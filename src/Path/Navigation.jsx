@@ -1,17 +1,19 @@
-import '../App.css';
-import React from "react";
-import { Button } from 'react-bootstrap';
-
-const Login = ()=>{
-    function loginPage() {
-        alert('You are to login');
-    }
-    return(
-        <Button onClick=  {loginPage}>Login</Button>          
+import React from 'react';
+ 
+import { NavLink } from 'react-router-dom';
+ 
+const Navigation = () => {
+    return (
+       <div>
+          <NavLink to="/">Dashboard</NavLink>
+          <NavLink to="/LoginPage">LoginPage</NavLink>
+          <NavLink to="/ProfilePage">ProfilePage</NavLink>
+          <NavLink to="/Register">Register</NavLink>
+       </div>
     );
-};
-
-export default Login;
+}
+ 
+export default Navigation;
 
 
 
