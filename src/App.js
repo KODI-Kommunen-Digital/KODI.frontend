@@ -14,9 +14,9 @@ class App extends Component{
       <div>
         <Navigation />
           <Routes>
-            <Route path="/" element={<Dashboard />} exact/>
+            <Route path="/Dashboard" element={<Dashboard />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>
-            <Route path="/LoginPage" element={<LoginPage />}/>
+            <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
              <Route path='*' element={<Error />}/>
           </Routes>
