@@ -2,18 +2,17 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
-const Register = () => {
+const PasswordForgot = () => {
 
-  useEffect(() => {
-    document.title = "Heidi - Register";
-  }, []);
-
-
-  let navigate  = useNavigate();  
-  const routeChangeToLogin   = () =>{ 
-      let path = `/`; 
-      navigate(path);
-    } 
+    useEffect(() => {
+        document.title = "Heidi - Update Password";
+      }, []);
+    
+    let navigate  = useNavigate();  
+    const routeChangeToLogin   = () =>{ 
+        let path = `/`; 
+        navigate(path);
+      } 
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -24,45 +23,15 @@ const Register = () => {
             alt="Your Company"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create your new account
+            Create new password
           </h3>
         </div>
         <form class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
           <div class="-space-y-px rounded-md shadow-sm">
             <div>
-              <label for="username" class="sr-only">
-                Username
-              </label>
-              <input
-                id="user-name"
-                name="username"
-                type="text"
-                autocomplete="on"
-                required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Username"
-              />
-            </div>
-            <br/>
-            <div>
-              <label for="email-address" class="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-            <br/>
-            <div>
               <label for="password" class="sr-only">
-                Password
+                New Password
               </label>
               <input
                 id="password"
@@ -71,13 +40,13 @@ const Register = () => {
                 autocomplete="current-password"
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Password"
+                placeholder="New Password"
               />
             </div>
             <br/>
             <div>
               <label for="password" class="sr-only">
-                Confirm Password
+                Confirm New Password
               </label>
               <input
                 id="password"
@@ -86,37 +55,9 @@ const Register = () => {
                 autocomplete="current-password"
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Confirm Password"
+                placeholder="Confirm New Password"
               />
             </div>
-          </div>
-          
-          <div class="flex items-center justify-between">
-           <p>
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                I accept the <a href="https://dev.heidi-app.de/cms/datenschutz/" target='_blank' rel="noopener noreferrer" class="text-red-500 hover:text-red-300">privacy policy*</a>
-              </label>
-            </div>
-            <br/>
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                I hereby accept the <a href="https://dev.heidi-app.de/cms/datenschutz/" class="text-red-500 hover:text-red-300">terms and conditions*</a>
-              </label>
-            </div>
-           </p>
           </div>
 
           <div>
@@ -140,7 +81,7 @@ const Register = () => {
                   />
                 </svg>
               </span>
-              Register
+              Update Password
             </button>
           </div>
           <div class="text-sm">
@@ -152,4 +93,4 @@ const Register = () => {
     </div>
   );
 };
-export default Register;
+export default PasswordForgot;
