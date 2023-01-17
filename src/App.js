@@ -29,7 +29,7 @@ const App =()=>{
             <Route path="/PasswordUpdate" element={<PasswordUpdate />}/>
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
-             <Route path='*' element={<Error />}/>
+            <Route path='*' element={<Error />}/>
           </Routes>
       </div>
     </BrowserRouter>

@@ -3,17 +3,15 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
 const Register = () => {
-
   useEffect(() => {
     document.title = "Heidi - Register";
   }, []);
 
-
-  let navigate  = useNavigate();  
-  const routeChangeToLogin   = () =>{ 
-      let path = `/`; 
-      navigate(path);
-    } 
+  let navigate = useNavigate();
+  const routeChangeToLogin = () => {
+    let path = `/`;
+    navigate(path);
+  };
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -44,7 +42,7 @@ const Register = () => {
                 placeholder="Username"
               />
             </div>
-            <br/>
+            <br />
             <div>
               <label for="email-address" class="sr-only">
                 Email address
@@ -59,7 +57,7 @@ const Register = () => {
                 placeholder="Email address"
               />
             </div>
-            <br/>
+            <br />
             <div>
               <label for="password" class="sr-only">
                 Password
@@ -74,7 +72,7 @@ const Register = () => {
                 placeholder="Password"
               />
             </div>
-            <br/>
+            <br />
             <div>
               <label for="password" class="sr-only">
                 Confirm Password
@@ -90,39 +88,60 @@ const Register = () => {
               />
             </div>
           </div>
-          
+
           <div class="flex items-center justify-between">
-           <p>
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                I accept the <a href="https://dev.heidi-app.de/cms/datenschutz/" target='_blank' rel="noopener noreferrer" class="text-red-500 hover:text-red-300">privacy policy*</a>
-              </label>
-            </div>
-            <br/>
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                I hereby accept the <a href="https://dev.heidi-app.de/cms/datenschutz/" class="text-red-500 hover:text-red-300">terms and conditions*</a>
-              </label>
-            </div>
-           </p>
+            <p>
+              <div class="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label
+                  for="remember-me"
+                  class="ml-2 block text-sm text-gray-900"
+                >
+                  I accept the{" "}
+                  <a
+                    href="https://dev.heidi-app.de/cms/datenschutz/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-red-500 hover:text-red-300"
+                  >
+                    privacy policy*
+                  </a>
+                </label>
+              </div>
+              <br />
+              <div class="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label
+                  for="remember-me"
+                  class="ml-2 block text-sm text-gray-900"
+                >
+                  I hereby accept the{" "}
+                  <a
+                    href="https://dev.heidi-app.de/cms/datenschutz/"
+                    class="text-red-500 hover:text-red-300"
+                  >
+                    terms and conditions*
+                  </a>
+                </label>
+              </div>
+            </p>
           </div>
 
           <div>
             <button
               type="submit"
               onClick={routeChangeToLogin}
+              id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
               <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -144,9 +163,15 @@ const Register = () => {
             </button>
           </div>
           <div class="text-sm">
-        Already have an account? Please Login   
-        <span onClick={routeChangeToLogin} class="font-medium cursor-pointer text-black hover:text-gray-500"> here </span>
-        </div>
+            Already have an account? Please Login
+            <span
+              onClick={routeChangeToLogin}
+              class="font-medium cursor-pointer text-black hover:text-gray-500"
+            >
+              {" "}
+              here{" "}
+            </span>
+          </div>
         </form>
       </div>
     </div>

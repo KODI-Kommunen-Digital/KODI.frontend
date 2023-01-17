@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../Resource/HEIDI_Logo.png';
+
 
 function SideBar () {
   function openSidebar() {

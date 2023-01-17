@@ -3,16 +3,15 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
 const PasswordForgot = () => {
+  useEffect(() => {
+    document.title = "Heidi - Update Password";
+  }, []);
 
-    useEffect(() => {
-        document.title = "Heidi - Update Password";
-      }, []);
-    
-    let navigate  = useNavigate();  
-    const routeChangeToLogin   = () =>{ 
-        let path = `/`; 
-        navigate(path);
-      } 
+  let navigate = useNavigate();
+  const routeChangeToLogin = () => {
+    let path = `/`;
+    navigate(path);
+  };
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -43,7 +42,7 @@ const PasswordForgot = () => {
                 placeholder="New Password"
               />
             </div>
-            <br/>
+            <br />
             <div>
               <label for="password" class="sr-only">
                 Confirm New Password
@@ -63,6 +62,7 @@ const PasswordForgot = () => {
           <div>
             <button
               type="submit"
+              id="finalbutton"
               onClick={routeChangeToLogin}
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
@@ -85,9 +85,15 @@ const PasswordForgot = () => {
             </button>
           </div>
           <div class="text-sm">
-        Already have an account? Please Login   
-        <span onClick={routeChangeToLogin} class="font-medium cursor-pointer text-black hover:text-gray-500"> here </span>
-        </div>
+            Already have an account? Please Login
+            <span
+              onClick={routeChangeToLogin}
+              class="font-medium cursor-pointer text-black hover:text-gray-500"
+            >
+              {" "}
+              here{" "}
+            </span>
+          </div>
         </form>
       </div>
     </div>

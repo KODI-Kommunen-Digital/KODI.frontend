@@ -126,6 +126,7 @@ const LoginPage = () => {
                   type="submit"
                   onClick={routeChangeToDashboard}
                   value="Submit"
+                  id="finalbutton"
                   class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                 >
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -178,6 +179,7 @@ const LoginPage = () => {
                   <div class="flex gap-2">
                     <button
                       type="submit"
+                      id="finalbutton"
                       onClick={routeChangeToDashboard}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                     >
@@ -185,6 +187,7 @@ const LoginPage = () => {
                     </button>
                     <button
                       type="Cancel"
+                      id="finalbutton"
                       onClick={onCancel}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                     >

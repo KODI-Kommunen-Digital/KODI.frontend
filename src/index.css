@@ -8,3 +8,12 @@
     gap: 1rem;
 }
 
+.errorPage{
+    margin-top: 20rem;
+    margin-left: 45%;
+}
+
+#finalbutton:hover{
+    transform: scale(1.02);
+}
+
