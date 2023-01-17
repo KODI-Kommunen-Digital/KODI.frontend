@@ -6,6 +6,8 @@ import LoginPage from './Path/LoginPage';
 import Navigation from './Path/Navigation';
 import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
+import ListingsPage from './Path/ListingsPage';
+import ContactInfo from './Path/ContactInfo';
 
 class App extends Component{
   render(){
@@ -18,6 +20,8 @@ class App extends Component{
             <Route path="/ProfilePage" element={<ProfilePage />}/>
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
+            <Route path="/ListingsPage" element={<ListingsPage />}/>
+            <Route path="/ContactInfo" element={<ContactInfo />}/>
              <Route path='*' element={<Error />}/>
           </Routes>
       </div>
