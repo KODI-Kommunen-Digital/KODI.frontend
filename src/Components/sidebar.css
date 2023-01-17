@@ -1,0 +1,9 @@
+@media only screen and (max-width: 768px) {
+    .sidebar {
+      display: none
+     }
+  }
+
+.visible-sidebar {
+  display: block !important
+  }
