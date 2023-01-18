@@ -33,8 +33,7 @@ const App =()=>{
             <Route path="/Register" element={<Register />}/>
             <Route path="/ListingsPage" element={<ListingsPage />}/>
             <Route path="/ContactInfo" element={<ContactInfo />}/>
-            <Route path="/Dashboard" element={<Dashboard />}/>
-            <Route path='*' element={<Error />}/>
+             <Route path='*' element={<Error />}/>
           </Routes>
       </div>
     </BrowserRouter>
