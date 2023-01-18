@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect }from "react";
 import SideBar from '../Components/SideBar';
 
 function ContactInfo() {
+
+  useEffect(() => {
+    document.title = "Contact-Info";
+  }, []);
+
   return (
-    <section class="bg-slate-300 body-font relative">
-      <SideBar/>
-      <div class="container pr-5 pl-10 py-2 mx-auto flex sm:flex-nowrap flex-wrap bg-slate-200">
-        <div class="lg:w-4/5 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 p-6 mr-2">
+    <section class="bg-slate-600 body-font relative">
+        <SideBar/>
+        <div class="container w-auto px-5 py-2 bg-slate-600">
+          <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
             Personal Information
             <div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -55,8 +60,8 @@ function ContactInfo() {
         </div>
       </div>
 
-      <div class="container pr-5 pl-10  py-2 mx-auto flex sm:flex-nowrap flex-wrap bg-slate-200">
-        <div class="lg:w-4/5 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 p-6 mr-2">
+      <div class="container w-auto px-5 py-2 bg-slate-600">
+          <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
             Social Media
             <div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -100,8 +105,8 @@ function ContactInfo() {
         </div>
       </div>
 
-      <div class="container pr-5 pl-10 py-2 mx-auto flex sm:flex-nowrap flex-wrap bg-slate-200">
-        <div class="lg:w-4/5 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 p-6 mr-2">
+      <div class="container w-auto px-5 py-2 bg-slate-600">
+          <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
             Media
             <div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -124,6 +129,11 @@ function ContactInfo() {
                 </div>
               </div>
             </div>
+            <div class="relative mb-4 mt-8 border-white">
+            <button class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+              Save Changes
+            </button>
+          </div>
           </div>
 
       </div>
