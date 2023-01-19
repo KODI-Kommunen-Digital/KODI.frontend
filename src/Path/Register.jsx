@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
@@ -12,6 +12,80 @@ const Register = () => {
     let path = `/`;
     navigate(path);
   };
+
+  const [input, setInput] = useState({
+    username: '',
+    email:'',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [error, setError] = useState({
+    username: '',
+    email:'',
+    password: '',
+    confirmPassword: ''
+  })
+
+  const onInputChange = e => {
+    const { name, value } = e.target;
+    setInput(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    validateInput(e);
+  }
+
+  const handleSubmit = async(event) =>{
+    event.preventDefault();
+
+    console.log(input)
+    routeChangeToLogin()
+  }
+
+  const validateInput = e => {
+    let { name, value } = e.target;
+    setError(prev => {
+      const stateObj = { ...prev, [name]: "" };
+ 
+      switch (name) {
+        case "username":
+          if (!value) {
+            stateObj[name] = "Please enter Username.";
+          }
+          break;
+        case "email":
+          if(!value){
+            stateObj[name] = "Please enter email address.";
+          }
+          break;
+        case "password":
+          if (!value) {
+            stateObj[name] = "Please enter Password.";
+          } else if (input.confirmPassword && value !== input.confirmPassword) {
+            stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
+          } else {
+            stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
+          }
+          break;
+ 
+        case "confirmPassword":
+          if (!value) {
+            stateObj[name] = "Please enter Confirm Password.";
+          } else if (input.password && value !== input.password) {
+            stateObj[name] = "Password and Confirm Password does not match.";
+          }
+          break;
+ 
+        default:
+          break;
+      }
+ 
+      return stateObj;
+    });
+  }
+
+
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -19,73 +93,82 @@ const Register = () => {
           <img
             class="mx-auto h-20 w-auto"
             src={HEIDI_Logo}
-            alt="Your Company"
+            alt="HEDI- Heimat Digital"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Create your new account
           </h3>
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST">
+        <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
-          <div class="-space-y-px rounded-md shadow-sm">
+          <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
               <label for="username" class="sr-only">
                 Username
               </label>
               <input
-                id="user-name"
+                id="username"
                 name="username"
+                value={input.username}
                 type="text"
-                autocomplete="on"
+                autoComplete="on"
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Username"
-              />
+                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Enter Username"
+              ></input>
+              {error.username && <span className='err'>{error.username}</span>}
             </div>
-            <br />
             <div>
               <label for="email-address" class="sr-only">
                 Email address
               </label>
               <input
-                id="email-address"
+                id="emailaddress"
                 name="email"
                 type="email"
-                autocomplete="email"
+                value={input.email}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                autoComplete="email"
                 required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Email address"
-              />
+              ></input>
+              {error.email && <span className='err'>{error.email}</span>}
             </div>
-            <br />
             <div>
               <label for="password" class="sr-only">
                 Password
               </label>
               <input
-                id="password"
                 name="password"
                 type="password"
-                autocomplete="current-password"
+                value={input.password}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Password"
-              />
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Enter Password"
+              ></input>
+              {error.password && <span className='err'>{error.password}</span>}
             </div>
-            <br />
             <div>
               <label for="password" class="sr-only">
                 Confirm Password
               </label>
               <input
-                id="password"
-                name="password"
+                name="confirmPassword"
                 type="password"
-                autocomplete="current-password"
+                value={input.confirmPassword}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Confirm Password"
-              />
+              ></input>
+              {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>
           </div>
 
@@ -93,7 +176,6 @@ const Register = () => {
             <p>
               <div class="flex items-center">
                 <input
-                  id="remember-me"
                   name="remember-me"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
@@ -116,7 +198,6 @@ const Register = () => {
               <br />
               <div class="flex items-center">
                 <input
-                  id="remember-me"
                   name="remember-me"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
@@ -140,7 +221,6 @@ const Register = () => {
           <div>
             <button
               type="submit"
-              onClick={routeChangeToLogin}
               id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
@@ -153,9 +233,9 @@ const Register = () => {
                   aria-hidden="true"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               </span>
@@ -166,10 +246,8 @@ const Register = () => {
             Already have an account? Please Login
             <span
               onClick={routeChangeToLogin}
-              class="font-medium cursor-pointer text-black hover:text-gray-500"
-            >
-              {" "}
-              here{" "}
+              class="font-medium cursor-pointer text-black hover:text-gray-500">
+              {" "}here{" "}
             </span>
           </div>
         </form>

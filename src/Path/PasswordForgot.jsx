@@ -12,6 +12,21 @@ const PasswordForgot = () => {
     let path = `/`;
     navigate(path);
   };
+
+  // const [input, setInput] = useState({
+  //   username: '',
+  //   email:'',
+  //   password: '',
+  //   confirmPassword: ''
+  // });
+
+  // const [error, setError] = useState({
+  //   username: '',
+  //   email:'',
+  //   password: '',
+  //   confirmPassword: ''
+  // })
+
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -27,38 +42,34 @@ const PasswordForgot = () => {
         </div>
         <form class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
-          <div class="-space-y-px rounded-md shadow-sm">
+          <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
               <label for="password" class="sr-only">
                 New Password
               </label>
               <input
-                id="password"
                 name="password"
                 type="password"
-                autocomplete="current-password"
+                autoComplete="current-password"
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="New Password"
               />
             </div>
-            <br />
             <div>
               <label for="password" class="sr-only">
                 Confirm New Password
               </label>
               <input
-                id="password"
                 name="password"
                 type="password"
-                autocomplete="current-password"
+                autoComplete="current-password"
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Confirm New Password"
               />
             </div>
           </div>
-
           <div>
             <button
               type="submit"
@@ -75,9 +86,9 @@ const PasswordForgot = () => {
                   aria-hidden="true"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               </span>

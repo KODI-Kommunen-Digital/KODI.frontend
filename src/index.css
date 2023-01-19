@@ -17,3 +17,8 @@
     transform: scale(1.02);
 }
 
+.err{
+    color: rgb(255, 0, 0);
+    font-family: sans-serif;
+    font-size: small;
+}
