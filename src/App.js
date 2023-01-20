@@ -6,6 +6,7 @@ import LoginPage from './Path/LoginPage';
 import Navigation from './Path/Navigation';
 import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
+import ListingsPage from './Path/ListingsPage';
 import PasswordForgot from './Path/PasswordForgot';
 import PasswordUpdate from './Path/PasswordUpdate';
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
@@ -29,7 +30,12 @@ const App =()=>{
             <Route path="/PasswordUpdate" element={<PasswordUpdate />}/>
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
+<<<<<<< HEAD
             <Route path='*' element={<Error />}/>
+=======
+            <Route path="/ListingsPage" element={<ListingsPage />}/>
+             <Route path='*' element={<Error />}/>
+>>>>>>> b7aee84f52c8a04fc8e5d0a83bc7c82fc26effc1
           </Routes>
       </div>
     </BrowserRouter>
