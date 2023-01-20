@@ -7,7 +7,6 @@ import Navigation from './Path/Navigation';
 import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
 import ListingsPage from './Path/ListingsPage';
-import ContactInfo from './Path/ContactInfo';
 import PasswordForgot from './Path/PasswordForgot';
 import PasswordUpdate from './Path/PasswordUpdate';
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
@@ -32,7 +31,6 @@ const App =()=>{
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
             <Route path="/ListingsPage" element={<ListingsPage />}/>
-            <Route path="/ContactInfo" element={<ContactInfo />}/>
              <Route path='*' element={<Error />}/>
           </Routes>
       </div>

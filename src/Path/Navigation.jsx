@@ -11,8 +11,7 @@ const Navigation = () => {
           <NavLink to="/Register"></NavLink>
           <NavLink to="/PasswordUpdate"></NavLink>
           <NavLink to="/PasswordForgot"></NavLink>
-          <NavLink to="/ListingsPage">ListingsPage</NavLink>
-          <NavLink to="/ContactInfo">ContactInfo</NavLink>
+          <NavLink to="/ListingsPage"></NavLink>
        </div>
     );
 }
