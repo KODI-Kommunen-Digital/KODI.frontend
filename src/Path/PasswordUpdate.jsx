@@ -1,18 +1,83 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
 const PasswordUpdate = () => {
+  useEffect(() => {
+    document.title = "Heidi - Update Password";
+  }, []);
 
-    useEffect(() => {
-        document.title = "Heidi - Update Password";
-      }, []);
-    
-    let navigate  = useNavigate();  
-    const routeChangeToLogin   = () =>{ 
-        let path = `/`; 
-        navigate(path);
-      } 
+  let navigate = useNavigate();
+  const routeChangeToLogin = () => {
+    let path = `/`;
+    navigate(path);
+  };
+
+  const [input, setInput] = useState({
+    oldPassword: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [error, setError] = useState({
+    oldPassword: '',
+    password: '',
+    confirmPassword: ''
+  })
+
+  const onInputChange = e => {
+    const { name, value } = e.target;
+    setInput(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    validateInput(e);
+  }
+
+  const handleSubmit = async(event) =>{
+    event.preventDefault();
+
+    console.log(input)
+    routeChangeToLogin()
+  }
+
+  const validateInput = e => {
+    let { name, value } = e.target;
+    setError(prev => {
+      const stateObj = { ...prev, [name]: "" };
+ 
+      switch (name) {
+        case "oldPassword":
+          if (!value) {
+            stateObj[name] = "Please enter your old password.";
+          }
+          break;
+        case "password":
+          if (!value) {
+            stateObj[name] = "Please enter new Password.";
+          } else if (input.confirmPassword && value !== input.confirmPassword) {
+            stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
+          } else {
+            stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
+          }
+          break;
+ 
+        case "confirmPassword":
+          if (!value) {
+            stateObj[name] = "Please confirm your Password.";
+          } else if (input.password && value !== input.password) {
+            stateObj[name] = "Password and Confirm Password does not match.";
+          }
+          break;
+ 
+        default:
+          break;
+      }
+ 
+      return stateObj;
+    });
+  }
+
   return (
     <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md space-y-8">
@@ -23,62 +88,66 @@ const PasswordUpdate = () => {
             alt="Your Company"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create new password
+            Update password
           </h3>
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST">
+        <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
-          <div class="-space-y-px rounded-md shadow-sm">
+          <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
               <label for="password" class="sr-only">
                 Old Password
               </label>
               <input
-                id="password"
-                name="password"
+                name="oldPassword"
                 type="password"
-                autocomplete="current-password"
+                value={input.oldPassword}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Old Password"
-              />
+              ></input>
+              {error.oldPassword && <span className='err'>{error.oldPassword}</span>}
             </div>
-            <br/>
             <div>
               <label for="password" class="sr-only">
                 New Password
               </label>
               <input
-                id="password"
                 name="password"
                 type="password"
-                autocomplete="current-password"
+                value={input.password}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="New Password"
-              />
+              ></input>
+              {error.password && <span className='err'>{error.password}</span>}
             </div>
-            <br/>
             <div>
               <label for="password" class="sr-only">
                 Confirm New Password
               </label>
               <input
-                id="password"
-                name="password"
+                name="confirmPassword"
                 type="password"
-                autocomplete="current-password"
+                value={input.confirmPassword}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Confirm New Password"
-              />
+              ></input>
+              {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>
           </div>
 
           <div>
             <button
               type="submit"
-              onClick={routeChangeToLogin}
+              id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
               <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -90,9 +159,9 @@ const PasswordUpdate = () => {
                   aria-hidden="true"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               </span>
@@ -100,9 +169,15 @@ const PasswordUpdate = () => {
             </button>
           </div>
           <div class="text-sm">
-        Already have an account? Please Login   
-        <span onClick={routeChangeToLogin} class="font-medium cursor-pointer text-black hover:text-gray-500"> here </span>
-        </div>
+            Already have an account? Please Login
+            <span
+              onClick={routeChangeToLogin}
+              class="font-medium cursor-pointer text-black hover:text-gray-500"
+            >
+              {" "}
+              here{" "}
+            </span>
+          </div>
         </form>
       </div>
     </div>

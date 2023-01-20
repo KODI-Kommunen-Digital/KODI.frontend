@@ -30,8 +30,12 @@ const App =()=>{
             <Route path="/PasswordUpdate" element={<PasswordUpdate />}/>
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
+<<<<<<< HEAD
+            <Route path='*' element={<Error />}/>
+=======
             <Route path="/ListingsPage" element={<ListingsPage />}/>
              <Route path='*' element={<Error />}/>
+>>>>>>> b7aee84f52c8a04fc8e5d0a83bc7c82fc26effc1
           </Routes>
       </div>
     </BrowserRouter>
