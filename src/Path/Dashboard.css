@@ -81,7 +81,8 @@ header div,
 	.dashboard-nav {
 	  display: flex;
 	  align-items: center;
-	margin-left: 150px;
+	margin-left: 250px;
+	grid-column-gap: 3rem;
   }
   
   .dashboard-navbar form{
@@ -109,7 +110,8 @@ header div,
   .dashboard-nav {
 	display: flex;
 	align-items: center;
-  margin-left: 150px;
+	margin-left: 100px;
+	grid-column-gap: 3rem;
 }
 
 .dashboard-navbar form{
