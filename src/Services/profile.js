@@ -7,7 +7,8 @@ var profileObj = {
     description: "Description",
     website: "www.example.com",
     email: "abc@def.com",
-    phoneNumber: "1234567890"
+    phoneNumber: "1234567890",
+    image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png"
 };
 
 export async function getProfile() {

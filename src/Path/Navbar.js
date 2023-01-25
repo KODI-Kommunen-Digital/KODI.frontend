@@ -1,10 +1,6 @@
 import React, { useState, useEffect , useRef  } from "react";
 import { FaBars, FaEllipsisH, FaFile, FaTimes } from "react-icons/fa";
 import "../Path/Dashboard";
-import {getDashboarddata, updateDashboardData,} from "../Services/dashboarddata";
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import SideBar from "../Components/SideBar";
 
 function Navbar() {
   const navRef = useRef();

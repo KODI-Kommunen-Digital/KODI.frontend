@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 // import '../Path/Dashboard.css';
-import {getDashboarddata, updateDashboardData,} from "../Services/dashboarddata";
+import {getDashboarddata} from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Path/Navbar";
 const dashboardStyle = require('../Path/Dashboard.css')
