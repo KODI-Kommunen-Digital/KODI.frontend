@@ -49,7 +49,7 @@ var dashboardObj = {
         {
             id: 3,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
-            name: "TDenio John",
+            name: "Denio John",
             email: "denio@flowbite.com",
             category: "Youtuber",
             expiryDate: "2024-12-01",

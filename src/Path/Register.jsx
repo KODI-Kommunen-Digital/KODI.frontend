@@ -13,7 +13,11 @@ const Register = () => {
     navigate(path);
   };
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const [input, setInput] = useState({
+    firstName:'',
+    secondName:'',
     username: '',
     email:'',
     password: '',
@@ -21,6 +25,8 @@ const Register = () => {
   });
 
   const [error, setError] = useState({
+    firstName:'',
+    secondName:'',
     username: '',
     email:'',
     password: '',
@@ -103,6 +109,37 @@ const Register = () => {
           <input type="hidden" name="remember" value="true" />
           <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
+              <span class="grid grid-cols-2 gap-2">
+              <label for="firstName" class="sr-only">
+                Firstname
+              </label>
+              <input
+                name="firstName"
+                value={input.firstName}
+                type="text"
+                onChange={onInputChange}
+                onBlur={validateInput}
+                autoComplete="on"
+                placeholder="Enter first name"
+                class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+              </input>
+              <label for="secondName" class="sr-only">
+                Second name
+              </label>
+              <input
+                name="secondName"
+                value={input.secondName}
+                type="text"
+                onChange={onInputChange}
+                onBlur={validateInput}
+                autoComplete="on"
+                placeholder="Enter second name"
+                class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm">
+              </input>
+              </span>
+            </div>
+            <div>
               <label for="username" class="sr-only">
                 Username
               </label>
@@ -178,28 +215,7 @@ const Register = () => {
                 <input
                   name="remember-me"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label
-                  for="remember-me"
-                  class="ml-2 block text-sm text-gray-900"
-                >
-                  I accept the{" "}
-                  <a
-                    href="https://dev.heidi-app.de/cms/datenschutz/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-red-500 hover:text-red-300"
-                  >
-                    privacy policy*
-                  </a>
-                </label>
-              </div>
-              <br />
-              <div class="flex items-center">
-                <input
-                  name="remember-me"
-                  type="checkbox"
+                  onChange={()=> setIsChecked(!isChecked)}
                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <label
@@ -209,18 +225,29 @@ const Register = () => {
                   I hereby accept the{" "}
                   <a
                     href="https://dev.heidi-app.de/cms/datenschutz/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-red-500 hover:text-red-300"
+                  >
+                    privacy policy*
+                  </a>
+                  {" "}
+                  and the {" "}
+                  <a
+                    href="https://dev.heidi-app.de/cms/datenschutz/"
                     class="text-red-500 hover:text-red-300"
                   >
                     terms and conditions*
                   </a>
                 </label>
-              </div>
+              </div> 
             </p>
           </div>
 
           <div>
             <button
               type="submit"
+              disabled={!isChecked}
               id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >

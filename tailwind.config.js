@@ -7,6 +7,9 @@ module.exports = {
     extend: {
       scale: {
         '102':'1.02'
+      },
+      margin: {
+        '5rem':'1rem'
       }
     },
   },
