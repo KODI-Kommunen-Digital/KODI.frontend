@@ -13,6 +13,8 @@ const Register = () => {
     navigate(path);
   };
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const [input, setInput] = useState({
     firstName:'',
     secondName:'',
@@ -213,28 +215,7 @@ const Register = () => {
                 <input
                   name="remember-me"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label
-                  for="remember-me"
-                  class="ml-2 block text-sm text-gray-900"
-                >
-                  I accept the{" "}
-                  <a
-                    href="https://dev.heidi-app.de/cms/datenschutz/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-red-500 hover:text-red-300"
-                  >
-                    privacy policy*
-                  </a>
-                </label>
-              </div>
-              <br />
-              <div class="flex items-center">
-                <input
-                  name="remember-me"
-                  type="checkbox"
+                  onChange={()=> setIsChecked(!isChecked)}
                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <label
@@ -244,18 +225,29 @@ const Register = () => {
                   I hereby accept the{" "}
                   <a
                     href="https://dev.heidi-app.de/cms/datenschutz/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-red-500 hover:text-red-300"
+                  >
+                    privacy policy*
+                  </a>
+                  {" "}
+                  and the {" "}
+                  <a
+                    href="https://dev.heidi-app.de/cms/datenschutz/"
                     class="text-red-500 hover:text-red-300"
                   >
                     terms and conditions*
                   </a>
                 </label>
-              </div>
+              </div> 
             </p>
           </div>
 
           <div>
             <button
               type="submit"
+              disabled={!isChecked}
               id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
