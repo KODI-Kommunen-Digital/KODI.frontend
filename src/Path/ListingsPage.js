@@ -2,9 +2,11 @@ import React, { useState , useRef , useEffect } from "react";
 import SideBar from '../Components/SideBar';
 import JoditEditor from 'jodit-react';
 import './bodyContainer.css';
+import { useTranslation } from "react-i18next";
 
 
 function ListingsPage() {
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     document.title = "Submit -Listings";
@@ -21,7 +23,7 @@ function ListingsPage() {
         <div class="container w-auto px-5 py-2 bg-slate-600">
             <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-              Information
+              {t("information")}
               <div className="my-4 bg-gray-600 h-[1px]"></div>
             </h2>
             <div class="relative mb-4">
@@ -29,7 +31,7 @@ function ListingsPage() {
                 for="category"
                 class="block text-sm font-medium text-gray-600"
               >
-                Category
+                {t("information")}
               </label>
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
@@ -37,7 +39,7 @@ function ListingsPage() {
                   name="category"
                   id="category"
                   class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                  placeholder="all your selection categories"
+                  placeholder="All your selection categories"
                 />
                 <div class="absolute inset-y-0 right-0 flex items-center">
                   <select
@@ -53,20 +55,20 @@ function ListingsPage() {
               </div>
             </div>
             <div class="relative mb-4">
-              <label for="title" class="block text-sm font-medium text-gray-600">
-                Title
+              <label for="" class="block text-sm font-medium text-gray-600">
+              {t("title")}
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                placeholder="enter your title"
+                placeholder={t("enterTitle")}
               />
             </div>
             <div class="relative mb-4">
               <label for="date" class="block text-sm font-medium text-gray-600">
-                Date
+              {t("date")}
               </label>
               <div class="relative">
                 <div class="flex absolute inset-y-0 right-1 items-center pl-3 pointer-events-none">
@@ -91,13 +93,14 @@ function ListingsPage() {
             </div>
             <div class="relative mb-4">
               <label for="time" class="block text-sm font-medium text-gray-600">
-                Time
+              {t("time")}
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Select a time"
+                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" 
+                placeholder={t("selectTime")}
               />
               <button tabindex="0" type="button" class="timepicker-toggle-button" data-mdb-toggle="timepicker">
                 <i class="fas fa-clock timepicker-icon"></i>
@@ -105,13 +108,14 @@ function ListingsPage() {
             </div>
             <div class="relative mb-4">
               <label for="place" class="block text-sm font-medium text-gray-600">
-                Place
+              {t("email")}
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="enter your place"
+                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" 
+                placeholder="ainfo@heidi-app.de"
               />
             </div>
             <div class="relative mb-4">
@@ -119,7 +123,7 @@ function ListingsPage() {
                 for="description"
                 class="block text-sm font-medium text-gray-600"
               >
-                Description
+                {t("description")}
               </label>
 
               <JoditEditor
@@ -135,7 +139,7 @@ function ListingsPage() {
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-            Personal Information
+              {t("personalInformation")}
             <div className="my-4 bg-gray-600 h-[1px]"></div>
           </h2>
           <div class="relative mb-4">
@@ -143,7 +147,7 @@ function ListingsPage() {
               for="category"
               class="block text-sm font-medium text-gray-600"
             >
-              Email
+              {t("email")}
             </label>
             <div class="relative mt-1 rounded-md shadow-sm">
               <input
@@ -157,19 +161,19 @@ function ListingsPage() {
           </div>
           <div class="relative mb-4">
             <label for="title" class="block text-sm font-medium text-gray-600">
-              Telefon
+            {t("telephone")}
             </label>
             <input
               type="email"
               id="email"
               name="email"
               class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              placeholder="Telephone number"
+              placeholder={t("telephoneNumber")}
             />
           </div>
           <div class="relative mb-4">
             <label for="date" class="block text-sm font-medium text-gray-600">
-              Website
+            {t("website")}
             </label>
               <input
                 type="email"
@@ -185,7 +189,7 @@ function ListingsPage() {
       <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-            Social Media
+              {t("socialMedia")}
             <div className="my-4 bg-gray-600 h-[1px]"></div>
           </h2>
           <div class="relative mb-4">
@@ -193,7 +197,7 @@ function ListingsPage() {
               for="category"
               class="block text-sm font-medium text-gray-600"
             >
-              Link your social media accounts here
+              {t("linkSocialMedia")}
             </label>
             <div class="relative mt-1 rounded-md shadow-sm">
               <input
@@ -230,30 +234,30 @@ function ListingsPage() {
       <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-            Media
+              {t("media")}
             <div className="my-4 bg-gray-600 h-[1px]"></div>
           </h2>
 
           <div>
-              <label class="block text-sm font-medium text-gray-700">Upload here</label>
+              <label class="block text-sm font-medium text-gray-700">{t("uploadHere")}</label>
               <div class="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 bg-slate-200">
                 <div class="space-y-1 text-center">
                   <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                   <div class="flex text-lg text-gray-600 ">
-                    <p class="pl-1">Drag & Drop</p>
+                    <p class="pl-1">{t("dragNDrop")}</p>
                   </div>
-                  <p class="text-xs text-gray-500">or</p>
+                  <p class="text-xs text-gray-500">{t("or")}</p>
                   <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
-                    Choose file
+                    {t("chooseFile")}
                   </button>
                 </div>
               </div>
             </div>
             <div class="relative mb-4 mt-8 border-white">
             <button class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
-              Save Changes
+            {t("saveChanges")}
             </button>
           </div>
           </div>

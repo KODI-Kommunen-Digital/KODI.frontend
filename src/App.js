@@ -10,6 +10,7 @@ import ListingsPage from './Path/ListingsPage';
 import PasswordForgot from './Path/PasswordForgot';
 import PasswordUpdate from './Path/PasswordUpdate';
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
+import "./i18n";
 
 const App =()=>{
   useEffect(() => {
