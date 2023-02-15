@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     document.title = "Heidi - Register";
   }, []);
@@ -57,19 +59,19 @@ const Register = () => {
       switch (name) {
         case "username":
           if (!value) {
-            stateObj[name] = "Please enter Username.";
+            stateObj[name] = t("pleaseEnterUsername");
           }
           break;
         case "email":
           if(!value){
-            stateObj[name] = "Please enter email address.";
+            stateObj[name] = t("pleaseEnterEmailAddress");
           }
           break;
         case "password":
           if (!value) {
-            stateObj[name] = "Please enter Password.";
+            stateObj[name] = t("pleaseEnterPassword");
           } else if (input.confirmPassword && value !== input.confirmPassword) {
-            stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
+            stateObj["confirmPassword"] = t("passwordsDoNotMatch");
           } else {
             stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
           }
@@ -77,9 +79,9 @@ const Register = () => {
  
         case "confirmPassword":
           if (!value) {
-            stateObj[name] = "Please enter Confirm Password.";
+            stateObj[name] = t("pleaseConfirmPassword");
           } else if (input.password && value !== input.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = t("passwordsDoNotMatch");
           }
           break;
  
@@ -102,7 +104,7 @@ const Register = () => {
             alt="HEDI- Heimat Digital"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create your new account
+            {t("createAccount")}
           </h3>
         </div>
         <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
@@ -111,7 +113,7 @@ const Register = () => {
             <div>
               <span class="grid grid-cols-2 gap-2">
               <label for="firstName" class="sr-only">
-                Firstname
+              {t("firstName")}
               </label>
               <input
                 name="firstName"
@@ -120,12 +122,12 @@ const Register = () => {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 autoComplete="on"
-                placeholder="Enter first name"
+                placeholder={t("pleaseEnterFirstName")}
                 class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 >
               </input>
               <label for="secondName" class="sr-only">
-                Second name
+              {t("lastName")}
               </label>
               <input
                 name="secondName"
@@ -134,14 +136,14 @@ const Register = () => {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 autoComplete="on"
-                placeholder="Enter second name"
+                placeholder={t("pleaseEnterLastName")}
                 class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm">
               </input>
               </span>
             </div>
             <div>
               <label for="username" class="sr-only">
-                Username
+                {t("username")}
               </label>
               <input
                 id="username"
@@ -153,13 +155,13 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Enter Username"
+                placeholder={t("pleaseEnterUsername")}
               ></input>
               {error.username && <span className='err'>{error.username}</span>}
             </div>
             <div>
               <label for="email-address" class="sr-only">
-                Email address
+                {t("email")}
               </label>
               <input
                 id="emailaddress"
@@ -171,13 +173,13 @@ const Register = () => {
                 autoComplete="email"
                 required
                 class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Email address"
+                placeholder={t("pleaseEnterEmailAddress")}
               ></input>
               {error.email && <span className='err'>{error.email}</span>}
             </div>
             <div>
               <label for="password" class="sr-only">
-                Password
+              {t("password")}
               </label>
               <input
                 name="password"
@@ -187,13 +189,13 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Enter Password"
+                placeholder={t("pleaseEnterPassword")}
               ></input>
               {error.password && <span className='err'>{error.password}</span>}
             </div>
             <div>
               <label for="password" class="sr-only">
-                Confirm Password
+              {t("confirmPassword")}
               </label>
               <input
                 name="confirmPassword"
@@ -203,7 +205,7 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Confirm Password"
+                placeholder={t("pleaseConfirmPassword")}
               ></input>
               {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>

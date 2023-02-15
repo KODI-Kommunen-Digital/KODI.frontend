@@ -3,12 +3,15 @@ import React, { useRef,useEffect ,useState, /*useContext*/ } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
+import { useTranslation } from "react-i18next";
+
 //import axios from "../api/axios";
 
 
 //const LOGIN_URL = '/auth';
 
 const LoginPage = () => {
+  const { t, i18n } = useTranslation();
 
   //const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
@@ -108,7 +111,7 @@ const LoginPage = () => {
                 alt="HEDI- Heimat Digital"
               />
               <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                Sign in to your account
+              {t("signIntoAccount")}
               </h2>
             </div>
             <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
@@ -116,7 +119,7 @@ const LoginPage = () => {
               <div class="-space-y-px space-y-4 rounded-md shadow-sm">
                 <div>
                   <label htmlFor="username" class="sr-only">
-                    Username
+                  {t("username")}
                   </label>
                   <input
                     type="text"
@@ -128,12 +131,12 @@ const LoginPage = () => {
                     onChange={(e)=>setUser(e.target.value)}
                     required
                     class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="Username"
+                    placeholder={t("username")}
                   />
                 </div>
                 <div>
                   <label for="password" class="sr-only">
-                    Password
+                  {t("password")}
                   </label>
                   <input
                     type="password"
@@ -143,7 +146,7 @@ const LoginPage = () => {
                     onChange={(e)=>setPwd(e.target.value)}
                     required
                     class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="Password"
+                    placeholder={t("password")}
                   />
                 </div>
               </div>
@@ -160,7 +163,7 @@ const LoginPage = () => {
                     for="remember-me"
                     class="ml-2 block text-sm text-gray-900"
                   >
-                    Remember me
+                   {t("rememberMe")}
                   </label>
                 </div>
 
@@ -169,7 +172,7 @@ const LoginPage = () => {
                     onClick={forgotPassword}
                     class="font-medium text-black cursor-pointer hover:text-sky-400"
                   >
-                    Forgot your password?
+                   {t("forgotYourPassword")}
                   </span>
                 </div>
               </div>
@@ -196,28 +199,25 @@ const LoginPage = () => {
                       />
                     </svg>
                   </span>
-                  Sign in
+                  {t("signIn")}
                 </button>
               </div>
               <div class="text-sm">
-                Not a member?
+                  {t("notMember")}
                 <span
                   onClick={routeChangeToRegister}
                   class="font-medium cursor-pointer text-black hover:text-sky-400"
                 >
-                  {" "}
-                  Click here{" "}
+                {" "}{t("clickToRegister")}
                 </span>
-                to Register
               </div>
             </form>
             {forgotPasswd && (
               <>
                 <div id="myDIV" class="text-sm">
-                  Forgot Password? Please confirm your email address. You will
-                  receive a link via your email to create a new password.
+                {t("forgotPasswordMessage")}                
                   <label for="email-address" class="sr-only">
-                    Email address
+                  {t("email")}
                   </label>
                   <input
                     id="email-address"
@@ -226,7 +226,7 @@ const LoginPage = () => {
                     autoComplete="email"
                     required
                     class="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="Email address"
+                    placeholder={t("email")}
                   />
                   <div class="flex gap-2">
                     <button
@@ -235,7 +235,7 @@ const LoginPage = () => {
                       onClick={routeChangeToDashboard}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                     >
-                      Send Link
+                      {t("sendLink")}
                     </button>
                     <button
                       type="Cancel"
@@ -243,7 +243,7 @@ const LoginPage = () => {
                       onClick={onCancel}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                   </div>
                 </div>

@@ -3,7 +3,7 @@ import SideBar from "../Components/SideBar";
 // import '../Path/Dashboard.css';
 import {getDashboarddata} from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Path/Navbar";
+import Navbar from "./Navbar";
 const dashboardStyle = require('../Path/Dashboard.css')
 
 const Dashboard = () => {
