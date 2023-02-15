@@ -1,6 +1,6 @@
 import React, { useState, useEffect , useRef  } from "react";
 import { FaBars, FaEllipsisH, FaFile, FaTimes } from "react-icons/fa";
-import "../Path/Dashboard";
+import "./Dashboard";
 
 function Navbar() {
   const navRef = useRef();

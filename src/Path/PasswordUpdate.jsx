@@ -1,8 +1,10 @@
 import React, { useEffect , useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
+import { useTranslation } from "react-i18next";
 
 const PasswordUpdate = () => {
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     document.title = "Heidi - Update Password";
   }, []);
@@ -49,14 +51,14 @@ const PasswordUpdate = () => {
       switch (name) {
         case "oldPassword":
           if (!value) {
-            stateObj[name] = "Please enter your old password.";
+            stateObj[name] = t("pleaseEnterOldPassword");
           }
           break;
         case "password":
           if (!value) {
-            stateObj[name] = "Please enter new Password.";
+            stateObj[name] = t("pleaseEnterNewPassword");
           } else if (input.confirmPassword && value !== input.confirmPassword) {
-            stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
+            stateObj["confirmPassword"] = t("passwordsDoNotMatch");
           } else {
             stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
           }
@@ -64,9 +66,9 @@ const PasswordUpdate = () => {
  
         case "confirmPassword":
           if (!value) {
-            stateObj[name] = "Please confirm your Password.";
+            stateObj[name] = t("pleaseConfirmPassword");;
           } else if (input.password && value !== input.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = t("passwordsDoNotMatch");
           }
           break;
  
@@ -85,10 +87,10 @@ const PasswordUpdate = () => {
           <img
             class="mx-auto h-20 w-auto"
             src={HEIDI_Logo}
-            alt="Your Company"
+            alt="HEIDI"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Update password
+          {t("updatePassword")}
           </h3>
         </div>
         <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
@@ -96,7 +98,7 @@ const PasswordUpdate = () => {
           <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
               <label for="password" class="sr-only">
-                Old Password
+              {t("oldPassword")}
               </label>
               <input
                 name="oldPassword"
@@ -106,13 +108,13 @@ const PasswordUpdate = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Old Password"
+                placeholder={t("oldPassword")}
               ></input>
               {error.oldPassword && <span className='err'>{error.oldPassword}</span>}
             </div>
             <div>
               <label for="password" class="sr-only">
-                New Password
+              {t("newPassword")}
               </label>
               <input
                 name="password"
@@ -122,13 +124,13 @@ const PasswordUpdate = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="New Password"
+                placeholder={t("newPassword")}
               ></input>
               {error.password && <span className='err'>{error.password}</span>}
             </div>
             <div>
               <label for="password" class="sr-only">
-                Confirm New Password
+                {t("confirmNewPassword")}
               </label>
               <input
                 name="confirmPassword"
@@ -138,7 +140,7 @@ const PasswordUpdate = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Confirm New Password"
+                placeholder={t("confirmNewPassword")}
               ></input>
               {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>
@@ -165,17 +167,16 @@ const PasswordUpdate = () => {
                   />
                 </svg>
               </span>
-              Update Password
+              {t("updatePassword")}
             </button>
           </div>
           <div class="text-sm">
-            Already have an account? Please Login
+          {t("accountPresent")}
             <span
               onClick={routeChangeToLogin}
               class="font-medium cursor-pointer text-black hover:text-gray-500"
             >
-              {" "}
-              here{" "}
+              {t(" ")}{t("loginHere")}
             </span>
           </div>
         </form>
