@@ -34,6 +34,7 @@ import ListingsPageClubNews from "./Path/Listings/PageClubNews";
 import PasswordForgot from './Path/PasswordForgot';
 import PasswordUpdate from './Path/PasswordUpdate';
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
+import "./i18n";
 
 //import OpenStreetMap from './Components/OpenStreetMap';
 
