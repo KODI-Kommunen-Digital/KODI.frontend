@@ -10,6 +10,7 @@ import Maps from "../../Components/Maps";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageRegionalProducts() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Regional Products";
   }, []);

@@ -7,6 +7,7 @@ import JoditEditor from "jodit-react";
 import "./bodyContainer.css";
 
 function ListingsPageCompanyportaits() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Company Portaits";
   }, []);

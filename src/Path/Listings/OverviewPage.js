@@ -4,6 +4,7 @@ import "./bodyContainer.css";
 import { useNavigate } from "react-router-dom";
 
 function OverviewPage() {
+    window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Overview Page";
   }, []);

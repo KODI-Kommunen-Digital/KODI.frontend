@@ -8,6 +8,12 @@ import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
 
 import HomePage from './Path/HomePage';
+import Below from './Path/Below';
+import Fuchstal from './Path/Fuchstal';
+import AppleVillage from './Path/AppleVillage';
+
+import Example1 from './Path/AppleVillage/Example1';
+
 import OverviewPage from './Path/Listings/OverviewPage';
 import OverviewPageNewsCategories from './Path/Listings/OverviewPageNewsCategories';
 import ListingsPageNewcitizeninfo from './Path/Listings/PageNewcitizeninfo';
@@ -52,6 +58,12 @@ const App =()=>{
         <Navigation />
           <Routes>
           <Route path="/HomePage" element={<HomePage />}/>
+          <Route path="/Below" element={<Below />}/>
+          <Route path="/Fuchstal" element={<Fuchstal />}/>
+          <Route path="/AppleVillage" element={<AppleVillage />}/>
+
+          <Route path="/Example1" element={<Example1 />}/>
+
             <Route path="/Dashboard" element={<Dashboard />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>
             <Route path="/PasswordForgot" element={<PasswordForgot />}/>

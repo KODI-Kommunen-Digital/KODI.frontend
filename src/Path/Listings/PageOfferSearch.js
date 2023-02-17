@@ -10,6 +10,7 @@ import Maps from "../../Components/Maps";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageOfferSearch() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Offer Search";
   }, []);

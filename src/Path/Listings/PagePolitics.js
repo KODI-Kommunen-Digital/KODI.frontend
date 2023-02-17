@@ -10,6 +10,7 @@ import "./bodyContainer.css";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPagePolitics() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Politics";
   }, []);
