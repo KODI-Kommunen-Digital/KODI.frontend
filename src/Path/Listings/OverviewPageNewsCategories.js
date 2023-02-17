@@ -12,6 +12,7 @@ import LOCAL from "../../Resource/localnews.jpg";
 import CLUB from "../../Resource/club.jpg";
 
 function OverviewPageNewsCategories() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "News Categories";
   }, []);

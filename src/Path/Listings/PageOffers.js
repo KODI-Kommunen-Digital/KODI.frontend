@@ -7,6 +7,7 @@ import "./bodyContainer.css";
 import Maps from "../../Components/Maps";
 
 function ListingsPageRegionalProducts() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Offers";
   }, []);

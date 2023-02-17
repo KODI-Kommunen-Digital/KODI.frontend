@@ -8,6 +8,7 @@ import SideBar from "../../Components/SideBar";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageClub() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Club";
   }, []);

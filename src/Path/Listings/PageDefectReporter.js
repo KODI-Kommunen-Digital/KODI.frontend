@@ -9,6 +9,7 @@ import Maps from "../../Components/Maps";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageDefectReporter() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Defect Report";
   }, []);

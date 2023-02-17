@@ -7,6 +7,7 @@ import Maps from "../../Components/Maps";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageNewcitizeninfo() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "New Citizen Info";
   }, []);

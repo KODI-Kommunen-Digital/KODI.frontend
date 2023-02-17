@@ -10,6 +10,7 @@ import "./bodyContainer.css";
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
 
 function ListingsPageSports() {
+  window.scrollTo(0, 0);
   useEffect(() => {
     document.title = "Sports";
   }, []);
