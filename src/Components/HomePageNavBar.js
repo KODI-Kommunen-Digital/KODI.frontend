@@ -96,7 +96,7 @@ export default function Example() {
         <div className="flex items-center justify-between border-gray-100 py-5 md:justify-start md:space-x-10">
           <div>
             <img
-              class="mx-auto h-10 w-auto"
+              class="mx-auto h-10 w-auto cursor-pointer"
               src={LOGO}
               alt="HEDI- Heimat Digital"
               onClick={() => navigateTo("/HomePage")}

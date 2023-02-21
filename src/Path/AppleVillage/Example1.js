@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../Components/HomePageNavBar";
-import { getDashboarddata } from "../Services/dashboarddata";
+import HomePageNavBar from "../../Components/HomePageNavBar";
+import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import LocationSelectionInput from "../Components/LocationSelectionInput";
-
-import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import FUCHSTALTIMELINE from "../assets/fuchstal.png";
 import { useTranslation } from "react-i18next";
+import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import LOGO from "../../assets/logo.png";
 
-const Fuchstal = () => {
-  window.scrollTo(0, 0);
+const Example1 = () => {
+  //window.scrollTo(0, 0);
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
       setDashboarddata(response);
     });
-    document.title = "fuchstal";
+    document.title = "apple village 1";
   }, []);
 
   let navigate = useNavigate();
@@ -32,272 +30,277 @@ const Fuchstal = () => {
     });
   }
 
-  const [content, setContent] = useState('A');
+  const [content, setContent] = useState("A");
 
   const handleButtonClick = (value) => {
     setContent(value);
   };
 
-const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
+  const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
 
   const customerServiceData = () => {
     setcustomerServiceDataload(true);
-    setSelectedLink('customerService');
+    setSelectedLink("customerService");
   };
   const onCancel = () => {
     setcustomerServiceDataload(false);
-    setSelectedLink('current');
+    setSelectedLink("current");
   };
 
-  const [selectedLink, setSelectedLink] = useState('current');
+  const [selectedLink, setSelectedLink] = useState("current");
 
   const { t, i18n } = useTranslation();
 
+  const [location, setLocation] = useState("");
+
+  function handleLocationChange(event) {
+    setLocation(event.target.value);
+  }
+
+  function handleLocationSubmit(event) {
+    event.preventDefault();
+  }
+
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(
+          `${position.coords.latitude}, ${position.coords.longitude}`
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
   return (
-    <section class="text-gray-600 body-font relative">
+    <section class="text-gray-600 bg-white body-font">
       <HomePageNavBar />
-      <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
-        <div class="w-full mr-0 ml-0">
-          <div class="h-64 overflow-hidden px-1 py-1">
-            {/* <a class="block relative h-96 overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center h-full w-full"
-              src= {HOMEPAGEIMG}
-            />
-          </a> */}
-            <div class="relative h-64">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-full w-full"
-                src={FUCHSTALTIMELINE}
-              />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z-10">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                  Find everything from your location
-                </h1>
-              </div> */}
+
+      <div class="mx-auto grid max-w-2xl grid-cols-1  gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+        <div className="grid grid-cols-1 gap-4">
+          <div class="lg:w-full md:w-1/2 h-64">
+            <div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-2xl w-full">
+              <div class="mt-5 md:col-span-2 md:mt-0">
+                <form action="#" method="POST">
+                  <p class="text-xs bg-red-600 rounded-sm p-1 font-bold text-white w-24 text-center">
+                    MOST POPULAR
+                  </p>
+                  <div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                    <h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
+                      Meanwhile example 1
+                    </h1>
+                    <div class="flex items-center">
+                      <button
+                        type="button"
+                        class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-1 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-2 -ml-1 text-[#626890]"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fab"
+                          data-icon="ethereum"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 320 512"
+                        >
+                          <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+                        </svg>
+                        Sprachern
+                      </button>
+                      <button
+                        type="button"
+                        class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-1 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-2 -ml-1 text-[#626890]"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fab"
+                          data-icon="ethereum"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 320 512"
+                        >
+                          <path d="M246.6 150.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0l96 96c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L352 109.3V384c0 35.3 28.7 64 64 64h64c17.7 0 32 14.3 32 32s-14.3 32-32 32H416c-70.7 0-128-57.3-128-128c0-35.3-28.7-64-64-64H109.3l41.4 41.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L109.3 256H224c23.3 0 45.2 6.2 64 17.1V109.3l-41.4 41.4z" />
+                        </svg>
+                        Split
+                      </button>
+                      <button type="button" class="text-gray-900 mt-0 items-center">
+                        <svg
+                          class="w-8 h-4 mx-1 text-[#626890]"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fab"
+                          data-icon="ethereum"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 320 512"
+                        >
+                          <path d="M0 256a56 56 0 1 1 112 0A56 56 0 1 1 0 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-center space-x-6 mt-2 h-5 w-5 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 576 512"
+                    >
+                      <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
+                  </div>
+                  <p>Regional Products</p>
+                </form>
+              </div>
             </div>
+          </div>
+          <div class="container-fluid lg:w-full md:w-1/2">
+            <div class=" mr-0 ml-0 mt-4">
+              <div class="h-96 overflow-hidden px-0 py-0 shadow-2xl">
+                <div class="relative h-96">
+                  <img
+                    alt="ecommerce"
+                    class="object-cover object-center h-full w-full"
+                    src={HOMEPAGEIMG}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 shadow-2xl">
+          <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
+            <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Add owner info
+            </h1>
+          </div>
+          <div class="my-4 bg-gray-200 h-[1px]"></div>
+
+          <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
+            <div class="flex justify-center sm:justify-start">
+              <img
+                class="h-6 w-auto"
+                src={LOGO}
+                alt="HEDI- Heimat Digital"
+                onClick={() => navigateTo("/HomePage")}
+              />
+            </div>
+            <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+              <h2 class="text-gray-900 text-lg title-font mb-2 font-bold">
+                Christian Bale
+              </h2>
+              <p class="leading-relaxed text-base">Uploaded 5 months ago.</p>
+            </div>
+          </div>
+
+          <div class="flex justify-center py-2 px-2 sm:justify-start mx-4 my-10 gap-4">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-600"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+              </svg>
+            </button>
+            {/* <p class="leading-relaxed text-base font-bold">
+              Check out social media
+            </p> */}
+          </div>
+
+          <div class="flex justify-center my-4">
+            <button
+              type="submit"
+              class="group relative flex w-72 md:w-96 justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium hover:text-cyan-500"
+            >
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 font-bold"></span>
+              View profiles
+            </button>
           </div>
         </div>
       </div>
 
-      <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
-        fuchstal
-      </h2>
+      <div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
+        <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Description
+        </h1>
+        <p class="leading-relaxed text-base font-bold my-6">
+          In the future there will be a detailed descriptive text for the
+          corresponding listings.
+        </p>
+      </div>
 
-    <div className="flex mx-auto flex-wrap mb-10 justify-center">
-      <a
-        onClick={onCancel}
-        className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'current' ? 'text-blue-800' : 'text-gray-500'}`}
-      >
-        <svg
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          className="w-5 h-5 mr-3"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-        Current
-      </a>
-      <a
-        onClick={customerServiceData}
-        id="loadMoreBtn"
-        className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'customerService' ? 'text-blue-800' : 'text-gray-500'}`}
-      >
-        Citizen Services
-      </a>
-    </div>
-
-    <div class="bg-white">
-        <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
-            <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
-            3
-            <a href="https://heidi-app.de/" rel="noopener noreferrer" class="text-black ml-1" target="_blank">
-                items found
+      <div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
+        <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Similar items
+        </h1>
+        <div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
+          <div
+            onClick={() => navigateTo("/Example1")}
+            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          >
+            <a class="block relative h-64 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center w-full h-full block"
+                src={HOMEPAGEIMG}
+              />
             </a>
-            </p>
-            <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
-                <button type="button" class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4">
-                    <svg class="w-4 h-4 mr-2 -ml-1 text-[#626890]" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="ethereum" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
-                    </svg>
-                    Show map
-                </button>
-                <div class="w-32 sm:w-auto">
-                    <select id="country" name="country" autocomplete="country-name" class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                    <option>Sort by</option>
-                    <option>A - Z (title)</option>
-                    <option>Z - A (title)</option>
-                    <option>Recent</option>
-                    <option>Oldest</option>
-                    </select>
-                </div>
+            <div class="mt-10">
+              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+                example-1
+              </h2>
             </div>
-        </div>
-    </div>
-
-
-      <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div class="p-6 space-y-0 md:space-y-6 sm:p-8">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Filter your result
-            </h1>
-            <form class="space-y-4 md:space-y-6" action="#">
-              <div>
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                ></label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search keyword..."
-                  required=""
-                />
-              </div>
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-            <label for="floatingInput" class="text-gray-700 font-bold">Place</label>
-                <select
-                  id="country"
-                  name="country"
-                  autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option>Choose a place</option>
-                  <option>apple village</option>
-                  <option>fuchstal</option>
-                  <option>below</option>
-                </select>
-            </div>
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold">Current location</label>
-                <LocationSelectionInput />
-            </div>
-            {customerServiceDataload && (
-              <>
-              <div class="flex justify-center">
-                  <div class="timepicker relative form-floating mb-3 xl:w-96">
-                  <label for="floatingInput" class="text-gray-700 font-bold">Time</label>
-                      <input type="text"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select a time" />
-                  </div>
-              </div>
-              {/* <div class="flex justify-center">
-                  <div class="timepicker relative form-floating mb-3 xl:w-96">
-                    <TimePicker />
-                  </div>
-              </div> */}
-              <div>
-                <label for="floatingInput" class="text-gray-700 font-bold">Phone Number</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Enter your phone number..."
-                    required=""
-                  />
-                </div>
-                <div>
-                  <label for="floatingInput" class="text-gray-700 font-bold">Review</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Write your review..."
-                    required=""
-                  />
-                </div>
-                </>
-            )}
-            </form>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
           </div>
-          <div class="mb-4 ml-7">
-            <button
-              type="submit"
-              class="group relative flex w-96 justify-center rounded-md border border-transparent bg-blue-800 py-2 px-4 text-sm font-medium text-white hover:bg-cyan-500"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              Apply Filter
-            </button>
+          <div
+            onClick={() => navigateTo("/Example1")}
+            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          >
+            <a class="block relative h-64 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center w-full h-full block"
+                src={HOMEPAGEIMG}
+              />
+            </a>
+            <div class="mt-10">
+              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+                example-2
+              </h2>
+            </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
           </div>
-          <div class="mb-4 ml-7">
-            <button
-              type="submit"
-              class="group relative flex w-96 justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium  hover:text-cyan-500"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              Remove Filter
-            </button>
+          <div
+            onClick={() => navigateTo("/Example1")}
+            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          >
+            <a class="block relative h-64 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center w-full h-full block"
+                src={HOMEPAGEIMG}
+              />
+            </a>
+            <div class="mt-10">
+              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+                example-3
+              </h2>
+            </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
           </div>
         </div>
-
-        {/* <div class="flex flex-nowrap gap-10"> */}
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                 fuchstal-1
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                fuchstal-2
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                fuchstal-3
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
-        {/* </div> */}
       </div>
 
       <footer class="text-center lg:text-left bg-slate-800 text-white mt-10">
@@ -470,4 +473,4 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
   );
 };
 
-export default Fuchstal;
+export default Example1;

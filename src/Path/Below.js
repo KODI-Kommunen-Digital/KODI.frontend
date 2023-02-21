@@ -255,7 +255,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
 
         {/* <div class="flex flex-nowrap gap-10"> */}
             <div
-            onClick={() => navigateTo("/ListingsPageNewsflash")}
+            onClick={() => navigateTo("/Example1")}
             class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
             >
             <a class="block relative h-64 rounded overflow-hidden">
@@ -270,9 +270,10 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 below-1
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
             <div
-            onClick={() => navigateTo("/ListingsPageAlert")}
+            onClick={() => navigateTo("/Example1")}
             class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
             >
             <a class="block relative h-64 rounded overflow-hidden">
@@ -287,9 +288,10 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 below-2
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
             <div
-            onClick={() => navigateTo("/ListingsPagePolitics")}
+            onClick={() => navigateTo("/Example1")}
             class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
             >
             <a class="block relative h-64 rounded overflow-hidden">
@@ -304,6 +306,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 below-3
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
         {/* </div> */}
       </div>
