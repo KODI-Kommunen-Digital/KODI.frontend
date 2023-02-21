@@ -94,11 +94,11 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 class="object-cover object-center h-full w-full"
                 src={APPLETIMELINEING}
               />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z-10">
+              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                  Find everything from your location
+                apple village
                 </h1>
-              </div> */}
+              </div>  */}
             </div>
           </div>
         </div>
@@ -280,6 +280,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 apple village-1
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
             <div
             onClick={() => navigateTo("/Example1")}
@@ -297,6 +298,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 apple village-2
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
             <div
             onClick={() => navigateTo("/Example1")}
@@ -314,6 +316,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 apple village-3
                 </h2>
             </div>
+            <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
         {/* </div> */}
       </div>

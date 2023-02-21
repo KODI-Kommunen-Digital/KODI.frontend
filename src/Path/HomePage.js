@@ -290,7 +290,7 @@ const HomePage = () => {
                 class="object-cover object-center h-full w-full"
                 src={below}
               />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z-10">
+              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-3xl font-bold mb-0 ml-4">
                   below
                 </h1>
@@ -308,8 +308,8 @@ const HomePage = () => {
                 class="object-cover object-center h-full w-full"
                 src={fuchstal}
               />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z-10">
-                <h1 class="text-3xl font-bold mb-0 ml-4">
+              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+                <h1 class="text-3xl font-bold mb-0 ml-4 overflow-hidden">
                   fuchstal
                 </h1>
                 <p class="mb-4 ml-4">entries</p>
@@ -326,7 +326,7 @@ const HomePage = () => {
                 class="object-cover object-center h-full w-full"
                 src={applevillage}
               />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z-10">
+              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-3xl font-bold mb-0 ml-4">
                   apple village
                 </h1>
