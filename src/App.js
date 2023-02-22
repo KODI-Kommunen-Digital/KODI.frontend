@@ -13,6 +13,7 @@ import Fuchstal from './Path/Fuchstal';
 import AppleVillage from './Path/AppleVillage';
 
 import Example1 from './Path/AppleVillage/Example1';
+import Events from './Path/Listings/Events';
 
 import OverviewPage from './Path/Listings/OverviewPage';
 import OverviewPageNewsCategories from './Path/Listings/OverviewPageNewsCategories';
@@ -63,6 +64,7 @@ const App =()=>{
           <Route path="/AppleVillage" element={<AppleVillage />}/>
 
           <Route path="/Example1" element={<Example1 />}/>
+          <Route path="/Events" element={<Events />}/>
 
             <Route path="/Dashboard" element={<Dashboard />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>

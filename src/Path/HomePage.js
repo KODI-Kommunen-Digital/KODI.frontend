@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
+import UploadContribution from "../Components/UploadContribution";
 import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import below from "../assets/homeimage.jpg";
-import HOME from "../assets/Home.png";
-import BELOWTIMELINEING from "../assets/below.png";
 import fuchstal from "../assets/homeimage.jpg";
 import applevillage from "../assets/homeimage.jpg";
+import ONEIMAGE from "../assets/01.png";
+import TWOIMAGE from "../assets/02.png";
+import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
-  window.scrollTo(0, 0);
+  //window.scrollTo(0, 0);
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
@@ -34,6 +36,14 @@ const HomePage = () => {
     });
   }
 
+  function goToFilters(filterName) {
+    // Encode the button name as a URL parameter
+    const encodedName = encodeURIComponent(filterName);
+
+    // Redirect to the filters page with the encoded name as a parameter
+    window.location.href = (encodedName);
+  }
+
   return (
     <section class="text-gray-600 body-font relative">
       <HomePageNavBar />
@@ -51,13 +61,13 @@ const HomePage = () => {
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
-                src={HOME}
+                src={HOMEPAGEIMG}
               />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z-10">
+              <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
                   Find everything from your location
                 </h1>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -67,10 +77,10 @@ const HomePage = () => {
           The most popular categories
         </h2>
 
-      <div class="bg-white px-40 py-6 mt-10 mb-10 flex flex-col">
+      <div class="bg-white lg:px-20 md:px-5 sm:px-0 py-6 mt-10 mb-10 flex flex-col">
         <div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
           <div
-            onClick={() => navigateTo("/OverviewPageNewsCategories")}
+            onClick={() => goToFilters('Events')}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
@@ -87,7 +97,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageConstructionTraffic")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -104,7 +114,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageEvents")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -121,7 +131,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageClub")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -138,7 +148,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageRegionalProducts")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -155,7 +165,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageOfferSearch")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -172,7 +182,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageNewcitizeninfo")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -189,7 +199,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageDefectReporter")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -207,7 +217,7 @@ const HomePage = () => {
           </div>
 
           <div
-            onClick={() => navigateTo("/ListingsPageLostPropertyOffice")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -224,7 +234,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageCompanyportaits")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -255,7 +265,7 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/ListingsPageOffers")}
+            onClick={() => navigateTo("/Events")}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -278,16 +288,16 @@ const HomePage = () => {
           Discover more places
         </h2>
 
-      <div class="bg-white px-40 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+      <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 relative mb-4 justify-center place-items-center">
             <div
             onClick={() => navigateTo("/Below")}
             class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
           >
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
               <img
                 alt="ecommerce"
-                class="object-cover object-center h-full w-full"
+                class="object-cover object-center h-full w-full  hover:scale-125 transition-all duration-500"
                 src={below}
               />
               <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
@@ -302,7 +312,7 @@ const HomePage = () => {
             onClick={() => navigateTo("/Fuchstal")}
             class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
           >
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
@@ -320,7 +330,7 @@ const HomePage = () => {
             onClick={() => navigateTo("/AppleVillage")}
             class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
           >
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
@@ -336,6 +346,66 @@ const HomePage = () => {
           </div>
           </div>
       </div>
+
+      <div className="my-4 bg-gray-200 h-[1px]"></div>
+
+      <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
+            <div
+            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
+          >
+            <div class="relative h-96 w-96 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center h-48 w-48 m-auto  hover:scale-125 transition-all duration-500"
+                src={ONEIMAGE}
+              />
+              <div class="p-6">
+                <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
+                  Create an account
+                </h2>
+                <p class="text-gray-900 title-font text-lg font-bold text-start">Create an account to be able to actively participate in city events.</p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
+          >
+            <div class="relative h-96 w-96 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500"
+                src={TWOIMAGE}
+              />
+              <div class="p-6">
+              <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
+              Get verified
+            </h2>
+            <p class="text-gray-900 title-font text-lg font-bold text-start">Verification is necessary to ensure regular quality.</p>
+            </div>
+            </div>
+          </div>
+          <div
+            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
+          >
+            <div class="relative h-96 w-96 rounded overflow-hidden">
+              <img
+                alt="ecommerce"
+                class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500"
+                src={THREEIMAGE}
+              />
+              <div class="p-6">
+                <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
+                Start
+              </h2>
+              <p class="text-gray-900 title-font text-lg font-bold text-start">Immediately afterwards you can get started and actively participate in what is happening in the city.</p>
+            </div>
+            </div>
+          </div>
+          </div>
+      </div>
+
+      <UploadContribution />
 
       <footer class="text-center lg:text-left bg-slate-800 text-white">
         <div class="mx-6 py-10 text-center md:text-left">

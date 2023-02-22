@@ -109,7 +109,7 @@ export default function Example() {
             </Popover.Button>
           </div>
 
-          <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
+          <div onClick={() => navigateTo("/OverviewPage")} className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
             <a href="#" className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-sm hover:border-cyan-500 hover:text-cyan-500">
               Register
             </a>

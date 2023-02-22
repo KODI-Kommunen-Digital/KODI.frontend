@@ -46,16 +46,16 @@ function OverviewPageNewsCategories() {
   };
 
   return (
-    <section class="text-gray-600 body-font">
+    <section class="bg-slate-600 body-font relative">
         <SideBar />
-      <div class="container w-auto px-5 py-2 bg-slate-600">
-        <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-20 justify-center">
-            <div onClick={() => navigateTo("/ListingsPageNewsflash")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+      <div class="container w-auto px-5 py-2 bg-slate-600 h-screen">
+        <div class="bg-white p-20 mt-4 mb-4 flex flex-wrap gap-20 justify-center">
+          <div onClick={() => navigateTo("/ListingsPageAlert")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
-                  src= {NEWSFLASH}
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  src={NEWSFLASH}
                 />
               </a>
               <div class="mt-4">
@@ -63,12 +63,13 @@ function OverviewPageNewsCategories() {
                   NEWSFLASH
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageAlert")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageAlert")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={ALERTS}
                 />
               </a>
@@ -77,12 +78,13 @@ function OverviewPageNewsCategories() {
                   ALERTS
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPagePolitics")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPagePolitics")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={POLITICS}
                 />
               </a>
@@ -91,12 +93,13 @@ function OverviewPageNewsCategories() {
                   POLITICS
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageEconomy")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageEconomy")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={ECONOMY}
                 />
               </a>
@@ -105,12 +108,13 @@ function OverviewPageNewsCategories() {
                   ECONOMY
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageSports")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageSports")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={SPORTS}
                 />
               </a>
@@ -119,12 +123,13 @@ function OverviewPageNewsCategories() {
                   SPORTS
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageTopicOfTheDay")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageTopicOfTheDay")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={TOPIC}
                 />
               </a>
@@ -133,12 +138,13 @@ function OverviewPageNewsCategories() {
                   TOPIC OF THE DAY
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageLocal")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageLocal")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={LOCAL}
                 />
               </a>
@@ -147,12 +153,13 @@ function OverviewPageNewsCategories() {
                   LOCAL
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
-            <div onClick={() => navigateTo("/ListingsPageClubNews")} class="lg:w-1/4 md:w-1/2 p-4 w-full shadow-2xl rounded-lg cursor-pointer">
+            <div onClick={() => navigateTo("/ListingsPageClubNews")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={CLUB}
                 />
               </a>
@@ -161,6 +168,7 @@ function OverviewPageNewsCategories() {
                   CLUB NEWS
                 </h2>
               </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
         </div>
       </div>
