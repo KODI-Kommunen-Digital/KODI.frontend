@@ -30,7 +30,7 @@ const Dashboard = () => {
   }
 
   return (
-    <section className="bg-slate-600 body-font relative h-full">
+    <section className="bg-slate-600 body-font relative">
       <SideBar/>
       <React.Fragment>
         <Navbar/>
@@ -39,7 +39,7 @@ const Dashboard = () => {
       <html class="h-full bg-gray-100" />
       <body class="h-full" />
 
-      <div class="container w-auto px-5 py-2 bg-slate-600">
+      <div class="container w-auto px-5 py-2 bg-slate-600 h-screen">
         <div class="bg-white mt-4 p-0 space-y-10">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-4 p-6 space-y-10">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

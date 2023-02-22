@@ -271,7 +271,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
             <a class="block relative h-64 rounded overflow-hidden">
                 <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
                 />
             </a>
@@ -289,7 +289,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
             <a class="block relative h-64 rounded overflow-hidden">
                 <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
                 />
             </a>
@@ -307,7 +307,7 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
             <a class="block relative h-64 rounded overflow-hidden">
                 <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
                 />
             </a>

@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../Components/HomePageNavBar";
-import { getDashboarddata } from "../Services/dashboarddata";
+import HomePageNavBar from "../../Components/HomePageNavBar";
+import LocationSelectionInput from "../../Components/LocationSelectionInput";
+import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import LocationSelectionInput from "../Components/LocationSelectionInput";
+import HomePage from '../../Path/HomePage';
 
-import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import FUCHSTALTIMELINE from "../assets/fuchstal.png";
+import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import EVENTSTIMELINEING from "../../assets/Events.png";
 import { useTranslation } from "react-i18next";
 
-const Fuchstal = () => {
+const Events = () => {
   window.scrollTo(0, 0);
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
       setDashboarddata(response);
     });
-    document.title = "fuchstal";
+    document.title = "Events-Demo";
   }, []);
 
   let navigate = useNavigate();
@@ -32,26 +33,61 @@ const Fuchstal = () => {
     });
   }
 
-  const [content, setContent] = useState('A');
+  const [content, setContent] = useState("A");
 
   const handleButtonClick = (value) => {
     setContent(value);
   };
 
-const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
+  const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
 
   const customerServiceData = () => {
     setcustomerServiceDataload(true);
-    setSelectedLink('customerService');
+    setSelectedLink("customerService");
   };
   const onCancel = () => {
     setcustomerServiceDataload(false);
-    setSelectedLink('current');
+    setSelectedLink("current");
   };
 
-  const [selectedLink, setSelectedLink] = useState('current');
+  const [selectedLink, setSelectedLink] = useState("current");
 
   const { t, i18n } = useTranslation();
+
+  const [location, setLocation] = useState("");
+
+  // Pre-select the corresponding filter option starts
+  const urlParams = new URLSearchParams(window.location.search);
+  const filterName = urlParams.get("filterName");
+
+  if (filterName) {
+    const buttonFilter = document.getElementById("button-filter");
+    buttonFilter.value = filterName;
+  }
+
+  // Pre-select the corresponding filter option ends
+
+  function handleLocationChange(event) {
+    setLocation(event.target.value);
+  }
+
+  function handleLocationSubmit(event) {
+    event.preventDefault();
+    // Do something with the location data, like pass it to a parent component
+  }
+
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(
+          `${position.coords.latitude}, ${position.coords.longitude}`
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 
   return (
     <section class="text-gray-600 body-font relative">
@@ -70,77 +106,107 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
-                src={FUCHSTALTIMELINE}
+                src={EVENTSTIMELINEING}
               />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z-10">
+              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                  Find everything from your location
+                apple village
                 </h1>
-              </div> */}
+              </div>  */}
             </div>
           </div>
         </div>
       </div>
 
       <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
-        fuchstal
+        events
       </h2>
 
-    <div className="flex mx-auto flex-wrap mb-10 justify-center">
-      <a
-        onClick={onCancel}
-        className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'current' ? 'text-blue-800' : 'text-gray-500'}`}
-      >
-        <svg
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          className="w-5 h-5 mr-3"
-          viewBox="0 0 24 24"
+      <div className="flex mx-auto flex-wrap mb-10 justify-center">
+        <a
+          onClick={onCancel}
+          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
+            selectedLink === "current" ? "text-blue-800" : "text-gray-500"
+          }`}
         >
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-        Current
-      </a>
-      <a
-        onClick={customerServiceData}
-        id="loadMoreBtn"
-        className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'customerService' ? 'text-blue-800' : 'text-gray-500'}`}
-      >
-        Citizen Services
-      </a>
-    </div>
+          <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            className="w-5 h-5 mr-3"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Current
+        </a>
+        <a
+          onClick={customerServiceData}
+          id="loadMoreBtn"
+          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
+            selectedLink === "customerService"
+              ? "text-blue-800"
+              : "text-gray-500"
+          }`}
+        >
+          Citizen Services
+        </a>
+      </div>
 
-    <div class="bg-white">
+      <div class="bg-white">
         <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
-            <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
+          <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
             3
-            <a href="https://heidi-app.de/" rel="noopener noreferrer" class="text-black ml-1" target="_blank">
-                items found
+            <a
+              href="https://heidi-app.de/"
+              rel="noopener noreferrer"
+              class="text-black ml-1"
+              target="_blank"
+            >
+              items found
             </a>
-            </p>
-            <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
-                <button type="button" class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4">
-                    <svg class="w-4 h-4 mr-2 -ml-1 text-[#626890]" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="ethereum" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
-                    </svg>
-                    Show map
-                </button>
-                <div class="w-32 sm:w-auto">
-                    <select id="country" name="country" autocomplete="country-name" class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                    <option>Sort by</option>
-                    <option>A - Z (title)</option>
-                    <option>Z - A (title)</option>
-                    <option>Recent</option>
-                    <option>Oldest</option>
-                    </select>
-                </div>
+          </p>
+          <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
+            <button
+              type="button"
+              class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4"
+            >
+              <svg
+                class="w-4 h-4 mr-2 -ml-1 text-[#626890]"
+                aria-hidden="true"
+                focusable="false"
+                data-prefix="fab"
+                data-icon="ethereum"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+              >
+                <path
+                  fill="currentColor"
+                  d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"
+                ></path>
+              </svg>
+              Show map
+            </button>
+            <div class="w-32 sm:w-auto">
+              <select
+                id="country"
+                name="country"
+                autocomplete="country-name"
+                class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              >
+                <option>Sort by</option>
+                <option>A - Z (title)</option>
+                <option>Z - A (title)</option>
+                <option>Recent</option>
+                <option>Oldest</option>
+              </select>
             </div>
+          </div>
         </div>
-    </div>
-
+      </div>
 
       <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
         <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -150,10 +216,6 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
             </h1>
             <form class="space-y-4 md:space-y-6" action="#">
               <div>
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                ></label>
                 <input
                   type="email"
                   name="email"
@@ -163,8 +225,10 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                   required=""
                 />
               </div>
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-            <label for="floatingInput" class="text-gray-700 font-bold">Place</label>
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="floatingInput" class="text-gray-700 font-bold">
+                  Place
+                </label>
                 <select
                   id="country"
                   name="country"
@@ -173,53 +237,88 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
                 >
                   <option>Choose a place</option>
                   <option>apple village</option>
-                  <option>fuchstal</option>
+                  <option>Fuchstal</option>
                   <option>below</option>
                 </select>
-            </div>
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold">Current location</label>
-                <LocationSelectionInput />
-            </div>
-            {customerServiceDataload && (
-              <>
-              <div class="flex justify-center">
-                  <div class="timepicker relative form-floating mb-3 xl:w-96">
-                  <label for="floatingInput" class="text-gray-700 font-bold">Time</label>
-                      <input type="text"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select a time" />
-                  </div>
               </div>
-              {/* <div class="flex justify-center">
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="floatingInput" class="text-gray-700 font-bold">
+                  Category
+                </label>
+                <select
+                  id="button-filter"
+                  name="country"
+                  autocomplete="country-name"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="Default">Choose one category</option>
+                  <option value="News">News</option>
+                  <option value="Road Works / Traffic">
+                    Road Works / Traffic
+                  </option>
+                  <option value="Events">Events</option>
+                  <option value="Clubs">Clubs</option>
+                  <option value="Regional Products">Regional Products</option>
+                  <option value="Offer / Search">Offer / Search</option>
+                  <option value="New Citizen Info">New Citizen Info</option>
+                  <option value="Direct Report">Direct Report</option>
+                  <option value="Lost And Found">Lost And Found</option>
+                  <option value="Company Portraits">Company Portraits</option>
+                  <option value="Carpooling And Public Transport">
+                    Carpooling And Public Transport
+                  </option>
+                  <option value="Offers">Offers</option>
+                </select>
+              </div>
+
+              {customerServiceDataload && (
+                <>
+                  <div>
+                    <label for="floatingInput" class="text-gray-700 font-bold">
+                      Time
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Select Time..."
+                      required=""
+                    />
+                  </div>
+                  {/* <div class="flex justify-center">
                   <div class="timepicker relative form-floating mb-3 xl:w-96">
                     <TimePicker />
                   </div>
               </div> */}
-              <div>
-                <label for="floatingInput" class="text-gray-700 font-bold">Phone Number</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Enter your phone number..."
-                    required=""
-                  />
-                </div>
-                <div>
-                  <label for="floatingInput" class="text-gray-700 font-bold">Review</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Write your review..."
-                    required=""
-                  />
-                </div>
+                  <div>
+                    <label for="floatingInput" class="text-gray-700 font-bold">
+                      Phone Number
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Enter your phone number..."
+                      required=""
+                    />
+                  </div>
+                  <div>
+                    <label for="floatingInput" class="text-gray-700 font-bold">
+                      Review
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Write your review..."
+                      required=""
+                    />
+                  </div>
                 </>
-            )}
+              )}
             </form>
           </div>
           <div class="mb-4 ml-7">
@@ -243,60 +342,60 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
         </div>
 
         {/* <div class="flex flex-nowrap gap-10"> */}
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                 fuchstal-1
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                fuchstal-2
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
-            <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-            >
-            <a class="block relative h-64 rounded overflow-hidden">
-                <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-                />
-            </a>
-            <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                fuchstal-3
-                </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-            </div>
+        <div
+          onClick={() => navigateTo("/Example1")}
+          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+        >
+          <a class="block relative h-64 rounded overflow-hidden">
+            <img
+              alt="ecommerce"
+              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+              src={HOMEPAGEIMG}
+            />
+          </a>
+          <div class="mt-10">
+            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+              event-1
+            </h2>
+          </div>
+          <div className="my-4 bg-gray-200 h-[1px]"></div>
+        </div>
+        <div
+          onClick={() => navigateTo("/Example1")}
+          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+        >
+          <a class="block relative h-64 rounded overflow-hidden">
+            <img
+              alt="ecommerce"
+              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+              src={HOMEPAGEIMG}
+            />
+          </a>
+          <div class="mt-10">
+            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+              event-2
+            </h2>
+          </div>
+          <div className="my-4 bg-gray-200 h-[1px]"></div>
+        </div>
+        <div
+          onClick={() => navigateTo("/Example1")}
+          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+        >
+          <a class="block relative h-64 rounded overflow-hidden">
+            <img
+              alt="ecommerce"
+              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+              src={HOMEPAGEIMG}
+            />
+          </a>
+          <div class="mt-10">
+            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
+              event-3
+            </h2>
+          </div>
+          <div className="my-4 bg-gray-200 h-[1px]"></div>
+        </div>
         {/* </div> */}
       </div>
 
@@ -470,4 +569,4 @@ const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
   );
 };
 
-export default Fuchstal;
+export default Events;

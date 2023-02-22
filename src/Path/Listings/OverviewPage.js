@@ -38,7 +38,7 @@ function OverviewPage() {
   };
 
   return (
-    <section class="text-gray-600 body-font">
+    <section class="bg-slate-600 body-font relative">
         <SideBar />
         <div class="container px-5 py-2 bg-slate-600 flex flex-col h-screen">
             <div class="bg-white mt-4 mb-4 p-6 space-y-10 flex flex-col h-screen">

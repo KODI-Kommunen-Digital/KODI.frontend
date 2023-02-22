@@ -7,7 +7,7 @@ import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
 
 const Example1 = () => {
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
@@ -253,7 +253,7 @@ const Example1 = () => {
             <a class="block relative h-64 rounded overflow-hidden">
               <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
               />
             </a>
@@ -271,7 +271,7 @@ const Example1 = () => {
             <a class="block relative h-64 rounded overflow-hidden">
               <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
               />
             </a>
@@ -289,7 +289,7 @@ const Example1 = () => {
             <a class="block relative h-64 rounded overflow-hidden">
               <img
                 alt="ecommerce"
-                class="object-cover object-center w-full h-full block"
+                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                 src={HOMEPAGEIMG}
               />
             </a>
