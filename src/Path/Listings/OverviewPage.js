@@ -40,13 +40,13 @@ function OverviewPage() {
   return (
     <section class="bg-slate-600 body-font relative">
         <SideBar />
-        <div class="container px-5 py-2 bg-slate-600 flex flex-col h-screen">
-            <div class="bg-white mt-4 mb-4 p-6 space-y-10 flex flex-col h-screen">
+        <div class="container px-5 py-2 lg:w-[75rem] bg-slate-600 flex flex-col h-screen">
+            <div class="bg-white mt-4 mb-4 p-6 space-y-10 flex flex-col">
                 <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
                     Please select the entry type:
                     <div className="my-4 bg-gray-600 h-[1px]"></div>
                 </h2>
-                <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
+                <div class="bg-white p-5 mt-4 mb-4 flex flex-wrap gap-20 justify-center">
                     <div onClick={() => navigateTo("/OverviewPageNewsCategories")} class="p-4 justify-center bg-white h-40 w-48 shadow-2xl rounded-lg mt-10 cursor-pointer">
                         <div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-8 w-40 mr-2">

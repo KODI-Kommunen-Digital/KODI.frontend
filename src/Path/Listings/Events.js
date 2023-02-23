@@ -125,7 +125,7 @@ const Events = () => {
       <div className="flex mx-auto flex-wrap mb-10 justify-center">
         <a
           onClick={onCancel}
-          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
+          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start title-font font-bold inline-flex items-center leading-none tracking-wider rounded-t ${
             selectedLink === "current" ? "text-blue-800" : "text-gray-500"
           }`}
         >
@@ -142,7 +142,8 @@ const Events = () => {
           </svg>
           Current
         </a>
-        <a
+        {/* ----- removed for the time ------ */}
+        {/* <a
           onClick={customerServiceData}
           id="loadMoreBtn"
           className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
@@ -152,8 +153,9 @@ const Events = () => {
           }`}
         >
           Citizen Services
-        </a>
+        </a> */}
       </div>
+      <div className="my-0 bg-gray-300 h-[1px]"></div>
 
       <div class="bg-white">
         <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
@@ -169,7 +171,9 @@ const Events = () => {
             </a>
           </p>
           <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
-            <button
+
+            {/* ----- removed for the time ------ */}
+            {/* <button
               type="button"
               class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4"
             >
@@ -189,7 +193,7 @@ const Events = () => {
                 ></path>
               </svg>
               Show map
-            </button>
+            </button> */}
             <div class="w-32 sm:w-auto">
               <select
                 id="country"
@@ -209,22 +213,22 @@ const Events = () => {
       </div>
 
       <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div class="p-6 space-y-0 md:space-y-6 sm:p-8">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <div class="w-full h-[30rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:white dark:white">
+          <div class="p-6 space-y-10 md:space-y-6 sm:p-8">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
               Filter your result
             </h1>
             <form class="space-y-4 md:space-y-6" action="#">
-              <div>
+              {/* <div>
                 <input
                   type="email"
                   name="email"
                   id="email"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search keyword..."
                   required=""
                 />
-              </div>
+              </div> */}
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="floatingInput" class="text-gray-700 font-bold">
                   Place
@@ -233,7 +237,7 @@ const Events = () => {
                   id="country"
                   name="country"
                   autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option>Choose a place</option>
                   <option>apple village</option>
@@ -249,7 +253,7 @@ const Events = () => {
                   id="button-filter"
                   name="country"
                   autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option value="Default">Choose one category</option>
                   <option value="News">News</option>
@@ -321,19 +325,19 @@ const Events = () => {
               )}
             </form>
           </div>
-          <div class="mb-4 ml-7">
+          <div class="mb-4 ml-7 mr-7">
             <button
               type="submit"
-              class="group relative flex w-96 justify-center rounded-md border border-transparent bg-blue-800 py-2 px-4 text-sm font-medium text-white hover:bg-cyan-500"
+              class="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-800 py-2 px-4 text-sm font-medium text-white hover:bg-cyan-500"
             >
               <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
               Apply Filter
             </button>
           </div>
-          <div class="mb-4 ml-7">
+          <div class="mb-4 ml-7 mr-7">
             <button
               type="submit"
-              class="group relative flex w-96 justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium  hover:text-cyan-500"
+              class="group relative flex w-full justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium  hover:text-cyan-500"
             >
               <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
               Remove Filter
@@ -341,10 +345,10 @@ const Events = () => {
           </div>
         </div>
 
-        {/* <div class="flex flex-nowrap gap-10"> */}
+      <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
         <div
           onClick={() => navigateTo("/Example1")}
-          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
         >
           <a class="block relative h-64 rounded overflow-hidden">
             <img
@@ -362,7 +366,7 @@ const Events = () => {
         </div>
         <div
           onClick={() => navigateTo("/Example1")}
-          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
         >
           <a class="block relative h-64 rounded overflow-hidden">
             <img
@@ -380,7 +384,7 @@ const Events = () => {
         </div>
         <div
           onClick={() => navigateTo("/Example1")}
-          class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+          class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
         >
           <a class="block relative h-64 rounded overflow-hidden">
             <img
@@ -396,7 +400,7 @@ const Events = () => {
           </div>
           <div className="my-4 bg-gray-200 h-[1px]"></div>
         </div>
-        {/* </div> */}
+      </div>
       </div>
 
       <footer class="text-center lg:text-left bg-slate-800 text-white mt-10">

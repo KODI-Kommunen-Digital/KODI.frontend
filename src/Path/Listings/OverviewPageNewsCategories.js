@@ -50,7 +50,7 @@ function OverviewPageNewsCategories() {
         <SideBar />
       <div class="container w-auto px-5 py-2 bg-slate-600 h-screen">
         <div class="bg-white p-20 mt-4 mb-4 flex flex-wrap gap-20 justify-center">
-          <div onClick={() => navigateTo("/ListingsPageAlert")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
+          <div onClick={() => navigateTo("/ListingsPageNewsflash")} class="lg:w-64 md:w-1/2 h-80 pb-20 w-full shadow-2xl rounded-lg cursor-pointer">
               <a class="block relative h-48 rounded overflow-hidden">
                 <img
                   alt="ecommerce"

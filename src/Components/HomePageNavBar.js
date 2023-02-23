@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import {
   ArrowPathIcon,
@@ -17,6 +17,7 @@ import {
 
 import LOGO from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+
 
 // const solutions = [
 //   {
@@ -80,7 +81,6 @@ import { useNavigate } from "react-router-dom";
 //   return classes.filter(Boolean).join(' ')
 // }
 
-
 export default function Example() {
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -88,6 +88,17 @@ export default function Example() {
       navigate(path);
     }
   };
+
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+// const login = () => {
+//   setIsLoggedIn(true);
+// }
+
+useEffect(() => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  setIsLoggedIn(!!isLoggedIn); // Convert string to boolean
+}, []);
 
   return (
     <div class="w-full fixed top-0 z-10">
@@ -109,11 +120,12 @@ export default function Example() {
             </Popover.Button>
           </div>
 
-          <div onClick={() => navigateTo("/OverviewPage")} className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
-            <a href="#" className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-sm hover:border-cyan-500 hover:text-cyan-500">
+          <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
+            <a onClick={() => navigateTo("/Register")} href="#" className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-sm hover:border-cyan-500 hover:text-cyan-500">
               Register
             </a>
             <a
+              onClick={() => isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")}
               href="#"
               className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-sm hover:bg-cyan-500"
             >

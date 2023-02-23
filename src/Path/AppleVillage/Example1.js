@@ -78,9 +78,9 @@ const Example1 = () => {
     <section class="text-gray-600 bg-white body-font">
       <HomePageNavBar />
 
-      <div class="mx-auto grid max-w-2xl grid-cols-1  gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
-        <div className="grid grid-cols-1 gap-4">
-          <div class="lg:w-full md:w-1/2 h-64">
+      <div class="mx-auto grid max-w-2xl grid-cols-1  gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
+        <div className="grid grid-cols-1 gap-4 col-span-2 ">
+          <div class="lg:w-full md:w-full h-64">
             <div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-2xl w-full">
               <div class="mt-5 md:col-span-2 md:mt-0">
                 <form action="#" method="POST">
@@ -158,7 +158,7 @@ const Example1 = () => {
               </div>
             </div>
           </div>
-          <div class="container-fluid lg:w-full md:w-1/2">
+          <div class="container-fluid lg:w-full md:w-full ">
             <div class=" mr-0 ml-0 mt-4">
               <div class="h-96 overflow-hidden px-0 py-0 shadow-2xl">
                 <div class="relative h-96">
@@ -173,9 +173,9 @@ const Example1 = () => {
           </div>
         </div>
 
-        <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 shadow-2xl">
+        <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
           <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-            <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
               Add owner info
             </h1>
           </div>
@@ -191,10 +191,10 @@ const Example1 = () => {
               />
             </div>
             <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-              <h2 class="text-gray-900 text-lg title-font mb-2 font-bold">
+              <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
                 Christian Bale
               </h2>
-              <p class="leading-relaxed text-base">Uploaded 5 months ago.</p>
+              <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
             </div>
           </div>
 
@@ -222,9 +222,9 @@ const Example1 = () => {
           <div class="flex justify-center my-4">
             <button
               type="submit"
-              class="group relative flex w-72 md:w-96 justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium hover:text-cyan-500"
+              class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm hover:text-cyan-500"
             >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 font-bold"></span>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
               View profiles
             </button>
           </div>
@@ -248,7 +248,7 @@ const Example1 = () => {
         <div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img
@@ -266,7 +266,7 @@ const Example1 = () => {
           </div>
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img
@@ -284,7 +284,7 @@ const Example1 = () => {
           </div>
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-1/2 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img

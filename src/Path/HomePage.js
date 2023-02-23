@@ -288,78 +288,52 @@ const HomePage = () => {
           Discover more places
         </h2>
 
-      <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-          <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 relative mb-4 justify-center place-items-center">
-            <div
-            onClick={() => navigateTo("/Below")}
-            class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
-          >
-            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-full w-full  hover:scale-125 transition-all duration-500"
-                src={below}
-              />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                <h1 class="text-3xl font-bold mb-0 ml-4">
-                  below
-                </h1>
-                <p class="mb-4 ml-4">entries</p>
+        <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+            <div onClick={() => navigateTo("/Below")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+                <img alt="ecommerce" class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500" src={below} />
+                <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+                  <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4">
+                    below
+                  </h1>
+                  <p class="mb-4 ml-4">entries</p>
+                </div>
+              </div>
+            </div>
+            <div onClick={() => navigateTo("/Fuchstal")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+                <img alt="ecommerce" class="object-cover object-center h-full w-full" src={fuchstal} />
+                <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+                  <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4 overflow-hidden">
+                    fuchstal
+                  </h1>
+                  <p class="mb-4 ml-4">entries</p>
+                </div>
+              </div>
+            </div>
+            <div onClick={() => navigateTo("/AppleVillage")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+                <img alt="ecommerce" class="object-cover object-center h-full w-full" src={applevillage} />
+                <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+                  <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4">
+                    apple village
+                  </h1>
+                  <p class="mb-4 ml-4">entries</p>
+                </div>
               </div>
             </div>
           </div>
-          <div
-            onClick={() => navigateTo("/Fuchstal")}
-            class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
-          >
-            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-full w-full"
-                src={fuchstal}
-              />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                <h1 class="text-3xl font-bold mb-0 ml-4 overflow-hidden">
-                  fuchstal
-                </h1>
-                <p class="mb-4 ml-4">entries</p>
-              </div>
-            </div>
-          </div>
-          <div
-            onClick={() => navigateTo("/AppleVillage")}
-            class="h-96 w-96 mb-4 shadow-xl rounded-lg cursor-pointer"
-          >
-            <div class="relative h-96 w-96 rounded overflow-hidden hover:scale-110 transition-all duration-500">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-full w-full"
-                src={applevillage}
-              />
-              <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                <h1 class="text-3xl font-bold mb-0 ml-4">
-                  apple village
-                </h1>
-                <p class="mb-4 ml-4">entries</p>
-              </div>
-            </div>
-          </div>
-          </div>
-      </div>
+        </div>
+
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
       <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-          <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-            <div
-            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
-          >
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
+          <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
             <div class="relative h-96 w-96 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-48 w-48 m-auto  hover:scale-125 transition-all duration-500"
-                src={ONEIMAGE}
-              />
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto  hover:scale-125 transition-all duration-500" src={ONEIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
                   Create an account
@@ -368,42 +342,31 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div
-            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
-          >
+          <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
             <div class="relative h-96 w-96 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500"
-                src={TWOIMAGE}
-              />
-              <div class="p-6">
-              <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
-              Get verified
-            </h2>
-            <p class="text-gray-900 title-font text-lg font-bold text-start">Verification is necessary to ensure regular quality.</p>
-            </div>
-            </div>
-          </div>
-          <div
-            class="h-full w-96 mb-4 bg-gray-100 rounded-lg cursor-pointer"
-          >
-            <div class="relative h-96 w-96 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500"
-                src={THREEIMAGE}
-              />
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={TWOIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
-                Start
-              </h2>
-              <p class="text-gray-900 title-font text-lg font-bold text-start">Immediately afterwards you can get started and actively participate in what is happening in the city.</p>
-            </div>
+                  Get verified
+                </h2>
+                <p class="text-gray-900 title-font text-lg font-bold text-start">Verification is necessary to ensure regular quality.</p>
+              </div>
             </div>
           </div>
+          <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+            <div class="relative h-96 w-96 rounded overflow-hidden">
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={THREEIMAGE} />
+              <div class="p-6">
+                <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold">
+                  Start
+                </h2>
+                <p class="text-gray-900 title-font text-lg font-bold text-start">Immediately afterwards you can get started and actively participate in what is happening in the city.</p>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
+
 
       <UploadContribution />
 
