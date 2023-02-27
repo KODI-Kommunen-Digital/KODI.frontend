@@ -14,6 +14,7 @@ import AppleVillage from './Path/AppleVillage';
 
 import Example1 from './Path/AppleVillage/Example1';
 import Events from './Path/Listings/Events';
+import ViewProfile from './Path/AppleVillage/ViewProfile';
 
 import OverviewPage from './Path/Listings/OverviewPage';
 import OverviewPageNewsCategories from './Path/Listings/OverviewPageNewsCategories';
@@ -65,6 +66,7 @@ const App =()=>{
 
           <Route path="/Example1" element={<Example1 />}/>
           <Route path="/Events" element={<Events />}/>
+          <Route path="/ViewProfile" element={<ViewProfile />}/>
 
             <Route path="/Dashboard" element={<Dashboard />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>
