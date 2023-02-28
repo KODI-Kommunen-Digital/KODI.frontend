@@ -158,7 +158,7 @@ const Example1 = () => {
               </div>
             </div>
           </div>
-          <div class="container-fluid lg:w-full md:w-full ">
+          <div class="container-fluid lg:w-full md:w-full">
             <div class=" mr-0 ml-0 mt-4">
               <div class="h-96 overflow-hidden px-0 py-0 shadow-2xl">
                 <div class="relative h-96">
@@ -173,60 +173,63 @@ const Example1 = () => {
           </div>
         </div>
 
-        <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
-          <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-            <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-              Add owner info
-            </h1>
-          </div>
-          <div class="my-4 bg-gray-200 h-[1px]"></div>
-
-          <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-            <div class="flex justify-center sm:justify-start">
-              <img
-                class="h-6 w-auto"
-                src={LOGO}
-                alt="HEDI- Heimat Digital"
-                onClick={() => navigateTo("/HomePage")}
-              />
+          <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
+          <div class="lg:w-full md:w-full">
+            <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
+              <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+                Add owner info
+              </h1>
             </div>
-            <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-              <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
-                Christian Bale
-              </h2>
-              <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
-            </div>
-          </div>
+            <div class="my-4 bg-gray-200 h-[1px]"></div>
 
-          <div class="flex justify-center py-2 px-2 sm:justify-start mx-4 my-10 gap-4">
-            <button
-              type="button"
-              data-te-ripple-init
-              data-te-ripple-color="light"
-              class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="currentColor"
-                viewBox="0 0 24 24"
+            <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
+              <div class="flex justify-center sm:justify-start">
+                <img
+                  class="h-6 w-auto"
+                  src={LOGO}
+                  alt="HEDI- Heimat Digital"
+                  onClick={() => navigateTo("/HomePage")}
+                />
+              </div>
+              <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+                <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
+                  Christian Bale
+                </h2>
+                <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
+              </div>
+            </div>
+
+            <div class="flex justify-center py-2 px-2 sm:justify-start mx-4 my-10 gap-4">
+              <button
+                type="button"
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-600"
               >
-                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-              </svg>
-            </button>
-            {/* <p class="leading-relaxed text-base font-bold">
-              Check out social media
-            </p> */}
-          </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </button>
+              {/* <p class="leading-relaxed text-base font-bold">
+                Check out social media
+              </p> */}
+            </div>
 
-          <div class="flex justify-center my-4">
-            <button
-              type="submit"
-              class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm hover:text-cyan-500"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              View profiles
-            </button>
+            <div class="flex justify-center my-4">
+              <button
+                onClick={() => navigateTo("/ViewProfile")}
+                type="submit"
+                class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm hover:text-cyan-500"
+              >
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                View profiles
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -248,7 +251,7 @@ const Example1 = () => {
         <div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img
@@ -266,7 +269,7 @@ const Example1 = () => {
           </div>
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img
@@ -284,7 +287,7 @@ const Example1 = () => {
           </div>
           <div
             onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
+            class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
           >
             <a class="block relative h-64 rounded overflow-hidden">
               <img
