@@ -1,4 +1,4 @@
-var baseUrl = "www.someapi.com"
+//var baseUrl = "www.someapi.com"
 var profileObj = {
     id: 1,
     firstName: "Max",
