@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import LocationSelectionInput from "../Components/LocationSelectionInput";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import BELOWTIMELINEING from "../assets/below.png";
 import { useTranslation } from "react-i18next";
 
 const Below = () => {
@@ -217,11 +215,22 @@ const Below = () => {
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option>Choose a category</option>
-                  <option>construction sites / traffic</option>
-                  <option>I am looking / I am offering</option>
-                  <option>Car pool / public transport</option>
-                  <option>News</option>
-                  <option>Warning Messages</option>
+                  <option value="News">News</option>
+                  <option value="Road Works / Traffic">
+                    Road Works / Traffic
+                  </option>
+                  <option value="Events">Events</option>
+                  <option value="Clubs">Clubs</option>
+                  <option value="Regional Products">Regional Products</option>
+                  <option value="Offer / Search">Offer / Search</option>
+                  <option value="New Citizen Info">New Citizen Info</option>
+                  <option value="Direct Report">Direct Report</option>
+                  <option value="Lost And Found">Lost And Found</option>
+                  <option value="Company Portraits">Company Portraits</option>
+                  <option value="Carpooling And Public Transport">
+                    Carpooling And Public Transport
+                  </option>
+                  <option value="Offers">Offers</option>
                 </select>
               </div>
               {customerServiceDataload && (

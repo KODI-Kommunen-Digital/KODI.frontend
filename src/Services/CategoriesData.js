@@ -1,57 +1,50 @@
 //var baseUrl = "www.someapi.com"
 var categoriesObj = {
 
-    "categoriesListings": [
+    "categories": [
+        "News",
+        "Road Works / Traffic",
+        "Events",
+        "Clubs",
+        "Regional Products",
+        "Offer / Search",
+        "New Citizen Info",
+        "Direct Report",
+        "Lost And Found",
+        "Company Portraits",
+        "Carpooling And Public Transport",
+        "Offers"
+     ],
+     "listings":[
         {
-            id: 1,
-            category: "News"
+            "title":"tile1",
+            "date": "2010-05-21"
         },
         {
-            id: 2,
-            ategory: "Road Works / Traffic"
+            "title":"tile2",
+            "date": "2017-10-20"
         },
         {
-            id: 3,
-            ategory: "Events"
+            "title":"tile3",
+            "date": "2017-07-19"
         },
         {
-            id: 4,
-            ategory: "Clubs"
+            "title":"tile4",
+            "date": "2010-02-05"
         },
         {
-            id: 5,
-            ategory: "Regional Products"
+            "title":"tile5",
+            "date": "2010-01-13"
         },
         {
-            id: 6,
-            ategory: "Offer / Search"
+            "title":"tile6",
+            "date": "2013-09-30"
         },
         {
-            id: 7,
-            ategory: "New Citizen Info"
-        },
-        {
-            id: 8,
-            ategory: "Direct Report"
-        },
-        {
-            id: 9,
-            ategory: "Lost And Found"
-        },
-        {
-            id: 10,
-            ategory: "Company Portraits"
-        },
-        {
-            id: 11,
-            ategory: "Carpooling And Public Transport"
-        },
-        {
-            id: 12,
-            ategory: "Offers"
+            "title":"tile7",
+            "date": "2011-01-20"
         }
-
-    ]
+     ]
 };
 
 export async function getCategoriesdata() {

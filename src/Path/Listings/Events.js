@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import LocationSelectionInput from "../../Components/LocationSelectionInput";
 import { getCategoriesdata } from "../../Services/CategoriesData";
 import { useNavigate } from "react-router-dom";
-import HomePage from '../../Path/HomePage';
-import { XIcon } from "@heroicons/react/outline";
 
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import EVENTSTIMELINEING from "../../assets/Events.png";
 import { useTranslation } from "react-i18next";
 
 const Events = () => {
   //window.scrollTo(0, 0);
+
+  //populate the events titles starts
   const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
   useEffect(() => {
     getCategoriesdata().then((response) => {
@@ -19,6 +17,8 @@ const Events = () => {
     });
     document.title = "Events";
   }, []);
+
+  //populate the events titles Ends
 
   // Selected Items Deletion Starts
   const selectedItem = localStorage.getItem('selectedItem');
@@ -349,6 +349,7 @@ const Events = () => {
         </div>
 
       <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+      {categoriesdata.listings.map((listing) => (
         <div
           onClick={() => navigateTo("/Example1")}
           class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
@@ -362,65 +363,12 @@ const Events = () => {
           </a>
           <div class="mt-10">
             <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-              event-1
+            {listing.title}
             </h2>
           </div>
           <div className="my-4 bg-gray-200 h-[1px]"></div>
         </div>
-        <div
-          onClick={() => navigateTo("/Example1")}
-          class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-        >
-          <a class="block relative h-64 rounded overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-              src={HOMEPAGEIMG}
-            />
-          </a>
-          <div class="mt-10">
-            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-              event-2
-            </h2>
-          </div>
-          <div className="my-4 bg-gray-200 h-[1px]"></div>
-        </div>
-        <div
-          onClick={() => navigateTo("/Example1")}
-          class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-        >
-          <a class="block relative h-64 rounded overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-              src={HOMEPAGEIMG}
-            />
-          </a>
-          <div class="mt-10">
-            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-              event-3
-            </h2>
-          </div>
-          <div className="my-4 bg-gray-200 h-[1px]"></div>
-        </div>
-        <div
-          onClick={() => navigateTo("/Example1")}
-          class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-        >
-          <a class="block relative h-64 rounded overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-              src={HOMEPAGEIMG}
-            />
-          </a>
-          <div class="mt-10">
-            <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-              event-4
-            </h2>
-          </div>
-          <div className="my-4 bg-gray-200 h-[1px]"></div>
-        </div>
+        ))}
       </div>
       </div>
 
