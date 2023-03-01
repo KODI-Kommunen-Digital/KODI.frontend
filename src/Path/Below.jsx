@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import LocationSelectionInput from "../Components/LocationSelectionInput";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import BELOWTIMELINEING from "../assets/below.png";
 import { useTranslation } from "react-i18next";
 
 const Below = () => {
@@ -23,6 +21,10 @@ const Below = () => {
       navigate(path);
     }
   };
+
+  // Selected Items Deletion Starts
+  const selectedItemLocation = localStorage.getItem('selectedItemLocation');
+  // Selected Items Deletion Ends
 
   function handleDashboardChange(event) {
     setDashboarddata({
@@ -69,19 +71,19 @@ const Below = () => {
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
-                src={BELOWTIMELINEING}
+                src={HOMEPAGEIMG}
               />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z-10">
+              <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                  Find everything from your location
+                {selectedItemLocation}
                 </h1>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
+      {/* <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
         below
       </h2>
 
@@ -112,10 +114,10 @@ const Below = () => {
         className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'customerService' ? 'text-blue-800' : 'text-gray-500'}`}
       >
         Citizen Services
-      </a> */}
-      </div>
+      </a>
+      </div> */}
 
-      <div className="my-0 bg-gray-300 h-[1px]"></div>
+      {/* <div className="my-0 bg-gray-300 h-[1px]"></div> */}
 
       <div class="bg-white">
         <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
@@ -140,7 +142,7 @@ const Below = () => {
                 </button>
             </div>*/}
 
-          <div class="w-full sm:w-auto">
+          <div class="w-full sm:w-auto sm:mr-20">
             <select
               id="country"
               name="country"
@@ -182,7 +184,25 @@ const Below = () => {
                 <label for="floatingInput" class="text-gray-700 font-bold">
                   Location
                 </label>
-                <LocationSelectionInput />
+                <select
+                  id="button-filter"
+                  name="country"
+                  autocomplete="country-name"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option value="Default">{selectedItemLocation}</option>
+                  {selectedItemLocation !== "Below" ? (
+                    <option value="Below">Below</option>
+                  ) : null}
+                  {selectedItemLocation !== "Fuchstal" ? (
+                    <option value="Fuchstal">Fuchstal</option>
+                  ) : null}
+                  {selectedItemLocation !== "Apple village" ? (
+                    <option value="Apple village">
+                    Apple village
+                  </option>
+                  ) : null}
+                </select>
               </div>
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="floatingInput" class="text-gray-700 font-bold">
@@ -195,11 +215,22 @@ const Below = () => {
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option>Choose a category</option>
-                  <option>construction sites / traffic</option>
-                  <option>I am looking / I am offering</option>
-                  <option>Car pool / public transport</option>
-                  <option>News</option>
-                  <option>Warning Messages</option>
+                  <option value="News">News</option>
+                  <option value="Road Works / Traffic">
+                    Road Works / Traffic
+                  </option>
+                  <option value="Events">Events</option>
+                  <option value="Clubs">Clubs</option>
+                  <option value="Regional Products">Regional Products</option>
+                  <option value="Offer / Search">Offer / Search</option>
+                  <option value="New Citizen Info">New Citizen Info</option>
+                  <option value="Direct Report">Direct Report</option>
+                  <option value="Lost And Found">Lost And Found</option>
+                  <option value="Company Portraits">Company Portraits</option>
+                  <option value="Carpooling And Public Transport">
+                    Carpooling And Public Transport
+                  </option>
+                  <option value="Offers">Offers</option>
                 </select>
               </div>
               {customerServiceDataload && (

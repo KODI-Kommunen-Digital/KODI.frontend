@@ -40,8 +40,8 @@ function OverviewPage() {
   return (
     <section class="bg-slate-600 body-font relative">
         <SideBar />
-        <div class="container px-5 py-2 lg:w-[75rem] bg-slate-600 flex flex-col h-screen">
-            <div class="bg-white mt-4 mb-4 p-6 space-y-10 flex flex-col">
+        <div class="container w-auto px-5 py-2 bg-slate-600">
+        <div class="bg-white mt-4 p-6 space-y-10">
                 <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
                     Please select the entry type:
                     <div className="my-4 bg-gray-600 h-[1px]"></div>

@@ -78,7 +78,8 @@ const Example1 = () => {
     <section class="text-gray-600 bg-white body-font">
       <HomePageNavBar />
 
-      <div class="mx-auto grid max-w-2xl grid-cols-1  gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
+      <div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8 justify-center text-center">
+
         <div className="grid grid-cols-1 gap-4 col-span-2 ">
           <div class="lg:w-full md:w-full h-64">
             <div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-2xl w-full">
@@ -92,7 +93,7 @@ const Example1 = () => {
                       Meanwhile example 1
                     </h1>
                     <div class="flex items-center">
-                      <button
+                    <button
                         type="button"
                         class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-1 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
                       >
@@ -106,7 +107,7 @@ const Example1 = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 320 512"
                         >
-                          <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+                          <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
                         </svg>
                         Sprachern
                       </button>
@@ -153,7 +154,7 @@ const Example1 = () => {
                       <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                     </svg>
                   </div>
-                  <p>Regional Products</p>
+                  <p class="text-start">Regional Products</p>
                 </form>
               </div>
             </div>
@@ -173,65 +174,65 @@ const Example1 = () => {
           </div>
         </div>
 
-          <div class="w-full h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
-          <div class="lg:w-full md:w-full">
-            <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-              <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-                Add owner info
-              </h1>
-            </div>
-            <div class="my-4 bg-gray-200 h-[1px]"></div>
-
-            <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-              <div class="flex justify-center sm:justify-start">
-                <img
-                  class="h-6 w-auto"
-                  src={LOGO}
-                  alt="HEDI- Heimat Digital"
-                  onClick={() => navigateTo("/HomePage")}
-                />
+          <div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
+            <div >
+              <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
+                <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+                  Add owner info
+                </h1>
               </div>
-              <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-                <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
-                  Christian Bale
-                </h2>
-                <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
-              </div>
-            </div>
+              <div class="my-4 bg-gray-200 h-[1px]"></div>
 
-            <div class="flex justify-center py-2 px-2 sm:justify-start mx-4 my-10 gap-4">
-              <button
-                type="button"
-                data-te-ripple-init
-                data-te-ripple-color="light"
-                class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-600"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+              <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
+                <div class="flex justify-center sm:justify-start">
+                  <img
+                    class="h-6 w-auto"
+                    src={LOGO}
+                    alt="HEDI- Heimat Digital"
+                    onClick={() => navigateTo("/HomePage")}
+                  />
+                </div>
+                <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+                  <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
+                    Christian Bale
+                  </h2>
+                  <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-center py-2 px-2 sm:justify-start mx-4 my-10 gap-4">
+                <button
+                  type="button"
+                  data-te-ripple-init
+                  data-te-ripple-color="light"
+                  class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-600"
                 >
-                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                </svg>
-              </button>
-              {/* <p class="leading-relaxed text-base font-bold">
-                Check out social media
-              </p> */}
-            </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                  </svg>
+                </button>
+                {/* <p class="leading-relaxed text-base font-bold">
+                  Check out social media
+                </p> */}
+              </div>
 
-            <div class="flex justify-center my-4">
-              <button
-                onClick={() => navigateTo("/ViewProfile")}
-                type="submit"
-                class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm hover:text-cyan-500"
-              >
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                View profiles
-              </button>
+              <div class="flex justify-center my-4">
+                <button
+                  onClick={() => navigateTo("/ViewProfile")}
+                  type="submit"
+                  class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm hover:text-cyan-500"
+                >
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                  View profiles
+                </button>
+              </div>
             </div>
           </div>
-        </div>
       </div>
 
       <div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">

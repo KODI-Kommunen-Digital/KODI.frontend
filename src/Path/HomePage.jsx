@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
-import { getDashboarddata } from "../Services/dashboarddata";
+import { getCategoriesdata } from "../Services/CategoriesData";
 import { useNavigate } from "react-router-dom";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -14,13 +14,29 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
   //window.scrollTo(0, 0);
-  const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+
+  // Data Population Starts
+  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
   useEffect(() => {
-    getDashboarddata().then((response) => {
-      setDashboarddata(response);
+    getCategoriesdata().then((response) => {
+      setCategoriesdata(response);
     });
-    document.title = "Home";
+    document.title = "Events";
   }, []);
+
+  function handleCategoriesChange(event) {
+    setCategoriesdata({
+      ...categoriesdata,
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  const [categoryName, setCategoryName] = useState("");
+
+  function handleClick(name) {
+    setCategoryName(name);
+  }
+  // Data Population Ends
 
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -28,13 +44,6 @@ const HomePage = () => {
       navigate(path);
     }
   };
-
-  function handleDashboardChange(event) {
-    setDashboarddata({
-      ...dashboarddata,
-      [event.target.name]: event.target.value,
-    });
-  }
 
   function goToFilters(filterName) {
     // Encode the button name as a URL parameter
@@ -49,7 +58,7 @@ const HomePage = () => {
       <HomePageNavBar />
       <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
         <div class="w-full mr-0 ml-0">
-          <div class="h-96 overflow-hidden px-1 py-1">
+          <div class="h-[35rem] overflow-hidden px-1 py-1">
             {/* <a class="block relative h-96 overflow-hidden">
             <img
               alt="ecommerce"
@@ -57,7 +66,7 @@ const HomePage = () => {
               src= {HOMEPAGEIMG}
             />
           </a> */}
-            <div class="relative h-96">
+            <div class="relative h-[35rem]">
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
@@ -80,7 +89,10 @@ const HomePage = () => {
       <div class="bg-white lg:px-20 md:px-5 sm:px-0 py-6 mt-10 mb-10 flex flex-col">
         <div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
           <div
-            onClick={() => goToFilters('Events')}
+            onClick={() => {
+              localStorage.setItem("selectedItem", "News"); // store the name value in localStorage
+              goToFilters('Events');
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
@@ -97,7 +109,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Road Works / Traffic");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -114,7 +129,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Events");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -131,7 +149,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Clubs");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -148,7 +169,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Regional Products");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -165,7 +189,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Offer / Search");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -182,7 +209,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "New Citizen Info");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -199,7 +229,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Direct Report");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -217,7 +250,10 @@ const HomePage = () => {
           </div>
 
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Lost And Found");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -234,7 +270,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Company Portraits");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -250,7 +289,11 @@ const HomePage = () => {
               COMPANY PORTRAITS
             </h2>
           </div>
-          <div class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer">
+          <div  onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Carpooling And Public Transport");
+            }}
+            class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer">
             <div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -265,7 +308,10 @@ const HomePage = () => {
             </h2>
           </div>
           <div
-            onClick={() => navigateTo("/Events")}
+            onClick={() => {
+              goToFilters('Events');
+              localStorage.setItem("selectedItem", "Offers");
+            }}
             class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
           >
             <div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
@@ -281,6 +327,7 @@ const HomePage = () => {
               OFFERS
             </h2>
           </div>
+
         </div>
       </div>
 
@@ -290,8 +337,11 @@ const HomePage = () => {
 
         <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-            <div onClick={() => navigateTo("/Below")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
-              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+            <div onClick={() => {
+              navigateTo("/Below");
+              localStorage.setItem("selectedItemLocation", "Below");
+              }} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden">
                 <img alt="ecommerce" class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500" src={below} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4">
@@ -301,8 +351,11 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <div onClick={() => navigateTo("/Fuchstal")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
-              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+            <div onClick={() => {
+              navigateTo("/Fuchstal");
+              localStorage.setItem("selectedItemLocation", "Fuchstal");
+              }} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden">
                 <img alt="ecommerce" class="object-cover object-center h-full w-full" src={fuchstal} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4 overflow-hidden">
@@ -312,8 +365,11 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <div onClick={() => navigateTo("/AppleVillage")} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
-              <div class="relative h-80 rounded overflow-hidden hover:scale-110 transition-all duration-500">
+            <div onClick={() => {
+              navigateTo("/Applevillage");
+              localStorage.setItem("selectedItemLocation", "Apple village");
+              }} class="h-80 w-full shadow-xl rounded-lg cursor-pointer">
+              <div class="relative h-80 rounded overflow-hidden">
                 <img alt="ecommerce" class="object-cover object-center h-full w-full" src={applevillage} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4">

@@ -301,7 +301,7 @@ const ViewProfile = () => {
 
         </div>
 
-        <div class="w-full justify-center md:h-[20rem] sm:h-[20rem] bg-white rounded-lg dark:border md:mt-0 ml-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
+        <div class="w-full justify-center md:ml-[6rem] lg:ml-[0rem] ml-[1rem] md:h-[20rem] sm:h-[20rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-gray-700 shadow-2xl dark:bg-white">
           <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
             <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
             contact information

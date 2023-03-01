@@ -1,5 +1,5 @@
-import React, { useState, useEffect , useRef  } from "react";
-import { FaBars, FaEllipsisH, FaFile, FaTimes } from "react-icons/fa";
+import React, { useRef  } from "react";
+import { FaEllipsisH } from "react-icons/fa";
 import "./Dashboard";
 
 function Navbar() {
