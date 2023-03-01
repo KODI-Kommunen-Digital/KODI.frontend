@@ -1,4 +1,4 @@
-const data = require('./dummyData.json')
+const data = require('./dummyData')
 
 
 var arr= data.listings
@@ -48,6 +48,7 @@ const sortOldest= (arr)=>{
       });
       return arr;
 }
+
 
 
 module.exports = {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest}
