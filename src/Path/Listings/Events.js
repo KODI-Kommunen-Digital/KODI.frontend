@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LocationSelectionInput from "../../Components/LocationSelectionInput";
-import { getDashboarddata } from "../../Services/dashboarddata";
+import { getCategoriesdata } from "../../Services/CategoriesData";
 import { useNavigate } from "react-router-dom";
 import HomePage from '../../Path/HomePage';
+import { XIcon } from "@heroicons/react/outline";
 
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import EVENTSTIMELINEING from "../../assets/Events.png";
@@ -11,13 +12,17 @@ import { useTranslation } from "react-i18next";
 
 const Events = () => {
   //window.scrollTo(0, 0);
-  const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
   useEffect(() => {
-    getDashboarddata().then((response) => {
-      setDashboarddata(response);
+    getCategoriesdata().then((response) => {
+      setCategoriesdata(response);
     });
-    document.title = "Events-Demo";
+    document.title = "Events";
   }, []);
+
+  // Selected Items Deletion Starts
+  const selectedItem = localStorage.getItem('selectedItem');
+  // Selected Items Deletion Ends
 
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -26,9 +31,9 @@ const Events = () => {
     }
   };
 
-  function handleDashboardChange(event) {
-    setDashboarddata({
-      ...dashboarddata,
+  function handleCategoriesChange(event) {
+    setCategoriesdata({
+      ...categoriesdata,
       [event.target.name]: event.target.value,
     });
   }
@@ -106,23 +111,23 @@ const Events = () => {
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
-                src={EVENTSTIMELINEING}
+                src={HOMEPAGEIMG}
               />
-              {/* <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-900 bg-opacity-50 text-white z--1">
+              <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                apple village
+                {selectedItem}
                 </h1>
-              </div>  */}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
+      {/* <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
         events
-      </h2>
+      </h2> */}
 
-      <div className="flex mx-auto flex-wrap mb-10 justify-center">
+      {/* <div className="flex mx-auto flex-wrap mb-10 justify-center">
         <a
           onClick={onCancel}
           className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start title-font font-bold inline-flex items-center leading-none tracking-wider rounded-t ${
@@ -153,9 +158,9 @@ const Events = () => {
           }`}
         >
           Citizen Services
-        </a> */}
+        </a>
       </div>
-      <div className="my-0 bg-gray-300 h-[1px]"></div>
+      <div className="my-0 bg-gray-300 h-[1px]"></div>*/}
 
       <div class="bg-white">
         <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
@@ -180,7 +185,7 @@ const Events = () => {
                 </button>
             </div>*/}
 
-<div class="w-full sm:w-auto">
+            <div class="w-full sm:w-auto sm:mr-20">
                     <select id="country" name="country" autocomplete="country-name" class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                     <option>Sorted by categories</option>
                     <option>A - Z (title)</option>
@@ -199,20 +204,26 @@ const Events = () => {
               Filter your result
             </h1>
             <form class="space-y-4 md:space-y-6" action="#">
-              {/* <div>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
+
+            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="floatingInput" class="text-gray-700 font-bold">
+                  Location
+                </label>
+                <select
+                  id="button-filter"
+                  name="country"
+                  autocomplete="country-name"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search keyword..."
-                  required=""
-                />
-              </div> */}
-              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold">Location</label>
-                <LocationSelectionInput />
-            </div>
+                >
+                  <option value="Default">Choose one location</option>
+                  <option value="Default">Below</option>
+                  <option value="News">Fuchstal</option>
+                  <option value="Road Works / Traffic">
+                    Apple village
+                  </option>
+                </select>
+              </div>
+
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="floatingInput" class="text-gray-700 font-bold">
                   Category
@@ -223,23 +234,47 @@ const Events = () => {
                   autocomplete="country-name"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
-                  <option value="Default">Choose one category</option>
-                  <option value="News">News</option>
-                  <option value="Road Works / Traffic">
+                  <option value="Default">{selectedItem}</option>
+                  {selectedItem !== "News" ? (
+                    <option value="News">News</option>
+                  ) : null}
+                  {selectedItem !== "Road Works / Traffic" ? (
+                    <option value="Road Works / Traffic">
                     Road Works / Traffic
                   </option>
-                  <option value="Events">Events</option>
-                  <option value="Clubs">Clubs</option>
-                  <option value="Regional Products">Regional Products</option>
-                  <option value="Offer / Search">Offer / Search</option>
-                  <option value="New Citizen Info">New Citizen Info</option>
-                  <option value="Direct Report">Direct Report</option>
-                  <option value="Lost And Found">Lost And Found</option>
-                  <option value="Company Portraits">Company Portraits</option>
-                  <option value="Carpooling And Public Transport">
+                  ) : null}
+                  {selectedItem !== "Events" ? (
+                    <option value="Events">Events</option>
+                  ) : null}
+                  {selectedItem !== "Clubs" ? (
+                    <option value="Clubs">Clubs</option>
+                  ) : null}
+                  {selectedItem !== "Regional Products" ? (
+                    <option value="Regional Products">Regional Products</option>
+                  ) : null}
+                  {selectedItem !== "Offer / Search" ? (
+                    <option value="Offer / Search">Offer / Search</option>
+                  ) : null}
+                  {selectedItem !== "New Citizen Info" ? (
+                    <option value="New Citizen Info">New Citizen Info</option>
+                  ) : null}
+                  {selectedItem !== "Direct Report" ? (
+                    <option value="Direct Report">Direct Report</option>
+                  ) : null}
+                  {selectedItem !== "Lost And Found" ? (
+                    <option value="Lost And Found">Lost And Found</option>
+                  ) : null}
+                  {selectedItem !== "Company Portraits" ? (
+                    <option value="Company Portraits">Company Portraits</option>
+                  ) : null}
+                  {selectedItem !== "Carpooling And Public Transport" ? (
+                    <option value="Carpooling And Public Transport">
                     Carpooling And Public Transport
                   </option>
-                  <option value="Offers">Offers</option>
+                  ) : null}
+                  {selectedItem !== "Offers" ? (
+                    <option value="Offers">Offers</option>
+                  ) : null}
                 </select>
               </div>
 
