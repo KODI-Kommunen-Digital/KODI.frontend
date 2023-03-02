@@ -11,10 +11,11 @@ var dashboardObj = {
             expiryDate: "2022-12-31",
             status: "Active",
             gatewayApi: "Member",
-            action: "Exit"
+            action: "Exit",
+            date:"2012-10-01"
         },
         {
-            id: 2,
+            id: 5,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Bonnie Green",
             email: "bonnie@flowbite.com",
@@ -22,7 +23,8 @@ var dashboardObj = {
             expiryDate: "2022-12-31",
             status: "Active",
             gatewayApi: "Footballer",
-            action: "Exit"
+            action: "Exit",
+            date:"2007-11-11"
         },
         {
             id: 3,
@@ -33,10 +35,11 @@ var dashboardObj = {
             expiryDate: "2022-12-31",
             status: "Active",
             gatewayApi: "Admin",
-            action: "Exit"
+            action: "Exit",
+            date:"2020-10-18"
         },
         {
-            id: 3,
+            id: 6,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Joseph Joseph",
             email: "joseph@flowbite.com",
@@ -44,10 +47,11 @@ var dashboardObj = {
             expiryDate: "2024-05-31",
             status: "Active",
             gatewayApi: "Admin",
-            action: "Exit"
+            action: "Exit",
+            date:"2002-05-01"
         },
         {
-            id: 3,
+            id: 2,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Denio John",
             email: "denio@flowbite.com",
@@ -55,10 +59,11 @@ var dashboardObj = {
             expiryDate: "2024-12-01",
             status: "Active",
             gatewayApi: "Manager",
-            action: "Exit"
+            action: "Exit",
+            date:"2010-10-02"
         },
         {
-            id: 3,
+            id: 4,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Sonu Sadanandhan",
             email: "sonu@flowbite.com",
@@ -66,10 +71,11 @@ var dashboardObj = {
             expiryDate: "2024-10-11",
             status: "Active",
             gatewayApi: "Member",
-            action: "Exit"
+            action: "Exit",
+            date:"2010-10-01"
         },
         {
-            id: 3,
+            id: 7,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Akshay Sunilkumar",
             email: "akshay@flowbite.com",
@@ -77,10 +83,11 @@ var dashboardObj = {
             expiryDate: "2022-12-31",
             status: "Active",
             gatewayApi: "Creator",
-            action: "Exit"
+            action: "Exit",
+            date:"2018-10-01"
         },
         {
-            id: 3,
+            id: 9,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Frederik Perrera",
             email: "fd@flowbite.com",
@@ -88,10 +95,11 @@ var dashboardObj = {
             expiryDate: "2023-11-29",
             status: "Active",
             gatewayApi: "Co-Founder",
-            action: "Exit"
+            action: "Exit",
+            date:"2019-10-09"
         },
         {
-            id: 3,
+            id: 8,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Leo Messi",
             email: "messi@flowbite.com",
@@ -99,7 +107,8 @@ var dashboardObj = {
             expiryDate: "2026-12-12",
             status: "Active",
             gatewayApi: "Footballer",
-            action: "Exit"
+            action: "Exit",
+            date:"2013-02-01"
         }
 
     ]

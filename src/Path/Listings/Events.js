@@ -50,8 +50,6 @@ const Events = () => {
     switch (selectedSortOption) {
       case 'titleAZ':
         setListingsData([...sortByTitleAZ(listingsData)])
-        //listingsData = sortByTitleZA(listingsData)
-        //setListingsData(listingsData);
         console.log(listingsData)
         break;
       case 'titleZA':
