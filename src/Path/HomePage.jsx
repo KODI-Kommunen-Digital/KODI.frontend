@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
-import { getCategoriesdata } from "../Services/CategoriesData";
+//import { getListingsData } from "../Services/listings";
 import { useNavigate } from "react-router-dom";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -16,20 +16,20 @@ const HomePage = () => {
   //window.scrollTo(0, 0);
 
   // Data Population Starts
-  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
-  useEffect(() => {
-    getCategoriesdata().then((response) => {
-      setCategoriesdata(response);
-    });
-    document.title = "Events";
-  }, []);
+  // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
+  // useEffect(() => {
+  //   getCategoriesdata().then((response) => {
+  //     setCategoriesdata(response);
+  //   });
+  //   document.title = "Events";
+  // }, []);
 
-  function handleCategoriesChange(event) {
-    setCategoriesdata({
-      ...categoriesdata,
-      [event.target.name]: event.target.value,
-    });
-  }
+  // function handleCategoriesChange(event) {
+  //   setCategoriesdata({
+  //     ...categoriesdata,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // }
 
   const [categoryName, setCategoryName] = useState("");
 

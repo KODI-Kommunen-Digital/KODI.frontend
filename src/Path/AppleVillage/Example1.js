@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
+import { getCategoriesdata } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
@@ -8,6 +9,17 @@ import LOGO from "../../assets/logo.png";
 
 const Example1 = () => {
   window.scrollTo(0, 0);
+
+  //populate the events titles starts
+  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
+  useEffect(() => {
+    getCategoriesdata().then((response) => {
+      setCategoriesdata(response);
+    });
+    document.title = "Events";
+  }, []);
+
+
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
@@ -22,6 +34,13 @@ const Example1 = () => {
       navigate(path);
     }
   };
+
+  function handleCategoriesChange(event) {
+    setCategoriesdata({
+      ...categoriesdata,
+      [event.target.name]: event.target.value,
+    });
+  }
 
   function handleDashboardChange(event) {
     setDashboarddata({
@@ -249,7 +268,9 @@ const Example1 = () => {
         <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           Similar items
         </h1>
+
         <div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
+        {categoriesdata.listings && categoriesdata.listings.slice(0,3).map((listing) =>(
           <div
             onClick={() => navigateTo("/Example1")}
             class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
@@ -263,47 +284,12 @@ const Example1 = () => {
             </a>
             <div class="mt-10">
               <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-1
+                {listing.title}
               </h2>
             </div>
             <div className="my-4 bg-gray-200 h-[1px]"></div>
           </div>
-          <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
-          >
-            <a class="block relative h-64 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-              />
-            </a>
-            <div class="mt-10">
-              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-2
-              </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-          </div>
-          <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-64 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-2xl rounded-lg cursor-pointer"
-          >
-            <a class="block relative h-64 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-              />
-            </a>
-            <div class="mt-10">
-              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-3
-              </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-          </div>
+         ))}
         </div>
       </div>
 
