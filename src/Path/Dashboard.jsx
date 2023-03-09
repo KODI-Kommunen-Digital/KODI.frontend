@@ -5,7 +5,6 @@ import LOGO from "../assets/logo.png";
 import SideBar from "../Components/SideBar";
 import {getDashboarddata} from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
 import {sortOldest} from "../Services/helper";
 
 const dashboardStyle = require('../Path/Dashboard.css')

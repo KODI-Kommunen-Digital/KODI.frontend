@@ -4,63 +4,111 @@ import JoditEditor from "jodit-react";
 import "./bodyContainer.css";
 import DragDropFiles from "../../Components/DragDropFiles";
 import Maps from "../../Components/Maps";
-//import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
+import {requiredData} from "../../Components/Maps";
 
 function ListingsPageConstructionTraffic() {
   //window.scrollTo(0, 0);
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     document.title = "Construction sites / traffic";
   }, []);
 
-  const [val, setVal] = useState([]);
-  const handleAdd = () => {
-    const abc = [...val, []];
-    setVal(abc);
-  };
-  const handleChange = (onChangeValue, i) => {
-    const inputdata = [...val];
-    inputdata[i] = onChangeValue.target.value;
-    setVal(inputdata);
-  };
-  const handleDelete = (i) => {
-    const deletVal = [...val];
-    deletVal.splice(i, 1);
-    setVal(deletVal);
-  };
-
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
-  const [date, setDate] = useState();
+  //Sending data to backend starts
+  const [input, setInput] = useState({
+    title:'',
+    place:'',
+    //address:requiredData.address,
+    // latitude:requiredData.lat,
+    // longitude:requiredData.lon,
+    phone: '',
+    email:'',
+    description: '',
+    media: ''
+  });
 
-  const handleSubmit = (event) => {
+  const [error, setError] = useState({
+    title:'',
+    place:'',
+    address:'',
+    phone: '',
+    email:'',
+    description: '',
+    media: ''
+  })
+
+  const onInputChange = e => {
+    const { name, value } = e.target;
+    setInput(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    validateInput(e);
+  }
+
+  const handleSubmit = async(event) =>{
     event.preventDefault();
-    const formData = new FormData();
-    formData.append('title', event.target.title.value);
-    formData.append('address', event.target.address.value);
-    formData.append('phone', event.target.phone.value);
-    formData.append('email', event.target.email.value);
-    formData.append('description', content);
 
-    const mediaFiles = event.target.media.files;
-    for (let i = 0; i < mediaFiles.length; i++) {
-      formData.append('media', mediaFiles[i]);
-    }
+    console.log(input)
+  }
 
-    axios.post('http://localhost:8001/cities/1/listings', formData)
-      .then((response) => {
-        // Handle successful response
-      })
-      .catch((error) => {
-        // Handle error
-      });
-  };
+  const validateInput = e => {
+    let { name, value } = e.target;
+    setError(prev => {
+      const stateObj = { ...prev, [name]: "" };
+
+      switch (name) {
+        case "title":
+          if (!value) {
+            stateObj[name] = t("pleaseEnterTitle");
+          }
+          break;
+          case "place":
+            if(!value){
+              stateObj[name] = t("pleaseEnterPlace");
+            }
+            break;
+        case "address":
+          if(!value){
+            stateObj[name] = t("pleaseEnterAddress");
+          }
+          break;
+          case "phone":
+            if(!value){
+              stateObj[name] = t("pleaseEnterPhone");
+            }
+            break;
+
+            case "description":
+              if(!value){
+                stateObj[name] = t("pleaseEnterDescription");
+              }
+              break;
+
+              case "media":
+              if(!value){
+                stateObj[name] = t("pleaseEnterMedia");
+              }
+              break;
+
+        default:
+          break;
+      }
+
+      return stateObj;
+    });
+  }
+  //Sending data to backend ends
 
   return (
     <section class="bg-slate-600 body-font relative">
       <SideBar />
 
+      <form onSubmit={handleSubmit} action="#" method="POST">
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -75,11 +123,31 @@ function ListingsPageConstructionTraffic() {
                 type="text"
                 id="title"
                 name="title"
+                value={input.title}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 required
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder="enter your title"
               />
             </div>
+
+            <div class="relative mb-4">
+              <label for="email" class="block text-sm font-medium text-gray-600">
+                Place
+              </label>
+              <input
+                type="text"
+                id="place"
+                name="place"
+                value={input.place}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                placeholder="Enter your place here"
+              />
+            </div>
+
             <div class="col-span-6">
               <label
                 for="address"
@@ -100,6 +168,9 @@ function ListingsPageConstructionTraffic() {
                 type="text"
                 id="phone"
                 name="phone"
+                value={input.phone}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder="enter your telephone number"
               />
@@ -113,6 +184,9 @@ function ListingsPageConstructionTraffic() {
                 type="email"
                 id="email"
                 name="email"
+                value={input.email}
+                onChange={onInputChange}
+                onBlur={validateInput}
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder="youremail@gmail.com"
               />
@@ -156,7 +230,6 @@ function ListingsPageConstructionTraffic() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <div class="relative mb-4 mt-8 border-white">
