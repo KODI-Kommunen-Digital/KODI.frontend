@@ -16,6 +16,7 @@ var categoriesObj = {
         "Offers"
      ],
      "listings":[
+
         {
             "title":"tile1",
             "date": "2010-05-21"
@@ -44,7 +45,8 @@ var categoriesObj = {
             "title":"tile7",
             "date": "2011-01-20"
         }
-     ]
+
+        ]
 };
 
 export async function getCategoriesdata() {
@@ -54,3 +56,4 @@ export async function getCategoriesdata() {
 export async function updateCategoriesData(newCategoriesObj) {
     categoriesObj = newCategoriesObj;
 }
+

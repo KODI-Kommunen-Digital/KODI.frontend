@@ -6,13 +6,15 @@ import SideBar from "../Components/SideBar";
 import {getDashboarddata} from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import {sortOldest} from "../Services/helper";
+
+const dashboardStyle = require('../Path/Dashboard.css')
 
 const Dashboard = () => {
-  const [dashboarddata, setDashboarddata] = useState({ listings: [] });
-
+  const [dashboarddata, setDashboarddata] = useState([]);
   useEffect(() => {
     getDashboarddata().then((response) => {
-      setDashboarddata(response);
+      setDashboarddata([...sortOldest((response.listings))]);
     });
     document.title = "Dashboard";
   }, []);
@@ -347,7 +349,7 @@ const Dashboard = () => {
                   Category
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Expiration Date
+                  Date of Creation
                 </th>
                 <th scope="col" class="px-6 py-3">
                   Status
@@ -364,7 +366,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {dashboarddata.listings.map((listing) => (
+              {dashboarddata.map((listing) => (
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <th
                     scope="row"
@@ -384,7 +386,7 @@ const Dashboard = () => {
                     </div>
                   </th>
                   <td class="px-6 py-4">{listing.category}</td>
-                  <td class="px-6 py-4">{listing.expiryDate}</td>
+                  <td class="px-6 py-4">{listing.date}</td>
                   <td class="px-6 py-4">
                     <div class="flex items-center">
                       <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>

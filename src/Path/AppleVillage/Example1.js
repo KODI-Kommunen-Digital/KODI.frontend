@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
+import { getCategoriesdata } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
@@ -8,6 +9,17 @@ import LOGO from "../../assets/logo.png";
 
 const Example1 = () => {
   window.scrollTo(0, 0);
+
+  //populate the events titles starts
+  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
+  useEffect(() => {
+    getCategoriesdata().then((response) => {
+      setCategoriesdata(response);
+    });
+    document.title = "Events";
+  }, []);
+
+
   const [dashboarddata, setDashboarddata] = useState({ listings: [] });
   useEffect(() => {
     getDashboarddata().then((response) => {
@@ -22,6 +34,13 @@ const Example1 = () => {
       navigate(path);
     }
   };
+
+  function handleCategoriesChange(event) {
+    setCategoriesdata({
+      ...categoriesdata,
+      [event.target.name]: event.target.value,
+    });
+  }
 
   function handleDashboardChange(event) {
     setDashboarddata({

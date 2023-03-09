@@ -1,10 +1,11 @@
-const data = require('./dummyData.json')
+//  const data = require('./dummyData.json')
+//  var arr1 = data.listings
+//  console.log(arr)
 
 
-var arr= data.listings
-
-//function to sort the categories based on title
+//functions to sort the categories based on title
 const sortByTitleAZ =(arr)=> {
+  console.log(arr)
     arr.sort(function(a, b) {
       var titleA = a.title.toLowerCase();
       var titleB = b.title.toLowerCase();
@@ -14,6 +15,7 @@ const sortByTitleAZ =(arr)=> {
     });
     return arr;
 }
+//sortByTitleAZ(arr1)
 const sortByTitleZA =(arr)=> {
     arr.sort(function(a, b) {
       var titleA = a.title.toLowerCase();
@@ -30,7 +32,7 @@ const sortByTitleZA =(arr)=> {
 
 
 
-//function to sort the categories based on date
+//functions to sort the categories based on date
 const sortRecent= (arr)=>{
     arr.sort(function(a, b) {
         var dateA = new Date(a.date);
@@ -49,5 +51,6 @@ const sortOldest= (arr)=>{
       return arr;
 }
 
+//console.log(sortByTitleAZ(arr))
 
 module.exports = {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest}

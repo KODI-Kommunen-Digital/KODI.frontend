@@ -16,13 +16,16 @@ class ProfilePage extends React.Component {
             formValid: true
         };
         this.handleProfileChange = this.handleProfileChange.bind(this);
+        this.updateChanges = this.updateChanges.bind(this);
     }
     componentDidMount() {
         document.title = "Heidi - Profile";
         getProfile().then((response) => {
             const newState = Object.assign({}, this.state);
-            newState.profile = response;
+            newState.profile = response.data.data;
             this.setState(newState);
+        }).catch((error) => {
+            this.setAlertInfo(true, "Failed to fetch your profile info, please try again!", "danger");
         })
     }
     componentDidUpdate() {
@@ -63,22 +66,22 @@ class ProfilePage extends React.Component {
         }
     }
     handleProfileChange(event) {
-        if (event.target.name == "firstName") {
+        if (event.target.name == "firstname") {
             if (!event.target.value) {
-                this.setShowError("firstName", true);
-                this.setErrorMessage("firstName", "This field cannot be empty");
+                this.setShowError("firstname", true);
+                this.setErrorMessage("firstname", "This field cannot be empty");
             } else {
-                this.setShowError("firstName", false);
-                this.setErrorMessage("firstName", "");
+                this.setShowError("firstname", false);
+                this.setErrorMessage("firstname", "");
             }
         }
-        if (event.target.name == "lastName") {
+        if (event.target.name == "lastname") {
             if (!event.target.value) {
-                this.setShowError("lastName", true);
-                this.setErrorMessage("lastName", "This field cannot be empty");
+                this.setShowError("lastname", true);
+                this.setErrorMessage("lastname", "This field cannot be empty");
             } else {
-                this.setShowError("lastName", false);
-                this.setErrorMessage("lastName", "");
+                this.setShowError("lastname", false);
+                this.setErrorMessage("lastname", "");
             }
         }
         if (event.target.name == "email") {
@@ -105,12 +108,12 @@ class ProfilePage extends React.Component {
     }
     updateChanges() {
         let valid = true;
-        for (let property in this.showError) {
-            if (this.showError[property])
+        for (let property in this.state.showError) {
+            if (this.state.showError[property])
                 valid = false
         }
         if (valid) {
-            updateProfile(this.profile).then(() => {
+            updateProfile(this.state.profile).then(() => {
                 this.setAlertInfo(true, "Your changes were saved succesfully", "success");
                 setInterval(() => {
                     this.setAlertInfo(false, "", null)
@@ -154,61 +157,62 @@ class ProfilePage extends React.Component {
                         <div class="py-2 grid grid-cols-1 md:grid-cols-2">
                             <div class="mt-1 px-2">
                                 <label
-                                htmlFor="firstName"
+                                htmlFor="firstname"
                                 class="block text-md font-medium text-gray-600"
                                 >
                                     First Name
                                 </label>
                                 <input
                                     type="text"
-                                    name="firstName"
-                                    id="firstName"
+                                    name="firstname"
+                                    id="firstname"
                                     class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     placeholder="Enter your first name here"
-                                    defaultValue={this.state.profile.firstName}
+                                    defaultValue={this.state.profile.firstname}
                                     onChange={this.handleProfileChange}
                                 />
-                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.firstName ? 'visible' : 'hidden'}}>
-                                    {this.state.errorMessage.firstName}
+                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.firstname ? 'visible' : 'hidden'}}>
+                                    {this.state.errorMessage.firstname}
                                 </div>
                             </div>
                             <div class="mt-1 px-2">
                                 <label
-                                htmlFor="lastName"
+                                htmlFor="lastname"
                                 class="block text-md font-medium text-gray-600"
                                 >
                                     Last Name
                                 </label>
                                 <input
                                     type="text"
-                                    name="lastName"
-                                    id="lastName"
+                                    name="lastname"
+                                    id="lastname"
                                     class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                     placeholder="Enter your last name here"
-                                    defaultValue={this.state.profile.lastName}
+                                    defaultValue={this.state.profile.lastname}
                                     onChange={this.handleProfileChange}
                                 />
-                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.lastName ? 'visible' : 'hidden'}}>
-                                    {this.state.errorMessage.lastName}
+                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.lastname ? 'visible' : 'hidden'}}>
+                                    {this.state.errorMessage.lastname}
                                 </div>
                             </div>
                         </div>
                         <div class="py-3 grid grid-cols-1">
                             <div class="mt-1 px-2">
                             <label
-                            htmlFor="userName"
+                            htmlFor="username"
                             class="block text-md font-medium text-gray-600"
                             >
-                                Username
+                                User Name
                             </label>
                             <input
                                 type="text"
-                                name="userName"
-                                id="userName"
-                                class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                name="username"
+                                id="username"
+                                class="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 placeholder="Enter your username here"
-                                defaultValue={this.state.profile.userName}
+                                defaultValue={this.state.profile.username}
                                 onChange={this.handleProfileChange}
+                                disabled='true'
                             />
                             </div>
                         </div>
@@ -357,7 +361,7 @@ class ProfilePage extends React.Component {
                     </div>
                     { this.state.alertInfo.show ? 
                         <div class="py-2 mt-1 px-2">
-                            <Alert type={this.state.alertInfo.type} message={this.state.alertInfo.message}/>
+                            <Alert ref={this.alertRef} type={this.state.alertInfo.type} message={this.state.alertInfo.message}/>
                         </div> :
                         null
                     }

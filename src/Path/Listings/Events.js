@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getCategoriesdata } from "../../Services/CategoriesData";
+import { getListingsData } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
-
+import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 
@@ -12,10 +12,10 @@ const Events = () => {
   //window.scrollTo(0, 0);
 
   //populate the events titles starts
-  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
+  const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
-    getCategoriesdata().then((response) => {
-      setCategoriesdata(response);
+    getListingsData().then((response) => {
+      setListingsData(response);
     });
     document.title = selectedItem;
   }, []);
@@ -33,15 +33,42 @@ const Events = () => {
     }
   };
 
+
+
   function handleCategoriesChange(event) {
-    setCategoriesdata({
-      ...categoriesdata,
+    setListingsData({
+      ...listingsData,
       [event.target.name]: event.target.value,
     });
   }
 
-  const [content, setContent] = useState("A");
 
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
+  }
+
+  useEffect(() => {
+    switch (selectedSortOption) {
+      case 'titleAZ':
+        setListingsData([...sortByTitleAZ(listingsData)])
+        console.log(listingsData)
+        break;
+      case 'titleZA':
+        setListingsData([...sortByTitleZA(listingsData)]);
+        break;
+      case 'recent':
+        setListingsData([...sortRecent(listingsData)]);
+        break;
+      case 'oldest':
+        setListingsData([...sortOldest(listingsData)]);
+        break;
+      default:
+        break;
+    }
+  }, [selectedSortOption]);
+
+  const [content, setContent] = useState("A");
   const handleButtonClick = (value) => {
     setContent(value);
   };
@@ -188,12 +215,12 @@ const Events = () => {
             </div>*/}
 
             <div class="w-full sm:w-auto sm:mr-20">
-                    <select id="country" name="country" autocomplete="country-name" class="font-sans mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                    <option class="font-sans">Sorted by categories</option>
-                    <option class="font-sans">A - Z (title)</option>
-                    <option class="font-sans">Z - A (title)</option>
-                    <option class="font-sans">Recent</option>
-                    <option class="font-sans">Oldest</option>
+                    <select id="country" name="country" value={selectedSortOption} onChange={handleSortOptionChange} autocomplete="country-name" class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                      <option value="">Sorted by categories</option>
+                      <option value = "titleAZ">A - Z (title)</option>
+                      <option value = "titleZA">Z - A (title)</option>
+                      <option value="recent">Recent</option>
+                      <option value="oldest">Oldest</option>
                     </select>
             </div>
         </div>
@@ -351,7 +378,7 @@ const Events = () => {
         </div>
 
       <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {categoriesdata.listings && categoriesdata.listings.map((listing) => (
+      {listingsData && listingsData.map((listing) => (
         <div
           onClick={() => navigateTo("/Example1")}
           class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
