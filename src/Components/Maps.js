@@ -71,14 +71,22 @@ const SearchLocation = () => {
   return (
     <div>
       <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          required
-          placeholder="Search for a location"
-          value={query}
-          class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-          onChange={(event) => setQuery(event.target.value)}
-        />
+      <input
+        type="text"
+        id="address"
+        name="address"
+        required
+        placeholder="Search for a location"
+        value={query}
+        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        onChange={(event) => {
+          const regex = /^[a-zA-Z0-9, ]*$/; // allow only letters, numbers, commas and spaces
+          if (regex.test(event.target.value)) {
+            setQuery(event.target.value);
+          }
+        }}
+      />
+
         <ul class="cursor-pointer mt-4 space-y-2">
         {results.map((result) => (
           <li key={result.place_id} onClick={() => handleResultSelect(result)}>

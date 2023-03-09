@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import Error from './Path/Error';
 import ProfilePage from './Path/ProfilePage';
 import LoginPage from './Path/LoginPage';
@@ -8,6 +9,7 @@ import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
 
 import HomePage from './Path/HomePage';
+import Places from './Path/Places';
 import Below from './Path/Below';
 import Fuchstal from './Path/Fuchstal';
 import AppleVillage from './Path/AppleVillage';
@@ -60,6 +62,7 @@ const App =()=>{
         <Navigation />
           <Routes>
           <Route path="/HomePage" element={<HomePage />}/>
+          <Route path="/Places" element={<Places />}/>
           <Route path="/Below" element={<Below />}/>
           <Route path="/Fuchstal" element={<Fuchstal />}/>
           <Route path="/AppleVillage" element={<AppleVillage />}/>

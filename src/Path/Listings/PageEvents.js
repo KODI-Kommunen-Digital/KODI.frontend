@@ -4,6 +4,7 @@ import JoditEditor from "jodit-react";
 import "./bodyContainer.css";
 import DragDropFiles from "../../Components/DragDropFiles";
 import Maps from "../../Components/Maps";
+import axios from "axios";
 //import OpenstreetMapLoader from "./OpenstreetMapLoader";
 //import ReactDOM from 'react-dom';
 //import OpenstreetMapLoader from "../Path/OpenstreetMapLoader";
@@ -34,6 +35,28 @@ function ListingsPageEvents() {
   const [content, setContent] = useState("");
 
   const [date, setDate] = useState();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      title: event.target.title.value,
+      address: event.target.address.value,
+      startDate: event.target.startDate.value,
+      endDate: event.target.endDate.value,
+      telephone: event.target.telephone.value,
+      email: event.target.email.value,
+      description: content,
+      socialMedia: event.target.socialMedia.value,
+      media: [] // Add code to upload media files and add their URLs to this array
+    };
+    axios.post('http://localhost:8001/cities/1/listings', formData)
+      .then((response) => {
+        // Handle successful response
+      })
+      .catch((error) => {
+        // Handle error
+      });
+  };
 
   return (
     <section class="bg-slate-600 body-font relative">
