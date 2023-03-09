@@ -7,99 +7,144 @@ var dashboardObj = {
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Neil Sims",
             email: "neil.sims@flowbite.com",
-            category: "Software Engineer",
+            category: "News",
             expiryDate: "2022-12-31",
             status: "Active",
-            gatewayApi: "Member",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
             id: 2,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Bonnie Green",
             email: "bonnie@flowbite.com",
-            category: "Designer",
+            category: "Road Works / Traffic",
             expiryDate: "2022-12-31",
             status: "Active",
-            gatewayApi: "Footballer",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
             id: 3,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Thomas Lean",
             email: "thomes@flowbite.com",
-            category: "UI/UX Developer",
+            category: "Events",
             expiryDate: "2022-12-31",
             status: "Active",
-            gatewayApi: "Admin",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 4,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Joseph Joseph",
             email: "joseph@flowbite.com",
-            category: "Game Developer",
+            category: "Clubs",
             expiryDate: "2024-05-31",
             status: "Active",
-            gatewayApi: "Admin",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 5,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Denio John",
             email: "denio@flowbite.com",
-            category: "Youtuber",
+            category: "Regional Products",
             expiryDate: "2024-12-01",
             status: "Active",
-            gatewayApi: "Manager",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 6,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Sonu Sadanandhan",
             email: "sonu@flowbite.com",
-            category: "Node Developer",
+            category: "Offer / Search",
             expiryDate: "2024-10-11",
             status: "Active",
-            gatewayApi: "Member",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 7,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Akshay Sunilkumar",
             email: "akshay@flowbite.com",
-            category: "Web Developer",
+            category: "New Citizen Info",
             expiryDate: "2022-12-31",
             status: "Active",
-            gatewayApi: "Creator",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 8,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Frederik Perrera",
             email: "fd@flowbite.com",
-            category: "Real Estate Developer",
+            category: "Direct Report",
             expiryDate: "2023-11-29",
             status: "Active",
-            gatewayApi: "Co-Founder",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         },
         {
-            id: 3,
+            id: 9,
             image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
             name: "Leo Messi",
             email: "messi@flowbite.com",
-            category: "Footballer",
+            category: "Lost And Found",
             expiryDate: "2026-12-12",
             status: "Active",
-            gatewayApi: "Footballer",
-            action: "Exit"
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
+        },
+        {
+            id: 10,
+            image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
+            name: "Christian Bale",
+            email: "messi@flowbite.com",
+            category: "Company Portraits",
+            expiryDate: "2026-12-12",
+            status: "Active",
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
+        },
+        {
+            id: 11,
+            image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
+            name: "Sunilkumar A",
+            email: "messi@flowbite.com",
+            category: "Carpooling And Public Transport",
+            expiryDate: "2026-12-12",
+            status: "Active",
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
+        },
+        {
+            id: 12,
+            image: "https://i.ibb.co/L1LQtBm/Ellipse-1.png",
+            name: "Kokku Biju",
+            email: "messi@flowbite.com",
+            category: "Offers",
+            expiryDate: "2026-12-12",
+            status: "Active",
+            gatewayApi: "Update",
+            action: "Delete",
+            edit:"Edit"
         }
 
     ]
