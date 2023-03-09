@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import SideBar from '../Components/SideBar';
 import Alert from '../Components/Alert';
 import './bodyContainer.css';
-import { useNavigate } from "react-router-dom";
-import {getProfile, updateProfile} from '../Services/profile'
+import {getProfile, updateProfile} from '../Services/users'
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -60,13 +59,13 @@ class ProfilePage extends React.Component {
     }
     setFormValid(value) {
         const newState = Object.assign({}, this.state);
-        if (newState.formValid != value) {
+        if (newState.formValid !== value) {
             newState.formValid = value;
             this.setState(newState);
         }
     }
     handleProfileChange(event) {
-        if (event.target.name == "firstname") {
+        if (event.target.name === "firstname") {
             if (!event.target.value) {
                 this.setShowError("firstname", true);
                 this.setErrorMessage("firstname", "This field cannot be empty");
@@ -75,7 +74,7 @@ class ProfilePage extends React.Component {
                 this.setErrorMessage("firstname", "");
             }
         }
-        if (event.target.name == "lastname") {
+        if (event.target.name === "lastname") {
             if (!event.target.value) {
                 this.setShowError("lastname", true);
                 this.setErrorMessage("lastname", "This field cannot be empty");
@@ -84,7 +83,7 @@ class ProfilePage extends React.Component {
                 this.setErrorMessage("lastname", "");
             }
         }
-        if (event.target.name == "email") {
+        if (event.target.name === "email") {
             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!re.test(event.target.value)) {
                 this.setShowError("email", true);
@@ -94,7 +93,7 @@ class ProfilePage extends React.Component {
                 this.setErrorMessage("email", "");
             }
         }
-        if (event.target.name == "phoneNumber") {
+        if (event.target.name === "phoneNumber") {
             let re = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
             if (!re.test(event.target.value)) {
                 this.setShowError("phoneNumber", true);
