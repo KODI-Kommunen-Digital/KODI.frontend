@@ -14,16 +14,21 @@ const DragDropFiles = () => {
   };
 
   // send files to the server // learn from my other video
-  const handleUpload = () => {
+  const handleUpload = async () => {
     const formData = new FormData();
     formData.append("Files", files);
-    console.log(formData.getAll());
-    // fetch(
-    //   "link", {
-    //     method: "POST",
-    //     body: formData
-    //   }
-    // )
+    try {
+      const response = await fetch("link", {
+        method: "POST",
+        body: formData,
+      });
+      if (response.ok) {
+        setFiles(null);
+        alert("Media uploaded successfully");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (files)
@@ -73,6 +78,8 @@ const DragDropFiles = () => {
             <p class="text-xs text-gray-500">or</p>
             <input
             type="file"
+            id="media"
+            name="media"
             multiple
             onChange={(event) => setFiles(event.target.files)}
             hidden
