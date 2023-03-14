@@ -1,5 +1,6 @@
 import React, { useState , useEffect } from "react";
 import L from "leaflet";
+import ListingsPageConstructionTraffic from "../Path/Listings/PageConstructionTraffic";
 
 export const SearchLocation = () => {
   const [query, setQuery] = useState("");
@@ -33,13 +34,13 @@ export const SearchLocation = () => {
   };
 
   useEffect(() => {
-  const requiredData = {
-    "address":selectedResult.display_name,
-    "latitude":selectedResult.lat,
-    "longitude":selectedResult.lon
-   }
+    const requiredData = {
+      "address": selectedResult.display_name,
+      "latitude": selectedResult.lat,
+      "longitude": selectedResult.lon
+    };
 
-    console.log({requiredData});
+    //console.log({requiredData});
   }, [selectedResult]);
 
   // const initializeMap = () => {

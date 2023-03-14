@@ -55,7 +55,7 @@ const Dashboard = () => {
     else if (editCategory == "New Citizen Info") {
       navigateTo("/ListingsPageNewcitizeninfo");
     }
-    else if (editCategory == "Direct Report") {
+    else if (editCategory == "Defect Report") {
       navigateTo("/ListingsPageDefectReporter");
     }
     else if (editCategory == "Lost And Found") {
@@ -78,62 +78,6 @@ const Dashboard = () => {
 
   //Navigate to Edit Listings page Starts
 
-  //Language changes starts
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const languages = [
-    { language: "DE", name: "German" },
-    { language: "EN", name: "English" },
-    { language: "FR", name: "French" },
-    // Add more languages as needed
-  ];
-  const countries = [
-    { language: "en-US", name: "United States", flag: "🇺🇸" },
-    { language: "en-GB", name: "United Kingdom", flag: "🇬🇧" },
-    { language: "fr-FR", name: "France", flag: "🇫🇷" },
-    { language: "de-DE", name: "Germany", flag: "🇩🇪" },
-    // Add more countries here as needed
-  ];
-
-  const handleLanguageChange = async (event) => {
-    const targetLanguage = event.target.value;
-    setSelectedLanguage(targetLanguage);
-    const selectedCountry = countries.find(
-      (country) => country.language === targetLanguage
-    );
-    setSelectedCountry(selectedCountry);
-    if (dashboarddata.listings.length > 0) {
-      const translations = await Promise.all(
-        dashboarddata.listings.map(async (listing) => {
-          const textToTranslate = `${listing.category}|${listing.gatewayApi}|${listing.edit}|${listing.status}|${listing.action}`;
-          const response = await fetch(
-            `https://api-free.deepl.com/v2/translate?auth_key=${"63c95e09-7f03-e88b-5e82-e056912f142b:fx"}&text=${encodeURIComponent(textToTranslate)}&target_lang=${targetLanguage}`
-          );
-          const { translations } = await response.json();
-          const translatedValues = translations[0].text.split('|');
-          return {
-            ...listing,
-            category: translatedValues[0],
-            gatewayApi: translatedValues[1],
-            edit: translatedValues[2],
-            status: translatedValues[3],
-            action: translatedValues[4],
-          };
-        })
-      );
-      setDashboarddata({ listings: translations });
-    }
-  };
-
-  useEffect(() => {
-    console.log(languages); // check if languages is defined and has data
-  }, []);
-
-  if (!languages) {
-    return <div>No language data found</div>;
-  }
-  //Language changes ends
-
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar/>
@@ -143,15 +87,7 @@ const Dashboard = () => {
       <div class="container px-5 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
         <Popover className="relative bg-black mr-0 ml-0 px-10 rounded-lg">
           <div className="w-full">
-            <div className="flex items-center justify-between border-gray-100 py-5 md:justify-between md:space-x-10">
-              <div>
-                <img
-                  class="mx-auto h-10 w-auto cursor-pointer"
-                  src={LOGO}
-                  alt="HEDI- Heimat Digital"
-                  onClick={() => navigateTo("/HomePage")}
-                />
-              </div>
+            <div className="flex items-center justify-end xl:justify-center lg:justify-center md:justify-center sm:justify-end border-gray-100 py-5 md:space-x-10">
 
 
               <div class="hidden md:block">
@@ -175,7 +111,7 @@ const Dashboard = () => {
                 </Popover.Button>
               </div>
 
-              <div class="hidden md:block">
+              {/* <div class="hidden md:block">
                 <div className="justify-end mt-0 ml-0 flex items-baseline space-x-4">
                   <select
                     id="language"
@@ -194,7 +130,7 @@ const Dashboard = () => {
                     ))}
                   </select>
                 </div>
-              </div>
+              </div> */}
 
               {/* <div class="hidden md:block">
                 <div class="flex justify-center">
@@ -268,11 +204,8 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div class="md:hidden flex justify-center px-3 py-2" id="mobile-menu">
+                    {/* <div class="md:hidden flex justify-center px-3 py-2" id="mobile-menu">
                       <div className="flex items-center justify-end">
-                        {/* <label htmlFor="language" className="text-white pr-4">
-                          Select Site Language:
-                        </label> */}
                         <select
                           id="language"
                           name="language"
@@ -290,7 +223,7 @@ const Dashboard = () => {
                           ))}
                         </select>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* <div class="md:hidden flex justify-center px-3 py-2" id="mobile-menu">
                       <div class="flex justify-center">
