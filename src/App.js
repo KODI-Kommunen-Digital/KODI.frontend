@@ -100,8 +100,6 @@ const App =()=>{
             <Route path="/ListingsPageTopicOfTheDay" element={<ListingsPageTopicOfTheDay />}/>
             <Route path="/ListingsPageLocal" element={<ListingsPageLocal />}/>
 
-            {/* <Route path="/OpenStreetMap" element={<OpenStreetMap />}/> */}
-
             <Route path='*' element={<Error />}/>
           </Routes>
       </div>

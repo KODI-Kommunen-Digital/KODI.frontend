@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
-//import { getListingsData } from "../Services/listings";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import DeepL from 'deepl-api';
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -35,11 +33,15 @@ const HomePage = () => {
   //   });
   // }
 
-  const [categoryName, setCategoryName] = useState("");
+  // useEffect(() => {
+  //   first
+  
+  //   return () => {
+  //     second
+  //   }
+  // }, [third])
+  
 
-  function handleClick(name) {
-    setCategoryName(name);
-  }
   // Data Population Ends
 
   let navigate = useNavigate();

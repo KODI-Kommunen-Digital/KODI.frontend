@@ -1,4 +1,3 @@
-//var baseUrl = "www.someapi.com"
 var dashboardObj = {
 
     "listings": [
@@ -164,8 +163,4 @@ var dashboardObj = {
 
 export async function getDashboarddata() {
     return dashboardObj;
-}
-
-export async function updateDashboardData(newDashboardObj) {
-    dashboardObj = newDashboardObj;
 }
