@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import JoditEditor from "jodit-react";
 import "./bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";

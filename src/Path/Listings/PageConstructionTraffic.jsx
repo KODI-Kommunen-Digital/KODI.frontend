@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
-import JoditEditor from "jodit-react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import "./bodyContainer.css";
 import { useTranslation } from "react-i18next";
 import L from "leaflet"
@@ -322,25 +323,16 @@ function ListingsPageConstructionTraffic() {
               <label for="description" class="block text-sm font-medium text-gray-600">
                 Description
               </label>
-              {/* <JoditEditor
-                ref={editor}
-                value={input.description}
-                onChange={(newContent) => {
-                  const cleanedContent = newContent.replace(/<\/?p>/g, '');
-                  onInputChange({ target: { name: 'description', value: cleanedContent } });
-                }}
-              /> */}
-              <JoditEditor
-                type="text"
-                id="description"
-                name="description"
-                ref={editor}
-                value={description}
-                // config={{
-                //   maxLength: 1000 // Set maximum length to 1000 characters
-                // }}
-                onChange={newContent => onDescriptionChange(newContent)}
-              />
+              <ReactQuill
+                  type="text"
+                  id="description"
+                  name="description"
+                  ref={editor}
+                  value={description}
+                  onChange={newContent => onDescriptionChange(newContent)}
+                  placeholder="Write something here..."
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                />
 
             </div>
           </div>
