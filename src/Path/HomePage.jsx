@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
-import DeepL from 'deepl-api';
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import below from "../assets/homeimage.jpg";

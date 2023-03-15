@@ -1,4 +1,4 @@
-import axios from "../api/axios";
+import axios from "../api/axiosInstance";
 var userId = 1;
 
 export async function getProfile() {
@@ -7,4 +7,8 @@ export async function getProfile() {
 
 export async function updateProfile(newProfileObj) {
     return axios.patch(`/users/${userId}`, newProfileObj);
+}
+
+export async function login(credentials) {
+    return axios.post(`/users/login`, credentials);
 }
