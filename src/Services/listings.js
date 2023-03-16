@@ -1,4 +1,3 @@
-//var baseUrl = "www.someapi.com"
 var listings = [
         {
             "title":"tile2",
@@ -33,7 +32,3 @@ var listings = [
 export async function getListingsData() {
     return listings;
 }
-
-// export async function updateCategoriesData(newCategoriesObj) {
-//     categoriesObj = newCategoriesObj;
-// }

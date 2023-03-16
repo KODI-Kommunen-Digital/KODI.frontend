@@ -1,27 +1,24 @@
-import React, { useRef,useEffect ,useState, /*useContext*/ } from "react";
-//import AuthContext from "../context/AuthProvider";
+import React, { useRef,useEffect ,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-
-//import axios from "../api/axios";
-
-
-//const LOGIN_URL = '/auth';
+import { login } from "../Services/users";
+import Alert from "../Components/Alert";
 
 const LoginPage = () => {
   const { t, i18n } = useTranslation();
 
-  //const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
-  //const errRef = useRef();
+  const errRef = useRef();
 
   const [forgotPasswd, setForgotPasswd] = useState(false);
+  const [alertInfo, setAlertInfo] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
-  //const [errMsg, setErrMsg] = useState('');
-  //const [success, setSuccess] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
     document.title = "Heidi - Login";
@@ -30,9 +27,9 @@ const LoginPage = () => {
   useEffect(() => {
     userRef.current.focus();
   }, []);
-  // useEffect(() => {
-  //   setErrMsg('');
-  // }, [user,pwd]);
+  useEffect(() => {
+    setErrMsg('');
+  }, [user,pwd]);
 
 
   let navigate = useNavigate();
@@ -52,51 +49,21 @@ const LoginPage = () => {
     setForgotPasswd(false);
   };
 
-  // const handleUsernameChange = (event) =>{
-  //   setUsername(event.target.value)
-  // }
-  // const handlePasswordChange = (event) =>{
-  //   setPassword(event.target.value)
-  // }
-
   const handleSubmit = async(event) => {
     event.preventDefault();
 
-    console.log({'username':user,'password':pwd })
-    setUser('');
-    setPwd('');
-    routeChangeToDashboard()
+    try{
+      var loginResponse=  await login({'username':user,'password':pwd })
+      setUser('');
+      setPwd('');
+      routeChangeToDashboard()
+    } catch (err) {
+      setAlertInfo(true)
+      setAlertType('danger')
+      setAlertMessage('Login Failed')
+      errRef.current.focus();
+    }
 
-    // Code to integrate the authentication
-
-
-
-    //setSuccess(true)
-    //try {
-    //   const response = await axios.post(LOGIN_URL,
-    //     JSON.stringify({user,pwd}), {
-    //       headers: {'Content-Type':'application/json'},
-    //       withCredentials: true
-    //     }
-    //   );
-    //   console.log(JSON.stringify(response?.data));
-      // console.log(user,pwd)
-      // setUser('');
-      // setPwd('');
-      // setSuccess(true)
-    // } catch (err) {
-    //   if(!err?.response){
-    //     setErrMsg('no server response');
-    //   }else if(err.response?.status===400){
-    //     setErrMsg('Missing Username or Password');
-    //   }else if(err.response?.status ===401){
-    //     setErrMsg('Unauthorized');
-    //   }else{
-    //     setErrMsg('Login Failed');
-    //   }
-    //   errRef.current.focus();
-    // }
-    // Send a request to the server with the username and password
   }
 
   return (
@@ -177,7 +144,8 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <button
+                <button 
+                  onSubmit = {handleSubmit}
                   type="submit"
                   value="Submit"
                   id="finalbutton"
@@ -201,6 +169,11 @@ const LoginPage = () => {
                   {t("signIn")}
                 </button>
               </div>
+              {alertInfo && (
+                <div class="py-2 mt-1 px-2">
+                  <Alert type = {alertType} message = {alertMessage} />
+                </div>
+              )}
               <div class="text-sm">
                   {t("notMember")}
                 <span

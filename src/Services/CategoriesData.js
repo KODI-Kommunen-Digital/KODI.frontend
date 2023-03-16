@@ -53,7 +53,4 @@ export async function getCategoriesdata() {
     return categoriesObj;
 }
 
-export async function updateCategoriesData(newCategoriesObj) {
-    categoriesObj = newCategoriesObj;
-}
 
