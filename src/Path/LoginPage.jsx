@@ -3,20 +3,22 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { login } from "../Services/users";
+import { login, resetPass } from "../Services/users";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {
   const { t, i18n } = useTranslation();
 
   const userRef = useRef();
-  const errRef = useRef();
+  //const errRef = useRef();
 
   const [forgotPasswd, setForgotPasswd] = useState(false);
   const [alertInfo, setAlertInfo] = useState(false);
+  const [alertInfoPasswrd, setAlertInfoPasswrd] = useState(false)
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState('');
+  const [userReset, setUserReset] = useState('');
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
 
@@ -47,6 +49,9 @@ const LoginPage = () => {
   };
   const onCancel = () => {
     setForgotPasswd(false);
+    setAlertInfoPasswrd(false)
+    setUserReset('')
+    setAlertMessage('')
   };
 
   const handleSubmit = async(event) => {
@@ -60,10 +65,23 @@ const LoginPage = () => {
     } catch (err) {
       setAlertInfo(true)
       setAlertType('danger')
-      setAlertMessage('Login Failed')
-      errRef.current.focus();
+      setAlertMessage('Login Failed. '+ err.response.data.message)
     }
+  }
 
+  const passwrdReset = async(event)=>{
+    event.preventDefault();
+    try {
+      var resp = await resetPass({"username":userReset, "language":'en'})
+      console.log(resp.data)
+      setAlertInfoPasswrd(true)
+      setAlertType('success')
+      setAlertMessage('Please check your mail')
+    } catch (err) {
+      setAlertInfoPasswrd(true)
+      setAlertType('danger')
+      setAlertMessage('Failed. '+ err.response.data.message)
+    }
   }
 
   return (
@@ -80,7 +98,7 @@ const LoginPage = () => {
               {t("signIntoAccount")}
               </h2>
             </div>
-            <form class="mt-8 space-y-6" action="#" method="POST">
+            <div class="mt-8 space-y-6">
               <input type="hidden" name="remember" value="true" />
               <div class="-space-y-px space-y-4 rounded-md shadow-sm">
                 <div>
@@ -145,7 +163,7 @@ const LoginPage = () => {
 
               <div>
                 <button 
-                  onSubmit = {handleSubmit}
+                  onClick={handleSubmit}
                   type="submit"
                   value="Submit"
                   id="finalbutton"
@@ -183,7 +201,7 @@ const LoginPage = () => {
                 {" "}{t("clickToRegister")}
                 </span>
               </div>
-            </form>
+            </div>
             {forgotPasswd && (
               <>
                 <div id="myDIV" class="text-sm">
@@ -192,19 +210,20 @@ const LoginPage = () => {
                   {t("email")}
                   </label>
                   <input
-                    id="email-address"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={userReset}
+                    onChange={(e)=>setUserReset(e.target.value)}
                     required
                     class="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder={t("email")}
+                    placeholder={t("username")}
                   />
                   <div class="flex gap-2">
                     <button
                       type="submit"
                       id="finalbutton"
-                      onClick={routeChangeToDashboard}
+                      onClick={passwrdReset}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
                     >
                       {t("sendLink")}
@@ -219,6 +238,11 @@ const LoginPage = () => {
                     </button>
                   </div>
                 </div>
+                {alertInfoPasswrd && (
+                <div class="py-2 mt-1 px-2">
+                  <Alert type = {alertType} message = {alertMessage} />
+                </div>
+              )}
               </>
             )}
           </div>
