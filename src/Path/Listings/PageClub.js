@@ -5,10 +5,13 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import {getListingsData, postListingsData , updateListingsData} from '../../Services/listingsData'
 
 
 function ListingsPageClub() {
   //window.scrollTo(0, 0);
+  const category = 4;
+  const subCategory = 0;
 
   const { t, i18n } = useTranslation();
   const editor = useRef(null);
@@ -109,6 +112,34 @@ function ListingsPageClub() {
     discountedPrice:''
   })
 
+  const handleSubmit = async(event) =>{
+    event.preventDefault();
+
+    try {
+      const getResponse = await postListingsData(input);
+      console.log('Information saved successfully:', getResponse.data);
+    } catch (error) {
+      console.error('Error creating your Infornamtion:', error);
+    }
+  };
+  console.log(input)
+
+  useEffect(() => {
+    document.title = "Club";
+    async function fetchData(listingId) {
+      try {
+        const response = await getListingsData(listingId);
+        const listingData = response.data;
+        setInput(listingData);
+      } catch (error) {
+        console.error("Error fetching listing data:", error);
+      }
+    }
+
+    const listingId = "4";
+    fetchData(listingId);
+  }, []);
+
   const onInputChange = e => {
     const { name, value } = e.target;
     setInput(prev => ({
@@ -117,11 +148,10 @@ function ListingsPageClub() {
     }));
     validateInput(e);
 
-    
   };
-  
+
   const [description, setDescription] = useState('');
-  
+
   const onDescriptionChange = newContent => {
     setInput(prev => ({
       ...prev,
@@ -129,11 +159,6 @@ function ListingsPageClub() {
     }));
     setDescription(newContent);
   };
-
-  const handleSubmit = async(event) =>{
-    event.preventDefault();
-  }
-  console.log(input)
 
   const validateInput = e => {
     let { name, value } = e.target;
@@ -251,20 +276,14 @@ function ListingsPageClub() {
   });
   //Map integration Sending data to backend ends
 
-  useEffect(() => {
-    document.title = "Club";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Club";
+  // }, []);
 
   //Social Media Starts
   const handleAdd = (value) => {
     setVal([...val, { socialMedia: value, selected: "" }]);
   };
-
-  useEffect(() => {
-    const socialMediaValues = val.map(item => item.socialMedia);
-    setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
-  }, [val]);
-  
 
   // To update the `selected` property of the input object, you can add another function to handle the selection of an item in the `val` array, like this:
   const handleSelection = (index, value) => {
@@ -303,7 +322,7 @@ function ListingsPageClub() {
     <section class="bg-slate-600 body-font relative">
       <SideBar />
 
-      <form onSubmit={handleSubmit} action="#" method="POST">
+      <form onSubmit={handleSubmit} method="POST">
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -322,7 +341,7 @@ function ListingsPageClub() {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                 placeholder="enter your title"
               />
             </div>

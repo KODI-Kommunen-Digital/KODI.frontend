@@ -204,31 +204,57 @@ function ListingsPageRegionalProducts() {
         document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
     }
   }, [map, selectedResult]);
-
-  const [data, setData] = useState({
-    socialMedia: ""
-  });
   //Map integration Sending data to backend ends
 
   useEffect(() => {
     document.title = "Regional Products";
   }, []);
 
-  const [val, setVal] = useState([]);
-  const handleAdd = () => {
-    const abc = [...val, []];
-    setVal(abc);
+  const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
+  //Social Media Starts
+  const [data, setData] = useState({
+    socialMedia: ""
+  });
+
+  const handleAdd = (value) => {
+    setVal([...val, { socialMedia: value, selected: "" }]);
   };
-  const handleChange = (onChangeValue, i) => {
-    const inputdata = [...val];
-    inputdata[i] = onChangeValue.target.value;
-    setVal(inputdata);
+
+  useEffect(() => {
+    const socialMediaValues = val.map(item => item.socialMedia);
+    setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
+  }, [val]);
+
+  // To update the `selected` property of the input object, you can add another function to handle the selection of an item in the `val` array, like this:
+  const handleSelection = (index, value) => {
+    const updatedVal = [...val];
+    updatedVal[index].selected = value;
+    setVal(updatedVal);
   };
-  const handleDelete = (i) => {
-    const deletVal = [...val];
-    deletVal.splice(i, 1);
-    setVal(deletVal);
+
+  // Then you can update the `selected` property of the `input` object in a similar way as the `socialMedia` property:
+  useEffect(() => {
+    const socialMediaValues = val.map(item => item.socialMedia);
+    setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
+  }, [val]);
+
+  useEffect(() => {
+    setInput(prevState => ({ ...prevState, selected: val.map(item => item.selected) }));
+  }, [val]);
+
+  const handleDelete = (index) => {
+    const list = [...val];
+    list.splice(index, 1);
+    setVal(list);
   };
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...val];
+    list[index][name] = value;
+    setVal(list);
+  };
+//Social Media ends
 
   return (
     <section class="bg-slate-600 body-font relative">
@@ -402,20 +428,7 @@ function ListingsPageRegionalProducts() {
           </div>
         </div>
 
-      {/* <div class="container w-auto px-5 py-2 bg-slate-600">
-        <div class="bg-white mt-4 p-6 space-y-10">
-          <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-            Price
-            <div className="my-4 bg-gray-600 h-[1px]"></div>
-          </h2>
-          <div class="relative mb-4">
-            <PriceAndDiscount/>
-          </div>
-
-        </div>
-      </div> */}
-
-      <div class="container w-auto px-5 py-2 bg-slate-600">
+        <div class="container w-auto px-5 py-2 bg-slate-600">
         <div class="bg-white mt-4 p-6 space-y-10">
           <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
             Social Media
@@ -442,8 +455,17 @@ function ListingsPageRegionalProducts() {
                           Select
                         </label>
                         <select
-                          id="country"
-                          name="country"
+                          type="text"
+                          id="selected"
+                          name="selected"
+                          value={data.selected}
+                          onBlur={validateInput}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setInput({ ...input, socialMedia: e.target.value })
+                            setData((prevData) => ({ ...prevData, socialMedia: value }));
+                            handleChange(e, i);
+                          }}
                           autocomplete="country-name"
                           class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         >

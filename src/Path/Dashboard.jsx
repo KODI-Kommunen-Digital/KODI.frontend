@@ -277,16 +277,16 @@ const Dashboard = () => {
                 <th scope="col" class="px-6 py-3">
                   Listings
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
                   Category
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
                   Date of Creation
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
                   Status
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
                   Gateway/API
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -317,15 +317,15 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </th>
-                  <td class="px-6 py-4">{listing.category}</td>
-                  <td class="px-6 py-4">{listing.date}</td>
-                  <td class="px-6 py-4">
+                  <td class="px-6 py-4 hidden sm:table-cell">{listing.category}</td>
+                  <td class="px-6 py-4 hidden sm:table-cell">{listing.date}</td>
+                  <td class="px-6 py-4 hidden sm:table-cell">
                     <div class="flex items-center">
                       <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>
                       {listing.status}
                     </div>
                   </td>
-                  <td class="px-6 py-4">
+                  <td class="px-6 py-4 hidden sm:table-cell">
                     <a
                       href="#"
                       class="font-medium text-violet-600 dark:text-blue-500 hover:underline"

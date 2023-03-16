@@ -80,9 +80,9 @@ const LoginPage = () => {
               {t("signIntoAccount")}
               </h2>
             </div>
-            <form class="mt-8 space-y-6" action="#" method="POST">
+            <form onSubmit={handleSubmit} class="mt-8 space-y-6" method="POST">
               <input type="hidden" name="remember" value="true" />
-              <div class="-space-y-px space-y-4 rounded-md shadow-sm">
+              <div class="space-y-2 rounded-md shadow-sm">
                 <div>
                   <label htmlFor="username" class="sr-only">
                   {t("username")}
@@ -96,7 +96,7 @@ const LoginPage = () => {
                     autoComplete="on"
                     onChange={(e)=>setUser(e.target.value)}
                     required
-                    class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder={t("username")}
                   />
                 </div>
@@ -111,7 +111,7 @@ const LoginPage = () => {
                     value={pwd}
                     onChange={(e)=>setPwd(e.target.value)}
                     required
-                    class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder={t("password")}
                   />
                 </div>
@@ -187,7 +187,7 @@ const LoginPage = () => {
             {forgotPasswd && (
               <>
                 <div id="myDIV" class="text-sm">
-                {t("forgotPasswordMessage")}                
+                {t("forgotPasswordMessage")}
                   <label for="email-address" class="sr-only">
                   {t("email")}
                   </label>
@@ -197,7 +197,7 @@ const LoginPage = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    class="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    class="mt-4 mb-4 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder={t("email")}
                   />
                   <div class="flex gap-2">

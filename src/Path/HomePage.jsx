@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import below from "../assets/homeimage.jpg";
@@ -14,7 +15,8 @@ import THREEIMAGE from "../assets/03.png";
 import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 const HomePage = () => {
-  //window.scrollTo(0, 0);
+  const { t, i18n } = useTranslation();
+  window.scrollTo(0, 0);
 
   // Data Population Starts
   // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
@@ -79,7 +81,7 @@ const HomePage = () => {
               />
               <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="font-sans text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
-                  Find everything from your location
+                {t("homePageHeading")}
                 </h1>
               </div>
             </div>
@@ -88,7 +90,7 @@ const HomePage = () => {
       </div>
 
       <h2 class="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center">
-          The most popular categories
+        {t("mostPopulatCategories")}
         </h2>
 
       <div class="bg-white lg:px-20 md:px-5 sm:px-0 px-0 py-6 mt-10 mb-10 flex flex-col">
@@ -110,7 +112,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 text-center font-sans font-bold">
-              NEWS
+            {t("news")}
             </h2>
           </div>
           <div
@@ -130,7 +132,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              ROAD WORKS / TRAFFIC
+            {t("roadTraffic")}
             </h2>
           </div>
           <div
@@ -150,7 +152,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              EVENTS
+            {t("events")}
             </h2>
           </div>
           <div
@@ -170,7 +172,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              CLUBS
+            {t("clubs")}
             </h2>
           </div>
           <div
@@ -190,7 +192,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              REGIONAL PRODUCTS
+            {t("regionalProducts")}
             </h2>
           </div>
           <div
@@ -210,7 +212,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              OFFER / SEARCH
+            {t("offerSearch")}
             </h2>
           </div>
           <div
@@ -230,7 +232,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              NEW CITIZEN INFO
+            {t("newCitizenInfo")}
             </h2>
           </div>
           <div
@@ -250,7 +252,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              DEFECT REPORT
+            {t("defectReport")}
             </h2>
           </div>
 
@@ -271,7 +273,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              LOST AND FOUND
+            {t("lostAndFound")}
             </h2>
           </div>
           <div
@@ -291,7 +293,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              COMPANY PORTRAITS
+            {t("companyPortaits")}
             </h2>
           </div>
           <div  onClick={() => {
@@ -309,7 +311,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              CARPOOLING / PUBLIC TRANSPORT
+            {t("carpoolingPublicTransport")}
             </h2>
           </div>
           <div
@@ -329,7 +331,7 @@ const HomePage = () => {
               </svg>
             </div>
             <h2 class="flex items-center justify-center m-auto mt-2 font-sans font-bold text-center">
-              OFFERS
+            {t("offers")}
             </h2>
           </div>
 
@@ -337,7 +339,7 @@ const HomePage = () => {
       </div>
 
       <h2 class="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold">
-          Discover more places
+          {t("discoverMorePlaces")}
         </h2>
 
         <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
@@ -350,9 +352,9 @@ const HomePage = () => {
                 <img alt="ecommerce" class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500" src={below} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-                    below
+                  {t("below")}
                   </h1>
-                  <p class="mb-4 ml-4 font-sans">entries</p>
+                  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
                 </div>
               </div>
             </div>
@@ -364,9 +366,9 @@ const HomePage = () => {
                 <img alt="ecommerce" class="object-cover object-center h-full w-full" src={fuchstal} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4 overflow-hidden">
-                    fuchstal
+                  {t("fuchstal")}
                   </h1>
-                  <p class="mb-4 ml-4 font-sans">entries</p>
+                  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
                 </div>
               </div>
             </div>
@@ -378,9 +380,9 @@ const HomePage = () => {
                 <img alt="ecommerce" class="object-cover object-center h-full w-full" src={applevillage} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4 font-sans">
-                    apple village
+                  {t("appleVillage")}
                   </h1>
-                  <p class="mb-4 ml-4 font-sans">entries</p>
+                  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
                 </div>
               </div>
             </div>
@@ -393,35 +395,35 @@ const HomePage = () => {
       <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
         <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 rounded overflow-hidden w-auto">
               <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto  hover:scale-125 transition-all duration-500" src={ONEIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
-                  Create an account
+                {t("createAnAccount")}
                 </h2>
-                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">Create an account to be able to actively participate in city events.</p>
+                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">{t("createAnAccountDescription")}</p>
               </div>
             </div>
           </div>
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 w-96 rounded overflow-hidden w-auto">
               <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={TWOIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
-                  Get verified
+                {t("getVerified")}
                 </h2>
-                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">Verification is necessary to ensure regular quality.</p>
+                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">{t("getVerifiedDescription")}</p>
               </div>
             </div>
           </div>
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
-            <div class="relative h-96 w-96 rounded overflow-hidden">
+            <div class="relative h-96 w-96 rounded overflow-hidden w-auto">
               <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={THREEIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
-                  Start
+                {t("start")}
                 </h2>
-                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">Immediately afterwards you can get started and actively participate in what is happening in the city.</p>
+                <p class="text-gray-900 title-font text-lg font-bold text-start font-sans">{t("startDescription")}</p>
               </div>
             </div>
           </div>
