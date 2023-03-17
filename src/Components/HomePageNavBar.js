@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Popover, Transition } from '@headlessui/react'
-import axios from 'axios';
+import { useTranslation } from "react-i18next";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 export default function HomePageNavBar() {
 
   let navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const navigateTo = (path) => {
     if (path) {
       navigate(path);
@@ -51,13 +52,13 @@ useEffect(() => {
 
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
             <a onClick={() => navigateTo("/Register")} href="#" className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-              Log In
+            {t("login")}
             </a>
             <a
               onClick={() => isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")}
               className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
             >
-              Submit entry
+              {t("submit")}
             </a>
           </div>
         </div>
@@ -88,12 +89,12 @@ useEffect(() => {
                   href="#"
                   className="flex font-sans w-full items-center justify-center rounded-md border border-transparent bg-blue-800 px-4 py-2 text-base font-medium text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 >
-                  Sign up
+                  {t("signup")}
                 </a>
                 <p className="mt-6 text-center text-base font-medium text-gray-500">
                   Existing customer?{' '}
                   <a href="#" className="text-blue-800 hover:text-[0_4px_9px_-4px_#3b71ca] font-sans">
-                    Sign in
+                  {t("signin")}
                   </a>
                 </p>
               </div>

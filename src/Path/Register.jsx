@@ -109,7 +109,7 @@ const Register = () => {
         </div>
         <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
-          <div class="-space-y-px space-y-4 rounded-md shadow-sm">
+          <div class="space-y-2 rounded-md shadow-sm">
             <div>
               <span class="grid grid-cols-2 gap-2">
               <label for="firstName" class="sr-only">
@@ -123,7 +123,7 @@ const Register = () => {
                 onBlur={validateInput}
                 autoComplete="on"
                 placeholder={t("pleaseEnterFirstName")}
-                class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 >
               </input>
               <label for="secondName" class="sr-only">
@@ -137,7 +137,7 @@ const Register = () => {
                 onBlur={validateInput}
                 autoComplete="on"
                 placeholder={t("pleaseEnterLastName")}
-                class="appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                class="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm">
               </input>
               </span>
             </div>
@@ -154,7 +154,7 @@ const Register = () => {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder={t("pleaseEnterUsername")}
               ></input>
               {error.username && <span className='err'>{error.username}</span>}
@@ -172,7 +172,7 @@ const Register = () => {
                 onBlur={validateInput}
                 autoComplete="email"
                 required
-                class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder={t("pleaseEnterEmailAddress")}
               ></input>
               {error.email && <span className='err'>{error.email}</span>}
@@ -188,7 +188,7 @@ const Register = () => {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder={t("pleaseEnterPassword")}
               ></input>
               {error.password && <span className='err'>{error.password}</span>}
@@ -204,7 +204,7 @@ const Register = () => {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder={t("pleaseConfirmPassword")}
               ></input>
               {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
