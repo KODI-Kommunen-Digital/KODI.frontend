@@ -1,4 +1,4 @@
-import axios from "../api/axios";
+import axios from "../api/axiosInstance";
 var listingsId = 2;
 var cityId = 2;
 
