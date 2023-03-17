@@ -14,7 +14,7 @@ import Below from './Path/Below';
 import Fuchstal from './Path/Fuchstal';
 import AppleVillage from './Path/AppleVillage';
 
-//import Example1 from './Path/AppleVillage/Example1';
+import Example1 from './Path/AppleVillage/Example1';
 import Events from './Path/Listings/Events';
 import ViewProfile from './Path/AppleVillage/ViewProfile';
 
@@ -67,7 +67,7 @@ const App =()=>{
           <Route path="/Fuchstal" element={<Fuchstal />}/>
           <Route path="/AppleVillage" element={<AppleVillage />}/>
 
-          {/* <Route path="/Example1" element={<Example1 />}/> */}
+          <Route path="/Example1" element={<Example1 />}/>
           <Route path="/Events" element={<Events />}/>
           <Route path="/ViewProfile" element={<ViewProfile />}/>
 

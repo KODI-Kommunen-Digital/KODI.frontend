@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
-import { getCategoriesdata } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
@@ -13,9 +12,6 @@ const Example1 = () => {
   //populate the events titles starts
   const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
   useEffect(() => {
-    getCategoriesdata().then((response) => {
-      setCategoriesdata(response);
-    });
     document.title = "Events";
   }, []);
 
