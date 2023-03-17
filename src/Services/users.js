@@ -12,3 +12,7 @@ export async function updateProfile(newProfileObj) {
 export async function login(credentials) {
     return axios.post(`/users/login`, credentials);
 }
+
+export async function resetPass(credentials) {
+    return axios.post(`/users/forgotPassword`, credentials);
+}
