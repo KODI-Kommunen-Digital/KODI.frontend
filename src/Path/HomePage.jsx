@@ -16,7 +16,7 @@ import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=s
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
-  window.scrollTo(0, 0);
+  //window.scrollTo(0, 0);
 
   // Data Population Starts
   // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });

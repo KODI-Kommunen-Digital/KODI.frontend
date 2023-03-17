@@ -31,6 +31,39 @@ function ListingsPageSocieties() {
     setVal(deletVal);
   };
 
+  const [input, setInput] = useState({
+    title:'',
+    place:'',
+    phone: '',
+    email:'',
+    description: '',
+    media: null,
+    originalPrice:'',
+    discountedPrice:'',
+    socialMedia: ''
+  });
+
+  const [error, setError] = useState({
+    title:'',
+    place:'',
+    phone: '',
+    email:'',
+    description: '',
+    media: null,
+    originalPrice:'',
+    discountedPrice:'',
+    socialMedia: ''
+  })
+
+  const handleSubmit = async(event) =>{
+    event.preventDefault();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const time = new Date().toLocaleTimeString();
+    const dateTime = `${currentDate} ${time}`;
+    setInput({ ...input, dateTime });
+  }
+  console.log(input)
+
   const editor = useRef(null);
   const [content, setContent] = useState("");
 

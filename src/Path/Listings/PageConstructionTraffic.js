@@ -105,6 +105,10 @@ function ListingsPageConstructionTraffic() {
 
   const handleSubmit = async(event) =>{
     event.preventDefault();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const time = new Date().toLocaleTimeString();
+    const dateTime = `${currentDate} ${time}`;
+    setInput({ ...input, dateTime });
   }
   console.log(input)
 

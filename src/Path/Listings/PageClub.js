@@ -89,6 +89,11 @@ function ListingsPageClub() {
   //Sending data to backend starts
   const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
   const [input, setInput] = useState({
+    "villageId": 1,
+    "categoryId": 1,
+    "statusId": 1,
+    "sourceId": 1,
+    "userId": 2,
     title:'',
     place:'',
     phone: '',
@@ -114,6 +119,11 @@ function ListingsPageClub() {
 
   const handleSubmit = async(event) =>{
     event.preventDefault();
+    //const date = new Date().toLocaleDateString();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const time = new Date().toLocaleTimeString();
+    const dateTime = `${currentDate} ${time}`;
+    setInput({ ...input, dateTime });
 
     try {
       const getResponse = await postListingsData(input);
@@ -297,7 +307,6 @@ function ListingsPageClub() {
     const socialMediaValues = val.map(item => item.socialMedia);
     setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
   }, [val]);
-  
 
   useEffect(() => {
     setInput(prevState => ({ ...prevState, selected: val.map(item => item.selected) }));
@@ -322,7 +331,7 @@ function ListingsPageClub() {
     <section class="bg-slate-600 body-font relative">
       <SideBar />
 
-      <form onSubmit={handleSubmit} method="POST">
+      
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -705,13 +714,13 @@ function ListingsPageClub() {
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <div class="relative mb-4 mt-8 border-white">
-              <button type="submit" class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+              <button type="submit" onClick={handleSubmit} class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
                 Save Changes
               </button>
             </div>
           </div>
         </div>
-        </form>
+
     </section>
   );
 }

@@ -74,7 +74,6 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       var resp = await resetPass({"username":userReset, "language":'en'})
-      console.log(resp.data)
       setAlertInfo(true)
       setAlertType('success')
       setAlertMessage('Please check your mail')
