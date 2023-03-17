@@ -50,6 +50,7 @@ const LoginPage = () => {
   const onCancel = () => {
     setForgotPasswd(false);
     setAlertInfoPasswrd(false)
+    setAlertInfo(false)
     setUserReset('')
     setAlertMessage('')
   };
@@ -72,13 +73,13 @@ const LoginPage = () => {
   const passwrdReset = async(event)=>{
     event.preventDefault();
     try {
-      var resp = await resetPass({"username":userReset, "language":'de'})
+      var resp = await resetPass({"username":userReset, "language":'en'})
       console.log(resp.data)
-      setAlertInfoPasswrd(true)
+      setAlertInfo(true)
       setAlertType('success')
       setAlertMessage('Please check your mail')
     } catch (err) {
-      setAlertInfoPasswrd(true)
+      setAlertInfo(true)
       setAlertType('danger')
       setAlertMessage('Failed. '+ err.response.data.message)
     }
@@ -238,11 +239,6 @@ const LoginPage = () => {
                     </button>
                   </div>
                 </div>
-                {alertInfoPasswrd && (
-                <div class="py-2 mt-1 px-2">
-                  <Alert type = {alertType} message = {alertMessage} />
-                </div>
-              )}
               </>
             )}
           </div>
