@@ -112,6 +112,7 @@ class ProfilePage extends React.Component {
                 valid = false
         }
         if (valid) {
+            console.log(this.state.profile)
             updateProfile(this.state.profile).then(() => {
                 this.setAlertInfo(true, "Your changes were saved succesfully", "success");
                 setInterval(() => {
