@@ -91,5 +91,30 @@
   "appleVillage": "apple village",
   "uploadArea": "Upload the first post here",
   "uploadAreaDescription": "Whether event, offers or news. Here you can easily upload a contribution",
-  "upload": "upload post"
+  "upload": "upload post",
+
+
+  "filteryourResult": "Filter your result",
+  "location": "Location",
+  "applyFilter": "Apply Filter",
+  "removeFilter": "Remove Filter",
+  "chooseOneLocation": "Choose one location",
+  "itemsFound": "items found",
+  "sort": "Sort by categories",
+  "atoztitle": "A - Z (title)",
+  "ztoatitle": "Z - A (title)",
+  "recent": "Recent",
+  "oldest": "Oldest",
+
+  "speakers": "Speakers",
+  "split": "Split",
+  "regionalProductsHeading": "Regional Products",
+  "ownerInfo": "Add owner info",
+  "viewProfile" : "View Profiles",
+  "smilarItems": "Similar items",
+
+  "contactInfo": "Contact Information",
+  "profileEntries": "Profile Entries",
+  "aboutUs": "About Us"
+
 }
