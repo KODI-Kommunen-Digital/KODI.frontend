@@ -16,3 +16,7 @@ export async function login(credentials) {
 export async function resetPass(credentials) {
     return axios.post(`/users/forgotPassword`, credentials);
 }
+
+export async function updatePassword(credentials) {
+    return axios.post(`/users/resetPassword`, credentials);
+}

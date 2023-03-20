@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
+import { updatePassword } from "../Services/usersApi";
+import Alert from "../Components/Alert";
 
 const PasswordForgot = () => {
 
   const searchParams = new URLSearchParams(window.location.search);
   const token = searchParams.get('token');
   const userId = searchParams.get('userId');
+
+  const [alertInfo, setAlertInfo] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   useEffect(() => {
     document.title = "Heidi - Update Password";
@@ -71,9 +77,22 @@ const PasswordForgot = () => {
 
   const handleSubmit = async(event) =>{
     event.preventDefault();
-
-    console.log(input)
-    routeChangeToLogin()
+    try {
+      await updatePassword({
+        "userId":userId,
+        "token": token,
+        "password": password,
+        "language":'en'
+      })
+      setAlertInfo(true)
+      setAlertType('success')
+      setAlertMessage('Your password is updated')
+      routeChangeToLogin()
+    } catch (err) {
+      setAlertInfo(true)
+      setAlertType('danger')
+      setAlertMessage('Failed. '+ err.response.data.message)
+    }
   }
 
   return (
@@ -151,6 +170,11 @@ const PasswordForgot = () => {
               Update Password
             </button>
           </div>
+          {alertInfo && (
+                <div class="py-2 mt-1 px-2">
+                  <Alert type = {alertType} message = {alertMessage} />
+                </div>
+              )}
           <div class="text-sm">
             Already have an account? Please Login
             <span

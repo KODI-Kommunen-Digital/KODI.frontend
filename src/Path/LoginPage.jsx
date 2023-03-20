@@ -59,28 +59,28 @@ const LoginPage = () => {
     event.preventDefault();
 
     try{
-      var loginResponse=  await login({'username':user,'password':pwd })
-      setUser('');
-      setPwd('');
-      routeChangeToDashboard()
+        await login({'username':user,'password':pwd })
+        setUser('');
+        setPwd('');
+        routeChangeToDashboard()
     } catch (err) {
-      setAlertInfo(true)
-      setAlertType('danger')
-      setAlertMessage('Login Failed. '+ err.response.data.message)
+        setAlertInfo(true)
+        setAlertType('danger')
+        setAlertMessage('Login Failed. '+ err.response.data.message)
     }
   }
 
   const passwrdReset = async(event)=>{
     event.preventDefault();
     try {
-      var resp = await resetPass({"username":userReset, "language":'de'})
-      setAlertInfo(true)
-      setAlertType('success')
-      setAlertMessage('Please check your mail')
+        await resetPass({"username":userReset, "language":'de'})
+        setAlertInfo(true)
+        setAlertType('success')
+        setAlertMessage('Please check your mail')
     } catch (err) {
-      setAlertInfo(true)
-      setAlertType('danger')
-      setAlertMessage('Failed. '+ err.response.data.message)
+        setAlertInfo(true)
+        setAlertType('danger')
+        setAlertMessage('Failed. '+ err.response.data.message)
     }
   }
 
