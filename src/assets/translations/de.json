@@ -89,5 +89,17 @@
   "appleVillage": "Apfeldorf",
   "uploadArea": "Laden Sie hier den ersten Beitrag hoch",
   "uploadAreaDescription": "Ob Veranstaltung, Angebote oder News. Hier können Sie ganz einfach einen Beitrag hochladen",
-  "upload": "Beitrag hochladen"
+  "upload": "Beitrag hochladen",
+
+  "filteryourResult": "Filtern Sie Ihr Ergebnis",
+  "location": "Standort",
+  "applyFilter": "Filter anwenden",
+  "removeFilter": "Filter entfernen",
+  "chooseOneLocation": "Wählen Sie einen Standort aus",
+  "itemsFound": "Gegenstände gefunden",
+  "sort": "Nach Kategorien sortieren",
+  "atoztitle": "A - Z (Titel)",
+  "ztoatitle": "Z - A (Titel)",
+  "recent": "Jüngste",
+  "oldest": "Älteste"
 }
