@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 
 const PasswordForgot = () => {
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const token = searchParams.get('token');
+  const userId = searchParams.get('userId');
+
   useEffect(() => {
     document.title = "Heidi - Update Password";
   }, []);
@@ -84,11 +89,11 @@ const PasswordForgot = () => {
             Create new password
           </h3>
         </div>
-        <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
+        <div class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
           <div class="-space-y-px space-y-4 rounded-md shadow-sm">
             <div>
-              <label for="password" class="sr-only">
+              <label htmlFor="password" class="sr-only">
                 New Password
               </label>
               <input
@@ -105,7 +110,7 @@ const PasswordForgot = () => {
               {error.password && <span className='err'>{error.password}</span>}
             </div>
             <div>
-              <label for="password" class="sr-only">
+              <label htmlFor="password" class="sr-only">
                 Confirm New Password
               </label>
               <input
@@ -123,6 +128,7 @@ const PasswordForgot = () => {
           </div>
           <div>
             <button
+              onClick={handleSubmit}
               type="submit"
               id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
@@ -155,7 +161,7 @@ const PasswordForgot = () => {
               here{" "}
             </span>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

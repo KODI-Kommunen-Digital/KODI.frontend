@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { login, resetPass } from "../Services/users";
+import { login, resetPass } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {
@@ -73,7 +73,7 @@ const LoginPage = () => {
   const passwrdReset = async(event)=>{
     event.preventDefault();
     try {
-      var resp = await resetPass({"username":userReset, "language":'en'})
+      var resp = await resetPass({"username":userReset, "language":'de'})
       setAlertInfo(true)
       setAlertType('success')
       setAlertMessage('Please check your mail')

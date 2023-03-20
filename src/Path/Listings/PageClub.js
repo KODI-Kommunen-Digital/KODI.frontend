@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {getListingsData, postListingsData , updateListingsData} from '../../Services/listingsData'
+import {getListingsData, postListingsData , updateListingsData} from '../../Services/listingsApi'
 
 
 function ListingsPageClub() {

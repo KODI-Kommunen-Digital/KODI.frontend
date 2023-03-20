@@ -2,7 +2,7 @@ import React from 'react';
 import SideBar from '../Components/SideBar';
 import Alert from '../Components/Alert';
 import './bodyContainer.css';
-import {getProfile, updateProfile} from '../Services/users'
+import {getProfile, updateProfile} from '../Services/usersApi'
 
 class ProfilePage extends React.Component {
     constructor(props) {
