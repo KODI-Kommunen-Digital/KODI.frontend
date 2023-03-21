@@ -1,5 +1,5 @@
 import axios from "../api/axiosInstance";
-var userId = 1;
+var userId = window.localStorage.getItem("userId");
 
 export async function getProfile() {
     return axios.get(`/users/${userId}`);
@@ -7,10 +7,6 @@ export async function getProfile() {
 
 export async function updateProfile(newProfileObj) {
     return axios.patch(`/users/${userId}`, newProfileObj);
-}
-
-export async function login(credentials) {
-    return axios.post(`/users/login`, credentials);
 }
 
 export async function resetPass(credentials) {

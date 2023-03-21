@@ -4,6 +4,7 @@ import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass } from "../Services/usersApi";
+import { login } from "../Services/login";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {

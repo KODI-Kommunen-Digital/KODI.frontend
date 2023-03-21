@@ -31,10 +31,8 @@ instance.interceptors.response.use(
         const userId = window.localStorage.getItem("userId");
         const response = await instance.post(`users/${userId}/refresh`, { refreshToken });
 
-        const newAccessToken = response.data.accessToken;
-        window.localStorage.setItem("accessToken", newAccessToken);
-
-        originalRequest.headers["authorization"] = "Bearer " + newAccessToken;
+        window.localStorage.setItem("accessToken", response.data.accessToken);
+        window.localStorage.setItem("refreshToken", response.data.refreshToken);
 
         return instance(originalRequest);
       } catch (refreshError) {
