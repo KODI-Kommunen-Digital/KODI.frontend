@@ -81,7 +81,7 @@ const PasswordForgot = () => {
       await updatePassword({
         "userId":userId,
         "token": token,
-        "password": password,
+        "password": input.password,
         "language":'en'
       })
       setAlertInfo(true)

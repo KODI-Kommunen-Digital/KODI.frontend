@@ -37,7 +37,7 @@ instance.interceptors.response.use(
 
       try {
         const refreshToken = window.localStorage.getItem("refreshToken");
-        const response = await refreshInstance.post('/refresh-token', { refreshToken });
+        const response = await instance.post('/refresh-token', { refreshToken });
 
         const newAccessToken = response.data.accessToken;
         window.localStorage.setItem("accessToken", newAccessToken);
