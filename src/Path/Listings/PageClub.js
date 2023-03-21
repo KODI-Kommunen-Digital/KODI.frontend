@@ -9,7 +9,7 @@ import {getListingsData, postListingsData , updateListingsData} from '../../Serv
 
 
 function ListingsPageClub() {
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   const category = 4;
   const subCategory = 0;
 
