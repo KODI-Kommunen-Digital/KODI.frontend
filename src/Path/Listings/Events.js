@@ -377,7 +377,7 @@ const Events = () => {
         </div>
 
       <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {listingsData && listingsData.map((listing) => (
+      {listingsData && listingsData.slice(0, 9).map((listing) => (
         <div
           onClick={() => navigateTo("/Example1")}
           class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"

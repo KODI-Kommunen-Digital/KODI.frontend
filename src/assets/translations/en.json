@@ -80,6 +80,7 @@
   "offers": "OFFERS",
   "discoverMorePlaces": "Discover more places",
   "entries": "entries",
+  "recentListings": "Recent Listings",
   "createAnAccount": "Create an account",
   "createAnAccountDescription": "Create an account to be able to actively participate in city events.",
   "getVerified": "Get verified",
@@ -92,6 +93,7 @@
   "uploadArea": "Upload the first post here",
   "uploadAreaDescription": "Whether event, offers or news. Here you can easily upload a contribution",
   "upload": "upload post",
+  "viewMore": "view more listings......",
 
 
   "filteryourResult": "Filter your result",
