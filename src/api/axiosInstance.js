@@ -1,21 +1,12 @@
 import axios from "axios";
 
-function getLocalAccessToken() {
-    const accessToken = window.localStorage.getItem("accessToken");
-    return accessToken;
-  }
-
-export const instance = axios.create({
-    // baseURL: "http://localhost:8080/api",
-    baseURL: 'http://localhost:8002',
-    headers: {
-      "Content-Type": "application/json",
-    },
+const instance = axios.create({
+    baseURL: 'http://localhost:8002'
   });
 
 instance.interceptors.request.use(
     async (config) => {
-      const token = getLocalAccessToken();
+      const token = window.localStorage.getItem("accessToken");
       if (token) {
         config.headers["authorization"] = "Bearer " + token;
       }
@@ -37,7 +28,8 @@ instance.interceptors.response.use(
 
       try {
         const refreshToken = window.localStorage.getItem("refreshToken");
-        const response = await instance.post('/refresh-token', { refreshToken });
+        const userId = window.localStorage.getItem("userId");
+        const response = await instance.post(`users/${userId}/refresh`, { refreshToken });
 
         const newAccessToken = response.data.accessToken;
         window.localStorage.setItem("accessToken", newAccessToken);
@@ -47,14 +39,13 @@ instance.interceptors.response.use(
         return instance(originalRequest);
       } catch (refreshError) {
         // If refreshing the token fails, redirect to login
-        window.location.href = "/login";
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }
+    window.location.href = "/";
     return Promise.reject(error);
   }
 );
 
-export default axios.create({
-    baseURL: 'http://localhost:8002'
-});
+export default instance;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { login, resetPass } from "../Services/usersApi";
+import { resetPass } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {
@@ -59,7 +59,10 @@ const LoginPage = () => {
     event.preventDefault();
 
     try{
-        await login({'username':user,'password':pwd })
+        var response = await login({'username':user,'password':pwd })
+        window.localStorage.setItem('accessToken', response.data.accessToken);
+        window.localStorage.setItem('refreshToken', response.data.refreshToken);
+        window.localStorage.setItem('userId', response.data.userId);
         setUser('');
         setPwd('');
         routeChangeToDashboard()
@@ -221,7 +224,7 @@ const LoginPage = () => {
                   />
                   <div class="flex gap-2">
                     <button
-                      type="submit"
+                      type="button"
                       id="finalbutton"
                       onClick={passwrdReset}
                       class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"

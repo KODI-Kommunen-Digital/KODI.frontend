@@ -212,7 +212,7 @@ class ProfilePage extends React.Component {
                                 placeholder="Enter your username here"
                                 defaultValue={this.state.profile.username}
                                 onChange={this.handleProfileChange}
-                                disabled='true'
+                                disabled={true}
                             />
                             </div>
                         </div>
