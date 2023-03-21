@@ -2,6 +2,8 @@ import React, { useEffect , useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
+import { updatePassword } from "../Services/usersApi";
+import Alert from "../Components/Alert";
 
 const PasswordUpdate = () => {
   const { t, i18n } = useTranslation();
@@ -12,6 +14,8 @@ const PasswordUpdate = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const token = searchParams.get('token');
   const userId = searchParams.get('userId');
+  const password = searchParams.get('password');
+  const oldPassword = searchParams.get('oldPassword');
 
   const [alertInfo, setAlertInfo] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
