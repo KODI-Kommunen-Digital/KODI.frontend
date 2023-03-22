@@ -12,18 +12,23 @@ class ProfilePage extends React.Component {
             alertInfo: {show : false, message: "", type: null},
             showError: {},
             errorMessage: {},
-            formValid: true
+            formValid: true,
+            pageLoading: true,
+            updatingProfile: false
         };
         this.handleProfileChange = this.handleProfileChange.bind(this);
         this.updateChanges = this.updateChanges.bind(this);
     }
     componentDidMount() {
         document.title = "Heidi - Profile";
+        this.setPageLoading(true)
         getProfile().then((response) => {
             const newState = Object.assign({}, this.state);
             newState.profile = response.data.data;
+            newState.pageLoading = false;
             this.setState(newState);
         }).catch((error) => {
+            this.setPageLoading(false)
             this.setAlertInfo(true, "Failed to fetch your profile info, please try again!", "danger");
         })
     }
@@ -61,6 +66,20 @@ class ProfilePage extends React.Component {
         const newState = Object.assign({}, this.state);
         if (newState.formValid !== value) {
             newState.formValid = value;
+            this.setState(newState);
+        }
+    }
+    setPageLoading(value) {
+        const newState = Object.assign({}, this.state);
+        if (newState.pageLoading !== value) {
+            newState.pageLoading = value;
+            this.setState(newState);
+        }
+    }
+    setUpdatingProfile(value) {
+        const newState = Object.assign({}, this.state);
+        if (newState.updatingProfile !== value) {
+            newState.updatingProfile = value;
             this.setState(newState);
         }
     }
@@ -111,19 +130,34 @@ class ProfilePage extends React.Component {
             if (this.state.showError[property])
                 valid = false
         }
-        if (valid) {
-            console.log(this.state.profile)
-            updateProfile(this.state.profile).then(() => {
-                this.setAlertInfo(true, "Your changes were saved succesfully", "success");
-                setInterval(() => {
-                    this.setAlertInfo(false, "", null)
-                    }, 5000)
-            }).catch(() => {
-                this.setAlertInfo(true, "Your changes were not saved, please try after sometime!", "danger");
-                setInterval(() => {
-                    this.setAlertInfo(false, "", null)
-                    }, 5000);
-            })
+        if (valid) {            
+            const newState = Object.assign({}, this.state);
+            if (newState.updatingProfile !== true) {
+                newState.updatingProfile = true;
+                this.setState(newState, () => {
+                    updateProfile(this.state.profile).then(() => {
+                        const newState = Object.assign({}, this.state);
+                        if (newState.updatingProfile !== false) {
+                            newState.updatingProfile = false;
+                            this.setState(newState, () => {
+                                this.setAlertInfo(true, "Your changes were saved succesfully", "success");
+                                setInterval(() => {
+                                    this.setAlertInfo(false, "", null)
+                            }, 5000)})
+                        }
+                    }).catch(() => {
+                        const newState = Object.assign({}, this.state);
+                        if (newState.updatingProfile !== false) {
+                            newState.updatingProfile = false;
+                            this.setState(newState, () => {
+                                this.setAlertInfo(true, "Your changes were not saved, please try after sometime!", "danger");
+                                setInterval(() => {
+                                    this.setAlertInfo(false, "", null)
+                            }, 5000)});
+                        }
+                    })
+                 });
+            }
         } else {
             this.setAlertInfo(true, "You have entered invalid data. Please correct and try again", "danger");
             setInterval(() => {
@@ -135,238 +169,254 @@ class ProfilePage extends React.Component {
         return (
         <div class="bg-slate-600">
             <SideBar/>
-            <div class="container w-auto px-5 py-2">
-                <div class="bg-white mt-4 p-6">
-                    <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-                        Account
-                        <div className="my-4 bg-gray-600 h-[1px]"/>
-                    </h2>
-                    <div class="relative mb-4">
-                        <div class="pb-8">
-                            <label
-                            class="block px-2 text-lg font-medium text-gray-600"
-                            >
-                            Profile
-                            </label>
-                            <label
-                            class="block px-2 text-sm font-medium text-gray-400"
-                            >
-                            This information will be displayed publicly, so be careful what you share
-                            </label>
-                        </div>
-                        <div class="py-2 grid grid-cols-1 md:grid-cols-2">
-                            <div class="mt-1 px-2">
+            {
+            this.state.pageLoading ?
+            <div class="flex h-screen justify-center items-center">
+                <svg aria-hidden="true" class="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg>
+            </div> :
+            <div>
+                <div class="container w-auto px-5 py-2">
+                    <div class="bg-white mt-4 p-6">
+                        <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+                            Account
+                            <div className="my-4 bg-gray-600 h-[1px]"/>
+                        </h2>
+                        <div class="relative mb-4">
+                            <div class="pb-8">
                                 <label
-                                htmlFor="firstname"
+                                class="block px-2 text-lg font-medium text-gray-600"
+                                >
+                                Profile
+                                </label>
+                                <label
+                                class="block px-2 text-sm font-medium text-gray-400"
+                                >
+                                This information will be displayed publicly, so be careful what you share
+                                </label>
+                            </div>
+                            <div class="py-2 grid grid-cols-1 md:grid-cols-2">
+                                <div class="mt-1 px-2">
+                                    <label
+                                    htmlFor="firstname"
+                                    class="block text-md font-medium text-gray-600"
+                                    >
+                                        First Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="firstname"
+                                        id="firstname"
+                                        class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                        placeholder="Enter your first name here"
+                                        defaultValue={this.state.profile.firstname}
+                                        onChange={this.handleProfileChange}
+                                    />
+                                    <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.firstname ? 'visible' : 'hidden'}}>
+                                        {this.state.errorMessage.firstname}
+                                    </div>
+                                </div>
+                                <div class="mt-1 px-2">
+                                    <label
+                                    htmlFor="lastname"
+                                    class="block text-md font-medium text-gray-600"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="lastname"
+                                        id="lastname"
+                                        class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                        placeholder="Enter your last name here"
+                                        defaultValue={this.state.profile.lastname}
+                                        onChange={this.handleProfileChange}
+                                    />
+                                    <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.lastname ? 'visible' : 'hidden'}}>
+                                        {this.state.errorMessage.lastname}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-3 grid grid-cols-1">
+                                <div class="mt-1 px-2">
+                                <label
+                                htmlFor="username"
                                 class="block text-md font-medium text-gray-600"
                                 >
-                                    First Name
+                                    User Name
                                 </label>
                                 <input
                                     type="text"
-                                    name="firstname"
-                                    id="firstname"
-                                    class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    placeholder="Enter your first name here"
-                                    defaultValue={this.state.profile.firstname}
+                                    name="username"
+                                    id="username"
+                                    class="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    placeholder="Enter your username here"
+                                    defaultValue={this.state.profile.username}
                                     onChange={this.handleProfileChange}
+                                    disabled={true}
                                 />
-                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.firstname ? 'visible' : 'hidden'}}>
-                                    {this.state.errorMessage.firstname}
                                 </div>
                             </div>
-                            <div class="mt-1 px-2">
+                            <div class="py-3 grid grid-cols-1">
+                                <div class="mt-1 px-2">
                                 <label
-                                htmlFor="lastname"
+                                htmlFor="photo"
                                 class="block text-md font-medium text-gray-600"
                                 >
-                                    Last Name
+                                    Photo
+                                </label>
+                                <div class="py-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
+                                    <div class="flex flex-col justify-center items-center">
+                                        <img class="rounded-full h-20" src={this.state.profile.image} alt="avatar" />
+                                    </div>
+                                    <div class="flex flex-col justify-center items-center">
+                                        <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+                                            Change
+                                        </button>
+                                    </div>
+                                    <div class="flex flex-col justify-center items-center">
+                                        <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="py-3 grid grid-cols-1">
+                                <div class="mt-1 px-2">
+                                <label
+                                htmlFor="description"
+                                class="block text-md font-medium text-gray-600"
+                                >
+                                    Description
+                                </label>
+                                <textarea
+                                    type="text"
+                                    name="description"
+                                    id="description"
+                                    class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    placeholder="Write a description about yourself"
+                                    defaultValue={this.state.profile.description}
+                                    onChange={this.handleProfileChange}
+                                />
+                                </div>
+                            </div> 
+                            <div class="py-3 grid grid-cols-1">
+                                <div class="mt-1 px-2">
+                                <label
+                                htmlFor="website"
+                                class="block text-md font-medium text-gray-600"
+                                >
+                                    URL/Website
                                 </label>
                                 <input
                                     type="text"
-                                    name="lastname"
-                                    id="lastname"
+                                    name="website"
+                                    id="website"
                                     class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    placeholder="Enter your last name here"
-                                    defaultValue={this.state.profile.lastname}
+                                    placeholder="Enter your website here"
+                                    defaultValue={this.state.profile.website}
                                     onChange={this.handleProfileChange}
                                 />
-                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.lastname ? 'visible' : 'hidden'}}>
-                                    {this.state.errorMessage.lastname}
                                 </div>
-                            </div>
-                        </div>
-                        <div class="py-3 grid grid-cols-1">
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="username"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                User Name
-                            </label>
-                            <input
-                                type="text"
-                                name="username"
-                                id="username"
-                                class="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                placeholder="Enter your username here"
-                                defaultValue={this.state.profile.username}
-                                onChange={this.handleProfileChange}
-                                disabled={true}
-                            />
-                            </div>
-                        </div>
-                        <div class="py-3 grid grid-cols-1">
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="photo"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                Photo
-                            </label>
-                            <div class="py-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
-                                <div class="flex flex-col justify-center items-center">
-                                    <img class="rounded-full h-20" src={this.state.profile.image} alt="avatar" />
-                                </div>
-                                <div class="flex flex-col justify-center items-center">
-                                    <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
-                                        Change
-                                    </button>
-                                </div>
-                                <div class="flex flex-col justify-center items-center">
-                                    <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center">
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="py-3 grid grid-cols-1">
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="description"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                Description
-                            </label>
-                            <textarea
-                                type="text"
-                                name="description"
-                                id="description"
-                                class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                placeholder="Write a description about yourself"
-                                defaultValue={this.state.profile.description}
-                                onChange={this.handleProfileChange}
-                            />
-                            </div>
-                        </div> 
-                        <div class="py-3 grid grid-cols-1">
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="website"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                URL/Website
-                            </label>
-                            <input
-                                type="text"
-                                name="website"
-                                id="website"
-                                class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                placeholder="Enter your website here"
-                                defaultValue={this.state.profile.website}
-                                onChange={this.handleProfileChange}
-                            />
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="container w-auto px-5 py-2 bg-slate-600">
-                <div class="bg-white mt-4 p-6">
-                    <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-                        Personal Information
-                        <div className="my-4 bg-gray-600 h-[1px]"/>
-                    </h2>
-                    <div class="relative mb-4">
-                        <div class="pb-8">
-                            <label
-                            class="block px-2 text-sm font-medium text-gray-400"
-                            >
-                            This information will be displayed publicly, so be careful what you share
-                            </label>
+                <div class="container w-auto px-5 py-2 bg-slate-600">
+                    <div class="bg-white mt-4 p-6">
+                        <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+                            Personal Information
+                            <div className="my-4 bg-gray-600 h-[1px]"/>
+                        </h2>
+                        <div class="relative mb-4">
+                            <div class="pb-8">
+                                <label
+                                class="block px-2 text-sm font-medium text-gray-400"
+                                >
+                                This information will be displayed publicly, so be careful what you share
+                                </label>
+                            </div>
+                            <div class="py-2 grid grid-cols-1 md:grid-cols-2">
+                                <div class="mt-1 px-2">
+                                <label
+                                class="block text-md font-medium text-gray-600"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    type="text"
+                                    name="email"
+                                    id="email"
+                                    class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    placeholder="Enter your email here"
+                                    defaultValue={this.state.profile.email}
+                                    onChange={this.handleProfileChange}
+                                />
+                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.email ? 'visible' : 'hidden'}}>
+                                    {this.state.errorMessage.email}
+                                </div>
+                                </div>
+                                <div class="mt-1 px-2">
+                                <label
+                                htmlFor="phoneNumber"
+                                class="block text-md font-medium text-gray-600"
+                                >
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="text"
+                                    name="phoneNumber"
+                                    id="phoneNumber"
+                                    class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    placeholder="Enter your phone number here"
+                                    defaultValue={this.state.profile.phoneNumber}
+                                    onChange={this.handleProfileChange}
+                                />
+                                <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.phoneNumber ? 'visible' : 'hidden'}}>
+                                    {this.state.errorMessage.phoneNumber}
+                                </div>
+                                </div>
+                            </div>
+                            <div class="py-2 grid grid-cols-1">
+                                <div class="mt-1 px-2">
+                                <label
+                                htmlFor="category"
+                                class="block text-md font-medium text-gray-600"
+                                >
+                                    Password
+                                </label>
+                                <button className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => this.navigateTo('/passwordUpdate')}>
+                                    Update Password
+                                </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="py-2 grid grid-cols-1 md:grid-cols-2">
-                            <div class="mt-1 px-2">
-                            <label
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                Email
-                            </label>
-                            <input
-                                type="text"
-                                name="email"
-                                id="email"
-                                class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                placeholder="Enter your email here"
-                                defaultValue={this.state.profile.email}
-                                onChange={this.handleProfileChange}
-                            />
-                            <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.email ? 'visible' : 'hidden'}}>
-                                {this.state.errorMessage.email}
-                            </div>
-                            </div>
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="phoneNumber"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                Phone Number
-                            </label>
-                            <input
-                                type="text"
-                                name="phoneNumber"
-                                id="phoneNumber"
-                                class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                placeholder="Enter your phone number here"
-                                defaultValue={this.state.profile.phoneNumber}
-                                onChange={this.handleProfileChange}
-                            />
-                            <div className="h-[24px] text-red-600" style={{visibility: this.state.showError.phoneNumber ? 'visible' : 'hidden'}}>
-                                {this.state.errorMessage.phoneNumber}
-                            </div>
-                            </div>
-                        </div>
-                        <div class="py-2 grid grid-cols-1">
-                            <div class="mt-1 px-2">
-                            <label
-                            htmlFor="category"
-                            class="block text-md font-medium text-gray-600"
-                            >
-                                Password
-                            </label>
-                            <button className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => this.navigateTo('/passwordUpdate')}>
-                                Update Password
+                        <div className="py-2 mt-1 px-2">
+                            <button className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+                            onClick={this.updateChanges}
+                            disabled={!this.state.formValid || this.state.updatingProfile}>
+                                Save Changes
+                                { this.state.updatingProfile &&
+                                <svg aria-hidden="true" class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                </svg> }
                             </button>
-                            </div>
                         </div>
+                        { this.state.alertInfo.show ? 
+                            <div class="py-2 mt-1 px-2">
+                                <Alert ref={this.alertRef} type={this.state.alertInfo.type} message={this.state.alertInfo.message}/>
+                            </div> :
+                            null
+                        }
                     </div>
-                    <div className="py-2 mt-1 px-2">
-                        <button className={`w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded ${this.state.formValid ? "bg-black" : "bg-slate-600" }`}
-                        onClick={this.updateChanges}
-                        disabled={!this.state.formValid}>
-                            Save Changes
-                        </button>
-                    </div>
-                    { this.state.alertInfo.show ? 
-                        <div class="py-2 mt-1 px-2">
-                            <Alert ref={this.alertRef} type={this.state.alertInfo.type} message={this.state.alertInfo.message}/>
-                        </div> :
-                        null
-                    }
                 </div>
             </div>
+            }
         </div>
         )
     }

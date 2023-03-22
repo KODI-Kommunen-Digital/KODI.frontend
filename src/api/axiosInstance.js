@@ -23,25 +23,28 @@ instance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = window.localStorage.getItem("refreshToken");
-        const userId = window.localStorage.getItem("userId");
-        const response = await instance.post(`users/${userId}/refresh`, { refreshToken });
-
-        window.localStorage.setItem("accessToken", response.data.accessToken);
-        window.localStorage.setItem("refreshToken", response.data.refreshToken);
-
-        return instance(originalRequest);
-      } catch (refreshError) {
-        // If refreshing the token fails, redirect to login
+    if (error.response.status === 401) {
+      if (!originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          const refreshToken = window.localStorage.getItem("refreshToken");
+          const userId = window.localStorage.getItem("userId");
+          const response = await instance.post(`users/${userId}/refresh`, { refreshToken });
+  
+          window.localStorage.setItem("accessToken", response.data.accessToken);
+          window.localStorage.setItem("refreshToken", response.data.refreshToken);
+  
+          return instance(originalRequest);
+        } catch (refreshError) {
+          // If refreshing the token fails, redirect to login
+          window.location.href = "/";
+          return Promise.reject(refreshError);
+        }
+      } else {
         window.location.href = "/";
-        return Promise.reject(refreshError);
+        return Promise.reject(error);
       }
     }
-    window.location.href = "/";
     return Promise.reject(error);
   }
 );
