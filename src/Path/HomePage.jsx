@@ -3,6 +3,8 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getListingsData } from "../Services/listings";
+import {sortRecent} from "../Services/helper"
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import below from "../assets/homeimage.jpg";
@@ -17,6 +19,20 @@ import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=s
 const HomePage = () => {
   const { t, i18n } = useTranslation();
   //window.scrollTo(0, 0);
+
+  const [listingsData, setListingsData] = useState([]);
+  useEffect(() => {
+    getListingsData().then((response) => {
+      setListingsData(response);
+    });
+  }, []);
+
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  const sortedListings = [...listingsData].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  }).slice(0, 9);
 
   // Data Population Starts
   // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
@@ -93,8 +109,8 @@ const HomePage = () => {
         {t("mostPopulatCategories")}
         </h2>
 
-      <div class="bg-white lg:px-20 md:px-5 sm:px-0 px-0 py-6 mt-10 mb-10 flex flex-col">
-        <div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
+      <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 flex flex-col">
+        <div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
           <div
             onClick={() => {
               localStorage.setItem("selectedItem", "News"); // store the name value in localStorage
@@ -342,7 +358,7 @@ const HomePage = () => {
           {t("discoverMorePlaces")}
         </h2>
 
-        <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+        <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
             <div onClick={() => {
               navigateTo("/Places");
@@ -387,6 +403,41 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+        </div>
+
+
+      <div className="my-4 bg-gray-200 h-[1px]"></div>
+
+      <h2 class="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold">
+            {t("recentListings")}
+          </h2>
+
+        <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          <div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
+            {sortedListings && sortedListings.map((listing) => (
+              <div
+                onClick={() => navigateTo("/Example1")}
+                class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+              >
+                <a class="block relative h-64 rounded overflow-hidden">
+                  <img
+                    alt="ecommerce"
+                    class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                    src={HOMEPAGEIMG}
+                  />
+                </a>
+                <div class="mt-10">
+                  <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                  {listing.title}
+                  </h2>
+                </div>
+                <div className="my-4 bg-gray-200 h-[1px]"></div>
+              </div>
+              ))}
+          </div>
+              <button type="submit" onClick={() => navigateTo("/ViewMoreListings")} class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans">
+              {t("viewMore")}
+              </button>
         </div>
 
 
