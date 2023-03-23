@@ -10,7 +10,7 @@ import(
 );
 
 const ViewMoreListings = () => {
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   const { t, i18n } = useTranslation();
 
   //populate the events titles starts
@@ -28,6 +28,9 @@ const ViewMoreListings = () => {
     const dateB = new Date(b.date);
     return dateB - dateA;
   });
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
+  }
 
   //populate the events titles Ends
 
@@ -118,76 +121,74 @@ const ViewMoreListings = () => {
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
                   All listings
                 </h1>
+                <div>
+                  <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      {/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
+                          {t("location")}
+                      </label> */}
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option class="font-sans" value="Default">
+                          {t("chooseOneLocation")}
+                          </option>
+                          <option class="font-sans" value="Default">
+                          {t("below")}
+                          </option>
+                          <option class="font-sans" value="News">
+                          {t("fuchstal")}
+                          </option>
+                          <option class="font-sans" value="Road Works / Traffic">
+                          {t("appleVillage")}
+                          </option>
+                      </select>
+                      </div>
+
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      {/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
+                          {t("category")}
+                      </label> */}
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option>{t("chooseOneCategory")}</option>
+                          <option value="News">News</option>
+                          <option value="Road Works / Traffic">Road Works / Traffic</option>
+                          <option value="Events">Events</option>
+                          <option value="Clubs">Clubs</option>
+                          <option value="Regional Products">Regional Products</option>
+                          <option value="Offer / Search">Offer / Search</option>
+                          <option value="New Citizen Info">New Citizen Info</option>
+                          <option value="Direct Report">Direct Report</option>
+                          <option value="Lost And Found">Lost And Found</option>
+                          <option value="Company Portraits">Company Portraits</option>
+                          <option value="Carpooling And Public Transport">
+                          Carpooling And Public Transport
+                          </option>
+                          <option value="Offers">Offers</option>
+                      </select>
+                      </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="bg-gray-200">
-        <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-0">
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-            <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                {t("location")}
-            </label>
-            <select
-                id="button-filter"
-                name="country"
-                autocomplete="country-name"
-                class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-                <option class="font-sans" value="Default">
-                {t("chooseOneLocation")}
-                </option>
-                <option class="font-sans" value="Default">
-                {t("below")}
-                </option>
-                <option class="font-sans" value="News">
-                {t("fuchstal")}
-                </option>
-                <option class="font-sans" value="Road Works / Traffic">
-                {t("appleVillage")}
-                </option>
-            </select>
-            </div>
-
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-            <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                {t("category")}
-            </label>
-            <select
-                id="button-filter"
-                name="country"
-                autocomplete="country-name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-                <option>Choose a category</option>
-                <option value="News">News</option>
-                <option value="Road Works / Traffic">Road Works / Traffic</option>
-                <option value="Events">Events</option>
-                <option value="Clubs">Clubs</option>
-                <option value="Regional Products">Regional Products</option>
-                <option value="Offer / Search">Offer / Search</option>
-                <option value="New Citizen Info">New Citizen Info</option>
-                <option value="Direct Report">Direct Report</option>
-                <option value="Lost And Found">Lost And Found</option>
-                <option value="Company Portraits">Company Portraits</option>
-                <option value="Carpooling And Public Transport">
-                Carpooling And Public Transport
-                </option>
-                <option value="Offers">Offers</option>
-            </select>
-            </div>
-        </div>
-      </div>
-
-      <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-          {sortedListings &&
-            sortedListings.map((listing) => (
+      <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+          <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+            {sortedListings && sortedListings.map((listing) => (
               <div
                 onClick={() => navigateTo("/Example1")}
-                class="lg:w-full md:w-full h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+                class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
               >
                 <a class="block relative h-64 rounded overflow-hidden">
                   <img
@@ -198,14 +199,14 @@ const ViewMoreListings = () => {
                 </a>
                 <div class="mt-10">
                   <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-                    {listing.title}
+                  {listing.title}
                   </h2>
                 </div>
                 <div className="my-4 bg-gray-200 h-[1px]"></div>
               </div>
-            ))}
+              ))}
+          </div>
         </div>
-      </div>
 
       <footer class="text-center lg:text-left bg-slate-800 text-white">
         <div class="mx-6 py-10 text-center md:text-left">

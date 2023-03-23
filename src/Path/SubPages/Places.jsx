@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../Components/HomePageNavBar";
-import { getDashboarddata } from "../Services/dashboarddata";
+import HomePageNavBar from "../../Components/HomePageNavBar";
+import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
-import HOMEPAGEIMG from "../assets/homeimage.jpg";
+import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
-import { getCategoriesdata } from "../Services/CategoriesData";
+import { getCategoriesdata } from "../../Services/CategoriesData";
+import { getListingsData } from "../../Services/listings";
+import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 
 const Places = () => {
   window.scrollTo(0, 0);
@@ -44,8 +46,46 @@ const Places = () => {
     });
   }
 
-  const [content, setContent] = useState("A");
+  //populate the events titles starts
+  const [listingsData, setListingsData] = useState([]);
+  useEffect(() => {
+    getListingsData().then((response) => {
+      setListingsData(response);
+    });
+    document.title = selectedItem;
+  }, []);
 
+  //populate the events titles Ends
+    // Selected Items Deletion Starts
+    const selectedItem = localStorage.getItem('selectedItem');
+    // Selected Items Deletion Ends
+
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
+  }
+
+  useEffect(() => {
+    switch (selectedSortOption) {
+      case 'titleAZ':
+        setListingsData([...sortByTitleAZ(listingsData)])
+        console.log(listingsData)
+        break;
+      case 'titleZA':
+        setListingsData([...sortByTitleZA(listingsData)]);
+        break;
+      case 'recent':
+        setListingsData([...sortRecent(listingsData)]);
+        break;
+      case 'oldest':
+        setListingsData([...sortOldest(listingsData)]);
+        break;
+      default:
+        break;
+    }
+  }, [selectedSortOption]);
+
+  const [content, setContent] = useState("A");
   const handleButtonClick = (value) => {
     setContent(value);
   };
@@ -71,13 +111,6 @@ const Places = () => {
       <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
         <div class="w-full mr-0 ml-0">
           <div class="h-64 overflow-hidden px-1 py-1">
-            {/* <a class="block relative h-96 overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center h-full w-full"
-              src= {HOMEPAGEIMG}
-            />
-          </a> */}
             <div class="relative h-64">
               <img
                 alt="ecommerce"
@@ -88,6 +121,66 @@ const Places = () => {
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
                 {selectedItemLocation}
                 </h1>
+                <div>
+                  <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option value="Default">{selectedItemLocation}</option>
+                            {selectedItemLocation !== "Below" ? (
+                              <option value="Below">Below</option>
+                            ) : null}
+                            {selectedItemLocation !== "Fuchstal" ? (
+                              <option value="Fuchstal">Fuchstal</option>
+                            ) : null}
+                            {selectedItemLocation !== "Apple village" ? (
+                              <option value="Apple village">
+                              Apple village
+                            </option>
+                            ) : null}
+                      </select>
+                      </div>
+
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option>{t("chooseOneCategory")}</option>
+                          <option value="News">News</option>
+                          <option value="Road Works / Traffic">Road Works / Traffic</option>
+                          <option value="Events">Events</option>
+                          <option value="Clubs">Clubs</option>
+                          <option value="Regional Products">Regional Products</option>
+                          <option value="Offer / Search">Offer / Search</option>
+                          <option value="New Citizen Info">New Citizen Info</option>
+                          <option value="Direct Report">Direct Report</option>
+                          <option value="Lost And Found">Lost And Found</option>
+                          <option value="Company Portraits">Company Portraits</option>
+                          <option value="Carpooling And Public Transport">
+                          Carpooling And Public Transport
+                          </option>
+                          <option value="Offers">Offers</option>
+                      </select>
+                      </div>
+
+                      <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                        <select id="country" name="country" value={selectedSortOption} onChange={handleSortOptionChange} autocomplete="country-name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option value="">{t("sort")}</option>
+                          <option value = "titleAZ">{t("atoztitle")}</option>
+                          <option value = "titleZA">{t("ztoatitle")}</option>
+                          <option value="recent">{t("recent")}</option>
+                          <option value="oldest">{t("oldest")}</option>
+                        </select>
+                      </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -130,67 +223,12 @@ const Places = () => {
 
       {/* <div className="my-0 bg-gray-300 h-[1px]"></div> */}
 
-      <div class="bg-white">
-        <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
-          <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
-            3
-            <a
-              href="https://heidi-app.de/"
-              rel="noopener noreferrer"
-              class="text-black ml-1"
-              target="_blank"
-            >
-              items found
-            </a>
-          </p>
-          {/* ----- removed for the time ------ */}
-          {/* <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
-                <button type="button" class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4">
-                    <svg class="w-4 h-4 mr-2 -ml-1 text-[#626890]" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="ethereum" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
-                    </svg>
-                    Show map
-                </button>
-            </div>*/}
-
-          <div class="w-full sm:w-auto sm:mr-20">
-            <select
-              id="country"
-              name="country"
-              autocomplete="country-name"
-              class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            >
-              <option>Sorted by categories</option>
-              <option>A - Z (title)</option>
-              <option>Z - A (title)</option>
-              <option>Recent</option>
-              <option>Oldest</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-        <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+        {/* <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
           <div class="p-6 space-y-0 md:space-y-6 sm:p-8">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
               Filter your result
             </h1>
             <form class="space-y-4 md:space-y-6" action="#">
-              {/* <div>
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 "
-                ></label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search keyword..."
-                  required=""
-                />
-              </div> */}
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="floatingInput" class="text-gray-700 font-bold">
                   Location
@@ -265,7 +303,7 @@ const Places = () => {
                   <div class="timepicker relative form-floating mb-3 xl:w-96">
                     <TimePicker />
                   </div>
-              </div> */}
+              </div>
                   <div>
                     <label for="floatingInput" class="text-gray-700 font-bold">
                       Phone Number
@@ -314,31 +352,32 @@ const Places = () => {
               Remove Filter
             </button>
           </div>
-        </div>
+        </div> */}
 
-        <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {categoriesdata.listings && categoriesdata.listings.map((listing) => (
-                <div
-                onClick={() => navigateTo("/Example1")}
-                class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-2xl rounded-lg cursor-pointer"
-                >
-                <a class="block relative h-64 rounded overflow-hidden">
-                    <img
-                    alt="ecommerce"
-                    class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                    src={HOMEPAGEIMG}
-                    />
-                </a>
-                <div class="mt-10">
-                    <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                    {listing.title}
-                    </h2>
-                </div>
-                <div className="my-4 bg-gray-200 h-[1px]"></div>
-                </div>
-            ))}
+      <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+        <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+          {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
+          {listingsData && listingsData.map((listing) => (
+            <div
+              onClick={() => navigateTo("/Example1")}
+              class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+            >
+              <a class="block relative h-64 rounded overflow-hidden">
+                <img
+                  alt="ecommerce"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  src={HOMEPAGEIMG}
+                />
+              </a>
+              <div class="mt-10">
+                <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                {listing.title}
+                </h2>
+              </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
+            </div>
+          ))}
         </div>
-
       </div>
 
       <footer class="text-center lg:text-left bg-slate-800 text-white mt-10">

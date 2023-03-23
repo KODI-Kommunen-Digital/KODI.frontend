@@ -81,9 +81,6 @@ const Dashboard = () => {
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar/>
-      {/* <React.Fragment>
-        <Navbar/>
-      </React.Fragment> */}
       <div class="container px-5 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
         <Popover className="relative bg-black mr-0 ml-0 px-10 rounded-lg">
           <div className="w-full">
@@ -272,7 +269,7 @@ const Dashboard = () => {
 
         <div class="bg-white mt-4 p-0 space-y-10">
           <table class="w-full text-sm text-left lg:mt-[2rem] mt-[7rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
                   Listings
@@ -299,7 +296,7 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {dashboarddata.map((listing) => (
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr class="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50">
                   <th
                     scope="row"
                     class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
