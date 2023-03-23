@@ -4,18 +4,18 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Error from './Path/Error';
 import ProfilePage from './Path/ProfilePage';
 import LoginPage from './Path/LoginPage';
-import Navigation from './Path/Navigation';
 import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
+import ImprintPage from './Path/ImprintPage';
 
 import HomePage from './Path/HomePage';
-import Places from './Path/Places';
+import Places from './Path/SubPages/Places';
 import Below from './Path/Below';
 import Fuchstal from './Path/Fuchstal';
 import AppleVillage from './Path/AppleVillage';
 
 import Example1 from './Path/SubPages/Example1';
-import Events from './Path/Listings/Events';
+import Events from './Path/SubPages/Events';
 import ViewProfile from './Path/SubPages/ViewProfile';
 import CitizenService from './Path/SubPages/CitizenService';
 import ViewMoreListings from './Path/SubPages/ViewMoreListings';
@@ -61,7 +61,6 @@ const App =()=>{
   return (
     <BrowserRouter>
       <div>
-        <Navigation />
           <Routes>
           <Route path="/HomePage" element={<HomePage />}/>
           <Route path="/Places" element={<Places />}/>
@@ -81,6 +80,7 @@ const App =()=>{
             <Route path="/PasswordUpdate" element={<PasswordUpdate />}/>
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
+            <Route path="/ImprintPage" element={<ImprintPage />}/>
 
             <Route path="/OverviewPage" element={<OverviewPage />}/>
             <Route path="/OverviewPageNewsCategories" element={<OverviewPageNewsCategories />}/>

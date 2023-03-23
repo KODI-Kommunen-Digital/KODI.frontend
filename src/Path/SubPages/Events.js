@@ -145,6 +145,98 @@ const Events = () => {
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
                 {selectedItem}
                 </h1>
+                <div>
+                  <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      {/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
+                          {t("location")}
+                      </label> */}
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option class="font-sans" value="Default">
+                          {t("chooseOneLocation")}
+                          </option>
+                          <option class="font-sans" value="Default">
+                          {t("below")}
+                          </option>
+                          <option class="font-sans" value="News">
+                          {t("fuchstal")}
+                          </option>
+                          <option class="font-sans" value="Road Works / Traffic">
+                          {t("appleVillage")}
+                          </option>
+                      </select>
+                      </div>
+
+                    <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                      {/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
+                          {t("category")}
+                      </label> */}
+                      <select
+                          id="button-filter"
+                          name="country"
+                          autocomplete="country-name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                          <option class="font-sans" value="Default">{selectedItem}</option>
+                            {selectedItem !== "News" ? (
+                              <option value="News">{t("news")}</option>
+                            ) : null}
+                            {selectedItem !== "Road Works / Traffic" ? (
+                              <option class="font-sans" value="Road Works / Traffic">
+                              {t("roadTraffic")}
+                            </option>
+                            ) : null}
+                            {selectedItem !== "Events" ? (
+                              <option class="font-sans" value="Events">{t("events")}</option>
+                            ) : null}
+                            {selectedItem !== "Clubs" ? (
+                              <option class="font-sans" value="Clubs">{t("clubs")}</option>
+                            ) : null}
+                            {selectedItem !== "Regional Products" ? (
+                              <option class="font-sans" value="Regional Products">{t("regionalProducts")}</option>
+                            ) : null}
+                            {selectedItem !== "Offer / Search" ? (
+                              <option class="font-sans" value="Offer / Search">{t("offerSearch")}</option>
+                            ) : null}
+                            {selectedItem !== "New Citizen Info" ? (
+                              <option class="font-sans" value="New Citizen Info">{t("newCitizenInfo")}</option>
+                            ) : null}
+                            {selectedItem !== "Defect Report" ? (
+                              <option class="font-sans" value="Direct Report">{t("defectReport")}</option>
+                            ) : null}
+                            {selectedItem !== "Lost And Found" ? (
+                              <option class="font-sans" value="Lost And Found">{t("lostAndFound")}</option>
+                            ) : null}
+                            {selectedItem !== "Company Portraits" ? (
+                              <option class="font-sans" value="Company Portraits">{t("companyPortaits")}</option>
+                            ) : null}
+                            {selectedItem !== "Carpooling And Public Transport" ? (
+                              <option class="font-sans" value="Carpooling And Public Transport">
+                              {t("carpoolingPublicTransport")}
+                            </option>
+                            ) : null}
+                            {selectedItem !== "Offers" ? (
+                              <option class="font-sans" value="Offers">{t("offers")}</option>
+                            ) : null}
+                      </select>
+                      </div>
+
+                      <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+                        <select id="country" name="country" value={selectedSortOption} onChange={handleSortOptionChange} autocomplete="country-name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option value="">{t("sort")}</option>
+                          <option value = "titleAZ">{t("atoztitle")}</option>
+                          <option value = "titleZA">{t("ztoatitle")}</option>
+                          <option value="recent">{t("recent")}</option>
+                          <option value="oldest">{t("oldest")}</option>
+                        </select>
+                      </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -190,7 +282,7 @@ const Events = () => {
       </div>
       <div className="my-0 bg-gray-300 h-[1px]"></div>*/}
 
-      <div class="bg-white">
+      {/* <div class="bg-white">
         <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
           <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
             7
@@ -202,7 +294,7 @@ const Events = () => {
             >
               {t("itemsFound")}
             </a>
-          </p>
+          </p> */}
           {/* ----- removed for the time ------ */}
             {/* <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
                 <button type="button" class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4">
@@ -211,22 +303,11 @@ const Events = () => {
                     </svg>
                     Show map
                 </button>
-            </div>*/}
-
-            <div class="w-full sm:w-auto sm:mr-20">
-                    <select id="country" name="country" value={selectedSortOption} onChange={handleSortOptionChange} autocomplete="country-name" class="mt-1 mb-3 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                      <option value="">{t("sort")}</option>
-                      <option value = "titleAZ">{t("atoztitle")}</option>
-                      <option value = "titleZA">{t("ztoatitle")}</option>
-                      <option value="recent">{t("recent")}</option>
-                      <option value="oldest">{t("oldest")}</option>
-                    </select>
             </div>
         </div>
-      </div>
+      </div>*/}
 
-      <div class="bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-        <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:white dark:white">
+        {/* <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:white dark:white">
           <div class="p-6 space-y-10 md:space-y-6 sm:p-8">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900 font-sans">
               {t("filteryourResult")}
@@ -321,11 +402,11 @@ const Events = () => {
                       required=""
                     />
                   </div>
-                  {/* <div class="flex justify-center">
+                  <div class="flex justify-center">
                   <div class="timepicker relative form-floating mb-3 xl:w-96">
                     <TimePicker />
                   </div>
-              </div> */}
+              </div>
                   <div>
                     <label for="floatingInput" class="text-gray-700 font-bold font-sans">
                       Phone Number
@@ -374,30 +455,32 @@ const Events = () => {
               {t("removeFilter")}
             </button>
           </div>
-        </div>
+        </div> */}
 
-      <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {listingsData && listingsData.slice(0, 9).map((listing) => (
-        <div
-          onClick={() => navigateTo("/Example1")}
-          class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-        >
-          <a class="block relative h-64 rounded overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-              src={HOMEPAGEIMG}
-            />
-          </a>
-          <div class="mt-10">
-            <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-            {listing.title}
-            </h2>
-          </div>
-          <div className="my-4 bg-gray-200 h-[1px]"></div>
+      <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+        <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+          {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
+          {listingsData && listingsData.map((listing) => (
+            <div
+              onClick={() => navigateTo("/Example1")}
+              class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+            >
+              <a class="block relative h-64 rounded overflow-hidden">
+                <img
+                  alt="ecommerce"
+                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  src={HOMEPAGEIMG}
+                />
+              </a>
+              <div class="mt-10">
+                <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                {listing.title}
+                </h2>
+              </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
+            </div>
+          ))}
         </div>
-        ))}
-      </div>
       </div>
 
       <footer class="text-center lg:text-left bg-slate-800 text-white">

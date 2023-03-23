@@ -18,7 +18,7 @@ import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=s
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
 
   const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
@@ -32,7 +32,7 @@ const HomePage = () => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB - dateA;
-  }).slice(0, 9);
+  }).slice(0, 3);
 
   // Data Population Starts
   // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
@@ -447,7 +447,7 @@ const HomePage = () => {
         <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
             <div class="relative h-96 rounded overflow-hidden w-auto">
-              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto  hover:scale-125 transition-all duration-500" src={ONEIMAGE} />
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto" src={ONEIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
                 {t("createAnAccount")}
@@ -458,7 +458,7 @@ const HomePage = () => {
           </div>
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
             <div class="relative h-96 w-96 rounded overflow-hidden w-auto">
-              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={TWOIMAGE} />
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto" src={TWOIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
                 {t("getVerified")}
@@ -469,7 +469,7 @@ const HomePage = () => {
           </div>
           <div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
             <div class="relative h-96 w-96 rounded overflow-hidden w-auto">
-              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto hover:scale-125 transition-all duration-500" src={THREEIMAGE} />
+              <img alt="ecommerce" class="object-cover object-center h-48 w-48 m-auto" src={THREEIMAGE} />
               <div class="p-6">
                 <h2 class="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans">
                 {t("start")}
