@@ -7,6 +7,7 @@ import LoginPage from './Path/LoginPage';
 import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
 import ImprintPage from './Path/ImprintPage';
+import PrivacyPolicy from './Path/PrivacyPolicy';
 
 import HomePage from './Path/HomePage';
 import Places from './Path/SubPages/Places';
@@ -81,6 +82,7 @@ const App =()=>{
             <Route path="/" element={<LoginPage />}/>
             <Route path="/Register" element={<Register />}/>
             <Route path="/ImprintPage" element={<ImprintPage />}/>
+            <Route path="/PrivacyPolicy" element={<PrivacyPolicy />}/>
 
             <Route path="/OverviewPage" element={<OverviewPage />}/>
             <Route path="/OverviewPageNewsCategories" element={<OverviewPageNewsCategories />}/>
