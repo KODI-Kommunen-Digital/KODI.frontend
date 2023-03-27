@@ -84,7 +84,8 @@ function ListingsPageRegionalProducts() {
     media: null,
     price:'',
     discountPrice:'',
-    socialMedia: ''
+    socialMedia: '',
+    villageId: 0
   });
 
   const [error, setError] = useState({
@@ -96,7 +97,8 @@ function ListingsPageRegionalProducts() {
     media: null,
     price:'',
     discountPrice:'',
-    socialMedia: ''
+    socialMedia: '',
+    villageId: ''
   })
 
   const onInputChange = e => {
@@ -106,8 +108,6 @@ function ListingsPageRegionalProducts() {
       [name]: value
     }));
     validateInput(e);
-
-    
   };
   
   const [description, setDescription] = useState('');
@@ -361,6 +361,9 @@ function ListingsPageRegionalProducts() {
                     </option>
                   ))}
                 </select>
+                <div className="h-[24px] text-red-600" style={{visibility: !error.villageId ? 'hidden' : 'visible'}}>
+                    {error.villageId}
+                </div>
             </div>
 
             <div class="relative mb-4">
@@ -378,6 +381,9 @@ function ListingsPageRegionalProducts() {
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                 placeholder="enter your title"
               />
+              <div className="h-[24px] text-red-600" style={{visibility: !error.title ? 'hidden' : 'visible'}}>
+                  {error.title}
+              </div>
             </div>
 
             <div class="relative mb-4">
@@ -394,6 +400,9 @@ function ListingsPageRegionalProducts() {
                   class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   placeholder="Enter your place here"
                 />
+                <div className="h-[24px] text-red-600" style={{visibility: !error.place ? 'hidden' : 'visible'}}>
+                    {error.place}
+                </div>
               </div>
 
               <div class="col-span-6">
@@ -451,6 +460,9 @@ function ListingsPageRegionalProducts() {
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                 placeholder="enter your telephone number"
               />
+              <div className="h-[24px] text-red-600" style={{visibility: !error.phone ? 'hidden' : 'visible'}}>
+                {error.phone}
+              </div>
             </div>
 
             <div class="relative mb-4">
@@ -468,6 +480,9 @@ function ListingsPageRegionalProducts() {
                 class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                 placeholder="youremail@gmail.com"
               />
+              <div className="h-[24px] text-red-600" style={{visibility: !error.email ? 'hidden' : 'visible'}}>
+                {error.email}
+              </div>
             </div>
 
             <div class="relative mb-4 grid grid-cols-2 gap-4">
@@ -486,6 +501,9 @@ function ListingsPageRegionalProducts() {
                   class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                   placeholder="Enter the price of the product"
                 />
+                <div className="h-[24px] text-red-600" style={{visibility: !error.price ? 'hidden' : 'visible'}}>
+                  {error.price}
+                </div>
               </div>
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="place" class="block text-sm font-medium text-gray-600">
@@ -502,6 +520,9 @@ function ListingsPageRegionalProducts() {
                   class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                   placeholder="Enter the price of the product"
                 />
+                <div className="h-[24px] text-red-600" style={{visibility: !error.discountPrice ? 'hidden' : 'visible'}}>
+                  {error.discountPrice}
+                </div>
               </div>
             </div>
 
@@ -519,7 +540,9 @@ function ListingsPageRegionalProducts() {
                   placeholder="Write something here..."
                   className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                 />
-
+                <div className="h-[24px] text-red-600" style={{visibility: !error.description ? 'hidden' : 'visible'}}>
+                  {error.description}
+                </div>
               </div>
 
           </div>
@@ -723,6 +746,9 @@ function ListingsPageRegionalProducts() {
                   </div>
                 )}
               </div>
+                <div className="h-[24px] text-red-600" style={{visibility: !error.media ? 'hidden' : 'visible'}}>
+                  {error.media}
+                </div>
             </div>
           </div>
         </div>
