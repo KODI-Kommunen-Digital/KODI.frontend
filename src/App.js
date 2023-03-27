@@ -63,17 +63,17 @@ const App =()=>{
     <BrowserRouter>
       <div>
           <Routes>
-          <Route path="/HomePage" element={<HomePage />}/>
-          <Route path="/Places" element={<Places />}/>
-          <Route path="/Below" element={<Below />}/>
-          <Route path="/Fuchstal" element={<Fuchstal />}/>
-          <Route path="/AppleVillage" element={<AppleVillage />}/>
+            <Route path="/HomePage" element={<HomePage />}/>
+            <Route path="/Places" element={<Places />}/>
+            <Route path="/Below" element={<Below />}/>
+            <Route path="/Fuchstal" element={<Fuchstal />}/>
+            <Route path="/AppleVillage" element={<AppleVillage />}/>
 
-          <Route path="/Example1" element={<Example1 />}/>
-          <Route path="/Events" element={<Events />}/>
-          <Route path="/ViewProfile" element={<ViewProfile />}/>
-          <Route path="/CitizenService" element={<CitizenService />}/>
-          <Route path="/ViewMoreListings" element={<ViewMoreListings />}/>
+            <Route path="/Example1" element={<Example1 />}/>
+            <Route path="/Events" element={<Events />}/>
+            <Route path="/ViewProfile" element={<ViewProfile />}/>
+            <Route path="/CitizenService" element={<CitizenService />}/>
+            <Route path="/ViewMoreListings" element={<ViewMoreListings />}/>
 
             <Route path="/Dashboard" element={<Dashboard />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>
@@ -85,27 +85,26 @@ const App =()=>{
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />}/>
 
             <Route path="/OverviewPage" element={<OverviewPage />}/>
-            <Route path="/OverviewPageNewsCategories" element={<OverviewPageNewsCategories />}/>
-            <Route path="/ListingsPageNewcitizeninfo" element={<ListingsPageNewcitizeninfo />}/>
-            <Route path="/ListingsPageEvents" element={<ListingsPageEvents />}/>
-            <Route path="/ListingsPageConstructionTraffic" element={<ListingsPageConstructionTraffic />}/>
-            <Route path="/ListingsPageSocieties" element={<ListingsPageSocieties />}/>
-            <Route path="/ListingsPageRegionalProducts" element={<ListingsPageRegionalProducts />}/>
-            <Route path="/ListingsPageOfferSearch" element={<ListingsPageOfferSearch />}/>
-            <Route path="/ListingsPageDefectReporter" element={<ListingsPageDefectReporter />}/>
-            <Route path="/ListingsPageLostPropertyOffice" element={<ListingsPageLostPropertyOffice />}/>
-            <Route path="/ListingsPageNewsflash" element={<ListingsPageNewsflash />}/>
-            <Route path="/ListingsPageClub" element={<ListingsPageClub />}/>
-            <Route path="/ListingsPageCompanyportaits" element={<ListingsPageCompanyportaits />}/>
-            <Route path="/ListingsPageOffers" element={<ListingsPageOffers />}/>
-            <Route path="/ListingsPageSports" element={<ListingsPageSports />}/>
-            <Route path="/ListingsPageAlert" element={<ListingsPageAlert />}/>
-            <Route path="/ListingsPagePolitics" element={<ListingsPagePolitics />}/>
-            <Route path="/ListingsPageEconomy" element={<ListingsPageEconomy />}/>
-            <Route path="/ListingsPageClubNews" element={<ListingsPageClubNews />}/>
-            <Route path="/ListingsPageTopicOfTheDay" element={<ListingsPageTopicOfTheDay />}/>
-            <Route path="/ListingsPageLocal" element={<ListingsPageLocal />}/>
-
+            <Route path="/OverviewPage/NewsCategories" element={<OverviewPageNewsCategories />}/>
+            <Route path="/ListingsPage/Newcitizeninfo" element={<ListingsPageNewcitizeninfo />}/>
+            <Route path="/ListingsPage/Events" element={<ListingsPageEvents />}/>
+            <Route path="/ListingsPage/ConstructionTraffic" element={<ListingsPageConstructionTraffic />}/>
+            <Route path="/ListingsPage/Societies" element={<ListingsPageSocieties />}/>
+            <Route path="/ListingsPage/RegionalProducts" element={<ListingsPageRegionalProducts />}/>
+            <Route path="/ListingsPage/OfferSearch" element={<ListingsPageOfferSearch />}/>
+            <Route path="/ListingsPage/DefectReporter" element={<ListingsPageDefectReporter />}/>
+            <Route path="/ListingsPage/LostPropertyOffice" element={<ListingsPageLostPropertyOffice />}/>
+            <Route path="/ListingsPage/Newsflash" element={<ListingsPageNewsflash />}/>
+            <Route path="/ListingsPage/Club" element={<ListingsPageClub />}/>
+            <Route path="/ListingsPage/Companyportaits" element={<ListingsPageCompanyportaits />}/>
+            <Route path="/ListingsPage/Offers" element={<ListingsPageOffers />}/>
+            <Route path="/ListingsPage/Sports" element={<ListingsPageSports />}/>
+            <Route path="/ListingsPage/Alert" element={<ListingsPageAlert />}/>
+            <Route path="/ListingsPage/Politics" element={<ListingsPagePolitics />}/>
+            <Route path="/ListingsPage/Economy" element={<ListingsPageEconomy />}/>
+            <Route path="/ListingsPage/ClubNews" element={<ListingsPageClubNews />}/>
+            <Route path="/ListingsPage/TopicOfTheDay" element={<ListingsPageTopicOfTheDay />}/>
+            <Route path="/ListingsPage/Local" element={<ListingsPageLocal />}/>
             <Route path='*' element={<Error />}/>
           </Routes>
       </div>

@@ -45,6 +45,6 @@ var listings = [
         }
      ]
 
-export async function getListingsData() {
+export async function getListingsByCity() {
     return listings;
 }

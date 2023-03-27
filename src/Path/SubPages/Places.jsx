@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../../Services/CategoriesData";
-import { getListingsData } from "../../Services/listings";
+import { getListingsByCity } from "../../Services/listings";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 
 const Places = () => {
@@ -49,7 +49,7 @@ const Places = () => {
   //populate the events titles starts
   const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
-    getListingsData().then((response) => {
+    getListingsByCity().then((response) => {
       setListingsData(response);
     });
     document.title = selectedItem;

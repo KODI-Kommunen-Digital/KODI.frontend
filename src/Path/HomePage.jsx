@@ -3,7 +3,7 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListingsData } from "../Services/listings";
+import { getListingsByCity } from "../Services/listings";
 import {sortRecent} from "../Services/helper"
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -22,7 +22,7 @@ const HomePage = () => {
 
   const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
-    getListingsData().then((response) => {
+    getListingsByCity().then((response) => {
       setListingsData(response);
     });
   }, []);

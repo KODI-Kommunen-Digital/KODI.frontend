@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getListingsData } from "../../Services/listings";
+import { getListingsByCity } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
@@ -15,7 +15,7 @@ const Events = () => {
   //populate the events titles starts
   const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
-    getListingsData().then((response) => {
+    getListingsByCity().then((response) => {
       setListingsData(response);
     });
     document.title = selectedItem;

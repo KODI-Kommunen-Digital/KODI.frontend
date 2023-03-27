@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
-import { getListingsData } from "../../Services/listings";
+import { getListingsByCity } from "../../Services/listings";
 import {
   sortByTitleAZ,
   sortByTitleZA,
@@ -26,7 +26,7 @@ const ViewProfile = () => {
   //populate the events titles starts
   const [listingsData, setListingsData] = useState([]);
   useEffect(() => {
-    getListingsData().then((response) => {
+    getListingsByCity().then((response) => {
       setListingsData(response);
     });
   }, []);
