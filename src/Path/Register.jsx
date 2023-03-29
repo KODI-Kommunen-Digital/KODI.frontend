@@ -21,6 +21,12 @@ const Register = () => {
     navigate(path);
   };
 
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
+
   const [isChecked, setIsChecked] = useState(false);
 
   const [input, setInput] = useState({
@@ -241,7 +247,9 @@ const Register = () => {
                 >
                   I hereby accept the{" "}
                   <a
-                    href="https://dev.heidi-app.de/cms/datenschutz/"
+                    onClick={() => {
+                      navigateTo("/PrivacyPolicy");
+                      }}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-red-500 hover:text-red-300"
@@ -251,7 +259,9 @@ const Register = () => {
                   {" "}
                   and the {" "}
                   <a
-                    href="https://dev.heidi-app.de/cms/datenschutz/"
+                    onClick={() => {
+                      navigateTo("/ImprintPage");
+                      }}
                     class="text-red-500 hover:text-red-300"
                   >
                     terms and conditions*

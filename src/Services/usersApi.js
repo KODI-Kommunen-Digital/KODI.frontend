@@ -1,12 +1,19 @@
 import axios from "../api/axiosInstance";
-var userId = window.localStorage.getItem("userId");
+
+function getUserId() {
+    return window.localStorage.getItem("userId");
+}
 
 export async function getProfile() {
-    return axios.get(`/users/${userId}`);
+    return axios.get(`/users/${getUserId()}`);
 }
 
 export async function updateProfile(newProfileObj) {
-    return axios.patch(`/users/${userId}`, newProfileObj);
+    return axios.patch(`/users/${getUserId()}`, newProfileObj);
+}
+
+export async function getListings() {
+    return axios.get(`/users/${getUserId()}/listings`);
 }
 
 export async function resetPass(credentials) {

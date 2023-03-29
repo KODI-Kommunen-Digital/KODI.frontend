@@ -3,17 +3,19 @@ import { Popover, Transition } from '@headlessui/react'
 import {Bars3Icon,XMarkIcon,} from '@heroicons/react/24/outline'
 import LOGO from "../assets/logo.png";
 import SideBar from "../Components/SideBar";
-import {getDashboarddata} from "../Services/dashboarddata";
+import { getListings } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import {sortOldest} from "../Services/helper";
+import { categoryByName, categoryById } from "../Constants/categories";
+import { status } from "../Constants/status";
 
 const dashboardStyle = require('../Path/Dashboard.css')
 
 const Dashboard = () => {
-  const [dashboarddata, setDashboarddata] = useState([]);
+  const [listings, setListings] = useState([]);
   useEffect(() => {
-    getDashboarddata().then((response) => {
-      setDashboarddata([...sortOldest((response.listings))]);
+    getListings().then((response) => {
+      setListings([...sortOldest((response.data.data))]);
     });
     document.title = "Dashboard";
   }, []);
@@ -26,54 +28,67 @@ const Dashboard = () => {
   };
 
   function handleDashboardChange(event) {
-    setDashboarddata({
-      ...dashboarddata,
+    setListings({
+      ...listings,
       [event.target.name]: event.target.value,
     });
   }
 
+  function getStatusClass(statusId) {
+    if (status[statusId] == "Active") {
+      return "bg-green-400"
+    }
+    if (status[statusId] == "Inactive") {
+      return "bg-red-400"
+    }
+    if (status[statusId] == "Pending") {
+      return "bg-yellow-400"
+    }
+  }
+
   //Navigate to Edit Listings page Starts
-  function goToEditListingsPage(editCategory) {
-    if (editCategory == "News") {
-      navigateTo("/OverviewPageNewsCategories");
+  function goToEditListingsPage(listing) {
+    var categoryId = listing.categoryId
+    if (categoryId == categoryByName.News) {
+      navigateTo(`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Road Works / Traffic") {
-      navigateTo("/ListingsPageConstructionTraffic");
+    else if (categoryId == categoryByName.RoadWorksOrTraffic) {
+      navigateTo(`/ListingsPage/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Events") {
-      navigateTo("/ListingsPageEvents");
+    else if (categoryId == categoryByName.EventsOrNews) {
+      navigateTo(`/ListingsPage/Events?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Clubs") {
-      navigateTo("/ListingsPageClub");
+    else if (categoryId == categoryByName.Associations) {
+      navigateTo(`/Listings/PageClub?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Regional Products") {
-      navigateTo("/ListingsPageRegionalProducts");
+    else if (categoryId ==  categoryByName.RegionalProducts) {
+      navigateTo(`/ListingsPage/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Offer / Search") {
-      navigateTo("/ListingsPageOfferSearch");
+    else if (categoryId == categoryByName.OfferOrSearch) {
+      navigateTo(`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "New Citizen Info") {
-      navigateTo("/ListingsPageNewcitizeninfo");
+    else if (categoryId == categoryByName.NewCitizenInfo) {
+      navigateTo(`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Defect Report") {
-      navigateTo("/ListingsPageDefectReporter");
+    else if (categoryId == categoryByName.DefectReport) {
+      navigateTo(`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Lost And Found") {
-      navigateTo("/ListingsPageLostPropertyOffice");
+    else if (categoryId == categoryByName.LostPropertyOffice) {
+      navigateTo(`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Company Portraits") {
-      navigateTo("/ListingsPageCompanyportaits");
+    else if (categoryId == categoryByName.CompanyPortraits) {
+      navigateTo(`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Carpooling And Public Transport") {
-      navigateTo("/OverviewPageNewsCategories");
+    else if (categoryId == categoryByName.News) {
+      navigateTo(`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
-    else if (editCategory == "Offers") {
-      navigateTo("/ListingsPageOffers");
+    else if (categoryId == categoryByName.Offers) {
+      navigateTo(`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}`);
     }
   }
 
   function handleEditListingsClick() {
-    dashboarddata.listings.forEach((listing) => goToEditListingsPage(listing));
+    listings.listings.forEach((listing) => goToEditListingsPage(listing));
   }
 
   //Navigate to Edit Listings page Starts
@@ -283,9 +298,6 @@ const Dashboard = () => {
                 <th scope="col" class="px-6 py-3 hidden sm:table-cell">
                   Status
                 </th>
-                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
-                  Gateway/API
-                </th>
                 <th scope="col" class="px-6 py-3">
                   Edit
                 </th>
@@ -295,7 +307,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {dashboarddata.map((listing) => (
+              {listings.map((listing) => (
                 <tr class="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50">
                   <th
                     scope="row"
@@ -308,34 +320,25 @@ const Dashboard = () => {
                       alt="avatar"
                     />
                     <div class="pl-3">
-                      <div class="text-base font-semibold">{listing.name}</div>
                       <div class="font-normal text-gray-500">
-                        {listing.email}
+                        {listing.title}
                       </div>
                     </div>
                   </th>
-                  <td class="px-6 py-4 hidden sm:table-cell">{listing.category}</td>
-                  <td class="px-6 py-4 hidden sm:table-cell">{listing.date}</td>
+                  <td class="px-6 py-4 hidden sm:table-cell">{categoryById[listing.categoryId]}</td>
+                  <td class="px-6 py-4 hidden sm:table-cell">{new Date(listing.createdAt).toLocaleString("de")}</td>
                   <td class="px-6 py-4 hidden sm:table-cell">
                     <div class="flex items-center">
-                      <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>
-                      {listing.status}
+                      <div class={`h-2.5 w-2.5 rounded-full ${getStatusClass(listing.statusId)} mr-2`}></div>
+                      {status[listing.statusId]}
                     </div>
-                  </td>
-                  <td class="px-6 py-4 hidden sm:table-cell">
-                    <a
-                      href="#"
-                      class="font-medium text-violet-600 dark:text-blue-500 hover:underline"
-                    >
-                      {listing.gatewayApi}
-                    </a>
                   </td>
                   <td class="px-6 py-4">
                     <a
                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                      onClick={() => goToEditListingsPage(listing.category)}
+                      onClick={() => goToEditListingsPage(listing)}
                     >
-                      {listing.edit}
+                      Edit
                     </a>
                   </td>
                   <td class="px-6 py-4">
@@ -343,7 +346,7 @@ const Dashboard = () => {
                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
                       onClick={() => navigateTo("/OverviewPage")}
                     >
-                      {listing.action}
+                      Action
                     </a>
                   </td>
                 </tr>

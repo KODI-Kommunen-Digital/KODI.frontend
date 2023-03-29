@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {getListingsData, postListingsData , updateListingsData} from '../../Services/listingsApi'
+import {getListingsByCity, postListingsData , updateListingsData} from '../../Services/listingsApi'
 
 
 function ListingsPageClub() {
@@ -138,7 +138,7 @@ function ListingsPageClub() {
     document.title = "Club";
     async function fetchData(listingId) {
       try {
-        const response = await getListingsData(listingId);
+        const response = await getListingsByCity(listingId);
         const listingData = response.data;
         setInput(listingData);
       } catch (error) {
