@@ -15,13 +15,12 @@ const LoginPage = () => {
 
   const [forgotPassword, setForgotPassword] = useState(false);
   const [alertInfo, setAlertInfo] = useState(false);
-  const [alertInfoPasswrd, setAlertInfoPasswrd] = useState(false)
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState('');
   const [userReset, setUserReset] = useState('');
   const [pwd, setPwd] = useState('');
-  const [errMsg, setErrMsg] = useState('');
+  //const [errMsg, setErrMsg] = useState('');
   const [loginLoading, setLoginLoading] = useState('');
   const [forgotPasswordLoading, setForgotPasswordLoading] = useState('');
 
@@ -32,9 +31,9 @@ const LoginPage = () => {
   useEffect(() => {
     userRef.current.focus();
   }, []);
-  useEffect(() => {
-    setErrMsg('');
-  }, [user,pwd]);
+  // useEffect(() => {
+  //   setErrMsg('');
+  // }, [user,pwd]);
 
 
   let navigate = useNavigate();
@@ -48,7 +47,6 @@ const LoginPage = () => {
   };
   const onCancel = () => {
     setForgotPassword(false);
-    setAlertInfoPasswrd(false)
     setAlertInfo(false)
     setUserReset('')
     setAlertMessage('')

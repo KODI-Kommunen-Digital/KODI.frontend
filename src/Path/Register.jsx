@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
+import { register } from "../Services/usersApi";
+import Alert from "../Components/Alert";
 
 const Register = () => {
   const { t, i18n } = useTranslation();
+  const [alertInfo, setAlertInfo] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
+  
   useEffect(() => {
     document.title = "Heidi - Register";
   }, []);
@@ -18,8 +24,8 @@ const Register = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   const [input, setInput] = useState({
-    firstName:'',
-    secondName:'',
+    firstname:'',
+    lastname:'',
     username: '',
     email:'',
     password: '',
@@ -27,8 +33,8 @@ const Register = () => {
   });
 
   const [error, setError] = useState({
-    firstName:'',
-    secondName:'',
+    firstname:'',
+    lastname:'',
     username: '',
     email:'',
     password: '',
@@ -44,11 +50,21 @@ const Register = () => {
     validateInput(e);
   }
 
+  input["role"] = 3;
+
   const handleSubmit = async(event) =>{
     event.preventDefault();
-
-    console.log(input)
-    routeChangeToLogin()
+    try {
+      await register(input)
+      setAlertInfo(true)
+      setAlertType('success')
+      setAlertMessage('Registration Successfull. Redirecting to login page in 5s')
+      setTimeout(() => { routeChangeToLogin() }, 5000)
+    } catch (err) {
+      setAlertInfo(true)
+      setAlertType('danger')
+      setAlertMessage('Failed. '+ err.response.data.message)
+    }
   }
 
   const validateInput = e => {
@@ -107,17 +123,17 @@ const Register = () => {
             {t("createAccount")}
           </h3>
         </div>
-        <form onSubmit={handleSubmit} class="mt-8 space-y-6" action="#" method="POST">
+        <div class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
           <div class="space-y-2 rounded-md shadow-sm">
             <div>
               <span class="grid grid-cols-2 gap-2">
-              <label for="firstName" class="sr-only">
+              <label for="firstname" class="sr-only">
               {t("firstName")}
               </label>
               <input
-                name="firstName"
-                value={input.firstName}
+                name="firstname"
+                value={input.firstname}
                 type="text"
                 onChange={onInputChange}
                 onBlur={validateInput}
@@ -126,12 +142,12 @@ const Register = () => {
                 class="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 >
               </input>
-              <label for="secondName" class="sr-only">
+              <label for="lastname" class="sr-only">
               {t("lastName")}
               </label>
               <input
-                name="secondName"
-                value={input.secondName}
+                name="lastname"
+                value={input.lastname}
                 type="text"
                 onChange={onInputChange}
                 onBlur={validateInput}
@@ -212,7 +228,6 @@ const Register = () => {
           </div>
 
           <div class="flex items-center justify-between">
-            <p>
               <div class="flex items-center">
                 <input
                   name="remember-me"
@@ -243,12 +258,12 @@ const Register = () => {
                   </a>
                 </label>
               </div> 
-            </p>
           </div>
 
           <div>
             <button
               type="submit"
+              onClick={handleSubmit}
               disabled={!isChecked}
               id="finalbutton"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
@@ -271,6 +286,11 @@ const Register = () => {
               Register
             </button>
           </div>
+          {alertInfo && (
+                <div class="py-2 mt-1 px-2">
+                  <Alert type = {alertType} message = {alertMessage} />
+                </div>
+              )}
           <div class="text-sm">
             Already have an account? Please Login
             <span
@@ -279,7 +299,7 @@ const Register = () => {
               {" "}here{" "}
             </span>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
