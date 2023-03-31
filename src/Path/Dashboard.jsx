@@ -1,7 +1,6 @@
 import React, { useState, useEffect , Fragment} from "react";
 import { Popover, Transition } from '@headlessui/react'
-import {Bars3Icon,XMarkIcon,} from '@heroicons/react/24/outline'
-import LOGO from "../assets/logo.png";
+import {Bars3Icon,XMarkIcon,} from '@heroicons/react/24/outline';
 import SideBar from "../Components/SideBar";
 import { getListings } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";

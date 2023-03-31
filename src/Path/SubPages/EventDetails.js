@@ -5,15 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
+import { getListingsByCity } from "../../Services/listings";
 
-const Example1 = () => {
+const EventDetails = () => {
   window.scrollTo(0, 0);
   const { t, i18n } = useTranslation();
 
   //populate the events titles starts
   const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
   useEffect(() => {
-    document.title = "Events";
+    document.title = "Event Details";
   }, []);
 
 
@@ -22,7 +23,6 @@ const Example1 = () => {
     getDashboarddata().then((response) => {
       setDashboarddata(response);
     });
-    document.title = "Example-1";
   }, []);
 
   let navigate = useNavigate();
@@ -75,6 +75,20 @@ const Example1 = () => {
     event.preventDefault();
   }
 
+  const [listingsData, setListingsData] = useState([]);
+  useEffect(() => {
+    getListingsByCity().then((response) => {
+      setListingsData(response);
+    });
+  }, []);
+
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  const sortedListings = [...listingsData].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  }).slice(0, 3);
+
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -104,44 +118,20 @@ const Example1 = () => {
                   </p> */}
                   <div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
                     <h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
-                      Meanwhile example 1
+                      Book of Batman
                     </h1>
                     <div class="flex items-center">
                     <button
                       type="button"
                       class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
                     >
-                      {/* <svg
-                        class="w-4 h-4 mr-2 -ml-1 text-[#626890]"
-                        aria-hidden="true"
-                        focusable="false"
-                        data-prefix="fab"
-                        data-icon="ethereum"
-                        role="img"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 320 512"
-                      >
-                        <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
-                      </svg> */}
-                      <span class="ml-1">{t("speakers")}</span>
+                      <span class="ml-1">{t("favourites")}</span>
                     </button>
 
                       <button
                         type="button"
                         class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
                       >
-                        {/* <svg
-                          class="w-4 h-4 mr-2 -ml-1 text-[#626890]"
-                          aria-hidden="true"
-                          focusable="false"
-                          data-prefix="fab"
-                          data-icon="ethereum"
-                          role="img"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 320 512"
-                        >
-                          <path d="M246.6 150.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0l96 96c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L352 109.3V384c0 35.3 28.7 64 64 64h64c17.7 0 32 14.3 32 32s-14.3 32-32 32H416c-70.7 0-128-57.3-128-128c0-35.3-28.7-64-64-64H109.3l41.4 41.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-96-96c-12.5-12.5-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L109.3 256H224c23.3 0 45.2 6.2 64 17.1V109.3l-41.4 41.4z" />
-                        </svg> */}
                         {t("split")}
                       </button>
                       <button type="button" class="text-gray-900 mt-0 items-center">
@@ -329,62 +319,30 @@ const Example1 = () => {
         <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
         {t("smilarItems")}
         </h1>
-        <div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-8 justify-Start">
-          <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-96 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-xl rounded-lg cursor-pointer"
-          >
-            <a class="block relative h-64 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-              />
-            </a>
-            <div class="mt-10">
-              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-1
-              </h2>
+        <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+            <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+              {sortedListings && sortedListings.map((listing) => (
+                <div
+                  onClick={() => navigateTo("/HomePage/EventDetails")}
+                  class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+                >
+                  <a class="block relative h-64 rounded overflow-hidden">
+                    <img
+                      alt="ecommerce"
+                      class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                      src={HOMEPAGEIMG}
+                    />
+                  </a>
+                  <div class="mt-10">
+                    <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                    {listing.title}
+                    </h2>
+                  </div>
+                  <div className="my-4 bg-gray-200 h-[1px]"></div>
+                </div>
+                ))}
             </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
           </div>
-          <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-96 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-xl rounded-lg cursor-pointer"
-          >
-            <a class="block relative h-64 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-              />
-            </a>
-            <div class="mt-10">
-              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-2
-              </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-          </div>
-          <div
-            onClick={() => navigateTo("/Example1")}
-            class="lg:w-96 md:w-64 h-96 pb-20 w-full border border-gray-200 shadow-xl rounded-lg cursor-pointer"
-          >
-            <a class="block relative h-64 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                src={HOMEPAGEIMG}
-              />
-            </a>
-            <div class="mt-10">
-              <h2 class="text-gray-900 title-font text-lg font-bold text-center">
-                example-3
-              </h2>
-            </div>
-            <div className="my-4 bg-gray-200 h-[1px]"></div>
-          </div>
-        </div>
       </div>
 
       <footer class="text-center lg:text-left bg-black text-white">
@@ -494,4 +452,4 @@ const Example1 = () => {
   );
 };
 
-export default Example1;
+export default EventDetails;

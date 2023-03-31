@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
-import "./bodyContainer.css";
 import { useNavigate } from "react-router-dom";
 import NEWSFLASH from "../../Resource/NewsFlash.jpg";
 import ALERTS from "../../Resource/alert.jpg";

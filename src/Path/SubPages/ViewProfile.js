@@ -30,6 +30,11 @@ const ViewProfile = () => {
       setListingsData(response);
     });
   }, []);
+  const sortedListings = [...listingsData].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  }).slice(0, 3);
 
   //populate the events titles Ends
 
@@ -320,13 +325,12 @@ const ViewProfile = () => {
               </div>
             </div>
           </div>
-        <div class="bg-white py-6 mt-10 mb-10 flex flex-wrap gap-10 justify-start">
-          <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-            {listingsData &&
-              listingsData.map((listing) => (
+          <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+            <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+              {sortedListings && sortedListings.map((listing) => (
                 <div
-                  onClick={() => navigateTo("/Example1")}
-                  class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+                  onClick={() => navigateTo("/HomePage/EventDetails")}
+                  class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
                 >
                   <a class="block relative h-64 rounded overflow-hidden">
                     <img
@@ -337,13 +341,13 @@ const ViewProfile = () => {
                   </a>
                   <div class="mt-10">
                     <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-                      {listing.title}
+                    {listing.title}
                     </h2>
                   </div>
                   <div className="my-4 bg-gray-200 h-[1px]"></div>
                 </div>
-              ))}
-          </div>
+                ))}
+            </div>
         </div>
       </div>
 
