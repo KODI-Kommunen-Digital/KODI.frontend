@@ -15,7 +15,7 @@ import Below from './Path/Below';
 import Fuchstal from './Path/Fuchstal';
 import AppleVillage from './Path/AppleVillage';
 
-import Example1 from './Path/SubPages/Example1';
+import EventDetails from './Path/SubPages/EventDetails';
 import Events from './Path/SubPages/Events';
 import ViewProfile from './Path/SubPages/ViewProfile';
 import CitizenService from './Path/SubPages/CitizenService';
@@ -23,26 +23,7 @@ import ViewMoreListings from './Path/SubPages/ViewMoreListings';
 
 import OverviewPage from './Path/Listings/OverviewPage';
 import OverviewPageNewsCategories from './Path/Listings/OverviewPageNewsCategories';
-import ListingsPageNewcitizeninfo from './Path/Listings/PageNewcitizeninfo';
-import ListingsPageEvents from './Path/Listings/PageEvents';
-import ListingsPageConstructionTraffic from './Path/Listings/PageConstructionTraffic';
-import ListingsPageSocieties from './Path/Listings/PageSocieties';
-import ListingsPageRegionalProducts from './Path/Listings/PageRegionalProducts';
-import ListingsPageOfferSearch from './Path/Listings/PageOfferSearch';
-import ListingsPageDefectReporter from './Path/Listings/PageDefectReporter';
-import ListingsPageLostPropertyOffice from './Path/Listings/PageLostPropertyOffice';
-
-import ListingsPageNewsflash from './Path/Listings/PageNewsflash';
-import ListingsPageClub from './Path/Listings/PageClub';
-import ListingsPageCompanyportaits from './Path/Listings/PageCompanyportaits';
-import ListingsPageOffers from './Path/Listings/PageOffers';
-import ListingsPageSports from './Path/Listings/PageSports';
-import ListingsPageAlert from './Path/Listings/PageAlert';
-import ListingsPagePolitics from './Path/Listings/PagePolitics';
-import ListingsPageEconomy from './Path/Listings/PageEconomy';
-import ListingsPageTopicOfTheDay from './Path/Listings/PageTopicOfTheDay';
-import ListingsPageLocal from './Path/Listings/PageLocal';
-import ListingsPageClubNews from "./Path/Listings/PageClubNews";
+import ListingsPage from './Path/ListingsPage';
 
 import PasswordForgot from './Path/PasswordForgot';
 import PasswordUpdate from './Path/PasswordUpdate';
@@ -69,13 +50,14 @@ const App =()=>{
             <Route path="/Fuchstal" element={<Fuchstal />}/>
             <Route path="/AppleVillage" element={<AppleVillage />}/>
 
-            <Route path="/Example1" element={<Example1 />}/>
+            <Route path="/HomePage/EventDetails" element={<EventDetails />}/>
             <Route path="/Events" element={<Events />}/>
             <Route path="/ViewProfile" element={<ViewProfile />}/>
             <Route path="/CitizenService" element={<CitizenService />}/>
             <Route path="/ViewMoreListings" element={<ViewMoreListings />}/>
 
             <Route path="/Dashboard" element={<Dashboard />} exact/>
+            <Route path="/ListingsPage" element={<ListingsPage />} exact/>
             <Route path="/ProfilePage" element={<ProfilePage />}/>
             <Route path="/PasswordForgot" element={<PasswordForgot />}/>
             <Route path="/PasswordUpdate" element={<PasswordUpdate />}/>
@@ -86,25 +68,6 @@ const App =()=>{
 
             <Route path="/OverviewPage" element={<OverviewPage />}/>
             <Route path="/OverviewPage/NewsCategories" element={<OverviewPageNewsCategories />}/>
-            <Route path="/ListingsPage/Newcitizeninfo" element={<ListingsPageNewcitizeninfo />}/>
-            <Route path="/ListingsPage/Events" element={<ListingsPageEvents />}/>
-            <Route path="/ListingsPage/ConstructionTraffic" element={<ListingsPageConstructionTraffic />}/>
-            <Route path="/ListingsPage/Societies" element={<ListingsPageSocieties />}/>
-            <Route path="/ListingsPage/RegionalProducts" element={<ListingsPageRegionalProducts />}/>
-            <Route path="/ListingsPage/OfferSearch" element={<ListingsPageOfferSearch />}/>
-            <Route path="/ListingsPage/DefectReporter" element={<ListingsPageDefectReporter />}/>
-            <Route path="/ListingsPage/LostPropertyOffice" element={<ListingsPageLostPropertyOffice />}/>
-            <Route path="/ListingsPage/Newsflash" element={<ListingsPageNewsflash />}/>
-            <Route path="/ListingsPage/Club" element={<ListingsPageClub />}/>
-            <Route path="/ListingsPage/Companyportaits" element={<ListingsPageCompanyportaits />}/>
-            <Route path="/ListingsPage/Offers" element={<ListingsPageOffers />}/>
-            <Route path="/ListingsPage/Sports" element={<ListingsPageSports />}/>
-            <Route path="/ListingsPage/Alert" element={<ListingsPageAlert />}/>
-            <Route path="/ListingsPage/Politics" element={<ListingsPagePolitics />}/>
-            <Route path="/ListingsPage/Economy" element={<ListingsPageEconomy />}/>
-            <Route path="/ListingsPage/ClubNews" element={<ListingsPageClubNews />}/>
-            <Route path="/ListingsPage/TopicOfTheDay" element={<ListingsPageTopicOfTheDay />}/>
-            <Route path="/ListingsPage/Local" element={<ListingsPageLocal />}/>
             <Route path='*' element={<Error />}/>
           </Routes>
       </div>

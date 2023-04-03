@@ -462,7 +462,7 @@ const Events = () => {
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
           {listingsData && listingsData.map((listing) => (
             <div
-              onClick={() => navigateTo("/Example1")}
+              onClick={() => navigateTo("/HomePage/EventDetails")}
               class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
             >
               <a class="block relative h-64 rounded overflow-hidden">

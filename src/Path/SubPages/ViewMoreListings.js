@@ -22,7 +22,7 @@ const ViewMoreListings = () => {
     document.title = selectedItem;
   }, []);
 
-  const [selectedSortOption, setSelectedSortOption] = useState("");
+  const [selectedSortOption, setSelectedSortOption] = useState('');
   const sortedListings = [...listingsData].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
@@ -187,7 +187,7 @@ const ViewMoreListings = () => {
           <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
             {sortedListings && sortedListings.map((listing) => (
               <div
-                onClick={() => navigateTo("/Example1")}
+                onClick={() => navigateTo("/HomePage/EventDetails")}
                 class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
               >
                 <a class="block relative h-64 rounded overflow-hidden">

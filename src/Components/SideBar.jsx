@@ -60,7 +60,7 @@ function SideBar() {
         <div className="my-2 bg-gray-600 h-[1px]"></div>
         <div
           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-          onClick={() => navigateTo("/OverviewPage")}
+          onClick={() => navigateTo("/Dashboard")}
         >
           <svg
             className="h-6 w-10 fill-current"
@@ -91,7 +91,7 @@ function SideBar() {
         <div className="fixed bottom-2 w-[280px]">
           <div
             className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-            onClick={() => navigateTo('/citizenServices')}
+            onClick={() => navigateTo('/ListingsPage')}
           >
             <svg
               className="h-6 w-10 fill-current"
@@ -101,7 +101,7 @@ function SideBar() {
               <path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
             </svg>
             <span className="text-[15px] ml-4 text-gray-200 font-bold">
-              {t("myEntries")}
+              {t("upload")}
             </span>
           </div>
           <div

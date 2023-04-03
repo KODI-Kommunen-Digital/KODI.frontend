@@ -4,7 +4,6 @@ import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListingsByCity } from "../Services/listings";
-import {sortRecent} from "../Services/helper"
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import below from "../assets/homeimage.jpg";
@@ -33,33 +32,6 @@ const HomePage = () => {
     const dateB = new Date(b.date);
     return dateB - dateA;
   }).slice(0, 3);
-
-  // Data Population Starts
-  // const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
-  // useEffect(() => {
-  //   getCategoriesdata().then((response) => {
-  //     setCategoriesdata(response);
-  //   });
-  //   document.title = "Events";
-  // }, []);
-
-  // function handleCategoriesChange(event) {
-  //   setCategoriesdata({
-  //     ...categoriesdata,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   first
-  
-  //   return () => {
-  //     second
-  //   }
-  // }, [third])
-  
-
-  // Data Population Ends
 
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -416,7 +388,7 @@ const HomePage = () => {
           <div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
             {sortedListings && sortedListings.map((listing) => (
               <div
-                onClick={() => navigateTo("/Example1")}
+                onClick={() => navigateTo("/HomePage/EventDetails")}
                 class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
               >
                 <a class="block relative h-64 rounded overflow-hidden">
