@@ -86,40 +86,40 @@ const HomePage = () => {
   function goToEditListingsPage(listing) {
     var categoryId = listing.categoryId
     if (categoryId == categoryByName.News) {
-      navigateTo(`/Events/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.RoadWorksOrTraffic) {
-      navigateTo(`/Events/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.EventsOrNews) {
-      navigateTo(`/Events/Events?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.Associations) {
-      navigateTo(`/Events/PageClub?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events/PageClub?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId ==  categoryByName.RegionalProducts) {
-      navigateTo(`/Events/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.OfferOrSearch) {
-      navigateTo(`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.NewCitizenInfo) {
-      navigateTo(`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.DefectReport) {
-      navigateTo(`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.LostPropertyOffice) {
-      navigateTo(`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.CompanyPortraits) {
-      navigateTo(`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.News) {
-      navigateTo(`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
     else if (categoryId == categoryByName.Offers) {
-      navigateTo(`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
   }
 

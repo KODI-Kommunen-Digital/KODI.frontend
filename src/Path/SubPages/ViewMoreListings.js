@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getListingsByCity } from "../../Services/listings";
+import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
+import { getListings } from "../../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
@@ -14,20 +15,21 @@ const ViewMoreListings = () => {
   const { t, i18n } = useTranslation();
 
   //populate the events titles starts
-  const [listingsData, setListingsData] = useState([]);
+  const [listings, setListings] = useState([]);
   useEffect(() => {
-    getListingsByCity().then((response) => {
-      setListingsData(response);
+    getListings().then((response) => {
+      setListings([...sortRecent((response.data.data))]);
     });
     document.title = selectedItem;
   }, []);
 
-  const [selectedSortOption, setSelectedSortOption] = useState('');
-  const sortedListings = [...listingsData].sort((a, b) => {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const sortedListings = [...listings].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB - dateA;
   });
+  const [selectedSortOption, setSelectedSortOption] = useState('');
   function handleSortOptionChange(event) {
     setSelectedSortOption(event.target.value);
   }
@@ -44,13 +46,6 @@ const ViewMoreListings = () => {
       navigate(path);
     }
   };
-
-  function handleCategoriesChange(event) {
-    setListingsData({
-      ...listingsData,
-      [event.target.name]: event.target.value,
-    });
-  }
 
   const [content, setContent] = useState("A");
   const handleButtonClick = (value) => {
@@ -184,29 +179,31 @@ const ViewMoreListings = () => {
       </div>
 
       <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-          <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-            {sortedListings && sortedListings.map((listing) => (
-              <div
-                onClick={() => navigateTo("/HomePage/EventDetails")}
-                class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-              >
-                <a class="block relative h-64 rounded overflow-hidden">
-                  <img
-                    alt="ecommerce"
-                    class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                    src={HOMEPAGEIMG}
-                  />
-                </a>
-                <div class="mt-10">
-                  <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+        <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+          {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
+          {sortedListings && sortedListings.map((listing) => (
+            <div
+              onClick={() => navigateTo("/HomePage/EventDetails")}
+              className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+            >
+              <a className="block relative h-64 rounded overflow-hidden">
+                <img
+                  alt="ecommerce"
+                  className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  src={HOMEPAGEIMG}
+                />
+              </a>
+              <div className="mt-10">
+                <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
                   {listing.title}
-                  </h2>
-                </div>
-                <div className="my-4 bg-gray-200 h-[1px]"></div>
+                </h2>
               </div>
-              ))}
-          </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
+            </div>
+          ))}
+
         </div>
+      </div>
 
         <footer class="text-center lg:text-left bg-black text-white">
             <div class="mx-6 py-10 text-center md:text-left">

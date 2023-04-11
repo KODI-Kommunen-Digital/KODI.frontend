@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getListingsByCity } from "../../Services/listings";
 import { useNavigate } from "react-router-dom";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
@@ -51,15 +50,15 @@ const Events = () => {
     getListings().then((response) => {
       setListings([...sortRecent((response.data.data))]);
     });
-    document.title = "Dashboard";
   }, []);
 
   function goToEventsPage(listing) {
     var categoryId = listing.categoryId
     if (categoryId == categoryByName.News) {
-      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}`);
     }
   }
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const sortedListings = [...listings].sort((a, b) => {
     const dateA = new Date(a.date);
@@ -134,6 +133,12 @@ const Events = () => {
         categoryId = 0;
         break;
     }
+
+    const newListing = {
+      ...input,
+      categoryId: categoryId,
+    };
+    goToEventsPage(newListing);
   };
 
   // function handleCategoriesChange(event) {
