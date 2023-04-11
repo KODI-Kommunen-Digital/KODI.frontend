@@ -8,6 +8,7 @@ import {
 
 import LOGO from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { logout } from '../Services/login';
 
 export default function HomePageNavBar() {
 
@@ -20,15 +21,31 @@ export default function HomePageNavBar() {
   };
 
 const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-// const login = () => {
-//   setIsLoggedIn(true);
-// }
+var accessToken;
+var refreshToken;
 
 useEffect(() => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  setIsLoggedIn(!!isLoggedIn); // Convert string to boolean
+  accessToken = window.localStorage.getItem('accessToken');
+  refreshToken = window.localStorage.getItem('refreshToken');
+  //const userId = window.localStorage.getItem('userId');
+  if (accessToken || refreshToken ){
+    setIsLoggedIn(true)
+  }
 }, []);
+
+const handleLoginLogout = () =>{
+  if (isLoggedIn){
+    logout({"accesToken":accessToken, "refreshToken": refreshToken});
+    window.localStorage.removeItem('accessToken')
+    window.localStorage.removeItem('refreshToken')
+    window.localStorage.removeItem('userId')
+    setIsLoggedIn(false)
+    navigateTo('/')
+  }else{
+    navigateTo('/')
+  }
+
+}
 
   return (
     <div class="w-full fixed top-0 z-10">
@@ -51,8 +68,8 @@ useEffect(() => {
           </div>
 
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
-            <a onClick={() => navigateTo("/")} className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-            {t("login")}
+            <a onClick={handleLoginLogout} className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+            {isLoggedIn? t("logOut"): t("login")}
             </a>
             <a
               onClick={() => isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")}
@@ -63,45 +80,6 @@ useEffect(() => {
           </div>
         </div>
       </div>
-
-      <Transition
-        as={Fragment}
-        enter="duration-200 ease-out"
-        enterFrom="opacity-0 scale-95"
-        enterTo="opacity-100 scale-100"
-        leave="duration-100 ease-in"
-        leaveFrom="opacity-100 scale-100"
-        leaveTo="opacity-0 scale-95"
-      >
-        <Popover.Panel focus className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden">
-          <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-            <div className="space-y-6 py-6 px-5">
-
-                <div className="mr-2 flex justify-end">
-                  <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-                    <span className="sr-only">Close menu</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </Popover.Button>
-                </div>
-
-              <div>
-                <a
-                  href="#"
-                  className="flex font-sans w-full items-center justify-center rounded-md border border-transparent bg-blue-800 px-4 py-2 text-base font-medium text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                >
-                  {t("signup")}
-                </a>
-                <p className="mt-6 text-center text-base font-medium text-gray-500">
-                  Existing customer?{' '}
-                  <a href="#" className="text-blue-800 hover:text-[0_4px_9px_-4px_#3b71ca] font-sans">
-                  {t("signin")}
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </Popover.Panel>
-      </Transition>
     </Popover>
     </div>
   )
