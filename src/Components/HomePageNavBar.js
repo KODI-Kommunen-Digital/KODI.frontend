@@ -36,7 +36,8 @@ export default function HomePageNavBar() {
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
 			setIsLoggedIn(false);
-			navigateTo("/");
+			navigateTo("/HomePage");
+      alert('You have been logged out');
 		} else {
 			navigateTo("/");
 		}

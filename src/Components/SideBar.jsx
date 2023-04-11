@@ -16,6 +16,7 @@ function SideBar() {
       window.localStorage.removeItem('userId');
       setLoggedIn(false);
       window.location.href = '/HomePage';
+      alert('You have been logged out')
     } catch (error) {
       console.log(error);
     }
