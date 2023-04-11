@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
@@ -12,7 +12,7 @@ const LoginPage = () => {
 
 	const userRef = useRef();
 	//const errRef = useRef();
-
+	const [rememberMe, setRememberMe] = useState(false);
 	const [forgotPassword, setForgotPassword] = useState(false);
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
@@ -23,23 +23,28 @@ const LoginPage = () => {
 	//const [errMsg, setErrMsg] = useState('');
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		document.title = "Heidi - Login";
 	}, []);
 
+	const routeChangeToDashboard = useCallback(() => {
+		let path = `/Dashboard`;
+		navigate(path);
+	});
+
 	useEffect(() => {
 		userRef.current.focus();
+		const accessToken = window.localStorage.getItem("accessToken");
+		const refreshToken = window.localStorage.getItem("refreshToken");
+		if (accessToken?.length === 456 || refreshToken?.length === 456) {
+			routeChangeToDashboard();
+		}
 	}, []);
 	// useEffect(() => {
 	//   setErrMsg('');
 	// }, [user,pwd]);
-
-	let navigate = useNavigate();
-	const routeChangeToDashboard = () => {
-		let path = `/Dashboard`;
-		navigate(path);
-	};
 	const routeChangeToRegister = () => {
 		let path = `/Register`;
 		navigate(path);
@@ -49,13 +54,18 @@ const LoginPage = () => {
 		setAlertInfo(false);
 		setUserReset("");
 		setAlertMessage("");
+		setRememberMe(false);
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
-			var response = await login({ username: user, password: pwd });
+			var response = await login({
+				username: user,
+				password: pwd,
+				rememberMe: rememberMe,
+			});
 			setLoginLoading(false);
 			window.localStorage.setItem(
 				"accessToken",
@@ -68,6 +78,7 @@ const LoginPage = () => {
 			window.localStorage.setItem("userId", response.data.data.userId);
 			setUser("");
 			setPwd("");
+			setRememberMe(false);
 			routeChangeToDashboard();
 		} catch (err) {
 			setLoginLoading(false);
@@ -152,6 +163,10 @@ const LoginPage = () => {
 									name="remember-me"
 									type="checkbox"
 									class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+									defaultChecked={rememberMe}
+									onChange={() => {
+										setRememberMe(!rememberMe);
+									}}
 								/>
 								<label
 									for="remember-me"
