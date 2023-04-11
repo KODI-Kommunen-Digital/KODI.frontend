@@ -8,6 +8,7 @@ import Dashboard from './Path/Dashboard';
 import Register from './Path/Register';
 import ImprintPage from './Path/ImprintPage';
 import PrivacyPolicy from './Path/PrivacyPolicy';
+import LogoutSuccessPage from './Components/LogoutSuccessPage';
 
 import HomePage from './Path/HomePage';
 import Places from './Path/SubPages/Places';
@@ -65,6 +66,8 @@ const App =()=>{
             <Route path="/Register" element={<Register />}/>
             <Route path="/ImprintPage" element={<ImprintPage />}/>
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />}/>
+
+            <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />}/>
 
             <Route path="/OverviewPage" element={<OverviewPage />}/>
             <Route path="/OverviewPage/NewsCategories" element={<OverviewPageNewsCategories />}/>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../../Services/CategoriesData";
-import { getListingsByCity } from "../../Services/listings";
+import { getListings } from "../../Services/usersApi";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 
 const Places = () => {
@@ -24,6 +24,20 @@ const Places = () => {
       navigate(path);
     }
   };
+
+  const [listings, setListings] = useState([]);
+  useEffect(() => {
+    getListings().then((response) => {
+      setListings([...sortRecent((response.data.data))]);
+    });
+  }, []);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const sortedListings = [...listings].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  });
 
   //populate the events titles starts
   const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
@@ -45,17 +59,6 @@ const Places = () => {
       [event.target.name]: event.target.value,
     });
   }
-
-  //populate the events titles starts
-  const [listingsData, setListingsData] = useState([]);
-  useEffect(() => {
-    getListingsByCity().then((response) => {
-      setListingsData(response);
-    });
-    document.title = selectedItem;
-  }, []);
-
-  //populate the events titles Ends
     // Selected Items Deletion Starts
     const selectedItem = localStorage.getItem('selectedItem');
     // Selected Items Deletion Ends
@@ -68,17 +71,17 @@ const Places = () => {
   useEffect(() => {
     switch (selectedSortOption) {
       case 'titleAZ':
-        setListingsData([...sortByTitleAZ(listingsData)])
-        console.log(listingsData)
+        setListings([...sortByTitleAZ(listings)])
+        console.log(listings)
         break;
       case 'titleZA':
-        setListingsData([...sortByTitleZA(listingsData)]);
+        setListings([...sortByTitleZA(listings)]);
         break;
       case 'recent':
-        setListingsData([...sortRecent(listingsData)]);
+        setListings([...sortRecent(listings)]);
         break;
       case 'oldest':
-        setListingsData([...sortOldest(listingsData)]);
+        setListings([...sortOldest(listings)]);
         break;
       default:
         break;
@@ -357,26 +360,27 @@ const Places = () => {
       <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
         <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
-          {listingsData && listingsData.map((listing) => (
+          {sortedListings && sortedListings.map((listing) => (
             <div
               onClick={() => navigateTo("/HomePage/EventDetails")}
-              class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+              className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
             >
-              <a class="block relative h-64 rounded overflow-hidden">
+              <a className="block relative h-64 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={HOMEPAGEIMG}
                 />
               </a>
-              <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-                {listing.title}
+              <div className="mt-10">
+                <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                  {listing.title}
                 </h2>
               </div>
               <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
           ))}
+
         </div>
       </div>
 

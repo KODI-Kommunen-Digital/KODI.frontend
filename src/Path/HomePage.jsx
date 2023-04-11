@@ -3,12 +3,13 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListingsByCity } from "../Services/listings";
+import { getListings } from "../Services/usersApi";
+import {sortOldest} from "../Services/helper";
+import { getCities } from "../Services/cities";
+import { getVillages } from "../Services/villages";
+import { categoryByName, categoryById } from "../Constants/categories";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import below from "../assets/homeimage.jpg";
-import fuchstal from "../assets/homeimage.jpg";
-import applevillage from "../assets/homeimage.jpg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -18,16 +19,50 @@ import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=s
 const HomePage = () => {
   const { t, i18n } = useTranslation();
   window.scrollTo(0, 0);
-
-  const [listingsData, setListingsData] = useState([]);
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
   useEffect(() => {
-    getListingsByCity().then((response) => {
-      setListingsData(response);
+    getCities().then(citiesResponse => {
+      setCities(citiesResponse.data.data);
+  })}, []);
+
+  const [input, setInput] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "sourceId": 1,
+    "userId": 2
+  });
+
+  const [listings, setListings] = useState([]);
+  useEffect(() => {
+    getListings().then((response) => {
+      setListings([...sortOldest((response.data.data))]);
     });
+    document.title = "Heidi Home";
   }, []);
 
+  // const [listingsData, setListingsData] = useState([]); - for jason
+  // useEffect(() => {
+  //   getListingsByCity().then((response) => {
+  //     setListingsData(response);
+  //   });
+  // }, []);
+
   const [selectedSortOption, setSelectedSortOption] = useState('');
-  const sortedListings = [...listingsData].sort((a, b) => {
+  const sortedListings = [...listings].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB - dateA;
@@ -46,6 +81,46 @@ const HomePage = () => {
 
     // Redirect to the filters page with the encoded name as a parameter
     window.location.href = (encodedName);
+  }
+
+  function goToEditListingsPage(listing) {
+    var categoryId = listing.categoryId
+    if (categoryId == categoryByName.News) {
+      navigateTo(`/Events/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.RoadWorksOrTraffic) {
+      navigateTo(`/Events/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.EventsOrNews) {
+      navigateTo(`/Events/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.Associations) {
+      navigateTo(`/Events/PageClub?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId ==  categoryByName.RegionalProducts) {
+      navigateTo(`/Events/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.OfferOrSearch) {
+      navigateTo(`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.NewCitizenInfo) {
+      navigateTo(`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.DefectReport) {
+      navigateTo(`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.LostPropertyOffice) {
+      navigateTo(`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.CompanyPortraits) {
+      navigateTo(`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.News) {
+      navigateTo(`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+    else if (categoryId == categoryByName.Offers) {
+      navigateTo(`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
   }
 
   return (
@@ -330,52 +405,25 @@ const HomePage = () => {
           {t("discoverMorePlaces")}
         </h2>
 
+        { cities.map(city => (
         <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
             <div onClick={() => {
               navigateTo("/Places");
-              localStorage.setItem("selectedItemLocation", "Below");
+              localStorage.setItem("selectedItemLocation", city.name);
               }} class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2">
               <div class="relative h-80 rounded overflow-hidden">
-                <img alt="ecommerce" class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500" src={below} />
+                <img alt="ecommerce" class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500" src={city.image} />
                 <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-                  {t("below")}
-                  </h1>
-                  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
-                </div>
-              </div>
-            </div>
-            <div onClick={() => {
-              navigateTo("/Places");
-              localStorage.setItem("selectedItemLocation", "Fuchstal");
-              }} class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2">
-              <div class="relative h-80 rounded overflow-hidden">
-                <img alt="ecommerce" class="object-cover object-center h-full w-full" src={fuchstal} />
-                <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                  <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4 overflow-hidden">
-                  {t("fuchstal")}
-                  </h1>
-                  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
-                </div>
-              </div>
-            </div>
-            <div onClick={() => {
-              navigateTo("/Places");
-              localStorage.setItem("selectedItemLocation", "Apple village");
-              }} class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2">
-              <div class="relative h-80 rounded overflow-hidden">
-                <img alt="ecommerce" class="object-cover object-center h-full w-full" src={applevillage} />
-                <div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                  <h1 class="text-xl md:text-3xl font-bold mb-0 ml-4 font-sans">
-                  {t("appleVillage")}
+                  {city.name}
                   </h1>
                   <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> ))}
 
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -386,7 +434,7 @@ const HomePage = () => {
 
         <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-            {sortedListings && sortedListings.map((listing) => (
+          {sortedListings && sortedListings.map((listing) => (
               <div
                 onClick={() => navigateTo("/HomePage/EventDetails")}
                 class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
