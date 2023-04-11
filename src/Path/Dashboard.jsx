@@ -95,32 +95,28 @@ const Dashboard = () => {
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar/>
-      <div class="container px-5 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
-        <Popover className="relative bg-black mr-0 ml-0 px-10 rounded-lg">
+      <div class="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
+        <Popover className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
           <div className="w-full">
-            <div className="flex items-center justify-end xl:justify-center lg:justify-center md:justify-center sm:justify-end border-gray-100 py-5 md:space-x-10">
+            <div className="flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 py-5 md:space-x-10">
 
 
-              <div class="hidden md:block">
-                  <div class="ml-10 flex items-baseline space-x-4">
-                    <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer" aria-current="page">All Listings</a>
-
-                    <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer">Publsihed</a>
-
-                    <a  class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer">Pending</a>
-
-                    <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer">Expired</a>
-
-                    {/* <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer">Reports</a> */}
-                  </div>
-                </div>
-
-              <div className="-my-2 -mr-2 md:hidden">
-                <Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <span className="sr-only">Open menu</span>
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </Popover.Button>
+            <div class="hidden lg:block">
+              <div class="ml-10 flex items-baseline space-x-20">
+                <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer" aria-current="page">All Listings</a>
+                <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">Published</a>
+                <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">Pending</a>
+                <a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">Expired</a>
               </div>
+            </div>
+
+            {/* <div class="-my-2 -mr-2 lg:hidden">
+              <Popover.Button class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <span class="sr-only">Open menu</span>
+                <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+              </Popover.Button>
+            </div> */}
+
 
               {/* <div class="hidden md:block">
                 <div className="justify-end mt-0 ml-0 flex items-baseline space-x-4">
@@ -175,8 +171,6 @@ const Dashboard = () => {
                 </div>
               </div> */}
 
-
-
             </div>
           </div>
 
@@ -189,11 +183,11 @@ const Dashboard = () => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Popover.Panel focus className="absolute inset-x-0 top-0 origin-top-right transform p-0 transition md:hidden">
+            <Popover.Panel focus className="absolute inset-x-0 top-0 origin-top-right transform p-0 transition lg:hidden">
               <div className="divide-y-2 divide-gray-50 bg-black shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="space-y-6 py-6 px-5">
 
-                <div className="-my-2 -mr-2 md:hidden flex justify-end">
+                <div className="-my-2 -mr-2 lg:hidden flex justify-end">
                       <Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="sr-only">Close menu</span>
                         <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -201,7 +195,7 @@ const Dashboard = () => {
                     </div>
 
                     <div class="space-y-1">
-                    <div class="md:hidden flex justify-center text-center" id="mobile-menu">
+                    <div class="lg:hidden flex justify-center text-center" id="mobile-menu">
                       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                         <a class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium cursor-pointer" aria-current="page">All Listings</a>
 
@@ -210,8 +204,6 @@ const Dashboard = () => {
                         <a  class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium cursor-pointer">Pending</a>
 
                         <a class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium cursor-pointer">Expired</a>
-
-                        {/* <a class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium cursor-pointer">Reports</a> */}
                       </div>
                     </div>
 
@@ -279,22 +271,22 @@ const Dashboard = () => {
       <html class="h-full bg-gray-100" />
       <body class="h-full" />
 
-      <div class="container w-auto px-5 py-2 bg-slate-600 h-full">
+      <div class="container w-auto px-0 lg:px-5 py-2 bg-slate-600 h-screen">
 
-        <div class="bg-white mt-4 p-0 space-y-10">
-          <table class="w-full text-sm text-left lg:mt-[2rem] mt-[7rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
+        <div class="bg-white mt-20 p-0 space-y-10 overflow-x-auto">
+          <table class="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
               <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 sm:px-6 py-3">
                   Listings
                 </th>
-                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
+                <th scope="col" class="px-6 sm:px-3 py-3 hidden lg:table-cell">
                   Category
                 </th>
-                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
+                <th scope="col" class="px-6 py-3 hidden lg:table-cell">
                   Date of Creation
                 </th>
-                <th scope="col" class="px-6 py-3 hidden sm:table-cell">
+                <th scope="col" class="px-6 py-3">
                   Status
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -314,19 +306,19 @@ const Dashboard = () => {
                     onClick={() => navigateTo("/Example1")}
                   >
                     <img
-                      class="w-10 h-10 rounded-full"
+                      class="w-10 h-10 rounded-full hidden sm:table-cell"
                       src={listing.image}
                       alt="avatar"
                     />
-                    <div class="pl-3">
+                    <div class="pl-0 sm:pl-3">
                       <div class="font-normal text-gray-500">
                         {listing.title}
                       </div>
                     </div>
                   </th>
-                  <td class="px-6 py-4 hidden sm:table-cell">{categoryById[listing.categoryId]}</td>
-                  <td class="px-6 py-4 hidden sm:table-cell">{new Date(listing.createdAt).toLocaleString("de")}</td>
-                  <td class="px-6 py-4 hidden sm:table-cell">
+                  <td class="px-6 py-4 hidden lg:table-cell">{categoryById[listing.categoryId]}</td>
+                  <td class="px-6 py-4 hidden lg:table-cell">{new Date(listing.createdAt).toLocaleString("de")}</td>
+                  <td class="px-6 py-4">
                     <div class="flex items-center">
                       <div class={`h-2.5 w-2.5 rounded-full ${getStatusClass(listing.statusId)} mr-2`}></div>
                       {status[listing.statusId]}

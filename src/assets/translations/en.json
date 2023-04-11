@@ -13,7 +13,7 @@
   "clickToRegister": "Click here to register",
   "myEntries": "My Entries",
   "myProfile": "My Profile",
-  "logOut": "My Prorfile",
+  "logOut": "Log Out",
   "publicInfoWarning": "This information will be displayed publicly, so be careful what you share",
   "information": "Information",
   "category": "Category",
@@ -57,6 +57,7 @@
   "pleaseEnterFirstName": "Please enter first name",
   "pleaseEnterLastName": "Please enter last name",
   "acceptConditionMessage": "I hereby accept the privacy policy* and the terms and conditions*",
+  "pleaseEnterZipCode": "Please enter zip code",
 
 
 

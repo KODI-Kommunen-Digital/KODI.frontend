@@ -58,9 +58,9 @@ const LoginPage = () => {
     try{
         var response = await login({'username':user,'password':pwd })
         setLoginLoading(false)
-        window.localStorage.setItem('accessToken', response.data.accessToken);
-        window.localStorage.setItem('refreshToken', response.data.refreshToken);
-        window.localStorage.setItem('userId', response.data.userId);
+        window.localStorage.setItem('accessToken', response.data.data.accessToken);
+        window.localStorage.setItem('refreshToken', response.data.data.refreshToken);
+        window.localStorage.setItem('userId', response.data.data.userId);
         setUser('');
         setPwd('');
         routeChangeToDashboard()

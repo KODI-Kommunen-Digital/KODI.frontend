@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../Resource/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {getProfile, updateProfile} from '../Services/usersApi'
 
 function SideBar() {
   const { t, i18n } = useTranslation();
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  const handleLogout = () => {
+    try {
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+      window.localStorage.removeItem('userId');
+      setLoggedIn(false);
+      window.location.href = '/HomePage';
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   function openSidebar() {
     let sideBar = document.querySelector(".sidebar");
     if (sideBar) {
@@ -19,6 +34,19 @@ function SideBar() {
       navigate(path);
     }
   };
+
+  const [userName, setUserName] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  useEffect(() => {
+    getProfile()
+      .then((response) => {
+        setUserName(response.data.data.username);
+        setProfilePic(response.data.data.image);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div>
@@ -48,7 +76,7 @@ function SideBar() {
               onClick={openSidebar}
             >
               <svg
-                className="fixed top-0 left-[270px] h-8 p-2 z-5 fill-current cursor-pointer close-nav-bar"
+                className="fixed top-0 left-[255px] sm:left-[270px] h-8 p-2 z-5 fill-current cursor-pointer close-nav-bar"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 496 512"
               >
@@ -104,35 +132,33 @@ function SideBar() {
               {t("upload")}
             </span>
           </div>
-          <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-            onClick={() => navigateTo("/HomePage")}
-          >
-            <svg
-              className="h-6 w-10 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 496 512"
+          {loggedIn && (
+            <div
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+              onClick={handleLogout}
             >
-              <path d="M160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128V384c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32h64zM504.5 273.4c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22v72H192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32H320v72c0 9.6 5.7 18.2 14.5 22s19 2 26-4.6l144-136z" />
-            </svg>
-            <span className="text-[15px] ml-4 text-gray-200 font-bold">
-            {t("logOut")}
-            </span>
-          </div>
+              <svg
+                className="h-6 w-10 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 496 512"
+              >
+                <path d="M160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128V384c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32h64zM504.5 273.4c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22v72H192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32H320v72c0 9.6 5.7 18.2 14.5 22s19 2 26-4.6l144-136z" />
+              </svg>
+              <span className="text-[15px] ml-4 text-gray-200 font-bold">
+                {t("logOut")}
+              </span>
+            </div>
+          )}
           <div className="my-2 bg-gray-600 h-[1px]"></div>
           <div
             className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
             onClick={() => navigateTo("/profilePage")}
           >
             <div>
-              <img
-                class="rounded-full"
-                src="https://i.ibb.co/L1LQtBm/Ellipse-1.png"
-                alt="avatar"
-              />
+              {profilePic}
             </div>
             <span className="text-[15px] ml-4 text-gray-200 font-bold">
-              Max Mullerman
+              {userName}
             </span>
           </div>
         </div>

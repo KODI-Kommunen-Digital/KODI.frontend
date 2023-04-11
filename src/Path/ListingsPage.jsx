@@ -5,18 +5,25 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {getListingsByCity, postListingsData , updateListingsData} from '../Services/listingsApi'
+import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../Services/listingsApi'
+
+import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 
 
 function ListingsPage() {
   //window.scrollTo(0, 0);
-  const category = 4;
-  const subCategory = 0;
+  //const category = 4;
+  //const subCategory = 0;
 
   const { t, i18n } = useTranslation();
   const editor = useRef(null);
   const [content, setContent] = useState("");
+  const [listingId, setListingId] = useState(0);
+  const [newListing, setNewListing] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({show: false, message:null, type:null});
+
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -93,10 +100,10 @@ function ListingsPage() {
   //Sending data to backend starts
   const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
   const [input, setInput] = useState({
-    "villageId": 1,
+    //"villageId": 1,
     "categoryId": 0,
     "subcategoryId": 0,
-    "statusId": '',
+    "statusId": 'pending',
     "sourceId": 1,
     "userId": 2,
     title:'',
@@ -105,19 +112,20 @@ function ListingsPage() {
     email:'',
     description: '',
     logo: null,
-    media: null,
+    //media: null,
     startDate:'',
     endDate:'',
     originalPrice:'',
     villagedropdown:'',
+    zipCode:'',
     discountedPrice:''
   });
 
   const [error, setError] = useState({
-    "villageId": 1,
+    //"villageId": 1,
     "categoryId": 0,
     "subcategoryId": 0,
-    "statusId": '',
+    "statusId": 'pending',
     "sourceId": 1,
     "userId": 2,
     title:'',
@@ -126,11 +134,12 @@ function ListingsPage() {
     email:'',
     description: '',
     logo: null,
-    media: null,
+    //media: null,
     startDate:'',
     endDate:'',
     originalPrice:'',
     villagedropdown:'',
+    zipCode:'',
     discountedPrice:''
   })
 
@@ -255,41 +264,69 @@ const handleCategoryChange = (event) => {
   }
 };
 
+  // const handleSubmit = async(event) =>{
+  //   setUpdating(true)
+  //   var requestPromise = newListing ? postListingsData(cityId, input) : updateListingsData(cityId, input, listingId);
+  //   requestPromise.then(response => {
+  //   setUpdating(false)
+  //     setAlertInfo({show: true, type:'success', message:t("listingUpdated")})
+  //     setInterval(() => {
+  //       setAlertInfo({show: false, type:"", message:null})
+  //     }, 5000)}).catch(error => {
+  //       setUpdating(false)
+  //       setAlertInfo({show: true, type:'danger', message:t("listingNotUpdated")})
+  //       setInterval(() => {
+  //         setAlertInfo({show: false, type:"", message:null})
+  //       }, 5000)
+  //     });
+  //   }
+
   const handleSubmit = async(event) =>{
-    event.preventDefault();
-    const currentDate = new Date().toISOString().slice(0, 10);
-    const time = new Date().toLocaleTimeString();
-    const createdAt = `${currentDate}`;
-    setInput({ ...input, createdAt });
-
+    setUpdating(true);
     try {
-      const getResponse = await postListingsData(input);
-      console.log('Information saved successfully:', getResponse.data);
-      setSuccessMessage('Information saved successfully');
-      setErrorMessage('');
+        var response = newListing ? await postListingsData(cityId, input) : await updateListingsData(cityId, input, listingId);
+        setSuccessMessage(t("listingUpdated"));
     } catch (error) {
-      console.error('Error creating your Infornamtion:', error);
-      setSuccessMessage('');
-      setErrorMessage('Error creating your Infornamtion');
+        setErrorMessage(t("listingNotUpdated"));
     }
-  };
-  console.log(input)
+    setUpdating(false);
+};
 
-  useEffect(() => {
-    document.title = "Submit Listing";
-    async function fetchData(listingId) {
-      try {
-        const response = await getListingsByCity(listingId);
-        const listingData = response.data;
-        setInput(listingData);
-      } catch (error) {
-        console.error("Error fetching listing data:", error);
+    useEffect(() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      var cityId = searchParams.get('cityId')
+      setCityId(cityId);
+      var listingId = searchParams.get('listingId')
+      setListingId(listingId);
+      if (listingId && cityId) {
+        setNewListing(false)
+          getVillages(cityId).then(response =>
+          setVillages(response.data.data)
+        )
+        getListingsById(cityId, listingId).then(listingsResponse => {
+          setInput(listingsResponse.data.data);
+          setDescription(listingsResponse.data.data.description);
+          // if (listingsResponse.data.data.socialMedia)
+          //   setVal(JSON.parse(listingsResponse.data.data.socialMedia));
+        });
       }
-    }
+    }, []);
 
-    const listingId = "4";
-    fetchData(listingId);
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Submit Listing";
+  //   async function fetchData(listingId) {
+  //     try {
+  //       const response = await getListingsByCity(listingId);
+  //       const listingData = response.data;
+  //       setInput(listingData);
+  //     } catch (error) {
+  //       console.error("Error fetching listing data:", error);
+  //     }
+  //   }
+
+  //   const listingId = "4";
+  //   fetchData(listingId);
+  // }, []);
 
   const onInputChange = e => {
     const { name, value } = e.target;
@@ -356,12 +393,6 @@ const handleCategoryChange = (event) => {
               }
               break;
 
-              case "socialMedia":
-              if(!value){
-                stateObj[name] = t("pleaseEnterSocialMedia");
-              }
-              break;
-
               case "selected":
               if(!value){
                 stateObj[name] = t("pleaseEnterSelected");
@@ -380,6 +411,11 @@ const handleCategoryChange = (event) => {
               case "villagedropdown":
               if(!value){
                 stateObj[name] = t("pleaseEnterVillage");
+              }
+              break;
+              case "zipCode":
+              if(!value){
+                stateObj[name] = t("pleaseEnterZipCode");
               }
               break;
 
@@ -437,9 +473,9 @@ const handleCategoryChange = (event) => {
     }
   }, [map, selectedResult]);
 
-  const [data, setData] = useState({
-    socialMedia: ""
-  });
+  // const [data, setData] = useState({
+  //   socialMedia: ""
+  // });
   //Map integration Sending data to backend ends
 
   // useEffect(() => {
@@ -447,9 +483,9 @@ const handleCategoryChange = (event) => {
   // }, []);
 
   //Social Media Starts
-  const handleAdd = (value) => {
-    setVal([...val, { socialMedia: value, selected: "" }]);
-  };
+  // const handleAdd = (value) => {
+  //   setVal([...val, { socialMedia: value, selected: "" }]);
+  // };
 
   // To update the `selected` property of the input object, you can add another function to handle the selection of an item in the `val` array, like this:
   const handleSelection = (index, value) => {
@@ -459,10 +495,15 @@ const handleCategoryChange = (event) => {
   };
 
   // Then you can update the `selected` property of the `input` object in a similar way as the `socialMedia` property:
+  // useEffect(() => {
+  //   const socialMediaValues = val.map(item => item.socialMedia);
+  //   setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
+  // }, [val]);
+
   useEffect(() => {
-    const socialMediaValues = val.map(item => item.socialMedia);
-    setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
-  }, [val]);
+    getCities().then(citiesResponse => {
+      setCities(citiesResponse.data.data);
+  })}, []);
 
   useEffect(() => {
     setInput(prevState => ({ ...prevState, selected: val.map(item => item.selected) }));
@@ -474,12 +515,25 @@ const handleCategoryChange = (event) => {
     setVal(list);
   };
 
-  const handleChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...val];
-    list[index][name] = value;
-    setVal(list);
-  };
+  // const handleSocialMediaChanges = (e, index) => {
+  //   const { name, value } = e.target;
+  //   const list = [...val];
+  //   list[index][name] = value;
+  //   setVal(list);
+  //   setInput(prev => ({ ...prev, socialMedia: JSON.stringify(list) }));
+  // };
+
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
 //Social Media ends
 
   const [date, setDate] = useState();
@@ -531,33 +585,52 @@ const handleCategoryChange = (event) => {
             </div>
 
             <div class="relative mb-4">
-              <label for="villagedropdown" class="block text-sm font-medium text-gray-600">
+              <label for="title" class="block text-sm font-medium text-gray-600">
+                City
+              </label>
+                <select
+                  type="text"
+                  id="selected"
+                  name="selected"
+                  value={cityId}
+                  onChange={onCityChange}
+                  onBlur={validateInput}
+                  autocomplete="country-name"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value={0}>Select</option>
+                  { cities.map(city => (
+                    <option value={Number(city.id)}>
+                      { city.name }
+                    </option>
+                  ))}
+                </select>
+            </div>
+
+
+            <div class="relative mb-4">
+              <label for="title" class="block text-sm font-medium text-gray-600">
                 Village
               </label>
-              <select
-                 type="villagedropdown"
-                 id="villagedropdown"
-                 name="villagedropdown"
-                 value={input.villagedropdown}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                 required
-                 class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-             >
-                 <option class="font-sans text-gray-400" value="Default">
-                 {t("chooseOneVillage")}
-                 </option>
-                 <option class="font-sans" value="below">
-                 {t("below")}
-                 </option>
-                 <option class="font-sans" value="fuchstal">
-                 {t("fuchstal")}
-                 </option>
-                 <option class="font-sans" value="appleVillage">
-                 {t("appleVillage")}
-                 </option>
-              </select>
+                <select
+                  type="text"
+                  id="villageId"
+                  name="villageId"
+                  value={input.villageId}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  autocomplete="country-name"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value={0}>Select</option>
+                  { villages.map(village => (
+                    <option value={Number(village.id)}>
+                      { village.name }
+                    </option>
+                  ))}
+                </select>
             </div>
+
 
             <div class="relative mb-4">
               <label for="dropdown" class="block text-sm font-medium text-gray-600">
@@ -661,8 +734,9 @@ const handleCategoryChange = (event) => {
             </div>
             )}
 
-            <div class="relative mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-600">
+            <div class="relative mb-4 grid grid-cols-2 gap-4">
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="place" class="block text-sm font-medium text-gray-600">
                   Place
                 </label>
                 <input
@@ -676,6 +750,22 @@ const handleCategoryChange = (event) => {
                   placeholder="Enter your place here"
                 />
               </div>
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="zipCode" class="block text-sm font-medium text-gray-600">
+                  Zip Code
+                </label>
+                <input
+                  type="text"
+                  id="zipCode"
+                  name="zipCode"
+                  value={input.zipCode}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  placeholder="Enter your Zip code here"
+                />
+              </div>
+            </div>
 
               <div class="col-span-6">
                 <label
@@ -901,7 +991,7 @@ const handleCategoryChange = (event) => {
             </div>
         )}
 
-        {selectedCategory !== "roadTraffic" && (
+        {/* {selectedCategory !== "roadTraffic" && (
             <div class="container w-auto px-5 py-2 bg-slate-600">
               <div class="bg-white mt-4 p-6 space-y-10">
                 <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -938,17 +1028,18 @@ const handleCategoryChange = (event) => {
                                   const value = e.target.value;
                                   setInput({ ...input, socialMedia: e.target.value })
                                   setData((prevData) => ({ ...prevData, socialMedia: value }));
-                                  handleChange(e, i);
+                                  handleSocialMediaChanges(e, i);
                                 }}
                                 autocomplete="country-name"
                                 class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                               >
                                 <option>Select</option>
-                                <option>Facebook</option>
-                                <option>Instagram</option>
-                                <option>Linkdin</option>
-                                <option>Youtube</option>
-                                <option>Twitter</option>
+                                {
+                                  socialMedia.map(option => (
+                                    <option value={ option }>
+                                      { option }
+                                    </option>
+                                ))}
                               </select>
                             </div>
                             <div class="mt-2 px-0 ml-2">
@@ -964,12 +1055,13 @@ const handleCategoryChange = (event) => {
                                 name="socialMedia"
                                 value={data.socialMedia}
                                 onBlur={validateInput}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  setInput({ ...input, socialMedia: e.target.value })
-                                  setData((prevData) => ({ ...prevData, socialMedia: value }));
-                                  handleChange(e, i);
-                                }}
+                                // onChange={(e) => {
+                                //   const value = e.target.value;
+                                //   setInput({ ...input, socialMedia: e.target.value })
+                                //   setData((prevData) => ({ ...prevData, socialMedia: value }));
+                                //   handleSocialMediaChanges(e, i);
+                                // }}
+                                onChange={(e) => handleSocialMediaChanges(e, i)}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 placeholder="ainfo@heidi-app.de"
                               />
@@ -1077,7 +1169,7 @@ const handleCategoryChange = (event) => {
                 </div>
               </div>
             </div>
-        )}
+        )} */}
 
       <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
@@ -1117,9 +1209,15 @@ const handleCategoryChange = (event) => {
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <div class="relative mb-4 mt-8 border-white">
-              <button type="submit" onClick={handleSubmit} class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+            <button type="button" onClick={handleSubmit} disabled={updating} class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
                 Save Changes
+                { updating &&
+                <svg aria-hidden="true" class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg> }
               </button>
+
             </div>
             <div>
               {successMessage && <div className="w-full bg-green-400 text-black font-bold py-2 px-4 rounded">{successMessage}</div>}

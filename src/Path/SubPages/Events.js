@@ -5,27 +5,159 @@ import { useNavigate } from "react-router-dom";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
+import { getListings } from "../../Services/usersApi";
+import { getCities } from "../../Services/cities";
+import { getVillages } from "../../Services/villages";
+import { categoryByName, categoryById } from "../../Constants/categories";
 
 import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 const Events = () => {
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   const { t, i18n } = useTranslation();
-
-  //populate the events titles starts
-  const [listingsData, setListingsData] = useState([]);
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
   useEffect(() => {
-    getListingsByCity().then((response) => {
-      setListingsData(response);
+    getCities().then(citiesResponse => {
+      setCities(citiesResponse.data.data);
+  })}, []);
+
+    // Selected Items Deletion Starts
+    const selectedItem = localStorage.getItem('selectedItem');
+    // Selected Items Deletion Ends
+
+  const [input, setInput] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "sourceId": 1,
+    "userId": 2
+  });
+
+  const [listings, setListings] = useState([]);
+  useEffect(() => {
+    getListings().then((response) => {
+      setListings([...sortRecent((response.data.data))]);
     });
-    document.title = selectedItem;
+    document.title = "Dashboard";
   }, []);
 
-  //populate the events titles Ends
+  function goToEventsPage(listing) {
+    var categoryId = listing.categoryId
+    if (categoryId == categoryByName.News) {
+      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?${listing.categoryId}`);
+    }
+  }
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const sortedListings = [...listings].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  });
+  const handleCategoryChange = (event) => {
+    let categoryId;
+    switch (event.target.value) {
+      case "news":
+        categoryId = 1;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "roadTraffic":
+        categoryId = 2;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "events":
+        categoryId = 3;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "club":
+        categoryId = 4;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "regionalProducts":
+        categoryId = 5;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "offerSearch":
+        categoryId = 6;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "newCitizenInfo":
+        categoryId = 7;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "defectReport":
+        categoryId = 8;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "lostAndFound":
+        categoryId = 9;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "companyPortaits":
+        categoryId = 10;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "carpoolingPublicTransport":
+        categoryId = 11;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "offers":
+        categoryId = 12;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
 
-  // Selected Items Deletion Starts
-  const selectedItem = localStorage.getItem('selectedItem');
-  // Selected Items Deletion Ends
+      default:
+        categoryId = 0;
+        break;
+    }
+  };
+
+  // function handleCategoriesChange(event) {
+  //   setListingsData({
+  //     ...listingsData,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // }
+
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
+  }
+
+  //populate the events titles starts
+  // const [listingsData, setListingsData] = useState([]);
+  // useEffect(() => {
+  //   getListingsByCity().then((response) => {
+  //     setListingsData(response);
+  //   });
+  //   document.title = selectedItem;
+  // }, []);
+
+  //populate the events titles Ends
 
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -34,35 +166,20 @@ const Events = () => {
     }
   };
 
-
-
-  function handleCategoriesChange(event) {
-    setListingsData({
-      ...listingsData,
-      [event.target.name]: event.target.value,
-    });
-  }
-
-
-  const [selectedSortOption, setSelectedSortOption] = useState('');
-  function handleSortOptionChange(event) {
-    setSelectedSortOption(event.target.value);
-  }
-
   useEffect(() => {
     switch (selectedSortOption) {
       case 'titleAZ':
-        setListingsData([...sortByTitleAZ(listingsData)])
-        console.log(listingsData)
+        setListings([...sortByTitleAZ(listings)])
+        console.log(listings)
         break;
       case 'titleZA':
-        setListingsData([...sortByTitleZA(listingsData)]);
+        setListings([...sortByTitleZA(listings)]);
         break;
       case 'recent':
-        setListingsData([...sortRecent(listingsData)]);
+        setListings([...sortRecent(listings)]);
         break;
       case 'oldest':
-        setListingsData([...sortOldest(listingsData)]);
+        setListings([...sortOldest(listings)]);
         break;
       default:
         break;
@@ -151,6 +268,7 @@ const Events = () => {
                       {/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
                           {t("location")}
                       </label> */}
+                      { cities.map(city => (
                       <select
                           id="button-filter"
                           name="country"
@@ -161,15 +279,9 @@ const Events = () => {
                           {t("chooseOneLocation")}
                           </option>
                           <option class="font-sans" value="Default">
-                          {t("below")}
+                          {city.name}
                           </option>
-                          <option class="font-sans" value="News">
-                          {t("fuchstal")}
-                          </option>
-                          <option class="font-sans" value="Road Works / Traffic">
-                          {t("appleVillage")}
-                          </option>
-                      </select>
+                      </select> ))}
                       </div>
 
                     <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
@@ -180,6 +292,7 @@ const Events = () => {
                           id="button-filter"
                           name="country"
                           autocomplete="country-name"
+                          onChange={handleCategoryChange}
                           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       >
                           <option class="font-sans" value="Default">{selectedItem}</option>
@@ -460,26 +573,27 @@ const Events = () => {
       <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
         <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
-          {listingsData && listingsData.map((listing) => (
+          {sortedListings && sortedListings.map((listing) => (
             <div
               onClick={() => navigateTo("/HomePage/EventDetails")}
-              class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+              className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
             >
-              <a class="block relative h-64 rounded overflow-hidden">
+              <a className="block relative h-64 rounded overflow-hidden">
                 <img
                   alt="ecommerce"
-                  class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
                   src={HOMEPAGEIMG}
                 />
               </a>
-              <div class="mt-10">
-                <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-                {listing.title}
+              <div className="mt-10">
+                <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                  {listing.title}
                 </h2>
               </div>
               <div className="my-4 bg-gray-200 h-[1px]"></div>
             </div>
           ))}
+
         </div>
       </div>
 
