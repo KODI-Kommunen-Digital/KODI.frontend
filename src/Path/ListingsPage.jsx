@@ -1171,7 +1171,7 @@ const handleCategoryChange = (event) => {
             </div>
         )} */}
 
-      <div class="container w-auto px-5 py-2 bg-slate-600">
+      {/* <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
               Media
@@ -1204,7 +1204,7 @@ const handleCategoryChange = (event) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">

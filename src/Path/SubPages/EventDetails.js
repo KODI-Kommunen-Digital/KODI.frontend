@@ -5,11 +5,74 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
-import { getListingsByCity } from "../../Services/listings";
+import { getListings,getProfile } from "../../Services/usersApi";
+import {sortOldest} from "../../Services/helper";
+import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
+import { getVillages } from "../../Services/villages";
 
 const EventDetails = () => {
   window.scrollTo(0, 0);
   const { t, i18n } = useTranslation();
+  const [listingId, setListingId] = useState(0);
+  const [newListing, setNewListing] = useState(true);
+  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
+
+  const [input, setInput] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "statusId": 'pending',
+    "sourceId": 1,
+    "userId": 2,
+    title:'',
+    place:'',
+    phone: '',
+    email:'',
+    description: '',
+    logo: null,
+    //media: null,
+    startDate:'',
+    endDate:'',
+    originalPrice:'',
+    villagedropdown:'',
+    zipCode:'',
+    discountedPrice:''
+  });
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    var cityId = searchParams.get('cityId')
+    setCityId(cityId);
+    var listingId = searchParams.get('listingId')
+    setListingId(listingId);
+    if (listingId && cityId) {
+      setNewListing(false)
+        getVillages(cityId).then(response =>
+        setVillages(response.data.data)
+      )
+      getListingsById(cityId, listingId).then(listingsResponse => {
+        setInput(listingsResponse.data.data);
+        setDescription(listingsResponse.data.data.description);
+        setTitle(listingsResponse.data.data.title);
+      });
+    }
+  }, []);
+
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
 
   //populate the events titles starts
   const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
@@ -75,15 +138,15 @@ const EventDetails = () => {
     event.preventDefault();
   }
 
-  const [listingsData, setListingsData] = useState([]);
+  const [listings, setListings] = useState([]);
   useEffect(() => {
-    getListingsByCity().then((response) => {
-      setListingsData(response);
+    getListings().then((response) => {
+      setListings([...sortOldest((response.data.data))]);
     });
   }, []);
 
   const [selectedSortOption, setSelectedSortOption] = useState('');
-  const sortedListings = [...listingsData].sort((a, b) => {
+  const sortedListings = [...listings].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB - dateA;
@@ -102,6 +165,19 @@ const EventDetails = () => {
     );
   }
 
+  const [userName, setUserName] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  useEffect(() => {
+    getProfile()
+      .then((response) => {
+        setUserName(response.data.data.username);
+        setProfilePic(response.data.data.image);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <section class="text-gray-600 bg-white body-font">
       <HomePageNavBar />
@@ -118,7 +194,7 @@ const EventDetails = () => {
                   </p> */}
                   <div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
                     <h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
-                      Book of Batman
+                      {title}
                     </h1>
                     <div class="flex items-center">
                     <button
@@ -182,7 +258,7 @@ const EventDetails = () => {
                 {t("description")}
                 </h1>
                 <p class="leading-relaxed text-base font-bold my-6">
-                Originally introduced as a ruthless vigilante who frequently killed or maimed criminals, but evolved into a character with a stringent moral code and strong sense of justice. Unlike most superheroes, Batman does not possess any superpowers, instead relying on his intellect, fighting skills, and wealth.
+                {description}
                 </p>
             </div>
         </div>
@@ -197,17 +273,12 @@ const EventDetails = () => {
               <div class="my-4 bg-gray-200 h-[1px]"></div>
 
               <div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-                <div class="flex justify-center sm:justify-start">
-                  <img
-                    class="h-6 w-auto"
-                    src={LOGO}
-                    alt="HEDI- Heimat Digital"
-                    onClick={() => navigateTo("/HomePage")}
-                  />
+                <div class="flex justify-center sm:justify-start h-6 w-auto">
+                  {profilePic}
                 </div>
                 <div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
                   <h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
-                    Christian Bale
+                  {userName}
                   </h2>
                   <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
                 </div>
@@ -321,26 +392,26 @@ const EventDetails = () => {
         </h1>
         <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
             <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-              {sortedListings && sortedListings.map((listing) => (
-                <div
-                  onClick={() => navigateTo("/HomePage/EventDetails")}
-                  class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-                >
-                  <a class="block relative h-64 rounded overflow-hidden">
-                    <img
-                      alt="ecommerce"
-                      class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-                      src={HOMEPAGEIMG}
-                    />
-                  </a>
-                  <div class="mt-10">
-                    <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-                    {listing.title}
-                    </h2>
-                  </div>
-                  <div className="my-4 bg-gray-200 h-[1px]"></div>
+            {sortedListings && sortedListings.map((listing) => (
+              <div
+                onClick={() => navigateTo("/HomePage/EventDetails")}
+                class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+              >
+                <a class="block relative h-64 rounded overflow-hidden">
+                  <img
+                    alt="ecommerce"
+                    class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                    src={HOMEPAGEIMG}
+                  />
+                </a>
+                <div class="mt-10">
+                  <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                  {listing.title}
+                  </h2>
                 </div>
-                ))}
+                <div className="my-4 bg-gray-200 h-[1px]"></div>
+              </div>
+              ))}
             </div>
           </div>
       </div>

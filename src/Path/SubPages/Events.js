@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import {sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest} from "../../Services/helper"
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
-import { getListings } from "../../Services/usersApi";
+import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import { getVillages } from "../../Services/villages";
 import { categoryByName, categoryById } from "../../Constants/categories";
+import {getListingsById} from '../../Services/listingsApi'
 
 import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
@@ -17,6 +18,7 @@ const Events = () => {
   const [cityId, setCityId] = useState(0);
   const [villages, setVillages] = useState([]);
   const [cities, setCities] = useState([]);
+  const [listingId, setListingId] = useState(0);
   async function onCityChange(e) {
     const cityId = e.target.value;
     setCityId(cityId);
@@ -46,25 +48,56 @@ const Events = () => {
   });
 
   const [listings, setListings] = useState([]);
-  useEffect(() => {
-    getListings().then((response) => {
-      setListings([...sortRecent((response.data.data))]);
-    });
-  }, []);
+  const [categoryId, setCategoryId] = useState(1);
+  console.log(categoryId)
+  const [newListing, setNewListing] = useState(true);
+
+   useEffect(() => {
+     getListings({"categoryId":categoryId}).then((response) => {
+       setListings([...sortRecent((response.data.data))]);
+     });
+  }, [categoryId]);
+
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   const cityId = searchParams.get('cityId');
+  //   const listingId = searchParams.get('listingId');
+  //   const categoryId = searchParams.get('categoryId');
+  
+  //   if (listingId && cityId) {
+  //     setCityId(cityId);
+  //     setListingId(listingId);
+  //     setCategoryId(categoryId);
+  //     setNewListing(false);
+  
+  //     getVillages(cityId).then(response => {
+  //       setVillages(response.data.data);
+  //     });
+  
+  //     getListings({ listingId }).then(response => {
+  //       const filteredListings = response.data.data.filter(listing => listing.id === listingId);
+  //       const sortedListings = sortRecent(filteredListings);
+  //       setListings(sortedListings);
+  //     });
+  //   }
+  // }, []);
+  
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  // const sortedListings = [...listings].sort((a, b) => {
+  //   const dateA = new Date(a.date);
+  //   const dateB = new Date(b.date);
+  //   return dateB - dateA;
+  // });
+  // console.log(sortedListings)
 
   function goToEventsPage(listing) {
     var categoryId = listing.categoryId
     if (categoryId == categoryByName.News) {
-      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}`);
+      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
     }
   }
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const sortedListings = [...listings].sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB - dateA;
-  });
   const handleCategoryChange = (event) => {
     let categoryId;
     switch (event.target.value) {
@@ -578,7 +611,7 @@ const Events = () => {
       <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
         <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
-          {sortedListings && sortedListings.map((listing) => (
+          {listings && listings.map((listing) => (
             <div
               onClick={() => navigateTo("/HomePage/EventDetails")}
               className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
