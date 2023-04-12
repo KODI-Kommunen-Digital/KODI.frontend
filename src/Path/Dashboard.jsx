@@ -3,11 +3,12 @@ import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import SideBar from "../Components/SideBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
-import { getListings } from "../Services/listingsApi";
+import { getListings, updateListingsData } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
+import { Select } from "@chakra-ui/react";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -49,6 +50,18 @@ const Dashboard = () => {
 		if (status[statusId] == "Pending") {
 			return "bg-yellow-400";
 		}
+	}
+
+	function handleChnageInStatus(e, listing) {
+		listing.statusId = e.target.value;
+		updateListingsData(listing.cityId, listing, listing.id).then((res) => {
+			if (res.status === 200) {
+				getListings().then((response) => {
+					setListings([...sortOldest(response.data.data)]);
+					setViewAllListings(true);
+				});
+			}
+		});
 	}
 
 	//Navigate to Edit Listings page Starts
@@ -342,9 +355,6 @@ const Dashboard = () => {
 									Date of Creation
 								</th>
 								<th scope="col" class="px-6 py-3">
-									Status
-								</th>
-								<th scope="col" class="px-6 py-3">
 									Edit
 								</th>
 								<th scope="col" class="px-6 py-3">
@@ -355,6 +365,9 @@ const Dashboard = () => {
 										UserId
 									</th>
 								)}
+								<th scope="col" class="px-6 py-3 text-center">
+									Status
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -384,16 +397,6 @@ const Dashboard = () => {
 											{new Date(listing.createdAt).toLocaleString("de")}
 										</td>
 										<td class="px-6 py-4">
-											<div class="flex items-center">
-												<div
-													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-														listing.statusId
-													)} mr-2`}
-												></div>
-												{status[listing.statusId]}
-											</div>
-										</td>
-										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 												onClick={() => goToEditListingsPage(listing)}
@@ -411,14 +414,38 @@ const Dashboard = () => {
 										</td>
 										{viewAllListings && (
 											<td class="px-6 py-4">
-												<a
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-													onClick={() => navigateTo("/OverviewPage")}
-												>
+												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
 													{listing.userId}
 												</a>
 											</td>
 										)}
+										<td class="px-6 py-4">
+											<div class="flex items-center">
+												<div
+													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+														listing.statusId
+													)} mr-2`}
+												></div>
+												{viewAllListings ? (
+													<Select
+														onChange={(e) => handleChnageInStatus(e, listing)}
+														value={listing.statusId}
+													>
+														{Object.keys(status).map((state) => {
+															return (
+																<>
+																	<option className="p-0" value={state}>
+																		{status[state]}
+																	</option>
+																</>
+															);
+														})}
+													</Select>
+												) : (
+													<h1>{status[listing.statusId]}</h1>
+												)}
+											</div>
+										</td>
 									</tr>
 								);
 							})}
