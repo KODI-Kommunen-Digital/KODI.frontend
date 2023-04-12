@@ -9,256 +9,291 @@ import {
 } from "../../Services/helper";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
-import { getUserListings } from "../../Services/usersApi";
+
+import { getListings } from "../../Services/listingsApi";
+
 import { getCities } from "../../Services/cities";
 import { getVillages } from "../../Services/villages";
 import { categoryByName, categoryById } from "../../Constants/categories";
+import {getListingsById} from '../../Services/listingsApi'
 
 import(
 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
 );
 
 const Events = () => {
-	window.scrollTo(0, 0);
-	const { t, i18n } = useTranslation();
-	const [cityId, setCityId] = useState(0);
-	const [villages, setVillages] = useState([]);
-	const [cities, setCities] = useState([]);
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
-	useEffect(() => {
-		getCities().then((citiesResponse) => {
-			setCities(citiesResponse.data.data);
-		});
-	}, []);
+  window.scrollTo(0, 0);
+  const { t, i18n } = useTranslation();
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [listingId, setListingId] = useState(0);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
+  useEffect(() => {
+    getCities().then(citiesResponse => {
+      setCities(citiesResponse.data.data);
+  })}, []);
 
-	// Selected Items Deletion Starts
-	const selectedItem = localStorage.getItem("selectedItem");
-	// Selected Items Deletion Ends
+    // Selected Items Deletion Starts
+    const selectedItem = localStorage.getItem('selectedItem');
+    // Selected Items Deletion Ends
 
-	const [input, setInput] = useState({
-		//"villageId": 1,
-		categoryId: 0,
-		subcategoryId: 0,
-		sourceId: 1,
-		userId: 2,
-	});
+  const [input, setInput] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "sourceId": 1,
+    "userId": 2
+  });
 
-	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings([...sortRecent(response.data.data)]);
-		});
-	}, []);
+  const [listings, setListings] = useState([]);
+  const [categoryId, setCategoryId] = useState(1);
+  console.log(categoryId)
+  const [newListing, setNewListing] = useState(true);
 
-	function goToEventsPage(listing) {
-		var categoryId = listing.categoryId;
-		if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/Events?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}`
-			);
-		}
-	}
+   useEffect(() => {
+     getListings({"categoryId":categoryId}).then((response) => {
+       setListings([...sortRecent((response.data.data))]);
+     });
+  }, [categoryId]);
 
-	const [selectedCategory, setSelectedCategory] = useState("");
-	const sortedListings = [...listings].sort((a, b) => {
-		const dateA = new Date(a.date);
-		const dateB = new Date(b.date);
-		return dateB - dateA;
-	});
-	const handleCategoryChange = (event) => {
-		let categoryId;
-		switch (event.target.value) {
-			case "news":
-				categoryId = 1;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "roadTraffic":
-				categoryId = 2;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "events":
-				categoryId = 3;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "club":
-				categoryId = 4;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "regionalProducts":
-				categoryId = 5;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "offerSearch":
-				categoryId = 6;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "newCitizenInfo":
-				categoryId = 7;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "defectReport":
-				categoryId = 8;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "lostAndFound":
-				categoryId = 9;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "companyPortaits":
-				categoryId = 10;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "carpoolingPublicTransport":
-				categoryId = 11;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "offers":
-				categoryId = 12;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   const cityId = searchParams.get('cityId');
+  //   const listingId = searchParams.get('listingId');
+  //   const categoryId = searchParams.get('categoryId');
+  
+  //   if (listingId && cityId) {
+  //     setCityId(cityId);
+  //     setListingId(listingId);
+  //     setCategoryId(categoryId);
+  //     setNewListing(false);
+  
+  //     getVillages(cityId).then(response => {
+  //       setVillages(response.data.data);
+  //     });
+  
+  //     getListings({ listingId }).then(response => {
+  //       const filteredListings = response.data.data.filter(listing => listing.id === listingId);
+  //       const sortedListings = sortRecent(filteredListings);
+  //       setListings(sortedListings);
+  //     });
+  //   }
+  // }, []);
+  
 
-			default:
-				categoryId = 0;
-				break;
-		}
+  const [selectedCategory, setSelectedCategory] = useState("");
+  // const sortedListings = [...listings].sort((a, b) => {
+  //   const dateA = new Date(a.date);
+  //   const dateB = new Date(b.date);
+  //   return dateB - dateA;
+  // });
+  // console.log(sortedListings)
 
-		const newListing = {
-			...input,
-			categoryId: categoryId,
-		};
-		goToEventsPage(newListing);
-	};
+  function goToEventsPage(listing) {
+    var categoryId = listing.categoryId
+    if (categoryId == categoryByName.News) {
+      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
+    }
+  }
 
-	// function handleCategoriesChange(event) {
-	//   setListingsData({
-	//     ...listingsData,
-	//     [event.target.name]: event.target.value,
-	//   });
-	// }
+  const handleCategoryChange = (event) => {
+    let categoryId;
+    switch (event.target.value) {
+      case "news":
+        categoryId = 1;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "roadTraffic":
+        categoryId = 2;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "events":
+        categoryId = 3;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "club":
+        categoryId = 4;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "regionalProducts":
+        categoryId = 5;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "offerSearch":
+        categoryId = 6;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "newCitizenInfo":
+        categoryId = 7;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "defectReport":
+        categoryId = 8;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "lostAndFound":
+        categoryId = 9;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "companyPortaits":
+        categoryId = 10;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "carpoolingPublicTransport":
+        categoryId = 11;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
+      case "offers":
+        categoryId = 12;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+      break;
 
-	const [selectedSortOption, setSelectedSortOption] = useState("");
-	function handleSortOptionChange(event) {
-		setSelectedSortOption(event.target.value);
-	}
+      default:
+        categoryId = 0;
+        break;
+    }
 
-	//populate the events titles starts
-	// const [listingsData, setListingsData] = useState([]);
-	// useEffect(() => {
-	//   getListingsByCity().then((response) => {
-	//     setListingsData(response);
-	//   });
-	//   document.title = selectedItem;
-	// }, []);
+    const newListing = {
+      ...input,
+      categoryId: categoryId,
+    };
+    goToEventsPage(newListing);
+  };
 
-	//populate the events titles Ends
+  // function handleCategoriesChange(event) {
+  //   setListingsData({
+  //     ...listingsData,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // }
 
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
+  const [selectedSortOption, setSelectedSortOption] = useState('');
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
+  }
 
-	useEffect(() => {
-		switch (selectedSortOption) {
-			case "titleAZ":
-				setListings([...sortByTitleAZ(listings)]);
-				console.log(listings);
-				break;
-			case "titleZA":
-				setListings([...sortByTitleZA(listings)]);
-				break;
-			case "recent":
-				setListings([...sortRecent(listings)]);
-				break;
-			case "oldest":
-				setListings([...sortOldest(listings)]);
-				break;
-			default:
-				break;
-		}
-	}, [selectedSortOption]);
+  //populate the events titles starts
+  // const [listingsData, setListingsData] = useState([]);
+  // useEffect(() => {
+  //   getListingsByCity().then((response) => {
+  //     setListingsData(response);
+  //   });
+  //   document.title = selectedItem;
+  // }, []);
 
-	const [content, setContent] = useState("A");
-	const handleButtonClick = (value) => {
-		setContent(value);
-	};
+  //populate the events titles Ends
 
-	const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
+  let navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
-	const customerServiceData = () => {
-		setcustomerServiceDataload(true);
-		setSelectedLink("customerService");
-	};
-	const onCancel = () => {
-		setcustomerServiceDataload(false);
-		setSelectedLink("current");
-	};
+  useEffect(() => {
+    switch (selectedSortOption) {
+      case 'titleAZ':
+        setListings([...sortByTitleAZ(listings)])
+        console.log(listings)
+        break;
+      case 'titleZA':
+        setListings([...sortByTitleZA(listings)]);
+        break;
+      case 'recent':
+        setListings([...sortRecent(listings)]);
+        break;
+      case 'oldest':
+        setListings([...sortOldest(listings)]);
+        break;
+      default:
+        break;
+    }
+  }, [selectedSortOption]);
 
-	const [selectedLink, setSelectedLink] = useState("current");
+  const [content, setContent] = useState("A");
+  const handleButtonClick = (value) => {
+    setContent(value);
+  };
 
-	const [location, setLocation] = useState("");
+  const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
 
-	// Pre-select the corresponding filter option starts
-	const urlParams = new URLSearchParams(window.location.search);
-	const filterName = urlParams.get("filterName");
+  const customerServiceData = () => {
+    setcustomerServiceDataload(true);
+    setSelectedLink("customerService");
+  };
+  const onCancel = () => {
+    setcustomerServiceDataload(false);
+    setSelectedLink("current");
+  };
 
-	if (filterName) {
-		const buttonFilter = document.getElementById("button-filter");
-		buttonFilter.value = filterName;
-	}
+  const [selectedLink, setSelectedLink] = useState("current");
 
-	// Pre-select the corresponding filter option ends
+  const [location, setLocation] = useState("");
 
-	function handleLocationChange(event) {
-		setLocation(event.target.value);
-	}
+  // Pre-select the corresponding filter option starts
+  const urlParams = new URLSearchParams(window.location.search);
+  const filterName = urlParams.get("filterName");
 
-	function handleLocationSubmit(event) {
-		event.preventDefault();
-		// Do something with the location data, like pass it to a parent component
-	}
+  if (filterName) {
+    const buttonFilter = document.getElementById("button-filter");
+    buttonFilter.value = filterName;
+  }
 
-	function getCurrentLocation() {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				setLocation(
-					`${position.coords.latitude}, ${position.coords.longitude}`
-				);
-			},
-			(error) => {
-				console.error(error);
-			}
-		);
-	}
+  // Pre-select the corresponding filter option ends
 
-	return (
-		<section class="text-gray-600 body-font relative">
-			<HomePageNavBar />
-			<div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
-				<div class="w-full mr-0 ml-0">
-					<div class="h-64 overflow-hidden px-1 py-1">
-						{/* <a class="block relative h-96 overflow-hidden">
+  function handleLocationChange(event) {
+    setLocation(event.target.value);
+  }
+
+  function handleLocationSubmit(event) {
+    event.preventDefault();
+    // Do something with the location data, like pass it to a parent component
+  }
+
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(
+          `${position.coords.latitude}, ${position.coords.longitude}`
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  return (
+    <section class="text-gray-600 body-font relative">
+      <HomePageNavBar />
+      <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+        <div class="w-full mr-0 ml-0">
+          <div class="h-64 overflow-hidden px-1 py-1">
+            {/* <a class="block relative h-96 overflow-hidden">
+
             <img
               alt="ecommerce"
               class="object-cover object-center h-full w-full"
@@ -617,39 +652,39 @@ const Events = () => {
           </div>
         </div> */}
 
-			<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-					{/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
-					{sortedListings &&
-						sortedListings.map((listing) => (
-							<div
-								onClick={() => navigateTo("/HomePage/EventDetails")}
-								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-							>
-								<a className="block relative h-64 rounded overflow-hidden">
-									<img
-										alt="ecommerce"
-										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-										src={HOMEPAGEIMG}
-									/>
-								</a>
-								<div className="mt-10">
-									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-										{listing.title}
-									</h2>
-								</div>
-								<div className="my-4 bg-gray-200 h-[1px]"></div>
-							</div>
-						))}
-				</div>
-			</div>
+      <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+        <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+          {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
+          {listings && listings.map((listing) => (
+            <div
+              onClick={() => navigateTo("/HomePage/EventDetails")}
+              className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+            >
+              <a className="block relative h-64 rounded overflow-hidden">
+                <img
+                  alt="ecommerce"
+                  className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                  src={HOMEPAGEIMG}
+                />
+              </a>
+              <div className="mt-10">
+                <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                  {listing.title}
+                </h2>
+              </div>
+              <div className="my-4 bg-gray-200 h-[1px]"></div>
+            </div>
+          ))}
 
-			<footer class="text-center lg:text-left bg-black text-white">
-				<div class="mx-6 py-10 text-center md:text-left">
-					<div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-						<div class="">
-							<h6
-								class="
+        </div>
+      </div>
+
+      <footer class="text-center lg:text-left bg-black text-white">
+            <div class="mx-6 py-10 text-center md:text-left">
+            <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="">
+                <h6 class="
+
                     uppercase
                     font-semibold
                     mb-4
