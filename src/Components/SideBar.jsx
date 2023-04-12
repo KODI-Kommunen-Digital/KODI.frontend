@@ -5,7 +5,7 @@ import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, updateProfile } from "../Services/usersApi";
 
-function SideBar({ handleGetAllListings }) {
+function SideBar({ handleGetAllListings, handleGetUserListings }) {
 	const { t, i18n } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
 
@@ -90,7 +90,10 @@ function SideBar({ handleGetAllListings }) {
 				<div className="my-2 bg-gray-600 h-[1px]"></div>
 				<div
 					className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-					onClick={() => navigateTo("/Dashboard")}
+					onClick={() => {
+						navigateTo("/Dashboard");
+						handleGetUserListings();
+					}}
 				>
 					<svg
 						className="h-6 w-10 fill-current"
@@ -121,7 +124,10 @@ function SideBar({ handleGetAllListings }) {
 				{userRole === 1 && (
 					<div
 						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-						onClick={handleGetAllListings}
+						onClick={() => {
+							navigate("/Dashboard");
+							handleGetAllListings();
+						}}
 					>
 						<svg
 							className="h-6 w-10 fill-current"

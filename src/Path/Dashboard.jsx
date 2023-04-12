@@ -14,6 +14,7 @@ const dashboardStyle = require("../Path/Dashboard.css");
 const Dashboard = () => {
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
+	const [viewAllListings, setViewAllListings] = useState(false);
 	useEffect(() => {
 		getProfile().then((response) => {
 			console.log(response.data.data.roleId);
@@ -117,6 +118,13 @@ const Dashboard = () => {
 				handleGetAllListings={() => {
 					getListings().then((response) => {
 						setListings([...sortOldest(response.data.data)]);
+						setViewAllListings(true);
+					});
+				}}
+				handleGetUserListings={() => {
+					getUserListings().then((response) => {
+						setListings([...sortOldest(response.data.data)]);
+						setViewAllListings(false);
 					});
 				}}
 			/>
@@ -343,61 +351,78 @@ const Dashboard = () => {
 								<th scope="col" class="px-6 py-3">
 									Action
 								</th>
+								{viewAllListings && (
+									<th scope="col" class="px-6 py-3">
+										UserId
+									</th>
+								)}
 							</tr>
 						</thead>
 						<tbody>
-							{listings.map((listing) => (
-								<tr class="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50">
-									<th
-										scope="row"
-										class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
-										onClick={() => navigateTo("/Example1")}
-									>
-										<img
-											class="w-10 h-10 rounded-full hidden sm:table-cell"
-											src={listing.image}
-											alt="avatar"
-										/>
-										<div class="pl-0 sm:pl-3">
-											<div class="font-normal text-gray-500">
-												{listing.title}
+							{listings.map((listing) => {
+								return (
+									<tr class="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50">
+										<th
+											scope="row"
+											class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+											onClick={() => navigateTo("/Example1")}
+										>
+											<img
+												class="w-10 h-10 rounded-full hidden sm:table-cell"
+												src={listing.image}
+												alt="avatar"
+											/>
+											<div class="pl-0 sm:pl-3">
+												<div class="font-normal text-gray-500">
+													{listing.title}
+												</div>
 											</div>
-										</div>
-									</th>
-									<td class="px-6 py-4 hidden lg:table-cell">
-										{categoryById[listing.categoryId]}
-									</td>
-									<td class="px-6 py-4 hidden lg:table-cell">
-										{new Date(listing.createdAt).toLocaleString("de")}
-									</td>
-									<td class="px-6 py-4">
-										<div class="flex items-center">
-											<div
-												class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-													listing.statusId
-												)} mr-2`}
-											></div>
-											{status[listing.statusId]}
-										</div>
-									</td>
-									<td class="px-6 py-4">
-										<a
-											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-											onClick={() => goToEditListingsPage(listing)}
-										>
-											Edit
-										</a>
-									</td>
-									<td class="px-6 py-4">
-										<a
-											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-											onClick={() => navigateTo("/OverviewPage")}
-										>
-											Action
-										</a>
-									</td>
-								</tr>
-							))}
+										</th>
+										<td class="px-6 py-4 hidden lg:table-cell">
+											{categoryById[listing.categoryId]}
+										</td>
+										<td class="px-6 py-4 hidden lg:table-cell">
+											{new Date(listing.createdAt).toLocaleString("de")}
+										</td>
+										<td class="px-6 py-4">
+											<div class="flex items-center">
+												<div
+													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+														listing.statusId
+													)} mr-2`}
+												></div>
+												{status[listing.statusId]}
+											</div>
+										</td>
+										<td class="px-6 py-4">
+											<a
+												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+												onClick={() => goToEditListingsPage(listing)}
+											>
+												Edit
+											</a>
+										</td>
+										<td class="px-6 py-4">
+											<a
+												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+												onClick={() => navigateTo("/OverviewPage")}
+											>
+												Action
+											</a>
+										</td>
+										{viewAllListings && (
+											<td class="px-6 py-4">
+												<a
+													class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+													onClick={() => navigateTo("/OverviewPage")}
+												>
+													{listing.userId}
+												</a>
+											</td>
+										)}
+									</tr>
+								);
+							})}
 						</tbody>
 					</table>
 				</div>
