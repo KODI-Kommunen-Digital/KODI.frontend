@@ -41,7 +41,7 @@ const LoginPage = () => {
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
 			routeChangeToDashboard();
 		}
-	}, [routeChangeToDashboard]);
+	}, []);
 	// useEffect(() => {
 	//   setErrMsg('');
 	// }, [user,pwd]);
