@@ -67,6 +67,13 @@ const Events = () => {
      });
   }, [categoryId]);
 
+  //Navigate to Event Details page Starts
+	function goToEventDetailsPage(listing) {
+			navigateTo(
+				`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+			);
+	}
+
   // useEffect(() => {
   //   const searchParams = new URLSearchParams(window.location.search);
   //   const cityId = searchParams.get('cityId');
@@ -99,13 +106,6 @@ const Events = () => {
   //   return dateB - dateA;
   // });
   // console.log(sortedListings)
-
-  function goToEventsPage(listing) {
-    var categoryId = listing.categoryId
-    if (categoryId == categoryByName.News) {
-      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
-    }
-  }
 
   const handleCategoryChange = (event) => {
     let categoryId;
@@ -176,11 +176,11 @@ const Events = () => {
         break;
     }
 
-    const newListing = {
-      ...input,
-      categoryId: categoryId,
-    };
-    goToEventsPage(newListing);
+    // const newListing = {
+    //   ...input,
+    //   categoryId: categoryId,
+    // };
+    // goToEventsPage(newListing);
   };
 
   // function handleCategoriesChange(event) {
@@ -657,7 +657,7 @@ const Events = () => {
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
           {listings && listings.map((listing) => (
             <div
-              onClick={() => navigateTo("/HomePage/EventDetails")}
+              onClick={() => goToEventDetailsPage(listing)}
               className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
             >
               <a className="block relative h-64 rounded overflow-hidden">

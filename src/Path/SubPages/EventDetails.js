@@ -4,11 +4,11 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import LOGO from "../../assets/logo.png";
 import { getListings } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
+import { getUserListings } from "../../Services/usersApi";
 import { sortOldest, sortRecent } from "../../Services/helper";
-import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
+import {getListingsById} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 
 const EventDetails = () => {
@@ -25,7 +25,7 @@ const EventDetails = () => {
     "subcategoryId": 0,
     "statusId": 'pending',
     "sourceId": 1,
-    "userId": 2,
+    //"userId": 2,
     title:'',
     place:'',
     phone: '',
@@ -164,16 +164,50 @@ const EventDetails = () => {
 
   const [userName, setUserName] = useState('');
   const [profilePic, setProfilePic] = useState('');
+  const [usersDescription, setUserDescription] = useState('');
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUserListings()
+      .then((response) => {
+        if (Array.isArray(response.data.data)) {
+          setUsers(response.data.data);
+        } else if (typeof response.data.data === 'object') {
+          setUsers([response.data.data]);
+        } else {
+          console.error('Invalid response:', response.data.data);
+        }
+    });
+ }, []);
+
   useEffect(() => {
     getProfile()
       .then((response) => {
-        setUserName(response.data.data.username);
-        setProfilePic(response.data.data.image);
+          setInput(response.data.data);
+          setUserName(response.data.data.username);
+          setProfilePic(response.data.data.image);
+          setUserDescription(response.data.data.description);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  function goToViewProfilePage(user) {
+    var userId = user.userId;
+		if (userId) {
+			navigateTo(
+				`/viewProfile?userId=${userId}`
+			);
+		} else {
+			navigateTo(
+				`/viewProfile`
+			);
+		}
+    // navigateTo(
+    //   `/viewProfile?userId=${user.userId}`
+    // );
+  }
 
   return (
     <section class="text-gray-600 bg-white body-font">
@@ -261,7 +295,7 @@ const EventDetails = () => {
         </div>
 
           <div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
-            <div >
+          <div >
               <div class="p-4 space-y-0 md:space-y-6 sm:p-4">
                 <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
                 {t("ownerInfo")}
@@ -280,7 +314,6 @@ const EventDetails = () => {
                   <p class="leading-relaxed text-base dark:text-gray-900">Uploaded 5 months ago.</p>
                 </div>
               </div>
-
               <div class="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1 justify-Start">
                 <div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
                   <button
@@ -367,17 +400,20 @@ const EventDetails = () => {
                   </svg>
                 </button>
                 </div>
-            </div>
+              </div>
 
               <div class="flex justify-center my-4">
+              {users.map((user) => (
+                user.userId === user.id ? (
                 <button
-                  onClick={() => navigateTo("/ViewProfile")}
-                  type="submit"
+                  onClick={() => goToViewProfilePage(user)} type="submit"
                   class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                 >
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
                   {t("viewProfile")}
-                </button>
+                </button>) : null
+                ))
+              }
               </div>
             </div>
           </div>

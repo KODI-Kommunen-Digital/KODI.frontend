@@ -29,6 +29,17 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 	}, []);
 
+	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+
+	const handlePasswordChange = (event) => {
+		setPassword(event.target.value);
+	};
+
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
+
 	const routeChangeToDashboard = useCallback(() => {
 		let path = `/Dashboard`;
 		navigate(path);
@@ -139,20 +150,27 @@ const LoginPage = () => {
 									placeholder={t("username")}
 								/>
 							</div>
-							<div>
+							<div class="relative">
 								<label for="password" class="sr-only">
 									{t("password")}
 								</label>
 								<input
-									type="password"
+									type={showPassword ? 'text' : 'password'}
 									id="password"
 									name="password"
-									value={pwd}
-									onChange={(e) => setPwd(e.target.value)}
+									value={password}
+									onChange={handlePasswordChange}
 									required
-									class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("password")}
+									class=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									placeholder="Enter your password"
 								/>
+								<button
+									type="button"
+									className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700 focus:outline-none"
+									onClick={toggleShowPassword}
+								>
+									{showPassword ? 'Hide' : 'Show'}
+								</button>
 							</div>
 						</div>
 
