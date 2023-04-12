@@ -17,7 +17,6 @@ const Dashboard = () => {
 	const [viewAllListings, setViewAllListings] = useState(false);
 	useEffect(() => {
 		getProfile().then((response) => {
-			console.log(response.data.data.roleId);
 			setUserRole(response.data.data.roleId);
 		});
 		getUserListings().then((response) => {
