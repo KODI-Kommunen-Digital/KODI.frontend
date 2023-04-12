@@ -4,9 +4,8 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import LOGO from "../../assets/logo.png";
-import { getListings,getProfile } from "../../Services/usersApi";
-import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
+import { getUserListings,getProfile } from "../../Services/usersApi";
+import {getListingsById} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 import {
   sortByTitleAZ,
@@ -66,15 +65,10 @@ const ViewProfile = () => {
   //populate the events titles starts
   const [listings, setListings] = useState([]);
   useEffect(() => {
-    getListings().then((response) => {
-      setListings([...sortOldest((response.data.data))]);
+    getUserListings().then((response) => {
+      setListings([...sortRecent((response.data.data))]);
     });
   }, []);
-  const sortedListings = [...listings].sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB - dateA;
-  });
 
   //populate the events titles Ends
 
@@ -377,7 +371,7 @@ const ViewProfile = () => {
           </div>
           <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
             <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-              {sortedListings && sortedListings.map((listing) => (
+              {listings && listings.map((listing) => (
                 <div
                   onClick={() => navigateTo("/HomePage/EventDetails")}
                   class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"

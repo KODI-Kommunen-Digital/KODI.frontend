@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
-import { getListings,getProfile } from "../../Services/usersApi";
-import {sortOldest} from "../../Services/helper";
+import { getListings } from "../../Services/listingsApi";
+import { getProfile } from "../../Services/usersApi";
+import { sortOldest, sortRecent } from "../../Services/helper";
 import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 
@@ -139,18 +140,14 @@ const EventDetails = () => {
   }
 
   const [listings, setListings] = useState([]);
-  useEffect(() => {
-    getListings().then((response) => {
-      setListings([...sortOldest((response.data.data))]);
-    });
-  }, []);
-
-  const [selectedSortOption, setSelectedSortOption] = useState('');
-  const sortedListings = [...listings].sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB - dateA;
-  }).slice(0, 3);
+	useEffect(() => {
+		getListings().then((response) => {
+		  const sortedListings = sortRecent(response.data.data);
+		  const slicedListings = sortedListings.slice(0, 3);
+		  setListings([...slicedListings]);
+		});
+		document.title = "Heidi Home";
+	  }, []);
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
@@ -392,7 +389,7 @@ const EventDetails = () => {
         </h1>
         <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
             <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-            {sortedListings && sortedListings.map((listing) => (
+            {listings && listings.map((listing) => (
               <div
                 onClick={() => navigateTo("/HomePage/EventDetails")}
                 class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
