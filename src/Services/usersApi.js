@@ -12,7 +12,7 @@ export async function updateProfile(newProfileObj) {
 	return axios.patch(`/users/${getUserId()}`, newProfileObj);
 }
 
-export async function getListings() {
+export async function getUserListings() {
 	return axios.get(`/users/${getUserId()}/listings`);
 }
 
