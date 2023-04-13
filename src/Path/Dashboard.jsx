@@ -2,9 +2,13 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import SideBar from "../Components/SideBar";
-import { getUserListings, getProfile } from "../Services/usersApi";
+import {
+	getUserListings,
+	getProfile,
+	getUserByIds,
+} from "../Services/usersApi";
 import { getListings, updateListingsData } from "../Services/listingsApi";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
@@ -16,6 +20,7 @@ const Dashboard = () => {
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
+	const [usersList, setUsersList] = useState([]);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -25,6 +30,20 @@ const Dashboard = () => {
 		});
 		document.title = "Dashboard";
 	}, []);
+
+	useEffect(() => {
+		if (viewAllListings) {
+			const ids = [];
+			listings.forEach((listing) => {
+				if (!ids.includes(listing.userId)) {
+					ids.push(listing.userId);
+				}
+			});
+			getUserByIds(ids).then((res) => {
+				setUsersList(res.data.data);
+			});
+		}
+	}, [listings, viewAllListings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -362,7 +381,7 @@ const Dashboard = () => {
 								</th>
 								{viewAllListings && (
 									<th scope="col" class="px-6 py-3">
-										UserId
+										UserName
 									</th>
 								)}
 								<th scope="col" class="px-6 py-3 text-center">
@@ -415,7 +434,13 @@ const Dashboard = () => {
 										{viewAllListings && (
 											<td class="px-6 py-4">
 												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-													{listing.userId}
+													{usersList?.filter((user) => {
+														return user.id === listing.userId;
+													})[0]
+														? usersList?.filter((user) => {
+																return user.id === listing.userId;
+														  })[0]["username"]
+														: ""}
 												</a>
 											</td>
 										)}
