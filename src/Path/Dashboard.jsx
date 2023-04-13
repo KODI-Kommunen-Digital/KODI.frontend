@@ -8,7 +8,7 @@ import {
 	getUserByIds,
 } from "../Services/usersApi";
 import { getListings, updateListingsData } from "../Services/listingsApi";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
