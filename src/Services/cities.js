@@ -1,5 +1,4 @@
-// import axios from "../api/axiosInstance";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 
 export async function getCities() {
 	return axios.get(`/cities`);
