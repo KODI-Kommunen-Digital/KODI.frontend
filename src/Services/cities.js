@@ -1,6 +1,9 @@
 // import axios from "../api/axiosInstance";
 import axios from "axios";
+const instance = axios.create({
+    baseURL: 'http://localhost:8002'
+  });
 
 export async function getCities() {
-	return axios.get(`/cities`);
+	return instance.get(`/cities`);
 }
