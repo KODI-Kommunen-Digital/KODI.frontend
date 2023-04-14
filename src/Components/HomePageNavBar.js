@@ -17,13 +17,14 @@ export default function HomePageNavBar() {
 	};
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	var accessToken;
-	var refreshToken;
 
 	useEffect(() => {
-		accessToken = window.localStorage.getItem("accessToken");
-		refreshToken = window.localStorage.getItem("refreshToken");
-		//const userId = window.localStorage.getItem('userId');
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
 		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
@@ -31,10 +32,19 @@ export default function HomePageNavBar() {
 
 	const handleLoginLogout = () => {
 		if (isLoggedIn) {
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
 			logout({ accesToken: accessToken, refreshToken: refreshToken });
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
+			window.sessionStorage.removeItem("accessToken");
+			window.sessionStorage.removeItem("refreshToken");
+			window.sessionStorage.removeItem("userId");
 			setIsLoggedIn(false);
 			navigateTo("/HomePage");
       alert('You have been logged out');

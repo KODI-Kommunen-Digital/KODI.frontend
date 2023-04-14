@@ -2,12 +2,17 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import SideBar from "../Components/SideBar";
-import { getUserListings, getProfile } from "../Services/usersApi";
-import { getListings } from "../Services/listingsApi";
+import {
+	getUserListings,
+	getProfile,
+	getUserByIds,
+} from "../Services/usersApi";
+import { getListings, updateListingsData } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
+import { Select } from "@chakra-ui/react";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -15,9 +20,9 @@ const Dashboard = () => {
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
+	const [usersList, setUsersList] = useState([]);
 	useEffect(() => {
 		getProfile().then((response) => {
-			console.log(response.data.data.roleId);
 			setUserRole(response.data.data.roleId);
 		});
 		getUserListings().then((response) => {
@@ -25,6 +30,20 @@ const Dashboard = () => {
 		});
 		document.title = "Dashboard";
 	}, []);
+
+	useEffect(() => {
+		if (viewAllListings) {
+			const ids = [];
+			listings.forEach((listing) => {
+				if (!ids.includes(listing.userId)) {
+					ids.push(listing.userId);
+				}
+			});
+			getUserByIds(ids).then((res) => {
+				setUsersList(res.data.data);
+			});
+		}
+	}, [listings, viewAllListings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -50,6 +69,18 @@ const Dashboard = () => {
 		if (status[statusId] == "Pending") {
 			return "bg-yellow-400";
 		}
+	}
+
+	function handleChnageInStatus(e, listing) {
+		listing.statusId = e.target.value;
+		updateListingsData(listing.cityId, listing, listing.id).then((res) => {
+			if (res.status === 200) {
+				getListings().then((response) => {
+					setListings([...sortOldest(response.data.data)]);
+					setViewAllListings(true);
+				});
+			}
+		});
 	}
 
 	//Navigate to Edit Listings page Starts
@@ -343,9 +374,6 @@ const Dashboard = () => {
 									Date of Creation
 								</th>
 								<th scope="col" class="px-6 py-3">
-									Status
-								</th>
-								<th scope="col" class="px-6 py-3">
 									Edit
 								</th>
 								<th scope="col" class="px-6 py-3">
@@ -353,9 +381,12 @@ const Dashboard = () => {
 								</th>
 								{viewAllListings && (
 									<th scope="col" class="px-6 py-3">
-										UserId
+										UserName
 									</th>
 								)}
+								<th scope="col" class="px-6 py-3 text-center">
+									Status
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -385,16 +416,6 @@ const Dashboard = () => {
 											{new Date(listing.createdAt).toLocaleString("de")}
 										</td>
 										<td class="px-6 py-4">
-											<div class="flex items-center">
-												<div
-													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-														listing.statusId
-													)} mr-2`}
-												></div>
-												{status[listing.statusId]}
-											</div>
-										</td>
-										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 												onClick={() => goToEditListingsPage(listing)}
@@ -412,14 +433,44 @@ const Dashboard = () => {
 										</td>
 										{viewAllListings && (
 											<td class="px-6 py-4">
-												<a
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-													onClick={() => navigateTo("/OverviewPage")}
-												>
-													{listing.userId}
+												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+													{usersList?.filter((user) => {
+														return user.id === listing.userId;
+													})[0]
+														? usersList?.filter((user) => {
+																return user.id === listing.userId;
+														  })[0]["username"]
+														: ""}
 												</a>
 											</td>
 										)}
+										<td class="px-6 py-4">
+											<div class="flex items-center">
+												<div
+													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+														listing.statusId
+													)} mr-2`}
+												></div>
+												{viewAllListings ? (
+													<Select
+														onChange={(e) => handleChnageInStatus(e, listing)}
+														value={listing.statusId}
+													>
+														{Object.keys(status).map((state) => {
+															return (
+																<>
+																	<option className="p-0" value={state}>
+																		{status[state]}
+																	</option>
+																</>
+															);
+														})}
+													</Select>
+												) : (
+													<h1>{status[listing.statusId]}</h1>
+												)}
+											</div>
+										</td>
 									</tr>
 								);
 							})}
