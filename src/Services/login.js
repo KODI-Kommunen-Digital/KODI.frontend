@@ -1,17 +1,16 @@
-import axios from "axios";
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8002'
-  });
+import axios from "../api/axiosInstance";
 
 function getUserId() {
-  return window.localStorage.getItem("userId");
+	return (
+		window.localStorage.getItem("userId") ||
+		window.sessionStorage.getItem("userId")
+	);
 }
 
 export async function login(credentials) {
-    return instance.post(`/users/login`, credentials);
+	return axios.post(`/users/login`, credentials);
 }
 
 export async function logout(credentials) {
-  return instance.post(`/${getUserId()}/logout`, credentials);
+	return axios.post(`/${getUserId()}/logout`, credentials);
 }

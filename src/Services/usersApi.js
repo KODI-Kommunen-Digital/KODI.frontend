@@ -1,7 +1,14 @@
 import axios from "../api/axiosInstance";
 
 function getUserId() {
-	return window.localStorage.getItem("userId");
+	return (
+		window.localStorage.getItem("userId") ||
+		window.sessionStorage.getItem("userId")
+	);
+}
+
+export async function getUserByIds(ids) {
+	return axios.get(`/users?id=${ids}`);
 }
 
 export async function getProfile() {
