@@ -63,6 +63,17 @@ header div,
 	align-items: center;
 }
 
+.notification-count {
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	padding: 2px 4px;
+	border-radius: 50%;
+	position: absolute;
+	top: -5px;
+	right: -5px;
+  }
+
 @media only screen and (min-width: 1605px) {
 	.dashboard-navbar {
 	  display: flex;
