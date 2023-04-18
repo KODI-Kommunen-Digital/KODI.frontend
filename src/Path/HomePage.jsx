@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
 import { sortOldest, sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
+import { getCategory } from "../Services/CategoryApi";
 import { getVillages } from "../Services/villages";
 import { categoryByName, categoryById } from "../Constants/categories";
 
@@ -20,7 +21,7 @@ import(
 
 const HomePage = () => {
 	const { t, i18n } = useTranslation();
-	window.scrollTo(0, 0);
+	//window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
@@ -49,6 +50,7 @@ const HomePage = () => {
 	});
 
 	const [listings, setListings] = useState([]);
+	const [categories, setCategories] = useState([]);
 	useEffect(() => {
 		getListings().then((response) => {
 		  const sortedListings = sortRecent(response.data.data);
@@ -89,57 +91,17 @@ const HomePage = () => {
 		window.location.href = encodedName;
 	}
 
-	function goToEditListingsPage(listing) {
-		var categoryId = listing.categoryId;
-		if (categoryId == categoryByName.News) {
+	useEffect(() => {
+		getCategory().then((response) => {
+			console.log(response.data)
+		  const setCategories = sortRecent(response.data.data);
+		});
+	  }, []);
+
+	function goToEditListingsPage(category) {
 			navigateTo(
-				`/Events/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
+				`/Events?categoryId=${category}`
 			);
-		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
-			navigateTo(
-				`/Events/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.EventsOrNews) {
-			navigateTo(
-				`/Events/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.Associations) {
-			navigateTo(
-				`/Events/PageClub?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.RegionalProducts) {
-			navigateTo(
-				`/Events/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.OfferOrSearch) {
-			navigateTo(
-				`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.NewCitizenInfo) {
-			navigateTo(
-				`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.DefectReport) {
-			navigateTo(
-				`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.LostPropertyOffice) {
-			navigateTo(
-				`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.CompanyPortraits) {
-			navigateTo(
-				`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.Offers) {
-			navigateTo(
-				`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		}
 	}
 
 	return (
@@ -175,14 +137,15 @@ const HomePage = () => {
 				{t("mostPopulatCategories")}
 			</h2>
 
+			{/* {listings && listings.map((listing) => (*/}
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 flex flex-col">
 				<div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
 					<div
 						onClick={() => {
-							localStorage.setItem("selectedItem", "News"); // store the name value in localStorage
-							goToFilters("Events");
+							localStorage.setItem("selectedItem", "News");
+							goToEditListingsPage(1);
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer "
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer "
 					>
 						<div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 							<svg
@@ -199,10 +162,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(2);
 							localStorage.setItem("selectedItem", "Road Works / Traffic");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -219,10 +182,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(3);
 							localStorage.setItem("selectedItem", "Events");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -239,10 +202,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(4);
 							localStorage.setItem("selectedItem", "Clubs");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -259,10 +222,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(5);
 							localStorage.setItem("selectedItem", "Regional Products");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -279,10 +242,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(6);
 							localStorage.setItem("selectedItem", "Offer / Search");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -299,10 +262,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(7);
 							localStorage.setItem("selectedItem", "New Citizen Info");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -319,10 +282,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
-							localStorage.setItem("selectedItem", "Direct Report");
+							goToEditListingsPage(8);
+							localStorage.setItem("selectedItem", "Defect Report");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -340,10 +303,10 @@ const HomePage = () => {
 
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(9);
 							localStorage.setItem("selectedItem", "Lost And Found");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -360,10 +323,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(10);
 							localStorage.setItem("selectedItem", "Company Portraits");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -380,13 +343,13 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(11);
 							localStorage.setItem(
 								"selectedItem",
 								"Carpooling And Public Transport"
 							);
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -403,10 +366,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(12);
 							localStorage.setItem("selectedItem", "Offers");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg

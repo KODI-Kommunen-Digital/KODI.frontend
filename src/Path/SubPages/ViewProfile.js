@@ -208,7 +208,7 @@ const ViewProfile = () => {
 					</div>
 					<div class="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
 						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-							{t("aboutUs")}
+							{t("aboutMe")}
 						</h1>
 						<p class="leading-relaxed text-base font-bold my-6">
 							{description}

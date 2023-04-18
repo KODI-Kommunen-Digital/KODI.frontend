@@ -29,11 +29,11 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 	}, []);
 
-	const [password, setPassword] = useState('');
+	//const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handlePasswordChange = (event) => {
-		setPassword(event.target.value);
+		setPwd(event.target.value);
 	};
 
 	const toggleShowPassword = () => {
@@ -76,21 +76,18 @@ const LoginPage = () => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
+			console.log("-------------" + pwd)
 			var response = await login({
 				username: user,
 				password: pwd,
-			});
+			  });
 			setLoginLoading(false);
+			console.log(response.data)
 			if (rememberMe) {
-				window.localStorage.setItem(
-					"accessToken",
-					response.data.data.accessToken
-				);
-				window.localStorage.setItem(
-					"refreshToken",
-					response.data.data.refreshToken
-				);
-				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem('accessToken', response.data.data.accessToken);
+				window.localStorage.setItem('refreshToken', response.data.data.refreshToken);
+				window.localStorage.setItem('userId', response.data.data.userId);
+
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -173,7 +170,7 @@ const LoginPage = () => {
 									type={showPassword ? 'text' : 'password'}
 									id="password"
 									name="password"
-									value={password}
+									value={pwd}
 									onChange={handlePasswordChange}
 									required
 									class=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"

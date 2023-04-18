@@ -126,7 +126,7 @@ class ProfilePage extends React.Component {
         if (event.target.name === "socialMedia") {
             if (!event.target.value) {
                 this.setShowError("socialMedia", true);
-                this.setErrorMessage("socialMedia", "This field cannot be empty");
+                this.setErrorMessage("socialMedia", "Please enter a valid social media");
             } else {
                 this.setShowError("socialMedia", false);
                 this.setErrorMessage("socialMedia", "");
@@ -492,7 +492,7 @@ class ProfilePage extends React.Component {
                                                         type="text"
                                                         id="selected"
                                                         name="selected"
-                                                        value={data.selected}
+                                                        value={data.selected || ""}
                                                         onBlur={validateInput}
                                                         onChange={e => this.handleSocialMediaChanges(e, i)}
                                                         autoComplete="country-name"
@@ -517,8 +517,7 @@ class ProfilePage extends React.Component {
                                                         type="text"
                                                         id="socialMedia"
                                                         name="socialMedia"
-                                                        value={data.socialMedia || ''}
-                                                        onBlur={validateInput}
+                                                        defaultValue={this.state.profile.socialMedia}
                                                         onChange={e => this.handleSocialMediaChanges(e, i)}
                                                         className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                                         placeholder="ainfo@heidi-app.de"

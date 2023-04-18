@@ -137,6 +137,12 @@ const Dashboard = () => {
 		}
 	}
 
+	function goToEventDetailsPage(listing) {
+		navigateTo(
+			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+		);
+	}
+
 	function handleEditListingsClick() {
 		listings.listings.forEach((listing) => goToEditListingsPage(listing));
 	}
@@ -396,7 +402,7 @@ const Dashboard = () => {
 										<th
 											scope="row"
 											class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
-											onClick={() => navigateTo("/Example1")}
+											onClick={() => goToEventDetailsPage(listing)}
 										>
 											<img
 												class="w-10 h-10 rounded-full hidden sm:table-cell"
