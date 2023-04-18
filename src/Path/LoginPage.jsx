@@ -36,8 +36,12 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		userRef.current.focus();
-		const accessToken = window.localStorage.getItem("accessToken");
-		const refreshToken = window.localStorage.getItem("refreshToken");
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
 			routeChangeToDashboard();
 		}
@@ -64,18 +68,29 @@ const LoginPage = () => {
 			var response = await login({
 				username: user,
 				password: pwd,
-				rememberMe: rememberMe,
 			});
 			setLoginLoading(false);
-			window.localStorage.setItem(
-				"accessToken",
-				response.data.data.accessToken
-			);
-			window.localStorage.setItem(
-				"refreshToken",
-				response.data.data.refreshToken
-			);
-			window.localStorage.setItem("userId", response.data.data.userId);
+			if (rememberMe) {
+				window.localStorage.setItem(
+					"accessToken",
+					response.data.data.accessToken
+				);
+				window.localStorage.setItem(
+					"refreshToken",
+					response.data.data.refreshToken
+				);
+				window.localStorage.setItem("userId", response.data.data.userId);
+			} else {
+				window.sessionStorage.setItem(
+					"accessToken",
+					response.data.data.accessToken
+				);
+				window.sessionStorage.setItem(
+					"refreshToken",
+					response.data.data.refreshToken
+				);
+				window.sessionStorage.setItem("userId", response.data.data.userId);
+			}
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
