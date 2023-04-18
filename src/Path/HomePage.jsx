@@ -14,9 +14,9 @@ import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+// import(
+// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
+// );
 
 const HomePage = () => {
 	const { t, i18n } = useTranslation();

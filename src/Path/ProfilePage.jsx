@@ -11,9 +11,7 @@ import { socialMedia } from "../Constants/socialMedia";
 import { getListingsById } from "../Services/listingsApi";
 import { getVillages } from "../Services/villages";
 import { useNavigate } from "react-router-dom";
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+//import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 class ProfilePage extends React.Component {
 	constructor(props) {
