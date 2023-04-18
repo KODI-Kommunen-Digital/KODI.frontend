@@ -184,10 +184,10 @@ const Dashboard = () => {
 									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
 										Expired
 									</a>
-									<>
-									<FaBell style={{ color: 'white' }}/>
-									{count > 0 && <span className="notification-count">{count}</span>}									
-									</>
+									<a className="flex">
+										<FaBell style={{ color: 'white', position:'relative' }}/>
+										{/*{count > 0 && <span className="notification-count">{count}</span>}*/}
+									</a>								
 								</div>
 							</div>
 

@@ -11,9 +11,9 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+// import(
+// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
+// );
 
 const ViewMoreListings = () => {
 	window.scrollTo(0, 0);
