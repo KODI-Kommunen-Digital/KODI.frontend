@@ -13,6 +13,7 @@ import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
 import { Select } from "@chakra-ui/react";
+import { FaBell } from 'react-icons/fa';
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -21,6 +22,7 @@ const Dashboard = () => {
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
 	const [usersList, setUsersList] = useState([]);
+	const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -188,6 +190,10 @@ const Dashboard = () => {
 									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
 										Expired
 									</a>
+									<>
+									<FaBell style={{ color: 'white' }}/>
+									{count > 0 && <span className="notification-count">{count}</span>}									
+									</>
 								</div>
 							</div>
 

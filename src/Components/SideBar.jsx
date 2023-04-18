@@ -9,17 +9,18 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 	const { t, i18n } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
 
-	const handleLogout = () => {
-		try {
-			window.localStorage.removeItem("accessToken");
-			window.localStorage.removeItem("refreshToken");
-			window.localStorage.removeItem("userId");
-			setLoggedIn(false);
-			window.location.href = "/HomePage";
-		} catch (error) {
-			console.log(error);
-		}
-	};
+  const handleLogout = () => {
+    try {
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+      window.localStorage.removeItem('userId');
+      setLoggedIn(false);
+      window.location.href = '/HomePage';
+      alert('You have been logged out')
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 	function openSidebar() {
 		let sideBar = document.querySelector(".sidebar");
