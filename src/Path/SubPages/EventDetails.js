@@ -4,6 +4,7 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import LOGO from "../../assets/logo.png";
 import { getListings } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import { getUserListings } from "../../Services/usersApi";
@@ -12,12 +13,12 @@ import {getListingsById} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 
 const EventDetails = () => {
-	window.scrollTo(0, 0);
-	const { t, i18n } = useTranslation();
-	const [listingId, setListingId] = useState(0);
-	const [newListing, setNewListing] = useState(true);
-	const [description, setDescription] = useState("");
-	const [title, setTitle] = useState("");
+  window.scrollTo(0, 0);
+  const { t, i18n } = useTranslation();
+  const [listingId, setListingId] = useState(0);
+  const [newListing, setNewListing] = useState(true);
+  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
 
   const [input, setInput] = useState({
     //"villageId": 1,
@@ -41,100 +42,99 @@ const EventDetails = () => {
     discountedPrice:''
   });
 
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-			getListingsById(cityId, listingId).then((listingsResponse) => {
-				setInput(listingsResponse.data.data);
-				setDescription(listingsResponse.data.data.description);
-				setTitle(listingsResponse.data.data.title);
-			});
-		}
-	}, []);
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    var cityId = searchParams.get('cityId')
+    setCityId(cityId);
+    var listingId = searchParams.get('listingId')
+    setListingId(listingId);
+    if (listingId && cityId) {
+      setNewListing(false)
+        getVillages(cityId).then(response =>
+        setVillages(response.data.data)
+      )
+      getListingsById(cityId, listingId).then(listingsResponse => {
+        setInput(listingsResponse.data.data);
+        setDescription(listingsResponse.data.data.description);
+        setTitle(listingsResponse.data.data.title);
+      });
+    }
+  }, []);
 
-	const [cityId, setCityId] = useState(0);
-	const [villages, setVillages] = useState([]);
-	const [cities, setCities] = useState([]);
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
 
-	//populate the events titles starts
-	const [categoriesdata, setCategoriesdata] = useState({
-		categoriesListings: [],
-	});
-	useEffect(() => {
-		document.title = "Event Details";
-	}, []);
+  //populate the events titles starts
+  const [categoriesdata, setCategoriesdata] = useState({ categoriesListings: [] });
+  useEffect(() => {
+    document.title = "Event Details";
+  }, []);
 
-	const [dashboarddata, setDashboarddata] = useState({ listings: [] });
-	useEffect(() => {
-		getDashboarddata().then((response) => {
-			setDashboarddata(response);
-		});
-	}, []);
 
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
+  const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+  useEffect(() => {
+    getDashboarddata().then((response) => {
+      setDashboarddata(response);
+    });
+  }, []);
 
-	function handleCategoriesChange(event) {
-		setCategoriesdata({
-			...categoriesdata,
-			[event.target.name]: event.target.value,
-		});
-	}
+  let navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
-	function handleDashboardChange(event) {
-		setDashboarddata({
-			...dashboarddata,
-			[event.target.name]: event.target.value,
-		});
-	}
+  function handleCategoriesChange(event) {
+    setCategoriesdata({
+      ...categoriesdata,
+      [event.target.name]: event.target.value,
+    });
+  }
 
-	const [content, setContent] = useState("A");
+  function handleDashboardChange(event) {
+    setDashboarddata({
+      ...dashboarddata,
+      [event.target.name]: event.target.value,
+    });
+  }
 
-	const handleButtonClick = (value) => {
-		setContent(value);
-	};
+  const [content, setContent] = useState("A");
 
-	const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
+  const handleButtonClick = (value) => {
+    setContent(value);
+  };
 
-	const customerServiceData = () => {
-		setcustomerServiceDataload(true);
-		setSelectedLink("customerService");
-	};
-	const onCancel = () => {
-		setcustomerServiceDataload(false);
-		setSelectedLink("current");
-	};
+  const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
 
-	const [selectedLink, setSelectedLink] = useState("current");
+  const customerServiceData = () => {
+    setcustomerServiceDataload(true);
+    setSelectedLink("customerService");
+  };
+  const onCancel = () => {
+    setcustomerServiceDataload(false);
+    setSelectedLink("current");
+  };
 
-	const [location, setLocation] = useState("");
+  const [selectedLink, setSelectedLink] = useState("current");
 
-	function handleLocationChange(event) {
-		setLocation(event.target.value);
-	}
+  const [location, setLocation] = useState("");
 
-	function handleLocationSubmit(event) {
-		event.preventDefault();
-	}
+  function handleLocationChange(event) {
+    setLocation(event.target.value);
+  }
 
 	const [listings, setListings] = useState([]);
 	useEffect(() => {
@@ -151,18 +151,31 @@ const EventDetails = () => {
 		document.title = "Heidi Home";
 	  }, []);
 
-	const [userName, setUserName] = useState("");
-	const [profilePic, setProfilePic] = useState("");
-	useEffect(() => {
-		getProfile()
-			.then((response) => {
-				setUserName(response.data.data.username);
-				setProfilePic(response.data.data.image);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}, []);
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(
+          `${position.coords.latitude}, ${position.coords.longitude}`
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  const [userName, setUserName] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  useEffect(() => {
+    getProfile()
+      .then((response) => {
+        setUserName(response.data.data.username);
+        setProfilePic(response.data.data.image);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const [usersDescription, setUserDescription] = useState('');
   const [users, setUsers] = useState([]);
@@ -223,79 +236,76 @@ const EventDetails = () => {
                   {/* <p class="text-xs bg-red-600 rounded-sm p-1 font-bold text-white w-24 text-center">
                     MOST POPULAR
                   </p> */}
-									<div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-										<h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
-											{title}
-										</h1>
-										<div class="flex items-center">
-											<button
-												type="button"
-												class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-											>
-												<span class="ml-1">{t("favourites")}</span>
-											</button>
+                  <div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                    <h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
+                      {title}
+                    </h1>
+                    <div class="flex items-center">
+                    <button
+                      type="button"
+                      class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+                    >
+                      <span class="ml-1">{t("favourites")}</span>
+                    </button>
 
-											<button
-												type="button"
-												class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-											>
-												{t("split")}
-											</button>
-											<button
-												type="button"
-												class="text-gray-900 mt-0 items-center"
-											>
-												<svg
-													class="w-8 h-4 mx-1 text-[#626890]"
-													aria-hidden="true"
-													focusable="false"
-													data-prefix="fab"
-													data-icon="ethereum"
-													role="img"
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 320 512"
-												>
-													<path d="M0 256a56 56 0 1 1 112 0A56 56 0 1 1 0 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z" />
-												</svg>
-											</button>
-										</div>
-									</div>
+                      <button
+                        type="button"
+                        class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+                      >
+                        {t("split")}
+                      </button>
+                      <button type="button" class="text-gray-900 mt-0 items-center">
+                        <svg
+                          class="w-8 h-4 mx-1 text-[#626890]"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fab"
+                          data-icon="ethereum"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 320 512"
+                        >
+                          <path d="M0 256a56 56 0 1 1 112 0A56 56 0 1 1 0 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
 
-									<div class="flex justify-center space-x-6 mt-2 h-5 w-5 mb-2">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 576 512"
-										>
-											<path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-										</svg>
-									</div>
-									<p class="text-start">Regional Products</p>
-								</form>
-							</div>
-						</div>
-					</div>
-					<div class="container-fluid lg:w-full md:w-full">
-						<div class=" mr-0 ml-0 mt-4">
-							<div class="h-96 overflow-hidden px-0 py-0 shadow-xl">
-								<div class="relative h-96">
-									<img
-										alt="ecommerce"
-										class="object-cover object-center h-full w-full"
-										src={HOMEPAGEIMG}
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
-						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-							{t("description")}
-						</h1>
-						<p class="leading-relaxed text-base font-bold my-6">
-							{description}
-						</p>
-					</div>
-				</div>
+                  <div class="flex justify-center space-x-6 mt-2 h-5 w-5 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 576 512"
+                    >
+                      <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
+                  </div>
+                  <p class="text-start">Regional Products</p>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid lg:w-full md:w-full">
+            <div class=" mr-0 ml-0 mt-4">
+              <div class="h-96 overflow-hidden px-0 py-0 shadow-xl">
+                <div class="relative h-96">
+                  <img
+                    alt="ecommerce"
+                    class="object-cover object-center h-full w-full"
+                    src={HOMEPAGEIMG}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+                <h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+                {t("description")}
+                </h1>
+                <p class="leading-relaxed text-base font-bold my-6">
+                {description}
+                </p>
+            </div>
+        </div>
 
           <div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
           <div >
@@ -452,12 +462,11 @@ const EventDetails = () => {
           </div>
       </div>
 
-			<footer class="text-center lg:text-left bg-black text-white">
-				<div class="mx-6 py-10 text-center md:text-left">
-					<div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-						<div class="">
-							<h6
-								class="
+      <footer class="text-center lg:text-left bg-black text-white">
+            <div class="mx-6 py-10 text-center md:text-left">
+            <div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="">
+                <h6 class="
                     uppercase
                     font-semibold
                     mb-4
