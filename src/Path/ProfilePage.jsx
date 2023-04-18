@@ -22,7 +22,7 @@ class ProfilePage extends React.Component {
             formValid: true,
             pageLoading: true,
             updatingProfile: false,
-            val: [{ socialMedia: "", selected: "" }],
+            val: [{  selected: "" , socialMedia: ""}],
             data: {
                 socialMedia: ""
             }
@@ -31,7 +31,7 @@ class ProfilePage extends React.Component {
         this.updateChanges = this.updateChanges.bind(this);
     }
     componentDidMount() {
-        document.title = "Heidi - Profile";
+        document.title = "Your Profile";
         this.setPageLoading(true)
         getProfile().then((response) => {
             const newState = Object.assign({}, this.state);
@@ -218,23 +218,36 @@ class ProfilePage extends React.Component {
 
       handleAdd = (value) => {
         const { val } = this.state;
-        this.setState({val: [...val, { socialMedia: value, selected: "" }]});
+        this.setState({val: [...val, { selected: "" , socialMedia: value}]});
+        //console.log(this.state.val);
       };
 
       handleDelete = (index) => {
         const list = [...this.state.val];
         list.splice(index, 1);
-        this.setState({ val: list });
-      };
+        this.setState({
+            val: list,
+            data: { socialMedia: JSON.stringify(list) }
+        }, () => {
+            console.log(this.state.val);
+        });
+    };
 
-      handleSocialMediaChanges = (e, index) => {
-        const { name, value } = e.target;
-        const { val } = this.state;
-        const list = [...val];
-        list[index][name] = value;
-        this.setState({val: list, data: { socialMedia: JSON.stringify(list) }});
-      };
-    
+    handleSocialMediaChanges = (event, index) => {
+        const { name, value } = event.target;
+        this.setState(prevState => ({
+          val: prevState.val.map((data, i) =>
+            i === index ? { ...data, [name]: value } : data
+          )
+        }), () => {
+          const updatedData = this.state.val.reduce((obj, data) => {
+            obj[data.selected] = data.socialMedia;
+            return obj;
+          }, {});
+          console.log(updatedData);
+        });
+      }
+
       componentDidUpdate(prevProps, prevState) {
         const { val } = this.state;
         if (val !== prevState.val) {
@@ -392,7 +405,7 @@ class ProfilePage extends React.Component {
                                 </label>
                                 <div class="py-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
                                     <div class="flex flex-col justify-center items-center">
-                                        <img class="rounded-full h-20" src={this.state.profile.image} alt="avatar" />
+                                        <img class="rounded-full h-20" src={this.state.profile.image} alt="image" />
                                     </div>
                                     <div class="flex flex-col justify-center items-center">
                                         <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
