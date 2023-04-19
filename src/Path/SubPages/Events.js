@@ -10,201 +10,200 @@ import {
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 
-import { getListings } from "../../Services/listingsApi";
+import { getListings , getListingsByCity } from "../../Services/listingsApi";
 
 import { getCities } from "../../Services/cities";
+import { getCategory , getCategoryListings } from "../../Services/CategoryApi";
 import { getVillages } from "../../Services/villages";
 import { categoryByName, categoryById } from "../../Constants/categories";
 import {getListingsById} from '../../Services/listingsApi'
 
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+// import(
+// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
+// );
 
 const Events = () => {
-  window.scrollTo(0, 0);
-  const { t, i18n } = useTranslation();
-  const [cityId, setCityId] = useState(0);
-  const [villages, setVillages] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [listingId, setListingId] = useState(0);
-  async function onCityChange(e) {
-    const cityId = e.target.value;
-    setCityId(cityId);
-    setInput(prev => ({
-      ...prev,
-      villageId: 0
-    }));
-    getVillages(cityId).then(response =>
-      setVillages(response.data.data)
-    )
-  }
-  useEffect(() => {
-    getCities().then(citiesResponse => {
-      setCities(citiesResponse.data.data);
-  })}, []);
+	window.scrollTo(0, 0);
+	const { t, i18n } = useTranslation();
+	const [cityId, setCityId] = useState(0);
+	const [villages, setVillages] = useState([]);
+	const [cities, setCities] = useState([]);
+	const [listingId, setListingId] = useState(0);
+	async function onCityChange(e) {
+		const cityId = e.target.value;
+		setCityId(cityId);
+		setInput(prev => ({
+		...prev,
+		villageId: 0
+		}));
+		getVillages(cityId).then(response =>
+		setVillages(response.data.data)
+		)
+	}
+	useEffect(() => {
+		getCities().then(citiesResponse => {
+		setCities(citiesResponse.data.data);
+	})}, []);
 
-    // Selected Items Deletion Starts
-    const selectedItem = localStorage.getItem('selectedItem');
-    // Selected Items Deletion Ends
+		// Selected Items Deletion Starts
+		const selectedItem = localStorage.getItem('selectedItem');
+		// Selected Items Deletion Ends
 
-  const [input, setInput] = useState({
-    //"villageId": 1,
-    "categoryId": 0,
-    "subcategoryId": 0,
-    "sourceId": 1,
-    "userId": 2
-  });
+	const [input, setInput] = useState({
+		//"villageId": 1,
+		"categoryId": 0,
+		"subcategoryId": 0,
+		"sourceId": 1,
+		"userId": 2
+	});
 
-  const [listings, setListings] = useState([]);
-  const [categoryId, setCategoryId] = useState(1);
-  console.log(categoryId)
-  const [newListing, setNewListing] = useState(true);
+	const [listings, setListings] = useState([]);
+	const [categoryId, setCategoryId] = useState();
+	const [newListing, setNewListing] = useState(true);
+	const [description, setDescription] = useState("");
+		const [title, setTitle] = useState("");
 
-   useEffect(() => {
-     getListings({"categoryId":categoryId}).then((response) => {
-       setListings([...sortRecent((response.data.data))]);
-     });
-  }, [categoryId]);
+	const [categories, setCategories] = useState([]);
+		useEffect(() => {
+			getCategory().then((response) => {
+			const sortedCategories = sortRecent(response.data.data);
+			setCategories([...sortedCategories]);
+			});
+		}, []);
 
-  // useEffect(() => {
-  //   const searchParams = new URLSearchParams(window.location.search);
-  //   const cityId = searchParams.get('cityId');
-  //   const listingId = searchParams.get('listingId');
-  //   const categoryId = searchParams.get('categoryId');
-  
-  //   if (listingId && cityId) {
-  //     setCityId(cityId);
-  //     setListingId(listingId);
-  //     setCategoryId(categoryId);
-  //     setNewListing(false);
-  
-  //     getVillages(cityId).then(response => {
-  //       setVillages(response.data.data);
-  //     });
-  
-  //     getListings({ listingId }).then(response => {
-  //       const filteredListings = response.data.data.filter(listing => listing.id === listingId);
-  //       const sortedListings = sortRecent(filteredListings);
-  //       setListings(sortedListings);
-  //     });
-  //   }
-  // }, []);
-  
+	//Navigate to Event Details page Starts
+		function goToEventDetailsPage(listing) {
+				navigateTo(
+					`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+				);
+		}
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  // const sortedListings = [...listings].sort((a, b) => {
-  //   const dateA = new Date(a.date);
-  //   const dateB = new Date(b.date);
-  //   return dateB - dateA;
-  // });
-  // console.log(sortedListings)
+	const [selectedCategory, setSelectedCategory] = useState("");
 
-  function goToEventsPage(listing) {
-    var categoryId = listing.categoryId
-    if (categoryId == categoryByName.News) {
-      navigateTo(`/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`);
-    }
-  }
+	const handleCategoryChange = (event) => {
+		let categoryId;
+		switch (event.target.value) {
+		case "News":
+			categoryId = 1;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Road Works / Traffic":
+			categoryId = 2;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Events":
+			categoryId = 3;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Clubs":
+			categoryId = 4;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Regional Products":
+			categoryId = 5;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Offer / Search":
+			categoryId = 6;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "New Citizen Info":
+			categoryId = 7;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Defect Report":
+			categoryId = 8;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Lost And Found":
+			categoryId = 9;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Company Portraits":
+			categoryId = 10;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Carpooling And Public Transport":
+			categoryId = 11;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Offers":
+			categoryId = 12;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
 
-  const handleCategoryChange = (event) => {
-    let categoryId;
-    switch (event.target.value) {
-      case "news":
-        categoryId = 1;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "roadTraffic":
-        categoryId = 2;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "events":
-        categoryId = 3;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "club":
-        categoryId = 4;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "regionalProducts":
-        categoryId = 5;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "offerSearch":
-        categoryId = 6;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "newCitizenInfo":
-        categoryId = 7;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "defectReport":
-        categoryId = 8;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "lostAndFound":
-        categoryId = 9;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "companyPortaits":
-        categoryId = 10;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "carpoolingPublicTransport":
-        categoryId = 11;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "offers":
-        categoryId = 12;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
+		default:
+			categoryId = 0;
+			break;
+		}
+		setCategoryId(categoryId);
+		//setCityId(null);
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("categoryId", categoryId);
+		urlParams.delete("cityId");
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.pushState({}, "", newUrl);
+	};
 
-      default:
-        categoryId = 0;
-        break;
-    }
+	const handleLocationChange = (event) => {
+		const cityId = event.target.value;
+		setCityId(cityId);
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("cityId", cityId);
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.pushState({}, "", newUrl);
+	};
 
-    const newListing = {
-      ...input,
-      categoryId: categoryId,
-    };
-    goToEventsPage(newListing);
-  };
+		useEffect(() => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const categoryIdParam = urlParams.get("categoryId");
+			const cityIdParam = urlParams.get("cityId");
 
-  // function handleCategoriesChange(event) {
-  //   setListingsData({
-  //     ...listingsData,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // }
+			if (categoryIdParam) {
+			  setCategoryId(categoryIdParam);
+			}
+
+			if (cityIdParam) {
+			  setCityId(cityIdParam);
+			}
+		  }, []);
+
+		useEffect(() => {
+			if (categoryId) {
+			  if (cityId) {
+				getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
+					console.log("inside getListingsById" + cityId + "---------" + categoryId)
+					console.log(response.data.data)
+				  const sortedListings = sortRecent(response.data.data);
+				  setListings(sortedListings);
+				});
+			  } else {
+				getListings({ categoryId }).then((response) => {
+					console.log("inside getListings"  + categoryId)
+				  const sortedListings = sortRecent(response.data.data);
+				  setListings(sortedListings);
+				});
+			  }
+			}
+		  }, [categoryId, cityId]);
 
   const [selectedSortOption, setSelectedSortOption] = useState('');
   function handleSortOptionChange(event) {
     setSelectedSortOption(event.target.value);
   }
 
-  //populate the events titles starts
-  // const [listingsData, setListingsData] = useState([]);
-  // useEffect(() => {
-  //   getListingsByCity().then((response) => {
-  //     setListingsData(response);
-  //   });
-  //   document.title = selectedItem;
-  // }, []);
-
-  //populate the events titles Ends
 
   let navigate = useNavigate();
   const navigateTo = (path) => {
@@ -217,7 +216,6 @@ const Events = () => {
     switch (selectedSortOption) {
       case 'titleAZ':
         setListings([...sortByTitleAZ(listings)])
-        console.log(listings)
         break;
       case 'titleZA':
         setListings([...sortByTitleZA(listings)]);
@@ -264,9 +262,6 @@ const Events = () => {
 
   // Pre-select the corresponding filter option ends
 
-  function handleLocationChange(event) {
-    setLocation(event.target.value);
-  }
 
   function handleLocationSubmit(event) {
     event.preventDefault();
@@ -292,14 +287,6 @@ const Events = () => {
       <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
         <div class="w-full mr-0 ml-0">
           <div class="h-64 overflow-hidden px-1 py-1">
-            {/* <a class="block relative h-96 overflow-hidden">
-
-            <img
-              alt="ecommerce"
-              class="object-cover object-center h-full w-full"
-              src= {HOMEPAGEIMG}
-            />
-          </a> */}
 						<div class="relative h-64">
 							<img
 								alt="ecommerce"
@@ -313,20 +300,18 @@ const Events = () => {
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-											{/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                          {t("location")}
-                      </label> */}
 											{cities.map((city) => (
 												<select
 													id="button-filter"
 													name="country"
 													autocomplete="country-name"
+                          							onChange={handleLocationChange}
 													class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												>
 													<option class="font-sans" value="Default">
 														{t("chooseOneLocation")}
 													</option>
-													<option class="font-sans" value="Default">
+													<option class="font-sans" value={city.id}>
 														{city.name}
 													</option>
 												</select>
@@ -334,9 +319,6 @@ const Events = () => {
 										</div>
 
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-											{/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                          {t("category")}
-                      </label> */}
 											<select
 												id="button-filter"
 												name="country"
@@ -384,7 +366,7 @@ const Events = () => {
 													</option>
 												) : null}
 												{selectedItem !== "Defect Report" ? (
-													<option class="font-sans" value="Direct Report">
+													<option class="font-sans" value="Defect Report">
 														{t("defectReport")}
 													</option>
 												) : null}
@@ -438,226 +420,12 @@ const Events = () => {
 				</div>
 			</div>
 
-			{/* <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
-        events
-      </h2> */}
-
-			{/* <div className="flex mx-auto flex-wrap mb-10 justify-center">
-        <a
-          onClick={onCancel}
-          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start title-font font-bold inline-flex items-center leading-none tracking-wider rounded-t ${
-            selectedLink === "current" ? "text-blue-800" : "text-gray-500"
-          }`}
-        >
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-5 h-5 mr-3"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-          Current
-        </a>
-        {/* ----- removed for the time ------ */}
-			{/* <a
-          onClick={customerServiceData}
-          id="loadMoreBtn"
-          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
-            selectedLink === "customerService"
-              ? "text-blue-800"
-              : "text-gray-500"
-          }`}
-        >
-          Citizen Services
-        </a>
-      </div>
-      <div className="my-0 bg-gray-300 h-[1px]"></div>*/}
-
-			{/* <div class="bg-white">
-        <div class="mx-auto p-6 mt-4 mb-4 flex flex-col sm:flex-row sm:justify-between items-center">
-          <p class="text-black text-lg text-center sm:text-left justify-start sm:ml-20 mb-4 sm:mb-0">
-            7
-            <a
-              href="https://heidi-app.de/"
-              rel="noopener noreferrer"
-              class="text-black ml-1"
-              target="_blank"
-            >
-              {t("itemsFound")}
-            </a>
-          </p> */}
-			{/* ----- removed for the time ------ */}
-			{/* <div class="flex items-center justify-end sm:justify-between w-full sm:w-auto mr-20">
-                <button type="button" class="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 sm:mr-4">
-                    <svg class="w-4 h-4 mr-2 -ml-1 text-[#626890]" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="ethereum" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"></path>
-                    </svg>
-                    Show map
-                </button>
-            </div>
-        </div>
-      </div>*/}
-
-			{/* <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:white dark:white">
-          <div class="p-6 space-y-10 md:space-y-6 sm:p-8">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900 font-sans">
-              {t("filteryourResult")}
-            </h1>
-            <form class="space-y-4 md:space-y-6" action="#">
-
-            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                  {t("location")}
-                </label>
-                <select
-                  id="button-filter"
-                  name="country"
-                  autocomplete="country-name"
-                  class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option class="font-sans" value="Default">{t("chooseOneLocation")}</option>
-                  <option class="font-sans" value="Default">{t("below")}</option>
-                  <option class="font-sans" value="News">{t("fuchstal")}</option>
-                  <option class="font-sans" value="Road Works / Traffic">
-                    {t("appleVillage")}
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                  {t("category")}
-                </label>
-                <select
-                  id="button-filter"
-                  name="country"
-                  autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option class="font-sans" value="Default">{selectedItem}</option>
-                  {selectedItem !== "News" ? (
-                    <option value="News">{t("news")}</option>
-                  ) : null}
-                  {selectedItem !== "Road Works / Traffic" ? (
-                    <option class="font-sans" value="Road Works / Traffic">
-                    {t("roadTraffic")}
-                  </option>
-                  ) : null}
-                  {selectedItem !== "Events" ? (
-                    <option class="font-sans" value="Events">{t("events")}</option>
-                  ) : null}
-                  {selectedItem !== "Clubs" ? (
-                    <option class="font-sans" value="Clubs">{t("clubs")}</option>
-                  ) : null}
-                  {selectedItem !== "Regional Products" ? (
-                    <option class="font-sans" value="Regional Products">{t("regionalProducts")}</option>
-                  ) : null}
-                  {selectedItem !== "Offer / Search" ? (
-                    <option class="font-sans" value="Offer / Search">{t("offerSearch")}</option>
-                  ) : null}
-                  {selectedItem !== "New Citizen Info" ? (
-                    <option class="font-sans" value="New Citizen Info">{t("newCitizenInfo")}</option>
-                  ) : null}
-                  {selectedItem !== "Defect Report" ? (
-                    <option class="font-sans" value="Direct Report">{t("defectReport")}</option>
-                  ) : null}
-                  {selectedItem !== "Lost And Found" ? (
-                    <option class="font-sans" value="Lost And Found">{t("lostAndFound")}</option>
-                  ) : null}
-                  {selectedItem !== "Company Portraits" ? (
-                    <option class="font-sans" value="Company Portraits">{t("companyPortaits")}</option>
-                  ) : null}
-                  {selectedItem !== "Carpooling And Public Transport" ? (
-                    <option class="font-sans" value="Carpooling And Public Transport">
-                    {t("carpoolingPublicTransport")}
-                  </option>
-                  ) : null}
-                  {selectedItem !== "Offers" ? (
-                    <option class="font-sans" value="Offers">{t("offers")}</option>
-                  ) : null}
-                </select>
-              </div>
-
-              {customerServiceDataload && (
-                <>
-                  <div>
-                    <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                      Time
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select Time..."
-                      required=""
-                    />
-                  </div>
-                  <div class="flex justify-center">
-                  <div class="timepicker relative form-floating mb-3 xl:w-96">
-                    <TimePicker />
-                  </div>
-              </div>
-                  <div>
-                    <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                      Phone Number
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter your phone number..."
-                      required=""
-                    />
-                  </div>
-                  <div>
-                    <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                      Review
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Write your review..."
-                      required=""
-                    />
-                  </div>
-                </>
-              )}
-            </form>
-          </div>
-          <div class="mb-4 ml-7 mr-7">
-            <button
-              type="submit"
-              class="group font-sans relative flex w-full justify-center rounded-md border border-transparent bg-blue-800 py-2 px-4 text-sm font-medium text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 font-sans"></span>
-              {t("applyFilter")}
-            </button>
-          </div>
-          <div class="mb-4 ml-7 mr-7">
-            <button
-              type="submit"
-              class="group font-sans relative flex w-full justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 font-sans"></span>
-              {t("removeFilter")}
-            </button>
-          </div>
-        </div> */}
-
       <div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
         <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
           {/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
           {listings && listings.map((listing) => (
             <div
-              onClick={() => navigateTo("/HomePage/EventDetails")}
+              onClick={() => goToEventDetailsPage(listing)}
               className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
             >
               <a className="block relative h-64 rounded overflow-hidden">

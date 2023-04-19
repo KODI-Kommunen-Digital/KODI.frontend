@@ -51,7 +51,9 @@ export default function HomePageNavBar() {
 			navigateTo("/");
 		}
 	};
-
+	const handleFavButton = () => {
+		
+	}
 	return (
 		<div class="w-full fixed top-0 z-10">
 			<Popover className="relative bg-white mr-0 ml-0 px-10">
@@ -73,6 +75,14 @@ export default function HomePageNavBar() {
 						</div>
 
 						<div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
+							<a onClick={() =>
+									isLoggedIn ? navigateTo("/Favorite") : navigateTo("/")
+								}>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+								</path>
+								</svg> 
+							</a>
 							<a
 								onClick={handleLoginLogout}
 								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
