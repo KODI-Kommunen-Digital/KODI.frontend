@@ -4,7 +4,7 @@ import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
-import { sortOldest } from "../Services/helper";
+import { sortOldest, sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import { categoryByName, categoryById } from "../Constants/categories";
@@ -14,9 +14,9 @@ import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+// import(
+// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
+// );
 
 const HomePage = () => {
 	const { t, i18n } = useTranslation();
@@ -36,6 +36,7 @@ const HomePage = () => {
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
+			console.log(citiesResponse)
 		});
 	}, []);
 
@@ -50,10 +51,12 @@ const HomePage = () => {
 	const [listings, setListings] = useState([]);
 	useEffect(() => {
 		getListings().then((response) => {
-			setListings([...sortOldest(response.data.data)]);
+		  const sortedListings = sortRecent(response.data.data);
+		  const slicedListings = sortedListings.slice(0, 3);
+		  setListings([...slicedListings]);
 		});
 		document.title = "Heidi Home";
-	}, []);
+	  }, []);
 
 	// const [listingsData, setListingsData] = useState([]); - for jason
 	// useEffect(() => {
@@ -63,13 +66,13 @@ const HomePage = () => {
 	// }, []);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
-	const sortedListings = [...listings]
-		.sort((a, b) => {
-			const dateA = new Date(a.date);
-			const dateB = new Date(b.date);
-			return dateB - dateA;
-		})
-		.slice(0, 3);
+	// const sortedListings = [...listings]
+	// 	.sort((a, b) => {
+	// 		const dateA = new Date(a.date);
+	// 		const dateB = new Date(b.date);
+	// 		return dateB - dateA;
+	// 	})
+	// 	.slice(0, 3);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -461,8 +464,8 @@ const HomePage = () => {
 
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-					{sortedListings &&
-						sortedListings.map((listing) => (
+					{listings &&
+						listings.map((listing) => (
 							<div
 								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
 								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"

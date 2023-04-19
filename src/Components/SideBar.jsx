@@ -14,6 +14,9 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
+			window.sessionStorage.removeItem("accessToken");
+			window.sessionStorage.removeItem("refreshToken");
+			window.sessionStorage.removeItem("userId");
 			setLoggedIn(false);
 			window.location.href = "/HomePage";
 		} catch (error) {

@@ -5,14 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
-import { getUserListings, getProfile } from "../../Services/usersApi";
-import { sortOldest } from "../../Services/helper";
-import {
-	getListingsByCity,
-	getListingsById,
-	postListingsData,
-	updateListingsData,
-} from "../../Services/listingsApi";
+import { getListings } from "../../Services/listingsApi";
+import { getProfile } from "../../Services/usersApi";
+import { sortOldest, sortRecent } from "../../Services/helper";
+import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 import {
 	getFavorites,
@@ -159,10 +155,14 @@ const EventDetails = () => {
 	}
 
 	const [listings, setListings] = useState([]);
+
 	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings([...sortOldest(response.data.data)]);
+		getListings().then((response) => {
+		  const sortedListings = sortRecent(response.data.data);
+		  const slicedListings = sortedListings.slice(0, 3);
+		  setListings([...slicedListings]);
 		});
+
 		
 	}, []);
 
@@ -480,6 +480,7 @@ const EventDetails = () => {
 						<div class="">
 							<h6
 								class="
+
                     uppercase
                     font-semibold
                     mb-4
