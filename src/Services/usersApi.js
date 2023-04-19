@@ -1,6 +1,6 @@
 import axios from "../api/axiosInstance";
 
-function getUserId() {
+export function getUserId() {
 	return (
 		window.localStorage.getItem("userId") ||
 		window.sessionStorage.getItem("userId")
