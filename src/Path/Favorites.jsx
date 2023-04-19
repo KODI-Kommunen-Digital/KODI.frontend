@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
-import { getUserListings } from "../Services/usersApi";
+import { getListingsById } from "../Services/listingsApi";
 import {getFavorites} from "../Services/favoritesApi"
 import {
 	sortByTitleAZ,
@@ -31,19 +31,23 @@ const Favorites = () => {
 		}
 	};
 
-	const [listings, setListings] = useState([]);
+	const [favListings, setFavListings] = useState([]);
 	useEffect(() => {
 		getFavorites().then((response) => {
-			setListings([...sortRecent(response.data.data)]);
+			setFavListings([...sortRecent(response.data.data)]);
 		});
 	}, []);
+	const [listings, setListings] = useState([]);
+	useEffect(() => {
+		favListings.forEach((fav) => {
+			getListingsById(fav.listingId,fav.cityId).then((response) => {
+			setListings([...sortRecent(response.data.data),...listings]);
+			});
+			
+		})
+	}, []);
 
-	const [selectedCategory, setSelectedCategory] = useState("");
-	const sortedListings = [...listings].sort((a, b) => {
-		const dateA = new Date(a.date);
-		const dateB = new Date(b.date);
-		return dateB - dateA;
-	});
+	
 
 	//populate the events titles starts
 	const [categoriesdata, setCategoriesdata] = useState({
@@ -79,17 +83,16 @@ const Favorites = () => {
 	useEffect(() => {
 		switch (selectedSortOption) {
 			case "titleAZ":
-				setListings([...sortByTitleAZ(listings)]);
-				console.log(listings);
+				setFavListings([...sortByTitleAZ(favListings)]);
 				break;
 			case "titleZA":
-				setListings([...sortByTitleZA(listings)]);
+				setFavListings([...sortByTitleZA(favListings)]);
 				break;
 			case "recent":
-				setListings([...sortRecent(listings)]);
+				setFavListings([...sortRecent(favListings)]);
 				break;
 			case "oldest":
-				setListings([...sortOldest(listings)]);
+				setFavListings([...sortOldest(favListings)]);
 				break;
 			default:
 				break;
@@ -142,10 +145,10 @@ const Favorites = () => {
 
 			<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
 				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-					{sortedListings &&
-						sortedListings.map((listing) => (
+					{listings &&
+						listings.map((favListings) => (
 							<div
-								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
+								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.listingId}&cityId=${favListings.cityId}`)}
 								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 							>
 								<a className="block relative h-64 rounded overflow-hidden">
@@ -157,7 +160,7 @@ const Favorites = () => {
 								</a>
 								<div className="mt-10">
 									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-										{listing.title}
+										{favListings.title}
 									</h2>
 								</div>
 								<div className="my-4 bg-gray-200 h-[1px]"></div>

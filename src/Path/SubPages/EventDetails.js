@@ -54,7 +54,6 @@ const EventDetails = () => {
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
-		console.log("CityId", cityId)
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
@@ -67,7 +66,6 @@ const EventDetails = () => {
 				setTitle(listingsResponse.data.data.title);
 			getFavorites().then((response) => {
 				var favorite = response.data.data.filter(f => f.listingId == listingId)[0]
-				console.log("Fav", favorite)
 				if (favorite) {
 					setFavoriteId(favorite.id)
 					setFavButton(t("Unfavorite"))
@@ -211,7 +209,6 @@ const EventDetails = () => {
 			}
 		
 			if (favoriteId !== 0) {
-				console.log("Id", favoriteId)
 				await deleteListingsById(favoriteId)
 				setFavoriteId(0)
 				setSuccessMessage(t("list removed from the favorites"))

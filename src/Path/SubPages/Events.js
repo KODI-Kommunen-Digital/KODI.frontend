@@ -61,7 +61,7 @@ const Events = () => {
 	const [categoryId, setCategoryId] = useState();
 	const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
-		const [title, setTitle] = useState("");
+	const [title, setTitle] = useState("");
 
 	const [categories, setCategories] = useState([]);
 		useEffect(() => {
@@ -73,7 +73,6 @@ const Events = () => {
 
 	//Navigate to Event Details page Starts
 	function goToEventDetailsPage(listing) {
-				console.log("listing",listing)
 				navigateTo(
 					`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
 				);
@@ -185,14 +184,11 @@ const Events = () => {
 			if (categoryId) {
 			  if (cityId) {
 				getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
-					console.log("inside getListingsById" + cityId + "---------" + categoryId)
-					console.log(response.data.data)
 				  const sortedListings = sortRecent(response.data.data);
 				  setListings(sortedListings);
 				});
 			  } else {
 				getListings({ categoryId }).then((response) => {
-					console.log("inside getListings"  + categoryId)
 				  const sortedListings = sortRecent(response.data.data);
 				  setListings(sortedListings);
 				});
