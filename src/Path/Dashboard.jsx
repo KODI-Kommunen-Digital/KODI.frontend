@@ -22,7 +22,7 @@ const Dashboard = () => {
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
 	const [usersList, setUsersList] = useState([]);
-	const [count, setCount] = useState(2);
+	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -169,23 +169,23 @@ const Dashboard = () => {
 								<div class="ml-10 flex items-baseline space-x-20">
 									{userRole === 3 && (
 										<a
-											class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer"
+											class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer"
 											aria-current="page"
 										>
 											All Listings
 										</a>
 									)}
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Published
 									</a>
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Pending
 									</a>
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Expired
 									</a>
-									<a className="flex">
-										<FaBell style={{ color: 'white', position:'relative' }}/>
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
+										<FaBell style={{ color: 'white', position:'relative', fontSize:'15px' }}/>
 										{/*{count > 0 && <span className="notification-count">{count}</span>}*/}
 									</a>								
 								</div>

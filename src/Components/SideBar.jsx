@@ -111,17 +111,17 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 				</div>
 				<div
 					className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-					onClick={() => navigateTo("/profilePage")}
+					onClick={() => navigateTo("/ListingsPage")}
 				>
 					<svg
 						className="h-6 w-10 fill-current"
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 496 512"
 					>
-						<path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z" />
+						<path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
 					</svg>
 					<span className="text-[15px] ml-4 text-gray-200 font-bold">
-						{t("myProfile")}
+						{t("upload")}
 					</span>
 				</div>
 				{userRole === 1 && (
@@ -147,17 +147,29 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 				<div className="fixed bottom-2 w-[280px]">
 					<div
 						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-						onClick={() => navigateTo("/ListingsPage")}
+						onClick={() => navigateTo("/profilePage")}
 					>
 						<svg
 							className="h-6 w-10 fill-current"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 496 512"
 						>
-							<path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
+							<path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z" />
 						</svg>
+						<div>{profilePic}</div>
 						<span className="text-[15px] ml-4 text-gray-200 font-bold">
-							{t("upload")}
+						{userName}
+						</span>
+					</div>
+					
+					<div className="my-2 bg-gray-600 h-[1px]"></div>
+					<div
+						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+						onClick={() => navigateTo("/profilePage")}
+					>
+						<div>{profilePic}</div>
+						<span className="text-[15px] ml-4 text-gray-200 font-bold">
+							{userName}
 						</span>
 					</div>
 					{loggedIn && (
@@ -177,16 +189,6 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 							</span>
 						</div>
 					)}
-					<div className="my-2 bg-gray-600 h-[1px]"></div>
-					<div
-						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-						onClick={() => navigateTo("/profilePage")}
-					>
-						<div>{profilePic}</div>
-						<span className="text-[15px] ml-4 text-gray-200 font-bold">
-							{userName}
-						</span>
-					</div>
 				</div>
 			</div>
 		</div>
