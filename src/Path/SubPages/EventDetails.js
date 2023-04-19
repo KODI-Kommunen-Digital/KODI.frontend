@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LOGO from "../../assets/logo.png";
 import { getListings } from "../../Services/listingsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfileByIds } from "../../Services/usersApi";
 import { sortOldest, sortRecent } from "../../Services/helper";
-import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../../Services/listingsApi'
+import {
+	getListingsByCity,
+	getListingsById,
+	postListingsData,
+	updateListingsData,
+} from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import {
 	getFavorites,
@@ -23,8 +28,10 @@ const EventDetails = () => {
 	const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
 	const [title, setTitle] = useState("");
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+	const [userSocial, setUserSocial] = useState([]);
+	const [user, setUser] = useState();
+	const [successMessage, setSuccessMessage] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 	const [input, setInput] = useState({
 		//"villageId": 1,
 		categoryId: 0,
@@ -58,21 +65,26 @@ const EventDetails = () => {
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
+				getProfileByIds(listingsResponse.data.data.userId).then((res) => {
+					setUser(res.data.data[0]);
+				});
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
-			getFavorites().then((response) => {
-				var favorite = response.data.data.filter(f => f.listingId == listingId)[0]
-				if (favorite) {
-					setFavoriteId(favorite.id)
-					setFavButton(t("Unfavorite"))
-				} else {
-					setFavoriteId(0)
-					setFavButton(t("Favorite"))
-				}
-			});
+				getFavorites().then((response) => {
+					var favorite = response.data.data.filter(
+						(f) => f.listingId == listingId
+					)[0];
+					if (favorite) {
+						setFavoriteId(favorite.id);
+						setFavButton(t("Unfavorite"));
+					} else {
+						setFavoriteId(0);
+						setFavButton(t("Favorite"));
+					}
+				});
 			});
 		}
-	}, []);
+	}, [t]);
 
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
@@ -153,15 +165,13 @@ const EventDetails = () => {
 	}
 
 	const [listings, setListings] = useState([]);
-
 	useEffect(() => {
 		getListings().then((response) => {
-		  const sortedListings = sortRecent(response.data.data);
-		  const slicedListings = sortedListings.slice(0, 3);
-		  setListings([...slicedListings]);
+			const sortedListings = sortRecent(response.data.data);
+			const slicedListings = sortedListings.slice(0, 3);
+			setListings([...slicedListings]);
 		});
-
-		
+		document.title = "Heidi Home";
 	}, []);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
@@ -188,45 +198,51 @@ const EventDetails = () => {
 
 	const [userName, setUserName] = useState("");
 	const [profilePic, setProfilePic] = useState("");
+
 	useEffect(() => {
-		getProfile()
-			.then((response) => {
-				setUserName(response.data.data.username);
-				setProfilePic(response.data.data.image);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-		
-	}, []);
-	const [handleClassName,setHandleClassName]= useState("text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2")
-	const [favButton, setFavButton] = useState("Favorite")
+		if (user) {
+			setUserSocial(JSON.parse(user.socialMedia));
+			setUserName(user.username);
+			setProfilePic(user.image);
+		}
+	}, [user]);
+	const [handleClassName, setHandleClassName] = useState(
+		"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+	);
+	const [favButton, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
 		try {
 			var postData = {
-				cityId:cityId,
-				listingId:listingId,
-			}
-		
+				cityId: cityId,
+				listingId: listingId,
+			};
+
 			if (favoriteId !== 0) {
-				await deleteListingsById(favoriteId)
-				setFavoriteId(0)
-				setSuccessMessage(t("list removed from the favorites"))
-				setHandleClassName("text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2" )
-				setFavButton(t("Unfavorite"))
+				await deleteListingsById(favoriteId);
+				setFavoriteId(0);
+				setSuccessMessage(t("list removed from the favorites"));
+				setHandleClassName(
+					"text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2"
+				);
+				setFavButton(t("Unfavorite"));
 			} else {
-				postData.cityId ? postFavoriteListingsData(postData).then((response) => {
-					setFavoriteId(response.data.id)
-					setSuccessMessage(t("List added to the favorites"))
-					setHandleClassName("text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2");
-					setFavButton(t("Favorite"))
-				}).catch((err) => console.log("Error",err)) : console.log("Error")
-				
+				postData.cityId
+					? postFavoriteListingsData(postData)
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
+					: console.log("Error");
 			}
-        } catch (error) {
-         setErrorMessage(t("Error",error));
-        }
-    }
+		} catch (error) {
+			setErrorMessage(t("Error", error));
+		}
+	};
 	return (
 		<section class="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
@@ -249,8 +265,10 @@ const EventDetails = () => {
 												type="button"
 												class={handleClassName}
 												onClick={() => handleFavorite()}
-											>						
-												<span class="ml-1">{favoriteId !==0?t("Unfavorite"):t("Favorite")}</span>
+											>
+												<span class="ml-1">
+													{favoriteId !== 0 ? t("Unfavorite") : t("Favorite")}
+												</span>
 											</button>
 
 											<button
@@ -339,91 +357,101 @@ const EventDetails = () => {
 						</div>
 
 						<div class="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1 justify-Start">
-							<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
-								<button
-									type="button"
-									data-te-ripple-init
-									data-te-ripple-color="light"
-									class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-500"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+							{userSocial?.Facebook && (
+								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<button
+										type="button"
+										data-te-ripple-init
+										data-te-ripple-color="light"
+										class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-500"
 									>
-										<path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-									</svg>
-								</button>
-							</div>
-							<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
-								<button
-									type="button"
-									data-te-ripple-init
-									data-te-ripple-color="light"
-									class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-pink-600"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-4 w-4"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+										</svg>
+									</button>
+								</div>
+							)}
+							{userSocial?.Instagram && (
+								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<button
+										type="button"
+										data-te-ripple-init
+										data-te-ripple-color="light"
+										class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-pink-600"
 									>
-										<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-									</svg>
-								</button>
-							</div>
-							<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
-								<button
-									type="button"
-									data-te-ripple-init
-									data-te-ripple-color="light"
-									class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-sky-600"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-4 w-4"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+										</svg>
+									</button>
+								</div>
+							)}
+							{userSocial?.LinkedIn && (
+								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<button
+										type="button"
+										data-te-ripple-init
+										data-te-ripple-color="light"
+										class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-sky-600"
 									>
-										<path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
-									</svg>
-								</button>
-							</div>
-							<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
-								<button
-									type="button"
-									data-te-ripple-init
-									data-te-ripple-color="light"
-									class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-red-600"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-4 w-4"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+										</svg>
+									</button>
+								</div>
+							)}
+							{userSocial?.Youtube && (
+								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<button
+										type="button"
+										data-te-ripple-init
+										data-te-ripple-color="light"
+										class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-red-600"
 									>
-										<path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-									</svg>
-								</button>
-							</div>
-							<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
-								<button
-									type="button"
-									data-te-ripple-init
-									data-te-ripple-color="light"
-									class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-400"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4"
-										fill="currentColor"
-										viewBox="0 0 24 24"
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-4 w-4"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+										</svg>
+									</button>
+								</div>
+							)}
+							{userSocial?.Twitter && (
+								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<button
+										type="button"
+										data-te-ripple-init
+										data-te-ripple-color="light"
+										class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-400"
 									>
-										<path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-									</svg>
-								</button>
-							</div>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-4 w-4"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+										</svg>
+									</button>
+								</div>
+							)}
 						</div>
 
 						<div class="flex justify-center my-4">
@@ -449,7 +477,11 @@ const EventDetails = () => {
 						{sortedListings &&
 							sortedListings.map((listing) => (
 								<div
-									onClick={() => navigateTo("/HomePage/EventDetails")}
+									onClick={() =>
+										navigateTo(
+											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
+										)
+									}
 									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 								>
 									<a class="block relative h-64 rounded overflow-hidden">
@@ -477,7 +509,6 @@ const EventDetails = () => {
 						<div class="">
 							<h6
 								class="
-
                     uppercase
                     font-semibold
                     mb-4

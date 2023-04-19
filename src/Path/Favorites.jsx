@@ -6,7 +6,7 @@ import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
 import { getListingsById } from "../Services/listingsApi";
-import {getFavorites} from "../Services/favoritesApi"
+import { getFavorites } from "../Services/favoritesApi";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -35,19 +35,18 @@ const Favorites = () => {
 	useEffect(() => {
 		getFavorites().then((response) => {
 			setFavListings([...sortRecent(response.data.data)]);
+			console.log("FavList", response.data.data);
 		});
 	}, []);
 	const [listings, setListings] = useState([]);
 	useEffect(() => {
 		favListings.forEach((fav) => {
-			getListingsById(fav.listingId,fav.cityId).then((response) => {
-			setListings([...sortRecent(response.data.data),...listings]);
+			getListingsById(fav.listingId, fav.cityId).then((response) => {
+				setListings([...sortRecent(response.data.data), ...listings]);
+				console.log("List", response.data.data);
 			});
-			
-		})
-	}, []);
-
-	
+		});
+	}, [favListings]);
 
 	//populate the events titles starts
 	const [categoriesdata, setCategoriesdata] = useState({
@@ -135,8 +134,7 @@ const Favorites = () => {
 								<h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
 									{selectedItemLocation}
 								</h1>
-								<div>
-								</div>
+								<div></div>
 							</div>
 						</div>
 					</div>
@@ -148,7 +146,11 @@ const Favorites = () => {
 					{listings &&
 						listings.map((favListings) => (
 							<div
-								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.listingId}&cityId=${favListings.cityId}`)}
+								onClick={() =>
+									navigateTo(
+										`/HomePage/EventDetails?listingId=${favListings.listingId}&cityId=${favListings.cityId}`
+									)
+								}
 								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 							>
 								<a className="block relative h-64 rounded overflow-hidden">

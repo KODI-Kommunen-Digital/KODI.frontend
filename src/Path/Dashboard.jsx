@@ -5,7 +5,7 @@ import SideBar from "../Components/SideBar";
 import {
 	getUserListings,
 	getProfile,
-	getUserByIds,
+	getProfileByIds,
 } from "../Services/usersApi";
 import { getListings, updateListingsData } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
 import { Select } from "@chakra-ui/react";
-import { FaBell } from 'react-icons/fa';
+import { FaBell } from "react-icons/fa";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -41,7 +41,7 @@ const Dashboard = () => {
 					ids.push(listing.userId);
 				}
 			});
-			getUserByIds(ids).then((res) => {
+			getProfileByIds(ids).then((res) => {
 				setUsersList(res.data.data);
 			});
 		}
@@ -185,9 +185,9 @@ const Dashboard = () => {
 										Expired
 									</a>
 									<a className="flex">
-										<FaBell style={{ color: 'white', position:'relative' }}/>
+										<FaBell style={{ color: "white", position: "relative" }} />
 										{/*{count > 0 && <span className="notification-count">{count}</span>}*/}
-									</a>								
+									</a>
 								</div>
 							</div>
 
