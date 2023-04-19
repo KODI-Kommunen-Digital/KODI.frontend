@@ -72,9 +72,10 @@ const Events = () => {
 		}, []);
 
 	//Navigate to Event Details page Starts
-		function goToEventDetailsPage(listing) {
+	function goToEventDetailsPage(listing) {
+				console.log("listing",listing)
 				navigateTo(
-					`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+					`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
 				);
 		}
 
