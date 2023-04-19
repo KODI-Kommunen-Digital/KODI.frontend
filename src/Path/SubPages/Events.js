@@ -18,9 +18,9 @@ import { getVillages } from "../../Services/villages";
 import { categoryByName, categoryById } from "../../Constants/categories";
 import {getListingsById} from '../../Services/listingsApi'
 
-import(
-	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-);
+// import(
+// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
+// );
 
 const Events = () => {
   window.scrollTo(0, 0);
