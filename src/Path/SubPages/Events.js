@@ -10,7 +10,7 @@ import {
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 
-import { getListings } from "../../Services/listingsApi";
+import { getListings , getListingsByCity } from "../../Services/listingsApi";
 
 import { getCities } from "../../Services/cities";
 import { getCategory , getCategoryListings } from "../../Services/CategoryApi";
@@ -23,167 +23,180 @@ import {getListingsById} from '../../Services/listingsApi'
 // );
 
 const Events = () => {
-  window.scrollTo(0, 0);
-  const { t, i18n } = useTranslation();
-  const [cityId, setCityId] = useState(0);
-  const [villages, setVillages] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [listingId, setListingId] = useState(0);
-  async function onCityChange(e) {
-    const cityId = e.target.value;
-    console.log(e.target.value)
-    setCityId(cityId);
-    setInput(prev => ({
-      ...prev,
-      villageId: 0
-    }));
-    getVillages(cityId).then(response =>
-      setVillages(response.data.data)
-    )
-  }
-  useEffect(() => {
-    getCities().then(citiesResponse => {
-      console.log(citiesResponse.data.data)
-      setCities(citiesResponse.data.data);
-  })}, []);
-
-    // Selected Items Deletion Starts
-    const selectedItem = localStorage.getItem('selectedItem');
-    // Selected Items Deletion Ends
-
-  const [input, setInput] = useState({
-    //"villageId": 1,
-    "categoryId": 0,
-    "subcategoryId": 0,
-    "sourceId": 1,
-    "userId": 2
-  });
-
-  const [listings, setListings] = useState([]);
-  const [categoryId, setCategoryId] = useState();
-  console.log(categoryId)
-  const [newListing, setNewListing] = useState(true);
-  const [description, setDescription] = useState("");
-	const [title, setTitle] = useState("");
-
-  //  useEffect(() => {
-  //    getListings({"categoryId":categoryId}).then((response) => {
-  //      setListings([...sortRecent((response.data.data))]);
-  //    });
-  // }, [categoryId]);
-
-  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-		getCategory().then((response) => {
-			console.log(response.data)
-		  const setCategories = sortRecent(response.data.data);
-		});
-	  }, []);
-
-  //Navigate to Event Details page Starts
-	function goToEventDetailsPage(listing) {
-			navigateTo(
-				`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
+	window.scrollTo(0, 0);
+	const { t, i18n } = useTranslation();
+	const [cityId, setCityId] = useState(0);
+	const [villages, setVillages] = useState([]);
+	const [cities, setCities] = useState([]);
+	const [listingId, setListingId] = useState(0);
+	async function onCityChange(e) {
+		const cityId = e.target.value;
+		setCityId(cityId);
+		setInput(prev => ({
+		...prev,
+		villageId: 0
+		}));
+		getVillages(cityId).then(response =>
+		setVillages(response.data.data)
+		)
 	}
+	useEffect(() => {
+		getCities().then(citiesResponse => {
+		setCities(citiesResponse.data.data);
+	})}, []);
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  // const sortedListings = [...listings].sort((a, b) => {
-  //   const dateA = new Date(a.date);
-  //   const dateB = new Date(b.date);
-  //   return dateB - dateA;
-  // });
-  // console.log(sortedListings)
+		// Selected Items Deletion Starts
+		const selectedItem = localStorage.getItem('selectedItem');
+		// Selected Items Deletion Ends
 
-  const handleCategoryChange = (event) => {
-    let categoryId;
-    // const cityId = event.target.value;
-		// setCityId(cityId);
-    switch (event.target.value) {
-      case "News":
-        categoryId = 1;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Road Works / Traffic":
-        categoryId = 2;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Events":
-        categoryId = 3;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Clubs":
-        categoryId = 4;
-        console.log("------------------" + event.target.value)
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Regional Products":
-        categoryId = 5;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Offer / Search":
-        categoryId = 6;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "New Citizen Info":
-        categoryId = 7;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Defect Report":
-        categoryId = 8;
-        console.log("------------------" + event.target.value)
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Lost And Found":
-        categoryId = 9;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Company Portraits":
-        categoryId = 10;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Carpooling And Public Transport":
-        categoryId = 11;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
-      case "Offers":
-        categoryId = 12;
-        setInput({ ...input, categoryId });
-        setSelectedCategory(event.target.value);
-      break;
+	const [input, setInput] = useState({
+		//"villageId": 1,
+		"categoryId": 0,
+		"subcategoryId": 0,
+		"sourceId": 1,
+		"userId": 2
+	});
 
-      default:
-        categoryId = 0;
-        break;
-    }
-    setCategoryId(categoryId);
+	const [listings, setListings] = useState([]);
+	const [categoryId, setCategoryId] = useState();
+	const [newListing, setNewListing] = useState(true);
+	const [description, setDescription] = useState("");
+		const [title, setTitle] = useState("");
 
-    if (categoryId && categoryId > 0) {
-      navigateTo(
-				`/Events?categoryId=${categoryId}`
-			);
-    }
-  };
+	const [categories, setCategories] = useState([]);
+		useEffect(() => {
+			getCategory().then((response) => {
+			const sortedCategories = sortRecent(response.data.data);
+			setCategories([...sortedCategories]);
+			});
+		}, []);
 
-  const handleLocationChange = (event) => {
-    const cityId = event.target.value;
-    console.log("this is city id " + cityId)
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("cityId", cityId);
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.pushState({}, "", newUrl);
-  };
+	//Navigate to Event Details page Starts
+		function goToEventDetailsPage(listing) {
+				navigateTo(
+					`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+				);
+		}
+
+	const [selectedCategory, setSelectedCategory] = useState("");
+
+	const handleCategoryChange = (event) => {
+		let categoryId;
+		switch (event.target.value) {
+		case "News":
+			categoryId = 1;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Road Works / Traffic":
+			categoryId = 2;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Events":
+			categoryId = 3;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Clubs":
+			categoryId = 4;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Regional Products":
+			categoryId = 5;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Offer / Search":
+			categoryId = 6;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "New Citizen Info":
+			categoryId = 7;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Defect Report":
+			categoryId = 8;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Lost And Found":
+			categoryId = 9;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Company Portraits":
+			categoryId = 10;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Carpooling And Public Transport":
+			categoryId = 11;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+		case "Offers":
+			categoryId = 12;
+			setInput({ ...input, categoryId });
+			setSelectedCategory(event.target.value);
+		break;
+
+		default:
+			categoryId = 0;
+			break;
+		}
+		setCategoryId(categoryId);
+		//setCityId(null);
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("categoryId", categoryId);
+		urlParams.delete("cityId");
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.pushState({}, "", newUrl);
+	};
+
+	const handleLocationChange = (event) => {
+		const cityId = event.target.value;
+		setCityId(cityId);
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("cityId", cityId);
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.pushState({}, "", newUrl);
+	};
+
+		useEffect(() => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const categoryIdParam = urlParams.get("categoryId");
+			const cityIdParam = urlParams.get("cityId");
+
+			if (categoryIdParam) {
+			  setCategoryId(categoryIdParam);
+			}
+
+			if (cityIdParam) {
+			  setCityId(cityIdParam);
+			}
+		  }, []);
+
+		useEffect(() => {
+			if (categoryId) {
+			  if (cityId) {
+				getListingsByCity(cityId, { categoryId }).then((response) => {
+					console.log("inside getListingsById" + cityId + "---------" + categoryId)
+				  const sortedListings = sortRecent(response.data.data);
+				  setListings(sortedListings);
+				});
+			  } else {
+				getListings({ categoryId }).then((response) => {
+					console.log("inside getListings"  + categoryId)
+				  const sortedListings = sortRecent(response.data.data);
+				  setListings(sortedListings);
+				});
+			  }
+			}
+		  }, [categoryId, cityId]);
 
   const [selectedSortOption, setSelectedSortOption] = useState('');
   function handleSortOptionChange(event) {
@@ -202,7 +215,6 @@ const Events = () => {
     switch (selectedSortOption) {
       case 'titleAZ':
         setListings([...sortByTitleAZ(listings)])
-        console.log(listings)
         break;
       case 'titleZA':
         setListings([...sortByTitleZA(listings)]);
@@ -249,9 +261,6 @@ const Events = () => {
 
   // Pre-select the corresponding filter option ends
 
-  // function handleLocationChange(event) {
-  //   setLocation(event.target.value);
-  // }
 
   function handleLocationSubmit(event) {
     event.preventDefault();
@@ -277,14 +286,6 @@ const Events = () => {
       <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
         <div class="w-full mr-0 ml-0">
           <div class="h-64 overflow-hidden px-1 py-1">
-            {/* <a class="block relative h-96 overflow-hidden">
-
-            <img
-              alt="ecommerce"
-              class="object-cover object-center h-full w-full"
-              src= {HOMEPAGEIMG}
-            />
-          </a> */}
 						<div class="relative h-64">
 							<img
 								alt="ecommerce"
@@ -298,15 +299,12 @@ const Events = () => {
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-											{/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                          {t("location")}
-                      </label> */}
 											{cities.map((city) => (
 												<select
 													id="button-filter"
 													name="country"
 													autocomplete="country-name"
-                          onChange={handleLocationChange}
+                          							onChange={handleLocationChange}
 													class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												>
 													<option class="font-sans" value="Default">
@@ -320,9 +318,6 @@ const Events = () => {
 										</div>
 
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-											{/* <label for="floatingInput" class="text-gray-700 font-bold font-sans">
-                          {t("category")}
-                      </label> */}
 											<select
 												id="button-filter"
 												name="country"
