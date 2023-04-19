@@ -15,6 +15,11 @@ import {
 	updateListingsData,
 } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
+import {
+	getFavorites,
+	postFavoriteListingsData,
+	deleteListingsById,
+} from "../../Services/favoritesApi";
 
 const EventDetails = () => {
 	window.scrollTo(0, 0);
@@ -25,7 +30,8 @@ const EventDetails = () => {
 	const [title, setTitle] = useState("");
 	const [userSocial, setUserSocial] = useState([]);
 	const [user, setUser] = useState();
-
+	const [successMessage, setSuccessMessage] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 	const [input, setInput] = useState({
 		//"villageId": 1,
 		categoryId: 0,
@@ -47,7 +53,7 @@ const EventDetails = () => {
 		zipCode: "",
 		discountedPrice: "",
 	});
-
+	const [favoriteId, setFavoriteId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
@@ -64,9 +70,21 @@ const EventDetails = () => {
 				});
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
+				getFavorites().then((response) => {
+					var favorite = response.data.data.filter(
+						(f) => f.listingId == listingId
+					)[0];
+					if (favorite) {
+						setFavoriteId(favorite.id);
+						setFavButton(t("Unfavorite"));
+					} else {
+						setFavoriteId(0);
+						setFavButton(t("Favorite"));
+					}
+				});
 			});
 		}
-	}, []);
+	}, [t]);
 
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
@@ -156,6 +174,15 @@ const EventDetails = () => {
 		document.title = "Heidi Home";
 	}, []);
 
+	const [selectedSortOption, setSelectedSortOption] = useState("");
+	const sortedListings = [...listings]
+		.sort((a, b) => {
+			const dateA = new Date(a.date);
+			const dateB = new Date(b.date);
+			return dateB - dateA;
+		})
+		.slice(0, 3);
+
 	function getCurrentLocation() {
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
@@ -175,9 +202,47 @@ const EventDetails = () => {
 	useEffect(() => {
 		if (user) {
 			setUserSocial(JSON.parse(user.socialMedia));
+			setUserName(user.username);
+			setProfilePic(user.image);
 		}
 	}, [user]);
+	const [handleClassName, setHandleClassName] = useState(
+		"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+	);
+	const [favButton, setFavButton] = useState("Favorite");
+	const handleFavorite = async (event) => {
+		try {
+			var postData = {
+				cityId: cityId,
+				listingId: listingId,
+			};
 
+			if (favoriteId !== 0) {
+				await deleteListingsById(favoriteId);
+				setFavoriteId(0);
+				setSuccessMessage(t("list removed from the favorites"));
+				setHandleClassName(
+					"text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2"
+				);
+				setFavButton(t("Unfavorite"));
+			} else {
+				postData.cityId
+					? postFavoriteListingsData(postData)
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
+					: console.log("Error");
+			}
+		} catch (error) {
+			setErrorMessage(t("Error", error));
+		}
+	};
 	return (
 		<section class="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
@@ -198,9 +263,12 @@ const EventDetails = () => {
 										<div class="flex items-center">
 											<button
 												type="button"
-												class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+												class={handleClassName}
+												onClick={() => handleFavorite()}
 											>
-												<span class="ml-1">{t("favourites")}</span>
+												<span class="ml-1">
+													{favoriteId !== 0 ? t("Unfavorite") : t("Favorite")}
+												</span>
 											</button>
 
 											<button
@@ -280,7 +348,7 @@ const EventDetails = () => {
 							</div>
 							<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 								<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
-									{user?.username}
+									{userName}
 								</h2>
 								<p class="leading-relaxed text-base dark:text-gray-900">
 									Uploaded 5 months ago.
@@ -289,7 +357,7 @@ const EventDetails = () => {
 						</div>
 
 						<div class="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1 justify-Start">
-							{userSocial.Facebook && (
+							{userSocial?.Facebook && (
 								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 									<button
 										type="button"
@@ -308,7 +376,7 @@ const EventDetails = () => {
 									</button>
 								</div>
 							)}
-							{userSocial.Instagram && (
+							{userSocial?.Instagram && (
 								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 									<button
 										type="button"
@@ -327,7 +395,7 @@ const EventDetails = () => {
 									</button>
 								</div>
 							)}
-							{userSocial.LinkedIn && (
+							{userSocial?.LinkedIn && (
 								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 									<button
 										type="button"
@@ -346,7 +414,7 @@ const EventDetails = () => {
 									</button>
 								</div>
 							)}
-							{userSocial.Youtube && (
+							{userSocial?.Youtube && (
 								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 									<button
 										type="button"
@@ -365,7 +433,7 @@ const EventDetails = () => {
 									</button>
 								</div>
 							)}
-							{userSocial.Twitter && (
+							{userSocial?.Twitter && (
 								<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 									<button
 										type="button"
@@ -406,10 +474,14 @@ const EventDetails = () => {
 				</h1>
 				<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
 					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-						{listings &&
-							listings.map((listing) => (
+						{sortedListings &&
+							sortedListings.map((listing) => (
 								<div
-									onClick={() => navigateTo("/HomePage/EventDetails")}
+									onClick={() =>
+										navigateTo(
+											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
+										)
+									}
 									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 								>
 									<a class="block relative h-64 rounded overflow-hidden">

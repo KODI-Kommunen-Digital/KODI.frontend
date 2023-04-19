@@ -12,6 +12,7 @@ import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePage from "./Path/HomePage";
 import Places from "./Path/SubPages/Places";
+import Favorites from "./Path/Favorites";
 import Below from "./Path/Below";
 import Fuchstal from "./Path/Fuchstal";
 import AppleVillage from "./Path/AppleVillage";
@@ -70,6 +71,7 @@ const App = () => {
 					<Route path="/ImprintPage" element={<ImprintPage />} />
 					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
+					<Route path="/Favorite" element={<Favorites/>}/>
 					<Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
 					<Route path="/OverviewPage" element={<OverviewPage />} />
