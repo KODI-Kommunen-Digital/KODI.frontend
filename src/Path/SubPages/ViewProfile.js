@@ -4,14 +4,9 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import LOGO from "../../assets/logo.png";
-import { getUserListings, getProfile } from "../../Services/usersApi";
-import {
-	getListingsByCity,
-	getListingsById,
-	postListingsData,
-	updateListingsData,
-} from "../../Services/listingsApi";
+
+import { getUserListings,getProfile } from "../../Services/usersApi";
+import {getListingsById} from '../../Services/listingsApi'
 import { getVillages } from "../../Services/villages";
 import {
 	sortByTitleAZ,
@@ -66,18 +61,14 @@ const ViewProfile = () => {
 		}
 	}, []);
 
-	//populate the events titles starts
-	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings([...sortOldest(response.data.data)]);
-		});
-	}, []);
-	const sortedListings = [...listings].sort((a, b) => {
-		const dateA = new Date(a.date);
-		const dateB = new Date(b.date);
-		return dateB - dateA;
-	});
+
+  //populate the events titles starts
+  const [listings, setListings] = useState([]);
+  useEffect(() => {
+    getUserListings().then((response) => {
+      setListings([...sortRecent((response.data.data))]);
+    });
+  }, []);
 
 	//populate the events titles Ends
 
@@ -352,58 +343,57 @@ const ViewProfile = () => {
 				</div>
 			</div>
 
-			<div class="mx-auto grid max-w-2xl gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
-				<div class="overflow-hidden sm:p-0 mt-8 px-0 py-0">
-					<div class="bg-white">
-						<div class="py-6 mt-4 mb-4 flex flex-col sm:flex-row gap-10 justify-between ">
-							<h1 class="text-lg text-center sm:text-left font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-								{t("profileEntries")}
-							</h1>
-							<div class="w-full sm:w-auto mr-0 sm:mr-0">
-								<select
-									id="country"
-									name="country"
-									value={selectedSortOption}
-									onChange={handleSortOptionChange}
-									autocomplete="country-name"
-									class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-								>
-									<option value="">{t("sort")}</option>
-									<option value="titleAZ">{t("atoztitle")}</option>
-									<option value="titleZA">{t("ztoatitle")}</option>
-									<option value="recent">{t("recent")}</option>
-									<option value="oldest">{t("oldest")}</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-						{sortedListings &&
-							sortedListings.map((listing) => (
-								<div
-									onClick={() => navigateTo("/HomePage/EventDetails")}
-									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-								>
-									<a class="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={HOMEPAGEIMG}
-										/>
-									</a>
-									<div class="mt-10">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-											{listing.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
-								</div>
-							))}
-					</div>
-				</div>
-			</div>
+      <div class="mx-auto grid max-w-2xl gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
+          <div class="overflow-hidden sm:p-0 mt-8 px-0 py-0">
+            <div class="bg-white">
+              <div class="py-6 mt-4 mb-4 flex flex-col sm:flex-row gap-10 justify-between ">
+                <h1 class="text-lg text-center sm:text-left font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                  {t("profileEntries")}
+                </h1>
+                <div class="w-full sm:w-auto mr-0 sm:mr-0">
+                  <select
+                    id="country"
+                    name="country"
+                    value={selectedSortOption}
+                    onChange={handleSortOptionChange}
+                    autocomplete="country-name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  >
+                    <option value="">{t("sort")}</option>
+                    <option value="titleAZ">{t("atoztitle")}</option>
+                    <option value="titleZA">{t("ztoatitle")}</option>
+                    <option value="recent">{t("recent")}</option>
+                    <option value="oldest">{t("oldest")}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+            <div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+              {listings && listings.map((listing) => (
+                <div
+                  onClick={() => navigateTo("/HomePage/EventDetails")}
+                  class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+                >
+                  <a class="block relative h-64 rounded overflow-hidden">
+                    <img
+                      alt="ecommerce"
+                      class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                      src={HOMEPAGEIMG}
+                    />
+                  </a>
+                  <div class="mt-10">
+                    <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                    {listing.title}
+                    </h2>
+                  </div>
+                  <div className="my-4 bg-gray-200 h-[1px]"></div>
+                </div>
+                ))}
+            </div>
+        </div>
+      </div>
 
 			<footer class="text-center lg:text-left bg-black text-white">
 				<div class="mx-6 py-10 text-center md:text-left">
