@@ -10,11 +10,13 @@
 	import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 	import { useTranslation } from "react-i18next";
 
-	import { getListings , getListingsByCity } from "../../Services/listingsApi";
+import { getListings , getListingsByCity } from "../../Services/listingsApi";
 
-	import { getCities } from "../../Services/cities";
-	import { getCategory } from "../../Services/CategoryApi";
-	import { getVillages } from "../../Services/villages";
+import { getCities } from "../../Services/cities";
+import { getCategory , getCategoryListings } from "../../Services/CategoryApi";
+import { getVillages } from "../../Services/villages";
+import { categoryByName, categoryById } from "../../Constants/categories";
+import {getListingsById} from '../../Services/listingsApi'
 
 	// import(
 	// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
@@ -257,9 +259,6 @@
 		const buttonFilter = document.getElementById("button-filter");
 		buttonFilter.value = filterName;
 	}
-
-	// Pre-select the corresponding filter option ends
-
 
 	function handleLocationSubmit(event) {
 		event.preventDefault();
@@ -616,4 +615,4 @@
 		);
 	};
 
-	export default Events;
+export default Events;

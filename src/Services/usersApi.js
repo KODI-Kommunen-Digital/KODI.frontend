@@ -1,13 +1,13 @@
 import axios from "../api/axiosInstance";
 
-function getUserId() {
+export function getUserId() {
 	return (
 		window.localStorage.getItem("userId") ||
 		window.sessionStorage.getItem("userId")
 	);
 }
 
-export async function getUserByIds(ids) {
+export async function getProfileByIds(ids) {
 	return axios.get(`/users?id=${ids}`);
 }
 
