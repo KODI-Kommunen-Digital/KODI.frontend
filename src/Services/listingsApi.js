@@ -1,11 +1,15 @@
 import axios from "../api/axiosInstance";
 
-export async function getListings(params) {
-    return axios.get(`/listings` , params);
+export async function getAllListings() {
+    return axios.get(`/listings`);
 }
 
-export async function getListingsByCity(cityId, parmas) {
-    return axios.get(`/cities/${cityId}/listings` , parmas);
+export async function getListings(params) {
+    return axios.get(`/listings?${Object.keys(params)}=${Object.values(params)}` , params);
+}
+
+export async function getListingsByCity(cityId, params) {
+    return axios.get(`/cities/${cityId}/listings?&${Object.keys(params)}=${Object.values(params)}`);
 }
 
 export async function getListingsById(cityId, listingsId) {
