@@ -193,94 +193,6 @@ function ListingsPage() {
     }
   };
 
-const [selectedCategory, setSelectedCategory] = useState("");
-const handleCategoryChange = (event) => {
-  let categoryId;
-  switch (event.target.value) {
-    case "news":
-      categoryId = 1;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "roadTraffic":
-      categoryId = 2;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "events":
-      categoryId = 3;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "club":
-      categoryId = 4;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "regionalProducts":
-      categoryId = 5;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "offerSearch":
-      categoryId = 6;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "newCitizenInfo":
-      categoryId = 7;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "defectReport":
-      categoryId = 8;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "lostAndFound":
-      categoryId = 9;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "companyPortaits":
-      categoryId = 10;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "carpoolingPublicTransport":
-      categoryId = 11;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-    case "offers":
-      categoryId = 12;
-      setInput({ ...input, categoryId });
-      setSelectedCategory(event.target.value);
-    break;
-
-    default:
-      categoryId = 0;
-      break;
-  }
-};
-
-  // const handleSubmit = async(event) =>{
-  //   setUpdating(true)
-  //   var requestPromise = newListing ? postListingsData(cityId, input) : updateListingsData(cityId, input, listingId);
-  //   requestPromise.then(response => {
-  //   setUpdating(false)
-  //     setAlertInfo({show: true, type:'success', message:t("listingUpdated")})
-  //     setInterval(() => {
-  //       setAlertInfo({show: false, type:"", message:null})
-  //     }, 5000)}).catch(error => {
-  //       setUpdating(false)
-  //       setAlertInfo({show: true, type:'danger', message:t("listingNotUpdated")})
-  //       setInterval(() => {
-  //         setAlertInfo({show: false, type:"", message:null})
-  //       }, 5000)
-  //     });
-  //   }
-
   const handleSubmit = async(event) =>{
     setUpdating(true);
     try {
@@ -306,27 +218,9 @@ const handleCategoryChange = (event) => {
         getListingsById(cityId, listingId).then(listingsResponse => {
           setInput(listingsResponse.data.data);
           setDescription(listingsResponse.data.data.description);
-          // if (listingsResponse.data.data.socialMedia)
-          //   setVal(JSON.parse(listingsResponse.data.data.socialMedia));
         });
       }
     }, []);
-
-  // useEffect(() => {
-  //   document.title = "Submit Listing";
-  //   async function fetchData(listingId) {
-  //     try {
-  //       const response = await getListingsByCity(listingId);
-  //       const listingData = response.data;
-  //       setInput(listingData);
-  //     } catch (error) {
-  //       console.error("Error fetching listing data:", error);
-  //     }
-  //   }
-
-  //   const listingId = "4";
-  //   fetchData(listingId);
-  // }, []);
 
   const onInputChange = e => {
     const { name, value } = e.target;
@@ -472,33 +366,11 @@ const handleCategoryChange = (event) => {
         document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
     }
   }, [map, selectedResult]);
-
-  // const [data, setData] = useState({
-  //   socialMedia: ""
-  // });
-  //Map integration Sending data to backend ends
-
-  // useEffect(() => {
-  //   document.title = "Club";
-  // }, []);
-
-  //Social Media Starts
-  // const handleAdd = (value) => {
-  //   setVal([...val, { socialMedia: value, selected: "" }]);
-  // };
-
-  // To update the `selected` property of the input object, you can add another function to handle the selection of an item in the `val` array, like this:
   const handleSelection = (index, value) => {
     const updatedVal = [...val];
     updatedVal[index].selected = value;
     setVal(updatedVal);
   };
-
-  // Then you can update the `selected` property of the `input` object in a similar way as the `socialMedia` property:
-  // useEffect(() => {
-  //   const socialMediaValues = val.map(item => item.socialMedia);
-  //   setInput(prevState => ({ ...prevState, socialMedia: socialMediaValues }));
-  // }, [val]);
 
   useEffect(() => {
     getCities().then(citiesResponse => {
@@ -515,14 +387,6 @@ const handleCategoryChange = (event) => {
     setVal(list);
   };
 
-  // const handleSocialMediaChanges = (e, index) => {
-  //   const { name, value } = e.target;
-  //   const list = [...val];
-  //   list[index][name] = value;
-  //   setVal(list);
-  //   setInput(prev => ({ ...prev, socialMedia: JSON.stringify(list) }));
-  // };
-
   async function onCityChange(e) {
     const cityId = e.target.value;
     setCityId(cityId);
@@ -537,11 +401,6 @@ const handleCategoryChange = (event) => {
 //Social Media ends
 
   const [date, setDate] = useState();
-
-  //const [selectedCategory, setSelectedCategory] = useState("Default");
-  // const handleCategoryChange = (event) => {
-  //   setSelectedCategory(event.target.value);
-  // };
   const [cityId, setCityId] = useState(0);
   const [villages, setVillages] = useState([]);
   const [cities, setCities] = useState([]);
@@ -556,6 +415,88 @@ const handleCategoryChange = (event) => {
       setVillages(response.data.data)
     )
   }
+
+    const [listings, setListings] = useState([]);
+    const [categoryId, setCategoryId] = useState();
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const selectedItem = localStorage.getItem('selectedItem');
+
+  const handleCategoryChange = (event) => {
+    let categoryId;
+    switch (event.target.value) {
+    case "News":
+        categoryId = 1;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Road Works / Traffic":
+        categoryId = 2;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Events":
+        categoryId = 3;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Clubs":
+        categoryId = 4;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Regional Products":
+        categoryId = 5;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Offer / Search":
+        categoryId = 6;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "New Citizen Info":
+        categoryId = 7;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Defect Report":
+        categoryId = 8;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Lost And Found":
+        categoryId = 9;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Company Portraits":
+        categoryId = 10;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Carpooling And Public Transport":
+        categoryId = 11;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Offers":
+        categoryId = 12;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+
+    default:
+        categoryId = 0;
+        break;
+    }
+    setCategoryId(categoryId);
+    //setCityId(null);
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("categoryId", categoryId);
+    urlParams.delete("cityId");
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, "", newUrl);
+};
 
   return (
     <section class="bg-slate-600 body-font relative">
@@ -647,48 +588,76 @@ const handleCategoryChange = (event) => {
                  class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
              >
                  <option class="font-sans" value="Default">
-                 {t("chooseOneCategory")}
-                 </option>
-                 <option class="font-sans" value="news">
-                 {t("news")}
-                 </option>
-                 <option class="font-sans" value="roadTraffic">
-                 {t("roadTraffic")}
-                 </option>
-                 <option class="font-sans" value="events">
-                 {t("events")}
-                 </option>
-                 <option class="font-sans" value="clubs">
-                 {t("clubs")}
-                 </option>
-                 <option class="font-sans" value="regionalProducts">
-                 {t("regionalProducts")}
-                 </option>
-                 <option class="font-sans" value="offerSearch">
-                 {t("offerSearch")}
-                 </option>
-                 <option class="font-sans" value="newCitizenInfo">
-                 {t("newCitizenInfo")}
-                 </option>
-                 <option class="font-sans" value="defectReport">
-                 {t("defectReport")}
-                 </option>
-                 <option class="font-sans" value="lostAndFound">
-                 {t("lostAndFound")}
-                 </option>
-                 <option class="font-sans" value="companyPortaits">
-                 {t("companyPortaits")}
-                 </option>
-                 <option class="font-sans" value="carpoolingPublicTransport">
-                 {t("carpoolingPublicTransport")}
-                 </option>
-                 <option class="font-sans" value="offers">
-                 {t("offers")}
-                 </option>
+														{selectedItem}
+													</option>
+													{selectedItem !== "News" ? (
+														<option value="News">{t("news")}</option>
+													) : null}
+													{selectedItem !== "Road Works / Traffic" ? (
+														<option
+															class="font-sans"
+															value="Road Works / Traffic"
+														>
+															{t("roadTraffic")}
+														</option>
+													) : null}
+													{selectedItem !== "Events" ? (
+														<option class="font-sans" value="Events">
+															{t("events")}
+														</option>
+													) : null}
+													{selectedItem !== "Clubs" ? (
+														<option class="font-sans" value="Clubs">
+															{t("clubs")}
+														</option>
+													) : null}
+													{selectedItem !== "Regional Products" ? (
+														<option class="font-sans" value="Regional Products">
+															{t("regionalProducts")}
+														</option>
+													) : null}
+													{selectedItem !== "Offer / Search" ? (
+														<option class="font-sans" value="Offer / Search">
+															{t("offerSearch")}
+														</option>
+													) : null}
+													{selectedItem !== "New Citizen Info" ? (
+														<option class="font-sans" value="New Citizen Info">
+															{t("newCitizenInfo")}
+														</option>
+													) : null}
+													{selectedItem !== "Defect Report" ? (
+														<option class="font-sans" value="Defect Report">
+															{t("defectReport")}
+														</option>
+													) : null}
+													{selectedItem !== "Lost And Found" ? (
+														<option class="font-sans" value="Lost And Found">
+															{t("lostAndFound")}
+														</option>
+													) : null}
+													{selectedItem !== "Company Portraits" ? (
+														<option class="font-sans" value="Company Portraits">
+															{t("companyPortaits")}
+														</option>
+													) : null}
+													{selectedItem !== "Carpooling And Public Transport" ? (
+														<option
+															class="font-sans"
+															value="Carpooling And Public Transport"
+														>
+															{t("carpoolingPublicTransport")}
+														</option>
+													) : null}
+													{selectedItem !== "Offers" ? (
+														<option class="font-sans" value="Offers">
+															{t("offers")}
+														</option>
+													) : null}
               </select>
             </div>
 
-            {selectedCategory === "news" && (
+            {selectedItem === "News" && (
             <div class="relative mb-4">
               <label for="newsdropdown" class="block text-sm font-medium text-gray-600">
                 Sub-Category
