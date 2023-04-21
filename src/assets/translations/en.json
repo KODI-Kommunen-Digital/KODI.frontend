@@ -58,6 +58,7 @@
   "pleaseEnterLastName": "Please enter last name",
   "acceptConditionMessage": "I hereby accept the privacy policy* and the terms and conditions*",
   "pleaseEnterZipCode": "Please enter zip code",
+  "Need_to_change_your_password":"Need to change your password?",
 
 
 
@@ -132,6 +133,7 @@
   "regionalProductsHeading": "Regional Products",
   "ownerInfo": "Add owner info",
   "viewProfile" : "View Profiles",
+  "Account_Settings": "Account Settings",
   "smilarItems": "Similar items",
 
   "contactInfo": "Contact Information",

@@ -13,6 +13,7 @@
   "clickToRegister": "Klicken Sie hier für die Anmeldung",
   "myEntries": "Meine Einträge",
   "myProfile": "Mein Profil",
+  "Account_Settings": "Account Einstellungen",
   "logOut": "Ausloggen",
   "publicInfoWarning": "Diese Informationen werden öffentlich angezeigt, seien Sie also vorsichtig, was Sie weitergeben",
   "information": "Informationen",
@@ -92,6 +93,7 @@
   "uploadAreaDescription": "Ob Veranstaltung, Angebote oder News. Hier können Sie ganz einfach einen Beitrag hochladen",
   "upload": "Beitrag hochladen",
   "viewMore": "Weitere Angebote ansehen......",
+  "Need_to_change_your_password":"",
 
   "filteryourResult": "Filtern Sie Ihr Ergebnis",
   "location": "Standort",

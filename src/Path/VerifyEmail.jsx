@@ -28,7 +28,7 @@ const VerifyEmail = () => {
 				}).then((res) => res.data.status);
 				setRedirect(true);
 				setTimeout(() => {
-					navigate("/");
+					navigateTo("/");
 				}, 5000);
 			} catch (e) {
 				response = e.response.data.status === "error" ? "Failed" : "";
@@ -37,7 +37,7 @@ const VerifyEmail = () => {
 			setRes(response);
 		}
 		_();
-	}, [navigate]);
+	}, [navigateTo]);
 
 	const [count, setCount] = useState(5);
 	const [redirect, setRedirect] = useState(false);

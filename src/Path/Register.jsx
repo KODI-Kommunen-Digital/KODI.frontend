@@ -64,8 +64,8 @@ const Register = () => {
       await register(input)
       setAlertInfo(true)
       setAlertType('success')
-      setAlertMessage('Registration Successfull. Redirecting to login page in 5s')
-      setTimeout(() => { routeChangeToLogin() }, 5000)
+      setAlertMessage('Registration Successfull. A mail has been sent to your email Id. Please verify to continue. \nRedirecting to login page in 10s')
+      setTimeout(() => { routeChangeToLogin() }, 10000)
     } catch (err) {
       setAlertInfo(true)
       setAlertType('danger')
@@ -276,7 +276,7 @@ const Register = () => {
               onClick={handleSubmit}
               disabled={!isChecked}
               id="finalbutton"
-              class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
+              class="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white  hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
             >
               <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg
