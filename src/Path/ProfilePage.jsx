@@ -142,84 +142,61 @@ class ProfilePage extends React.Component {
                 this.setErrorMessage("phoneNumber", "");
             }
         }
-        // if (event.target.name === "currentPassword") {
-        //     const enteredPassword = event.target.value;
-        //     const currentPassword = this.state.currentPassword;
-    
-        //     if (enteredPassword !== currentPassword) {
-        //         this.setShowError("currentPassword", true);
-        //         this.setErrorMessage("currentPassword", "The entered current password is incorrect. Please enter the correct current password");
-        //     } else {
-        //         this.setShowError("currentPassword", false);
-        //         this.setErrorMessage("currentPassword", "");
-        //     }
-        // } else if (event.target.name === "newPassword") {
-        //     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        //     if (!re.test(event.target.value)) {
-        //         this.setShowError("newPassword", true);
-        //         this.setErrorMessage("newPassword", "The entered new password is invalid. Please enter a valid new password");
-        //     } else {
-        //         this.setShowError("newPassword", false);
-        //         this.setErrorMessage("newPassword", "");
-        //     }
-        // } else if (event.target.name === "confirmPassword") {
-        //     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        //     if (!re.test(event.target.value) && event.target.value !== this.state.newPassword) {
-        //         this.setShowError("newPassword", true);
-        //         this.setErrorMessage("newPassword", "The entered passwords don't match. Please enter a valid password");
-        //     } else {
-        //         this.setShowError("newPassword", false);
-        //         this.setErrorMessage("newPassword", "");
-        //     }
-        // }
         this.setProfile(event.target.name, event.target.value);
     }
     updateChanges() {
         let valid = true;
         for (let property in this.state.showError) {
-            if (this.state.showError[property])
-                valid = false
+          if (this.state.showError[property]) {
+            valid = false;
+          }
         }
         if (valid) {
-            const newState = Object.assign({}, this.state);
-            if (newState.updatingProfile !== true) {
-                newState.updatingProfile = true;
-                this.setState(newState, () => {
-                    updateProfile(this.state.profile).then(() => {
-                        const newState = Object.assign({}, this.state);
-                        if (newState.updatingProfile !== false) {
-                            newState.updatingProfile = false;
-                            this.setState(newState, () => {
-                                this.setAlertInfo(true, "Your changes were saved succesfully", "success");
-                                setInterval(() => {
-                                    this.setAlertInfo(false, "", null)
-                            }, 5000)})
-                        }
-                    }).catch(() => {
-                        const newState = Object.assign({}, this.state);
-                        if (newState.updatingProfile !== false) {
-                            newState.updatingProfile = false;
-                            this.setState(newState, () => {
-                                this.setAlertInfo(true, "Your changes were not saved, please try after sometime!", "danger");
-                                setInterval(() => {
-                                    this.setAlertInfo(false, "", null)
-                            }, 5000)});
-                        }
-                    })
-                 });
-            }
+          const newState = Object.assign({}, this.state);
+          if (newState.updatingProfile !== true) {
+            newState.updatingProfile = true;
+            this.setState(newState, () => {
+              const updatedData = this.state.val.reduce((obj, data) => {
+                obj[data.selected] = data.socialMedia;
+                return obj;
+              }, {});
+              const updatedProfile = Object.assign({}, this.state.profile, { socialMedia: updatedData });
+              updateProfile(updatedProfile).then(() => {
+                const newState = Object.assign({}, this.state);
+                if (newState.updatingProfile !== false) {
+                  newState.updatingProfile = false;
+                  this.setState(newState, () => {
+                    this.setAlertInfo(true, "Your changes were saved succesfully", "success");
+                    setInterval(() => {
+                      this.setAlertInfo(false, "", null);
+                    }, 5000);
+                  });
+                }
+              }).catch(() => {
+                const newState = Object.assign({}, this.state);
+                if (newState.updatingProfile !== false) {
+                  newState.updatingProfile = false;
+                  this.setState(newState, () => {
+                    this.setAlertInfo(true, "Your changes were not saved, please try after sometime!", "danger");
+                    setInterval(() => {
+                      this.setAlertInfo(false, "", null);
+                    }, 5000);
+                  });
+                }
+              });
+            });
+          }
         } else {
-            this.setAlertInfo(true, "You have entered invalid data. Please correct and try again", "danger");
-            setInterval(() => {
-                this.setAlertInfo(false, "", null)
-                }, 5000);
+          this.setAlertInfo(true, "You have entered invalid data. Please correct and try again", "danger");
+          setInterval(() => {
+            this.setAlertInfo(false, "", null);
+          }, 5000);
         }
-    }
+      }
 
       handleAdd = (value) => {
         const { val } = this.state;
         this.setState({val: [...val, { selected: "" , socialMedia: value}]});
-        //console.log(this.state.val);
       };
 
       handleDelete = (index) => {
@@ -229,32 +206,39 @@ class ProfilePage extends React.Component {
             val: list,
             data: { socialMedia: JSON.stringify(list) }
         }, () => {
-            console.log(this.state.val);
         });
     };
 
-    handleSocialMediaChanges = (event, index) => {
-        const { name, value } = event.target;
-        this.setState(prevState => ({
-          val: prevState.val.map((data, i) =>
-            i === index ? { ...data, [name]: value } : data
-          )
-        }), () => {
-          const updatedData = this.state.val.reduce((obj, data) => {
-            obj[data.selected] = data.socialMedia;
-            return obj;
-          }, {});
-          console.log(updatedData);
-        });
-      }
-
-      componentDidUpdate(prevProps, prevState) {
-        const { val } = this.state;
-        if (val !== prevState.val) {
-          const socialMediaValues = val.map(item => item.socialMedia);
-          this.setState(prevState => ({ input: {...prevState.input, socialMedia: socialMediaValues } }));
+        handleSocialMediaChanges = (event, index) => {
+            const { name, value } = event.target;
+            this.setState(prevState => ({
+            val: prevState.val.map((data, i) =>
+                i === index ? { ...data, [name]: value } : data
+            )
+            }), () => {
+            const updatedData = this.state.val.reduce((obj, data) => {
+                obj[data.selected] = data.socialMedia;
+                return obj;
+            }, {});
+            console.log(updatedData);
+            this.setState(prevState => ({
+                input: {
+                ...prevState.input,
+                socialMedia: updatedData[event.target.value]
+                }
+            }));
+            });
         }
-      }
+
+            componentDidUpdate(prevProps, prevState) {
+                const { val } = this.state;
+                if (val !== prevState.val) {
+                const socialMediaValues = val.map(item => item.socialMedia).join(','); // join the array of strings into a single string
+                this.setState(prevState => ({
+                    input: { ...prevState.input, socialMedia: socialMediaValues }
+                }));
+                }
+            }
 
       handleUpdatePassword = () => {
         const { currentPassword, newPassword, confirmPassword } = this.state;

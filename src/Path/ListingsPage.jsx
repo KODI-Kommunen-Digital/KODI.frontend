@@ -143,56 +143,6 @@ function ListingsPage() {
     discountedPrice:''
   })
 
-  const [selectedSubCategory, setSelectedSubCategory] = useState('');
-  const handleSubcategoryChange = (event) => {
-    let subcategoryId;
-    switch (event.target.value) {
-      case "newsflash":
-        subcategoryId = 1;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "alerts":
-        subcategoryId = 2;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "politics":
-        subcategoryId = 3;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "ecocomy":
-        subcategoryId = 4;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "sports":
-        subcategoryId = 5;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "tod":
-        subcategoryId = 6;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "local":
-        subcategoryId = 7;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      case "clubnews":
-        subcategoryId = 8;
-        setInput({ ...input, subcategoryId });
-        setSelectedSubCategory(event.target.value);
-      break;
-      default:
-        subcategoryId = 0;
-        break;
-    }
-  };
-
   const handleSubmit = async(event) =>{
     setUpdating(true);
     try {
@@ -419,7 +369,61 @@ function ListingsPage() {
     const [listings, setListings] = useState([]);
     const [categoryId, setCategoryId] = useState();
     const [selectedCategory, setSelectedCategory] = useState("");
-    const selectedItem = localStorage.getItem('selectedItem');
+    const [subcategoryId, setSubcategoryId] = useState();
+    //const selectedItem = localStorage.getItem('selectedItem');
+    const [selectedItem, setSelectedItem] = useState(localStorage.getItem('selectedItem'));
+
+    function handleSelectedItemChange(newValue) {
+      setSelectedItem(newValue);
+      localStorage.setItem('selectedItem', newValue);
+    }
+
+    useEffect(() => {
+      let categoryId = 0;
+      switch (selectedItem) {
+        case "News":
+          categoryId = 1;
+          break;
+        case "Road Works / Traffic":
+          categoryId = 2;
+          break;
+          case "Events":
+            categoryId = 3;
+        break;
+        case "Clubs":
+            categoryId = 4;
+        break;
+        case "Regional Products":
+            categoryId = 5;
+        break;
+        case "Offer / Search":
+            categoryId = 6;
+        break;
+        case "New Citizen Info":
+            categoryId = 7;
+        break;
+        case "Defect Report":
+            categoryId = 8;
+        break;
+        case "Lost And Found":
+            categoryId = 9;
+        break;
+        case "Company Portraits":
+            categoryId = 10;
+        break;
+        case "Carpooling And Public Transport":
+            categoryId = 11;
+        break;
+        case "Offers":
+            categoryId = 12;
+        break;
+        default:
+          categoryId = 0;
+          break;
+      }
+      setInput(prevInput => ({ ...prevInput, categoryId }));
+      setCategoryId(categoryId);
+    }, [selectedItem]);
 
   const handleCategoryChange = (event) => {
     let categoryId;
@@ -489,14 +493,75 @@ function ListingsPage() {
         categoryId = 0;
         break;
     }
-    setCategoryId(categoryId);
-    //setCityId(null);
+    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setSubcategoryId(null);
+    handleSelectedItemChange(event.target.value);
+
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("categoryId", categoryId);
-    urlParams.delete("cityId");
+    urlParams.delete("subcategoryId");
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.pushState({}, "", newUrl);
 };
+
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+  const handleSubcategoryChange = (event) => {
+    let subcategoryId;
+    switch (event.target.value) {
+      case "newsflash":
+        subcategoryId = 1;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "alerts":
+        subcategoryId = 2;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "politics":
+        subcategoryId = 3;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "ecocomy":
+        subcategoryId = 4;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "sports":
+        subcategoryId = 5;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "tod":
+        subcategoryId = 6;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "local":
+        subcategoryId = 7;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "clubnews":
+        subcategoryId = 8;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      default:
+        subcategoryId = 0;
+        break;
+    }
+    setInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setSubcategoryId(subcategoryId);
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("subcategoryId", subcategoryId);
+    if (subcategoryId === 0) {
+      urlParams.delete("subCategoryId");
+    }
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, "", newUrl);
+  };
 
   return (
     <section class="bg-slate-600 body-font relative">
