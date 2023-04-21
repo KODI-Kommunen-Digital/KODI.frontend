@@ -33,6 +33,8 @@
   "chooseFile": "Choose file",
   "dragNDrop": "Drag & Drop",
   "saveChanges": "Save changes",
+  "deleteAccount": "Delete Account",
+  "need_to_delete_account": "Need to delete your account ?",
   "telephoneNumber": "Telephone Number",
   "enterTitle": "Enter your title",
   "selectTime": "Select Time",

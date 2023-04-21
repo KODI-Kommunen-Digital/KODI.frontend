@@ -22,8 +22,8 @@ const PasswordUpdate = () => {
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
 	let navigate = useNavigate();
-	const routeChangeToLogin = () => {
-		let path = `/`;
+	const routeChangeToSettings = () => {
+		let path = `/AccountSettings`;
 		navigate(path);
 	};
 
@@ -59,7 +59,7 @@ const PasswordUpdate = () => {
 			setAlertInfo(true);
 			setAlertType("success");
 			setAlertMessage("Your password is updated");
-			routeChangeToLogin();
+			routeChangeToSettings();
 		} catch (err) {
 			setAlertInfo(true);
 			setAlertType("danger");
@@ -206,16 +206,6 @@ const PasswordUpdate = () => {
 							<Alert type={alertType} message={alertMessage} />
 						</div>
 					)}
-					{/* <div class="text-sm">
-						{t("accountPresent")}
-						<span
-							onClick={routeChangeToLogin}
-							class="font-medium cursor-pointer text-black hover:text-gray-500"
-						>
-							{t(" ")}
-							{t("loginHere")}
-						</span>
-					</div> */}
 				</form>
 			</div>
 		</div>
