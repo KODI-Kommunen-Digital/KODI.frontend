@@ -1,87 +1,177 @@
 import React, { useState, useEffect } from "react";
-import { verifyEmail } from "../Services/usersApi";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../Components/HomePageNavBar";
+import { getDashboarddata } from "../Services/dashboarddata";
+import { useNavigate } from "react-router-dom";
+import HOMEPAGEIMG from "../assets/homeimage.jpg";
+import { useTranslation } from "react-i18next";
+import { getCategoriesdata } from "../Services/CategoriesData";
+import { getListingsById } from "../Services/listingsApi";
+import { getFavorites } from "../Services/favoritesApi";
+import {
+	sortByTitleAZ,
+	sortByTitleZA,
+	sortRecent,
+	sortOldest,
+} from "../Services/helper";
 
-const VerifyEmail = () => {
-	const { t, i18n } = useTranslation();
+const Favorites = () => {
 	window.scrollTo(0, 0);
+	const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+	useEffect(() => {
+		getDashboarddata().then((response) => {
+			setDashboarddata(response);
+		});
+		document.title = selectedItemLocation;
+	}, []);
+
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
 			navigate(path);
 		}
 	};
-	const [res, setRes] = useState();
-	useEffect(() => {
-		async function _() {
-			var url = window.location;
-			var access_token = new URLSearchParams(url.search).get("token");
-			var userId = new URLSearchParams(url.search).get("userId");
-			var lang = new URLSearchParams(url.search).get("lang");
-			try {
-				var response = await verifyEmail({
-					token: access_token,
-					userId: userId,
-					language: lang,
-				}).then((res) => res.data.status);
-				setRedirect(true);
-				setTimeout(() => {
-					navigateTo("/");
-				}, 5000);
-			} catch (e) {
-				response = e.response.data.status === "error" ? "Failed" : "";
-			}
 
-			setRes(response);
+	const [favListings, setFavListings] = useState([]);
+	useEffect(() => {
+		getFavorites().then((response) => {
+			setFavListings([...sortRecent(response.data.data)]);
+			console.log("FavList", response.data.data);
+		});
+	}, []);
+	const [listings, setListings] = useState([]);
+	useEffect(() => {
+		favListings.forEach((fav) => {
+			getListingsById(fav.listingId, fav.cityId).then((response) => {
+				setListings([...sortRecent(response.data.data), ...listings]);
+				console.log("List", response.data.data);
+			});
+		});
+	}, [favListings]);
+
+	//populate the events titles starts
+	const [categoriesdata, setCategoriesdata] = useState({
+		categoriesListings: [],
+	});
+	useEffect(() => {
+		getCategoriesdata().then((response) => {
+			setCategoriesdata(response);
+		});
+		document.title = selectedItemLocation;
+	}, []);
+
+	//populate the events titles Ends
+	// Selected Items Deletion Starts
+	const selectedItemLocation = localStorage.getItem("selectedItemLocation");
+	// Selected Items Deletion Ends
+
+	function handleDashboardChange(event) {
+		setDashboarddata({
+			...dashboarddata,
+			[event.target.name]: event.target.value,
+		});
+	}
+	// Selected Items Deletion Starts
+	const selectedItem = localStorage.getItem("selectedItem");
+	// Selected Items Deletion Ends
+
+	const [selectedSortOption, setSelectedSortOption] = useState("");
+	function handleSortOptionChange(event) {
+		setSelectedSortOption(event.target.value);
+	}
+
+	useEffect(() => {
+		switch (selectedSortOption) {
+			case "titleAZ":
+				setFavListings([...sortByTitleAZ(favListings)]);
+				break;
+			case "titleZA":
+				setFavListings([...sortByTitleZA(favListings)]);
+				break;
+			case "recent":
+				setFavListings([...sortRecent(favListings)]);
+				break;
+			case "oldest":
+				setFavListings([...sortOldest(favListings)]);
+				break;
+			default:
+				break;
 		}
-		_();
-	}, [navigateTo]);
+	}, [selectedSortOption]);
 
-	const [count, setCount] = useState(5);
-	const [redirect, setRedirect] = useState(false);
-	useEffect(() => {
-		const timer = setTimeout(() => {
-		  if (count > 0) {
-			setCount(count - 1);
-		  } else {
-			setRedirect(true);
-			//window.location.href = '/';
-		  }
-		}, 1000);
-		return () => clearTimeout(timer);
-	  }, [count]);
+	const [content, setContent] = useState("A");
+	const handleButtonClick = (value) => {
+		setContent(value);
+	};
+
+	const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
+
+	const customerServiceData = () => {
+		setcustomerServiceDataload(true);
+		setSelectedLink("customerService");
+	};
+	const onCancel = () => {
+		setcustomerServiceDataload(false);
+		setSelectedLink("current");
+	};
+
+	const [selectedLink, setSelectedLink] = useState("current");
+
+	const { t, i18n } = useTranslation();
 
 	return (
-		<section>
+		<section class="text-gray-600 body-font relative">
 			<HomePageNavBar />
-		<div class="flex items-center justify-center">
-			<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">The Email Verification was successfull !</h1>
-		</div>
-
-		<div class="flex items-center justify-center">
-			<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">The Verification was successfull. Now you can use HEIDI to its full extend.</h1>
-		</div>
-
-		<div class="flex items-center justify-center">
-				<button
-					type="submit"
-					onClick={() => navigateTo("/")}
-					class="w-96 mt-20 mx-auto rounded bg-black px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
-				>
-					{t("goback")}
-				</button></div>
-
-				<div className="flex items-center justify-center">
-					{redirect ? (
-						<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">Please wait. It wont take much long</h1>
-					) : (
-						<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">Redirecting in ( {count} ) seconds...</h1>
-					)}
+			<div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+				<div class="w-full mr-0 ml-0">
+					<div class="h-64 overflow-hidden px-1 py-1">
+						<div class="relative h-64">
+							<img
+								alt="ecommerce"
+								class="object-cover object-center h-full w-full"
+								src={HOMEPAGEIMG}
+							/>
+							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+								<h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
+									{selectedItemLocation}
+								</h1>
+								<div></div>
+							</div>
+						</div>
+					</div>
 				</div>
+			</div>
 
-				<footer class="text-center lg:text-left bg-black text-white">
+			<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+					{listings &&
+						listings.map((favListings) => (
+							<div
+								onClick={() =>
+									navigateTo(
+										`/HomePage/EventDetails?listingId=${favListings.listingId}&cityId=${favListings.cityId}`
+									)
+								}
+								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+							>
+								<a className="block relative h-64 rounded overflow-hidden">
+									<img
+										alt="ecommerce"
+										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+										src={HOMEPAGEIMG}
+									/>
+								</a>
+								<div className="mt-10">
+									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+										{favListings.title}
+									</h2>
+								</div>
+								<div className="my-4 bg-gray-200 h-[1px]"></div>
+							</div>
+						))}
+				</div>
+			</div>
+
+			<footer class="text-center lg:text-left bg-black text-white">
 				<div class="mx-6 py-10 text-center md:text-left">
 					<div class="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 						<div class="">
@@ -225,4 +315,4 @@ const VerifyEmail = () => {
 	);
 };
 
-export default VerifyEmail;
+export default Favorites;
