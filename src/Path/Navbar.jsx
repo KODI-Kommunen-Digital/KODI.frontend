@@ -51,7 +51,7 @@ function filterData() {
               class="mx-auto h-10 w-auto cursor-pointer"
               src={LOGO}
               alt="HEDI- Heimat Digital"
-              onClick={() => navigateTo("/HomePage")}
+              onClick={() => navigateTo("/")}
             />
           </div>
 

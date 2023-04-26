@@ -76,7 +76,6 @@ const LoginPage = () => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
-			console.log("-------------" + pwd)
 			var response = await login({
 				username: user,
 				password: pwd,
@@ -104,6 +103,7 @@ const LoginPage = () => {
 			setRememberMe(false);
 			routeChangeToDashboard();
 		} catch (err) {
+			console.log(err)
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");

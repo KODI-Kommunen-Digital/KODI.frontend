@@ -62,11 +62,11 @@ instance.interceptors.response.use(
 					return instance(originalRequest);
 				} catch (refreshError) {
 					// If refreshing the token fails, redirect to login
-					window.location.href = "/";
+					window.location.href = "/login";
 					return Promise.reject(refreshError);
 				}
 			} else {
-				window.location.href = "/";
+				window.location.href = "/login";
 				return Promise.reject(error);
 			}
 		}

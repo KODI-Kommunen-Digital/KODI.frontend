@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../Resource/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
-import { getProfile, updateProfile } from "../Services/usersApi";
+import { getProfile } from "../Services/usersApi";
 
 function SideBar({ handleGetAllListings, handleGetUserListings }) {
 	const { t, i18n } = useTranslation();
@@ -18,7 +18,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 			window.sessionStorage.removeItem("refreshToken");
 			window.sessionStorage.removeItem("userId");
 			setLoggedIn(false);
-			window.location.href = "/HomePage";
+			window.location.href = "/";
 		} catch (error) {
 			console.log(error);
 		}
@@ -40,13 +40,11 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
-	const [username, setUsername] = useState("");
 	const [profilePic, setProfilePic] = useState("");
 	const [userRole, setUserRole] = useState(3);
 	useEffect(() => {
 		getProfile()
 			.then((response) => {
-				setUsername(response.data.data.username);
 				setFirstname(response.data.data.firstname);
 				setLastname(response.data.data.lastname);
 				setProfilePic(response.data.data.image);
@@ -75,7 +73,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 				<div className="text-gray-100 text-xl">
 					<div className="p-2.5 mt-1 flex items-center">
 						<img
-							onClick={() => navigateTo("/HomePage")}
+							onClick={() => navigateTo("/")}
 							className="p-5 cursor-pointer"
 							src={logo}
 							alt="HEDI- Heimat Digital"
