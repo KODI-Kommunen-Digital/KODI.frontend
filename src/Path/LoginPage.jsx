@@ -107,6 +107,7 @@ const LoginPage = () => {
 			setRememberMe(false);
 			routeChangeToDashboard();
 		} catch (err) {
+			console.log(err)
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");

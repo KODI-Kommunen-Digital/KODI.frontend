@@ -28,7 +28,7 @@ const VerifyEmail = () => {
 				}).then((res) => res.data.status);
 				setRedirect(true);
 				setTimeout(() => {
-					navigateTo("/");
+					navigateTo("/login");
 				}, 5000);
 			} catch (e) {
 				response = e.response.data.status === "error" ? "Failed" : "";
@@ -72,7 +72,7 @@ const VerifyEmail = () => {
 			<div class="flex items-center justify-center">
 				<button
 					type="submit"
-					onClick={() => navigateTo("/")}
+					onClick={() => navigateTo("/login")}
 					class="w-96 mt-20 mx-auto rounded bg-black px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 				>
 					{t("goback")}
@@ -190,7 +190,7 @@ const VerifyEmail = () => {
 								</a>
 							</p>
 							<p class="mb-4">
-								<a href="/" class="text-gray-600 font-sans">
+								<a href="/login" class="text-gray-600 font-sans">
 									Log in
 								</a>
 							</p>

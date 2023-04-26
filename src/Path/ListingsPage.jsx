@@ -103,7 +103,7 @@ function ListingsPage() {
     //"villageId": 1,
     "categoryId": 0,
     "subcategoryId": 0,
-    "statusId": 'pending',
+    "statusId": 3,
     "sourceId": 1,
     "userId": 2,
     title:'',

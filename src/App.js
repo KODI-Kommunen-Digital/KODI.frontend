@@ -50,7 +50,7 @@ const App = () => {
 		<BrowserRouter>
 			<div>
 				<Routes>
-					<Route path="/HomePage" element={<HomePage />} />
+					<Route path="/" element={<HomePage />} />
 					<Route path="/Places" element={<Places />} />
 					<Route path="/Below" element={<Below />} />
 					<Route path="/Fuchstal" element={<Fuchstal />} />
@@ -68,7 +68,7 @@ const App = () => {
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-					<Route path="/" element={<LoginPage />} />
+					<Route path="/login" element={<LoginPage />} />
 					<Route path="/Register" element={<Register />} />
 					<Route path="/ImprintPage" element={<ImprintPage />} />
 					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
