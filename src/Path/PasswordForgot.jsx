@@ -21,7 +21,7 @@ const PasswordForgot = () => {
 
   let navigate = useNavigate();
   const routeChangeToLogin = () => {
-    let path = `/`;
+    let path = `/login`;
     navigate(path);
   };
 

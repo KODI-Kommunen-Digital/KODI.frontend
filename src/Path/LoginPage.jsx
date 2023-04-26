@@ -11,7 +11,6 @@ const LoginPage = () => {
 	const { t, i18n } = useTranslation();
 
 	const userRef = useRef();
-	//const errRef = useRef();
 	const [rememberMe, setRememberMe] = useState(false);
 	const [forgotPassword, setForgotPassword] = useState(false);
 	const [alertInfo, setAlertInfo] = useState(false);
@@ -20,7 +19,6 @@ const LoginPage = () => {
 	const [user, setUser] = useState("");
 	const [userReset, setUserReset] = useState("");
 	const [pwd, setPwd] = useState("");
-	//const [errMsg, setErrMsg] = useState('');
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
@@ -29,7 +27,7 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 	}, []);
 
-	//const [password, setPassword] = useState('');
+
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handlePasswordChange = (event) => {
@@ -40,8 +38,8 @@ const LoginPage = () => {
 		setShowPassword(!showPassword);
 	};
 
-	const routeChangeToDashboard = useCallback(() => {
-		let path = `/Dashboard`;
+	const routeChangeToUpload = useCallback(() => {
+		let path = `/UploadListings`;
 		navigate(path);
 	});
 
@@ -54,7 +52,7 @@ const LoginPage = () => {
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
-			routeChangeToDashboard();
+			routeChangeToUpload();
 		}
 	}, []);
 	// useEffect(() => {
@@ -105,7 +103,7 @@ const LoginPage = () => {
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
-			routeChangeToDashboard();
+			routeChangeToUpload();
 		} catch (err) {
 			console.log(err)
 			setLoginLoading(false);

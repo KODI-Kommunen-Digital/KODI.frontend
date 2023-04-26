@@ -94,11 +94,11 @@ const Dashboard = () => {
 			);
 		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
 			navigateTo(
-				`/ListingsPage/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.EventsOrNews) {
 			navigateTo(
-				`/ListingsPage/Events?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/Events?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Associations) {
 			navigateTo(
@@ -106,27 +106,27 @@ const Dashboard = () => {
 			);
 		} else if (categoryId == categoryByName.RegionalProducts) {
 			navigateTo(
-				`/ListingsPage/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.OfferOrSearch) {
 			navigateTo(
-				`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.NewCitizenInfo) {
 			navigateTo(
-				`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.DefectReport) {
 			navigateTo(
-				`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.LostPropertyOffice) {
 			navigateTo(
-				`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.CompanyPortraits) {
 			navigateTo(
-				`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.News) {
 			navigateTo(
@@ -134,7 +134,7 @@ const Dashboard = () => {
 			);
 		} else if (categoryId == categoryByName.Offers) {
 			navigateTo(
-				`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/UploadListings/Offers?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		}
 	}

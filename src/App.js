@@ -25,7 +25,7 @@ import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
 
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
-import ListingsPage from "./Path/ListingsPage";
+import UploadListings from "./Path/UploadListings";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 
@@ -64,7 +64,7 @@ const App = () => {
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/AccountSettings" element={<AccountSettings />} exact />
-					<Route path="/ListingsPage" element={<ListingsPage />} exact />
+					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
