@@ -7,7 +7,11 @@ import {
 	getProfile,
 	getProfileByIds,
 } from "../Services/usersApi";
-import { getListings, getAllListings, updateListingsData } from "../Services/listingsApi";
+import {
+	getListings,
+	getAllListings,
+	updateListingsData,
+} from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
@@ -191,7 +195,13 @@ const Dashboard = () => {
 										Expired
 									</a>
 									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
-										<FaBell style={{ color: 'white', position:'relative', fontSize:'15px' }}/>
+										<FaBell
+											style={{
+												color: "white",
+												position: "relative",
+												fontSize: "15px",
+											}}
+										/>
 										{/*{count > 0 && <span className="notification-count">{count}</span>}*/}
 									</a>
 								</div>
