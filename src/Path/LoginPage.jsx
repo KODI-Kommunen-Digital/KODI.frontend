@@ -11,7 +11,6 @@ const LoginPage = () => {
 	const { t, i18n } = useTranslation();
 
 	const userRef = useRef();
-	//const errRef = useRef();
 	const [rememberMe, setRememberMe] = useState(false);
 	const [forgotPassword, setForgotPassword] = useState(false);
 	const [alertInfo, setAlertInfo] = useState(false);
@@ -20,7 +19,6 @@ const LoginPage = () => {
 	const [user, setUser] = useState("");
 	const [userReset, setUserReset] = useState("");
 	const [pwd, setPwd] = useState("");
-	//const [errMsg, setErrMsg] = useState('');
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
@@ -29,7 +27,7 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 	}, []);
 
-	//const [password, setPassword] = useState('');
+
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handlePasswordChange = (event) => {
@@ -40,8 +38,8 @@ const LoginPage = () => {
 		setShowPassword(!showPassword);
 	};
 
-	const routeChangeToDashboard = useCallback(() => {
-		let path = `/Dashboard`;
+	const routeChangeToUpload = useCallback(() => {
+		let path = `/UploadListings`;
 		navigate(path);
 	});
 
@@ -54,7 +52,7 @@ const LoginPage = () => {
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
-			routeChangeToDashboard();
+			routeChangeToUpload();
 		}
 	}, []);
 	// useEffect(() => {
@@ -76,18 +74,21 @@ const LoginPage = () => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
-			console.log("-------------" + pwd)
 			var response = await login({
 				username: user,
 				password: pwd,
-			  });
+			});
 			setLoginLoading(false);
-			console.log(response.data)
 			if (rememberMe) {
-				window.localStorage.setItem('accessToken', response.data.data.accessToken);
-				window.localStorage.setItem('refreshToken', response.data.data.refreshToken);
-				window.localStorage.setItem('userId', response.data.data.userId);
-
+				window.localStorage.setItem(
+					"accessToken",
+					response.data.data.accessToken
+				);
+				window.localStorage.setItem(
+					"refreshToken",
+					response.data.data.refreshToken
+				);
+				window.localStorage.setItem("userId", response.data.data.userId);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -102,8 +103,9 @@ const LoginPage = () => {
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
-			routeChangeToDashboard();
+			routeChangeToUpload();
 		} catch (err) {
+			console.log(err)
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
@@ -167,7 +169,7 @@ const LoginPage = () => {
 									{t("password")}
 								</label>
 								<input
-									type={showPassword ? 'text' : 'password'}
+									type={showPassword ? "text" : "password"}
 									id="password"
 									name="password"
 									value={pwd}
@@ -181,7 +183,7 @@ const LoginPage = () => {
 									className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700 focus:outline-none"
 									onClick={toggleShowPassword}
 								>
-									{showPassword ? 'Hide' : 'Show'}
+									{showPassword ? "Hide" : "Show"}
 								</button>
 							</div>
 						</div>

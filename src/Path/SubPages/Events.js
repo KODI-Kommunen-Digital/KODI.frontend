@@ -561,7 +561,7 @@ import { getVillages } from "../../Services/villages";
 								</a>
 							</p>
 							<p class="mb-4">
-								<a href="/" class="text-gray-600 font-sans">
+								<a href="/login" class="text-gray-600 font-sans">
 									Log in
 								</a>
 							</p>

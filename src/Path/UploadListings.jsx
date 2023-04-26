@@ -11,7 +11,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 
 
-function ListingsPage() {
+function UploadListings() {
   //window.scrollTo(0, 0);
   //const category = 4;
   //const subCategory = 0;
@@ -103,7 +103,7 @@ function ListingsPage() {
     //"villageId": 1,
     "categoryId": 0,
     "subcategoryId": 0,
-    "statusId": 'pending',
+    "statusId": 3,
     "sourceId": 1,
     "userId": 2,
     title:'',
@@ -1264,4 +1264,4 @@ function ListingsPage() {
   );
 }
 
-export default ListingsPage;
+export default UploadListings;

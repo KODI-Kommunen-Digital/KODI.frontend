@@ -40,7 +40,7 @@
 
     function goToListingsPage(category) {
         navigateTo(
-            `/ListingsPage?categoryId=${category}`
+            `/UploadListings?categoryId=${category}`
         );
     }
 
