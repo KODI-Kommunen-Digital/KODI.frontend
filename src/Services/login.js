@@ -1,4 +1,5 @@
-import axios from "../api/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
+import axios from "axios";
 
 function getUserId() {
 	return (
@@ -8,9 +9,12 @@ function getUserId() {
 }
 
 export async function login(credentials) {
-	return axios.post(`/users/login`, credentials);
+	return axios.post(
+		`${process.env.REACT_APP_API_BASE_URL}/users/login`,
+		credentials
+	);
 }
 
 export async function logout(credentials) {
-	return axios.post(`/${getUserId()}/logout`, credentials);
+	return axiosInstance.post(`/${getUserId()}/logout`, credentials);
 }
