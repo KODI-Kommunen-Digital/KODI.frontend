@@ -185,14 +185,12 @@ import { getVillages } from "../../Services/villages";
 				if (categoryId) {
 				if (cityId) {
 					getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
-						console.log("inside getListingsById" + cityId + "---------" + categoryId)
 						console.log(response.data.data)
 					const sortedListings = sortRecent(response.data.data);
 					setListings(sortedListings);
 					});
 				} else {
 					getListings({"categoryId":categoryId}).then((response) => {
-						console.log("inside getListings"  + categoryId)
 					const sortedListings = sortRecent(response.data.data);
 					setListings(sortedListings);
 					});
@@ -425,7 +423,8 @@ import { getVillages } from "../../Services/villages";
 				{/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
 				{listings && listings.map((listing) => (
 					<div
-					onClick={() => goToEventDetailsPage(listing)}
+					onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									goToEventDetailsPage(listing)}}
 					className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 					>
 					<a className="block relative h-64 rounded overflow-hidden">

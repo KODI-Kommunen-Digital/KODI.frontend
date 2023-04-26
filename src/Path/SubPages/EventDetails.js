@@ -4,7 +4,7 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import { getAllListings } from "../../Services/listingsApi";
+import { getAllListings , getListings } from "../../Services/listingsApi";
 import { getProfileByIds } from "../../Services/usersApi";
 import { sortRecent } from "../../Services/helper";
 import {
@@ -49,6 +49,8 @@ const EventDetails = () => {
 		zipCode: "",
 		discountedPrice: "",
 	});
+
+
 	const [favoriteId, setFavoriteId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
@@ -150,14 +152,18 @@ const EventDetails = () => {
 	}
 
 	const [listings, setListings] = useState([]);
+	const [categoryId, setCategoryId] = useState();
+	const selectedCategoryId = localStorage.getItem('selectedCategoryId');
+
 	useEffect(() => {
-		getAllListings().then((response) => {
-			const sortedListings = sortRecent(response.data.data);
-			const slicedListings = sortedListings.slice(0, 3);
-			setListings([...slicedListings]);
-		});
-		document.title = "Heidi Home";
-	}, []);
+		if (selectedCategoryId) {
+			getListings({"categoryId": selectedCategoryId}).then((response) => {
+				console.log(selectedCategoryId)
+				const sortedListings = sortRecent(response.data.data);
+				setListings(sortedListings);
+			});
+		}
+	}, [selectedCategoryId]);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 
@@ -532,7 +538,7 @@ const EventDetails = () => {
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
 								</div>
-							))}
+						))}
 					</div>
 				</div>
 			</div>

@@ -842,7 +842,7 @@ function ListingsPage() {
 
               </div>
 
-            {selectedCategory === "events" && (
+            {selectedCategory === "Events" && (
               <div class="relative mb-4">
               <div class="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="relative">
@@ -898,7 +898,7 @@ function ListingsPage() {
             </div>
             )}
 
-          {(selectedCategory === "offers" || selectedCategory === "regionalProducts") && (
+          {(selectedCategory === "Offers" || selectedCategory === "Regional Products") && (
             <div class="relative mb-4 grid grid-cols-2 gap-4">
               <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label for="place" class="block text-sm font-medium text-gray-600">
@@ -988,7 +988,7 @@ function ListingsPage() {
           </div>
         </div>
 
-        {selectedCategory !== "roadTraffic" && selectedCategory !== "regionalProducts" && selectedCategory !== "offerSearch" && selectedCategory !== "offers" && selectedCategory !== "newCitizenInfo" && selectedCategory !== "defectReport" && selectedCategory !== "events" && selectedCategory !== "lostAndFound" && (
+        {selectedCategory !== "Road Works / Traffic" && selectedCategory !== "Regional Products" && selectedCategory !== "Offer / Search" && selectedCategory !== "Offers" && selectedCategory !== "New Citizen Info" && selectedCategory !== "Defect Report" && selectedCategory !== "Events" && selectedCategory !== "Lost And Found" && (
             <div class="container w-auto px-5 py-2 bg-slate-600">
               <div class="bg-white mt-4 p-6 space-y-10">
                 <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -1254,8 +1254,8 @@ function ListingsPage() {
 
             </div>
             <div>
-              {successMessage && <div className="w-full bg-green-400 text-black font-bold py-2 px-4 rounded">{successMessage}</div>}
-              {errorMessage && <div className="w-full bg-red-400 text-black font-bold py-2 px-4 rounded text-center">{errorMessage}</div>}
+              {successMessage && <div className="mt-1 w-full bg-green-200 text-green-700 font-bold py-2 px-4 rounded text-center">{successMessage}</div>}
+              {errorMessage && <div className="mt-1 w-full bg-red-200 text-red-700 font-bold py-2 px-4 rounded text-center">{errorMessage}</div>}
             </div>
           </div>
         </div>

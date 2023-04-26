@@ -624,8 +624,8 @@ class ProfilePage extends React.Component {
                                 </svg> }
                             </button>
                         </div>
-                        { this.state.alertInfo.show ? 
-                            <div class="py-2 mt-1 px-2">
+                        { this.state.alertInfo.show ?
+                            <div class="mt-1 font-bold py-2 px-4 rounded text-center">
                                 <Alert ref={this.alertRef} type={this.state.alertInfo.type} message={this.state.alertInfo.message}/>
                             </div> :
                             null
