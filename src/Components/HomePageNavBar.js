@@ -47,14 +47,14 @@ export default function HomePageNavBar() {
 			window.sessionStorage.removeItem("userId");
 			setIsLoggedIn(false);
 			navigateTo("/HomePage");
-      alert('You have been logged out');
+			alert("You have been logged out");
 		} else {
 			navigateTo("/");
 		}
 	};
-	const handleFavButton = () => {
-		
-	}
+	const handleGotoDashboard = () => {
+		navigateTo("/Dashboard");
+	};
 	return (
 		<div class="w-full fixed top-0 z-10">
 			<Popover className="relative bg-white mr-0 ml-0 px-10">
@@ -76,28 +76,48 @@ export default function HomePageNavBar() {
 						</div>
 
 						<div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
-							<a onClick={() =>
+							<button
+								onClick={() =>
 									isLoggedIn ? navigateTo("/Favorite") : navigateTo("/")
-								}>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-								</path>
-								</svg> 
-							</a>
-							<a
+								}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									class="w-5 h-5"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+									></path>
+								</svg>
+							</button>
+							<button
 								onClick={handleLoginLogout}
 								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{isLoggedIn ? t("logOut") : t("login")}
-							</a>
-							<a
+							</button>
+							{isLoggedIn && (
+								<button
+									onClick={handleGotoDashboard}
+									className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								>
+									{t("dashboard")}
+								</button>
+							)}
+							<button
 								onClick={() =>
 									isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")
 								}
 								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{t("submit")}
-							</a>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -111,32 +131,37 @@ export default function HomePageNavBar() {
 					leaveFrom="opacity-100 scale-100"
 					leaveTo="opacity-0 scale-95"
 				>
-					<Popover.Panel focus className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden">
-					<div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-						<div className="space-y-6 py-6 px-5">
+					<Popover.Panel
+						focus
+						className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden"
+					>
+						<div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+							<div className="space-y-6 py-6 px-5">
+								<div className="mr-2 flex justify-end">
+									<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+										<span className="sr-only">Close menu</span>
+										<XMarkIcon className="h-6 w-6" aria-hidden="true" />
+									</Popover.Button>
+								</div>
 
-							<div className="mr-2 flex justify-end">
-							<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-								<span className="sr-only">Close menu</span>
-								<XMarkIcon className="h-6 w-6" aria-hidden="true" />
-							</Popover.Button>
+								<div>
+									<a
+										onClick={handleLoginLogout}
+										className="flex font-sans w-full items-center justify-center rounded-md mt-4 px-4 py-2 border-transparent border border-bg-slate-300 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+									>
+										{isLoggedIn ? t("logOut") : t("login")}
+									</a>
+									<a
+										onClick={() =>
+											isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")
+										}
+										className="flex font-sans w-full items-center justify-center rounded-md mt-4 px-4 py-2 border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+									>
+										{t("submit")}
+									</a>
+								</div>
 							</div>
-
-						<div>
-							<a
-							onClick={handleLoginLogout}
-							className="flex font-sans w-full items-center justify-center rounded-md mt-4 px-4 py-2 border-transparent border border-bg-slate-300 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-							>
-							{isLoggedIn ? t("logOut") : t("login")}
-							</a>
-							<a onClick={() =>
-									isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")
-								} className="flex font-sans w-full items-center justify-center rounded-md mt-4 px-4 py-2 border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-							{t("submit")}
-							</a>
 						</div>
-						</div>
-					</div>
 					</Popover.Panel>
 				</Transition>
 			</Popover>
