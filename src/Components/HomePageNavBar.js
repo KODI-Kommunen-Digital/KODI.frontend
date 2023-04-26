@@ -46,7 +46,7 @@ export default function HomePageNavBar() {
 			window.sessionStorage.removeItem("refreshToken");
 			window.sessionStorage.removeItem("userId");
 			setIsLoggedIn(false);
-			navigateTo("/HomePage");
+			navigateTo("/");
 			alert("You have been logged out");
 		} else {
 			navigateTo("/login");
@@ -77,9 +77,15 @@ export default function HomePageNavBar() {
 
 						<div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
 							<a
-								onClick={() =>
-									isLoggedIn ? navigateTo("/Favorite") : navigateTo("/")
-								}
+								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap px-8 py-2 text-base font-semibold text-gray-600 transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								onClick={() => {
+									if (isLoggedIn) {
+										navigateTo("/Favorite");
+									} else {
+										window.sessionStorage.setItem("redirectTo", "/Favorite");
+										navigateTo("/login");
+									}
+								}}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +118,9 @@ export default function HomePageNavBar() {
 							)}
 							<a
 								onClick={() =>
-									isLoggedIn ? navigateTo("/UploadListings") : navigateTo("/login")
+									isLoggedIn
+										? navigateTo("/UploadListings")
+										: navigateTo("/login")
 								}
 								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
