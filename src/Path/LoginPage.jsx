@@ -76,18 +76,21 @@ const LoginPage = () => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
-			console.log("-------------" + pwd)
 			var response = await login({
 				username: user,
 				password: pwd,
-			  });
+			});
 			setLoginLoading(false);
-			console.log(response.data)
 			if (rememberMe) {
-				window.localStorage.setItem('accessToken', response.data.data.accessToken);
-				window.localStorage.setItem('refreshToken', response.data.data.refreshToken);
-				window.localStorage.setItem('userId', response.data.data.userId);
-
+				window.localStorage.setItem(
+					"accessToken",
+					response.data.data.accessToken
+				);
+				window.localStorage.setItem(
+					"refreshToken",
+					response.data.data.refreshToken
+				);
+				window.localStorage.setItem("userId", response.data.data.userId);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -167,7 +170,7 @@ const LoginPage = () => {
 									{t("password")}
 								</label>
 								<input
-									type={showPassword ? 'text' : 'password'}
+									type={showPassword ? "text" : "password"}
 									id="password"
 									name="password"
 									value={pwd}
@@ -181,7 +184,7 @@ const LoginPage = () => {
 									className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700 focus:outline-none"
 									onClick={toggleShowPassword}
 								>
-									{showPassword ? 'Hide' : 'Show'}
+									{showPassword ? "Hide" : "Show"}
 								</button>
 							</div>
 						</div>
