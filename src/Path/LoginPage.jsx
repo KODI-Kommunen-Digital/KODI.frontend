@@ -27,7 +27,7 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 	}, []);
 
-
+	//const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handlePasswordChange = (event) => {
@@ -103,9 +103,14 @@ const LoginPage = () => {
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
-			routeChangeToUpload();
+
+			if (window.sessionStorage.getItem("redirectTo")) {
+				navigate(window.sessionStorage.getItem("redirectTo"));
+			} else {
+				routeChangeToUpload();
+			}
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
