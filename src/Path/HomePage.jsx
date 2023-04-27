@@ -33,7 +33,6 @@ const HomePage = () => {
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
-			console.log(citiesResponse)
 		});
 	}, []);
 
@@ -378,7 +377,7 @@ const HomePage = () => {
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo("/Places");
+								navigateTo(`/Places?cityId=${city.id}`);
 								localStorage.setItem("selectedItemLocation", city.name);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"

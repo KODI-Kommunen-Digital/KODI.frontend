@@ -248,6 +248,12 @@ const ViewMoreListings = () => {
 		);
 	}
 
+	function goToEventDetailsPage(listing) {
+		navigateTo(
+			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+		);
+	}
+
 	return (
 		<section class="text-gray-600 body-font relative">
 			<HomePageNavBar />
@@ -376,7 +382,7 @@ const ViewMoreListings = () => {
 					{sortedListings &&
 						sortedListings.map((listing) => (
 							<div
-								onClick={() => navigateTo("/HomePage/EventDetails")}
+								onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId)); goToEventDetailsPage(listing)}}
 								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 							>
 								<a className="block relative h-64 rounded overflow-hidden">

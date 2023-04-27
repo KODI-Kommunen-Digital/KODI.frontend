@@ -69,17 +69,11 @@ import { getVillages } from "../../Services/villages";
 				});
 			}, []);
 
-		//Navigate to Event Details page Starts
-			function goToEventDetailsPage(listing) {
-					navigateTo(
-						`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-					);
-			}
-
 		const [selectedCategory, setSelectedCategory] = useState("");
 
 		const handleCategoryChange = (event) => {
 			let categoryId;
+			console.log(event.target.value)
 			switch (event.target.value) {
 			case "News":
 				categoryId = 1;
@@ -147,25 +141,36 @@ import { getVillages } from "../../Services/villages";
 				break;
 			}
 			setCategoryId(categoryId);
+
 			const urlParams = new URLSearchParams(window.location.search);
 			urlParams.set("categoryId", categoryId);
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) {
 				urlParams.set("cityId", cityIdParam);
 			}
-
 			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 			window.history.pushState({}, "", newUrl);
 		};
 
-		const handleLocationChange = (event) => {
-			const cityId = event.target.value;
-			setCityId(cityId);
-			const urlParams = new URLSearchParams(window.location.search);
-			urlParams.set("cityId", cityId);
-			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-			window.history.pushState({}, "", newUrl);
-		};
+			const handleLocationChange = (event) => {
+				console.log('Selected city value:', event.target.value);
+				const cityId = event.target.value;
+				if (cityId === "Default") {
+				setCityId(null);
+				const urlParams = new URLSearchParams(window.location.search);
+				urlParams.delete("cityId"); // Remove cityId parameter from URL
+				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+				window.history.pushState({}, "", newUrl);
+				return;
+				} else {
+				setCityId(cityId);
+				}
+				const urlParams = new URLSearchParams(window.location.search);
+				urlParams.set("cityId", cityId);
+				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+				window.history.pushState({}, "", newUrl);
+			};
+
 
 			useEffect(() => {
 				const urlParams = new URLSearchParams(window.location.search);
@@ -183,18 +188,17 @@ import { getVillages } from "../../Services/villages";
 
 			useEffect(() => {
 				if (categoryId) {
-				if (cityId) {
-					getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
-						console.log(response.data.data)
-					const sortedListings = sortRecent(response.data.data);
-					setListings(sortedListings);
-					});
-				} else {
-					getListings({"categoryId":categoryId}).then((response) => {
-					const sortedListings = sortRecent(response.data.data);
-					setListings(sortedListings);
-					});
-				}
+					if (cityId) {
+						getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
+						const sortedListings = sortRecent(response.data.data);
+						setListings(sortedListings);
+						});
+					} else {
+						getListings({"categoryId":categoryId}).then((response) => {
+						const sortedListings = sortRecent(response.data.data);
+						setListings(sortedListings);
+						});
+					}
 				}
 			}, [categoryId, cityId]);
 
@@ -322,7 +326,7 @@ import { getVillages } from "../../Services/villages";
 													onChange={handleCategoryChange}
 													class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												>
-													<option class="font-sans" value="Default">
+													<option class="font-sans" value={selectedItem}>
 														{selectedItem}
 													</option>
 													{selectedItem !== "News" ? (
@@ -420,11 +424,11 @@ import { getVillages } from "../../Services/villages";
 		{listings && listings.length > 0 ? (
 			<div class="bg-white p-6 mt-20 mb-20 flex flex-wrap gap-10 justify-center">
 				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-				{/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
 				{listings && listings.map((listing) => (
+					console.log('Listing city ID:', listing.cityId),
 					<div
 					onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId));
-									goToEventDetailsPage(listing)}}
+									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`);}}
 					className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 					>
 					<a className="block relative h-64 rounded overflow-hidden">
