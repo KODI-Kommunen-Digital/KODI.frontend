@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../../Services/CategoriesData";
-import { getUserListings } from "../../Services/usersApi";
+import { getListings , getListingsByCity } from "../../Services/listingsApi";
+import { getCities } from "../../Services/cities";
+import { getVillages } from "../../Services/villages";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -15,6 +17,15 @@ import {
 
 const Places = () => {
 	window.scrollTo(0, 0);
+
+	const [input, setInput] = useState({
+		//"villageId": 1,
+		"categoryId": 0,
+		"subcategoryId": 0,
+		"sourceId": 1,
+		"userId": 2
+	});
+
 	const [dashboarddata, setDashboarddata] = useState({ listings: [] });
 	useEffect(() => {
 		getDashboarddata().then((response) => {
@@ -31,18 +42,8 @@ const Places = () => {
 	};
 
 	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings([...sortRecent(response.data.data)]);
-		});
-	}, []);
 
 	const [selectedCategory, setSelectedCategory] = useState("");
-	const sortedListings = [...listings].sort((a, b) => {
-		const dateA = new Date(a.date);
-		const dateB = new Date(b.date);
-		return dateB - dateA;
-	});
 
 	//populate the events titles starts
 	const [categoriesdata, setCategoriesdata] = useState({
@@ -115,6 +116,149 @@ const Places = () => {
 
 	const { t, i18n } = useTranslation();
 
+	const [categoryId, setCategoryId] = useState();
+	const [cityId, setCityId] = useState(0);
+	const [cities, setCities] = useState([]);
+	const [villages, setVillages] = useState([]);
+	async function onCityChange(e) {
+		const cityId = e.target.value;
+		setCityId(cityId);
+		setInput(prev => ({
+		...prev,
+		villageId: 0
+		}));
+		getVillages(cityId).then(response =>
+		setVillages(response.data.data)
+		)
+	}
+	useEffect(() => {
+		getCities().then(citiesResponse => {
+		setCities(citiesResponse.data.data);
+	})}, []);
+		const handleCategoryChange = (event) => {
+			let categoryId;
+			switch (event.target.value) {
+			case "News":
+				categoryId = 1;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Road Works / Traffic":
+				categoryId = 2;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Events":
+				categoryId = 3;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Clubs":
+				categoryId = 4;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Regional Products":
+				categoryId = 5;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Offer / Search":
+				categoryId = 6;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "New Citizen Info":
+				categoryId = 7;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Defect Report":
+				categoryId = 8;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Lost And Found":
+				categoryId = 9;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Company Portraits":
+				categoryId = 10;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Carpooling And Public Transport":
+				categoryId = 11;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+			case "Offers":
+				categoryId = 12;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+			break;
+
+			default:
+				categoryId = 0;
+				break;
+			}
+			setCategoryId(categoryId);
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set("categoryId", categoryId);
+			const cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) {
+				urlParams.set("cityId", cityIdParam);
+			}
+
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.pushState({}, "", newUrl);
+		};
+
+		const handleLocationChange = (event) => {
+			const cityId = event.target.value;
+			setCityId(cityId);
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set("cityId", cityId);
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.pushState({}, "", newUrl);
+		};
+
+			useEffect(() => {
+				const urlParams = new URLSearchParams(window.location.search);
+				const categoryIdParam = urlParams.get("categoryId");
+				const cityIdParam = urlParams.get("cityId");
+
+				if (categoryIdParam) {
+				setCategoryId(categoryIdParam);
+				}
+
+				if (cityIdParam) {
+				setCityId(cityIdParam);
+				}
+			}, []);
+
+			useEffect(() => {
+				if (cityId) {
+					console.log(cityId)
+				if (categoryId) {
+					getListings({"categoryId":categoryId}).then((response) => {
+						const sortedListings = sortRecent(response.data.data);
+						setListings(sortedListings);
+						});
+				} else {
+					getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
+						console.log(response.data.data)
+					const sortedListings = sortRecent(response.data.data);
+					setListings(sortedListings);
+					});
+				}
+				}
+			}, [cityId , categoryId]);
+	function handleSortOptionChange(event) {
+		setSelectedSortOption(event.target.value);
+	}
+
 	return (
 		<section class="text-gray-600 body-font relative">
 			<HomePageNavBar />
@@ -134,23 +278,26 @@ const Places = () => {
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
-											<select
-												id="button-filter"
-												name="country"
-												autocomplete="country-name"
-												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
-												<option value="Default">{selectedItemLocation}</option>
-												{selectedItemLocation !== "Below" ? (
-													<option value="Below">Below</option>
-												) : null}
-												{selectedItemLocation !== "Fuchstal" ? (
-													<option value="Fuchstal">Fuchstal</option>
-												) : null}
-												{selectedItemLocation !== "Apple village" ? (
-													<option value="Apple village">Apple village</option>
-												) : null}
-											</select>
+										{cities.map((city) => (
+													<select
+														id="button-filter"
+														name="country"
+														autocomplete="country-name"
+														onChange={handleLocationChange}
+														class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+													>
+														<option class="font-sans" value="Default">
+															{selectedItemLocation}
+															</option>
+														{cities.map((city) => (
+															selectedItemLocation !== city.name && (
+															<option class="font-sans" value={city.id}>
+																{city.name}
+															</option>
+															)
+														))}
+													</select>
+												))}
 										</div>
 
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
@@ -158,6 +305,7 @@ const Places = () => {
 												id="button-filter"
 												name="country"
 												autocomplete="country-name"
+												onChange={handleCategoryChange}
 												class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 												<option>{t("chooseOneCategory")}</option>
@@ -210,199 +358,57 @@ const Places = () => {
 				</div>
 			</div>
 
-			{/* <h2 class="text-gray-900 mb-10 text-2xl md:text-3xl mt-20 lg:text-4xl title-font text-center font-bold">
-        below
-      </h2>
-
-      <div className="flex mx-auto flex-wrap mb-10 justify-center">
-        <a
-          onClick={onCancel}
-          className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${
-            selectedLink === "current" ? "text-blue-800" : "text-gray-500"
-          }`}
-        >
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-5 h-5 mr-3"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-          Current
-        </a>
-        {/* ----- removed for the time ------ */}
-			{/* <a
-        onClick={customerServiceData}
-        id="loadMoreBtn"
-        className={`cursor-pointer sm:px-6 py-3 w-1/2 sm:w-auto justify-center sm:justify-start border-b-2 title-font font-bold inline-flex items-center leading-none border-gray-500 tracking-wider rounded-t ${selectedLink === 'customerService' ? 'text-blue-800' : 'text-gray-500'}`}
-      >
-        Citizen Services
-      </a>
-      </div> */}
-
-			{/* <div className="my-0 bg-gray-300 h-[1px]"></div> */}
-
-			{/* <div class="w-full h-[28rem] bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
-          <div class="p-6 space-y-0 md:space-y-6 sm:p-8">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
-              Filter your result
-            </h1>
-            <form class="space-y-4 md:space-y-6" action="#">
-              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold">
-                  Location
-                </label>
-                <select
-                  id="button-filter"
-                  name="country"
-                  autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="Default">{selectedItemLocation}</option>
-                  {selectedItemLocation !== "Below" ? (
-                    <option value="Below">Below</option>
-                  ) : null}
-                  {selectedItemLocation !== "Fuchstal" ? (
-                    <option value="Fuchstal">Fuchstal</option>
-                  ) : null}
-                  {selectedItemLocation !== "Apple village" ? (
-                    <option value="Apple village">
-                    Apple village
-                  </option>
-                  ) : null}
-                </select>
-              </div>
-              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                <label for="floatingInput" class="text-gray-700 font-bold">
-                  Category
-                </label>
-                <select
-                  id="country"
-                  name="country"
-                  autocomplete="country-name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option>Choose a category</option>
-                  <option value="News">News</option>
-                  <option value="Road Works / Traffic">
-                    Road Works / Traffic
-                  </option>
-                  <option value="Events">Events</option>
-                  <option value="Clubs">Clubs</option>
-                  <option value="Regional Products">Regional Products</option>
-                  <option value="Offer / Search">Offer / Search</option>
-                  <option value="New Citizen Info">New Citizen Info</option>
-                  <option value="Direct Report">Direct Report</option>
-                  <option value="Lost And Found">Lost And Found</option>
-                  <option value="Company Portraits">Company Portraits</option>
-                  <option value="Carpooling And Public Transport">
-                    Carpooling And Public Transport
-                  </option>
-                  <option value="Offers">Offers</option>
-                </select>
-              </div>
-              {customerServiceDataload && (
-                <>
-                  <div class="flex justify-center">
-                    <div class="timepicker relative form-floating mb-3 xl:w-96">
-                      <label
-                        for="floatingInput"
-                        class="text-gray-700 font-bold"
-                      >
-                        Time
-                      </label>
-                      <input
-                        type="text"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Select a time"
-                      />
-                    </div>
-                  </div>
-                  {/* <div class="flex justify-center">
-                  <div class="timepicker relative form-floating mb-3 xl:w-96">
-                    <TimePicker />
-                  </div>
-              </div>
-                  <div>
-                    <label for="floatingInput" class="text-gray-700 font-bold">
-                      Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      name="email"
-                      id="email"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter your phone number..."
-                      required=""
-                    />
-                  </div>
-                  <div>
-                    <label for="floatingInput" class="text-gray-700 font-bold">
-                      Review
-                    </label>
-                    <input
-                      type="text"
-                      name="email"
-                      id="email"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Write your review..."
-                      required=""
-                    />
-                  </div>
-                </>
-              )}
-            </form>
-          </div>
-          <div class="mb-4 ml-7 mr-7">
-            <button
-              type="submit"
-              class="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-800 py-2 px-4 text-sm font-medium text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              Apply Filter
-            </button>
-          </div>
-          <div class="mb-4 ml-7 mr-7">
-            <button
-              type="submit"
-              class="group relative flex w-full justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm font-medium shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-            >
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-              Remove Filter
-            </button>
-          </div>
-        </div> */}
-
-			<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+			{listings && listings.length > 0 ? (
+			<div class="bg-white p-6 mt-20 mb-20 flex flex-wrap gap-10 justify-center">
 				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-					{/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
-					{sortedListings &&
-						sortedListings.map((listing) => (
-							<div
-								onClick={() => navigateTo("/HomePage/EventDetails")}
-								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-							>
-								<a className="block relative h-64 rounded overflow-hidden">
-									<img
-										alt="ecommerce"
-										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-										src={HOMEPAGEIMG}
-									/>
-								</a>
-								<div className="mt-10">
-									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-										{listing.title}
-									</h2>
-								</div>
-								<div className="my-4 bg-gray-200 h-[1px]"></div>
-							</div>
-						))}
+				{listings && listings.map((listing) => (
+					<div
+					onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);}}
+					className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+					>
+					<a className="block relative h-64 rounded overflow-hidden">
+						<img
+						alt="ecommerce"
+						className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+						src={HOMEPAGEIMG}
+						/>
+					</a>
+					<div className="mt-10">
+						<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+						{listing.title}
+						</h2>
+					</div>
+					<div className="my-4 bg-gray-200 h-[1px]"></div>
+					</div>
+				))}
+
 				</div>
 			</div>
+
+			) : (
+
+			<div>
+				<div class="flex items-center justify-center">
+						<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">Currently there is no listings to display !</h1>
+					</div>
+
+					<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							<span class="font-sans text-black">
+								To see all of our listings,{" "}
+							</span>
+							<a
+								class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+								onClick={() => {
+									localStorage.setItem("selectedItem", "Choose one category");
+									navigateTo("/ViewMoreListings");
+								}}
+							>
+								Click here
+							</a>
+						</div>
+			</div>
+			)}
 
 			<footer class="text-center lg:text-left bg-black text-white">
 				<div class="mx-6 py-10 text-center md:text-left">

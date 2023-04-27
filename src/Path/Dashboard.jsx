@@ -94,51 +94,51 @@ const Dashboard = () => {
 		var categoryId = listing.categoryId;
 		if (categoryId == categoryByName.News) {
 			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
 			navigateTo(
-				`/UploadListings/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.EventsOrNews) {
 			navigateTo(
-				`/UploadListings/Events?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Associations) {
 			navigateTo(
-				`/Listings/PageClub?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.RegionalProducts) {
 			navigateTo(
-				`/UploadListings/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.OfferOrSearch) {
 			navigateTo(
-				`/UploadListings/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.NewCitizenInfo) {
 			navigateTo(
-				`/UploadListings/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.DefectReport) {
 			navigateTo(
-				`/UploadListings/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.LostPropertyOffice) {
 			navigateTo(
-				`/UploadListings/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.CompanyPortraits) {
 			navigateTo(
-				`/UploadListings/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.News) {
 			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Offers) {
 			navigateTo(
-				`/UploadListings/Offers?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		}
 	}
@@ -327,7 +327,11 @@ const Dashboard = () => {
 										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-												onClick={() => goToEditListingsPage(listing)}
+												onClick={() => {
+													localStorage.setItem("selectedItem", (categoryById[listing.categoryId]));
+													goToEditListingsPage(listing);
+												}}
+												//onClick={() => goToEditListingsPage(listing)}
 											>
 												Edit
 											</a>
