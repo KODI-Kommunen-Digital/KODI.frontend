@@ -27,6 +27,13 @@ const Events = () => {
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
 	const [listingId, setListingId] = useState(0);
+	const [listings, setListings] = useState([]);
+	const [categoryId, setCategoryId] = useState();
+	const [newListing, setNewListing] = useState(true);
+	const [description, setDescription] = useState("");
+	const [title, setTitle] = useState("");
+
+	const [categories, setCategories] = useState([]);
 	async function onCityChange(e) {
 		const cityId = e.target.value;
 		setCityId(cityId);
@@ -54,32 +61,12 @@ const Events = () => {
 		userId: 2,
 	});
 
-	const [listings, setListings] = useState([]);
-	const [categoryId, setCategoryId] = useState();
-	const [newListing, setNewListing] = useState(true);
-	const [description, setDescription] = useState("");
-	const [title, setTitle] = useState("");
+		const [selectedCategory, setSelectedCategory] = useState("");
 
-	const [categories, setCategories] = useState([]);
-	useEffect(() => {
-		getCategory().then((response) => {
-			const sortedCategories = sortRecent(response.data.data);
-			setCategories([...sortedCategories]);
-		});
-	}, []);
-
-	//Navigate to Event Details page Starts
-	function goToEventDetailsPage(listing) {
-		navigateTo(
-			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-		);
-	}
-
-	const [selectedCategory, setSelectedCategory] = useState("");
-
-	const handleCategoryChange = (event) => {
-		let categoryId;
-		switch (event.target.value) {
+		const handleCategoryChange = (event) => {
+			let categoryId;
+			console.log(event.target.value)
+			switch (event.target.value) {
 			case "News":
 				categoryId = 1;
 				setInput({ ...input, categoryId });
@@ -144,27 +131,38 @@ const Events = () => {
 			default:
 				categoryId = 0;
 				break;
-		}
-		setCategoryId(categoryId);
-		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("categoryId", categoryId);
-		const cityIdParam = urlParams.get("cityId");
-		if (cityIdParam) {
-			urlParams.set("cityId", cityIdParam);
-		}
+			}
+			setCategoryId(categoryId);
 
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
-	};
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set("categoryId", categoryId);
+			const cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) {
+				urlParams.set("cityId", cityIdParam);
+			}
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.pushState({}, "", newUrl);
+		};
 
-	const handleLocationChange = (event) => {
-		const cityId = event.target.value;
-		setCityId(cityId);
-		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("cityId", cityId);
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
-	};
+			const handleLocationChange = (event) => {
+				console.log('Selected city value:', event.target.value);
+				const cityId = event.target.value;
+				if (cityId === "Default") {
+				setCityId(null);
+				const urlParams = new URLSearchParams(window.location.search);
+				urlParams.delete("cityId"); // Remove cityId parameter from URL
+				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+				window.history.pushState({}, "", newUrl);
+				return;
+				} else {
+				setCityId(cityId);
+				}
+				const urlParams = new URLSearchParams(window.location.search);
+				urlParams.set("cityId", cityId);
+				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+				window.history.pushState({}, "", newUrl);
+			};
+
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -180,28 +178,21 @@ const Events = () => {
 		}
 	}, []);
 
-	useEffect(() => {
-		if (categoryId) {
-			if (cityId) {
-				getListingsByCity(cityId, { categoryId: categoryId }).then(
-					(response) => {
-						console.log(
-							"inside getListingsById" + cityId + "---------" + categoryId
-						);
-						console.log(response.data.data);
+			useEffect(() => {
+				if (categoryId) {
+					if (cityId) {
+						getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
 						const sortedListings = sortRecent(response.data.data);
 						setListings(sortedListings);
+						});
+					} else {
+						getListings({"categoryId":categoryId}).then((response) => {
+						const sortedListings = sortRecent(response.data.data);
+						setListings(sortedListings);
+						});
 					}
-				);
-			} else {
-				getListings({ categoryId: categoryId }).then((response) => {
-					console.log("inside getListings" + categoryId);
-					const sortedListings = sortRecent(response.data.data);
-					setListings(sortedListings);
-				});
-			}
-		}
-	}, [categoryId, cityId]);
+				}
+			}, [categoryId, cityId]);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	function handleSortOptionChange(event) {
@@ -326,7 +317,7 @@ const Events = () => {
 												onChange={handleCategoryChange}
 												class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
-												<option class="font-sans" value="Default">
+												<option class="font-sans" value={selectedItem}>
 													{selectedItem}
 												</option>
 												{selectedItem !== "News" ? (
@@ -429,23 +420,25 @@ const Events = () => {
 								listings
 									.filter((listing) => listing.statusId === 1)
 									.map((listing) => (
+										console.log('Listing city ID:', listing.cityId),
 										<div
-											onClick={() => goToEventDetailsPage(listing)}
-											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+										onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId));
+														navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`);}}
+										className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-													src={HOMEPAGEIMG}
-												/>
-											</a>
-											<div className="mt-10">
-												<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-													{listing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
+										<a className="block relative h-64 rounded overflow-hidden">
+											<img
+											alt="ecommerce"
+											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+											src={HOMEPAGEIMG}
+											/>
+										</a>
+										<div className="mt-10">
+											<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+											{listing.title}
+											</h2>
+										</div>
+										<div className="my-4 bg-gray-200 h-[1px]"></div>
 										</div>
 									))}
 						</div>

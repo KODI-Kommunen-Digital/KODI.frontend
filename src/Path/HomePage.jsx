@@ -374,7 +374,7 @@ const HomePage = () => {
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo("/Places");
+								navigateTo(`/Places?cityId=${city.id}`);
 								localStorage.setItem("selectedItemLocation", city.name);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
@@ -407,27 +407,27 @@ const HomePage = () => {
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
 						listings
-							.filter((listing) => listing.statusId === 1)
-							.map((listing) => (
-								<div
-									onClick={() =>
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-										)
-									}
-									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-								>
-									<a class="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={HOMEPAGEIMG}
-										/>
-									</a>
-									<div class="mt-10">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-											{listing.title}
-										</h2>
+						.filter((listing) => listing.statusId === 1)
+						.map((listing) => (
+							<div
+								onClick={() => {
+									localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
+								}}
+								//onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
+								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+							>
+								<a class="block relative h-64 rounded overflow-hidden">
+									<img
+										alt="ecommerce"
+										class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+										src={HOMEPAGEIMG}
+									/>
+								</a>
+								<div class="mt-10">
+									<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+										{listing.title}
+									</h2>
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
 								</div>
