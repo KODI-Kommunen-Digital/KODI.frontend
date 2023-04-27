@@ -138,8 +138,7 @@ const Favorites = () => {
 						favListings.map((favListings) => (
 							<div
 								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.id}&cityId=${favListings.cityId}`)}
-								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-							>
+								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer">
 								<a className="block relative h-64 rounded overflow-hidden">
 									<img
 										alt="ecommerce"
@@ -151,6 +150,7 @@ const Favorites = () => {
 									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
 										{favListings.title}
 									</h2>				
+								</div>
 								</div>
 							))}
 				</div>
