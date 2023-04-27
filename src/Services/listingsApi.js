@@ -23,3 +23,7 @@ export async function postListingsData(cityId, newListingsDataObj) {
 export async function updateListingsData(cityId, newListingsDataObj, listingsId) {
     return axios.patch(`/cities/${cityId}/listings/${listingsId}`, newListingsDataObj);
 }
+
+export async function deleteListing(cityId, listingsId) {
+    return axios.delete(`/cities/${cityId}/listings/${listingsId}`);
+}

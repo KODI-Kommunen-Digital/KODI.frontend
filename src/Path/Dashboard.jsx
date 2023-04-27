@@ -11,6 +11,7 @@ import {
 	getListings,
 	getAllListings,
 	updateListingsData,
+	deleteListing
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
@@ -25,7 +26,6 @@ const Dashboard = () => {
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
-	const [usersList, setUsersList] = useState([]);
 	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
@@ -36,20 +36,6 @@ const Dashboard = () => {
 		});
 		document.title = "Dashboard";
 	}, []);
-
-	useEffect(() => {
-		if (viewAllListings) {
-			const ids = [];
-			listings.forEach((listing) => {
-				if (!ids.includes(listing.userId)) {
-					ids.push(listing.userId);
-				}
-			});
-			getProfileByIds(ids).then((res) => {
-				setUsersList(res.data.data);
-			});
-		}
-	}, [listings, viewAllListings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -77,15 +63,10 @@ const Dashboard = () => {
 		}
 	}
 
-	function handleChnageInStatus(e, listing) {
-		listing.statusId = e.target.value;
-		updateListingsData(listing.cityId, listing, listing.id).then((res) => {
-			if (res.status === 200) {
-				getAllListings().then((response) => {
-					setListings([...sortOldest(response.data.data)]);
-					setViewAllListings(true);
-				});
-			}
+	function handleChangeInStatus(newStatusId, listing) {
+		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id).then((res) => {
+			listing.statusId = newStatusId;
+			setListings(listings)
 		});
 	}
 
@@ -137,12 +118,19 @@ const Dashboard = () => {
 				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Offers) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		}
+		navigateTo(
+			`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
+		);
+	}
 	}
 
+
+	function deleteListingOnClick(listing) {
+		deleteListing(listing.cityId, listing.id).then((res) => {
+			setListings(listings.filter(l => l.cityId != listing.cityId || l.id != listing.id))
+		})
+	}
+	
 	function goToEventDetailsPage(listing) {
 		navigateTo(
 			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
@@ -283,9 +271,6 @@ const Dashboard = () => {
 									Date of Creation
 								</th>
 								<th scope="col" class="px-6 py-3">
-									Edit
-								</th>
-								<th scope="col" class="px-6 py-3">
 									Action
 								</th>
 								{viewAllListings && (
@@ -326,34 +311,22 @@ const Dashboard = () => {
 										</td>
 										<td class="px-6 py-4">
 											<a
-												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-												onClick={() => {
-													localStorage.setItem("selectedItem", (categoryById[listing.categoryId]));
-													goToEditListingsPage(listing);
-												}}
-												//onClick={() => goToEditListingsPage(listing)}
+												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
+												onClick={() => goToEditListingsPage(listing)}
 											>
 												Edit
 											</a>
-										</td>
-										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-												onClick={() => navigateTo("/OverviewPage")}
+												onClick={() => deleteListingOnClick(listing)}
 											>
-												Action
+												Delete
 											</a>
 										</td>
 										{viewAllListings && (
 											<td class="px-6 py-4">
 												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-													{usersList?.filter((user) => {
-														return user.id === listing.userId;
-													})[0]
-														? usersList?.filter((user) => {
-																return user.id === listing.userId;
-														  })[0]["username"]
-														: ""}
+													{ listing.username }
 												</a>
 											</td>
 										)}
@@ -366,7 +339,7 @@ const Dashboard = () => {
 												></div>
 												{viewAllListings ? (
 													<Select
-														onChange={(e) => handleChnageInStatus(e, listing)}
+														onChange={(e) => handleChangeInStatus(e.target.value, listing)}
 														value={listing.statusId}
 													>
 														{Object.keys(status).map((state) => {
