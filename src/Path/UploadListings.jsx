@@ -574,7 +574,7 @@ function UploadListings() {
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-              Information
+              Upload Post
               <div className="my-4 bg-gray-600 h-[1px]"></div>
             </h2>
             <div class="relative mb-4">
