@@ -4,7 +4,9 @@ import { getUserId } from "./usersApi";
 export async function getFavorites() {
     return axios.get(`/users/${getUserId()}/favorites`);
 }
-
+export async function getFavoriteListings() {
+    return axios.get(`/users/${getUserId()}/favorites/listings`);
+}
 export async function deleteListingsById(favoriteId) {
     // eslint-disable-next-line no-undef
     return axios.delete(`/users/${getUserId()}/favorites/${favoriteId}`);
