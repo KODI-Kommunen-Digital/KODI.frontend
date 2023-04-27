@@ -6,7 +6,7 @@ import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
 import { getListingsById } from "../Services/listingsApi";
-import { getFavorites } from "../Services/favoritesApi";
+import {getFavoriteListings} from "../Services/favoritesApi"
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -33,20 +33,11 @@ const Favorites = () => {
 
 	const [favListings, setFavListings] = useState([]);
 	useEffect(() => {
-		getFavorites().then((response) => {
-			setFavListings([...sortRecent(response.data.data)]);
-			console.log("FavList", response.data.data);
+		getFavoriteListings().then((response) => {
+			setFavListings(response.data.data);
+			console.log(response.data.data)
 		});
 	}, []);
-	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		favListings.forEach((fav) => {
-			getListingsById(fav.listingId, fav.cityId).then((response) => {
-				setListings([...sortRecent(response.data.data), ...listings]);
-				console.log("List", response.data.data);
-			});
-		});
-	}, [favListings]);
 
 	//populate the events titles starts
 	const [categoriesdata, setCategoriesdata] = useState({
@@ -143,31 +134,23 @@ const Favorites = () => {
 
 			<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
 				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-					{listings &&
-						listings
-							.filter((listing) => listing.statusId === 1)
-							.map((favListings) => (
-								<div
-									onClick={() =>
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${favListings.listingId}&cityId=${favListings.cityId}`
-										)
-									}
-									className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-								>
-									<a className="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={HOMEPAGEIMG}
-										/>
-									</a>
-									<div className="mt-10">
-										<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-											{favListings.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
+					{favListings &&
+						favListings.map((favListings) => (
+							<div
+								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.id}&cityId=${favListings.cityId}`)}
+								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+							>
+								<a className="block relative h-64 rounded overflow-hidden">
+									<img
+										alt="ecommerce"
+										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+										src={HOMEPAGEIMG}
+									/>
+								</a>
+								<div className="mt-10">
+									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+										{favListings.title}
+									</h2>				
 								</div>
 							))}
 				</div>
