@@ -3,9 +3,10 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings } from "../Services/listingsApi";
+import { getAllListings } from "../Services/listingsApi";
 import { sortOldest, sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
+import { getCategory } from "../Services/CategoryApi";
 import { getVillages } from "../Services/villages";
 import { categoryByName, categoryById } from "../Constants/categories";
 
@@ -14,13 +15,9 @@ import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
-// import(
-// 	"https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap"
-// );
-
 const HomePage = () => {
 	const { t, i18n } = useTranslation();
-	window.scrollTo(0, 0);
+	//window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
@@ -36,7 +33,6 @@ const HomePage = () => {
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
-			console.log(citiesResponse)
 		});
 	}, []);
 
@@ -49,30 +45,18 @@ const HomePage = () => {
 	});
 
 	const [listings, setListings] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getListings().then((response) => {
-		  const sortedListings = sortRecent(response.data.data);
-		  const slicedListings = sortedListings.slice(0, 3);
-		  setListings([...slicedListings]);
+		getAllListings().then((response) => {
+			const sortedListings = sortRecent(response.data.data);
+			const slicedListings = sortedListings.slice(0, 3);
+			setListings([...slicedListings]);
 		});
 		document.title = "Heidi Home";
-	  }, []);
-
-	// const [listingsData, setListingsData] = useState([]); - for jason
-	// useEffect(() => {
-	//   getListingsByCity().then((response) => {
-	//     setListingsData(response);
-	//   });
-	// }, []);
+	}, []);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
-	// const sortedListings = [...listings]
-	// 	.sort((a, b) => {
-	// 		const dateA = new Date(a.date);
-	// 		const dateB = new Date(b.date);
-	// 		return dateB - dateA;
-	// 	})
-	// 	.slice(0, 3);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -89,57 +73,14 @@ const HomePage = () => {
 		window.location.href = encodedName;
 	}
 
-	function goToEditListingsPage(listing) {
-		var categoryId = listing.categoryId;
-		if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/Events/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
-			navigateTo(
-				`/Events/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.EventsOrNews) {
-			navigateTo(
-				`/Events/Events?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.Associations) {
-			navigateTo(
-				`/Events/PageClub?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.RegionalProducts) {
-			navigateTo(
-				`/Events/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.OfferOrSearch) {
-			navigateTo(
-				`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.NewCitizenInfo) {
-			navigateTo(
-				`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.DefectReport) {
-			navigateTo(
-				`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.LostPropertyOffice) {
-			navigateTo(
-				`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.CompanyPortraits) {
-			navigateTo(
-				`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		} else if (categoryId == categoryByName.Offers) {
-			navigateTo(
-				`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}?categoryId=${listing.categoryId}`
-			);
-		}
+	useEffect(() => {
+		getCategory().then((response) => {
+			const setCategories = sortRecent(response.data.data);
+		});
+	}, []);
+
+	function goToEditListingsPage(category) {
+		navigateTo(`/Events?categoryId=${category}`);
 	}
 
 	return (
@@ -179,10 +120,10 @@ const HomePage = () => {
 				<div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
 					<div
 						onClick={() => {
-							localStorage.setItem("selectedItem", "News"); // store the name value in localStorage
-							goToFilters("Events");
+							localStorage.setItem("selectedItem", "News");
+							goToEditListingsPage(1);
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer "
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer "
 					>
 						<div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 							<svg
@@ -199,10 +140,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(2);
 							localStorage.setItem("selectedItem", "Road Works / Traffic");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -219,10 +160,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(3);
 							localStorage.setItem("selectedItem", "Events");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -239,10 +180,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(4);
 							localStorage.setItem("selectedItem", "Clubs");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -259,10 +200,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(5);
 							localStorage.setItem("selectedItem", "Regional Products");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -279,10 +220,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(6);
 							localStorage.setItem("selectedItem", "Offer / Search");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -299,10 +240,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(7);
 							localStorage.setItem("selectedItem", "New Citizen Info");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -319,10 +260,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
-							localStorage.setItem("selectedItem", "Direct Report");
+							goToEditListingsPage(8);
+							localStorage.setItem("selectedItem", "Defect Report");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -340,10 +281,10 @@ const HomePage = () => {
 
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(9);
 							localStorage.setItem("selectedItem", "Lost And Found");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -360,10 +301,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(10);
 							localStorage.setItem("selectedItem", "Company Portraits");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -380,13 +321,13 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(11);
 							localStorage.setItem(
 								"selectedItem",
 								"Carpooling And Public Transport"
 							);
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -403,10 +344,10 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToFilters("Events");
+							goToEditListingsPage(12);
 							localStorage.setItem("selectedItem", "Offers");
 						}}
-						class="p-4 justify-center bg-white h-40 w-48 shadow-xl rounded-lg mt-10 cursor-pointer"
+						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -430,10 +371,10 @@ const HomePage = () => {
 
 			{cities.map((city) => (
 				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-					<div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo("/Places");
+								navigateTo(`/Places?cityId=${city.id}`);
 								localStorage.setItem("selectedItemLocation", city.name);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
@@ -465,9 +406,15 @@ const HomePage = () => {
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
-						listings.map((listing) => (
+						listings
+						.filter((listing) => listing.statusId === 1)
+						.map((listing) => (
 							<div
-								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
+								onClick={() => {
+									localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
+								}}
+								//onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
 								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 							>
 								<a class="block relative h-64 rounded overflow-hidden">
@@ -481,14 +428,17 @@ const HomePage = () => {
 									<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
 										{listing.title}
 									</h2>
+									</div>
+									<div className="my-4 bg-gray-200 h-[1px]"></div>
 								</div>
-								<div className="my-4 bg-gray-200 h-[1px]"></div>
-							</div>
-						))}
+							))}
 				</div>
 				<button
 					type="submit"
-					onClick={() => navigateTo("/ViewMoreListings")}
+					onClick={() => {
+						localStorage.setItem("selectedItem", "Choose one category");
+						navigateTo("/ViewMoreListings");
+					}}
 					class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 				>
 					{t("viewMore")}
@@ -588,72 +538,53 @@ const HomePage = () => {
 								Smart Regions
 							</h6>
 							<div class="uppercase font-semibold mb-4 flex justify-center md:justify-start gap-4">
-								<a href="#!" class=" text-white rounded-full bg-gray-500 p-2">
+								<a
+									href="https://www.facebook.com/people/HEIDI-Heimat-Digital/100063686672976/"
+									class=" text-white rounded-full bg-gray-500 p-2"
+								>
 									<svg
-										aria-hidden="true"
-										focusable="false"
-										data-prefix="fab"
-										data-icon="facebook-f"
-										class="w-2.5 text-white"
-										role="img"
 										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 320 512"
+										class="h-5 w-5"
+										fill="currentColor"
+										viewBox="0 0 24 24"
 									>
-										<path
-											fill="currentColor"
-											d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-										></path>
+										<path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
 									</svg>
 								</a>
 								<a href="#!" class=" text-white rounded-full bg-gray-500 p-2">
 									<svg
-										aria-hidden="true"
-										focusable="false"
-										data-prefix="fab"
-										data-icon="twitter"
-										class="w-4 text-white"
-										role="img"
 										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 512 512"
+										class="h-5 w-5"
+										fill="currentColor"
+										viewBox="0 0 24 24"
 									>
-										<path
-											fill="currentColor"
-											d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-										></path>
+										<path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
 									</svg>
 								</a>
-								<a href="#!" class=" text-white rounded-full bg-gray-500 p-2">
+								<a
+									href="https://www.instagram.com/heidi.app/?hl=de"
+									class=" text-white rounded-full bg-gray-500 p-2"
+								>
 									<svg
-										aria-hidden="true"
-										focusable="false"
-										data-prefix="fab"
-										data-icon="instagram"
-										class="w-3.5 text-white"
-										role="img"
 										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 448 512"
+										class="h-5 w-5"
+										fill="currentColor"
+										viewBox="0 0 24 24"
 									>
-										<path
-											fill="currentColor"
-											d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-										></path>
+										<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
 									</svg>
 								</a>
-								<a href="#!" class=" text-white rounded-full bg-gray-500 p-2">
+								<a
+									href="https://www.linkedin.com/company/heidi-heimat-digital/mycompany/"
+									class=" text-white rounded-full bg-gray-500 p-2"
+								>
 									<svg
-										aria-hidden="true"
-										focusable="false"
-										data-prefix="fab"
-										data-icon="linkedin-in"
-										class="w-3.5 text-white"
-										role="img"
 										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 448 512"
+										class="h-5 w-5"
+										fill="currentColor"
+										viewBox="0 0 24 24"
 									>
-										<path
-											fill="currentColor"
-											d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"
-										></path>
+										<path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
 									</svg>
 								</a>
 							</div>
@@ -663,17 +594,17 @@ const HomePage = () => {
 								Learn More
 							</h6>
 							<p class="mb-4">
-								<a href="#!" class="text-gray-600 font-sans">
+								<a href="https://heidi-app.de/" class="text-gray-600 font-sans">
 									developer community
 								</a>
 							</p>
 							<p class="mb-4">
-								<a href="#!" class="text-gray-600 font-sans">
+								<a href="https://heidi-app.de/" class="text-gray-600 font-sans">
 									Contact us
 								</a>
 							</p>
 							<p class="mb-4">
-								<a href="#!" class="text-gray-600 font-sans">
+								<a href="/login" class="text-gray-600 font-sans">
 									Log in
 								</a>
 							</p>
@@ -683,12 +614,12 @@ const HomePage = () => {
 								Leagal
 							</h6>
 							<p class="mb-4">
-								<a href="#!" class="text-gray-600 font-sans">
+								<a href="/ImprintPage" class="text-gray-600 font-sans">
 									imprint
 								</a>
 							</p>
 							<p class="mb-4">
-								<a href="#!" class="text-gray-600 font-sans">
+								<a href="/PrivacyPolicy" class="text-gray-600 font-sans">
 									terms and conditions
 								</a>
 							</p>

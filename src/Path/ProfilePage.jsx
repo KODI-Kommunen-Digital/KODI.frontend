@@ -10,8 +10,7 @@ import {
 import { socialMedia } from "../Constants/socialMedia";
 import { getListingsById } from "../Services/listingsApi";
 import { getVillages } from "../Services/villages";
-import { useNavigate } from "react-router-dom";
-//import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
+// import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 class ProfilePage extends React.Component {
 	constructor(props) {
@@ -27,7 +26,7 @@ class ProfilePage extends React.Component {
 			formValid: true,
 			pageLoading: true,
 			updatingProfile: false,
-			val: [{ socialMedia: "", selected: "" }],
+			val: [{ selected: "", socialMedia: "" }],
 			data: {
 				socialMedia: "",
 			},
@@ -36,7 +35,7 @@ class ProfilePage extends React.Component {
 		this.updateChanges = this.updateChanges.bind(this);
 	}
 	componentDidMount() {
-		document.title = "Heidi - Profile";
+		document.title = "Your Profile";
 		this.setPageLoading(true);
 		getProfile()
 			.then((response) => {
@@ -141,7 +140,10 @@ class ProfilePage extends React.Component {
 		if (event.target.name === "socialMedia") {
 			if (!event.target.value) {
 				this.setShowError("socialMedia", true);
-				this.setErrorMessage("socialMedia", "This field cannot be empty");
+				this.setErrorMessage(
+					"socialMedia",
+					"Please enter a valid social media"
+				);
 			} else {
 				this.setShowError("socialMedia", false);
 				this.setErrorMessage("socialMedia", "");
@@ -160,49 +162,28 @@ class ProfilePage extends React.Component {
 				this.setErrorMessage("phoneNumber", "");
 			}
 		}
-		// if (event.target.name === "currentPassword") {
-		//     const enteredPassword = event.target.value;
-		//     const currentPassword = this.state.currentPassword;
-
-		//     if (enteredPassword !== currentPassword) {
-		//         this.setShowError("currentPassword", true);
-		//         this.setErrorMessage("currentPassword", "The entered current password is incorrect. Please enter the correct current password");
-		//     } else {
-		//         this.setShowError("currentPassword", false);
-		//         this.setErrorMessage("currentPassword", "");
-		//     }
-		// } else if (event.target.name === "newPassword") {
-		//     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		//     if (!re.test(event.target.value)) {
-		//         this.setShowError("newPassword", true);
-		//         this.setErrorMessage("newPassword", "The entered new password is invalid. Please enter a valid new password");
-		//     } else {
-		//         this.setShowError("newPassword", false);
-		//         this.setErrorMessage("newPassword", "");
-		//     }
-		// } else if (event.target.name === "confirmPassword") {
-		//     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		//     if (!re.test(event.target.value) && event.target.value !== this.state.newPassword) {
-		//         this.setShowError("newPassword", true);
-		//         this.setErrorMessage("newPassword", "The entered passwords don't match. Please enter a valid password");
-		//     } else {
-		//         this.setShowError("newPassword", false);
-		//         this.setErrorMessage("newPassword", "");
-		//     }
-		// }
 		this.setProfile(event.target.name, event.target.value);
 	}
 	updateChanges() {
 		let valid = true;
 		for (let property in this.state.showError) {
-			if (this.state.showError[property]) valid = false;
+			if (this.state.showError[property]) {
+				valid = false;
+			}
 		}
 		if (valid) {
 			const newState = Object.assign({}, this.state);
 			if (newState.updatingProfile !== true) {
 				newState.updatingProfile = true;
 				this.setState(newState, () => {
-					updateProfile(this.state.profile)
+					const updatedData = this.state.val.reduce((obj, data) => {
+						obj[data.selected] = data.socialMedia;
+						return obj;
+					}, {});
+					const updatedProfile = Object.assign({}, this.state.profile, {
+						socialMedia: updatedData,
+					});
+					updateProfile(updatedProfile)
 						.then(() => {
 							const newState = Object.assign({}, this.state);
 							if (newState.updatingProfile !== false) {
@@ -251,27 +232,49 @@ class ProfilePage extends React.Component {
 
 	handleAdd = (value) => {
 		const { val } = this.state;
-		this.setState({ val: [...val, { socialMedia: value, selected: "" }] });
+		this.setState({ val: [...val, { selected: "", socialMedia: value }] });
 	};
 
 	handleDelete = (index) => {
 		const list = [...this.state.val];
 		list.splice(index, 1);
-		this.setState({ val: list });
+		this.setState(
+			{
+				val: list,
+				data: { socialMedia: JSON.stringify(list) },
+			},
+			() => {}
+		);
 	};
 
-	handleSocialMediaChanges = (e, index) => {
-		const { name, value } = e.target;
-		const { val } = this.state;
-		const list = [...val];
-		list[index][name] = value;
-		this.setState({ val: list, data: { socialMedia: JSON.stringify(list) } });
+	handleSocialMediaChanges = (event, index) => {
+		const { name, value } = event.target;
+		this.setState(
+			(prevState) => ({
+				val: prevState.val.map((data, i) =>
+					i === index ? { ...data, [name]: value } : data
+				),
+			}),
+			() => {
+				const updatedData = this.state.val.reduce((obj, data) => {
+					obj[data.selected] = data.socialMedia;
+					return obj;
+				}, {});
+				console.log(updatedData);
+				this.setState((prevState) => ({
+					input: {
+						...prevState.input,
+						socialMedia: updatedData[event.target.value],
+					},
+				}));
+			}
+		);
 	};
 
 	componentDidUpdate(prevProps, prevState) {
 		const { val } = this.state;
 		if (val !== prevState.val) {
-			const socialMediaValues = val.map((item) => item.socialMedia);
+			const socialMediaValues = val.map((item) => item.socialMedia).join(","); // join the array of strings into a single string
 			this.setState((prevState) => ({
 				input: { ...prevState.input, socialMedia: socialMediaValues },
 			}));
@@ -332,6 +335,9 @@ class ProfilePage extends React.Component {
 			handleSocialMediaChanges,
 			i,
 		} = this.props;
+
+		const userSocialMedia = this.state.profile.socialMedia;
+		console.log(userSocialMedia);
 		return (
 			<div class="bg-slate-600">
 				<SideBar />
@@ -461,7 +467,7 @@ class ProfilePage extends React.Component {
 													<img
 														class="rounded-full h-20"
 														src={this.state.profile.image}
-														alt="avatar"
+														alt="image"
 													/>
 												</div>
 												<div class="flex flex-col justify-center items-center">
@@ -535,6 +541,85 @@ class ProfilePage extends React.Component {
 									</label>
 									<div class="relative mb-4">
 										<div class="relative mb-4 mt-2 border-white">
+											{Object.keys(
+												JSON.parse(this.state.profile.socialMedia)
+											).map((data) => {
+												return JSON.parse(this.state.profile.socialMedia)[
+													data
+												] !== "" ? (
+													<div
+														key={data}
+														class="items-stretch py-2 grid grid-cols-1 md:grid-cols-3 gap-4"
+													>
+														<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+															<label
+																for="country"
+																class="block text-md font-medium text-gray-600"
+															>
+																Select
+															</label>
+															<select
+																type="text"
+																id="selected"
+																name="selected"
+																value={data || ""}
+																onBlur={validateInput}
+																onChange={(e) =>
+																	this.handleSocialMediaChanges(e, i)
+																}
+																disabled
+																autoComplete="country-name"
+																className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+															>
+																{socialMedia.map((option) => (
+																	<option key={option} value={option}>
+																		{option}
+																	</option>
+																))}
+															</select>
+														</div>
+														<div class="mt-2 px-0 ml-2">
+															<label
+																htmlFor="lastName"
+																class="block text-md font-medium text-gray-600"
+															>
+																Link
+															</label>
+															<input
+																type="text"
+																id="socialMedia"
+																name="socialMedia"
+																defaultValue={
+																	JSON.parse(this.state.profile.socialMedia)[
+																		data
+																	]
+																}
+																onChange={(e) =>
+																	this.handleSocialMediaChanges(e, i)
+																}
+																className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+																placeholder="ainfo@heidi-app.de"
+																disabled
+															/>
+														</div>
+														<div class="flex ml-2 mt-8">
+															<button onClick={() => this.handleDelete(i)}>
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	class="w-5 h-5"
+																	viewBox="0 0 512 512"
+																>
+																	<path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+																</svg>
+															</button>
+														</div>
+													</div>
+												) : (
+													<></>
+												);
+											})}
+										</div>
+										<div class="relative mb-4 mt-2 border-white">
 											{this.state.val.map((data, i) => {
 												return (
 													<div
@@ -552,7 +637,7 @@ class ProfilePage extends React.Component {
 																type="text"
 																id="selected"
 																name="selected"
-																value={data.selected}
+																value={data.selected || ""}
 																onBlur={validateInput}
 																onChange={(e) =>
 																	this.handleSocialMediaChanges(e, i)
@@ -560,7 +645,6 @@ class ProfilePage extends React.Component {
 																autoComplete="country-name"
 																className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 															>
-																<option>Select</option>
 																{socialMedia.map((option) => (
 																	<option key={option} value={option}>
 																		{option}
@@ -573,14 +657,13 @@ class ProfilePage extends React.Component {
 																htmlFor="lastName"
 																class="block text-md font-medium text-gray-600"
 															>
-																Website
+																Link
 															</label>
 															<input
 																type="text"
 																id="socialMedia"
 																name="socialMedia"
-																value={data.socialMedia || ""}
-																onBlur={validateInput}
+																defaultValue={""}
 																onChange={(e) =>
 																	this.handleSocialMediaChanges(e, i)
 																}
@@ -690,165 +773,8 @@ class ProfilePage extends React.Component {
 								</div>
 							</div>
 						</div>
-
-						{/* <div class="container w-auto px-5 py-2 bg-slate-600">
-							<div class="bg-white mt-4 p-6 space-y-10">
-								<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-									Update Password
-									<div className="my-4 bg-gray-600 h-[1px]"></div>
-								</h2>
-								<div class="py-2 grid grid-cols-1 md:grid-cols-3">
-									<div class="mt-1 px-2">
-										<label class="block text-md font-medium text-gray-600">
-											Current password
-										</label>
-										<input
-											type="text"
-											name="currentPassword"
-											id="currentPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your email here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.email
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.email}
-										</div>
-									</div>
-									<div class="mt-1 px-2">
-										<label class="block text-md font-medium text-gray-600">
-											New password
-										</label>
-										<input
-											type="text"
-											name="newPassword"
-											id="newPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your email here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.email
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.email}
-										</div>
-									</div>
-									<div class="mt-1 px-2">
-										<label
-											htmlFor="phoneNumber"
-											class="block text-md font-medium text-gray-600"
-										>
-											Confirm password
-										</label>
-										<input
-											type="text"
-											name="confirmPassword"
-											id="confirmPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your phone number here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.phoneNumber
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.phoneNumber}
-										</div>
-									</div>
-								</div>
-								<button
-									className="w-full bg-red-800 hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
-									onClick={() => {
-										this.props.navigate("/PasswordUpdate");
-									}}
-								>
-									Update Password
-								</button>
-							</div>
-						</div> */}
-
 						<div class="container w-auto px-5 py-2 bg-slate-600">
 							<div class="bg-white mt-4 p-6">
-								<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-									Personal Information
-									<div className="my-4 bg-gray-600 h-[1px]" />
-								</h2>
-								<div class="relative mb-4">
-									<div class="pb-8">
-										<label class="block px-2 text-sm font-medium text-gray-400">
-											This information will be displayed publicly, so be careful
-											what you share
-										</label>
-									</div>
-									<div class="py-2 grid grid-cols-1 md:grid-cols-2">
-										<div class="mt-1 px-2">
-											<label class="block text-md font-medium text-gray-600">
-												Email
-											</label>
-											<input
-												type="text"
-												name="email"
-												id="email"
-												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your email here"
-												defaultValue={this.state.profile.email}
-												onChange={this.handleProfileChange}
-											/>
-											<div
-												className="h-[24px] text-red-600"
-												style={{
-													visibility: this.state.showError.email
-														? "visible"
-														: "hidden",
-												}}
-											>
-												{this.state.errorMessage.email}
-											</div>
-										</div>
-										<div class="mt-1 px-2">
-											<label
-												htmlFor="phoneNumber"
-												class="block text-md font-medium text-gray-600"
-											>
-												Phone Number
-											</label>
-											<input
-												type="text"
-												name="phoneNumber"
-												id="phoneNumber"
-												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your phone number here"
-												defaultValue={this.state.profile.phoneNumber}
-												onChange={this.handleProfileChange}
-											/>
-											<div
-												className="h-[24px] text-red-600"
-												style={{
-													visibility: this.state.showError.phoneNumber
-														? "visible"
-														: "hidden",
-												}}
-											>
-												{this.state.errorMessage.phoneNumber}
-											</div>
-										</div>
-									</div>
-								</div>
 								<div className="py-2 mt-1 px-2">
 									<button
 										className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
@@ -888,94 +814,6 @@ class ProfilePage extends React.Component {
 									</div>
 								) : null}
 							</div>
-							<div class="bg-white mt-4 p-6 space-y-10">
-								{/* <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-									Update Password
-									<div className="my-4 bg-gray-600 h-[1px]"></div>
-								</h2> */}
-								{/* <div class="py-2 grid grid-cols-1 md:grid-cols-3">
-									<div class="mt-1 px-2">
-										<label class="block text-md font-medium text-gray-600">
-											Current password
-										</label>
-										<input
-											type="text"
-											name="currentPassword"
-											id="currentPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your email here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.email
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.email}
-										</div>
-									</div>
-									<div class="mt-1 px-2">
-										<label class="block text-md font-medium text-gray-600">
-											New password
-										</label>
-										<input
-											type="text"
-											name="newPassword"
-											id="newPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your email here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.email
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.email}
-										</div>
-									</div>
-									<div class="mt-1 px-2">
-										<label
-											htmlFor="phoneNumber"
-											class="block text-md font-medium text-gray-600"
-										>
-											Confirm password
-										</label>
-										<input
-											type="text"
-											name="confirmPassword"
-											id="confirmPassword"
-											class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-											placeholder="Enter your phone number here"
-											//onChange={this.handleProfileChange}
-										/>
-										<div
-											className="h-[24px] text-red-600"
-											style={{
-												visibility: this.state.showError.phoneNumber
-													? "visible"
-													: "hidden",
-											}}
-										>
-											{this.state.errorMessage.phoneNumber}
-										</div>
-									</div>
-								</div> */}
-								<button
-									className="w-full bg-red-800 hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
-									onClick={() => {
-										this.props.navigate("/PasswordUpdate");
-									}}
-								>
-									Update Password
-								</button>
-							</div>
 						</div>
 					</div>
 				)}
@@ -983,9 +821,4 @@ class ProfilePage extends React.Component {
 		);
 	}
 }
-
-function WithNavigate(props) {
-	let navigate = useNavigate();
-	return <ProfilePage {...props} navigate={navigate} />;
-}
-export default WithNavigate;
+export default ProfilePage;

@@ -25,8 +25,9 @@ import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
 
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
-import ListingsPage from "./Path/ListingsPage";
+import UploadListings from "./Path/UploadListings";
 import VerifyEmail from "./Path/VerifyEmail";
+import AccountSettings from "./Path/AccountSettings";
 
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
@@ -49,7 +50,7 @@ const App = () => {
 		<BrowserRouter>
 			<div>
 				<Routes>
-					<Route path="/HomePage" element={<HomePage />} />
+					<Route path="/" element={<HomePage />} />
 					<Route path="/Places" element={<Places />} />
 					<Route path="/Below" element={<Below />} />
 					<Route path="/Fuchstal" element={<Fuchstal />} />
@@ -62,11 +63,12 @@ const App = () => {
 					<Route path="/ViewMoreListings" element={<ViewMoreListings />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
-					<Route path="/ListingsPage" element={<ListingsPage />} exact />
+					<Route path="/AccountSettings" element={<AccountSettings />} exact />
+					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-					<Route path="/" element={<LoginPage />} />
+					<Route path="/login" element={<LoginPage />} />
 					<Route path="/Register" element={<Register />} />
 					<Route path="/ImprintPage" element={<ImprintPage />} />
 					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />

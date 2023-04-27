@@ -1,3 +1,4 @@
+import { categoryById } from "../Constants/categories";
 import axios from "../api/axiosInstance";
 
 const instance = axios.create({

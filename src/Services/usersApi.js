@@ -7,7 +7,7 @@ export function getUserId() {
 	);
 }
 
-export async function getUserByIds(ids) {
+export async function getProfileByIds(ids) {
 	return axios.get(`/users?id=${ids}`);
 }
 

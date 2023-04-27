@@ -5,15 +5,19 @@ import SideBar from "../Components/SideBar";
 import {
 	getUserListings,
 	getProfile,
-	getUserByIds,
+	getProfileByIds,
 } from "../Services/usersApi";
-import { getListings, updateListingsData } from "../Services/listingsApi";
+import {
+	getListings,
+	getAllListings,
+	updateListingsData,
+} from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
 import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
 import { Select } from "@chakra-ui/react";
-import { FaBell } from 'react-icons/fa';
+import { FaBell } from "react-icons/fa";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -22,7 +26,7 @@ const Dashboard = () => {
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
 	const [usersList, setUsersList] = useState([]);
-	const [count, setCount] = useState(2);
+	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -41,7 +45,7 @@ const Dashboard = () => {
 					ids.push(listing.userId);
 				}
 			});
-			getUserByIds(ids).then((res) => {
+			getProfileByIds(ids).then((res) => {
 				setUsersList(res.data.data);
 			});
 		}
@@ -77,7 +81,7 @@ const Dashboard = () => {
 		listing.statusId = e.target.value;
 		updateListingsData(listing.cityId, listing, listing.id).then((res) => {
 			if (res.status === 200) {
-				getListings().then((response) => {
+				getAllListings().then((response) => {
 					setListings([...sortOldest(response.data.data)]);
 					setViewAllListings(true);
 				});
@@ -90,53 +94,59 @@ const Dashboard = () => {
 		var categoryId = listing.categoryId;
 		if (categoryId == categoryByName.News) {
 			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
 			navigateTo(
-				`/ListingsPage/ConstructionTraffic?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.EventsOrNews) {
 			navigateTo(
-				`/ListingsPage/Events?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Associations) {
 			navigateTo(
-				`/Listings/PageClub?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.RegionalProducts) {
 			navigateTo(
-				`/ListingsPage/RegionalProducts?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.OfferOrSearch) {
 			navigateTo(
-				`/ListingsPage/OfferSearch?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.NewCitizenInfo) {
 			navigateTo(
-				`/ListingsPage/Newcitizeninfo?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.DefectReport) {
 			navigateTo(
-				`/ListingsPage/DefectReporter?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.LostPropertyOffice) {
 			navigateTo(
-				`/ListingsPage/LostPropertyOffice?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.CompanyPortraits) {
 			navigateTo(
-				`/ListingsPage/Companyportaits?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.News) {
 			navigateTo(
-				`/OverviewPage/NewsCategories?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		} else if (categoryId == categoryByName.Offers) {
 			navigateTo(
-				`/ListingsPage/Offers?listingId=${listing.id}&cityId=${listing.cityId}`
+				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
 			);
 		}
+	}
+
+	function goToEventDetailsPage(listing) {
+		navigateTo(
+			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+		);
 	}
 
 	function handleEditListingsClick() {
@@ -149,7 +159,7 @@ const Dashboard = () => {
 		<section className="bg-slate-600 body-font relative">
 			<SideBar
 				handleGetAllListings={() => {
-					getListings().then((response) => {
+					getAllListings().then((response) => {
 						setListings([...sortOldest(response.data.data)]);
 						setViewAllListings(true);
 					});
@@ -169,87 +179,33 @@ const Dashboard = () => {
 								<div class="ml-10 flex items-baseline space-x-20">
 									{userRole === 3 && (
 										<a
-											class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer"
+											class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer"
 											aria-current="page"
 										>
 											All Listings
 										</a>
 									)}
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Published
 									</a>
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Pending
 									</a>
-									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-bold cursor-pointer">
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
 										Expired
 									</a>
-									<a className="flex">
-										<FaBell style={{ color: 'white', position:'relative' }}/>
+									<a class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 text-sm font-bold cursor-pointer">
+										<FaBell
+											style={{
+												color: "white",
+												position: "relative",
+												fontSize: "15px",
+											}}
+										/>
 										{/*{count > 0 && <span className="notification-count">{count}</span>}*/}
-									</a>								
+									</a>
 								</div>
 							</div>
-
-							{/* <div class="-my-2 -mr-2 lg:hidden">
-              <Popover.Button class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                <span class="sr-only">Open menu</span>
-                <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-              </Popover.Button>
-            </div> */}
-
-							{/* <div class="hidden md:block">
-                <div className="justify-end mt-0 ml-0 flex items-baseline space-x-4">
-                  <select
-                    id="language"
-                    name="language"
-                    onChange={handleLanguageChange}
-                    value={selectedLanguage}
-                    className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-700"
-                  >
-                    <option value={null} disabled selected>
-                      Select a language
-                    </option>
-                    {languages.map((language) => (
-                      <option key={language.language} value={language.language}>
-                        {language.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div> */}
-
-							{/* <div class="hidden md:block">
-                <div class="flex justify-center">
-                  <div class="mb-0">
-                    <div class="relative mb-0 flex w-full flex-wrap items-stretch">
-                      <input
-                        type="search"
-                        class="relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                        placeholder="Search"
-                        aria-label="Search"
-                        aria-describedby="button-addon1" />
-                      <button
-                        class="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase bg-white leading-tight text-black shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                        type="button"
-                        id="button-addon1"
-                        data-te-ripple-init
-                        data-te-ripple-color="light">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          class="h-5 w-5">
-                          <path
-                            fill-rule="evenodd"
-                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                            clip-rule="evenodd" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
 						</div>
 					</div>
 
@@ -301,59 +257,6 @@ const Dashboard = () => {
 												</a>
 											</div>
 										</div>
-
-										{/* <div class="md:hidden flex justify-center px-3 py-2" id="mobile-menu">
-                      <div className="flex items-center justify-end">
-                        <select
-                          id="language"
-                          name="language"
-                          onChange={handleLanguageChange}
-                          value={selectedLanguage}
-                          className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-700"
-                        >
-                          <option value={null} disabled selected>
-                            Select a language
-                          </option>
-                          {languages.map((language) => (
-                            <option key={language.language} value={language.language}>
-                              {language.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div> */}
-
-										{/* <div class="md:hidden flex justify-center px-3 py-2" id="mobile-menu">
-                      <div class="flex justify-center">
-                        <div class="mb-0">
-                          <div class="relative mb-0 flex w-full flex-wrap items-stretch">
-                            <input
-                              type="search"
-                              class="relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                              placeholder="Search"
-                              aria-label="Search"
-                              aria-describedby="button-addon1" />
-                            <button
-                              class="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase bg-white leading-tight text-blackshadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                              type="button"
-                              id="button-addon1"
-                              data-te-ripple-init
-                              data-te-ripple-color="light">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                class="h-5 w-5">
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                                  clip-rule="evenodd" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
 									</div>
 								</div>
 							</div>
@@ -402,7 +305,7 @@ const Dashboard = () => {
 										<th
 											scope="row"
 											class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
-											onClick={() => navigateTo("/Example1")}
+											onClick={() => goToEventDetailsPage(listing)}
 										>
 											<img
 												class="w-10 h-10 rounded-full hidden sm:table-cell"
@@ -424,7 +327,11 @@ const Dashboard = () => {
 										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-												onClick={() => goToEditListingsPage(listing)}
+												onClick={() => {
+													localStorage.setItem("selectedItem", (categoryById[listing.categoryId]));
+													goToEditListingsPage(listing);
+												}}
+												//onClick={() => goToEditListingsPage(listing)}
 											>
 												Edit
 											</a>
