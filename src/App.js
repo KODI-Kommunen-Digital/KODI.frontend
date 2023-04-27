@@ -18,7 +18,7 @@ import Fuchstal from "./Path/Fuchstal";
 import AppleVillage from "./Path/AppleVillage";
 
 import EventDetails from "./Path/SubPages/EventDetails";
-import Events from "./Path/SubPages/Events";
+import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/SubPages/CitizenService";
 import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
@@ -57,7 +57,7 @@ const App = () => {
 					<Route path="/AppleVillage" element={<AppleVillage />} />
 
 					<Route path="/HomePage/EventDetails" element={<EventDetails />} />
-					<Route path="/Events" element={<Events />} />
+					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
 					<Route path="/ViewMoreListings" element={<ViewMoreListings />} />

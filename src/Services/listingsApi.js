@@ -5,11 +5,11 @@ export async function getAllListings() {
 }
 
 export async function getListings(params) {
-    return axios.get(`/listings?${Object.keys(params)}=${Object.values(params)}` , params);
+    return axios.get(`/listings`, { params });
 }
 
 export async function getListingsByCity(cityId, params) {
-    return axios.get(`/cities/${cityId}/listings?&${Object.keys(params)}=${Object.values(params)}`);
+    return axios.get(`/cities/${cityId}/listings`, { params });
 }
 
 export async function getListingsById(cityId, listingsId) {

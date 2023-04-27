@@ -80,7 +80,7 @@ const HomePage = () => {
 	}, []);
 
 	function goToEditListingsPage(category) {
-		navigateTo(`/Events?categoryId=${category}`);
+		navigateTo(`/AllEvents?categoryId=${category}`);
 	}
 
 	return (
@@ -121,6 +121,7 @@ const HomePage = () => {
 					<div
 						onClick={() => {
 							localStorage.setItem("selectedItem", "News");
+							//localStorage.setItem("selectedItemLocation", t("chooseOneLocation"));
 							goToEditListingsPage(1);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer "
@@ -374,7 +375,7 @@ const HomePage = () => {
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo(`/Places?cityId=${city.id}`);
+								navigateTo(`/AllEvents?cityId=${city.id}`);
 								localStorage.setItem("selectedItemLocation", city.name);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
@@ -414,7 +415,6 @@ const HomePage = () => {
 									localStorage.setItem("selectedCategoryId", (listing.categoryId));
 									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
 								}}
-								//onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
 								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 							>
 								<a class="block relative h-64 rounded overflow-hidden">
@@ -437,7 +437,7 @@ const HomePage = () => {
 					type="submit"
 					onClick={() => {
 						localStorage.setItem("selectedItem", "Choose one category");
-						navigateTo("/ViewMoreListings");
+						navigateTo("/AllEvents");
 					}}
 					class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 				>
