@@ -5,11 +5,15 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {getListingsByCity, getListingsById, postListingsData , updateListingsData} from '../Services/listingsApi'
+import {
+	getListingsByCity,
+	getListingsById,
+	postListingsData,
+	updateListingsData,
+} from "../Services/listingsApi";
 
 import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
-
 
 function UploadListings() {
   //window.scrollTo(0, 0);
@@ -1205,7 +1209,7 @@ function UploadListings() {
             </div>
         )} */}
 
-      {/* <div class="container w-auto px-5 py-2 bg-slate-600">
+			{/* <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
               Media

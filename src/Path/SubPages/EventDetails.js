@@ -1,15 +1,15 @@
-	import React, { useState, useEffect } from "react";
-	import HomePageNavBar from "../../Components/HomePageNavBar";
-	import { getDashboarddata } from "../../Services/dashboarddata";
-	import { useNavigate } from "react-router-dom";
-	import { useTranslation } from "react-i18next";
-	import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-	import { getAllListings, getListings } from "../../Services/listingsApi";
-	import { getProfileByIds , getProfile } from "../../Services/usersApi";
-	import { sortRecent } from "../../Services/helper";
-	import { getListingsById } from "../../Services/listingsApi";
-	import { getVillages } from "../../Services/villages";
-	import {
+import React, { useState, useEffect } from "react";
+import HomePageNavBar from "../../Components/HomePageNavBar";
+import { getDashboarddata } from "../../Services/dashboarddata";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import { getAllListings , getListings} from "../../Services/listingsApi";
+import { getProfileByIds } from "../../Services/usersApi";
+import { sortRecent } from "../../Services/helper";
+import { getListingsById } from "../../Services/listingsApi";
+import { getVillages } from "../../Services/villages";
+import {
 	getFavorites,
 	postFavoriteListingsData,
 	deleteListingsById,
