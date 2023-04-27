@@ -3,9 +3,9 @@ import axios from "../api/axiosInstance";
 
 
 export async function getCategory() {
-	return instance.get(`/categories`);
+	return axios.get(`/categories`);
 }
 
 export async function getCategoryListings(cityId , categoryId) {
-	return instance.get(`/cities/${cityId}/categories/${categoryId}`);
+	return axios.get(`/cities/${cityId}/categories/${categoryId}`);
 }
