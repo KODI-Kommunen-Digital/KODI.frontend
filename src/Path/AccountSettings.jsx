@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import "../index.css";
 import { FaBell } from 'react-icons/fa';
 import Alert from "../Components/Alert";
-import { getProfile, updateProfile } from "../Services/usersApi";
+import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
 
 
 const AccountSettings = () => {
@@ -59,8 +59,18 @@ const AccountSettings = () => {
 		}
 	}
 
-	const handledeleteAccount = ()=>{
-		
+	const handleDeleteAccount = ()=>{
+		deleteAccount().then(() => {
+			window.localStorage.removeItem("accessToken");
+			window.localStorage.removeItem("refreshToken");
+			window.localStorage.removeItem("userId");
+			window.sessionStorage.removeItem("accessToken");
+			window.sessionStorage.removeItem("refreshToken");
+			window.sessionStorage.removeItem("userId");
+			window.location.href = "/";
+		}).catch((error) => {
+			console.log(error);
+		})
 	}
 
 	return (
@@ -158,7 +168,7 @@ const AccountSettings = () => {
                             <button className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 								class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
-								onClick = {handledeleteAccount}
+								onClick = {handleDeleteAccount}
 							>{t("deleteAccount")} </button>
                         </div>
 					</div>

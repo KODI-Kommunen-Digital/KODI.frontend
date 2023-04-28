@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { getAllListings , getListings} from "../../Services/listingsApi";
-import { getProfileByIds } from "../../Services/usersApi";
+import { getProfile } from "../../Services/usersApi";
 import { sortRecent } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
@@ -60,8 +60,9 @@ import {
 		getVillages(cityId).then((response) => setVillages(response.data.data));
 		getListingsById(cityId, listingId).then((listingsResponse) => {
 			setInput(listingsResponse.data.data);
-			getProfileByIds(listingsResponse.data.data.userId).then((res) => {
-			setUser(res.data.data[0]);
+			var cityUserId = listingsResponse.data.data.userId
+			getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+				setUser(res.data.data);
 			});
 			setDescription(listingsResponse.data.data.description);
 			setTitle(listingsResponse.data.data.title);
@@ -378,7 +379,7 @@ import {
 
 				<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
 					<div class="flex justify-center sm:justify-start h-6 w-auto">
-						{profilePic}
+						<img src={profilePic}/>
 					</div>
 					<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 					<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
@@ -516,7 +517,7 @@ import {
 
 				<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
 					<div class="flex justify-center sm:justify-start h-6 w-auto">
-					{profilePic}
+						<img src={profilePic}/>
 					</div>
 					<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 					<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
