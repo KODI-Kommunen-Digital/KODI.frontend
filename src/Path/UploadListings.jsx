@@ -153,7 +153,6 @@ function UploadListings() {
     const currentDate = new Date().toISOString().slice(0, 10);
     //const time = new Date().toLocaleTimeString();
     const createdAt = `${currentDate}`;
-    console.log(currentDate)
     setInput({ ...input, createdAt });
 
     try {
@@ -663,9 +662,13 @@ function UploadListings() {
                  required
                  class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
              >
-                 <option class="font-sans" value="Default">
+                 {/* <option class="font-sans" value="Default">
 														{selectedItem}
-													</option>
+													</option> */}
+                          <option class="font-sans" value="Default">
+                          {t("chooseOneCategory")}
+                          </option>
+
 													{selectedItem !== "News" ? (
 														<option value="News">{t("news")}</option>
 													) : null}
@@ -820,7 +823,6 @@ function UploadListings() {
                   Street address
                 </label>
 
-                {/* <Maps/> */}
                 <div>
                   <input
                     type="text"
