@@ -4,4 +4,10 @@ var status = {
     3: "Pending"
 }
 
-module.exports = { status }
+var statusByName = {
+    "Active": 1,
+    "Inactive": 2,
+    "Pending": 3
+}
+
+module.exports = { status, statusByName }

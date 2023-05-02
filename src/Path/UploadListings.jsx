@@ -16,1106 +16,1020 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 
 function UploadListings() {
-	//window.scrollTo(0, 0);
-	//const category = 4;
-	//const subCategory = 0;
+  //window.scrollTo(0, 0);
+  //const category = 4;
+  //const subCategory = 0;
 
-	const { t, i18n } = useTranslation();
-	const editor = useRef(null);
-	const [content, setContent] = useState("");
-	const [listingId, setListingId] = useState(0);
-	const [newListing, setNewListing] = useState(true);
-	const [updating, setUpdating] = useState(false);
-	const [alertInfo, setAlertInfo] = useState({
-		show: false,
-		message: null,
-		type: null,
-	});
+  const { t, i18n } = useTranslation();
+  const editor = useRef(null);
+  const [content, setContent] = useState("");
+  const [listingId, setListingId] = useState(0);
+  const [newListing, setNewListing] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({show: false, message:null, type:null});
 
-	const [query, setQuery] = useState("");
-	const [results, setResults] = useState([]);
-	const [selectedResult, setSelectedResult] = useState({});
-	const [map, setMap] = useState(null);
-	const [marker, setMarker] = useState(null);
 
-	//Drag and Drop starts
-	const [image1, setImage1] = useState(null);
-	const [image2, setImage2] = useState(null);
-	const [dragging, setDragging] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [selectedResult, setSelectedResult] = useState({});
+  const [map, setMap] = useState(null);
+  const [marker, setMarker] = useState(null);
 
-	const [successMessage, setSuccessMessage] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
+  //Drag and Drop starts
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [dragging, setDragging] = useState(false);
 
-	function handleDragEnter(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		setDragging(true);
-	}
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-	function handleDragLeave(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		setDragging(false);
-	}
 
-	function handleDragOver(e) {
-		e.preventDefault();
-		e.stopPropagation();
-	}
+  function handleDragEnter(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  }
 
-	function handleDrop1(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		const file = e.dataTransfer.files[0];
-		setImage1(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			logo: URL.createObjectURL(file),
-		})); //send as url image
-		setDragging(false);
-	}
+  function handleDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  }
 
-	function handleInputChange1(e) {
-		const file = e.target.files[0];
-		setImage1(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			logo: URL.createObjectURL(file),
-		})); //send as url image
-	}
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-	function handleRemoveImage1() {
-		setImage1(null);
-		setInput((prevInput) => ({ ...prevInput, logo: "" }));
-	}
-	function handleDrop2(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		const file = e.dataTransfer.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
-		setDragging(false);
-	}
+  function handleDrop1(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files[0];
+    setImage1(file);
+    setInput(prevInput => ({...prevInput, logo: URL.createObjectURL(file)})); //send as url image
+    setDragging(false);
+  }
 
-	function handleInputChange2(e) {
-		const file = e.target.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
-	}
+  function handleInputChange1(e) {
+    const file = e.target.files[0];
+    setImage1(file);
+    setInput(prevInput => ({...prevInput, logo: URL.createObjectURL(file)})); //send as url image
+  }
 
-	function handleRemoveImage2() {
-		setImage2(null);
-		setInput((prevInput) => ({ ...prevInput, media: "" }));
-	}
-	//Drag and Drop ends
+  function handleRemoveImage1() {
+    setImage1(null);
+    setInput(prevInput => ({...prevInput, logo: ''}));
+  }
+  function handleDrop2(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files[0];
+    setImage2(file);
+    setInput(prevInput => ({...prevInput, media: URL.createObjectURL(file)})); //send as url image
+    setDragging(false);
+  }
 
-	//Sending data to backend starts
-	const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
-	const [input, setInput] = useState({
-		//"villageId": 1,
-		categoryId: 0,
-		subcategoryId: 0,
-		statusId: 3,
-		sourceId: 1,
-		userId: 2,
-		title: "",
-		place: "",
-		phone: "",
-		email: "",
-		description: "",
-		logo: null,
-		//media: null,
-		startDate: "",
-		endDate: "",
-		originalPrice: "",
-		villagedropdown: "",
-		zipCode: "",
-		discountedPrice: "",
-	});
+  function handleInputChange2(e) {
+    const file = e.target.files[0];
+    setImage2(file);
+    setInput(prevInput => ({...prevInput, media: URL.createObjectURL(file)})); //send as url image
+  }
 
-	const [error, setError] = useState({
-		//"villageId": 1,
-		categoryId: 0,
-		subcategoryId: 0,
-		statusId: "pending",
-		sourceId: 1,
-		userId: 2,
-		title: "",
-		place: "",
-		phone: "",
-		email: "",
-		description: "",
-		logo: null,
-		//media: null,
-		startDate: "",
-		endDate: "",
-		originalPrice: "",
-		villagedropdown: "",
-		zipCode: "",
-		discountedPrice: "",
-	});
+  function handleRemoveImage2() {
+    setImage2(null);
+    setInput(prevInput => ({...prevInput, media: ''}));
+  }
+  //Drag and Drop ends
 
-	const handleSubmit = async (event) => {
-		setUpdating(true);
-		try {
-			var response = newListing
-				? await postListingsData(cityId, input)
-				: await updateListingsData(cityId, input, listingId);
-			setSuccessMessage(t("listingUpdated"));
-			setErrorMessage(false);
-			setTimeout(() => setSuccessMessage(false), 5000);
-		} catch (error) {
-			setErrorMessage(t("listingNotUpdated"));
-			setSuccessMessage(false);
-			setTimeout(() => setErrorMessage(false), 5000);
-		}
-		setUpdating(false);
-	};
+  //Sending data to backend starts
+  const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
+  const [input, setInput] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "statusId": 3,
+    "sourceId": 1,
+    "userId": 2,
+    title:'',
+    place:'',
+    phone: '',
+    email:'',
+    description: '',
+    logo: null,
+    //media: null,
+    startDate:'',
+    endDate:'',
+    originalPrice:'',
+    villagedropdown:'',
+    zipCode:'',
+    discountedPrice:''
+  });
 
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-			getListingsById(cityId, listingId).then((listingsResponse) => {
-				setInput(listingsResponse.data.data);
-				setDescription(listingsResponse.data.data.description);
-			});
-		}
-	}, []);
+  const [error, setError] = useState({
+    //"villageId": 1,
+    "categoryId": 0,
+    "subcategoryId": 0,
+    "statusId": 'pending',
+    "sourceId": 1,
+    "userId": 2,
+    title:'',
+    place:'',
+    phone: '',
+    email:'',
+    description: '',
+    logo: null,
+    //media: null,
+    startDate:'',
+    endDate:'',
+    originalPrice:'',
+    villagedropdown:'',
+    zipCode:'',
+    discountedPrice:''
+  })
 
-	const onInputChange = (e) => {
-		const { name, value } = e.target;
-		setInput((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-		validateInput(e);
-	};
+  const handleSubmit = async(event) =>{
+    setUpdating(true);
+    try {
+        var response = newListing ? await postListingsData(cityId, input) : await updateListingsData(cityId, input, listingId);
+        setSuccessMessage(t("listingUpdated"));
+    } catch (error) {
+        setErrorMessage(t("listingNotUpdated"));
+    }
+    setUpdating(false);
+};
 
-	const [description, setDescription] = useState("");
+    useEffect(() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      var cityId = searchParams.get('cityId')
+      setCityId(cityId);
+      var listingId = searchParams.get('listingId')
+      setListingId(listingId);
+      if (listingId && cityId) {
+        setNewListing(false)
+          getVillages(cityId).then(response =>
+          setVillages(response.data.data)
+        )
+        getListingsById(cityId, listingId).then(listingsResponse => {
+          setInput(listingsResponse.data.data);
+          setDescription(listingsResponse.data.data.description);
+        });
+      }
+    }, []);
 
-	const onDescriptionChange = (newContent) => {
-		setInput((prev) => ({
-			...prev,
-			description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
-		}));
-		setDescription(newContent);
-	};
+  const onInputChange = e => {
+    const { name, value } = e.target;
+    setInput(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    validateInput(e);
 
-	const validateInput = (e) => {
-		let { name, value } = e.target;
-		setError((prev) => {
-			const stateObj = { ...prev, [name]: "" };
+  };
 
-			switch (name) {
-				case "title":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterTitle");
-					}
-					break;
-				case "place":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterPlace");
-					}
-					break;
-				case "address":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterAddress");
-					}
-					break;
-				case "phone":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterPhone");
-					}
-					break;
+  const [description, setDescription] = useState('');
 
-				case "description":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterDescription");
-					}
-					break;
+  const onDescriptionChange = newContent => {
+    setInput(prev => ({
+      ...prev,
+      description: newContent.replace(/(<br>|<\/?p>)/gi, '')
+    }));
+    setDescription(newContent);
+  };
 
-				case "logo":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterLogo");
-					}
-					break;
+  const validateInput = e => {
+    let { name, value } = e.target;
+    setError(prev => {
+      const stateObj = { ...prev, [name]: "" };
 
-				case "media":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterMedia");
-					}
-					break;
+      switch (name) {
+        case "title":
+          if (!value) {
+            stateObj[name] = t("pleaseEnterTitle");
+          }
+          break;
+          case "place":
+            if(!value){
+              stateObj[name] = t("pleaseEnterPlace");
+            }
+            break;
+        case "address":
+          if(!value){
+            stateObj[name] = t("pleaseEnterAddress");
+          }
+          break;
+          case "phone":
+            if(!value){
+              stateObj[name] = t("pleaseEnterPhone");
+            }
+            break;
 
-				case "selected":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterSelected");
-					}
-					break;
-				case "endDate":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterStartDate");
-					}
-					break;
-				case "startDate":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterEndDate");
-					}
-					break;
-				case "villagedropdown":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterVillage");
-					}
-					break;
-				case "zipCode":
-					if (!value) {
-						stateObj[name] = t("pleaseEnterZipCode");
-					}
-					break;
+            case "description":
+              if(!value){
+                stateObj[name] = t("pleaseEnterDescription");
+              }
+              break;
 
-				default:
-					break;
-			}
+              case "logo":
+              if(!value){
+                stateObj[name] = t("pleaseEnterLogo");
+              }
+              break;
 
-			return stateObj;
-		});
-	};
-	//Sending data to backend ends
+              case "media":
+              if(!value){
+                stateObj[name] = t("pleaseEnterMedia");
+              }
+              break;
 
-	//Map integration Sending data to backend starts
-	input["address"] = selectedResult.display_name;
-	input["latitude"] = selectedResult.lat;
-	input["longitude"] = selectedResult.lon;
-	const handleSearch = async (event) => {
-		event.preventDefault();
-		setQuery(event.target.value);
-		const response = await fetch(
-			`https://nominatim.openstreetmap.org/search?q=${query}&format=json`
-		);
-		const data = await response.json();
-		setResults(data);
-	};
+              case "selected":
+              if(!value){
+                stateObj[name] = t("pleaseEnterSelected");
+              }
+              break;
+              case "endDate":
+              if(!value){
+                stateObj[name] = t("pleaseEnterStartDate");
+              }
+              break;
+              case "startDate":
+              if(!value){
+                stateObj[name] = t("pleaseEnterEndDate");
+              }
+              break;
+              case "villagedropdown":
+              if(!value){
+                stateObj[name] = t("pleaseEnterVillage");
+              }
+              break;
+              case "zipCode":
+              if(!value){
+                stateObj[name] = t("pleaseEnterZipCode");
+              }
+              break;
 
-	const handleResultSelect = (result) => {
-		setQuery(result.display_name);
-		setSelectedResult(result);
-		if (marker) {
-			marker.setLatLng([result.lat, result.lon]);
-		} else {
-			const newMarker = L.marker([result.lat, result.lon]).addTo(map);
-			setMarker(newMarker);
-		}
-		map.setView([result.lat, result.lon], 13);
-		setResults([]);
-	};
+        default:
+          break;
+      }
 
-	useEffect(() => {
-		if (!map && selectedResult.lat) {
-			const newMap = L.map("map").setView(
-				[selectedResult.lat, selectedResult.lon],
-				13
-			);
-			setMap(newMap);
-			L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-				attribution:
-					'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-			}).addTo(newMap);
-			document.getElementsByClassName(
-				"leaflet-control-attribution"
-			)[0].style.display = "none";
-		}
-	}, [map, selectedResult]);
-	const handleSelection = (index, value) => {
-		const updatedVal = [...val];
-		updatedVal[index].selected = value;
-		setVal(updatedVal);
-	};
+      return stateObj;
+    });
+  }
+  //Sending data to backend ends
 
-	useEffect(() => {
-		getCities().then((citiesResponse) => {
-			setCities(citiesResponse.data.data);
-		});
-	}, []);
+  //Map integration Sending data to backend starts
+  input["address"] = selectedResult.display_name
+  input["latitude"] = selectedResult.lat
+  input["longitude"] = selectedResult.lon
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    setQuery(event.target.value)
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${query}&format=json`
+    );
+    const data = await response.json();
+    setResults(data);
+  };
 
-	useEffect(() => {
-		setInput((prevState) => ({
-			...prevState,
-			selected: val.map((item) => item.selected),
-		}));
-	}, [val]);
+  const handleResultSelect = (result) => {
+    setQuery(result.display_name);
+    setSelectedResult(result);
+    if (marker) {
+      marker.setLatLng([result.lat, result.lon]);
+    } else {
+      const newMarker = L.marker([result.lat, result.lon]).addTo(map);
+      setMarker(newMarker);
+    }
+    map.setView([result.lat, result.lon], 13);
+    setResults([]);
+  };
 
-	const handleDelete = (index) => {
-		const list = [...val];
-		list.splice(index, 1);
-		setVal(list);
-	};
+  useEffect(() => {
+    if (!map && selectedResult.lat) {
+        const newMap = L.map("map").setView(
+        [selectedResult.lat, selectedResult.lon],
+        13
+        );
+        setMap(newMap);
+        L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            attribution:
+            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        }
+        ).addTo(newMap);
+        document.getElementsByClassName('leaflet-control-attribution')[0].style.display = 'none';
+    }
+  }, [map, selectedResult]);
+  const handleSelection = (index, value) => {
+    const updatedVal = [...val];
+    updatedVal[index].selected = value;
+    setVal(updatedVal);
+  };
 
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
-	//Social Media ends
+  useEffect(() => {
+    getCities().then(citiesResponse => {
+      setCities(citiesResponse.data.data);
+  })}, []);
 
-	const [date, setDate] = useState();
-	const [cityId, setCityId] = useState(0);
-	const [villages, setVillages] = useState([]);
-	const [cities, setCities] = useState([]);
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
+  useEffect(() => {
+    setInput(prevState => ({ ...prevState, selected: val.map(item => item.selected) }));
+  }, [val]);
 
-	const [listings, setListings] = useState([]);
-	const [categoryId, setCategoryId] = useState();
-	const [selectedCategory, setSelectedCategory] = useState("");
-	const [subcategoryId, setSubcategoryId] = useState();
-	//const selectedItem = localStorage.getItem('selectedItem');
-	const [selectedItem, setSelectedItem] = useState(
-		localStorage.getItem("selectedItem")
-	);
+  const handleDelete = (index) => {
+    const list = [...val];
+    list.splice(index, 1);
+    setVal(list);
+  };
 
-	function handleSelectedItemChange(newValue) {
-		setSelectedItem(newValue);
-		localStorage.setItem("selectedItem", newValue);
-	}
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
+//Social Media ends
 
-	useEffect(() => {
-		let categoryId = 0;
-		switch (selectedItem) {
-			case "News":
-				categoryId = 1;
-				break;
-			case "Road Works / Traffic":
-				categoryId = 2;
-				break;
-			case "Events":
-				categoryId = 3;
-				break;
-			case "Clubs":
-				categoryId = 4;
-				break;
-			case "Regional Products":
-				categoryId = 5;
-				break;
-			case "Offer / Search":
-				categoryId = 6;
-				break;
-			case "New Citizen Info":
-				categoryId = 7;
-				break;
-			case "Defect Report":
-				categoryId = 8;
-				break;
-			case "Lost And Found":
-				categoryId = 9;
-				break;
-			case "Company Portraits":
-				categoryId = 10;
-				break;
-			case "Carpooling And Public Transport":
-				categoryId = 11;
-				break;
-			case "Offers":
-				categoryId = 12;
-				break;
-			default:
-				categoryId = 0;
-				break;
-		}
-		setInput((prevInput) => ({ ...prevInput, categoryId }));
-		setCategoryId(categoryId);
-	}, [selectedItem]);
+  const [date, setDate] = useState();
+  const [cityId, setCityId] = useState(0);
+  const [villages, setVillages] = useState([]);
+  const [cities, setCities] = useState([]);
+  async function onCityChange(e) {
+    const cityId = e.target.value;
+    setCityId(cityId);
+    setInput(prev => ({
+      ...prev,
+      villageId: 0
+    }));
+    getVillages(cityId).then(response =>
+      setVillages(response.data.data)
+    )
+  }
 
-	const handleCategoryChange = (event) => {
-		let categoryId;
-		switch (event.target.value) {
-			case "News":
-				categoryId = 1;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Road Works / Traffic":
-				categoryId = 2;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Events":
-				categoryId = 3;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Clubs":
-				categoryId = 4;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Regional Products":
-				categoryId = 5;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Offer / Search":
-				categoryId = 6;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "New Citizen Info":
-				categoryId = 7;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Defect Report":
-				categoryId = 8;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Lost And Found":
-				categoryId = 9;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Company Portraits":
-				categoryId = 10;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Carpooling And Public Transport":
-				categoryId = 11;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
-			case "Offers":
-				categoryId = 12;
-				setInput({ ...input, categoryId });
-				setSelectedCategory(event.target.value);
-				break;
+    const [listings, setListings] = useState([]);
+    const [categoryId, setCategoryId] = useState();
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [subcategoryId, setSubcategoryId] = useState();
+    //const selectedItem = localStorage.getItem('selectedItem');
+    const [selectedItem, setSelectedItem] = useState(localStorage.getItem('selectedItem'));
 
-			default:
-				categoryId = 0;
-				break;
-		}
-		setInput((prevInput) => ({ ...prevInput, categoryId }));
-		setSubcategoryId(null);
-		handleSelectedItemChange(event.target.value);
+    function handleSelectedItemChange(newValue) {
+      setSelectedItem(newValue);
+      localStorage.setItem('selectedItem', newValue);
+    }
 
-		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("categoryId", categoryId);
-		urlParams.delete("subcategoryId");
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
-	};
+    useEffect(() => {
+      let categoryId = 0;
+      switch (selectedItem) {
+        case "News":
+          categoryId = 1;
+          break;
+        case "Road Works / Traffic":
+          categoryId = 2;
+          break;
+          case "Events":
+            categoryId = 3;
+        break;
+        case "Clubs":
+            categoryId = 4;
+        break;
+        case "Regional Products":
+            categoryId = 5;
+        break;
+        case "Offer / Search":
+            categoryId = 6;
+        break;
+        case "New Citizen Info":
+            categoryId = 7;
+        break;
+        case "Defect Report":
+            categoryId = 8;
+        break;
+        case "Lost And Found":
+            categoryId = 9;
+        break;
+        case "Company Portraits":
+            categoryId = 10;
+        break;
+        case "Carpooling And Public Transport":
+            categoryId = 11;
+        break;
+        case "Offers":
+            categoryId = 12;
+        break;
+        default:
+          categoryId = 0;
+          break;
+      }
+      setInput(prevInput => ({ ...prevInput, categoryId }));
+      setCategoryId(categoryId);
+    }, [selectedItem]);
 
-	const [selectedSubCategory, setSelectedSubCategory] = useState("");
-	const handleSubcategoryChange = (event) => {
-		let subcategoryId;
-		switch (event.target.value) {
-			case "newsflash":
-				subcategoryId = 1;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "alerts":
-				subcategoryId = 2;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "politics":
-				subcategoryId = 3;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "ecocomy":
-				subcategoryId = 4;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "sports":
-				subcategoryId = 5;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "tod":
-				subcategoryId = 6;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "local":
-				subcategoryId = 7;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			case "clubnews":
-				subcategoryId = 8;
-				setInput({ ...input, subcategoryId });
-				setSelectedSubCategory(event.target.value);
-				break;
-			default:
-				subcategoryId = 0;
-				break;
-		}
-		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
-		setSubcategoryId(subcategoryId);
-		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("subcategoryId", subcategoryId);
-		if (subcategoryId === 0) {
-			urlParams.delete("subCategoryId");
-		}
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
-	};
+  const handleCategoryChange = (event) => {
+    let categoryId;
+    switch (event.target.value) {
+    case "News":
+        categoryId = 1;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Road Works / Traffic":
+        categoryId = 2;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Events":
+        categoryId = 3;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Clubs":
+        categoryId = 4;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Regional Products":
+        categoryId = 5;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Offer / Search":
+        categoryId = 6;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "New Citizen Info":
+        categoryId = 7;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Defect Report":
+        categoryId = 8;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Lost And Found":
+        categoryId = 9;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Company Portraits":
+        categoryId = 10;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Carpooling And Public Transport":
+        categoryId = 11;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
+    case "Offers":
+        categoryId = 12;
+        setInput({ ...input, categoryId });
+        setSelectedCategory(event.target.value);
+    break;
 
-	return (
-		<section class="bg-slate-600 body-font relative">
-			<SideBar />
+    default:
+        categoryId = 0;
+        break;
+    }
+    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setSubcategoryId(null);
+    handleSelectedItemChange(event.target.value);
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-						Information
-						<div className="my-4 bg-gray-600 h-[1px]"></div>
-					</h2>
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
-							Title
-						</label>
-						<input
-							type="text"
-							id="title"
-							name="title"
-							value={input.title}
-							onChange={onInputChange}
-							onBlur={validateInput}
-							required
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="enter your title"
-						/>
-					</div>
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("categoryId", categoryId);
+    urlParams.delete("subcategoryId");
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, "", newUrl);
+};
 
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
-							City
-						</label>
-						<select
-							type="text"
-							id="selected"
-							name="selected"
-							value={cityId}
-							onChange={onCityChange}
-							onBlur={validateInput}
-							autocomplete="country-name"
-							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-						>
-							<option value={0}>Select</option>
-							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
-							))}
-						</select>
-					</div>
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+  const handleSubcategoryChange = (event) => {
+    let subcategoryId;
+    switch (event.target.value) {
+      case "newsflash":
+        subcategoryId = 1;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "alerts":
+        subcategoryId = 2;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "politics":
+        subcategoryId = 3;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "ecocomy":
+        subcategoryId = 4;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "sports":
+        subcategoryId = 5;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "tod":
+        subcategoryId = 6;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "local":
+        subcategoryId = 7;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      case "clubnews":
+        subcategoryId = 8;
+        setInput({ ...input, subcategoryId });
+        setSelectedSubCategory(event.target.value);
+      break;
+      default:
+        subcategoryId = 0;
+        break;
+    }
+    setInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setSubcategoryId(subcategoryId);
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("subcategoryId", subcategoryId);
+    if (subcategoryId === 0) {
+      urlParams.delete("subCategoryId");
+    }
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, "", newUrl);
+  };
 
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
-							Village
-						</label>
-						<select
-							type="text"
-							id="villageId"
-							name="villageId"
-							value={input.villageId}
-							onChange={onInputChange}
-							onBlur={validateInput}
-							autocomplete="country-name"
-							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-						>
-							<option value={0}>Select</option>
-							{villages.map((village) => (
-								<option value={Number(village.id)}>{village.name}</option>
-							))}
-						</select>
-					</div>
+  return (
+    <section class="bg-slate-600 body-font relative">
+      <SideBar />
 
-					<div class="relative mb-4">
-						<label
-							for="dropdown"
-							class="block text-sm font-medium text-gray-600"
-						>
-							Category
-						</label>
-						<select
-							type="dropdown"
-							id="dropdown"
-							name="dropdown"
-							value={selectedCategory}
-							onChange={handleCategoryChange}
-							onBlur={validateInput}
-							required
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-						>
-							<option class="font-sans" value="Default">
-								{selectedItem}
-							</option>
-							{selectedItem !== "News" ? (
-								<option value="News">{t("news")}</option>
-							) : null}
-							{selectedItem !== "Road Works / Traffic" ? (
-								<option class="font-sans" value="Road Works / Traffic">
-									{t("roadTraffic")}
-								</option>
-							) : null}
-							{selectedItem !== "Events" ? (
-								<option class="font-sans" value="Events">
-									{t("events")}
-								</option>
-							) : null}
-							{selectedItem !== "Clubs" ? (
-								<option class="font-sans" value="Clubs">
-									{t("clubs")}
-								</option>
-							) : null}
-							{selectedItem !== "Regional Products" ? (
-								<option class="font-sans" value="Regional Products">
-									{t("regionalProducts")}
-								</option>
-							) : null}
-							{selectedItem !== "Offer / Search" ? (
-								<option class="font-sans" value="Offer / Search">
-									{t("offerSearch")}
-								</option>
-							) : null}
-							{selectedItem !== "New Citizen Info" ? (
-								<option class="font-sans" value="New Citizen Info">
-									{t("newCitizenInfo")}
-								</option>
-							) : null}
-							{selectedItem !== "Defect Report" ? (
-								<option class="font-sans" value="Defect Report">
-									{t("defectReport")}
-								</option>
-							) : null}
-							{selectedItem !== "Lost And Found" ? (
-								<option class="font-sans" value="Lost And Found">
-									{t("lostAndFound")}
-								</option>
-							) : null}
-							{selectedItem !== "Company Portraits" ? (
-								<option class="font-sans" value="Company Portraits">
-									{t("companyPortaits")}
-								</option>
-							) : null}
-							{selectedItem !== "Carpooling And Public Transport" ? (
-								<option
-									class="font-sans"
-									value="Carpooling And Public Transport"
-								>
-									{t("carpoolingPublicTransport")}
-								</option>
-							) : null}
-							{selectedItem !== "Offers" ? (
-								<option class="font-sans" value="Offers">
-									{t("offers")}
-								</option>
-							) : null}
-						</select>
-					</div>
+        <div class="container w-auto px-5 py-2 bg-slate-600">
+          <div class="bg-white mt-4 p-6 space-y-10">
+            <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+              Upload Post
+              <div className="my-4 bg-gray-600 h-[1px]"></div>
+            </h2>
+            <div class="relative mb-4">
+              <label for="title" class="block text-sm font-medium text-gray-600">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={input.title}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                required
+                class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                placeholder="enter your title"
+              />
+            </div>
 
-					{selectedItem === "News" && (
-						<div class="relative mb-4">
-							<label
-								for="newsdropdown"
-								class="block text-sm font-medium text-gray-600"
-							>
-								Sub-Category
-							</label>
-							<select
-								type="newsdropdown"
-								id="newsdropdown"
-								name="newsdropdown"
-								value={selectedSubCategory}
-								onChange={handleSubcategoryChange}
-								onBlur={validateInput}
-								required
-								class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							>
-								<option class="font-sans" value="Default">
-									{t("chooseOneSubCategory")}
-								</option>
-								<option class="font-sans" value="newsflash">
-									{t("newsflash")}
-								</option>
-								<option class="font-sans" value="alerts">
-									{t("alerts")}
-								</option>
-								<option class="font-sans" value="politics">
-									{t("politics")}
-								</option>
-								<option class="font-sans" value="ecocomy">
-									{t("ecocomy")}
-								</option>
-								<option class="font-sans" value="sports">
-									{t("sports")}
-								</option>
-								<option class="font-sans" value="tod">
-									{t("tod")}
-								</option>
-								<option class="font-sans" value="local">
-									{t("local")}
-								</option>
-								<option class="font-sans" value="clubnews">
-									{t("clubnews")}
-								</option>
-							</select>
-						</div>
-					)}
+            <div class="relative mb-4">
+              <label for="title" class="block text-sm font-medium text-gray-600">
+                City
+              </label>
+                <select
+                  type="text"
+                  id="selected"
+                  name="selected"
+                  value={cityId}
+                  onChange={onCityChange}
+                  onBlur={validateInput}
+                  autocomplete="country-name"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value={0}>Select</option>
+                  { cities.map(city => (
+                    <option value={Number(city.id)}>
+                      { city.name }
+                    </option>
+                  ))}
+                </select>
+            </div>
 
-					<div class="relative mb-4 grid grid-cols-2 gap-4">
-						<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-							<label
-								for="place"
-								class="block text-sm font-medium text-gray-600"
-							>
-								Place
-							</label>
-							<input
-								type="text"
-								id="place"
-								name="place"
-								value={input.place}
-								onChange={onInputChange}
-								onBlur={validateInput}
-								class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder="Enter your place here"
-							/>
-						</div>
-						<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-							<label
-								for="zipCode"
-								class="block text-sm font-medium text-gray-600"
-							>
-								Zip Code
-							</label>
-							<input
-								type="text"
-								id="zipCode"
-								name="zipCode"
-								value={input.zipCode}
-								onChange={onInputChange}
-								onBlur={validateInput}
-								class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder="Enter your Zip code here"
-							/>
-						</div>
-					</div>
 
-					<div class="col-span-6">
-						<label
-							for="address"
-							class="block text-sm font-medium text-gray-600"
-						>
-							Street address
-						</label>
+            <div class="relative mb-4">
+              <label for="title" class="block text-sm font-medium text-gray-600">
+                Village
+              </label>
+                <select
+                  type="text"
+                  id="villageId"
+                  name="villageId"
+                  value={input.villageId}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  autocomplete="country-name"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value={0}>Select</option>
+                  { villages.map(village => (
+                    <option value={Number(village.id)}>
+                      { village.name }
+                    </option>
+                  ))}
+                </select>
+            </div>
 
-						{/* <Maps/> */}
-						<div>
-							<input
-								type="text"
-								id="address"
-								name="address"
-								required
-								placeholder="Search for a location"
-								value={query}
-								onChange={handleSearch}
-								onBlur={validateInput}
-								className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-							/>
-							<ul class="cursor-pointer mt-4 space-y-2">
-								{results.map((result) => (
-									<li
-										key={result.place_id}
-										onClick={() => handleResultSelect(result)}
-									>
-										{result.display_name}
-									</li>
-								))}
-							</ul>
-							<button
-								onClick={handleSearch}
-								class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
-								type="submit"
-							>
-								Search
-							</button>
-							{selectedResult.lat && (
-								<div id="map" className="mt-6 h-64 w-full">
-									<link
-										rel="stylesheet"
-										href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-										integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-										crossorigin=""
-									/>
-								</div>
-							)}
-						</div>
-					</div>
 
-					{selectedCategory === "events" && (
-						<div class="relative mb-4">
-							<div class="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-								<div class="relative">
-									<div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-										<svg
-											aria-hidden="true"
-											class="w-5 h-5 text-gray-600 dark:text-gray-400"
-											fill="currentColor"
-											viewBox="0 0 20 20"
-											xmlns="http://www.w3.org/2000/svg"
-										></svg>
-									</div>
-									<label
-										for="city"
-										class="block text-sm font-medium text-gray-600"
-									>
-										Event Start Date
-									</label>
-									<input
-										type="date"
-										id="startDate"
-										name="startDate"
-										value={input.startDate}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Start Date"
-									/>
-								</div>
+            <div class="relative mb-4">
+              <label for="dropdown" class="block text-sm font-medium text-gray-600">
+                Category
+              </label>
+              <select
+                 type="dropdown"
+                 id="dropdown"
+                 name="dropdown"
+                 value={selectedCategory}
+                onChange={handleCategoryChange}
+                 onBlur={validateInput}
+                 required
+                 class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+             >
+                 <option class="font-sans" value="Default">
+														{selectedItem}
+													</option>
+													{selectedItem !== "News" ? (
+														<option value="News">{t("news")}</option>
+													) : null}
+													{selectedItem !== "Road Works / Traffic" ? (
+														<option
+															class="font-sans"
+															value="Road Works / Traffic"
+														>
+															{t("roadTraffic")}
+														</option>
+													) : null}
+													{selectedItem !== "Events" ? (
+														<option class="font-sans" value="Events">
+															{t("events")}
+														</option>
+													) : null}
+													{selectedItem !== "Clubs" ? (
+														<option class="font-sans" value="Clubs">
+															{t("clubs")}
+														</option>
+													) : null}
+													{selectedItem !== "Regional Products" ? (
+														<option class="font-sans" value="Regional Products">
+															{t("regionalProducts")}
+														</option>
+													) : null}
+													{selectedItem !== "Offer / Search" ? (
+														<option class="font-sans" value="Offer / Search">
+															{t("offerSearch")}
+														</option>
+													) : null}
+													{selectedItem !== "New Citizen Info" ? (
+														<option class="font-sans" value="New Citizen Info">
+															{t("newCitizenInfo")}
+														</option>
+													) : null}
+													{selectedItem !== "Defect Report" ? (
+														<option class="font-sans" value="Defect Report">
+															{t("defectReport")}
+														</option>
+													) : null}
+													{selectedItem !== "Lost And Found" ? (
+														<option class="font-sans" value="Lost And Found">
+															{t("lostAndFound")}
+														</option>
+													) : null}
+													{selectedItem !== "Company Portraits" ? (
+														<option class="font-sans" value="Company Portraits">
+															{t("companyPortaits")}
+														</option>
+													) : null}
+													{selectedItem !== "Carpooling And Public Transport" ? (
+														<option
+															class="font-sans"
+															value="Carpooling And Public Transport"
+														>
+															{t("carpoolingPublicTransport")}
+														</option>
+													) : null}
+													{selectedItem !== "Offers" ? (
+														<option class="font-sans" value="Offers">
+															{t("offers")}
+														</option>
+													) : null}
+              </select>
+            </div>
 
-								<div class="relative">
-									<div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-										<svg
-											aria-hidden="true"
-											class="w-5 h-5 text-gray-600 dark:text-gray-400"
-											fill="currentColor"
-											viewBox="0 0 20 20"
-											xmlns="http://www.w3.org/2000/svg"
-										></svg>
-									</div>
-									<label
-										for="city"
-										class="block text-sm font-medium text-gray-600"
-									>
-										Event End Date
-									</label>
-									<input
-										type="date"
-										id="endDate"
-										name="endDate"
-										value={input.endDate}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="End Date"
-									/>
-								</div>
-							</div>
-						</div>
-					)}
+            {selectedItem === "News" && (
+            <div class="relative mb-4">
+              <label for="newsdropdown" class="block text-sm font-medium text-gray-600">
+                Sub-Category
+              </label>
+              <select
+                 type="newsdropdown"
+                 id="newsdropdown"
+                 name="newsdropdown"
+                 value={selectedSubCategory}
+                 onChange={handleSubcategoryChange}
+                 onBlur={validateInput}
+                 required
+                 class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+             >
+                 <option class="font-sans" value="Default">
+                 {t("chooseOneSubCategory")}
+                 </option>
+                 <option class="font-sans" value="newsflash">
+                 {t("newsflash")}
+                 </option>
+                 <option class="font-sans" value="alerts">
+                 {t("alerts")}
+                 </option>
+                 <option class="font-sans" value="politics">
+                 {t("politics")}
+                 </option>
+                 <option class="font-sans" value="ecocomy">
+                 {t("ecocomy")}
+                 </option>
+                 <option class="font-sans" value="sports">
+                 {t("sports")}
+                 </option>
+                 <option class="font-sans" value="tod">
+                 {t("tod")}
+                 </option>
+                 <option class="font-sans" value="local">
+                 {t("local")}
+                 </option>
+                 <option class="font-sans" value="clubnews">
+                 {t("clubnews")}
+                 </option>
+              </select>
+            </div>
+            )}
 
-					{(selectedCategory === "offers" ||
-						selectedCategory === "regionalProducts") && (
-						<div class="relative mb-4 grid grid-cols-2 gap-4">
-							<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									class="block text-sm font-medium text-gray-600"
-								>
-									Original Price
-								</label>
-								<input
-									type="text"
-									id="originalPrice"
-									name="originalPrice"
-									value={input.originalPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
-							</div>
-							<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									class="block text-sm font-medium text-gray-600"
-								>
-									Discounted Price
-								</label>
-								<input
-									type="text"
-									id="discountedPrice"
-									name="discountedPrice"
-									value={input.discountedPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
-							</div>
-						</div>
-					)}
+            <div class="relative mb-4 grid grid-cols-2 gap-4">
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="place" class="block text-sm font-medium text-gray-600">
+                  Place
+                </label>
+                <input
+                  type="text"
+                  id="place"
+                  name="place"
+                  value={input.place}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  placeholder="Enter your place here"
+                />
+              </div>
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="zipCode" class="block text-sm font-medium text-gray-600">
+                  Zip Code
+                </label>
+                <input
+                  type="text"
+                  id="zipCode"
+                  name="zipCode"
+                  value={input.zipCode}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  placeholder="Enter your Zip code here"
+                />
+              </div>
+            </div>
 
-					<div class="relative mb-4">
-						<label for="place" class="block text-sm font-medium text-gray-600">
-							Telephone
-						</label>
-						<input
-							type="text"
-							id="phone"
-							name="phone"
-							value={input.phone}
-							onChange={onInputChange}
-							onBlur={validateInput}
-							class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="enter your telephone number"
-						/>
-					</div>
+              <div class="col-span-6">
+                <label
+                  for="address"
+                  class="block text-sm font-medium text-gray-600"
+                >
+                  Street address
+                </label>
 
-					<div class="relative mb-4">
-						<label for="place" class="block text-sm font-medium text-gray-600">
-							Email
-						</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							value={input.email}
-							onChange={onInputChange}
-							onBlur={validateInput}
-							required
-							class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="youremail@gmail.com"
-						/>
-					</div>
+                {/* <Maps/> */}
+                <div>
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    required
+                    placeholder="Search for a location"
+                    value={query}
+                    onChange={handleSearch}
+                    onBlur={validateInput}
+                    className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  />
+                    <ul class="cursor-pointer mt-4 space-y-2">
+                    {results.map((result) => (
+                      <li key={result.place_id} onClick={() => handleResultSelect(result)}>
+                        {result.display_name}
+                      </li>
+                    ))}
+                  </ul>
+                    <button onClick={handleSearch} class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded" type="submit">
+                      Search
+                    </button>
+                  {selectedResult.lat && <div id="map" className="mt-6 h-64 w-full">
+                  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+                    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+                    crossorigin=""/>
 
-					<div class="relative mb-4">
-						<label
-							for="description"
-							class="block text-sm font-medium text-gray-600"
-						>
-							Description
-						</label>
-						<ReactQuill
-							type="text"
-							id="description"
-							name="description"
-							ref={editor}
-							value={description}
-							onChange={(newContent) => onDescriptionChange(newContent)}
-							placeholder="Write something here..."
-							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-						/>
-					</div>
-				</div>
-			</div>
+                    </div>}
+                </div>
 
-			{selectedCategory !== "roadTraffic" &&
-				selectedCategory !== "regionalProducts" &&
-				selectedCategory !== "offerSearch" &&
-				selectedCategory !== "offers" &&
-				selectedCategory !== "newCitizenInfo" &&
-				selectedCategory !== "defectReport" &&
-				selectedCategory !== "events" &&
-				selectedCategory !== "lostAndFound" && (
-					<div class="container w-auto px-5 py-2 bg-slate-600">
-						<div class="bg-white mt-4 p-6 space-y-10">
-							<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-								Upload Logo
-								<div className="my-4 bg-gray-600 h-[1px]"></div>
-							</h2>
+              </div>
 
-							<div>
-								<label className="block text-sm font-medium text-gray-700">
-									Add your Logo here
-								</label>
-								<div
-									className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 bg-slate-200`}
-									onDrop={handleDrop1}
-									onDragOver={handleDragOver}
-									onDragEnter={handleDragEnter}
-									onDragLeave={handleDragLeave}
-								>
-									{image1 ? (
-										<div className="flex flex-col items-center">
-											<img
-												className="object-contain h-64 w-full mb-4"
-												src={URL.createObjectURL(image1)}
-												alt="uploaded"
-											/>
-											<button
-												className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-												onClick={handleRemoveImage1}
-											>
-												Remove Image
-											</button>
-										</div>
-									) : (
-										<div className="text-center">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="mx-auto h-12 w-12"
-												viewBox="0 0 20 20"
-												fill="currentColor"
-											>
-												<path
-													fillRule="evenodd"
-													d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-													clipRule="evenodd"
-												/>
-											</svg>
-											<p className="mt-1 text-sm text-gray-600">
-												Drag and drop your image here, or{" "}
-												<label
-													htmlFor="image1-upload"
-													className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
-												>
-													Upload
-												</label>{" "}
-												to choose a file.
-											</p>
-											<input
-												id="image1-upload"
-												type="file"
-												className="sr-only"
-												onChange={handleInputChange1}
-											/>
-										</div>
-									)}
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
+            {selectedCategory === "Events" && (
+              <div class="relative mb-4">
+              <div class="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="relative">
+                  <div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      class="w-5 h-5 text-gray-600 dark:text-gray-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    ></svg>
+                  </div>
+                  <label for="city" class="block text-sm font-medium text-gray-600">
+                    Event Start Date
+                  </label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    value={input.startDate}
+                    onChange={onInputChange}
+                    onBlur={validateInput}
+                    class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                    placeholder="Start Date"
+                  />
+                </div>
 
-			{/* {selectedCategory !== "roadTraffic" && (
+                <div class="relative">
+                  <div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      class="w-5 h-5 text-gray-600 dark:text-gray-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    ></svg>
+                  </div>
+                  <label for="city" class="block text-sm font-medium text-gray-600">
+                    Event End Date
+                  </label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={input.endDate}
+                    onChange={onInputChange}
+                    onBlur={validateInput}
+                    class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                    placeholder="End Date"
+                  />
+                </div>
+              </div>
+            </div>
+            )}
+
+          {(selectedCategory === "Offers" || selectedCategory === "Regional Products") && (
+            <div class="relative mb-4 grid grid-cols-2 gap-4">
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="place" class="block text-sm font-medium text-gray-600">
+                  Original Price
+                </label>
+                <input
+                  type="text"
+                  id="originalPrice"
+                  name="originalPrice"
+                  value={input.originalPrice}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  required
+                  class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  placeholder="Enter the price of the product"
+                />
+              </div>
+              <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                <label for="place" class="block text-sm font-medium text-gray-600">
+                  Discounted Price
+                </label>
+                <input
+                  type="text"
+                  id="discountedPrice"
+                  name="discountedPrice"
+                  value={input.discountedPrice}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  required
+                  class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  placeholder="Enter the price of the product"
+                />
+              </div>
+            </div>
+          )}
+
+              <div class="relative mb-4">
+              <label for="place" class="block text-sm font-medium text-gray-600">
+                Telephone
+              </label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value={input.phone}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                placeholder="enter your telephone number"
+              />
+            </div>
+
+            <div class="relative mb-4">
+              <label for="place" class="block text-sm font-medium text-gray-600">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={input.email}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                required
+                class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                placeholder="youremail@gmail.com"
+              />
+            </div>
+
+            <div class="relative mb-4" >
+                <label for="description" class="block text-sm font-medium text-gray-600">
+                  Description
+                </label>
+                <ReactQuill
+                  type="text"
+                  id="description"
+                  name="description"
+                  ref={editor}
+                  value={description}
+                  onChange={newContent => onDescriptionChange(newContent)}
+                  placeholder="Write something here..."
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                />
+
+              </div>
+
+          </div>
+        </div>
+
+        {selectedCategory !== "Road Works / Traffic" && selectedCategory !== "Regional Products" && selectedCategory !== "Offer / Search" && selectedCategory !== "Offers" && selectedCategory !== "New Citizen Info" && selectedCategory !== "Defect Report" && selectedCategory !== "Events" && selectedCategory !== "Lost And Found" && (
+            <div class="container w-auto px-5 py-2 bg-slate-600">
+              <div class="bg-white mt-4 p-6 space-y-10">
+                <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+                  Upload Logo
+                  <div className="my-4 bg-gray-600 h-[1px]"></div>
+                </h2>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Add your Logo here</label>
+                  <div className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 bg-slate-200`} onDrop={handleDrop1} onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave}>
+                    {image1 ? (
+                      <div className="flex flex-col items-center">
+                        <img className="object-contain h-64 w-full mb-4" src={URL.createObjectURL(image1)} alt="uploaded" />
+                        <button className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded" onClick={handleRemoveImage1}>Remove Image</button>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                        </svg>
+                        <p className="mt-1 text-sm text-gray-600">
+                          Drag and drop your image here, or{' '}
+                          <label htmlFor="image1-upload" className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
+                            Upload
+                          </label>{' '}
+                          to choose a file.
+                        </p>
+                        <input id="image1-upload" type="file" className="sr-only" onChange={handleInputChange1} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+        )}
+
+        {/* {selectedCategory !== "roadTraffic" && (
             <div class="container w-auto px-5 py-2 bg-slate-600">
               <div class="bg-white mt-4 p-6 space-y-10">
                 <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -1330,52 +1244,28 @@ function UploadListings() {
           </div>
         </div> */}
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<div class="relative mb-4 mt-8 border-white">
-						<button
-							type="button"
-							onClick={handleSubmit}
-							disabled={updating}
-							class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-						>
-							Save Changes
-							{updating && (
-								<svg
-									aria-hidden="true"
-									class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
-									viewBox="0 0 100 101"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-										fill="currentColor"
-									/>
-									<path
-										d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-										fill="currentFill"
-									/>
-								</svg>
-							)}
-						</button>
-					</div>
-					<div>
-						{successMessage && (
-							<div className="w-full bg-green-400 text-black font-bold py-2 px-4 rounded">
-								{successMessage}
-							</div>
-						)}
-						{errorMessage && (
-							<div className="w-full bg-red-400 text-black font-bold py-2 px-4 rounded text-center">
-								{errorMessage}
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
-		</section>
-	);
+        <div class="container w-auto px-5 py-2 bg-slate-600">
+          <div class="bg-white mt-4 p-6 space-y-10">
+            <div class="relative mb-4 mt-8 border-white">
+            <button type="button" onClick={handleSubmit} disabled={updating} class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
+                Save Changes
+                { updating &&
+                <svg aria-hidden="true" class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg> }
+              </button>
+
+            </div>
+            <div>
+              {successMessage && <div className="mt-1 w-full bg-green-200 text-green-700 font-bold py-2 px-4 rounded text-center">{successMessage}</div>}
+              {errorMessage && <div className="mt-1 w-full bg-red-200 text-red-700 font-bold py-2 px-4 rounded text-center">{errorMessage}</div>}
+            </div>
+          </div>
+        </div>
+
+    </section>
+  );
 }
 
 export default UploadListings;

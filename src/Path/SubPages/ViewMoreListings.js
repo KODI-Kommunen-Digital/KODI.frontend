@@ -248,6 +248,12 @@ const ViewMoreListings = () => {
 		);
 	}
 
+	function goToEventDetailsPage(listing) {
+		navigateTo(
+			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+		);
+	}
+
 	return (
 		<section class="text-gray-600 body-font relative">
 			<HomePageNavBar />
@@ -262,7 +268,7 @@ const ViewMoreListings = () => {
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-									All listings
+									{t("allListings")}
 								</h1>
 								<div>
 									<div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
@@ -376,7 +382,7 @@ const ViewMoreListings = () => {
 					{sortedListings &&
 						sortedListings.map((listing) => (
 							<div
-								onClick={() => navigateTo("/HomePage/EventDetails")}
+								onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId)); goToEventDetailsPage(listing)}}
 								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 							>
 								<a className="block relative h-64 rounded overflow-hidden">

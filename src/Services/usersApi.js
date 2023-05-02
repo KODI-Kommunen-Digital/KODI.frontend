@@ -11,16 +11,22 @@ export async function getProfileByIds(ids) {
 	return axios.get(`/users?id=${ids}`);
 }
 
-export async function getProfile() {
-	return axios.get(`/users/${getUserId()}`);
+export async function getProfile(userId, params = {}) {
+	if (!userId)
+		userId = getUserId()
+	return axios.get(`/users/${userId}`, { params });
 }
 
 export async function updateProfile(newProfileObj) {
 	return axios.patch(`/users/${getUserId()}`, newProfileObj);
 }
 
-export async function getUserListings() {
-	return axios.get(`/users/${getUserId()}/listings`);
+export async function getUserListings(params = {}) {
+	return axios.get(`/users/${getUserId()}/listings`, { params });
+}
+
+export async function deleteAccount() {
+	return axios.delete(`/users/${getUserId()}`);
 }
 
 export async function resetPass(credentials) {
