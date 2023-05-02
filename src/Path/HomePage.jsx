@@ -375,8 +375,9 @@ const HomePage = () => {
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo(`/AllEvents?cityId=${city.id}`);
 								localStorage.setItem("selectedItemLocation", city.name);
+								localStorage.setItem("selectedItem", "Choose one category");
+								navigateTo(`/AllEvents?cityId=${city.id}`);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 						>
@@ -412,7 +413,7 @@ const HomePage = () => {
 						.map((listing) => (
 							<div
 								onClick={() => {
-									localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									//localStorage.setItem("selectedCategoryId", (listing.categoryId));
 									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
 								}}
 								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"

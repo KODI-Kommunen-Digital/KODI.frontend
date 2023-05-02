@@ -260,7 +260,6 @@ class ProfilePage extends React.Component {
 					obj[data.selected] = data.socialMedia;
 					return obj;
 				}, {});
-				console.log(updatedData);
 				this.setState((prevState) => ({
 					input: {
 						...prevState.input,
@@ -541,9 +540,7 @@ class ProfilePage extends React.Component {
 									</label>
 									<div class="relative mb-4">
 										<div class="relative mb-4 mt-2 border-white">
-											{Object.keys(
-												JSON.parse(this.state.profile.socialMedia)
-											).map((data) => {
+										{this.state.profile.socialMedia && Object.keys(JSON.parse(this.state.profile.socialMedia)).map((data) => {
 												return JSON.parse(this.state.profile.socialMedia)[
 													data
 												] !== "" ? (
@@ -567,15 +564,16 @@ class ProfilePage extends React.Component {
 																onChange={(e) =>
 																	this.handleSocialMediaChanges(e, i)
 																}
-																disabled
 																autoComplete="country-name"
 																className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 															>
+																<option value="">Select</option>
 																{socialMedia.map((option) => (
 																	<option key={option} value={option}>
 																		{option}
 																	</option>
 																))}
+
 															</select>
 														</div>
 														<div class="mt-2 px-0 ml-2">
@@ -590,7 +588,7 @@ class ProfilePage extends React.Component {
 																id="socialMedia"
 																name="socialMedia"
 																defaultValue={
-																	JSON.parse(this.state.profile.socialMedia)[
+																	JSON.parse(this.state.profile.socialMedia) [
 																		data
 																	]
 																}
@@ -637,7 +635,7 @@ class ProfilePage extends React.Component {
 																type="text"
 																id="selected"
 																name="selected"
-																value={data.selected || ""}
+																value={data || ""}
 																onBlur={validateInput}
 																onChange={(e) =>
 																	this.handleSocialMediaChanges(e, i)
@@ -647,7 +645,7 @@ class ProfilePage extends React.Component {
 															>
 																{socialMedia.map((option) => (
 																	<option key={option} value={option}>
-																		{option}
+																	{option}
 																	</option>
 																))}
 															</select>
