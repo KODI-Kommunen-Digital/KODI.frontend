@@ -255,7 +255,6 @@
 			});
 		}
 		} else if (cityId) {
-		console.log(cityId);
 		if (categoryId) {
 			getListings({ categoryId: categoryId }).then((response) => {
 			const sortedListings = sortRecent(response.data.data);

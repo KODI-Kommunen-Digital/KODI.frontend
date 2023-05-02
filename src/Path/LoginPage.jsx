@@ -107,6 +107,7 @@ const LoginPage = () => {
 			if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
+				localStorage.setItem("selectedItem", t("chooseOneCategory"));
 				routeChangeToUpload();
 			}
 		} catch (err) {
