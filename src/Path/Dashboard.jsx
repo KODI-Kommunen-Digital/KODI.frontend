@@ -26,16 +26,28 @@ const Dashboard = () => {
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
+	const [pageNo, setPageNo] = useState(1);
+	const [selectedStatus, setSelectedStatus] = useState(null);
 	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
-		getUserListings().then((response) => {
-			setListings([...sortOldest(response.data.data)]);
-		});
+		fetchListings()
 		document.title = "Dashboard";
 	}, []);
+
+	useEffect(() => {
+		if (pageNo == 1)
+			fetchListings()
+		else 
+			setPageNo(1)
+		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
+	}, [selectedStatus, viewAllListings])
+	
+	useEffect(() => {
+		fetchListings()
+	}, [pageNo])
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -77,23 +89,26 @@ const Dashboard = () => {
 		);
 	}
 
-	function fetchListings(status = null) {
+	function fetchListings() {
 		if (viewAllListings) {
-			getUserListings({ statusId: status }).then((response) => {
+			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		} else {
-			getAllListings({ statusId: status }).then((response) => {
+			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		}
 	}
 
-
 	function deleteListingOnClick(listing) {
 		deleteListing(listing.cityId, listing.id).then((res) => {
 			setListings(listings.filter(l => l.cityId != listing.cityId || l.id != listing.id))
 		})
+	}
+
+	function changePageOnClick(increment) {
+		increment ? setPageNo(pageNo + 1) : setPageNo(pageNo - 1)
 	}
 	
 	function goToEventDetailsPage(listing) {
@@ -109,11 +124,9 @@ const Dashboard = () => {
 			<SideBar
 				handleGetAllListings={() => {
 					setViewAllListings(true);
-					fetchListings();
 				}}
 				handleGetUserListings={() => {
 					setViewAllListings(false);
-					fetchListings();
 				}}
 			/>
 			<div class="container px-0 sm:px-0 py-0 w-full fixed lg:top-5 z-10 lg:px-5 lg:w-auto lg:relative">
@@ -121,22 +134,22 @@ const Dashboard = () => {
 					<div className=" w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
 							<div
 								class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings()}
+								onClick={() => setSelectedStatus(null)}
 							>
 								All Listings
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Active)}
+								onClick={() => setSelectedStatus(statusByName.Active)}
 							>
 								Active
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Pending)}
+								onClick={() => setSelectedStatus(statusByName.Pending)}
 							>
 								Pending
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Inactive)}
+								onClick={() => setSelectedStatus(statusByName.Inactive)}
 							>
 								Inactive
 							</div>
@@ -254,6 +267,11 @@ const Dashboard = () => {
 						</tbody>
 					</table>
 				</div>
+			<div className="bottom-5 right-5 bg-black text-white p-3 my-5 rounded-lg float-right">
+				{ (pageNo != 1) ? <span className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg" onClick={() => changePageOnClick(false)}>{'<'} </span> : <span/>}
+				<span className="text-lg px-3">Page { pageNo }</span>
+				<span className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg" onClick={() => changePageOnClick(true)}>{'>'}</span>
+			</div>
 			</div>
 		</section>
 	);
