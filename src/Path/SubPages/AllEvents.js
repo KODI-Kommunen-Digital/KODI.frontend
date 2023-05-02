@@ -500,13 +500,11 @@
 			{listings && listings.length > 0 ? (
 			<div class="bg-white p-6 mt-20 mb-20 flex flex-wrap gap-10 justify-center">
 				<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-				{/* {listingsData && listingsData.slice(0, 9).map((listing) => ( */}
 				{listings &&
 					listings
 					.filter((listing) => listing.statusId === 1)
 					.map(
 						(listing) => (
-						console.log("Listing city ID:", listing.cityId),
 						(
 							<div
 							onClick={() => {
