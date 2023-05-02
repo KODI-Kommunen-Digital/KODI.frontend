@@ -149,6 +149,13 @@ function UploadListings() {
 
   const handleSubmit = async(event) =>{
     setUpdating(true);
+    event.preventDefault();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    //const time = new Date().toLocaleTimeString();
+    const createdAt = `${currentDate}`;
+    console.log(currentDate)
+    setInput({ ...input, createdAt });
+
     try {
         var response = newListing ? await postListingsData(cityId, input) : await updateListingsData(cityId, input, listingId);
         setSuccessMessage(t("listingUpdated"));
@@ -156,7 +163,7 @@ function UploadListings() {
         setErrorMessage(t("listingNotUpdated"));
     }
     setUpdating(false);
-};
+  };
 
     useEffect(() => {
       const searchParams = new URLSearchParams(window.location.search);
