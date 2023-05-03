@@ -11,10 +11,14 @@ import { getUserListings } from "../../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
-import { getListings , getListingsByCity ,getAllListings } from "../../Services/listingsApi";
+import {
+	getListings,
+	getListingsByCity,
+	getAllListings,
+} from "../../Services/listingsApi";
 
 import { getCities } from "../../Services/cities";
-import { getCategory , getCategoryListings } from "../../Services/CategoryApi";
+import { getCategory, getCategoryListings } from "../../Services/CategoryApi";
 import { getVillages } from "../../Services/villages";
 
 // import(
@@ -27,10 +31,10 @@ const ViewMoreListings = () => {
 
 	const [input, setInput] = useState({
 		//"villageId": 1,
-		"categoryId": 0,
-		"subcategoryId": 0,
-		"sourceId": 1,
-		"userId": 2
+		categoryId: 0,
+		subcategoryId: 0,
+		sourceId: 1,
+		userId: 2,
 	});
 
 	//populate the events titles starts
@@ -42,83 +46,83 @@ const ViewMoreListings = () => {
 	const handleCategoryChange = (event) => {
 		let categoryId;
 		setInput({ ...input, categoryId });
- 		setSelectedCategory(event.target.value);
+		setSelectedCategory(event.target.value);
 		switch (event.target.value) {
-		case "News":
-			categoryId = 1;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Road Works / Traffic":
-			categoryId = 2;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Events":
-			categoryId = 3;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Clubs":
-			categoryId = 4;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Regional Products":
-			categoryId = 5;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Offer / Search":
-			categoryId = 6;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "New Citizen Info":
-			categoryId = 7;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Defect Report":
-			categoryId = 8;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Lost And Found":
-			categoryId = 9;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Company Portraits":
-			categoryId = 10;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Carpooling And Public Transport":
-			categoryId = 11;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
-		case "Offers":
-			categoryId = 12;
-			setInput({ ...input, categoryId });
-			setSelectedCategory(event.target.value);
-		break;
+			case "News":
+				categoryId = 1;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Road Works / Traffic":
+				categoryId = 2;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Events":
+				categoryId = 3;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Clubs":
+				categoryId = 4;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Regional Products":
+				categoryId = 5;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Offer / Search":
+				categoryId = 6;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "New Citizen Info":
+				categoryId = 7;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Defect Report":
+				categoryId = 8;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Lost And Found":
+				categoryId = 9;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Company Portraits":
+				categoryId = 10;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Carpooling And Public Transport":
+				categoryId = 11;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
+			case "Offers":
+				categoryId = 12;
+				setInput({ ...input, categoryId });
+				setSelectedCategory(event.target.value);
+				break;
 
-		default:
-			categoryId = 0;
-			break;
+			default:
+				categoryId = 0;
+				break;
 		}
 		setCategoryId(categoryId);
-			const urlParams = new URLSearchParams(window.location.search);
-			urlParams.set("categoryId", categoryId);
-			const cityIdParam = urlParams.get("cityId");
-			if (cityIdParam) {
-				urlParams.set("cityId", cityIdParam);
-			}
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("categoryId", categoryId);
+		const cityIdParam = urlParams.get("cityId");
+		if (cityIdParam) {
+			urlParams.set("cityId", cityIdParam);
+		}
 
-			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-			window.history.pushState({}, "", newUrl);
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.pushState({}, "", newUrl);
 	};
 
 	const handleLocationChange = (event) => {
@@ -127,55 +131,55 @@ const ViewMoreListings = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("cityId", cityId);
 		if (categoryId) {
-		  urlParams.set("categoryId", categoryId);
+			urlParams.set("categoryId", categoryId);
 		} else {
-		  urlParams.delete("categoryId");
+			urlParams.delete("categoryId");
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.pushState({}, "", newUrl);
-	  };
-
-		useEffect(() => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const categoryIdParam = urlParams.get("categoryId");
-			const cityIdParam = urlParams.get("cityId");
-
-			if (categoryIdParam) {
-			setCategoryId(categoryIdParam);
-			}
-
-			if (cityIdParam) {
-			setCityId(cityIdParam);
-			}
-		}, []);
-
-		useEffect(() => {
-			if (cityId && categoryId) {
-			  getListingsByCity(cityId, {"categoryId":categoryId}).then((response) => {
-				const sortedListings = sortRecent(response.data.data);
-				const slicedListing = sortedListings;
-				setListings([...slicedListing]);
-			  });
-			} else if (categoryId) {
-			  getListings({"categoryId":categoryId}).then((response) => {
-				const sortedListings = sortRecent(response.data.data);
-				const slicedListing = sortedListings;
-				setListings([...slicedListing]);
-			  });
-			} else {
-			  getAllListings().then((response) => {
-				const sortedListings = sortRecent(response.data.data);
-				const slicedListing = sortedListings;
-				setListings([...slicedListing]);
-			  });
-			}
-		  }, [categoryId, cityId]);
-
+	};
 
 	useEffect(() => {
-		getCities().then(citiesResponse => {
-		setCities(citiesResponse.data.data);
-	})}, []);
+		const urlParams = new URLSearchParams(window.location.search);
+		const categoryIdParam = urlParams.get("categoryId");
+		const cityIdParam = urlParams.get("cityId");
+
+		if (categoryIdParam) {
+			setCategoryId(categoryIdParam);
+		}
+
+		if (cityIdParam) {
+			setCityId(cityIdParam);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (cityId && categoryId) {
+			getListingsByCity(cityId, { categoryId: categoryId }).then((response) => {
+				const sortedListings = sortRecent(response.data.data);
+				const slicedListing = sortedListings;
+				setListings([...slicedListing]);
+			});
+		} else if (categoryId) {
+			getListings({ categoryId: categoryId }).then((response) => {
+				const sortedListings = sortRecent(response.data.data);
+				const slicedListing = sortedListings;
+				setListings([...slicedListing]);
+			});
+		} else {
+			getAllListings().then((response) => {
+				const sortedListings = sortRecent(response.data.data);
+				const slicedListing = sortedListings;
+				setListings([...slicedListing]);
+			});
+		}
+	}, [categoryId, cityId]);
+
+	useEffect(() => {
+		getCities().then((citiesResponse) => {
+			setCities(citiesResponse.data.data);
+		});
+	}, []);
 
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const sortedListings = [...listings].sort((a, b) => {
@@ -274,12 +278,12 @@ const ViewMoreListings = () => {
 								<div>
 									<div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-										{cities.map((city) => (
+											{cities.map((city) => (
 												<select
 													id="button-filter"
 													name="country"
 													autocomplete="country-name"
-                          							onChange={handleLocationChange}
+													onChange={handleLocationChange}
 													class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												>
 													<option class="font-sans" value="Default">
@@ -293,7 +297,7 @@ const ViewMoreListings = () => {
 										</div>
 
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-										<select
+											<select
 												id="button-filter"
 												name="country"
 												autocomplete="country-name"
@@ -369,7 +373,6 @@ const ViewMoreListings = () => {
 												) : null}
 											</select>
 										</div>
-
 									</div>
 								</div>
 							</div>
@@ -383,14 +386,20 @@ const ViewMoreListings = () => {
 					{sortedListings &&
 						sortedListings.map((listing) => (
 							<div
-								onClick={() => {localStorage.setItem("selectedCategoryId", (listing.categoryId)); goToEventDetailsPage(listing)}}
+								onClick={() => {
+									localStorage.setItem(
+										"selectedCategoryId",
+										listing.categoryId
+									);
+									goToEventDetailsPage(listing);
+								}}
 								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 							>
 								<a className="block relative h-64 rounded overflow-hidden">
 									<img
 										alt="ecommerce"
 										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-										src={HOMEPAGEIMG}
+										src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
 									/>
 								</a>
 								<div className="mt-10">

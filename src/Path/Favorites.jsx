@@ -6,7 +6,7 @@ import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
 import { getListingsById } from "../Services/listingsApi";
-import {getFavoriteListings} from "../Services/favoritesApi"
+import { getFavoriteListings } from "../Services/favoritesApi";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -36,7 +36,6 @@ const Favorites = () => {
 	useEffect(() => {
 		getFavoriteListings().then((response) => {
 			setFavListings(response.data.data);
-			console.log(response.data.data)
 		});
 	}, []);
 

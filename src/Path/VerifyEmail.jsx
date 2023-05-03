@@ -6,7 +6,7 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import Footer from "../Components/Footer";
 
 const VerifyEmail = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	window.scrollTo(0, 0);
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -35,7 +35,7 @@ const VerifyEmail = () => {
 		})
 	}, []);
 
-	const [count, setCount] = useState(5);
+	const [count, setCount] = useState(10);
 	const [redirect, setRedirect] = useState(false);
 	useEffect(() => {
 		const timer = setTimeout(() => {

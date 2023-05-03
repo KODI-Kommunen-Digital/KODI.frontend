@@ -53,9 +53,3 @@ function UploadContribution() {
 }
 
 export default UploadContribution;
-
-
-
-{/* <div class="flex justify-center">
-            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-sm hover:bg-cyan-500">upload post</button>
-          </div> */}

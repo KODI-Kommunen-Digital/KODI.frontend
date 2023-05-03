@@ -6,7 +6,7 @@ import { updateProfile } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 const PasswordUpdate = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	useEffect(() => {
 		document.title = "Heidi - Update Password";
 	}, []);

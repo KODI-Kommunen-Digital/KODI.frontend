@@ -6,7 +6,7 @@ import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 const Register = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [alertInfo, setAlertInfo] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -233,7 +233,7 @@ const Register = () => {
             </div>
           </div>
 
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between"> 
               <div class="flex items-center">
                 <input
                   name="remember-me"
@@ -245,7 +245,7 @@ const Register = () => {
                   for="remember-me"
                   class="ml-2 block text-sm text-gray-900"
                 >
-                  I hereby accept the{" "}
+                  {t("i_hereby_accept_the")}
                   <a
                     onClick={() => {
                       navigateTo("/PrivacyPolicy");
@@ -254,17 +254,16 @@ const Register = () => {
                     rel="noopener noreferrer"
                     class="text-red-500 hover:text-red-300"
                   >
-                    privacy policy*
+                    {t("privacy_policy")}
                   </a>
-                  {" "}
-                  and the {" "}
+                  {t("and_the")}
                   <a
                     onClick={() => {
                       navigateTo("/ImprintPage");
                       }}
                     class="text-red-500 hover:text-red-300"
                   >
-                    terms and conditions*
+                    {t("terms_conditions")}
                   </a>
                 </label>
               </div> 
@@ -293,7 +292,7 @@ const Register = () => {
                   />
                 </svg>
               </span>
-              Register
+              {t("register")}
             </button>
           </div>
           {alertInfo && (
@@ -302,11 +301,11 @@ const Register = () => {
                 </div>
               )}
           <div class="text-sm">
-            Already have an account? Please Login
+            {t("accountPresent")}
             <span
               onClick={routeChangeToLogin}
               class="font-medium cursor-pointer text-black hover:text-gray-500">
-              {" "}here{" "}
+              {t("loginHere")}
             </span>
           </div>
         </div>

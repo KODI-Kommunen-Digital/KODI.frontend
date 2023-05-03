@@ -1,53 +1,51 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
+import { getUserListings, getProfile } from "../Services/usersApi";
 import {
-	getUserListings,
-	getProfile,
-	getProfileByIds,
-} from "../Services/usersApi";
-import {
-	getListings,
 	getAllListings,
 	updateListingsData,
-	deleteListing
+	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
-import { categoryByName, categoryById } from "../Constants/categories";
+import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
+import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
-import { FaBell } from "react-icons/fa";
 
+import Error from "./Error";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
+	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
-	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
-		fetchListings()
+		fetchListings();
 		document.title = "Dashboard";
 	}, []);
 
 	useEffect(() => {
-		if (pageNo == 1)
-			fetchListings()
-		else 
-			setPageNo(1)
+		if (pageNo == 1) fetchListings();
+		else setPageNo(1);
 		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
-	}, [selectedStatus, viewAllListings])
-	
+	}, [selectedStatus, viewAllListings]);
+
 	useEffect(() => {
-		fetchListings()
-	}, [pageNo])
+		fetchListings();
+	}, [pageNo]);
+
+	// useEffect(() => {
+	// 	getUserListings().then((response) => {
+	// 		setListings([...sortOldest(response.data.data)]);
+	// 	});
+	// }, [listings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -56,11 +54,35 @@ const Dashboard = () => {
 		}
 	};
 
+	function fetchListings(status = null) {
+		if (viewAllListings) {
+			getUserListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		} else {
+			getAllListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		}
+	}
+
 	function handleDashboardChange(event) {
 		setListings({
 			...listings,
 			[event.target.name]: event.target.value,
 		});
+	}
+
+	function fetchListings(status = null) {
+		if (viewAllListings) {
+			getUserListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		} else {
+			getAllListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		}
 	}
 
 	function getStatusClass(statusId) {
@@ -76,10 +98,12 @@ const Dashboard = () => {
 	}
 
 	function handleChangeInStatus(newStatusId, listing) {
-		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id).then((res) => {
-			listing.statusId = newStatusId;
-			setListings(listings)
-		});
+		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
+			.then((res) => {
+				listing.statusId = newStatusId;
+				setListings(listings);
+			})
+			.catch((error) => console.log(error));
 	}
 
 	//Navigate to Edit Listings page Starts
@@ -87,30 +111,26 @@ const Dashboard = () => {
 		navigateTo(
 			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
-	}
 
-	function fetchListings() {
-		if (viewAllListings) {
-			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		} else {
-			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		}
+		// <BrowserRouter>
+		// 	<Routes>
+		// 			<Route path="*" element={<Error />} />
+		// 	</Routes>
+		// </BrowserRouter>
 	}
 
 	function deleteListingOnClick(listing) {
 		deleteListing(listing.cityId, listing.id).then((res) => {
-			setListings(listings.filter(l => l.cityId != listing.cityId || l.id != listing.id))
-		})
+			setListings(
+				listings.filter((l) => l.cityId != listing.cityId || l.id != listing.id)
+			);
+		});
 	}
 
 	function changePageOnClick(increment) {
-		increment ? setPageNo(pageNo + 1) : setPageNo(pageNo - 1)
+		increment ? setPageNo(pageNo + 1) : setPageNo(pageNo - 1);
 	}
-	
+
 	function goToEventDetailsPage(listing) {
 		navigateTo(
 			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
@@ -132,27 +152,30 @@ const Dashboard = () => {
 			<div class="container px-0 sm:px-0 py-0 w-full fixed lg:top-5 z-10 lg:px-5 lg:w-auto lg:relative">
 				<div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
 					<div className=" w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
-							<div
-								class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => setSelectedStatus(null)}
-							>
-								All Listings
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => setSelectedStatus(statusByName.Active)}
-							>
-								Active
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => setSelectedStatus(statusByName.Pending)}
-							>
-								Pending
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => setSelectedStatus(statusByName.Inactive)}
-							>
-								Inactive
-							</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => setSelectedStatus(null)}
+						>
+							{t("allListings")}
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => setSelectedStatus(statusByName.Active)}
+						>
+							{t("active")}
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => setSelectedStatus(statusByName.Pending)}
+						>
+							{t("pending")}
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => setSelectedStatus(statusByName.Inactive)}
+						>
+							{t("inactive")}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -198,7 +221,7 @@ const Dashboard = () => {
 										>
 											<img
 												class="w-10 h-10 rounded-full hidden sm:table-cell"
-												src={listing.image}
+												src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
 												alt="avatar"
 											/>
 											<div class="pl-0 sm:pl-3">
@@ -230,7 +253,7 @@ const Dashboard = () => {
 										{viewAllListings && (
 											<td class="px-6 py-4">
 												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-													{ listing.username }
+													{listing.username}
 												</a>
 											</td>
 										)}
@@ -243,7 +266,9 @@ const Dashboard = () => {
 												></div>
 												{viewAllListings ? (
 													<Select
-														onChange={(e) => handleChangeInStatus(e.target.value, listing)}
+														onChange={(e) =>
+															handleChangeInStatus(e.target.value, listing)
+														}
 														value={listing.statusId}
 													>
 														{Object.keys(status).map((state) => {
@@ -267,11 +292,25 @@ const Dashboard = () => {
 						</tbody>
 					</table>
 				</div>
-			<div className="bottom-5 right-5 bg-black text-white p-3 my-5 rounded-lg float-right">
-				{ (pageNo != 1) ? <span className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg" onClick={() => changePageOnClick(false)}>{'<'} </span> : <span/>}
-				<span className="text-lg px-3">Page { pageNo }</span>
-				<span className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg" onClick={() => changePageOnClick(true)}>{'>'}</span>
-			</div>
+				<div className="bottom-5 right-5 bg-black text-white p-3 my-5 rounded-lg float-right">
+					{pageNo != 1 ? (
+						<span
+							className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+							onClick={() => changePageOnClick(false)}
+						>
+							{"<"}{" "}
+						</span>
+					) : (
+						<span />
+					)}
+					<span className="text-lg px-3">Page {pageNo}</span>
+					<span
+						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+						onClick={() => changePageOnClick(true)}
+					>
+						{">"}
+					</span>
+				</div>
 			</div>
 		</section>
 	);
