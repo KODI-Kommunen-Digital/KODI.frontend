@@ -435,7 +435,7 @@ const ViewProfile = () => {
 											<img
 												alt="ecommerce"
 												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-												src={HOMEPAGEIMG}
+												src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
 											/>
 										</a>
 										<div class="mt-10">

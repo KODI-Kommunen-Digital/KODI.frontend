@@ -11,7 +11,7 @@ import {
 	getListings,
 	getAllListings,
 	updateListingsData,
-	deleteListing
+	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
@@ -36,6 +36,12 @@ const Dashboard = () => {
 		});
 		document.title = "Dashboard";
 	}, []);
+
+	useEffect(() => {
+		getUserListings().then((response) => {
+			setListings([...sortOldest(response.data.data)]);
+		});
+	}, [listings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -64,10 +70,12 @@ const Dashboard = () => {
 	}
 
 	function handleChangeInStatus(newStatusId, listing) {
-		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id).then((res) => {
-			listing.statusId = newStatusId;
-			setListings(listings)
-		});
+		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
+			.then((res) => {
+				listing.statusId = newStatusId;
+				setListings(listings);
+			})
+			.catch((error) => console.log(error));
 	}
 
 	//Navigate to Edit Listings page Starts
@@ -89,13 +97,14 @@ const Dashboard = () => {
 		}
 	}
 
-
 	function deleteListingOnClick(listing) {
 		deleteListing(listing.cityId, listing.id).then((res) => {
-			setListings(listings.filter(l => l.cityId != listing.cityId || l.id != listing.id))
-		})
+			setListings(
+				listings.filter((l) => l.cityId != listing.cityId || l.id != listing.id)
+			);
+		});
 	}
-	
+
 	function goToEventDetailsPage(listing) {
 		navigateTo(
 			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
@@ -119,27 +128,30 @@ const Dashboard = () => {
 			<div class="container px-0 sm:px-0 py-0 w-full fixed lg:top-5 z-10 lg:px-5 lg:w-auto lg:relative">
 				<div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
 					<div className=" w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
-							<div
-								class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings()}
-							>
-								All Listings
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Active)}
-							>
-								Active
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Pending)}
-							>
-								Pending
-							</div>
-							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-								onClick={() => fetchListings(statusByName.Inactive)}
-							>
-								Inactive
-							</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => fetchListings()}
+						>
+							All Listings
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => fetchListings(statusByName.Active)}
+						>
+							Active
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => fetchListings(statusByName.Pending)}
+						>
+							Pending
+						</div>
+						<div
+							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+							onClick={() => fetchListings(statusByName.Inactive)}
+						>
+							Inactive
+						</div>
 					</div>
 				</div>
 			</div>
@@ -185,7 +197,7 @@ const Dashboard = () => {
 										>
 											<img
 												class="w-10 h-10 rounded-full hidden sm:table-cell"
-												src={listing.image}
+												src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
 												alt="avatar"
 											/>
 											<div class="pl-0 sm:pl-3">
@@ -217,7 +229,7 @@ const Dashboard = () => {
 										{viewAllListings && (
 											<td class="px-6 py-4">
 												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-													{ listing.username }
+													{listing.username}
 												</a>
 											</td>
 										)}
@@ -230,7 +242,9 @@ const Dashboard = () => {
 												></div>
 												{viewAllListings ? (
 													<Select
-														onChange={(e) => handleChangeInStatus(e.target.value, listing)}
+														onChange={(e) =>
+															handleChangeInStatus(e.target.value, listing)
+														}
 														value={listing.statusId}
 													>
 														{Object.keys(status).map((state) => {
