@@ -3,7 +3,7 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getAllListings } from "../Services/listingsApi";
+import { getListings } from "../Services/listingsApi";
 import { sortOldest, sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
@@ -48,10 +48,8 @@ const HomePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getAllListings().then((response) => {
-			const sortedListings = sortRecent(response.data.data);
-			const slicedListings = sortedListings.slice(0, 3);
-			setListings([...slicedListings]);
+		getListings({statusId: 1, pageNo: 1, pageSize: 3}).then((response) => {
+			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
 	}, []);
@@ -79,8 +77,8 @@ const HomePage = () => {
 		});
 	}, []);
 
-	function goToEditListingsPage(category) {
-		navigateTo(`/Events?categoryId=${category}`);
+	function goToAllListingsPage(category) {
+		navigateTo(`/AllEvents?categoryId=${category}`);
 	}
 
 	return (
@@ -120,8 +118,7 @@ const HomePage = () => {
 				<div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
 					<div
 						onClick={() => {
-							localStorage.setItem("selectedItem", "News");
-							goToEditListingsPage(1);
+							goToAllListingsPage(1);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer "
 					>
@@ -140,8 +137,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(2);
-							localStorage.setItem("selectedItem", "Road Works / Traffic");
+							goToAllListingsPage(2);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -160,8 +156,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(3);
-							localStorage.setItem("selectedItem", "Events");
+							goToAllListingsPage(3);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -180,8 +175,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(4);
-							localStorage.setItem("selectedItem", "Clubs");
+							goToAllListingsPage(4);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -200,8 +194,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(5);
-							localStorage.setItem("selectedItem", "Regional Products");
+							goToAllListingsPage(5);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -220,8 +213,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(6);
-							localStorage.setItem("selectedItem", "Offer / Search");
+							goToAllListingsPage(6);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -240,8 +232,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(7);
-							localStorage.setItem("selectedItem", "New Citizen Info");
+							goToAllListingsPage(7);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -260,8 +251,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(8);
-							localStorage.setItem("selectedItem", "Defect Report");
+							goToAllListingsPage(8);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -281,8 +271,7 @@ const HomePage = () => {
 
 					<div
 						onClick={() => {
-							goToEditListingsPage(9);
-							localStorage.setItem("selectedItem", "Lost And Found");
+							goToAllListingsPage(9);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -301,8 +290,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(10);
-							localStorage.setItem("selectedItem", "Company Portraits");
+							goToAllListingsPage(10);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -321,11 +309,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(11);
-							localStorage.setItem(
-								"selectedItem",
-								"Carpooling And Public Transport"
-							);
+							goToAllListingsPage(11);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -344,8 +328,7 @@ const HomePage = () => {
 					</div>
 					<div
 						onClick={() => {
-							goToEditListingsPage(12);
-							localStorage.setItem("selectedItem", "Offers");
+							goToAllListingsPage(12);
 						}}
 						class="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
 					>
@@ -374,8 +357,7 @@ const HomePage = () => {
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						<div
 							onClick={() => {
-								navigateTo(`/Places?cityId=${city.id}`);
-								localStorage.setItem("selectedItemLocation", city.name);
+								navigateTo(`/AllEvents?cityId=${city.id}`);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 						>
@@ -407,14 +389,12 @@ const HomePage = () => {
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
 						listings
-						.filter((listing) => listing.statusId === 1)
 						.map((listing) => (
 							<div
 								onClick={() => {
-									localStorage.setItem("selectedCategoryId", (listing.categoryId));
+									//localStorage.setItem("selectedCategoryId", (listing.categoryId));
 									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
 								}}
-								//onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`)}
 								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 							>
 								<a class="block relative h-64 rounded overflow-hidden">
@@ -437,7 +417,7 @@ const HomePage = () => {
 					type="submit"
 					onClick={() => {
 						localStorage.setItem("selectedItem", "Choose one category");
-						navigateTo("/ViewMoreListings");
+						navigateTo("/AllEvents");
 					}}
 					class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 				>

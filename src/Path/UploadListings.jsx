@@ -149,6 +149,12 @@ function UploadListings() {
 
   const handleSubmit = async(event) =>{
     setUpdating(true);
+    event.preventDefault();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    //const time = new Date().toLocaleTimeString();
+    const createdAt = `${currentDate}`;
+    setInput({ ...input, createdAt });
+
     try {
         var response = newListing ? await postListingsData(cityId, input) : await updateListingsData(cityId, input, listingId);
         setSuccessMessage(t("listingUpdated"));
@@ -156,7 +162,7 @@ function UploadListings() {
         setErrorMessage(t("listingNotUpdated"));
     }
     setUpdating(false);
-};
+  };
 
     useEffect(() => {
       const searchParams = new URLSearchParams(window.location.search);
@@ -574,7 +580,7 @@ function UploadListings() {
         <div class="container w-auto px-5 py-2 bg-slate-600">
           <div class="bg-white mt-4 p-6 space-y-10">
             <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-              Information
+              Upload Post
               <div className="my-4 bg-gray-600 h-[1px]"></div>
             </h2>
             <div class="relative mb-4">
@@ -656,9 +662,13 @@ function UploadListings() {
                  required
                  class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
              >
-                 <option class="font-sans" value="Default">
+                 {/* <option class="font-sans" value="Default">
 														{selectedItem}
-													</option>
+													</option> */}
+                          <option class="font-sans" value="Default">
+                          {t("chooseOneCategory")}
+                          </option>
+
 													{selectedItem !== "News" ? (
 														<option value="News">{t("news")}</option>
 													) : null}
@@ -813,7 +823,6 @@ function UploadListings() {
                   Street address
                 </label>
 
-                {/* <Maps/> */}
                 <div>
                   <input
                     type="text"

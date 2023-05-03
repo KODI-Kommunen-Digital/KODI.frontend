@@ -130,7 +130,7 @@
 	"favourites": "Favourites",
 	"split": "Split",
 	"regionalProductsHeading": "Regional Products",
-	"ownerInfo": "Add owner info",
+	"ownerInfo": "Owner info",
 	"viewProfile": "View Profiles",
 	"Account_Settings": "Account Settings",
 	"smilarItems": "Similar items",
@@ -139,5 +139,6 @@
 	"profileEntries": "Profile Entries",
 	"aboutMe": "About Me",
 	"listingUpdated": "Your listing was updated succesfully",
-	"listingNotUpdated": "Your listing was not updated. Please try again!"
+	"listingNotUpdated": "Your listing was not updated. Please try again!",
+	"alllistings": "All Listings"
 }
