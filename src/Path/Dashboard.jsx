@@ -19,7 +19,8 @@ import { categoryByName, categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { Select } from "@chakra-ui/react";
 import { FaBell } from "react-icons/fa";
-
+import Error from "./Error"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
@@ -83,23 +84,19 @@ const Dashboard = () => {
 	}
 
 	//Navigate to Edit Listings page Starts
-	function goToEditListingsPage(listing) {
+	function goToEditListingsPage(listing) {		
 		navigateTo(
 			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
-		);
-	}
+		)
 
-	function fetchListings() {
-		if (viewAllListings) {
-			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		} else {
-			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		}
+		// <BrowserRouter>
+		// 	<Routes>
+		// 			<Route path="*" element={<Error />} />
+		// 	</Routes>
+		// </BrowserRouter>
+
 	}
+	
 
 	function deleteListingOnClick(listing) {
 		deleteListing(listing.cityId, listing.id).then((res) => {
