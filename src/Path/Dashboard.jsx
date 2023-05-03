@@ -41,11 +41,11 @@ const Dashboard = () => {
 		fetchListings();
 	}, [pageNo]);
 
-	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings([...sortOldest(response.data.data)]);
-		});
-	}, [listings]);
+	// useEffect(() => {
+	// 	getUserListings().then((response) => {
+	// 		setListings([...sortOldest(response.data.data)]);
+	// 	});
+	// }, [listings]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {

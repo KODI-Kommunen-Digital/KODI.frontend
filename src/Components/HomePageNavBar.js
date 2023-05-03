@@ -147,7 +147,33 @@ export default function HomePageNavBar() {
 					>
 						<div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
 							<div className="space-y-6 py-6 px-5">
-								<div className="mr-2 flex justify-end">
+								<div className="mr-2 flex justify-between">
+									<a
+										class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 cursor-pointer"
+										onClick={() => {
+											if (isLoggedIn) {
+												navigateTo("/Favorite");
+											} else {
+												window.sessionStorage.setItem("redirectTo", "/Favorite");
+												navigateTo("/login");
+											}
+										}}
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											class="w-5 h-5"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+											></path>
+										</svg>
+									</a>
 									<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
 										<span className="sr-only">Close menu</span>
 										<XMarkIcon className="h-6 w-6" aria-hidden="true" />

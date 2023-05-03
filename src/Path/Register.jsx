@@ -141,10 +141,11 @@ const Register = () => {
                 name="firstname"
                 value={input.firstname}
                 type="text"
+                required
                 onChange={onInputChange}
                 onBlur={validateInput}
                 autoComplete="on"
-                placeholder={t("pleaseEnterFirstName")}
+                placeholder={t("pleaseEnterFirstName")+"*"}
                 class="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 >
               </input>
@@ -155,17 +156,18 @@ const Register = () => {
                 name="lastname"
                 value={input.lastname}
                 type="text"
+                required
                 onChange={onInputChange}
                 onBlur={validateInput}
                 autoComplete="on"
-                placeholder={t("pleaseEnterLastName")}
+                placeholder={t("pleaseEnterLastName")+"*"}
                 class="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm">
               </input>
               </span>
             </div>
             <div>
               <label for="username" class="sr-only">
-                {t("username")}
+                {t("username")+"*"}
               </label>
               <input
                 id="username"
@@ -177,13 +179,13 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder={t("pleaseEnterUsername")}
+                placeholder={t("pleaseEnterUsername")+"*"}
               ></input>
               {error.username && <span className='err'>{error.username}</span>}
             </div>
             <div>
               <label for="email-address" class="sr-only">
-                {t("email")}
+                {t("email")+"*"}
               </label>
               <input
                 id="emailaddress"
@@ -195,13 +197,13 @@ const Register = () => {
                 autoComplete="email"
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder={t("pleaseEnterEmailAddress")}
+                placeholder={t("pleaseEnterEmailAddress")+"*"}
               ></input>
               {error.email && <span className='err'>{error.email}</span>}
             </div>
             <div>
               <label for="password" class="sr-only">
-              {t("password")}
+              {t("password")+"*"}
               </label>
               <input
                 name="password"
@@ -211,7 +213,7 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder={t("pleaseEnterPassword")}
+                placeholder={t("pleaseEnterPassword")+"*"}
               ></input>
               {error.password && <span className='err'>{error.password}</span>}
             </div>
@@ -227,7 +229,7 @@ const Register = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder={t("pleaseConfirmPassword")}
+                placeholder={t("pleaseConfirmPassword")+"*"}
               ></input>
               {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>

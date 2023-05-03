@@ -607,7 +607,7 @@ function UploadListings() {
 					</h2>
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							Title
+							Title *
 						</label>
 						<input
 							type="text"
@@ -624,7 +624,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							City
+							City *
 						</label>
 						<select
 							type="text"
@@ -645,7 +645,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							Village
+							Village 
 						</label>
 						<select
 							type="text"
@@ -669,7 +669,7 @@ function UploadListings() {
 							for="dropdown"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Category
+							Category *
 						</label>
 						<select
 							type="dropdown"
@@ -754,7 +754,7 @@ function UploadListings() {
 								for="newsdropdown"
 								class="block text-sm font-medium text-gray-600"
 							>
-								Sub-Category
+								Sub-Category *
 							</label>
 							<select
 								type="newsdropdown"
@@ -841,7 +841,7 @@ function UploadListings() {
 							for="address"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Street address
+							Street address *
 						</label>
 
 						{/* <Maps/> */}
@@ -957,7 +957,7 @@ function UploadListings() {
 									for="place"
 									class="block text-sm font-medium text-gray-600"
 								>
-									Original Price
+									Original Price *
 								</label>
 								<input
 									type="text"
@@ -976,7 +976,7 @@ function UploadListings() {
 									for="place"
 									class="block text-sm font-medium text-gray-600"
 								>
-									Discounted Price
+									Discounted Price *
 								</label>
 								<input
 									type="text"
@@ -995,7 +995,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="place" class="block text-sm font-medium text-gray-600">
-							Telephone
+							Telephone *
 						</label>
 						<input
 							type="text"
@@ -1011,7 +1011,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="place" class="block text-sm font-medium text-gray-600">
-							Email
+							Email *
 						</label>
 						<input
 							type="email"
