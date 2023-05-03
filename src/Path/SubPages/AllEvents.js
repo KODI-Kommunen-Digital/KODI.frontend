@@ -557,13 +557,13 @@
 
 					<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
 					<span class="font-sans text-black">
-						To see all of our listings,{" "}
+						To upload a new listing,{" "}
 					</span>
 					<a
 						class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 						onClick={() => {
 						localStorage.setItem("selectedItem", "Choose one category");
-						navigateTo("/ViewMoreListings");
+						navigateTo("/UploadListings");
 						}}
 					>
 						Click here
@@ -573,7 +573,7 @@
 				)}
 			</div>
 			<div className="bottom-0 w-full">
-				<Footer/>			
+				<Footer/>
 			</div>
 		</section>
 	);

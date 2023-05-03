@@ -165,6 +165,7 @@ function UploadListings() {
   };
 
     useEffect(() => {
+      window.scrollTo(0, 0);
       const searchParams = new URLSearchParams(window.location.search);
       var cityId = searchParams.get('cityId')
       setCityId(cityId);
