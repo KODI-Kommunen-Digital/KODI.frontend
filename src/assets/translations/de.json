@@ -140,5 +140,28 @@
 	"right_withdrawal": "",
 	"secure_app_now":"",
 
+	"email_verified":"",
+	"heidi_full_extend":"",
+	"please_wait":"",
+	"redirecting_in":"",
+	"seconds":"",
+	"email_being_verified":"",
+	"email_verification_not_succesfull":"",
+
+	"account":"",
+	"profile":"",
+	"displayed_publicly":"",
+	"change":"",
+	"photo":"",
+	"remove":"",
+	"enter_description":"",
+	"url/website":"",
+	"enter_website" :"",
+	"add_social_media":"",
+	"heidi_mail":"",
+	"select":"",
+	"link":"",
+	"+add_social_media":"",
+
 	"heidi_all_rights_reserved": ""
 }

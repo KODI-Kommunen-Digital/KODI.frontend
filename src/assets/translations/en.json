@@ -179,6 +179,20 @@
 
 	"account":"Account",
 	"profile":"Profile",
+	"displayed_publicly":"This information will be displayed publicly, so be careful what you share",
+	"change":"Change",
+	"photo":"Photo",
+	"remove":"Remove",
+	"enter_description":"Write a description about yourself",
+	"url/website":"URL/Website",
+	"enter_website" :"Enter your website here",
+	"add_social_media":"Add your social media accounts here",
+	"heidi_mail":"info@heidi-app.de",
+	"select":"Select",
+	"link":"Link",
+	"+add_social_media":"+ Add your social media",
+	"emailId":"Email Id",
+	"phoneNumber": "Phone Number",
 	
 
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
