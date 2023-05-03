@@ -1,35 +1,28 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
+import { getUserListings, getProfile } from "../Services/usersApi";
 import {
-	getUserListings,
-	getProfile,
-	getProfileByIds,
-} from "../Services/usersApi";
-import {
-	getListings,
 	getAllListings,
 	updateListingsData,
 	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
-import { categoryByName, categoryById } from "../Constants/categories";
+import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
+import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
-import { FaBell } from "react-icons/fa";
+
 import Error from "./Error";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
+	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
-	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -78,6 +71,18 @@ const Dashboard = () => {
 			...listings,
 			[event.target.name]: event.target.value,
 		});
+	}
+
+	function fetchListings(status = null) {
+		if (viewAllListings) {
+			getUserListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		} else {
+			getAllListings({ statusId: status }).then((response) => {
+				setListings([...sortOldest(response.data.data)]);
+			});
+		}
 	}
 
 	function getStatusClass(statusId) {
@@ -151,25 +156,25 @@ const Dashboard = () => {
 							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 							onClick={() => setSelectedStatus(null)}
 						>
-							All Listings
+							{t("allListings")}
 						</div>
 						<div
 							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 							onClick={() => setSelectedStatus(statusByName.Active)}
 						>
-							Active
+							{t("active")}
 						</div>
 						<div
 							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 							onClick={() => setSelectedStatus(statusByName.Pending)}
 						>
-							Pending
+							{t("pending")}
 						</div>
 						<div
 							class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 							onClick={() => setSelectedStatus(statusByName.Inactive)}
 						>
-							Inactive
+							{t("inactive")}
 						</div>
 					</div>
 				</div>

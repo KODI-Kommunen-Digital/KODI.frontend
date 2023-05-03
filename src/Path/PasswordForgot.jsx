@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import { updatePassword } from "../Services/usersApi";
+import { useTranslation } from "react-i18next";
 import Alert from "../Components/Alert";
 
 const PasswordForgot = () => {
+  const { t } = useTranslation();
 
   const searchParams = new URLSearchParams(window.location.search);
   const token = searchParams.get('token');
@@ -104,7 +106,7 @@ const PasswordForgot = () => {
             alt="Your Company"
           />
           <h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create new password
+          {t("create_new_password")}
           </h3>
         </div>
         <div class="mt-8 space-y-6" action="#" method="POST">
@@ -112,7 +114,7 @@ const PasswordForgot = () => {
           <div class="space-y-2 rounded-md shadow-sm">
             <div>
               <label htmlFor="password" class="sr-only">
-                New Password
+              {t("newPassword")}
               </label>
               <input
                 name="password"
@@ -123,13 +125,13 @@ const PasswordForgot = () => {
                 autoComplete="current-password"
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="New Password"
+                placeholder={t("pleaseEnterPassword")}
               ></input>
               {error.password && <span className='err'>{error.password}</span>}
             </div>
             <div>
               <label htmlFor="password" class="sr-only">
-                Confirm New Password
+              {t("confirmNewPassword")}
               </label>
               <input
                 name="confirmPassword"
@@ -139,7 +141,7 @@ const PasswordForgot = () => {
                 onBlur={validateInput}
                 required
                 class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Confirm New Password"
+                placeholder={t("pleaseConfirmPassword")}
               ></input>
               {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
             </div>
@@ -167,7 +169,7 @@ const PasswordForgot = () => {
                   />
                 </svg>
               </span>
-              Update Password
+              {t("updatePassword")}
               { updatingPassword &&
               <svg aria-hidden="true" class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -181,13 +183,11 @@ const PasswordForgot = () => {
                 </div>
               )}
           <div class="text-sm">
-            Already have an account? Please Login
+            {t("accountPresent")}
             <span
               onClick={routeChangeToLogin}
-              class="font-medium cursor-pointer text-black hover:text-gray-500"
-            >
-              {" "}
-              here{" "}
+              class="font-medium cursor-pointer text-black hover:text-gray-500">
+              {t("loginHere")}
             </span>
           </div>
         </div>

@@ -42,9 +42,10 @@
 	"sendLink": "Link senden",
 	"cancel": "Abbrechen",
 	"allListings": "Alle Beiträge",
-	"accountPresent": "Du Hast bereits ein Konto?",
+	"accountPresent": "Du Hast bereits ein Konto? ",
 	"loginHere": "Bitte hier anmelden",
 	"updatePassword": "Passwort Aktualisieren",
+	"create_new_password":"Neues Passwort erstellen",
 	"oldPassword": "Altes  Password",
 	"newPassword": "Neues Password",
 	"confirmNewPassword": "Neues Passwort bestätigen",
@@ -94,8 +95,7 @@
 	"uploadAreaDescription": "Ob Veranstaltungen, Angebote oder News. Hier kannst du ganz einfach einen Beitrag hochladen",
 	"upload": "Beitrag hochladen",
 	"viewMore": "Weitere Angebote ansehen......",
-	"Need_to_change_your_password": "",
-	"deleteAccount": "",
+	"listingUpdated": "Ihr Eintrag wurde erfolgreich aktualisiert. Es wird vom Administrator überprüft und in Kürze aktualisiert.",
 
 	"filteryourResult": "Filter deine Ergebnisse",
 	"location": "Standort",
@@ -108,5 +108,25 @@
 	"atoztitle": "A - Z (Titel)",
 	"ztoatitle": "Z - A (Titel)",
 	"recent": "Neuste",
-	"oldest": "Älteste"
+	"oldest": "Älteste",
+
+	"register": "Registrieren",
+	"i_hereby_accept_the": "Hiermit akzeptiere ich die ",
+	"privacy_policy": "Datenschutzbestimmungen* ",
+	"and_the": "und ",
+	"terms_conditions":"allgemeinen Geschäftsbedingungen.*",
+
+	"Need_to_change_your_password": "",
+	"deleteAccount": "",
+	"smart_regions":"",
+	"learn_more": "",
+	"developer_community":"",
+	"contact_us":"",
+	"legal":"",
+	"imprint":"",
+	"data_protection":"",
+	"right_withdrawal": "",
+	"secure_app_now":"",
+
+	"heidi_all_rights_reserved": ""
 }
