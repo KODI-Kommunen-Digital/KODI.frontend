@@ -18,7 +18,8 @@ import { categoryByName, categoryById } from "../Constants/categories";
 import { status } from "../Constants/status";
 import { Select } from "@chakra-ui/react";
 import { FaBell } from "react-icons/fa";
-
+import Error from "./Error"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
@@ -91,57 +92,18 @@ const Dashboard = () => {
 
 	//Navigate to Edit Listings page Starts
 	function goToEditListingsPage(listing) {
-		var categoryId = listing.categoryId;
-		if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.RoadWorksOrTraffic) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.EventsOrNews) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.Associations) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.RegionalProducts) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.OfferOrSearch) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.NewCitizenInfo) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.DefectReport) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.LostPropertyOffice) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.CompanyPortraits) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.News) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		} else if (categoryId == categoryByName.Offers) {
-			navigateTo(
-				`/ListingsPage?listingId=${listing.id}&cityId=${listing.cityId}`
-			);
-		}
+		
+		navigateTo(
+			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
+		)
+
+		// <BrowserRouter>
+		// 	<Routes>
+		// 			<Route path="*" element={<Error />} />
+		// 	</Routes>
+		// </BrowserRouter>
 	}
+	
 
 	function goToEventDetailsPage(listing) {
 		navigateTo(
