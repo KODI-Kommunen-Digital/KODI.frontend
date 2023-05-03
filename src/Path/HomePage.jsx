@@ -8,7 +8,6 @@ import { sortOldest, sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
 import { getVillages } from "../Services/villages";
-import { categoryByName, categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -17,8 +16,8 @@ import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
-	const { t } = useTranslation();
-	//window.scrollTo(0, 0);
+	const { t, i18n } = useTranslation();
+	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
@@ -493,8 +492,10 @@ const HomePage = () => {
 			</div>
 
 			<UploadContribution />
-			<Footer/>			
-			
+
+			<div className="bottom-0 w-full">
+				<Footer/>
+			</div>
 		</section>
 	);
 };

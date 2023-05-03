@@ -122,7 +122,7 @@ const VerifyEmail = () => {
 				</div>
 			}
 			<div className="fixed bottom-0 w-full">
-				<Footer/>			
+				<Footer/>
 			</div>
 		</section>
 	);
