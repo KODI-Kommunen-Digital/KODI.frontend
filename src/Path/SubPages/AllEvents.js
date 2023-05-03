@@ -18,6 +18,7 @@ import {
 
 import { getCities } from "../../Services/cities";
 import { getVillages } from "../../Services/villages";
+import Footer from "../../Components/Footer";
 
 const Events = () => {
 	window.scrollTo(0, 0);
@@ -57,8 +58,6 @@ const Events = () => {
 		//"villageId": 1,
 		categoryId: 0,
 		subcategoryId: 0,
-		sourceId: 1,
-		userId: 2,
 	});
 
 	const [selectedCategory, setSelectedCategory] = useState("");
@@ -135,7 +134,9 @@ const Events = () => {
 		setCategoryId(categoryId);
 
 		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("categoryId", categoryId);
+		if (categoryId) {
+			urlParams.set("categoryId", categoryId);
+		}
 		const cityIdParam = urlParams.get("cityId");
 		if (cityIdParam) {
 			urlParams.set("cityId", cityIdParam);
@@ -257,7 +258,6 @@ const Events = () => {
 				});
 			}
 		} else if (cityId) {
-			console.log(cityId);
 			if (categoryId) {
 				getListings({ categoryId: categoryId }).then((response) => {
 					const sortedListings = sortRecent(response.data.data);
