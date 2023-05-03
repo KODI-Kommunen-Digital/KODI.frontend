@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import SideBar from "../Components/SideBar";
 import Alert from "../Components/Alert";
 import "./bodyContainer.css";
@@ -8,13 +8,47 @@ import {
 	updatePassword,
 } from "../Services/usersApi";
 import { socialMedia } from "../Constants/socialMedia";
-import { getListingsById } from "../Services/listingsApi";
+import { getListingsById, uploadImage } from "../Services/listingsApi";
 import { getVillages } from "../Services/villages";
 // import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
+
+function ChangeImage({ setInput, input }) {
+	const inputFile = useRef(null);
+	var file = false;
+	function handleChangeImage(e) {
+		console.log("Chanege Image", input);
+		file = e.target.files[0];
+		const form = new FormData();
+		form.append("image", file);
+		uploadImage(form).then((res) => {
+			setInput("image", res.data.path);
+		});
+	}
+	return (
+		<>
+			{file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
+			<button
+				onClick={() => inputFile.current.click()}
+				class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+			>
+				Change
+			</button>
+			<input
+				onChange={handleChangeImage}
+				className="sr-only"
+				type="file"
+				id="file"
+				ref={inputFile}
+				style={{ display: "none" }}
+			/>
+		</>
+	);
+}
 
 class ProfilePage extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			input: {
 				socialMedia: "",
@@ -33,7 +67,9 @@ class ProfilePage extends React.Component {
 		};
 		this.handleProfileChange = this.handleProfileChange.bind(this);
 		this.updateChanges = this.updateChanges.bind(this);
+		this.setProfile = this.setProfile.bind(this);
 	}
+
 	componentDidMount() {
 		document.title = "Your Profile";
 		this.setPageLoading(true);
@@ -183,6 +219,7 @@ class ProfilePage extends React.Component {
 					const updatedProfile = Object.assign({}, this.state.profile, {
 						socialMedia: updatedData,
 					});
+					console.log("UpdatedProfile", this.state);
 					updateProfile(updatedProfile)
 						.then(() => {
 							const newState = Object.assign({}, this.state);
@@ -280,6 +317,11 @@ class ProfilePage extends React.Component {
 		}
 	}
 
+	handleRemoveImage() {
+		console.log("Rinvemvsorn");
+		this.setProfile("image", null);
+	}
+
 	handleUpdatePassword = () => {
 		const { currentPassword, newPassword, confirmPassword } = this.state;
 		if (currentPassword === "") {
@@ -316,9 +358,7 @@ class ProfilePage extends React.Component {
 		}
 
 		updatePassword({ currentPassword, newPassword })
-			.then((response) => {
-				console.log(response);
-			})
+			.then((response) => {})
 			.catch((error) => {
 				console.error(error);
 			});
@@ -332,11 +372,13 @@ class ProfilePage extends React.Component {
 			setInput,
 			setData,
 			handleSocialMediaChanges,
+			handleChangeImage,
+			handleRemoveImage,
 			i,
+			inputFile,
 		} = this.props;
 
 		const userSocialMedia = this.state.profile.socialMedia;
-		console.log(userSocialMedia);
 		return (
 			<div class="bg-slate-600">
 				<SideBar />
@@ -465,17 +507,24 @@ class ProfilePage extends React.Component {
 												<div class="flex flex-col justify-center items-center">
 													<img
 														class="rounded-full h-20"
-														src={this.state.profile.image}
-														alt="image"
+														src={
+															process.env.REACT_APP_BUCKET_HOST +
+															this.state.profile.image
+														}
+														alt="profile"
 													/>
 												</div>
 												<div class="flex flex-col justify-center items-center">
-													<button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
-														Change
-													</button>
+													<ChangeImage
+														input={this.state}
+														setInput={this.setProfile.bind(this)}
+													/>
 												</div>
 												<div class="flex flex-col justify-center items-center">
-													<button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center">
+													<button
+														onClick={() => this.setProfile("image", "")}
+														class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center"
+													>
 														Remove
 													</button>
 												</div>

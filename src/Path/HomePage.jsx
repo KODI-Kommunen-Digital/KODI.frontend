@@ -49,7 +49,7 @@ const HomePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getListings({statusId: 1, pageNo: 1, pageSize: 3}).then((response) => {
+		getListings({ statusId: 1, pageNo: 1, pageSize: 3 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
@@ -366,7 +366,9 @@ const HomePage = () => {
 								<img
 									alt="ecommerce"
 									class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-									src={city.image}
+									src={
+										process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image
+									}
 								/>
 								<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
 									<h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
@@ -390,25 +392,31 @@ const HomePage = () => {
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
 						listings
-						.map((listing) => (
-							<div
-								onClick={() => {
-									//localStorage.setItem("selectedCategoryId", (listing.categoryId));
-									navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
-								}}
-								class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-							>
-								<a class="block relative h-64 rounded overflow-hidden">
-									<img
-										alt="ecommerce"
-										class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-										src={HOMEPAGEIMG}
-									/>
-								</a>
-								<div class="mt-10">
-									<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-										{listing.title}
-									</h2>
+							.filter((listing) => listing.statusId === 1)
+							.map((listing) => (
+								<div
+									onClick={() => {
+										localStorage.setItem(
+											"selectedCategoryId",
+											listing.categoryId
+										);
+										navigateTo(
+											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+										);
+									}}
+									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+								>
+									<a class="block relative h-64 rounded overflow-hidden">
+										<img
+											alt="ecommerce"
+											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+											src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+										/>
+									</a>
+									<div class="mt-10">
+										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+											{listing.title}
+										</h2>
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
 								</div>

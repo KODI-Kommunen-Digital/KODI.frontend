@@ -6,7 +6,7 @@ import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
 import { getListingsById } from "../Services/listingsApi";
-import {getFavoriteListings} from "../Services/favoritesApi"
+import { getFavoriteListings } from "../Services/favoritesApi";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -35,7 +35,7 @@ const Favorites = () => {
 	useEffect(() => {
 		getFavoriteListings().then((response) => {
 			setFavListings(response.data.data);
-			console.log(response.data.data)
+			console.log(response.data.data);
 		});
 	}, []);
 
@@ -137,22 +137,27 @@ const Favorites = () => {
 					{favListings &&
 						favListings.map((favListings) => (
 							<div
-								onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.id}&cityId=${favListings.cityId}`)}
-								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer">
+								onClick={() =>
+									navigateTo(
+										`/HomePage/EventDetails?listingId=${favListings.id}&cityId=${favListings.cityId}`
+									)
+								}
+								className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+							>
 								<a className="block relative h-64 rounded overflow-hidden">
 									<img
 										alt="ecommerce"
 										className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-										src={HOMEPAGEIMG}
+										src={process.env.REACT_APP_BUCKET_HOST + favListings.logo}
 									/>
 								</a>
 								<div className="mt-10">
 									<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
 										{favListings.title}
-									</h2>				
+									</h2>
 								</div>
-								</div>
-							))}
+							</div>
+						))}
 				</div>
 			</div>
 
