@@ -998,7 +998,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="place" class="block text-sm font-medium text-gray-600">
-							Telephone
+							Telephone *
 						</label>
 						<input
 							type="text"
