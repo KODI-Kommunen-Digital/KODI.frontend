@@ -189,24 +189,24 @@ const Dashboard = () => {
 						<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
 							<tr>
 								<th scope="col" class="px-6 sm:px-6 py-3">
-									Listings
+									{t("listings")}
 								</th>
 								<th scope="col" class="px-6 sm:px-3 py-3 hidden lg:table-cell">
-									Category
+									{t("category")}
 								</th>
 								<th scope="col" class="px-6 py-3 hidden lg:table-cell">
-									Date of Creation
+									{t("date_of_creation")}
 								</th>
 								<th scope="col" class="px-6 py-3">
-									Action
+									{t("action")}
 								</th>
 								{viewAllListings && (
 									<th scope="col" class="px-6 py-3">
-										UserName
+										{t("username")}
 									</th>
 								)}
 								<th scope="col" class="px-6 py-3 text-center">
-									Status
+									{t("status")}
 								</th>
 							</tr>
 						</thead>
@@ -241,13 +241,13 @@ const Dashboard = () => {
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 												onClick={() => goToEditListingsPage(listing)}
 											>
-												Edit
+												{t("edit")}
 											</a>
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 												onClick={() => deleteListingOnClick(listing)}
 											>
-												Delete
+												{t("delete")}
 											</a>
 										</td>
 										{viewAllListings && (
@@ -303,7 +303,7 @@ const Dashboard = () => {
 					) : (
 						<span />
 					)}
-					<span className="text-lg px-3">Page {pageNo}</span>
+					<span className="text-lg px-3">{t("page")} {pageNo}</span>
 					<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 						onClick={() => changePageOnClick(true)}

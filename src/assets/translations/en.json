@@ -152,6 +152,12 @@
 	"pending":"Pending",
 	"Inactive":"Inactive",
 	"listings":"Listings",
+	"date_of_creation":"Date of Creation",
+	"action":"Action",
+	"status":"Status",
+	"delete":"Delete",
+	"edit":"Edit",
+	"page":"Page",
 
 	"smart_regions":"SMART REGIONS",
 	"learn_more": "LEARN MORE",
@@ -162,6 +168,18 @@
 	"data_protection":"Data protection",
 	"right_withdrawal": "Right of withdrawal",
 	"secure_app_now":"SECURE THE APP NOW!",
+
+	"email_verified":"Your email has been Verified!!",
+	"heidi_full_extend":"You can use HEIDI to its full extend.",
+	"please_wait":"Please wait. It wont take much long",
+	"redirecting_in":"Redirecting in",
+	"seconds":"seconds...",
+	"email_being_verified":"Your Email is being verified!! Please wait!!",
+	"email_verification_not_succesfull":"The Email Verification was not succesful! Please try again later",
+
+	"account":"Account",
+	"profile":"Profile",
+	
 
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }

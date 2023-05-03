@@ -8,8 +8,7 @@ import {
 	updatePassword,
 } from "../Services/usersApi";
 import { socialMedia } from "../Constants/socialMedia";
-import { getListingsById, uploadImage } from "../Services/listingsApi";
-import { getVillages } from "../Services/villages";
+import { uploadImage } from "../Services/listingsApi";
 // import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 function ChangeImage({ setInput, input }) {

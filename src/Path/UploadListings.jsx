@@ -19,9 +19,6 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 
 function UploadListings() {
-	//window.scrollTo(0, 0);
-	//const category = 4;
-	//const subCategory = 0;
 
 	const { t, i18n } = useTranslation();
 	const editor = useRef(null);

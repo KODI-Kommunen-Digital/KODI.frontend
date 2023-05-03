@@ -52,17 +52,17 @@ const VerifyEmail = () => {
 	return (
 		<section>
 			<HomePageNavBar />
-			{ verifyState == "success" ?
+			{ verifyState === "success" ?
 				<div>
 					<div class="flex items-center justify-center">
 						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
-							Your email has been Verified!!
+							{t("email_verified")}
 						</h1>
 					</div>
 
 					<div class="flex items-center justify-center">
 						<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-							You can use HEIDI to its full extend.
+							{t("heidi_full_extend")}
 						<button
 							type="submit"
 							onClick={() => navigateTo("/login")}
@@ -79,19 +79,19 @@ const VerifyEmail = () => {
 					<div className="flex items-center justify-center">
 						{redirect ? (
 							<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-								Please wait. It wont take much long
+								{t("please_wait")}
 							</h1>
 						) : (
 							<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-								Redirecting in ( {count} ) seconds...
+								{t("redirecting_in")} ( {count} ) {t("seconds")}
 							</h1>
 						)}
 					</div>
-				</div> : verifyState == "pending" ? 
+				</div> : verifyState === "pending" ? 
 				<div>
 					<div class="flex items-center justify-center">
 						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
-							Your Email is being verified!! Please wait!!
+							{t("email_being_verified")}
 						</h1>
 					</div>
 					<div class="flex items-center justify-center pt-5">
@@ -116,7 +116,7 @@ const VerifyEmail = () => {
 				<div>
 					<div class="flex items-center justify-center">
 						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
-							The Email Verification was not succesful! Please try again later
+							{t("email_verification_not_succesfull")}
 						</h1>
 					</div>
 				</div>
