@@ -425,7 +425,7 @@ class ProfilePage extends React.Component {
 												htmlFor="firstname"
 												class="block text-md font-medium text-gray-600"
 											>
-												First Name
+												First Name *
 											</label>
 											<input
 												type="text"
@@ -433,6 +433,7 @@ class ProfilePage extends React.Component {
 												id="firstname"
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 												placeholder="Enter your first name here"
+												required
 												defaultValue={this.state.profile.firstname}
 												onChange={this.handleProfileChange}
 											/>
@@ -452,12 +453,13 @@ class ProfilePage extends React.Component {
 												htmlFor="lastname"
 												class="block text-md font-medium text-gray-600"
 											>
-												Last Name
+												Last Name *
 											</label>
 											<input
 												type="text"
 												name="lastname"
 												id="lastname"
+												required
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 												placeholder="Enter your last name here"
 												defaultValue={this.state.profile.lastname}
@@ -481,7 +483,7 @@ class ProfilePage extends React.Component {
 												htmlFor="username"
 												class="block text-md font-medium text-gray-600"
 											>
-												User Name
+												User Name *
 											</label>
 											<input
 												type="text"
@@ -489,6 +491,7 @@ class ProfilePage extends React.Component {
 												id="username"
 												class="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 												placeholder="Enter your username here"
+												required
 												defaultValue={this.state.profile.username}
 												onChange={this.handleProfileChange}
 												disabled={true}
