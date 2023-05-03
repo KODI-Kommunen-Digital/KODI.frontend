@@ -42,12 +42,14 @@ export default function HomePageNavBar() {
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
+			window.localStorage.removeItem("selectedItem");
 			window.sessionStorage.removeItem("accessToken");
 			window.sessionStorage.removeItem("refreshToken");
 			window.sessionStorage.removeItem("userId");
+			window.sessionStorage.removeItem("selectedItem");
 			setIsLoggedIn(false);
 			navigateTo("/");
-			alert("You have been logged out");
+			//alert("You have been logged out");
 		} else {
 			navigateTo("/login");
 		}
@@ -59,7 +61,7 @@ export default function HomePageNavBar() {
 		<div class="w-full fixed top-0 z-10">
 			<Popover className="relative bg-white mr-0 ml-0 px-10">
 				<div className="w-full">
-					<div className="flex items-center justify-between border-gray-100 py-5 md:justify-start md:space-x-10">
+					<div className="flex items-center justify-between border-gray-100 py-5 lg:justify-start lg:space-x-10">
 						<div>
 							<img
 								class="mx-auto lg:h-10 md:h-8 h-5 w-auto cursor-pointer"
@@ -68,16 +70,16 @@ export default function HomePageNavBar() {
 								onClick={() => navigateTo("/")}
 							/>
 						</div>
-						<div className="-my-2 -mr-2 md:hidden">
+						<div className="-my-2 -mr-2 lg:hidden">
 							<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
 								<span className="sr-only">Open menu</span>
 								<Bars3Icon className="h-6 w-6" aria-hidden="true" />
 							</Popover.Button>
 						</div>
 
-						<div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0 space-x-15">
+						<div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
 							<a
-								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap px-8 py-2 text-base font-semibold text-gray-600 transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 cursor-pointer"
 								onClick={() => {
 									if (isLoggedIn) {
 										navigateTo("/Favorite");
@@ -141,7 +143,7 @@ export default function HomePageNavBar() {
 				>
 					<Popover.Panel
 						focus
-						className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden"
+						className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition lg:hidden"
 					>
 						<div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
 							<div className="space-y-6 py-6 px-5">
@@ -169,7 +171,9 @@ export default function HomePageNavBar() {
 									)}
 									<a
 										onClick={() =>
-											isLoggedIn ? navigateTo("/OverviewPage") : navigateTo("/")
+											isLoggedIn
+												? navigateTo("/UploadListings")
+												: navigateTo("/login")
 										}
 										className="flex font-sans w-full items-center justify-center rounded-md mt-4 px-4 py-2 border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 									>
