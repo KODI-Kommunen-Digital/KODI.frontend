@@ -1,32 +1,29 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import {
 	getUserListings,
-	getProfile,
-	getProfileByIds,
+	getProfile
 } from "../Services/usersApi";
 import {
-	getListings,
 	getAllListings,
 	updateListingsData,
 	deleteListing
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { sortOldest } from "../Services/helper";
-import { categoryByName, categoryById } from "../Constants/categories";
+import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
+import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
-import { FaBell } from "react-icons/fa";
+
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
+	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(false);
-	//const [count, setCount] = useState(2);
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -123,22 +120,22 @@ const Dashboard = () => {
 								class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 								onClick={() => fetchListings()}
 							>
-								All Listings
+								{t("allListings")}
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 								onClick={() => fetchListings(statusByName.Active)}
 							>
-								Active
+								{t("active")}
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 								onClick={() => fetchListings(statusByName.Pending)}
 							>
-								Pending
+								{t("pending")}
 							</div>
 							<div class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 								onClick={() => fetchListings(statusByName.Inactive)}
 							>
-								Inactive
+								{t("inactive")}
 							</div>
 					</div>
 				</div>

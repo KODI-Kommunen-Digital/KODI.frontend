@@ -43,9 +43,11 @@
 	"sendLink": "Send Link",
 	"cancel": "Cancel",
 	"allListings": "All Listings",
-	"accountPresent": "Already have an account?",
+
+	"accountPresent": "Already have an account? ",
 	"loginHere": "Please Login here",
 	"updatePassword": "Update Password",
+	"create_new_password":"Create new password",
 	"oldPassword": "Old Password",
 	"newPassword": "New Password",
 	"confirmNewPassword": "Confirm New Password",
@@ -58,7 +60,6 @@
 	"pleaseEnterEmailAddress": "Please enter email address",
 	"pleaseEnterFirstName": "Please enter first name",
 	"pleaseEnterLastName": "Please enter last name",
-	"acceptConditionMessage": "I hereby accept the privacy policy* and the terms and conditions*",
 	"pleaseEnterZipCode": "Please enter zip code",
 	"Need_to_change_your_password": "Need to change your password?",
 	"dashboard": "Dashboard",
@@ -140,5 +141,27 @@
 	"aboutMe": "About Me",
 	"listingUpdated": "Your listing was updated succesfully. It is under review by Admin and will be updated soon.",
 	"listingNotUpdated": "Your listing was not updated. Please try again!",
-	"alllistings": "All Listings"
+
+	"register": "Register",
+	"i_hereby_accept_the": "I hereby accept the ",
+	"privacy_policy": "privacy policy* ",
+	"and_the": "and the ",
+	"terms_conditions":"terms and conditions*",
+
+	"active":"Active",
+	"pending":"Pending",
+	"Inactive":"Inactive",
+	"listings":"Listings",
+
+	"smart_regions":"SMART REGIONS",
+	"learn_more": "LEARN MORE",
+	"developer_community":"Developer community",
+	"contact_us":"Contact us",
+	"legal":"LEGAL",
+	"imprint":"Imprint",
+	"data_protection":"Data protection",
+	"right_withdrawal": "Right of withdrawal",
+	"secure_app_now":"SECURE THE APP NOW!",
+
+	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }
