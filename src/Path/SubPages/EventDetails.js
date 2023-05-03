@@ -68,7 +68,6 @@ const EventDetails = () => {
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
 				setImagePath(listingsResponse.data.data.logo);
-				console.log("Lsiitnigbsfv", listingsResponse.data.data);
 				getFavorites().then((response) => {
 					var favorite = response.data.data.filter(
 						(f) => f.listingId == listingId
@@ -83,7 +82,6 @@ const EventDetails = () => {
 				});
 			});
 		}
-		console.log("sbyribswvriudvsibdvksvsut", process.env.REACT_APP_BUCKET_HOST);
 	}, [t]);
 
 	const [cityId, setCityId] = useState(0);
@@ -160,7 +158,6 @@ const EventDetails = () => {
 	useEffect(() => {
 		if (selectedCategoryId) {
 			getListings({ categoryId: selectedCategoryId }).then((response) => {
-				console.log(selectedCategoryId);
 				const sortedListings = sortRecent(response.data.data);
 				setListings(sortedListings);
 			});

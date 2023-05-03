@@ -35,7 +35,6 @@ const Favorites = () => {
 	useEffect(() => {
 		getFavoriteListings().then((response) => {
 			setFavListings(response.data.data);
-			console.log(response.data.data);
 		});
 	}, []);
 

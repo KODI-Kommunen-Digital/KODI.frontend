@@ -166,7 +166,6 @@ const Events = () => {
 	const [selectedCity, setSelectedCity] = useState("Default");
 
 	const handleLocationChange = (event) => {
-		console.log("Selected city value:", event.target.value);
 		const cityId = event.target.value;
 		if (cityId === "Default") {
 			setSelectedCity("Default");
@@ -266,7 +265,6 @@ const Events = () => {
 			} else {
 				getListingsByCity(cityId, { categoryId: categoryId }).then(
 					(response) => {
-						console.log(response.data.data);
 						const sortedListings = sortRecent(response.data.data);
 						setListings(sortedListings);
 					}
@@ -508,51 +506,44 @@ const Events = () => {
 							{listings &&
 								listings
 									.filter((listing) => listing.statusId === 1)
-									.map(
-										(listing) => (
-											console.log("Listing city ID:", listing.cityId),
-											(
-												<div
-													onClick={() => {
-														if (cityId) {
-															localStorage.setItem(
-																"selectedCategoryId",
-																listing.categoryId
-															);
-															navigateTo(
-																`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
-															);
-														} else {
-															localStorage.setItem(
-																"selectedCategoryId",
-																listing.categoryId
-															);
-															navigateTo(
-																`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-															);
-														}
-													}}
-													className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-												>
-													<a className="block relative h-64 rounded overflow-hidden">
-														<img
-															alt="ecommerce"
-															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-															src={
-																process.env.REACT_APP_BUCKET_HOST + listing.logo
-															}
-														/>
-													</a>
-													<div className="mt-10">
-														<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-															{listing.title}
-														</h2>
-													</div>
-													<div className="my-4 bg-gray-200 h-[1px]"></div>
-												</div>
-											)
-										)
-									)}
+									.map((listing) => (
+										<div
+											onClick={() => {
+												if (cityId) {
+													localStorage.setItem(
+														"selectedCategoryId",
+														listing.categoryId
+													);
+													navigateTo(
+														`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
+													);
+												} else {
+													localStorage.setItem(
+														"selectedCategoryId",
+														listing.categoryId
+													);
+													navigateTo(
+														`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+													);
+												}
+											}}
+											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+										>
+											<a className="block relative h-64 rounded overflow-hidden">
+												<img
+													alt="ecommerce"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+												/>
+											</a>
+											<div className="mt-10">
+												<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+													{listing.title}
+												</h2>
+											</div>
+											<div className="my-4 bg-gray-200 h-[1px]"></div>
+										</div>
+									))}
 						</div>
 					</div>
 				) : (

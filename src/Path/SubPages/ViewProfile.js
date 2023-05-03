@@ -86,7 +86,6 @@ const ViewProfile = () => {
 		switch (selectedSortOption) {
 			case "titleAZ":
 				setListings([...sortByTitleAZ(listings)]);
-				console.log(listings);
 				break;
 			case "titleZA":
 				setListings([...sortByTitleZA(listings)]);

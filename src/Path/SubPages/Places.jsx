@@ -80,7 +80,6 @@ const Places = () => {
 		switch (selectedSortOption) {
 			case "titleAZ":
 				setListings([...sortByTitleAZ(listings)]);
-				console.log(listings);
 				break;
 			case "titleZA":
 				setListings([...sortByTitleZA(listings)]);
@@ -239,7 +238,6 @@ const Places = () => {
 
 	useEffect(() => {
 		if (cityId) {
-			console.log(cityId);
 			if (categoryId) {
 				getListings({ categoryId: categoryId }).then((response) => {
 					const sortedListings = sortRecent(response.data.data);
@@ -248,7 +246,6 @@ const Places = () => {
 			} else {
 				getListingsByCity(cityId, { categoryId: categoryId }).then(
 					(response) => {
-						console.log(response.data.data);
 						const sortedListings = sortRecent(response.data.data);
 						setListings(sortedListings);
 					}
