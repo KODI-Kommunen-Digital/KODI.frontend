@@ -16,7 +16,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
 
-
+import Error from "./Error"
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
@@ -60,6 +60,18 @@ const Dashboard = () => {
 		});
 	}
 
+	function fetchListings(status = null) {
+        if (viewAllListings) {
+            getUserListings({ statusId: status }).then((response) => {
+                setListings([...sortOldest(response.data.data)]);
+            });
+        } else {
+            getAllListings({ statusId: status }).then((response) => {
+                setListings([...sortOldest(response.data.data)]);
+            });
+        }
+    }
+
 	function getStatusClass(statusId) {
 		if (status[statusId] == "Active") {
 			return "bg-green-400";
@@ -80,23 +92,19 @@ const Dashboard = () => {
 	}
 
 	//Navigate to Edit Listings page Starts
-	function goToEditListingsPage(listing) {
+	function goToEditListingsPage(listing) {		
 		navigateTo(
 			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
-		);
-	}
+		)
 
-	function fetchListings() {
-		if (viewAllListings) {
-			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		} else {
-			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		}
+		// <BrowserRouter>
+		// 	<Routes>
+		// 			<Route path="*" element={<Error />} />
+		// 	</Routes>
+		// </BrowserRouter>
+
 	}
+	
 
 	function deleteListingOnClick(listing) {
 		deleteListing(listing.cityId, listing.id).then((res) => {
