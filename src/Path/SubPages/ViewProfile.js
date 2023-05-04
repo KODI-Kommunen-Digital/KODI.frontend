@@ -4,6 +4,7 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
 import {
 	getUserListings,
@@ -185,10 +186,12 @@ const ViewProfile = () => {
 							<div class="mt-5 md:col-span-2 md:mt-0">
 								<form action="#" method="POST">
 									<div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
-										<div class="flex justify-center sm:justify-start">
+										<div class="flex flex-col justify-center items-start">
 											<img
 												class="rounded-full h-20 w-20"
-												src={process.env.REACT_APP_BUCKET_HOST + user?.image}
+												src={user?.image
+													? process.env.REACT_APP_BUCKET_HOST + user?.image
+													: PROFILEIMAGE}
 												alt={user?.lastname}
 											/>
 										</div>
@@ -219,7 +222,7 @@ const ViewProfile = () => {
 				</div>
 
 				{userSocial && userSocial !== {} ? (
-					<div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div class="w-full h-80 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 							<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
 								{t("contactInfo")}

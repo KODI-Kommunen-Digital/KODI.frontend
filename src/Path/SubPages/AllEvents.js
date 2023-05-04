@@ -117,7 +117,7 @@ const Events = () => {
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-									{selectedCity} : {selectedCategory} 
+									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
@@ -159,7 +159,7 @@ const Events = () => {
 														</option>)
 													})
 												}
-											</select>								
+											</select>
 										</div>
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
 											<select
