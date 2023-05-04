@@ -166,7 +166,6 @@ const ViewProfile = () => {
 		getProfile()
 			.then((response) => {
 				setUser(response.data.data);
-				console.log(response.data.data);
 				setUserSocial(JSON.parse(response.data.data.socialMedia));
 			})
 			.catch((error) => {

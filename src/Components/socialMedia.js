@@ -52,7 +52,6 @@ export default function SocialMedia({ setSocialMedia }) {
 			Object.keys(user.socialMedia).indexOf(event.target.value) === -1 &&
 			Object.keys(val).indexOf(event.target.value) === -1
 		) {
-			console.log(temp);
 			delete temp[idx][""];
 			delete temp[idx][Object.keys(temp[idx])[0]];
 			temp[idx][event.target.value] = "";

@@ -65,7 +65,6 @@ const Events = () => {
 
 	const handleCategoryChange = (event) => {
 		let categoryId;
-		console.log(event.target.value);
 		switch (event.target.value) {
 			case "News":
 				categoryId = 1;
@@ -534,7 +533,11 @@ const Events = () => {
 												<img
 													alt="ecommerce"
 													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-													src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
+													src={
+														listing.logo
+															? process.env.REACT_APP_BUCKET_HOST + listing.logo
+															: LISTINGSIMAGE
+													}
 												/>
 											</a>
 											<div className="mt-10">
@@ -550,29 +553,29 @@ const Events = () => {
 				) : (
 					<div>
 						<div class="flex items-center justify-center">
-						<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-							Currently there is no listings to display !
-						</h1>
+							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								Currently there is no listings to display !
+							</h1>
 						</div>
 						<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-						<span class="font-sans text-black">
-							To upload a new listing,{" "}
-						</span>
-						<a
-							class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
-							onClick={() => {
-							localStorage.setItem("selectedItem", "Choose one category");
-							navigateTo("/UploadListings");
-							}}
-						>
-							Click here
-						</a>
+							<span class="font-sans text-black">
+								To upload a new listing,{" "}
+							</span>
+							<a
+								class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+								onClick={() => {
+									localStorage.setItem("selectedItem", "Choose one category");
+									navigateTo("/UploadListings");
+								}}
+							>
+								Click here
+							</a>
 						</div>
 					</div>
 				)}
 			</div>
 			<div className="bottom-0 w-full">
-				<Footer/>
+				<Footer />
 			</div>
 		</section>
 	);
