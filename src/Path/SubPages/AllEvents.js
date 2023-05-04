@@ -33,6 +33,13 @@ const Events = () => {
 	const [pageNo, setPageNo] = useState(1);
 
 	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		var cityIdParam = urlParams.get("cityId")
+		var categoryIdParam = urlParams.get("categoryId")
+		if (cityIdParam)
+			setCityId(cityIdParam)
+		if (categoryIdParam)
+			setCategoryId(categoryIdParam);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
@@ -40,20 +47,14 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		setCityId(urlParams.get("categoryId") || null)
-		setCategoryId(urlParams.get("cityId") || null);
-	}, []);
-
-	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
 		var params = { pageNo }
 		if (parseInt(cityId)) {
-			setSelectedCity(cities.find(c => cityId == c.id).name);
+			setSelectedCity(cities.find(c => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId
 		}
 		else {
-			setSelectedCity("All Cities");
+			setSelectedCity(t("allCities"));
 			urlParams.delete("cityId"); // Remove cityId parameter from URL
 		}
 		if (parseInt(categoryId)) {
@@ -62,7 +63,7 @@ const Events = () => {
 			urlParams.set("categoryId", categoryId);
 		}
 		else {
-			setSelectedCategory("All Categories");
+			setSelectedCategory(t("allCategories"));
 			urlParams.delete("categoryId"); // Remove categoryId parameter from URL
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -130,7 +131,7 @@ const Events = () => {
 											class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 												<option class="font-sans" value={0} key={0}>
-													{t("chooseOneLocation")}
+													{t("allCities")}
 												</option>
 												{cities.map((city) => (
 													<option class="font-sans" value={city.id} key={city.id}>
@@ -149,7 +150,7 @@ const Events = () => {
 											class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 												<option class="font-sans" value={0} key={0}>
-													{t("chooseOneCategory")}
+													{t("allCategories")}
 												</option>
 												{
 													Object.keys(categories).map((key) => {
