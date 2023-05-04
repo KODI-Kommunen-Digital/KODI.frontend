@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
-	getAllListings,
+	getListings,
 	updateListingsData,
 	deleteListing,
 } from "../Services/listingsApi";
@@ -12,11 +12,15 @@ import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
+import { Fragment } from "react";
+import { Popover, Transition } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import Error from "./Error";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
+	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
@@ -41,30 +45,12 @@ const Dashboard = () => {
 		fetchListings();
 	}, [pageNo]);
 
-	// useEffect(() => {
-	// 	getUserListings().then((response) => {
-	// 		setListings([...sortOldest(response.data.data)]);
-	// 	});
-	// }, [listings]);
-
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
 			navigate(path);
 		}
 	};
-
-	function fetchListings(status = null) {
-		if (viewAllListings) {
-			getUserListings({ statusId: status }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		} else {
-			getAllListings({ statusId: status }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		}
-	}
 
 	function handleDashboardChange(event) {
 		setListings({
@@ -73,13 +59,13 @@ const Dashboard = () => {
 		});
 	}
 
-	function fetchListings(status = null) {
+	function fetchListings() {
 		if (viewAllListings) {
-			getUserListings({ statusId: status }).then((response) => {
+			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		} else {
-			getAllListings({ statusId: status }).then((response) => {
+			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		}
@@ -100,8 +86,9 @@ const Dashboard = () => {
 	function handleChangeInStatus(newStatusId, listing) {
 		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
 			.then((res) => {
-				listing.statusId = newStatusId;
-				setListings(listings);
+				let tempListings = listings;
+				tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
+				setListings([...tempListings]);
 			})
 			.catch((error) => console.log(error));
 	}
@@ -127,10 +114,6 @@ const Dashboard = () => {
 		});
 	}
 
-	function changePageOnClick(increment) {
-		increment ? setPageNo(pageNo + 1) : setPageNo(pageNo - 1);
-	}
-
 	function goToEventDetailsPage(listing) {
 		navigateTo(
 			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
@@ -149,7 +132,7 @@ const Dashboard = () => {
 					setViewAllListings(false);
 				}}
 			/>
-			<div class="container px-0 sm:px-0 py-0 w-full fixed lg:top-5 z-10 lg:px-5 lg:w-auto lg:relative">
+			{/* <div class="container px-0 sm:px-0 py-0 w-full fixed lg:top-5 z-10 lg:px-5 lg:w-auto lg:relative">
 				<div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
 					<div className=" w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
 						<div
@@ -178,6 +161,114 @@ const Dashboard = () => {
 						</div>
 					</div>
 				</div>
+			</div> */}
+
+			<div class="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
+				<Popover className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+					<div className="w-full">
+						<div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
+							<div class="hidden lg:block">
+								<div class="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
+									<div
+										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										onClick={() => setSelectedStatus(null)}
+									>
+										{t("allListings")}
+									</div>
+									<div
+										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										onClick={() => setSelectedStatus(statusByName.Active)}
+									>
+										{t("active")}
+									</div>
+									<div
+										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										onClick={() => setSelectedStatus(statusByName.Pending)}
+									>
+										{t("pending")}
+									</div>
+									<div
+										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										onClick={() => setSelectedStatus(statusByName.Inactive)}
+									>
+										{t("inactive")}
+									</div>
+								</div>
+							</div>
+
+							<div class="-my-2 -mr-2 lg:hidden">
+								<Popover.Button class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+									<span class="sr-only">Open menu</span>
+									<Bars3Icon class="h-6 w-6" aria-hidden="true" />
+								</Popover.Button>
+							</div>
+						</div>
+					</div>
+
+					<Transition
+						as={Fragment}
+						enter="duration-200 ease-out"
+						enterFrom="opacity-0 scale-95"
+						enterTo="opacity-100 scale-100"
+						leave="duration-100 ease-in"
+						leaveFrom="opacity-100 scale-100"
+						leaveTo="opacity-0 scale-95"
+					>
+						<Popover.Panel
+							focus
+							className="absolute inset-x-0 top-0 origin-top-right transform p-0 transition lg:hidden"
+						>
+							<div className="divide-y-2 divide-gray-50 bg-black shadow-lg ring-1 ring-black ring-opacity-5">
+								<div className="space-y-6 py-6 px-5">
+									<div className="-my-2 -mr-2 lg:hidden flex justify-end">
+										<Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+											<span className="sr-only">Close menu</span>
+											<XMarkIcon className="h-6 w-6" aria-hidden="true" />
+										</Popover.Button>
+									</div>
+
+									<div class="space-y-1">
+										<div
+											class="lg:hidden flex justify-center text-center"
+											id="mobile-menu"
+										>
+											<div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+												<div
+													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													onClick={() => setSelectedStatus(null)}
+												>
+													{t("allListings")}
+												</div>
+												<div
+													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													onClick={() => setSelectedStatus(statusByName.Active)}
+												>
+													{t("active")}
+												</div>
+												<div
+													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													onClick={() =>
+														setSelectedStatus(statusByName.Pending)
+													}
+												>
+													{t("pending")}
+												</div>
+												<div
+													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													onClick={() =>
+														setSelectedStatus(statusByName.Inactive)
+													}
+												>
+													{t("inactive")}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</Popover.Panel>
+					</Transition>
+				</Popover>
 			</div>
 
 			<html class="h-full bg-gray-100" />
@@ -292,21 +383,23 @@ const Dashboard = () => {
 						</tbody>
 					</table>
 				</div>
-				<div className="bottom-5 right-5 bg-black text-white p-3 my-5 rounded-lg float-right">
+				<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
 					{pageNo != 1 ? (
 						<span
-							className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
-							onClick={() => changePageOnClick(false)}
+							className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+							onClick={() => setPageNo(pageNo - 1)}
 						>
 							{"<"}{" "}
 						</span>
 					) : (
 						<span />
 					)}
-					<span className="text-lg px-3">{t("page")} {pageNo}</span>
+					<span className="text-lg px-3">
+						{t("page")} {pageNo}
+					</span>
 					<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
-						onClick={() => changePageOnClick(true)}
+						onClick={() => setPageNo(pageNo + 1)}
 					>
 						{">"}
 					</span>

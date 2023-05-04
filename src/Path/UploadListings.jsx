@@ -17,9 +17,9 @@ import {
 import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
+import Alert from "../Components/Alert";
 
 function UploadListings() {
-
 	const { t, i18n } = useTranslation();
 	const editor = useRef(null);
 	const [content, setContent] = useState("");
@@ -48,6 +48,7 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		window.scrollTo(0, 0);
 		const _ = async () => {
 			if (image1 !== null) {
 				const form = new FormData();
@@ -56,6 +57,7 @@ function UploadListings() {
 				setInput((prevInput) => ({
 					...prevInput,
 					logo: filePath.data.path,
+					removeImage: false,
 				}));
 			}
 		};
@@ -95,7 +97,7 @@ function UploadListings() {
 
 	function handleRemoveImage1() {
 		setImage1(null);
-		setInput((prevInput) => ({ ...prevInput, logo: null }));
+		setInput((prevInput) => ({ ...prevInput, logo: null, removeImage: true }));
 	}
 	function handleDrop2(e) {
 		e.preventDefault();
@@ -146,6 +148,7 @@ function UploadListings() {
 		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
+		removeImage: false,
 	});
 
 	const [error, setError] = useState({
@@ -172,6 +175,11 @@ function UploadListings() {
 
 	const handleSubmit = async (event) => {
 		setUpdating(true);
+		event.preventDefault();
+		const currentDate = new Date().toISOString().slice(0, 10);
+		const time = new Date().toLocaleTimeString();
+		const createdAt = `${currentDate}`;
+		setInput({ ...input, createdAt });
 		try {
 			var response = newListing
 				? await postListingsData(cityId, input)
@@ -645,7 +653,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							Village 
+							Village
 						</label>
 						<select
 							type="text"
@@ -1073,11 +1081,15 @@ function UploadListings() {
 									onDragEnter={handleDragEnter}
 									onDragLeave={handleDragLeave}
 								>
-									{image1 ? (
+									{image1 || input.logo ? (
 										<div className="flex flex-col items-center">
 											<img
 												className="object-contain h-64 w-full mb-4"
-												src={URL.createObjectURL(image1)}
+												src={
+													image1
+														? URL.createObjectURL(image1)
+														: process.env.REACT_APP_BUCKET_HOST + input.logo
+												}
 												alt="uploaded"
 											/>
 											<button
@@ -1372,15 +1384,9 @@ function UploadListings() {
 					</div>
 					<div>
 						{successMessage && (
-							<div className="mt-1 w-full bg-green-200 text-green-700 font-bold py-2 px-4 rounded text-center">
-								{successMessage}
-							</div>
+							<Alert type={"success"} message={successMessage} />
 						)}
-						{errorMessage && (
-							<div className="mt-1 w-full bg-red-200 text-red-700 font-bold py-2 px-4 rounded text-center">
-								{errorMessage}
-							</div>
-						)}
+						{errorMessage && <Alert type={"danger"} message={errorMessage} />}
 					</div>
 				</div>
 			</div>

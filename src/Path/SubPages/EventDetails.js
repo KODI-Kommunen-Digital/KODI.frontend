@@ -3,13 +3,14 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import { getAllListings, getListings } from "../../Services/listingsApi";
+import { getListings } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import { sortRecent } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
+import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import {
 	getFavorites,
 	postFavoriteListingsData,
@@ -22,12 +23,15 @@ const EventDetails = () => {
 	const [listingId, setListingId] = useState(0);
 	const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
+	const [createdAt, setCreatedAt] = useState("");
 	const [title, setTitle] = useState("");
 	const [userSocial, setUserSocial] = useState([]);
 	const [user, setUser] = useState();
 	const [imagePath, setImagePath] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
+	const [listings, setListings] = useState([]);
+
 	const [input, setInput] = useState({
 		//"villageId": 1,
 		categoryId: 0,
@@ -61,6 +65,7 @@ const EventDetails = () => {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
+				console.log(listingsResponse.data.data)
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
@@ -81,6 +86,7 @@ const EventDetails = () => {
 						setFavButton(t("Favorite"));
 					}
 				});
+				setCreatedAt(listingsResponse.data.data.createdAt.slice(0, 10));
 			});
 		}
 	}, [t]);
@@ -152,7 +158,7 @@ const EventDetails = () => {
 		event.preventDefault();
 	}
 
-	const [listings, setListings] = useState([]);
+	//const [listings, setListings] = useState([]);
 	const [categoryId, setCategoryId] = useState();
 	const selectedCategoryId = localStorage.getItem("selectedCategoryId");
 
@@ -269,12 +275,12 @@ const EventDetails = () => {
 												</span>
 											</button>
 
-											<button
+											{/* <button
 												type="button"
 												class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
 											>
 												{t("split")}
-											</button>
+											</button> */}
 											<button
 												type="button"
 												class="text-gray-900 mt-0 items-center"
@@ -354,7 +360,11 @@ const EventDetails = () => {
 									<img
 										alt="listing"
 										class="object-cover object-center h-full w-full"
-										src={process.env.REACT_APP_BUCKET_HOST + input.logo}
+										src={
+											input.logo
+												? process.env.REACT_APP_BUCKET_HOST + input.logo
+												: LISTINGSIMAGE
+										}
 									/>
 								</div>
 							</div>
@@ -364,13 +374,13 @@ const EventDetails = () => {
 						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 							{t("description")}
 						</h1>
-						<p class="leading-relaxed text-base font-bold my-6">
+						<p class="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
 							{description}
 						</p>
 					</div>
 				</div>
 
-				{userSocial && userSocial.length > 0 ? (
+				{userSocial && userSocial !== {} ? (
 					<div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
@@ -381,18 +391,21 @@ const EventDetails = () => {
 							<div class="my-4 bg-gray-200 h-[1px]"></div>
 
 							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-								<div class="flex justify-center sm:justify-start h-6 w-auto">
-									<img
-										src={process.env.REACT_APP_BUCKET_HOST + user?.image}
-										alt={user?.lastname}
-									/>
-								</div>
+										<div class="flex flex-col justify-center items-start">
+											<img
+												class="rounded-full h-20 w-20"
+												src={user?.image
+													? process.env.REACT_APP_BUCKET_HOST + user?.image
+													: PROFILEIMAGE}
+												alt={user?.lastname}
+											/>
+										</div>
 								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										Uploaded 5 months ago.
+										Uploaded at {createdAt}
 									</p>
 								</div>
 							</div>
@@ -522,8 +535,9 @@ const EventDetails = () => {
 							<div class="my-4 bg-gray-200 h-[1px]"></div>
 
 							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-								<div class="flex justify-center sm:justify-start h-6 w-auto">
+								<div class="flex justify-center sm:justify-start">
 									<img
+										class="rounded-full h-20 w-20"
 										src={process.env.REACT_APP_BUCKET_HOST + user?.image}
 										alt={user?.lastname}
 									/>
@@ -533,12 +547,12 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										Uploaded 5 months ago.
+										Uploaded at {createdAt}
 									</p>
 								</div>
 							</div>
 
-							<div class="flex justify-center lg:mt-10 md:mt-10">
+							<div class="flex justify-center lg:mt-7 md:mt-7">
 								<button
 									onClick={() =>
 										navigateTo(
@@ -577,7 +591,11 @@ const EventDetails = () => {
 										<img
 											alt="ecommerce"
 											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+											src={
+												listing.logo
+													? process.env.REACT_APP_BUCKET_HOST + listing.logo
+													: LISTINGSIMAGE
+											}
 										/>
 									</a>
 									<div class="mt-10">
@@ -593,7 +611,7 @@ const EventDetails = () => {
 			</div>
 
 			<div className="bottom-0 w-full">
-				<Footer/>
+				<Footer />
 			</div>
 		</section>
 	);
