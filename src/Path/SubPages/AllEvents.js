@@ -166,6 +166,8 @@ const Events = () => {
 	// };
 	const [selectedCity, setSelectedCity] = useState("Default");
 
+	//const [selectedItemLocation, setSelectedItemLocation] = useState(localStorage.getItem("selectedItemLocation"));
+
 	const handleLocationChange = (event) => {
 		const cityId = event.target.value;
 		if (cityId === "Default") {
@@ -379,7 +381,6 @@ const Events = () => {
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-											{cities.map((city) => (
 												<select
 													id="button-filter"
 													name="country"
@@ -391,11 +392,12 @@ const Events = () => {
 													<option class="font-sans" value="Default">
 														{t("chooseOneLocation")}
 													</option>
-													<option class="font-sans" value={city.id}>
+											{cities.map((city) => (
+													<option class="font-sans" key={city.id} value={city.id}>
 														{city.name}
 													</option>
-												</select>
 											))}
+												</select>
 										</div>
 
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">

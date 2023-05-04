@@ -219,7 +219,7 @@ const ViewProfile = () => {
 				</div>
 
 				{userSocial && userSocial !== {} ? (
-					<div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div class="w-full h-80 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 							<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
 								{t("contactInfo")}
