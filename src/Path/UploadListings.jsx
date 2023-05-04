@@ -17,9 +17,9 @@ import {
 import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
+import Alert from "../Components/Alert";
 
 function UploadListings() {
-
 	const { t, i18n } = useTranslation();
 	const editor = useRef(null);
 	const [content, setContent] = useState("");
@@ -48,7 +48,7 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-    window.scrollTo(0, 0);
+		window.scrollTo(0, 0);
 		const _ = async () => {
 			if (image1 !== null) {
 				const form = new FormData();
@@ -173,11 +173,11 @@ function UploadListings() {
 
 	const handleSubmit = async (event) => {
 		setUpdating(true);
-    event.preventDefault();
-    const currentDate = new Date().toISOString().slice(0, 10);
-    const time = new Date().toLocaleTimeString();
-    const createdAt = `${currentDate}`;
-    setInput({ ...input, createdAt })
+		event.preventDefault();
+		const currentDate = new Date().toISOString().slice(0, 10);
+		const time = new Date().toLocaleTimeString();
+		const createdAt = `${currentDate}`;
+		setInput({ ...input, createdAt });
 		try {
 			var response = newListing
 				? await postListingsData(cityId, input)
@@ -651,7 +651,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							Village 
+							Village
 						</label>
 						<select
 							type="text"
@@ -1378,15 +1378,9 @@ function UploadListings() {
 					</div>
 					<div>
 						{successMessage && (
-							<div className="mt-1 w-full bg-green-200 text-green-700 font-bold py-2 px-4 rounded text-center">
-								{successMessage}
-							</div>
+							<Alert type={"success"} message={successMessage} />
 						)}
-						{errorMessage && (
-							<div className="mt-1 w-full bg-red-200 text-red-700 font-bold py-2 px-4 rounded text-center">
-								{errorMessage}
-							</div>
-						)}
+						{errorMessage && <Alert type={"danger"} message={errorMessage} />}
 					</div>
 				</div>
 			</div>
