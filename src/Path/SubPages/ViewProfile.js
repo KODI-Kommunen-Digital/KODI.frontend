@@ -3,7 +3,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import LISTINGSIMAGE from "../../assets/ListingsImage.png";
 import Footer from "../../Components/Footer";
 import {
 	getUserListings,
@@ -163,9 +163,10 @@ const ViewProfile = () => {
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var userId = searchParams.get("userId");
-		getProfileByIds(userId)
+		getProfile()
 			.then((response) => {
-				setUser(response.data.data[0]);
+				setUser(response.data.data);
+				console.log(response.data.data)
 				setUserSocial(JSON.parse(response.data.data[0].socialMedia));
 			})
 			.catch((error) => {
@@ -185,17 +186,21 @@ const ViewProfile = () => {
 								<form action="#" method="POST">
 									<div class="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-Start">
 										<div class="flex justify-center sm:justify-start">
-											{user?.image}
+											<img
+												class="rounded-full h-20 w-20"
+												src={process.env.REACT_APP_BUCKET_HOST + user?.image}
+												alt={user?.lastname}
+											/>
 										</div>
 										<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 											<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
-												{user?.username}
+												{user?.firstname + " " + user?.lastname}
 											</h2>
-											<p class="leading-relaxed text-base font-semibold dark:text-gray-900">
+											{/* <p class="leading-relaxed text-base font-semibold mb-2 dark:text-gray-900">
 												Member for 10 months
-											</p>
+											</p> */}
 											<p class="leading-relaxed text-base dark:text-gray-900">
-												entries
+												Entries
 											</p>
 										</div>
 									</div>
@@ -207,7 +212,7 @@ const ViewProfile = () => {
 						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 							{t("aboutMe")}
 						</h1>
-						<p class="leading-relaxed text-base font-bold my-6">
+						<p class="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
 							{user?.description}
 						</p>
 					</div>
@@ -435,7 +440,7 @@ const ViewProfile = () => {
 											<img
 												alt="ecommerce"
 												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-												src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+												src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
 											/>
 										</a>
 										<div class="mt-10">

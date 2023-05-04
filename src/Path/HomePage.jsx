@@ -11,6 +11,8 @@ import { getVillages } from "../Services/villages";
 import Footer from "../Components/Footer";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
+import CITYIMAGE from "../assets/City.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -352,9 +354,10 @@ const HomePage = () => {
 				{t("discoverMorePlaces")}
 			</h2>
 
-			{cities.map((city) => (
+
 				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+					{cities.map((city) => (
 						<div
 							onClick={() => {
 								navigateTo(`/AllEvents?cityId=${city.id}`);
@@ -366,7 +369,8 @@ const HomePage = () => {
 									alt="ecommerce"
 									class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
 									src={
-										process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image
+										city.image
+										? process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image : CITYIMAGE
 									}
 								/>
 								<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
@@ -377,9 +381,9 @@ const HomePage = () => {
 								</div>
 							</div>
 						</div>
+					))}
 					</div>
 				</div>
-			))}
 
 			<div className="my-4 bg-gray-200 h-[1px]"></div>
 
@@ -409,7 +413,7 @@ const HomePage = () => {
 										<img
 											alt="ecommerce"
 											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+											src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
 										/>
 									</a>
 									<div class="mt-10">

@@ -8,6 +8,7 @@ import {
 	sortOldest,
 } from "../../Services/helper";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
+import LISTINGSIMAGE from "../../assets/ListingsImage.png";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -533,7 +534,7 @@ const Events = () => {
 												<img
 													alt="ecommerce"
 													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-													src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+													src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
 												/>
 											</a>
 											<div className="mt-10">
