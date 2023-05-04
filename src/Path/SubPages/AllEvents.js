@@ -208,7 +208,7 @@ const Events = () => {
 				<div>
 					{listings && listings.length > 0 ? (
 						<div class="bg-white flex flex-wrap gap-10 justify-center">
-							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 							{listings &&
 								listings
 								.map((listing) => (
