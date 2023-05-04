@@ -48,6 +48,7 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+    window.scrollTo(0, 0);
 		const _ = async () => {
 			if (image1 !== null) {
 				const form = new FormData();
@@ -172,6 +173,11 @@ function UploadListings() {
 
 	const handleSubmit = async (event) => {
 		setUpdating(true);
+    event.preventDefault();
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const time = new Date().toLocaleTimeString();
+    const createdAt = `${currentDate}`;
+    setInput({ ...input, createdAt })
 		try {
 			var response = newListing
 				? await postListingsData(cityId, input)

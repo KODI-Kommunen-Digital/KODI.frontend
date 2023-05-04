@@ -509,9 +509,9 @@ class ProfilePage extends React.Component {
 												{t("photo")}
 											</label>
 											<div class="py-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
-												<div class="flex flex-col justify-center items-center">
+												<div class="flex flex-col justify-center items-start">
 													<img
-														class="rounded-full h-20"
+														class="rounded-full h-20 w-20"
 														src={
 															process.env.REACT_APP_BUCKET_HOST +
 															this.state.profile.image
@@ -519,13 +519,13 @@ class ProfilePage extends React.Component {
 														alt="profile"
 													/>
 												</div>
-												<div class="flex flex-col justify-center items-center">
+												<div class="flex flex-col justify-center items-start">
 													<ChangeImage
 														input={this.state}
 														setInput={this.setProfile.bind(this)}
 													/>
 												</div>
-												<div class="flex flex-col justify-center items-center">
+												<div class="flex flex-col justify-center items-start">
 													<button
 														onClick={() => this.setProfile("image", "")}
 														class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center"
