@@ -52,18 +52,6 @@ const Dashboard = () => {
 		}
 	};
 
-	function fetchListings(status = null) {
-		if (viewAllListings) {
-			getUserListings({ statusId: status }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		} else {
-			getAllListings({ statusId: status }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
-			});
-		}
-	}
-
 	function handleDashboardChange(event) {
 		setListings({
 			...listings,
@@ -71,13 +59,13 @@ const Dashboard = () => {
 		});
 	}
 
-	function fetchListings(status = null) {
+	function fetchListings() {
 		if (viewAllListings) {
-			getUserListings({ statusId: status }).then((response) => {
+			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		} else {
-			getAllListings({ statusId: status }).then((response) => {
+			getAllListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		}
