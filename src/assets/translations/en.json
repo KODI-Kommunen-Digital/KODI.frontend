@@ -134,7 +134,7 @@
 	"ownerInfo": "Owner info",
 	"viewProfile": "View Profiles",
 	"Account_Settings": "Account Settings",
-	"smilarItems": "Similar items",
+	"similarItems": "Similar items",
 
 	"contactInfo": "Contact Information",
 	"profileEntries": "Profile Entries",
@@ -195,5 +195,11 @@
 	"phoneNumber": "Phone Number",
 	"allCities": "All Cities",
 	"allCategories": "All Categories",
+
+	"currently_no_listings":"Currently there is no listings to display !",
+	"to_upload_new_listing":"To upload a new listing, ",
+	"click_here":"Click here.",
+	"uploaded_at":"Uploaded at ",
+
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }

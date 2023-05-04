@@ -159,13 +159,13 @@ const Favorites = () => {
 				<div>
 					<div class="flex items-center justify-center">
 					<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-						Currently there is no listings to display !
+					{t("currently_no_listings")}
 					</h1>
 					</div>
 
 					<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
 					<span class="font-sans text-black">
-						To upload a new listing,{" "}
+					{t("to_upload_new_listing")}
 					</span>
 					<a
 						class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
@@ -174,7 +174,7 @@ const Favorites = () => {
 						navigateTo("/UploadListings");
 						}}
 					>
-						Click here
+						{t("click_here")}
 					</a>
 					</div>
 				</div>

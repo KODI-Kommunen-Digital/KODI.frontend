@@ -405,7 +405,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										Uploaded at {createdAt}
+										{t("uploaded_at")}{createdAt}
 									</p>
 								</div>
 							</div>
@@ -547,7 +547,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										Uploaded at {createdAt}
+										{t("uploaded_at")}{createdAt}
 									</p>
 								</div>
 							</div>
@@ -573,7 +573,7 @@ const EventDetails = () => {
 
 			<div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
 				<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-					{t("smilarItems")}
+					{t("similarItems")}
 				</h1>
 				<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
 					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
