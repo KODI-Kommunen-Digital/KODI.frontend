@@ -167,7 +167,7 @@ const LoginPage = () => {
 									onChange={(e) => setUser(e.target.value)}
 									required
 									class="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username")}
+									placeholder={t("username") +"*"}
 								/>
 							</div>
 							<div class="relative">
@@ -182,7 +182,7 @@ const LoginPage = () => {
 									onChange={handlePasswordChange}
 									required
 									class=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("pleaseEnterPassword")}
+									placeholder={t("pleaseEnterPassword")+"*"}
 								/>
 								<button
 									type="button"
@@ -300,7 +300,7 @@ const LoginPage = () => {
 									onChange={(e) => setUserReset(e.target.value)}
 									required
 									class="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username")}
+									placeholder={t("username")+"*"}
 								/>
 								<div class="flex gap-2">
 									<button

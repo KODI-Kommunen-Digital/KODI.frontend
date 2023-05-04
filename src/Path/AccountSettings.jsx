@@ -99,19 +99,19 @@ const AccountSettings = () => {
 				<div class="container w-auto px-5 py-2 bg-slate-600">
                     <div class="bg-white mt-4 p-6">
                         <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-                            Personal Information
+                            {t("personalInformation")}
                             <div className="my-4 bg-gray-600 h-[1px]"/>
                         </h2>
                         <div class="relative mb-4">
                             <div class="pb-6">
                                 <label class="block px-2 text-sm font-medium text-gray-500">
-                                This information will be displayed publicly, so be careful what you share
+                                {t("displayed_publicly")}
                                 </label>
                             </div>
                             <div class="py-2 grid grid-cols-1 md:grid-cols-2">
                                 <div class="mt-1 px-2">
                                 <label class="block text-md font-medium text-gray-600">
-                                    Email Id
+                                    {t("emailId")}
                                 </label>
                                 <input
                                     type="text"
@@ -125,7 +125,7 @@ const AccountSettings = () => {
                                 </div>
                                 <div class="mt-1 px-2">
                                 <label htmlFor="phoneNumber" class="block text-md font-medium text-gray-600">
-                                    Phone Number
+                                    {t("phoneNumber")}
                                 </label>
                                 <input
                                     type="text"
