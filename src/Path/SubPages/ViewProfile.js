@@ -166,8 +166,8 @@ const ViewProfile = () => {
 		getProfile()
 			.then((response) => {
 				setUser(response.data.data);
-				console.log(response.data.data)
-				setUserSocial(JSON.parse(response.data.data[0].socialMedia));
+				console.log(response.data.data);
+				setUserSocial(JSON.parse(response.data.data.socialMedia));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -218,7 +218,7 @@ const ViewProfile = () => {
 					</div>
 				</div>
 
-				{userSocial && userSocial.length > 0 ? (
+				{userSocial && userSocial !== {} ? (
 					<div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 							<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
@@ -440,7 +440,11 @@ const ViewProfile = () => {
 											<img
 												alt="ecommerce"
 												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-												src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
+												src={
+													listing.logo
+														? process.env.REACT_APP_BUCKET_HOST + listing.logo
+														: LISTINGSIMAGE
+												}
 											/>
 										</a>
 										<div class="mt-10">
@@ -456,7 +460,7 @@ const ViewProfile = () => {
 			</div>
 
 			<div className="bottom-0 w-full">
-				<Footer/>
+				<Footer />
 			</div>
 		</section>
 	);
