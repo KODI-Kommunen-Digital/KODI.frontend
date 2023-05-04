@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
-	getAllListings,
+	getListings,
 	updateListingsData,
 	deleteListing,
 } from "../Services/listingsApi";
@@ -61,11 +61,11 @@ const Dashboard = () => {
 
 	function fetchListings() {
 		if (viewAllListings) {
-			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
+			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		} else {
-			getAllListings({ statusId: selectedStatus, pageNo }).then((response) => {
+			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings([...sortOldest(response.data.data)]);
 			});
 		}
@@ -111,10 +111,6 @@ const Dashboard = () => {
 				listings.filter((l) => l.cityId != listing.cityId || l.id != listing.id)
 			);
 		});
-	}
-
-	function changePageOnClick(increment) {
-		increment ? setPageNo(pageNo + 1) : setPageNo(pageNo - 1);
 	}
 
 	function goToEventDetailsPage(listing) {
@@ -386,7 +382,7 @@ const Dashboard = () => {
 					{pageNo != 1 ? (
 						<span
 							className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
-							onClick={() => changePageOnClick(false)}
+							onClick={() => setPageNo(pageNo - 1)}
 						>
 							{"<"}{" "}
 						</span>
@@ -396,7 +392,7 @@ const Dashboard = () => {
 					<span className="text-lg px-3">{t("page")} {pageNo}</span>
 					<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
-						onClick={() => changePageOnClick(true)}
+						onClick={() => setPageNo(pageNo + 1)}
 					>
 						{">"}
 					</span>
