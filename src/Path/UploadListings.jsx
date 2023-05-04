@@ -57,6 +57,7 @@ function UploadListings() {
 				setInput((prevInput) => ({
 					...prevInput,
 					logo: filePath.data.path,
+					removeImage: false,
 				}));
 			}
 		};
@@ -96,7 +97,7 @@ function UploadListings() {
 
 	function handleRemoveImage1() {
 		setImage1(null);
-		setInput((prevInput) => ({ ...prevInput, logo: null }));
+		setInput((prevInput) => ({ ...prevInput, logo: null, removeImage: true }));
 	}
 	function handleDrop2(e) {
 		e.preventDefault();
@@ -147,6 +148,7 @@ function UploadListings() {
 		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
+		removeImage: false,
 	});
 
 	const [error, setError] = useState({
@@ -1079,11 +1081,15 @@ function UploadListings() {
 									onDragEnter={handleDragEnter}
 									onDragLeave={handleDragLeave}
 								>
-									{image1 ? (
+									{image1 || input.logo ? (
 										<div className="flex flex-col items-center">
 											<img
 												className="object-contain h-64 w-full mb-4"
-												src={URL.createObjectURL(image1)}
+												src={
+													image1
+														? URL.createObjectURL(image1)
+														: process.env.REACT_APP_BUCKET_HOST + input.logo
+												}
 												alt="uploaded"
 											/>
 											<button

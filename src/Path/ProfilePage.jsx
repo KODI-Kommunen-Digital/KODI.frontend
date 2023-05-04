@@ -18,7 +18,6 @@ function ChangeImage({ setInput, input }) {
 	const inputFile = useRef(null);
 	var file = false;
 	function handleChangeImage(e) {
-		console.log("Chanege Image", input);
 		file = e.target.files[0];
 		const form = new FormData();
 		form.append("image", file);
@@ -145,7 +144,6 @@ class ProfilePage extends React.Component {
 	}
 	setSocialMedia(socialMediaVal) {
 		const newState = Object.assign({}, this.state);
-		console.log("SocialMDine", socialMediaVal);
 		if (newState.data.socialMedia !== socialMediaVal) {
 			newState.data.socialMedia = socialMediaVal;
 			this.setState(newState);
@@ -284,7 +282,6 @@ class ProfilePage extends React.Component {
 	}
 
 	handleRemoveImage() {
-		console.log("Rinvemvsorn");
 		this.setProfile("image", null);
 	}
 

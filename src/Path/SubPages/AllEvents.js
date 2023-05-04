@@ -11,13 +11,11 @@ import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import LISTINGSIMAGE from "../../assets/ListingsImage.png";
 import { useTranslation } from "react-i18next";
 
-import {
-	getListings
-} from "../../Services/listingsApi";
+import { getListings } from "../../Services/listingsApi";
 
-	import { getCities } from "../../Services/cities";
-	import { categoryByName, categoryById } from "../../Constants/categories";
-	import Footer from "../../Components/Footer";
+import { getCities } from "../../Services/cities";
+import { categoryByName, categoryById } from "../../Constants/categories";
+import Footer from "../../Components/Footer";
 
 const Events = () => {
 	window.scrollTo(0, 0);
@@ -34,12 +32,10 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var cityIdParam = urlParams.get("cityId")
-		var categoryIdParam = urlParams.get("categoryId")
-		if (cityIdParam)
-			setCityId(cityIdParam)
-		if (categoryIdParam)
-			setCategoryId(categoryIdParam);
+		var cityIdParam = urlParams.get("cityId");
+		var categoryIdParam = urlParams.get("categoryId");
+		if (cityIdParam) setCityId(cityIdParam);
+		if (categoryIdParam) setCategoryId(categoryIdParam);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
@@ -47,22 +43,20 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { pageNo }
+		var params = { pageNo };
 		if (parseInt(cityId)) {
-			setSelectedCity(cities.find(c => cityId == c.id)?.name);
+			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
-			params.cityId = cityId
-		}
-		else {
+			params.cityId = cityId;
+		} else {
 			setSelectedCity(t("allCities"));
 			urlParams.delete("cityId"); // Remove cityId parameter from URL
 		}
 		if (parseInt(categoryId)) {
-			setSelectedCategory(t(categoryById[categoryId]))
-			params.categoryId = categoryId	
+			setSelectedCategory(t(categoryById[categoryId]));
+			params.categoryId = categoryId;
 			urlParams.set("categoryId", categoryId);
-		}
-		else {
+		} else {
 			setSelectedCategory(t("allCategories"));
 			urlParams.delete("categoryId"); // Remove categoryId parameter from URL
 		}
@@ -117,24 +111,28 @@ const Events = () => {
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-									{selectedCity} : {selectedCategory} 
+									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
 											<select
-											id="city"
-											name="city"
-											autocomplete="city-name"
-											onChange={e => setCityId(e.target.value)}
-											value={cityId}
-											class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+												id="city"
+												name="city"
+												autocomplete="city-name"
+												onChange={(e) => setCityId(e.target.value)}
+												value={cityId}
+												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 												<option class="font-sans" value={0} key={0}>
 													{t("allCities")}
 												</option>
 												{cities.map((city) => (
-													<option class="font-sans" value={city.id} key={city.id}>
+													<option
+														class="font-sans"
+														value={city.id}
+														key={city.id}
+													>
 														{city.name}
 													</option>
 												))}
@@ -142,24 +140,24 @@ const Events = () => {
 										</div>
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
 											<select
-											id="category"
-											name="category"
-											autocomplete="category-name"
-											onChange={e => setCategoryId(e.target.value)}
-											value={categoryId}
-											class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+												id="category"
+												name="category"
+												autocomplete="category-name"
+												onChange={(e) => setCategoryId(e.target.value)}
+												value={categoryId}
+												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 												<option class="font-sans" value={0} key={0}>
 													{t("allCategories")}
 												</option>
-												{
-													Object.keys(categories).map((key) => {
-														return (<option class="font-sans" value={key} key={key}>
+												{Object.keys(categories).map((key) => {
+													return (
+														<option class="font-sans" value={key} key={key}>
 															{t(categories[key])}
-														</option>)
-													})
-												}
-											</select>								
+														</option>
+													);
+												})}
+											</select>
 										</div>
 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
 											<select
@@ -197,7 +195,9 @@ const Events = () => {
 					) : (
 						<span />
 					)}
-					<span className="text-lg px-3">{t("page")} {pageNo}</span>
+					<span className="text-lg px-3">
+						{t("page")} {pageNo}
+					</span>
 					<span
 						className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 						onClick={() => setPageNo(pageNo + 1)}
@@ -213,56 +213,61 @@ const Events = () => {
 								listings
 								.map((listing) => (
 										<div
-										onClick={() => {
-											navigateTo(`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`);
-											}
-										}
-										className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+											onClick={() => {
+												navigateTo(
+													`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+												);
+											}}
+											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 										>
-										<a className="block relative h-64 rounded overflow-hidden">
-											<img
-											alt="ecommerce"
-											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
-											/>
-										</a>
-										<div className="mt-10">
-											<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-											{listing.title}
-											</h2>
+											<a className="block relative h-64 rounded overflow-hidden">
+												<img
+													alt="ecommerce"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													src={
+														listing.logo
+															? process.env.REACT_APP_BUCKET_HOST + listing.logo
+															: LISTINGSIMAGE
+													}
+												/>
+											</a>
+											<div className="mt-10">
+												<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+													{listing.title}
+												</h2>
+											</div>
+											<div className="my-4 bg-gray-200 h-[1px]"></div>
 										</div>
-										<div className="my-4 bg-gray-200 h-[1px]"></div>
-										</div>
-											))}
-								</div>
+									))}
 							</div>
-						) : (
-							<div>
-								<div class="flex items-center justify-center">
+						</div>
+					) : (
+						<div>
+							<div class="flex items-center justify-center">
 								<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 									Currently there is no listings to display !
 								</h1>
-								</div>
-								<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							</div>
+							<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
 								<span class="font-sans text-black">
 									To upload a new listing,{" "}
 								</span>
 								<a
 									class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 									onClick={() => {
-									localStorage.setItem("selectedItem", "Choose one category");
-									navigateTo("/UploadListings");
+										localStorage.setItem("selectedItem", "Choose one category");
+										navigateTo("/UploadListings");
 									}}
 								>
 									Click here
 								</a>
-								</div>
 							</div>
-						)}
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="bottom-0 w-full">
-				<Footer/>
+				<Footer />
 			</div>
 		</section>
 	);
