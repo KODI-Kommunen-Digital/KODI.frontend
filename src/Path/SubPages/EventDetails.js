@@ -10,6 +10,7 @@ import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import {
 	getFavorites,
 	postFavoriteListingsData,
@@ -64,6 +65,7 @@ const EventDetails = () => {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
+				console.log(listingsResponse.data.data)
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
@@ -389,12 +391,15 @@ const EventDetails = () => {
 							<div class="my-4 bg-gray-200 h-[1px]"></div>
 
 							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-								<div class="flex justify-center sm:justify-start h-6 w-auto">
-									<img
-										src={process.env.REACT_APP_BUCKET_HOST + user?.image}
-										alt={user?.lastname}
-									/>
-								</div>
+										<div class="flex flex-col justify-center items-start">
+											<img
+												class="rounded-full h-20 w-20"
+												src={user?.image
+													? process.env.REACT_APP_BUCKET_HOST + user?.image
+													: PROFILEIMAGE}
+												alt={user?.lastname}
+											/>
+										</div>
 								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
 										{firstname + " " + lastname}

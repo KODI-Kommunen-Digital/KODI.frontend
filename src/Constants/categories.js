@@ -1,4 +1,4 @@
-var categoryByName = {
+export const categoryByName = {
     news: 1,
     roadTraffic: 2,
     events: 3,
@@ -12,20 +12,17 @@ var categoryByName = {
     carpoolingPublicTransport: 11,
     offers: 12
 }
-
-var categoryById = {
-    1: "News",
-    2: "RoadWorksOrTraffic",
-    3: "EventsOrNews",
-    4: "Clubs",
-    5: "RegionalProducts",
-    6: "OfferOrSearch",
-    7: "NewCitizenInfo",
-    8: "DefectReport",
-    9: "LostAndFound",
-    10: "CompanyPortraits",
-    11: "CarpoolingOrPublicTransport",
-    12: "Offers"
+export const categoryById = {
+    1: "news",
+    2: "roadTraffic",
+    3: "events",
+    4: "clubs",
+    5: "regionalProducts",
+    6: "offerSearch",
+    7: "newCitizenInfo",
+    8: "defectReport",
+    9: "lostAndFound",
+    10: "companyPortaits",
+    11: "carpoolingPublicTransport",
+    12: "offers"
  }
-
-module.exports = { categoryByName, categoryById }

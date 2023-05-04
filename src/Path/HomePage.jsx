@@ -360,6 +360,7 @@ const HomePage = () => {
 					{cities.map((city) => (
 						<div
 							onClick={() => {
+								localStorage.setItem("selectedItemLocation", city.name);
 								navigateTo(`/AllEvents?cityId=${city.id}`);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
