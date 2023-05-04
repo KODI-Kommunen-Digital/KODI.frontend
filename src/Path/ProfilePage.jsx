@@ -8,11 +8,12 @@ import {
 	updatePassword,
 } from "../Services/usersApi";
 import { socialMedia } from "../Constants/socialMedia";
-import { getListingsById, uploadImage } from "../Services/listingsApi";
-import { getVillages } from "../Services/villages";
+import { uploadImage } from "../Services/listingsApi";
+import { useTranslation, withTranslation } from "react-i18next";
 // import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 function ChangeImage({ setInput, input }) {
+	const { t } = useTranslation();
 	const inputFile = useRef(null);
 	var file = false;
 	function handleChangeImage(e) {
@@ -31,7 +32,7 @@ function ChangeImage({ setInput, input }) {
 				onClick={() => inputFile.current.click()}
 				class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 			>
-				Change
+				{t("change")}
 			</button>
 			<input
 				onChange={handleChangeImage}
@@ -46,6 +47,7 @@ function ChangeImage({ setInput, input }) {
 }
 
 class ProfilePage extends React.Component {
+
 	constructor(props) {
 		super(props);
 
@@ -366,6 +368,7 @@ class ProfilePage extends React.Component {
 
 	render() {
 		const { val } = this.state;
+		const { t } = this.props;
 		const {
 			data,
 			validateInput,
@@ -406,17 +409,16 @@ class ProfilePage extends React.Component {
 						<div class="container w-auto px-5 py-2">
 							<div class="bg-white mt-4 p-6">
 								<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-									Account
+									{t("account")}
 									<div className="my-4 bg-gray-600 h-[1px]" />
 								</h2>
 								<div class="relative mb-4">
 									<div class="pb-8">
 										<label class="block px-2 text-lg font-medium text-gray-600">
-											Profile
+											{t("profile")}
 										</label>
 										<label class="block px-2 text-sm font-medium text-gray-400">
-											This information will be displayed publicly, so be careful
-											what you share
+											{t("displayed_publicly")}
 										</label>
 									</div>
 									<div class="py-2 grid grid-cols-1 md:grid-cols-2">
@@ -425,14 +427,15 @@ class ProfilePage extends React.Component {
 												htmlFor="firstname"
 												class="block text-md font-medium text-gray-600"
 											>
-												First Name
+												{t("firstName")} *
 											</label>
 											<input
 												type="text"
 												name="firstname"
 												id="firstname"
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your first name here"
+												placeholder={t("pleaseEnterFirstName")}
+												required
 												defaultValue={this.state.profile.firstname}
 												onChange={this.handleProfileChange}
 											/>
@@ -452,14 +455,15 @@ class ProfilePage extends React.Component {
 												htmlFor="lastname"
 												class="block text-md font-medium text-gray-600"
 											>
-												Last Name
+												{t("lastName")} *
 											</label>
 											<input
 												type="text"
 												name="lastname"
 												id="lastname"
+												required
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your last name here"
+												placeholder={t("pleaseEnterLastName")}
 												defaultValue={this.state.profile.lastname}
 												onChange={this.handleProfileChange}
 											/>
@@ -481,14 +485,15 @@ class ProfilePage extends React.Component {
 												htmlFor="username"
 												class="block text-md font-medium text-gray-600"
 											>
-												User Name
+												{t("username")}
 											</label>
 											<input
 												type="text"
 												name="username"
 												id="username"
 												class="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your username here"
+												placeholder={t("pleaseEnterUsername")}
+												required
 												defaultValue={this.state.profile.username}
 												onChange={this.handleProfileChange}
 												disabled={true}
@@ -501,7 +506,7 @@ class ProfilePage extends React.Component {
 												htmlFor="photo"
 												class="block text-md font-medium text-gray-600"
 											>
-												Photo
+												{t("photo")}
 											</label>
 											<div class="py-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
 												<div class="flex flex-col justify-center items-start">
@@ -525,7 +530,7 @@ class ProfilePage extends React.Component {
 														onClick={() => this.setProfile("image", "")}
 														class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center"
 													>
-														Remove
+														{t("remove")}
 													</button>
 												</div>
 											</div>
@@ -537,14 +542,14 @@ class ProfilePage extends React.Component {
 												htmlFor="description"
 												class="block text-md font-medium text-gray-600"
 											>
-												Description
+												{t("description")}
 											</label>
 											<textarea
 												type="text"
 												name="description"
 												id="description"
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Write a description about yourself"
+												placeholder={t("enter_description")}
 												defaultValue={this.state.profile.description}
 												onChange={this.handleProfileChange}
 											/>
@@ -556,14 +561,14 @@ class ProfilePage extends React.Component {
 												htmlFor="website"
 												class="block text-md font-medium text-gray-600"
 											>
-												URL/Website
+												{t("url/website")}
 											</label>
 											<input
 												type="text"
 												name="website"
 												id="website"
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-												placeholder="Enter your website here"
+												placeholder={t("enter_website")}
 												defaultValue={this.state.profile.website}
 												onChange={this.handleProfileChange}
 											/>
@@ -576,16 +581,16 @@ class ProfilePage extends React.Component {
 						<div class="container w-auto px-5 py-2 bg-slate-600">
 							<div class="bg-white mt-4 p-6 space-y-10">
 								<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-									Social Media
+									{t("socialMedia")}
 									<div className="my-4 bg-gray-600 h-[1px]"></div>
 								</h2>
 
 								<div class="relative mb-4">
 									<label
-										for="category"
+										htmlFor="category"
 										class="block text-sm font-medium text-gray-600"
 									>
-										Add your social media accounts here
+										{t("add_social_media")}
 									</label>
 									<div class="relative mb-4">
 										<div class="relative mb-4 mt-2 border-white">
@@ -599,10 +604,10 @@ class ProfilePage extends React.Component {
 													>
 														<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 															<label
-																for="country"
+																htmlFor="country"
 																class="block text-md font-medium text-gray-600"
 															>
-																Select
+																{t("select")}
 															</label>
 															<select
 																type="text"
@@ -629,7 +634,7 @@ class ProfilePage extends React.Component {
 																htmlFor="lastName"
 																class="block text-md font-medium text-gray-600"
 															>
-																Link
+																{t("link")}
 															</label>
 															<input
 																type="text"
@@ -644,7 +649,7 @@ class ProfilePage extends React.Component {
 																	this.handleSocialMediaChanges(e, i)
 																}
 																className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-																placeholder="ainfo@heidi-app.de"
+																placeholder={t("heidi_mail")}
 																disabled
 															/>
 														</div>
@@ -674,10 +679,10 @@ class ProfilePage extends React.Component {
 													>
 														<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 															<label
-																for="country"
+																htmlFor="country"
 																class="block text-md font-medium text-gray-600"
 															>
-																Select
+																{t("select")}
 															</label>
 															<select
 																type="text"
@@ -703,7 +708,7 @@ class ProfilePage extends React.Component {
 																htmlFor="lastName"
 																class="block text-md font-medium text-gray-600"
 															>
-																Link
+																{t("link")}
 															</label>
 															<input
 																type="text"
@@ -714,7 +719,7 @@ class ProfilePage extends React.Component {
 																	this.handleSocialMediaChanges(e, i)
 																}
 																className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-																placeholder="ainfo@heidi-app.de"
+																placeholder="www.facebook.com"
 															/>
 														</div>
 														<div class="flex ml-2 mt-8">
@@ -735,7 +740,7 @@ class ProfilePage extends React.Component {
 												class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
 												onClick={() => this.handleAdd("")}
 											>
-												+ Add your social media
+												{t("+add_social_media")}
 											</button>
 										</div>
 										<div class="flex justify-center space-x-6 mt-7">
@@ -829,7 +834,7 @@ class ProfilePage extends React.Component {
 											!this.state.formValid || this.state.updatingProfile
 										}
 									>
-										Save Changes
+										{t("saveChanges")}
 										{this.state.updatingProfile && (
 											<svg
 												aria-hidden="true"
@@ -867,4 +872,4 @@ class ProfilePage extends React.Component {
 		);
 	}
 }
-export default ProfilePage;
+export default withTranslation()(ProfilePage);

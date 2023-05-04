@@ -117,6 +117,17 @@
 	"and_the": "und ",
 	"terms_conditions":"allgemeinen Geschäftsbedingungen.*",
 
+	"active":"",
+	"pending":"",
+	"Inactive":"",
+	"listings":"",
+	"date_of_creation":"",
+	"action":"",
+	"status":"",
+	"delete":"",
+	"edit":"",
+	"page":"",
+
 	"Need_to_change_your_password": "",
 	"deleteAccount": "",
 	"smart_regions":"",
@@ -128,6 +139,29 @@
 	"data_protection":"",
 	"right_withdrawal": "",
 	"secure_app_now":"",
+
+	"email_verified":"",
+	"heidi_full_extend":"",
+	"please_wait":"",
+	"redirecting_in":"",
+	"seconds":"",
+	"email_being_verified":"",
+	"email_verification_not_succesfull":"",
+
+	"account":"",
+	"profile":"",
+	"displayed_publicly":"",
+	"change":"",
+	"photo":"",
+	"remove":"",
+	"enter_description":"",
+	"url/website":"",
+	"enter_website" :"",
+	"add_social_media":"",
+	"heidi_mail":"",
+	"select":"",
+	"link":"",
+	"+add_social_media":"",
 
 	"heidi_all_rights_reserved": ""
 }
