@@ -224,7 +224,10 @@ class ProfilePage extends React.Component {
 				newState.updatingProfile = true;
 				this.setState(newState, () => {
 					const updatedProfile = Object.assign({}, this.state.profile, {
-						socialMedia: Object.assign({}, ...this.state.data.socialMedia),
+						socialMedia:
+							this.state.data.socialMedia.length > 0
+								? Object.assign({}, ...this.state.data.socialMedia)
+								: {},
 					});
 					updateProfile(updatedProfile)
 						.then(() => {
