@@ -3,6 +3,7 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
+import LISTINGSIMAGE from "../assets/ListingsImage.png";
 import { useTranslation } from "react-i18next";
 import { getCategoriesdata } from "../Services/CategoriesData";
 import { getListingsById } from "../Services/listingsApi";
@@ -135,20 +136,23 @@ const Favorites = () => {
 				<div class="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
 					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
 						{favListings &&
-							favListings.map((favListings) => (
+							favListings.map((favListing) => (
 								<div
-									onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListings.id}&cityId=${favListings.cityId}`)}
+									onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`)}
 									className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer">
 									<a className="block relative h-64 rounded overflow-hidden">
 										<img
 											alt="ecommerce"
 											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={HOMEPAGEIMG}
+											src={
+												favListing.media
+													? process.env.REACT_APP_BUCKET_HOST + favListing.media
+													: LISTINGSIMAGE}
 										/>
 									</a>
 									<div className="mt-10">
 										<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-											{favListings.title}
+											{favListing.title}
 										</h2>
 									</div>
 									</div>
