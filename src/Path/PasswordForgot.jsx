@@ -101,7 +101,8 @@ const PasswordForgot = () => {
       <div class="w-full max-w-md space-y-8">
         <div>
           <img
-            class="mx-auto h-20 w-auto"
+            onClick={() => navigate("/")}
+            class="mx-auto h-20 w-auto cursor-pointer"
             src={HEIDI_Logo}
             alt="Your Company"
           />
