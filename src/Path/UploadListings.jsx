@@ -651,26 +651,30 @@ function UploadListings() {
 						</select>
 					</div>
 
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
-							Village
-						</label>
-						<select
-							type="text"
-							id="villageId"
-							name="villageId"
-							value={input.villageId}
-							onChange={onInputChange}
-							onBlur={validateInput}
-							autocomplete="country-name"
-							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-						>
-							<option value={0}>Select</option>
-							{villages.map((village) => (
-								<option value={Number(village.id)}>{village.name}</option>
-							))}
-						</select>
-					</div>
+					{
+						parseInt(cityId) ? 
+						<div class="relative mb-4">
+							<label for="title" class="block text-sm font-medium text-gray-600">
+								Village
+							</label>
+							<select
+								type="text"
+								id="villageId"
+								name="villageId"
+								value={input.villageId}
+								onChange={onInputChange}
+								onBlur={validateInput}
+								autocomplete="country-name"
+								class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+							>
+								<option value={0}>Select</option>
+								{villages.map((village) => (
+									<option value={Number(village.id)}>{village.name}</option>
+								))}
+							</select>
+						</div> :
+						<span/>
+					}
 
 					<div class="relative mb-4">
 						<label
@@ -1039,7 +1043,7 @@ function UploadListings() {
 							for="description"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Description
+							Description *
 						</label>
 						<ReactQuill
 							type="text"

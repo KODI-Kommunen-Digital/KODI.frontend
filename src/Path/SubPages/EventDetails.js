@@ -17,6 +17,26 @@ import {
 	deleteListingsById,
 } from "../../Services/favoritesApi";
 
+const Description = ({ content }) => {
+	const myStr = content;
+	var e = document.createElement("div");
+	e.innerHTML = myStr;
+	content = e.textContent ? e.textContent : e.innerText;
+	return (
+		<p className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
+			{content.indexOf("</") !== -1 ? (
+				<div
+					dangerouslySetInnerHTML={{
+						__html: content.replace(/(<? *script)/gi, "illegalscript"),
+					}}
+				></div>
+			) : (
+				content
+			)}
+		</p>
+	);
+};
+
 const EventDetails = () => {
 	window.scrollTo(0, 0);
 	const { t, i18n } = useTranslation();
@@ -65,7 +85,6 @@ const EventDetails = () => {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
-				console.log(listingsResponse.data.data)
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
@@ -86,7 +105,12 @@ const EventDetails = () => {
 						setFavButton(t("Favorite"));
 					}
 				});
-				setCreatedAt(listingsResponse.data.data.createdAt.slice(0, 10));
+				console.log(Date.parse(listingsResponse.data.data.createdAt));
+				setCreatedAt(
+					new Intl.DateTimeFormat("de-DE").format(
+						Date.parse(listingsResponse.data.data.createdAt)
+					)
+				);
 			});
 		}
 	}, [t]);
@@ -281,71 +305,46 @@ const EventDetails = () => {
 											>
 												{t("split")}
 											</button> */}
-											<button
-												type="button"
-												class="text-gray-900 mt-0 items-center"
-											>
-												<svg
-													class="w-8 h-4 mx-1 text-[#626890]"
-													aria-hidden="true"
-													focusable="false"
-													data-prefix="fab"
-													data-icon="ethereum"
-													role="img"
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 320 512"
-												>
-													<path d="M0 256a56 56 0 1 1 112 0A56 56 0 1 1 0 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z" />
-												</svg>
-											</button>
 										</div>
 									</div>
 
-									<div class="flex justify-center space-x-6 mt-2 h-5 w-5 mb-2">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 576 512"
-										>
-											<path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-										</svg>
-									</div>
 									<div class="mt-6">
-										{selectedCategoryId == 1 ? (
+										{input.categoryId == 1 ? (
 											<p className="text-start">{t("news")}</p>
 										) : null}
-										{selectedCategoryId == 2 ? (
+										{input.categoryId == 2 ? (
 											<p className="text-start">{t("roadTraffic")}</p>
 										) : null}
-										{selectedCategoryId == 3 ? (
+										{input.categoryId == 3 ? (
 											<p className="text-start">{t("events")}</p>
 										) : null}
-										{selectedCategoryId == 4 ? (
+										{input.categoryId == 4 ? (
 											<p className="text-start">{t("clubs")}</p>
 										) : null}
-										{selectedCategoryId == 5 ? (
+										{input.categoryId == 5 ? (
 											<p className="text-start">{t("regionalProducts")}</p>
 										) : null}
-										{selectedCategoryId == 6 ? (
+										{input.categoryId == 6 ? (
 											<p className="text-start">{t("offerSearch")}</p>
 										) : null}
-										{selectedCategoryId == 7 ? (
+										{input.categoryId == 7 ? (
 											<p className="text-start">{t("newCitizenInfo")}</p>
 										) : null}
-										{selectedCategoryId == 8 ? (
+										{input.categoryId == 8 ? (
 											<p className="text-start">{t("defectReport")}</p>
 										) : null}
-										{selectedCategoryId == 9 ? (
+										{input.categoryId == 9 ? (
 											<p className="text-start">{t("lostAndFound")}</p>
 										) : null}
-										{selectedCategoryId == 10 ? (
+										{input.categoryId == 10 ? (
 											<p className="text-start">{t("companyPortaits")}</p>
 										) : null}
-										{selectedCategoryId == 11 ? (
+										{input.categoryId == 11 ? (
 											<p className="text-start">
 												{t("carpoolingPublicTransport")}
 											</p>
 										) : null}
-										{selectedCategoryId == 12 ? (
+										{input.categoryId == 12 ? (
 											<p className="text-start">{t("offers")}</p>
 										) : null}
 									</div>
@@ -374,9 +373,7 @@ const EventDetails = () => {
 						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 							{t("description")}
 						</h1>
-						<p class="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
-							{description}
-						</p>
+						<Description content={description} />
 					</div>
 				</div>
 
@@ -391,21 +388,24 @@ const EventDetails = () => {
 							<div class="my-4 bg-gray-200 h-[1px]"></div>
 
 							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-										<div class="flex flex-col justify-center items-start">
-											<img
-												class="rounded-full h-20 w-20"
-												src={user?.image
-													? process.env.REACT_APP_BUCKET_HOST + user?.image
-													: PROFILEIMAGE}
-												alt={user?.lastname}
-											/>
-										</div>
+								<div class="flex flex-col justify-center items-start">
+									<img
+										class="rounded-full h-20 w-20"
+										src={
+											user?.image
+												? process.env.REACT_APP_BUCKET_HOST + user?.image
+												: PROFILEIMAGE
+										}
+										alt={user?.lastname}
+									/>
+								</div>
 								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										{t("uploaded_at")}{createdAt}
+										{t("uploaded_at")}
+										{createdAt}
 									</p>
 								</div>
 							</div>
@@ -547,7 +547,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										{t("uploaded_at")}{createdAt}
+										{t("uploaded_at") + " " + createdAt}
 									</p>
 								</div>
 							</div>

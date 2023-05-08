@@ -13,6 +13,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
 import { Fragment } from "react";
+import LISTINGSIMAGE from "../assets/ListingsImage.png";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -312,7 +313,11 @@ const Dashboard = () => {
 										>
 											<img
 												class="w-10 h-10 rounded-full hidden sm:table-cell"
-												src={process.env.REACT_APP_BUCKET_HOST + listing.logo}
+												src={
+													listing.logo
+														? process.env.REACT_APP_BUCKET_HOST + listing.logo
+														: LISTINGSIMAGE
+												}
 												alt="avatar"
 											/>
 											<div class="pl-0 sm:pl-3">

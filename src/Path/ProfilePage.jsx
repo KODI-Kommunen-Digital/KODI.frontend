@@ -11,6 +11,7 @@ import {
 import { socialMedia } from "../Constants/socialMedia";
 import { uploadImage } from "../Services/listingsApi";
 import { useTranslation, withTranslation } from "react-i18next";
+import PROFILEIMAGE from "../assets/ProfilePicture.png";
 // import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 function ChangeImage({ setInput, input }) {
@@ -25,6 +26,7 @@ function ChangeImage({ setInput, input }) {
 			setInput("image", res.data.path);
 		});
 	}
+	
 	return (
 		<>
 			{file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
@@ -222,7 +224,10 @@ class ProfilePage extends React.Component {
 				newState.updatingProfile = true;
 				this.setState(newState, () => {
 					const updatedProfile = Object.assign({}, this.state.profile, {
-						socialMedia: Object.assign({}, ...this.state.data.socialMedia),
+						socialMedia:
+							this.state.data.socialMedia.length > 0
+								? Object.assign({}, ...this.state.data.socialMedia)
+								: {},
 					});
 					updateProfile(updatedProfile)
 						.then(() => {
@@ -473,9 +478,10 @@ class ProfilePage extends React.Component {
 													<img
 														class="rounded-full h-20 w-20"
 														src={
-															process.env.REACT_APP_BUCKET_HOST +
-															this.state.profile.image
-														}
+																this.state.profile.image
+																? (process.env.REACT_APP_BUCKET_HOST + this.state.profile.image)
+																: PROFILEIMAGE
+															}
 														alt="profile"
 													/>
 												</div>
