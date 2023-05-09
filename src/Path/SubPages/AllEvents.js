@@ -34,12 +34,12 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var cityIdParam = urlParams.get("cityId");
 		var categoryIdParam = urlParams.get("categoryId");
-		if (cityIdParam) setCityId(cityIdParam);
 		if (categoryIdParam) setCategoryId(categoryIdParam);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
+			var cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) setCityId(cityIdParam);
 		});
 	}, []);
 
