@@ -51,6 +51,8 @@ const EventDetails = () => {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
 	const [input, setInput] = useState({
 		//"villageId": 1,
@@ -83,31 +85,40 @@ const EventDetails = () => {
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
 		if (listingId && cityId) {
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
+			if (accessToken || refreshToken) {
+				setIsLoggedIn(true);
+			}
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
-				getProfileByIds(cityUserId).then((res) => {
-					setUser(res.data.data[0]);
-					console.log("Userere", res.data.data);
+				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
+					setUser(res.data.data);
 				});
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
 				setImagePath(listingsResponse.data.data.logo);
-				getFavorites().then((response) => {
-					var favorite = response.data.data.filter(
-						(f) => f.listingId == listingId
-					)[0];
-					if (favorite) {
-						setFavoriteId(favorite.id);
-						setFavButton(t("Unfavorite"));
-					} else {
-						setFavoriteId(0);
-						setFavButton(t("Favorite"));
-					}
-				});
-				console.log(Date.parse(listingsResponse.data.data.createdAt));
+				if (isLoggedIn) {
+					getFavorites().then((response) => {
+						var favorite = response.data.data.filter(
+							(f) => f.listingId == listingId
+						)[0];
+						if (favorite) {
+							setFavoriteId(favorite.id);
+							setFavButton(t("Unfavorite"));
+						} else {
+							setFavoriteId(0);
+							setFavButton(t("Favorite"));
+						}
+					});
+				}
 				setCreatedAt(
 					new Intl.DateTimeFormat("de-DE").format(
 						Date.parse(listingsResponse.data.data.createdAt)

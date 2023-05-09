@@ -160,10 +160,10 @@ const ViewProfile = () => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var userId = searchParams.get("userId");
 		if (userId) {
-			getProfileByIds(userId)
+			getProfile(userId)
 				.then((response) => {
-					setUser(response.data.data[0]);
-					setUserSocial(JSON.parse(response.data.data[0].socialMedia));
+					setUser(response.data.data);
+					setUserSocial(JSON.parse(response.data.data.socialMedia));
 				})
 				.catch((error) => {
 					console.log(error);
