@@ -43,12 +43,9 @@ const Events = () => {
 		});
 	}, []);
 
-	const pageSize = 9;
-	const startIndex = (pageNo - 1) * pageSize;
-
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { cities };
+		var params = { pageNo };
 		if (parseInt(cityId)) {
 			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -195,7 +192,7 @@ const Events = () => {
 						<div class="bg-white flex flex-wrap gap-10 justify-center">
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 							{listings &&
-								listings.slice(startIndex, startIndex + pageSize)
+								listings.slice(0 , 9)
 								.map((listing) => (
 										<div
 											onClick={() => {

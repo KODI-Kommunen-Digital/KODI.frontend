@@ -54,6 +54,7 @@ const HomePage = () => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
+		console.log(listings)
 	}, []);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
@@ -416,6 +417,15 @@ const HomePage = () => {
 										</h2>
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
+									{listing.id && listing.categoryId == 3 ? (
+									<p class="text-gray-900 title-font text-sm font-bold text-center font-sans">
+											{"From " + listing.startDate + " To " + listing.endDate}
+									</p>
+									):(
+										<p class="text-gray-900 title-font text-sm font-bold text-center font-sans">
+											"No date available"
+									</p>
+									)}
 								</div>
 							))}
 				</div>
