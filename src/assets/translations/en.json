@@ -1,6 +1,8 @@
 {
 	"signIntoAccount": "Sign in to your account",
+	"aboutMe": "About Me",
 	"createAccount": "Create your new account",
+    "acceptConditionMessage": "Ich akzeptiere die Datenschutzerkläung* und die allgemeinen Geschäftsbedingungen*",
 	"username": "Username",
 	"firstName": "First Name",
 	"lastName": "Last Name",
@@ -51,6 +53,7 @@
 	"oldPassword": "Old Password",
 	"newPassword": "New Password",
 	"confirmNewPassword": "Confirm New Password",
+	"pleaseEnterTitle": "Please enter a title",
 	"pleaseEnterOldPassword": "Please enter your old password",
 	"pleaseEnterNewPassword": "Please enter your new password",
 	"pleaseConfirmPassword": "Please confirm your new password",
@@ -139,7 +142,6 @@
 
 	"contactInfo": "Contact Information",
 	"profileEntries": "Profile Entries",
-	"aboutMe": "About Me",
 	"listingUpdated": "Your listing was updated succesfully. It is under review by Admin and will be updated soon.",
 	"listingNotUpdated": "Your listing was not updated. Please try again!",
 

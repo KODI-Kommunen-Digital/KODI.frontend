@@ -34,18 +34,18 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var cityIdParam = urlParams.get("cityId");
 		var categoryIdParam = urlParams.get("categoryId");
-		if (cityIdParam) setCityId(cityIdParam);
 		if (categoryIdParam) setCategoryId(categoryIdParam);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
+			var cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) setCityId(cityIdParam);
 		});
 	}, []);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { pageNo };
+		var params = { pageNo, pageSize: 12 };
 		if (parseInt(cityId)) {
 			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -63,7 +63,7 @@ const Events = () => {
 			urlParams.delete("categoryId"); // Remove categoryId parameter from URL
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
+		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
 			console.log(response.data.data)
 			setListings(response.data.data);

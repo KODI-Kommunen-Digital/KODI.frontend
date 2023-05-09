@@ -159,14 +159,25 @@ const ViewProfile = () => {
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var userId = searchParams.get("userId");
-		getProfile()
-			.then((response) => {
-				setUser(response.data.data);
-				setUserSocial(JSON.parse(response.data.data.socialMedia));
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		if (userId) {
+			getProfileByIds(userId)
+				.then((response) => {
+					setUser(response.data.data[0]);
+					setUserSocial(JSON.parse(response.data.data[0].socialMedia));
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} else {
+			getProfile()
+				.then((response) => {
+					setUser(response.data.data);
+					setUserSocial(JSON.parse(response.data.data.socialMedia));
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
 	}, []);
 
 	return (
@@ -183,9 +194,11 @@ const ViewProfile = () => {
 										<div class="flex flex-col justify-center items-start">
 											<img
 												class="rounded-full h-20 w-20"
-												src={user?.image
-													? process.env.REACT_APP_BUCKET_HOST + user?.image
-													: PROFILEIMAGE}
+												src={
+													user?.image
+														? process.env.REACT_APP_BUCKET_HOST + user?.image
+														: PROFILEIMAGE
+												}
 												alt={user?.lastname}
 											/>
 										</div>

@@ -192,7 +192,7 @@ function UploadListings() {
 			setTimeout(() => setSuccessMessage(false), 5000);
 			navigate("/Dashboard");
 		} catch (error) {
-			setErrorMessage(t("listingNotUpdated"));
+			setErrorMessage("error: " + error.response.data.message);
 			setSuccessMessage(false);
 			setTimeout(() => setErrorMessage(false), 5000);
 		}

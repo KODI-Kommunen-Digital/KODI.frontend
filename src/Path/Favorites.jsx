@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import LISTINGSIMAGE from "../assets/ListingsImage.png";
 import { useTranslation } from "react-i18next";
-import { getCategoriesdata } from "../Services/CategoriesData";
-import { getListingsById } from "../Services/listingsApi";
 import { getFavoriteListings } from "../Services/favoritesApi";
 import {
 	sortByTitleAZ,
@@ -40,20 +38,6 @@ const Favorites = () => {
 		});
 	}, []);
 
-	//populate the events titles starts
-	const [categoriesdata, setCategoriesdata] = useState({
-		categoriesListings: [],
-	});
-	useEffect(() => {
-		getCategoriesdata().then((response) => {
-			setCategoriesdata(response);
-		});
-		document.title = "Favourites";
-	}, []);
-
-	//populate the events titles Ends
-	// Selected Items Deletion Starts
-	const selectedItemLocation = localStorage.getItem("selectedItemLocation");
 	// Selected Items Deletion Ends
 
 	function handleDashboardChange(event) {
@@ -62,9 +46,6 @@ const Favorites = () => {
 			[event.target.name]: event.target.value,
 		});
 	}
-	// Selected Items Deletion Starts
-	const selectedItem = localStorage.getItem("selectedItem");
-	// Selected Items Deletion Ends
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	function handleSortOptionChange(event) {
@@ -90,25 +71,7 @@ const Favorites = () => {
 		}
 	}, [selectedSortOption]);
 
-	const [content, setContent] = useState("A");
-	const handleButtonClick = (value) => {
-		setContent(value);
-	};
-
-	const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
-
-	const customerServiceData = () => {
-		setcustomerServiceDataload(true);
-		setSelectedLink("customerService");
-	};
-	const onCancel = () => {
-		setcustomerServiceDataload(false);
-		setSelectedLink("current");
-	};
-
-	const [selectedLink, setSelectedLink] = useState("current");
-
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 
 	return (
 		<section class="text-gray-600 body-font relative">
