@@ -89,13 +89,6 @@ const HomePage = () => {
 			<div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
 				<div class="w-full mr-0 ml-0">
 					<div class="h-[35rem] overflow-hidden px-0 py-1">
-						{/* <a class="block relative h-96 overflow-hidden">
-            <img
-              alt="ecommerce"
-              class="object-cover object-center h-full w-full"
-              src= {HOMEPAGEIMG}
-            />
-          </a> */}
 						<div class="relative h-[35rem]">
 							<img
 								alt="ecommerce"
@@ -360,7 +353,7 @@ const HomePage = () => {
 					{cities.map((city) => (
 						<div
 							onClick={() => {
-								localStorage.setItem("selectedItemLocation", city.name);
+								localStorage.setItem("selectedCity", city.name);
 								navigateTo(`/AllEvents?cityId=${city.id}`);
 							}}
 							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"

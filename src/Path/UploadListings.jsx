@@ -652,7 +652,7 @@ function UploadListings() {
 					</div>
 
 					{
-						parseInt(cityId) ? 
+						parseInt(cityId) ?
 						<div class="relative mb-4">
 							<label for="title" class="block text-sm font-medium text-gray-600">
 								{t("village")}
@@ -1059,14 +1059,7 @@ function UploadListings() {
 				</div>
 			</div>
 
-			{selectedCategory !== "Road Works / Traffic" &&
-				selectedCategory !== "Regional Products" &&
-				selectedCategory !== "Offer / Search" &&
-				selectedCategory !== "Offers" &&
-				selectedCategory !== "New Citizen Info" &&
-				selectedCategory !== "Defect Report" &&
-				selectedCategory !== "Events" &&
-				selectedCategory !== "Lost And Found" && (
+			{selectedCategory !== "Road Works / Traffic" && (
 					<div class="container w-auto px-5 py-2 bg-slate-600">
 						<div class="bg-white mt-4 p-6 space-y-10">
 							<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
