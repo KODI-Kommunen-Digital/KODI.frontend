@@ -43,12 +43,9 @@ const Events = () => {
 		});
 	}, []);
 
-	const pageSize = 9;
-	const startIndex = (pageNo - 1) * pageSize;
-
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { cities };
+		var params = { pageNo, pageSize: 12 };
 		if (parseInt(cityId)) {
 			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -66,7 +63,7 @@ const Events = () => {
 			urlParams.delete("categoryId"); // Remove categoryId parameter from URL
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.pushState({}, "", newUrl);
+		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
 			console.log(response.data.data)
 			setListings(response.data.data);
@@ -195,7 +192,7 @@ const Events = () => {
 						<div class="bg-white flex flex-wrap gap-10 justify-center">
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 							{listings &&
-								listings.slice(startIndex, startIndex + pageSize)
+								listings
 								.map((listing) => (
 										<div
 											onClick={() => {
