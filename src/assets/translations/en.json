@@ -96,6 +96,7 @@
 
 	"discoverMorePlaces": "Discover more places",
 	"entries": "entries",
+
 	"recentListings": "Recent Listings",
 	"createAnAccount": "Create an account",
 	"createAnAccountDescription": "Create an account to be able to actively participate in city events.",
@@ -200,6 +201,22 @@
 	"to_upload_new_listing":"To upload a new listing, ",
 	"click_here":"Click here.",
 	"uploaded_at":"Uploaded at ",
+	"uploadPost":"Upload Post",
+	"city":"City",
+	"village":"Village",
+	"subCategory":"Sub-Category",
+	"zipCode":"Zip Code",
+	"streetAddress":"Street Address",
+	"search":"Search",
+	"eventStartDate":"Event Start Date",
+	"eventEndDate":"Event End Date",
+	"originalPrice":"Original Price",
+	"discountedPrice":"Discounted Price",
+	"writeSomethingHere":"Write something here...",
+	"uploadLogo":"Upload Logo",
+	"addLogoHere":"Add your Logo here",
+	"dragAndDropFile":"Drag and drop your image here, or Click ",
+	"chooseaAFile":"to choose a file.",
 
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }

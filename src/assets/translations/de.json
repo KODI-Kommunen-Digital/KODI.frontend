@@ -172,5 +172,21 @@
 	"click_here": "Klicken Sie hier.",
 
 	"heidi_all_rights_reserved": "HEIDI Theme - Alle Rechte vorbehalten.",
-	"uploaded_at": "Hochgeladen am"
+	"uploaded_at": "Hochgeladen am",
+	"writeSomethingHere":"Schreiben Sie hier etwas...",
+	"uploadPost":"",
+	"city":"",
+	"village":"",
+	"subCategory":"",
+	"zipCode":"",
+	"streetAddress":"",
+	"search":"",
+	"eventStartDate":"",
+	"eventEndDate":"",
+	"originalPrice":"",
+	"discountedPrice":"",
+	"uploadLogo":"",
+	"addLogoHere":"",
+	"dragAndDropFile":"",
+	"chooseaAFile":""
 }

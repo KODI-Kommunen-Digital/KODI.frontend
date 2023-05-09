@@ -39,7 +39,7 @@ const Description = ({ content }) => {
 
 const EventDetails = () => {
 	window.scrollTo(0, 0);
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
 	const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
@@ -118,7 +118,6 @@ const EventDetails = () => {
 
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
-	const [cities, setCities] = useState([]);
 	async function onCityChange(e) {
 		const cityId = e.target.value;
 		setCityId(cityId);
@@ -549,9 +548,7 @@ const EventDetails = () => {
 							<div class="flex justify-center lg:mt-7 md:mt-7">
 								<button
 									onClick={() =>
-										navigateTo(
-											user ? `/ViewProfile?userId=${user.id}` : "/ViewProfile"
-										)
+										navigateTo(`/ViewProfile?userId=${user.id}`)
 									}
 									type="submit"
 									class="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
