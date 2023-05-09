@@ -13,9 +13,6 @@ import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 import HomePage from "./Path/HomePage";
 import Places from "./Path/SubPages/Places";
 import Favorites from "./Path/Favorites";
-import Below from "./Path/Below";
-import Fuchstal from "./Path/Fuchstal";
-import AppleVillage from "./Path/AppleVillage";
 
 import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
@@ -52,9 +49,6 @@ const App = () => {
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/Places" element={<Places />} />
-					<Route path="/Below" element={<Below />} />
-					<Route path="/Fuchstal" element={<Fuchstal />} />
-					<Route path="/AppleVillage" element={<AppleVillage />} />
 
 					<Route path="/HomePage/EventDetails" element={<EventDetails />} />
 					<Route path="/AllEvents" element={<AllEvents />} />
