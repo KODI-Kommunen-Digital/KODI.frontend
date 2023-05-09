@@ -4,7 +4,7 @@ import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfile, getProfileByIds } from "../../Services/usersApi";
 import { sortRecent } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
@@ -88,8 +88,9 @@ const EventDetails = () => {
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
-				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-					setUser(res.data.data);
+				getProfileByIds(cityUserId).then((res) => {
+					setUser(res.data.data[0]);
+					console.log("Userere", res.data.data);
 				});
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
