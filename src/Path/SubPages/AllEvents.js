@@ -20,12 +20,14 @@ import Footer from "../../Components/Footer";
 const Events = () => {
 	window.scrollTo(0, 0);
 	const { t, i18n } = useTranslation();
-	const [cityId, setCityId] = useState(0);
+	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
 	const [categories, setCategories] = useState(categoryById);
 	const [selectedCategory, setSelectedCategory] = useState("");
-	const [selectedCity, setSelectedCity] = useState("");
+	const [selectedCity, setSelectedCity] = useState(
+		localStorage.getItem("selectedCity") || "All Cities"
+	);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
@@ -41,9 +43,12 @@ const Events = () => {
 		});
 	}, []);
 
+	const pageSize = 9;
+	const startIndex = (pageNo - 1) * pageSize;
+
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { pageNo };
+		var params = { cities };
 		if (parseInt(cityId)) {
 			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -63,6 +68,7 @@ const Events = () => {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.pushState({}, "", newUrl);
 		getListings(params).then((response) => {
+			console.log(response.data.data)
 			setListings(response.data.data);
 		});
 	}, [categoryId, cityId, pageNo]);
@@ -111,7 +117,7 @@ const Events = () => {
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-									{selectedCity} : {selectedCategory}
+								{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
@@ -184,39 +190,19 @@ const Events = () => {
 			</div>
 
 			<div className="mt-5 mb-20 p-6">
-				<div className="mb-10 px-1 py-2 w-fit mx-auto text-xs font-medium text-center text-white bg-blue-800 rounded-lg focus:ring-4 focus:outline-none focus:ring-gray-300 cursor-pointer">
-					{pageNo != 1 ? (
-						<span
-							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-							onClick={() => setPageNo(pageNo - 1)}
-						>
-							{"<"}{" "}
-						</span>
-					) : (
-						<span />
-					)}
-					<span className="text-lg px-3">
-						{t("page")} {pageNo}
-					</span>
-					<span
-						className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-						onClick={() => setPageNo(pageNo + 1)}
-					>
-						{">"}
-					</span>
-				</div>
 				<div>
 					{listings && listings.length > 0 ? (
 						<div class="bg-white flex flex-wrap gap-10 justify-center">
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 							{listings &&
-								listings
+								listings.slice(startIndex, startIndex + pageSize)
 								.map((listing) => (
 										<div
 											onClick={() => {
 												navigateTo(
 													`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
 												);
+												console.log(listing.cityId)
 											}}
 											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 										>
@@ -264,6 +250,27 @@ const Events = () => {
 							</div>
 						</div>
 					)}
+				</div>
+				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+					{pageNo != 1 ? (
+						<span
+							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							onClick={() => setPageNo(pageNo - 1)}
+						>
+							{"<"}{" "}
+						</span>
+					) : (
+						<span />
+					)}
+					<span className="text-lg px-3">
+						{t("page")} {pageNo}
+					</span>
+					<span
+						className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+						onClick={() => setPageNo(pageNo + 1)}
+					>
+						{">"}
+					</span>
 				</div>
 			</div>
 			<div className="bottom-0 w-full">

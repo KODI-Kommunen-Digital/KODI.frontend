@@ -79,6 +79,7 @@ const EventDetails = () => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
+		console.log(cityId)
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
 		if (listingId && cityId) {
@@ -298,13 +299,6 @@ const EventDetails = () => {
 													{favoriteId !== 0 ? t("Unfavorite") : t("Favorite")}
 												</span>
 											</button>
-
-											{/* <button
-												type="button"
-												class="text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-											>
-												{t("split")}
-											</button> */}
 										</div>
 									</div>
 
