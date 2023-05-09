@@ -610,12 +610,12 @@ function UploadListings() {
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-						Upload Post
+						{t("uploadPost")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							Title *
+							{t("title")} *
 						</label>
 						<input
 							type="text"
@@ -632,7 +632,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="title" class="block text-sm font-medium text-gray-600">
-							City *
+							{t("city")} *
 						</label>
 						<select
 							type="text"
@@ -644,7 +644,7 @@ function UploadListings() {
 							autocomplete="country-name"
 							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 						>
-							<option value={0}>Select</option>
+							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
 								<option value={Number(city.id)}>{city.name}</option>
 							))}
@@ -652,10 +652,10 @@ function UploadListings() {
 					</div>
 
 					{
-						parseInt(cityId) ? 
+						parseInt(cityId) ?
 						<div class="relative mb-4">
 							<label for="title" class="block text-sm font-medium text-gray-600">
-								Village
+								{t("village")}
 							</label>
 							<select
 								type="text"
@@ -667,7 +667,7 @@ function UploadListings() {
 								autocomplete="country-name"
 								class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 							>
-								<option value={0}>Select</option>
+								<option value={0}>{t("select")}</option>
 								{villages.map((village) => (
 									<option value={Number(village.id)}>{village.name}</option>
 								))}
@@ -681,7 +681,7 @@ function UploadListings() {
 							for="dropdown"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Category *
+							{t("category")} *
 						</label>
 						<select
 							type="dropdown"
@@ -766,7 +766,7 @@ function UploadListings() {
 								for="newsdropdown"
 								class="block text-sm font-medium text-gray-600"
 							>
-								Sub-Category *
+								{t("subCategory")} *
 							</label>
 							<select
 								type="newsdropdown"
@@ -815,7 +815,7 @@ function UploadListings() {
 								for="place"
 								class="block text-sm font-medium text-gray-600"
 							>
-								Place
+								{t("place")}
 							</label>
 							<input
 								type="text"
@@ -833,7 +833,7 @@ function UploadListings() {
 								for="zipCode"
 								class="block text-sm font-medium text-gray-600"
 							>
-								Zip Code
+								{t("zipCode")}
 							</label>
 							<input
 								type="text"
@@ -853,7 +853,7 @@ function UploadListings() {
 							for="address"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Street address *
+							{t("streetAddress")} *
 						</label>
 
 						{/* <Maps/> */}
@@ -884,7 +884,7 @@ function UploadListings() {
 								class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
 								type="submit"
 							>
-								Search
+								{t("search")}
 							</button>
 							{selectedResult.lat && (
 								<div id="map" className="mt-6 h-64 w-full">
@@ -916,7 +916,7 @@ function UploadListings() {
 										for="city"
 										class="block text-sm font-medium text-gray-600"
 									>
-										Event Start Date
+										{t("eventStartDate")}
 									</label>
 									<input
 										type="date"
@@ -944,7 +944,7 @@ function UploadListings() {
 										for="city"
 										class="block text-sm font-medium text-gray-600"
 									>
-										Event End Date
+										{t("eventEndDate")}
 									</label>
 									<input
 										type="date"
@@ -969,7 +969,7 @@ function UploadListings() {
 									for="place"
 									class="block text-sm font-medium text-gray-600"
 								>
-									Original Price *
+									{t("originalPrice")} *
 								</label>
 								<input
 									type="text"
@@ -988,7 +988,7 @@ function UploadListings() {
 									for="place"
 									class="block text-sm font-medium text-gray-600"
 								>
-									Discounted Price *
+									{t("discountedProce")} *
 								</label>
 								<input
 									type="text"
@@ -1007,7 +1007,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="place" class="block text-sm font-medium text-gray-600">
-							Telephone *
+							{t("telephone")} *
 						</label>
 						<input
 							type="text"
@@ -1023,7 +1023,7 @@ function UploadListings() {
 
 					<div class="relative mb-4">
 						<label for="place" class="block text-sm font-medium text-gray-600">
-							Email *
+							{t("email")} *
 						</label>
 						<input
 							type="email"
@@ -1043,7 +1043,7 @@ function UploadListings() {
 							for="description"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Description *
+							{t("description")} *
 						</label>
 						<ReactQuill
 							type="text"
@@ -1052,31 +1052,24 @@ function UploadListings() {
 							ref={editor}
 							value={description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
-							placeholder="Write something here..."
+							placeholder={t("writeSomethingHere")}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 						/>
 					</div>
 				</div>
 			</div>
 
-			{selectedCategory !== "Road Works / Traffic" &&
-				selectedCategory !== "Regional Products" &&
-				selectedCategory !== "Offer / Search" &&
-				selectedCategory !== "Offers" &&
-				selectedCategory !== "New Citizen Info" &&
-				selectedCategory !== "Defect Report" &&
-				selectedCategory !== "Events" &&
-				selectedCategory !== "Lost And Found" && (
+			{selectedCategory !== "Road Works / Traffic" && (
 					<div class="container w-auto px-5 py-2 bg-slate-600">
 						<div class="bg-white mt-4 p-6 space-y-10">
 							<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-								Upload Logo
+								{t("uploadLogo")}
 								<div className="my-4 bg-gray-600 h-[1px]"></div>
 							</h2>
 
 							<div>
 								<label className="block text-sm font-medium text-gray-700">
-									Add your Logo here
+									{t("addLogoHere")}
 								</label>
 								<div
 									className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 bg-slate-200`}
@@ -1100,7 +1093,7 @@ function UploadListings() {
 												className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 												onClick={handleRemoveImage1}
 											>
-												Remove Image
+												{t("remove")}
 											</button>
 										</div>
 									) : (
@@ -1118,14 +1111,14 @@ function UploadListings() {
 												/>
 											</svg>
 											<p className="mt-1 text-sm text-gray-600">
-												Drag and drop your image here, or{" "}
+												{t("dragAndDropFile")}
 												<label
 													htmlFor="image1-upload"
 													className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
 												>
-													Upload
+													{t("upload")}
 												</label>{" "}
-												to choose a file.
+												{t("chooseaAFile")}
 											</p>
 											<input
 												id="image1-upload"
@@ -1365,7 +1358,7 @@ function UploadListings() {
 							disabled={updating}
 							class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
-							Save Changes
+							{t("saveChanges")}
 							{updating && (
 								<svg
 									aria-hidden="true"

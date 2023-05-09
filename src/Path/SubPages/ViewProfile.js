@@ -31,16 +31,11 @@ const ViewProfile = () => {
 	}, []);
 
 	const [listingId, setListingId] = useState(0);
-	const [email, setEmail] = useState("");
-	const [website, setWebsite] = useState("");
 	const [newListing, setNewListing] = useState(true);
-	const [description, setDescription] = useState("");
-	const [title, setTitle] = useState("");
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
-	const [cities, setCities] = useState([]);
 	const [input, setInput] = useState({
-		//"villageId": 1,
+
 		categoryId: 0,
 		subcategoryId: 0,
 		sourceId: 1,
