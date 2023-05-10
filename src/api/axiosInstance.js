@@ -35,31 +35,32 @@ instance.interceptors.response.use(
 					const userId =
 						window.localStorage.getItem("userId") ||
 						window.sessionStorage.getItem("userId");
-					const response = await instance.post(`users/${userId}/refresh`, {
-						refreshToken,
-					});
-
-					if (window.localStorage.getItem("refreshToken")) {
-						window.localStorage.setItem(
-							"accessToken",
-							response.data.data.accessToken
-						);
-						window.localStorage.setItem(
-							"refreshToken",
-							response.data.data.refreshToken
-						);
-					} else if (window.sessionStorage.getItem("refreshToken")) {
-						window.sessionStorage.setItem(
-							"accessToken",
-							response.data.data.accessToken
-						);
-						window.sessionStorage.setItem(
-							"refreshToken",
-							response.data.data.refreshToken
-						);
+					if (refreshToken && userId) {
+						const response = await instance.post(`users/${userId}/refresh`, {
+							refreshToken,
+						});
+						
+						if (window.localStorage.getItem("refreshToken")) {
+							window.localStorage.setItem(
+								"accessToken",
+								response.data.data.accessToken
+							);
+							window.localStorage.setItem(
+								"refreshToken",
+								response.data.data.refreshToken
+							);
+						} else if (window.sessionStorage.getItem("refreshToken")) {
+							window.sessionStorage.setItem(
+								"accessToken",
+								response.data.data.accessToken
+							);
+							window.sessionStorage.setItem(
+								"refreshToken",
+								response.data.data.refreshToken
+							);
+						}
+						return instance(originalRequest);
 					}
-
-					return instance(originalRequest);
 				} catch (refreshError) {
 					// If refreshing the token fails, redirect to login
 					window.location.href = "/login";
