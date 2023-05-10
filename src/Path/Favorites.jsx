@@ -17,6 +17,20 @@ import Footer from "../Components/Footer";
 const Favorites = () => {
 	window.scrollTo(0, 0);
 	const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	useEffect(() => {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
+			setIsLoggedIn(true);
+		}
+	}, []);
+
 	useEffect(() => {
 		getDashboarddata().then((response) => {
 			setDashboarddata(response);
@@ -144,7 +158,7 @@ const Favorites = () => {
 							class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 							onClick={() => {
 								localStorage.setItem("selectedItem", "Choose one category");
-								navigateTo("/UploadListings");
+								isLoggedIn? navigateTo("/UploadListings"): navigateTo("/login");
 							}}
 						>
 							{t("click_here")}
