@@ -55,7 +55,6 @@ const EventDetails = () => {
 
 
 	const [input, setInput] = useState({
-		//"villageId": 1,
 		categoryId: 0,
 		subcategoryId: 0,
 		statusId: "pending",
@@ -67,7 +66,6 @@ const EventDetails = () => {
 		email: "",
 		description: "",
 		logo: null,
-		//media: null,
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
@@ -77,11 +75,11 @@ const EventDetails = () => {
 	});
 
 	const [favoriteId, setFavoriteId] = useState(0);
+	const [cityId, setCityId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		console.log(cityId)
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
 		if (listingId && cityId) {
@@ -126,9 +124,8 @@ const EventDetails = () => {
 				);
 			});
 		}
-	}, [t]);
+	}, [t, window.location.href ]);
 
-	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	async function onCityChange(e) {
 		const cityId = e.target.value;
@@ -583,10 +580,12 @@ const EventDetails = () => {
 						{listings &&
 							listings.map((listing) => (
 								<div
-									onClick={() =>
+									onClick={() =>{
+										console.log(listings)
 										navigateTo(
 											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
 										)
+									}
 									}
 									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 								>
