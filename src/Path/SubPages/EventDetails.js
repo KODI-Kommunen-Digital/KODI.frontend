@@ -406,7 +406,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										{t("uploaded_at")}
+										{t("uploaded_on")}
 										{createdAt}
 									</p>
 								</div>
