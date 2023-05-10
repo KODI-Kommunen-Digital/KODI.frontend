@@ -581,7 +581,6 @@ const EventDetails = () => {
 							listings.map((listing) => (
 								<div
 									onClick={() =>{
-										console.log(listings)
 										navigateTo(
 											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
 										)

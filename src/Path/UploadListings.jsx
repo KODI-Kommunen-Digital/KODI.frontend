@@ -22,7 +22,6 @@ import Alert from "../Components/Alert";
 function UploadListings() {
 	const { t, i18n } = useTranslation();
 	const editor = useRef(null);
-	const [content, setContent] = useState("");
 	const [listingId, setListingId] = useState(0);
 	const [newListing, setNewListing] = useState(true);
 	const [updating, setUpdating] = useState(false);
