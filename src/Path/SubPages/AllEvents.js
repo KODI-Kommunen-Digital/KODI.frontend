@@ -78,10 +78,10 @@ const Events = () => {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
-			console.log(response.data.data)
+			console.log(response.data.data);
 			setListings(response.data.data);
 		});
-	}, [categoryId, cityId, pageNo]);
+	}, [categoryId, cities, cityId, pageNo, window.location.href]);
 
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
@@ -127,7 +127,7 @@ const Events = () => {
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-								{selectedCity} : {selectedCategory}
+									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
@@ -204,15 +204,14 @@ const Events = () => {
 					{listings && listings.length > 0 ? (
 						<div class="bg-white flex flex-wrap gap-10 justify-center">
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
-							{listings &&
-								listings
-								.map((listing) => (
+								{listings &&
+									listings.map((listing) => (
 										<div
 											onClick={() => {
 												navigateTo(
 													`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
 												);
-												console.log(listing.cityId)
+												console.log(listing.cityId);
 											}}
 											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
 										>
@@ -252,7 +251,9 @@ const Events = () => {
 									class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 									onClick={() => {
 										localStorage.setItem("selectedItem", "Choose one category");
-										isLoggedIn? navigateTo("/UploadListings"): navigateTo("/login");
+										isLoggedIn
+											? navigateTo("/UploadListings")
+											: navigateTo("/login");
 									}}
 								>
 									{t("click_here")}
