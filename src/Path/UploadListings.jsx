@@ -208,13 +208,15 @@ function UploadListings() {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
-				if (listingsResponse.data.data.startDate)
-					listingsResponse.data.data.startDate = listingsResponse.data.data.startDate.slice(0,10)
-				if (listingsResponse.data.data.endDate)
-					listingsResponse.data.data.endDate = listingsResponse.data.data.endDate.slice(0,10)
-				setInput(listingsResponse.data.data);
-				setDescription(listingsResponse.data.data.description);
-				setCategoryId(listingsResponse.data.data.categoryId)
+				let listingData = listingsResponse.data.data
+				if (listingData.startDate)
+					listingData.startDate = listingData.startDate.slice(0,10)
+				if (listingData.endDate)
+					listingData.endDate = listingData.endDate.slice(0,10)
+				listingData.cityId = cityId;
+				setInput(listingData);
+				setDescription(listingData.description);
+				setCategoryId(listingData.categoryId)
 			});
 		}
 	}, []);
@@ -484,7 +486,8 @@ function UploadListings() {
 							value={cityId}
 							onChange={onCityChange}
 							autocomplete="country-name"
-							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+							disabled={!newListing}
+							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
@@ -542,7 +545,8 @@ function UploadListings() {
 							value={categoryId}
 							onChange={handleCategoryChange}
 							required
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+							disabled={!newListing}
+							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option class="font-sans" value={0} key={0}>
 								{t("chooseOneCategory")}
