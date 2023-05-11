@@ -24,16 +24,15 @@ const Events = () => {
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
 	const [categories, setCategories] = useState(categoryById);
-	const [selectedCategory, setSelectedCategory] = useState("");
-	const [selectedCity, setSelectedCity] = useState(
-		localStorage.getItem("selectedCity") || "All Cities"
-	);
+	const [selectedCategory, setCategoryName] = useState("");
+	const [selectedCity, setCityName] = useState("");
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");
@@ -43,16 +42,12 @@ const Events = () => {
 		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
-	}, []);
-
-	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		var categoryIdParam = urlParams.get("categoryId");
-		if (categoryIdParam) setCategoryId(categoryIdParam);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 			var cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
+			var categoryIdParam = urlParams.get("categoryId");
+			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
 	}, []);
 
@@ -60,19 +55,19 @@ const Events = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		var params = { pageNo, pageSize: 12 };
 		if (parseInt(cityId)) {
-			setSelectedCity(cities.find((c) => cityId == c.id)?.name);
+			setCityName(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			setSelectedCity(t("allCities"));
+			setCityName(t("allCities"));
 			urlParams.delete("cityId"); // Remove cityId parameter from URL
 		}
 		if (parseInt(categoryId)) {
-			setSelectedCategory(t(categoryById[categoryId]));
+			setCategoryName(t(categoryById[categoryId]));
 			params.categoryId = categoryId;
 			urlParams.set("categoryId", categoryId);
 		} else {
-			setSelectedCategory(t("allCategories"));
+			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId"); // Remove categoryId parameter from URL
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
