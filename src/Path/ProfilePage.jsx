@@ -211,7 +211,8 @@ class ProfilePage extends React.Component {
 		}
 		this.setProfile(event.target.name, event.target.value);
 	}
-	updateChanges() {
+	updateChanges() {	
+		const { t } = this.props;
 		let valid = true;
 		for (let property in this.state.showError) {
 			if (this.state.showError[property]) {
@@ -253,7 +254,7 @@ class ProfilePage extends React.Component {
 								this.setState(newState, () => {
 									this.setAlertInfo(
 										true,
-										"Your changes were not saved, please try after sometime!",
+										t("changesNotSaved"),
 										"danger"
 									);
 									setInterval(() => {
@@ -267,7 +268,7 @@ class ProfilePage extends React.Component {
 		} else {
 			this.setAlertInfo(
 				true,
-				"You have entered invalid data. Please correct and try again",
+				t("invalidData"),
 				"danger"
 			);
 			setInterval(() => {
