@@ -50,10 +50,11 @@ const HomePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getListings({ statusId: 1, pageNo: 1, pageSize: 3 }).then((response) => {
+		getListings({ statusId: 1, pageNo: 1, pageSize: 8 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
+		console.log(listings)
 	}, []);
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
@@ -100,6 +101,29 @@ const HomePage = () => {
 									{t("homePageHeading")}
 								</h1>
 							</div>
+							<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+											<select
+												id="city"
+												name="city"
+												autocomplete="city-name"
+												onChange={(e) => setCityId(e.target.value)}
+												value={cityId}
+												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											>
+												<option class="font-sans" value={0} key={0}>
+													{t("allCities")}
+												</option>
+												{cities.map((city) => (
+													<option
+														class="font-sans"
+														value={city.id}
+														key={city.id}
+													>
+														{city.name}
+													</option>
+												))}
+											</select>
+										</div>
 						</div>
 					</div>
 				</div>
@@ -386,10 +410,9 @@ const HomePage = () => {
 			</h2>
 
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
+				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-start">
 					{listings &&
 						listings
-							.filter((listing) => listing.statusId === 1)
 							.map((listing) => (
 								<div
 									onClick={() => {
@@ -416,6 +439,16 @@ const HomePage = () => {
 										</h2>
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
+									{listing.id && listing.categoryId == 3 ? (
+									<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+										{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+										" To " +
+										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+									</p>
+									):(
+										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+									</p>
+									)}
 								</div>
 							))}
 				</div>
