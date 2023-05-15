@@ -438,6 +438,10 @@ function UploadListings() {
 		window.history.replaceState({}, "", newUrl);
 	};
 
+	function formatDateTime(dateTimeString) {
+		return dateTimeString.replace('T', ' ');
+	}
+
 	return (
 		<section class="bg-slate-600 body-font relative">
 			<SideBar />
@@ -721,7 +725,7 @@ function UploadListings() {
 										{t("eventStartDate")} *
 									</label>
 									<input
-										type="date"
+										type="datetime-local"
 										id="startDate"
 										name="startDate"
 										value={input.startDate}
@@ -759,10 +763,10 @@ function UploadListings() {
 										{t("eventEndDate")} *
 									</label>
 									<input
-										type="date"
+										type="datetime-local"
 										id="endDate"
 										name="endDate"
-										value={input.endDate}
+										value={input.endDate.replace('T', ' ')}
 										onChange={onInputChange}
 										onBlur={validateInput}
 										class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"

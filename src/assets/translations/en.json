@@ -227,6 +227,8 @@
 	"addLogoHere":"Add your Logo here",
 	"dragAndDropFile":"Drag and drop your image here, or Click ",
 	"chooseaAFile":"to choose a file.",
+	"eventStartTime":"Event Start Time",
+	"eventEndTime":"Event End Time",
 
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }
