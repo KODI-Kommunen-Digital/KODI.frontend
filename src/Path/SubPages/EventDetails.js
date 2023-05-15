@@ -100,6 +100,7 @@ const EventDetails = () => {
 				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
 					setUser(res.data.data);
 				});
+				setSelectedCategoryId(listingsResponse.data.data.categoryId)
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
 				setImagePath(listingsResponse.data.data.logo);
@@ -193,7 +194,7 @@ const EventDetails = () => {
 
 	//const [listings, setListings] = useState([]);
 	const [categoryId, setCategoryId] = useState();
-	const selectedCategoryId = localStorage.getItem("selectedCategoryId");
+	const [selectedCategoryId, setSelectedCategoryId] = useState(0);
 
 	useEffect(() => {
 		if (selectedCategoryId) {
