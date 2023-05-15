@@ -15,14 +15,24 @@ const VerifyEmail = () => {
 		}
 	};
 	const [verifyState, setVerifyState] = useState("pending");
+	const [makeVerifyEmailCall, setMakeVerifyEmailCall] = useState(false);
+	const [token, setToken] = useState("");
+	const [userId, setUserId] = useState(0);
 	useEffect(() => {
 		var url = window.location;
-		var access_token = new URLSearchParams(url.search).get("token");
-		var userId = new URLSearchParams(url.search).get("userId");
-		var lang = new URLSearchParams(url.search).get("lang");
+		var params = new URLSearchParams(url.search)
+		setToken(params.get("token"));
+		setUserId(params.get("userId"));
+		setMakeVerifyEmailCall(true);
+	}, []);
+
+	const [count, setCount] = useState(10);
+	const [redirect, setRedirect] = useState(false);
+	
+	useEffect(() => {
 		verifyEmail({
-			token: access_token,
-			userId: userId,
+			token,
+			userId,
 			language: "de"
 		}).then((response) => {
 			setRedirect(true);
@@ -33,10 +43,8 @@ const VerifyEmail = () => {
 		}).catch((e) => {
 			setVerifyState("failed");
 		})
-	}, []);
+	}, [makeVerifyEmailCall]);
 
-	const [count, setCount] = useState(10);
-	const [redirect, setRedirect] = useState(false);
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			if (count > 0) {
