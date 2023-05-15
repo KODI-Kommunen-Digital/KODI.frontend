@@ -50,7 +50,7 @@ const HomePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getListings({ statusId: 1, pageNo: 1, pageSize: 3 }).then((response) => {
+		getListings({ statusId: 1, pageNo: 1, pageSize: 9 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
@@ -389,7 +389,6 @@ const HomePage = () => {
 				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
 						listings
-							.filter((listing) => listing.statusId === 1)
 							.map((listing) => (
 								<div
 									onClick={() => {
