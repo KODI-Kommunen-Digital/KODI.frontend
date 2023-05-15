@@ -51,9 +51,10 @@ const EventDetails = () => {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
 	const [input, setInput] = useState({
-		//"villageId": 1,
 		categoryId: 0,
 		subcategoryId: 0,
 		statusId: "pending",
@@ -65,7 +66,6 @@ const EventDetails = () => {
 		email: "",
 		description: "",
 		logo: null,
-		//media: null,
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
@@ -75,39 +75,48 @@ const EventDetails = () => {
 	});
 
 	const [favoriteId, setFavoriteId] = useState(0);
+	const [cityId, setCityId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		console.log(cityId)
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
 		if (listingId && cityId) {
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
+			if (accessToken || refreshToken) {
+				setIsLoggedIn(true);
+			}
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
-				getProfileByIds(cityUserId).then((res) => {
-					setUser(res.data.data[0]);
-					console.log("Userere", res.data.data);
+				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
+					setUser(res.data.data);
 				});
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
 				setImagePath(listingsResponse.data.data.logo);
-				getFavorites().then((response) => {
-					var favorite = response.data.data.filter(
-						(f) => f.listingId == listingId
-					)[0];
-					if (favorite) {
-						setFavoriteId(favorite.id);
-						setFavButton(t("Unfavorite"));
-					} else {
-						setFavoriteId(0);
-						setFavButton(t("Favorite"));
-					}
-				});
-				console.log(Date.parse(listingsResponse.data.data.createdAt));
+				if (isLoggedIn) {
+					getFavorites().then((response) => {
+						var favorite = response.data.data.filter(
+							(f) => f.listingId == listingId
+						)[0];
+						if (favorite) {
+							setFavoriteId(favorite.id);
+							setFavButton(t("Unfavorite"));
+						} else {
+							setFavoriteId(0);
+							setFavButton(t("Favorite"));
+						}
+					});
+				}
 				setCreatedAt(
 					new Intl.DateTimeFormat("de-DE").format(
 						Date.parse(listingsResponse.data.data.createdAt)
@@ -115,9 +124,8 @@ const EventDetails = () => {
 				);
 			});
 		}
-	}, [t]);
+	}, [t, window.location.href ]);
 
-	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	async function onCityChange(e) {
 		const cityId = e.target.value;
@@ -398,7 +406,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p class="leading-relaxed text-base dark:text-gray-900">
-										{t("uploaded_at")}
+										{t("uploaded_on")}
 										{createdAt}
 									</p>
 								</div>
@@ -572,10 +580,11 @@ const EventDetails = () => {
 						{listings &&
 							listings.map((listing) => (
 								<div
-									onClick={() =>
+									onClick={() =>{
 										navigateTo(
 											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
 										)
+									}
 									}
 									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 								>

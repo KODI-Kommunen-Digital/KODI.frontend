@@ -97,7 +97,7 @@
 	"uploadAreaDescription": "Ob Veranstaltungen, Angebote oder News. Hier kannst du ganz einfach einen Beitrag hochladen",
 	"upload": "Beitrag hochladen",
 	"viewMore": "Weitere Angebote ansehen......",
-	"listingUpdated": "Ihr Eintrag wurde erfolgreich aktualisiert. Es wird vom Administrator überprüft und in Kürze aktualisiert.",
+	"listingUpdated": "Ihr Eintrag wurde erfolgreich aktualisiert. Es wird vom Administrator überprüft und in Kürze aktualisiert. Weiterleitung zum Dashboard in 5 Sekunden.",
 
 	"filteryourResult": "Filter deine Ergebnisse",
 	"location": "Standort",
@@ -183,6 +183,8 @@
     "pleaseEnterStartDate": "",
 	"pleaseEnterVillage": "",
     "pleaseEnterZipCode": "",
+	"pleaseSelectCategory": "",
+	"pleaseSelectSubcategory": "",
     "politics": "",
     "profileEntries": "",
     "regionalProductsHeading": "",
@@ -191,6 +193,7 @@
     "sports": "",
     "tod": "",
     "viewProfile": "",
+	"endDateBeforeStartDate": "",
 
 	"allCities": "Alle Städte",
 	"allCategories": "Alle Kategorien",
