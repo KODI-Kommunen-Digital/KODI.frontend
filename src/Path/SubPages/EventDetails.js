@@ -310,45 +310,57 @@ const EventDetails = () => {
 										</div>
 									</div>
 
-									<div class="mt-6">
-										{input.categoryId == 1 ? (
-											<p className="text-start">{t("news")}</p>
-										) : null}
-										{input.categoryId == 2 ? (
-											<p className="text-start">{t("roadTraffic")}</p>
-										) : null}
-										{input.categoryId == 3 ? (
-											<p className="text-start">{t("events")}</p>
-										) : null}
-										{input.categoryId == 4 ? (
-											<p className="text-start">{t("clubs")}</p>
-										) : null}
-										{input.categoryId == 5 ? (
-											<p className="text-start">{t("regionalProducts")}</p>
-										) : null}
-										{input.categoryId == 6 ? (
-											<p className="text-start">{t("offerSearch")}</p>
-										) : null}
-										{input.categoryId == 7 ? (
-											<p className="text-start">{t("newCitizenInfo")}</p>
-										) : null}
-										{input.categoryId == 8 ? (
-											<p className="text-start">{t("defectReport")}</p>
-										) : null}
-										{input.categoryId == 9 ? (
-											<p className="text-start">{t("lostAndFound")}</p>
-										) : null}
-										{input.categoryId == 10 ? (
-											<p className="text-start">{t("companyPortaits")}</p>
-										) : null}
-										{input.categoryId == 11 ? (
-											<p className="text-start">
-												{t("carpoolingPublicTransport")}
+									<div class="flex flex-wrap gap-1 justify-between mt-6">
+										<div>
+											{input.categoryId == 1 ? (
+												<p className="text-start">{t("news")}</p>
+											) : null}
+											{input.categoryId == 2 ? (
+												<p className="text-start">{t("roadTraffic")}</p>
+											) : null}
+											{input.categoryId == 3 ? (
+												<p className="text-start">{t("events")}</p>
+											) : null}
+											{input.categoryId == 4 ? (
+												<p className="text-start">{t("clubs")}</p>
+											) : null}
+											{input.categoryId == 5 ? (
+												<p className="text-start">{t("regionalProducts")}</p>
+											) : null}
+											{input.categoryId == 6 ? (
+												<p className="text-start">{t("offerSearch")}</p>
+											) : null}
+											{input.categoryId == 7 ? (
+												<p className="text-start">{t("newCitizenInfo")}</p>
+											) : null}
+											{input.categoryId == 8 ? (
+												<p className="text-start">{t("defectReport")}</p>
+											) : null}
+											{input.categoryId == 9 ? (
+												<p className="text-start">{t("lostAndFound")}</p>
+											) : null}
+											{input.categoryId == 10 ? (
+												<p className="text-start">{t("companyPortaits")}</p>
+											) : null}
+											{input.categoryId == 11 ? (
+												<p className="text-start">
+													{t("carpoolingPublicTransport")}
+												</p>
+											) : null}
+											{input.categoryId == 12 ? (
+												<p className="text-start">{t("offers")}</p>
+											) : null}
+										</div>
+										{input.id && input.categoryId == 3 ? (
+											<p class="leading-relaxed text-base dark:text-gray-900">
+												{new Date(input.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+												" - to - " +
+												new Date(input.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 											</p>
-										) : null}
-										{input.categoryId == 12 ? (
-											<p className="text-start">{t("offers")}</p>
-										) : null}
+											):(
+												<p class="leading-relaxed text-base dark:text-gray-900">
+												</p>
+										)}
 									</div>
 								</form>
 							</div>
@@ -605,6 +617,17 @@ const EventDetails = () => {
 										</h2>
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
+									{listing.id && listing.categoryId == 3 ? (
+									<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+										{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+										" To " +
+										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+									</p>
+									):(
+										<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+											Click here
+									</p>
+									)}
 								</div>
 							))}
 					</div>

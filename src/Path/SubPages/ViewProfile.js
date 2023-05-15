@@ -412,7 +412,7 @@ const ViewProfile = () => {
 							<h1 class="text-lg text-center sm:text-left font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 								{t("profileEntries")}
 							</h1>
-							<div class="w-full sm:w-auto mr-0 sm:mr-0">
+							{/* <div class="w-full sm:w-auto mr-0 sm:mr-0">
 								<select
 									id="country"
 									name="country"
@@ -427,7 +427,7 @@ const ViewProfile = () => {
 									<option value="recent">{t("recent")}</option>
 									<option value="oldest">{t("oldest")}</option>
 								</select>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>
@@ -463,6 +463,17 @@ const ViewProfile = () => {
 											</h2>
 										</div>
 										<div className="my-4 bg-gray-200 h-[1px]"></div>
+										{listing.id && listing.categoryId == 3 ? (
+										<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+											{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+											" To " +
+											new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+										</p>
+										):(
+											<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+												Click here
+										</p>
+										)}
 									</div>
 								))}
 					</div>

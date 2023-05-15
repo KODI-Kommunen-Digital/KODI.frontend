@@ -50,7 +50,7 @@ const HomePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
-		getListings({ statusId: 1, pageNo: 1, pageSize: 3 }).then((response) => {
+		getListings({ statusId: 1, pageNo: 1, pageSize: 8 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
@@ -387,7 +387,7 @@ const HomePage = () => {
 			</h2>
 
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-				<div class="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
+				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-start">
 					{listings &&
 						listings
 							.filter((listing) => listing.statusId === 1)
@@ -418,12 +418,13 @@ const HomePage = () => {
 									</div>
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
 									{listing.id && listing.categoryId == 3 ? (
-									<p class="text-gray-900 title-font text-sm font-bold text-center font-sans">
-											{"From " + listing.startDate + " To " + listing.endDate}
+									<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+										{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+										" To " +
+										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 									</p>
 									):(
-										<p class="text-gray-900 title-font text-sm font-bold text-center font-sans">
-											"No date available"
+										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
 									</p>
 									)}
 								</div>

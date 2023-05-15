@@ -227,6 +227,17 @@ const Events = () => {
 												</h2>
 											</div>
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
+											{listing.id && listing.categoryId == 3 ? (
+											<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+												" To " +
+												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+											</p>
+											):(
+												<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+													Click here
+											</p>
+											)}
 										</div>
 									))}
 							</div>

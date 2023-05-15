@@ -491,7 +491,7 @@ function UploadListings() {
 							onChange={onCityChange}
 							autocomplete="country-name"
 							disabled={!newListing}
-							class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm disabled:bg-gray-400"
+							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
@@ -524,7 +524,7 @@ function UploadListings() {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								autocomplete="country-name"
-								class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 							>
 								<option value={0}>{t("select")}</option>
 								{villages.map((village) => (

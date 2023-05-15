@@ -52,10 +52,11 @@ const VerifyEmail = () => {
 	return (
 		<section>
 			<HomePageNavBar />
+			<div className="main-content">
 			{ verifyState === "success" ?
 				<div>
 					<div class="flex items-center justify-center">
-						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
+						<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
 							{t("email_verified")}
 						</h1>
 					</div>
@@ -87,10 +88,10 @@ const VerifyEmail = () => {
 							</h1>
 						)}
 					</div>
-				</div> : verifyState === "pending" ? 
+				</div> : verifyState === "pending" ?
 				<div>
 					<div class="flex items-center justify-center">
-						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
+						<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
 							{t("email_being_verified")}
 						</h1>
 					</div>
@@ -115,13 +116,14 @@ const VerifyEmail = () => {
 				</div> :
 				<div>
 					<div class="flex items-center justify-center">
-						<h1 class=" m-auto mt-40 text-center font-sans font-bold text-2xl">
+						<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold sm:text-2xl text-lg">
 							{t("email_verification_not_succesfull")}
 						</h1>
 					</div>
 				</div>
 			}
-			<div className="fixed bottom-0 w-full">
+			</div>
+			<div className="sm:fixed bottom-0 w-full">
 				<Footer/>
 			</div>
 		</section>
