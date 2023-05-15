@@ -390,7 +390,6 @@ const HomePage = () => {
 				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-start">
 					{listings &&
 						listings
-							.filter((listing) => listing.statusId === 1)
 							.map((listing) => (
 								<div
 									onClick={() => {
