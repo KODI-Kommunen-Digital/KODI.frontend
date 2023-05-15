@@ -76,7 +76,7 @@ const Events = () => {
 			console.log(response.data.data)
 			setListings(response.data.data);
 		});
-	}, [categoryId, cityId, pageNo]);
+	}, [categoryId, cityId, pageNo, window.location.href]);
 
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
