@@ -64,7 +64,7 @@ const ViewProfile = () => {
 	const [listings, setListings] = useState([]);
 	useEffect(() => {
 		getUserListings().then((response) => {
-			setListings([...sortRecent(response.data.data)]);
+			setListings(response.data.data);
 		});
 	}, []);
 
@@ -464,14 +464,13 @@ const ViewProfile = () => {
 										</div>
 										<div className="my-4 bg-gray-200 h-[1px]"></div>
 										{listing.id && listing.categoryId == 3 ? (
-										<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
+										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
 											{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
 											" To " +
 											new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 										</p>
 										):(
-											<p class="text-blue-800 title-font text-sm font-semibold text-center font-sans">
-												Click here
+											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
 										</p>
 										)}
 									</div>
