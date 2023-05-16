@@ -10,7 +10,7 @@ import Footer from "../../Components/Footer";
 
 const CitizenService = () => {
   window.scrollTo(0, 0);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   let navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -33,7 +33,7 @@ const CitizenService = () => {
               />
               <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-                  Citizen Services
+                {t("citizenService")}
                 </h1>
               </div>
             </div>
@@ -88,7 +88,7 @@ const CitizenService = () => {
           </div>
         </div>
 
-        <div className="bottom-0 w-full">
+      <div className="bottom-0 w-full">
 				<Footer/>
 			</div>
     </section>

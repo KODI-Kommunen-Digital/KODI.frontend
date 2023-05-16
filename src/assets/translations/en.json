@@ -229,6 +229,9 @@
 	"chooseaAFile":"to choose a file.",
 	"eventStartTime":"Event Start Time",
 	"eventEndTime":"Event End Time",
+	"citizenService":"Citizen Services",
+	"findBestCitizenServicesInTheCity":"Find the best citizen services in the city",
+	"clickHereToFind":"Click here to find",
 
 	"heidi_all_rights_reserved": "© HeidiTheme 2023. All rights reserved. Created by "
 }

@@ -8,7 +8,7 @@ import {
 	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
-import { sortOldest } from "../Services/helper";
+import { sortRecent } from "../Services/helper";
 import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
@@ -64,11 +64,11 @@ const Dashboard = () => {
 	function fetchListings() {
 		if (viewAllListings) {
 			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
+				setListings((response.data.data));
 			});
 		} else {
 			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings([...sortOldest(response.data.data)]);
+				setListings((response.data.data));
 			});
 		}
 	}

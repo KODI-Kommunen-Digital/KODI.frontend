@@ -219,5 +219,9 @@
 	"uploadLogo":"",
 	"addLogoHere":"",
 	"dragAndDropFile":"",
-	"chooseaAFile":""
+	"chooseaAFile":"",
+
+	"citizenService":"",
+	"findBestCitizenServicesInTheCity":"",
+	"clickHereToFind":""
 }

@@ -10,13 +10,13 @@
 }
 
 .errorPage{
-    position: absolute;
-    top:0;
+    position: relative;
+    top: 10rem;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
-    width: 40%;
+    width: 60%;
     height: 40%;
     justify-content: center;
     align-items: center;
