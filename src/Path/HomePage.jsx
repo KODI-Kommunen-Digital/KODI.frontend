@@ -499,7 +499,7 @@ const HomePage = () => {
 
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 				<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-					<div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div class="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
 						<div class="relative h-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"
@@ -516,7 +516,7 @@ const HomePage = () => {
 							</div>
 						</div>
 					</div>
-					<div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div class="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
 						<div class="relative h-96 w-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"
@@ -533,7 +533,7 @@ const HomePage = () => {
 							</div>
 						</div>
 					</div>
-					<div class="h-full w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div class="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
 						<div class="relative h-96 w-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"
