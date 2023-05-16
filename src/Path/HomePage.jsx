@@ -97,7 +97,7 @@ const HomePage = () => {
 								src={HOMEPAGEIMG}
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-								<h1 class="font-sans text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
+								<h1 class="font-sans mb-40 text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
 									{t("homePageHeading")}
 								</h1>
 							</div>
@@ -118,14 +118,15 @@ const HomePage = () => {
 											}
 										}}
 										value={cityId}
-										class="block py-2.5 px-0 w-full text-xl font-sans text-white bg-transparent border-0 border-b-2 border-white appearance-none dark:text-white dark:border-white focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+										//class="block py-2.5 px-0 w-full text-xl font-sans text-white bg-transparent border-0 border-b-2 border-white appearance-none dark:text-white dark:border-white focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+										class="input-group relative flex flex-wrap items-stretch w-full mb-4 py-2 text-sm text-gray-700 dark:text-gray-700 rounded border border-gray-300"
 									>
 										<option class="py-2 text-sm text-gray-700 dark:text-gray-200" value={0} key={0}>
 										{t("chooseCities")}
 										</option>
 										{cities.map((city) => (
 										<option
-											className="py-2 text-sm text-gray-700 dark:text-gray-200"
+											className="py-2 text-sm text-gray-700 dark:text-gray-700"
 											value={city.id}
 											key={city.id}
 										>

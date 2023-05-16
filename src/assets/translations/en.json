@@ -209,6 +209,7 @@
 	"allCategories": "All Categories",
 
 	"currently_no_listings":"Currently there is no listings to display !",
+	"currently_no_services":"Currently there is no citizen services to display !",
 	"to_upload_new_listing":"To upload a new listing, ",
 	"click_here":"Click here.",
 	"uploaded_at":"Uploaded at ",
