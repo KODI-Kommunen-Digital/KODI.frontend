@@ -101,33 +101,64 @@ const HomePage = () => {
 									{t("homePageHeading")}
 								</h1>
 							</div>
-							<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-											<select
-												id="city"
-												name="city"
-												autocomplete="city-name"
-												onChange={(e) => setCityId(e.target.value)}
-												value={cityId}
-												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
-												<option class="font-sans" value={0} key={0}>
-													{t("allCities")}
-												</option>
-												{cities.map((city) => (
-													<option
-														class="font-sans"
-														value={city.id}
-														key={city.id}
-													>
-														{city.name}
-													</option>
-												))}
-											</select>
-										</div>
+
+							<div class="absolute w-96 m-auto inset-0 flex mb-40 flex-col items-center justify-end bg-opacity-50 text-white z--1">
+								<div class="relative mb-4 flex w-full flex-wrap items-stretch">
+									<select
+										id="city"
+										name="city"
+										autocomplete="city-name"
+										onChange={(e) => {
+											const selectedCityId = e.target.value;
+											const selectedCity = cities.find((city) => city.id.toString() === selectedCityId);
+											console.log(cities)
+											if (selectedCity) {
+												localStorage.setItem("selectedCity", selectedCity.name);
+												window.location.href = `/AllEvents?cityId=${selectedCityId}`;
+											}
+										}}
+										value={cityId}
+										class="block py-2.5 px-0 w-full text-xl font-sans text-white bg-transparent border-0 border-b-2 border-white appearance-none dark:text-white dark:border-white focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+									>
+										<option class="py-2 text-sm text-gray-700 dark:text-gray-200" value={0} key={0}>
+										{t("chooseCities")}
+										</option>
+										{cities.map((city) => (
+										<option
+											className="py-2 text-sm text-gray-700 dark:text-gray-200"
+											value={city.id}
+											key={city.id}
+										>
+											{city.name}
+										</option>
+										))}
+									</select>
+
+									{/* <button
+									class="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out bg-blue-800 active:shadow-lg"
+									type="button"
+									id="button-addon1"
+									data-te-ripple-init
+									data-te-ripple-color="light">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+										class="h-5 w-5">
+										<path
+										fill-rule="evenodd"
+										d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+										clip-rule="evenodd" />
+									</svg>
+									</button> */}
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>
 			</div>
+
 
 			<h2 class="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center">
 				{t("mostPopulatCategories")}
@@ -433,8 +464,8 @@ const HomePage = () => {
 											src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
 										/>
 									</a>
-									<div class="mt-10">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+									<div class="mt-10 px-2">
+										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
 											{listing.title}
 										</h2>
 									</div>
