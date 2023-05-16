@@ -8,3 +8,7 @@ const instance = axios.create({
 export async function getCities() {
 	return instance.get(`/cities`);
 }
+
+export async function getCitizenServices(){
+  return instance.get('/citizenServices');
+}
