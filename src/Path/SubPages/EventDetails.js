@@ -197,8 +197,9 @@ const EventDetails = () => {
 	useEffect(() => {
 		if (selectedCategoryId) {
 			getListings({ categoryId: selectedCategoryId }).then((response) => {
-				const sortedListings = sortRecent(response.data.data);
-				setListings(sortedListings);
+				// const sortedListings = sortRecent(response.data.data);
+				// setListings(sortedListings);
+				setListings(response.data.data);
 			});
 		}
 	}, [selectedCategoryId]);
@@ -610,8 +611,8 @@ const EventDetails = () => {
 											}
 										/>
 									</a>
-									<div class="mt-10">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
+									<div class="mt-10 px-2">
+										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
 											{listing.title}
 										</h2>
 									</div>

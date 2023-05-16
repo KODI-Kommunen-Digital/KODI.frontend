@@ -457,10 +457,10 @@ const ViewProfile = () => {
 												}
 											/>
 										</a>
-										<div class="mt-10">
-											<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans">
-												{listing.title}
-											</h2>
+										<div class="mt-10 px-2">
+										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+											{listing.title}
+										</h2>
 										</div>
 										<div className="my-4 bg-gray-200 h-[1px]"></div>
 										{listing.id && listing.categoryId == 3 ? (

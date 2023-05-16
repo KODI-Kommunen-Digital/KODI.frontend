@@ -220,8 +220,8 @@ const Events = () => {
 													}
 												/>
 											</a>
-											<div className="mt-10">
-												<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+											<div class="mt-10 px-2">
+												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
 													{listing.title}
 												</h2>
 											</div>
