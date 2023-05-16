@@ -292,10 +292,12 @@ const EventDetails = () => {
 					<div class="lg:w-full md:w-full h-64">
 						<div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
 							<div class="mt-5 md:col-span-2 md:mt-0">
-								<form action="#" method="POST">
+								<form method="POST">
 									<div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-										<h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold">
+										<h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+										<span class="inline-block max-w-full break-words">
 											{title}
+										</span>
 										</h1>
 										<div class="flex items-center">
 											<button
@@ -391,8 +393,8 @@ const EventDetails = () => {
 					</div>
 				</div>
 
-				{userSocial && userSocial !== {} ? (
-					<div class="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+				{userSocial && userSocial.length > 0  ? (
+					<div class="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
@@ -537,9 +539,10 @@ const EventDetails = () => {
 								</button>
 							</div>
 						</div>
+					
 					</div>
 				) : (
-					<div class="w-full h-72 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div class="w-full sm:h-72 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
@@ -552,7 +555,11 @@ const EventDetails = () => {
 								<div class="flex justify-center sm:justify-start">
 									<img
 										class="rounded-full h-20 w-20"
-										src={process.env.REACT_APP_BUCKET_HOST + user?.image}
+										src={
+											user?.image
+												? process.env.REACT_APP_BUCKET_HOST + user?.image
+												: PROFILEIMAGE
+										}
 										alt={user?.lastname}
 									/>
 								</div>

@@ -302,8 +302,8 @@ const Dashboard = () => {
 												}
 												alt="avatar"
 											/>
-											<div class="pl-0 sm:pl-3">
-												<div class="font-normal text-gray-500">
+											<div class="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
+												<div class="font-normal text-gray-500 truncate">
 													{listing.title}
 												</div>
 											</div>
