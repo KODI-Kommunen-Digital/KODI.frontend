@@ -124,7 +124,7 @@ const CitizenService = () => {
           <div>
             <div class="flex items-center justify-center">
               <h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-                {t("currently_no_listings")}
+                {t("currently_no_services")}
               </h1>
             </div>
             <div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
