@@ -119,14 +119,14 @@ const HomePage = () => {
 										}}
 										value={cityId}
 										//class="block py-2.5 px-0 w-full text-xl font-sans text-white bg-transparent border-0 border-b-2 border-white appearance-none dark:text-white dark:border-white focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-										class="input-group relative flex flex-wrap items-stretch w-full mb-4 py-2 text-sm text-gray-700 dark:text-gray-700 rounded border border-gray-300"
-									>
-										<option class="py-2 text-sm text-gray-700 dark:text-gray-200" value={0} key={0}>
+										class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											>
+										<option class="font-sans" value={0} key={0}>
 										{t("chooseCities")}
 										</option>
 										{cities.map((city) => (
 										<option
-											className="py-2 text-sm text-gray-700 dark:text-gray-700"
+											class="font-sans"
 											value={city.id}
 											key={city.id}
 										>
