@@ -1,4 +1,4 @@
-//  const data = require('./dummyData.json')
+
 //  var arr1 = data.listings
 //  console.log(arr)
 
