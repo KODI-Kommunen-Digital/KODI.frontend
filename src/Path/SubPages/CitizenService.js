@@ -8,6 +8,7 @@ import { getCitizenServices, getCities } from "../../Services/cities";
 import { getListings } from "../../Services/listingsApi";
 
 const CitizenService = () => {
+  window.scrollTo(0, 0);
   const { t } = useTranslation();
   const [citizenServiceData, setcitizenServiceData] = useState([])
   const [cities , setCities] = useState({})
