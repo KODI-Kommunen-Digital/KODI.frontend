@@ -237,7 +237,7 @@
 								</h3>
 								<div className="mt-2">
 								<p className="text-sm text-gray-500">
-									Do you really want to delete this listing? This
+									Do you really want to delete your account? This
 									action cannot be undone.
 								</p>
 								</div>
