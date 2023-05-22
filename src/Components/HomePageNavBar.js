@@ -9,7 +9,7 @@ import { logout } from "../Services/login";
 
 export default function HomePageNavBar() {
 	let navigate = useNavigate();
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const navigateTo = (path) => {
 		if (path) {
 			navigate(path);
@@ -49,7 +49,6 @@ export default function HomePageNavBar() {
 			window.sessionStorage.removeItem("selectedItem");
 			setIsLoggedIn(false);
 			navigateTo("/");
-			//alert("You have been logged out");
 		} else {
 			navigateTo("/login");
 		}
@@ -67,7 +66,11 @@ export default function HomePageNavBar() {
 								class="mx-auto lg:h-10 md:h-8 h-5 w-auto cursor-pointer"
 								src={LOGO}
 								alt="HEDI- Heimat Digital"
-								onClick={() => navigateTo("/")}
+								onClick={() => {
+									navigateTo("/")
+									window.location.reload();
+									}
+								}
 							/>
 						</div>
 						<div className="-my-2 -mr-2 lg:hidden">
