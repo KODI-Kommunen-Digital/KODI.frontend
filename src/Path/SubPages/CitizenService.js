@@ -8,6 +8,7 @@ import { getCitizenServices, getCities } from "../../Services/cities";
 import { getListings } from "../../Services/listingsApi";
 
 const CitizenService = () => {
+  window.scrollTo(0, 0);
   const { t } = useTranslation();
   const [citizenServiceData, setcitizenServiceData] = useState([])
   const [cities , setCities] = useState({})
@@ -15,7 +16,6 @@ const CitizenService = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cityId, setCityId] = useState(null);
   const [pageNo, setPageNo] = useState(1);
-  const [selectedCity, setCityName] = useState("");
   const [listings, setListings] = useState([]);
 
   let navigate = useNavigate();
@@ -26,19 +26,40 @@ const CitizenService = () => {
   };
 
   useEffect(() => {
-		document.title = "Heidi - Citizen Services";
+		const urlParams = new URLSearchParams(window.location.search);
+    document.title = "Heidi - Citizen Services";
     getCities().then((response) => {
-      setCitiesArray(response.data.data)
-      var temp = {}
+      setCitiesArray(response.data.data);
+      var temp = {};
       for (let city of response.data.data) {
-        temp[city.id] = city.name
+        temp[city.id] = city.name;
       }
-      setCities(temp)
-    })
-    getCitizenServices().then((response)=>{
-      setcitizenServiceData(response.data.data)
-    })
+      setCities(temp);
+			var cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) setCityId(cityIdParam);
+    });
 	}, []);
+
+  useEffect(() => {
+		var params = { pageNo, pageSize: 12 };
+		const urlParams = new URLSearchParams(window.location.search);
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.replaceState({}, "", newUrl);
+		getCitizenServices(params).then((response) => {
+      setcitizenServiceData(response.data.data);
+    });
+	}, [cityId, pageNo]);
+
+  useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+    var cityId = urlParams.get("cityId");
+		if (parseInt(cityId)) {
+			urlParams.set("cityId", cityId);
+		} else {
+			urlParams.delete("cityId"); // Remove cityId parameter from URL
+		}
+  }, [window.location.href]);
+
 
   useEffect(() => {
     let params = {}
@@ -50,7 +71,7 @@ const CitizenService = () => {
     })
 	}, [cityId]);
 
-  console.log(citiesArray)
+  //console.log(citiesArray)
 
   return (
     <section class="text-gray-600 bg-white body-font">
@@ -70,29 +91,26 @@ const CitizenService = () => {
                 {t("citizenService")}
                 </h1>
 
-                <div class="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
-											<select
-												id="city"
-												name="city"
-												autocomplete="city-name"
-												onChange={(e) => setCityId(e.target.value)}
-												value={cityId}
-												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
-												<option class="font-sans" value={0} key={0}>
-													{t("allCities")}
-												</option>
-												{citiesArray.map((city) => (
-													<option
-														class="font-sans"
-														value={city.id}
-														key={city.id}
-													>
-														{city.name}
-													</option>
-												))}
-											</select>
-										</div>
+                <div className="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
+                  <select
+                    id="city"
+                    name="city"
+                    autoComplete="city-name"
+                    onChange={(e) => setCityId(e.target.value)}
+                    value={cityId}
+                    className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  >
+                    <option className="font-sans" value={0} key={0}>
+                      {t('allCities')}
+                    </option>
+                    {citiesArray.map((city) => (
+                      <option className="font-sans" value={city.id} key={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
               </div>
 
             </div>

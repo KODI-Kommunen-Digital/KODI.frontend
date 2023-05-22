@@ -157,7 +157,7 @@ const Favorites = () => {
 						<a
 							class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 							onClick={() => {
-								localStorage.setItem("selectedItem", "Choose one category");
+								localStorage.setItem("selectedItem", t("chooseOneCategory"));
 								isLoggedIn? navigateTo("/UploadListings"): navigateTo("/login");
 							}}
 						>
