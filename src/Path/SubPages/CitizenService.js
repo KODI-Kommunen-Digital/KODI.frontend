@@ -43,6 +43,8 @@ const CitizenService = () => {
   useEffect(() => {
 		var params = { pageNo, pageSize: 12 };
 		const urlParams = new URLSearchParams(window.location.search);
+    //urlParams.set("cityId", cityId);
+		params.cityId = cityId;
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 		getCitizenServices(params).then((response) => {
