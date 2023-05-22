@@ -21,8 +21,10 @@ export async function updateProfile(newProfileObj) {
 	return axios.patch(`/users/${getUserId()}`, newProfileObj);
 }
 
-export async function getUserListings(params = {}) {
-	return axios.get(`/users/${getUserId()}/listings`, { params });
+export async function getUserListings(params = {}, userId) {
+	if (!userId)
+		userId = getUserId()
+	return axios.get(`/users/${userId}/listings`, { params });
 }
 
 export async function deleteAccount() {

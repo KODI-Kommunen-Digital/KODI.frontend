@@ -127,6 +127,7 @@ const EventDetails = () => {
 						}
 					});
 				}
+				
 				setCreatedAt(
 					new Intl.DateTimeFormat("de-DE").format(
 						Date.parse(listingsResponse.data.data.createdAt)
@@ -255,23 +256,26 @@ const EventDetails = () => {
 	);
 	const [favButton, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
-		try {
-			var postData = {
-				cityId: cityId,
-				listingId: listingId,
-			};
 
-			if (favoriteId !== 0) {
-				await deleteListingsById(favoriteId);
-				setFavoriteId(0);
-				setSuccessMessage(t("list removed from the favorites"));
-				setHandleClassName(
-					"text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2"
-				);
-				setFavButton(t("Unfavorite"));
-			} else {
-				postData.cityId
-					? postFavoriteListingsData(postData)
+		try {
+			if (isLoggedIn) {
+				var postData = {
+					cityId: cityId,
+					listingId: listingId,
+				};
+
+				if (favoriteId !== 0) {
+					await deleteListingsById(favoriteId);
+					setFavoriteId(0);
+					setSuccessMessage(t("list removed from the favorites"));
+					setHandleClassName(
+						"text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2"
+					);
+					setFavButton(t("Unfavorite"));
+				}
+				else {
+					postData.cityId
+						? postFavoriteListingsData(postData)
 							.then((response) => {
 								setFavoriteId(response.data.id);
 								setSuccessMessage(t("List added to the favorites"));
@@ -281,7 +285,12 @@ const EventDetails = () => {
 								setFavButton(t("Favorite"));
 							})
 							.catch((err) => console.log("Error", err))
-					: console.log("Error");
+						: console.log("Error");
+				}
+			}
+			else {
+				window.sessionStorage.setItem("redirectTo", "/Favorite");
+				navigateTo("/login");
 			}
 		} catch (error) {
 			setErrorMessage(t("Error", error));

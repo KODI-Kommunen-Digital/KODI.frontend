@@ -57,6 +57,7 @@ const App = () => {
 					<Route path="/ViewMoreListings" element={<ViewMoreListings />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
+					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
 					<Route path="/AccountSettings" element={<AccountSettings />} exact />
 					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />

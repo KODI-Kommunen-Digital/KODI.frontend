@@ -26,26 +26,32 @@ const Dashboard = () => {
 	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
 	const [userRole, setUserRole] = useState(3);
-	const [viewAllListings, setViewAllListings] = useState(false);
+	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
+	
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
-		fetchListings();
+		if (window.location.pathname == "/Dashboard") {
+			setViewAllListings(false);
+		} else  {
+			setViewAllListings(true);
+		}
 		document.title = "Dashboard";
-	}, []);
+	}, [window.location.pathname]);
 
 	useEffect(() => {
-		if (pageNo == 1) fetchListings();
-		else setPageNo(1);
+		if (pageNo == 1) {
+			fetchListings();
+		}
+		else {
+			// setPageNo(1);
+			fetchListings();
+		}
 		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
-	}, [selectedStatus, viewAllListings]);
-
-	useEffect(() => {
-		fetchListings();
-	}, [pageNo]);
+	}, [selectedStatus, viewAllListings,pageNo]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -62,11 +68,12 @@ const Dashboard = () => {
 	}
 
 	function fetchListings() {
-		if (viewAllListings) {
+		if (viewAllListings == true) {
 			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings((response.data.data));
 			});
-		} else {
+		}
+		if (viewAllListings == false){
 			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings((response.data.data));
 			});
@@ -138,12 +145,6 @@ const Dashboard = () => {
 	return (
 		<section className="bg-slate-600 body-font relative">
 			<SideBar
-				handleGetAllListings={() => {
-					setViewAllListings(true);
-				}}
-				handleGetUserListings={() => {
-					setViewAllListings(false);
-				}}
 			/>
 
 			<div class="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">

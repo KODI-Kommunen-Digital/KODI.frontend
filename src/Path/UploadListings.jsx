@@ -444,7 +444,12 @@ function UploadListings() {
 
 	return (
 		<section class="bg-slate-600 body-font relative">
-			<SideBar />
+			<SideBar
+				// handleGetAllListings={() => {
+				// }}
+				// handleGetUserListings={() => {
+				// }}
+			/>
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6 space-y-10">
