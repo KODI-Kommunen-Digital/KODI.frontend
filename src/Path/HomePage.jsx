@@ -4,10 +4,9 @@ import UploadContribution from "../Components/UploadContribution";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
-import { sortOldest, sortRecent } from "../Services/helper";
+import { sortRecent } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
-import { getVillages } from "../Services/villages";
 import Footer from "../Components/Footer";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
@@ -18,46 +17,26 @@ import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState(0);
-	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
+	const urlParams = new URLSearchParams(window.location.search);
+
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
+		setCityId(urlParams.get('cityId'))
 	}, []);
 
-	const [input, setInput] = useState({
-		//"villageId": 1,
-		categoryId: 0,
-		subcategoryId: 0,
-		sourceId: 1,
-		userId: 2,
-	});
-
 	const [listings, setListings] = useState([]);
-	const [categories, setCategories] = useState([]);
-	const [selectedCategory, setSelectedCategory] = useState("");
 	useEffect(() => {
 		getListings({ statusId: 1, pageNo: 1, pageSize: 8 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
-		console.log(listings)
 	}, []);
-
-	const [selectedSortOption, setSelectedSortOption] = useState("");
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -66,22 +45,11 @@ const HomePage = () => {
 		}
 	};
 
-	function goToFilters(filterName) {
-		// Encode the button name as a URL parameter
-		const encodedName = encodeURIComponent(filterName);
-
-		// Redirect to the filters page with the encoded name as a parameter
-		window.location.href = encodedName;
-	}
-
-	useEffect(() => {
-		getCategory().then((response) => {
-			const setCategories = sortRecent(response.data.data);
-		});
-	}, []);
-
 	function goToAllListingsPage(category) {
-		navigateTo(`/AllEvents?categoryId=${category}`);
+		let navUrl = `/AllEvents?categoryId=${category}`
+		if(cityId)
+			navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`
+		navigateTo(navUrl);
 	}
 
 	return (
@@ -111,14 +79,12 @@ const HomePage = () => {
 										onChange={(e) => {
 											const selectedCityId = e.target.value;
 											const selectedCity = cities.find((city) => city.id.toString() === selectedCityId);
-											console.log(cities)
 											if (selectedCity) {
 												localStorage.setItem("selectedCity", selectedCity.name);
-												window.location.href = `/AllEvents?cityId=${selectedCityId}`;
+												window.location.href = `/?cityId=${selectedCityId}`;
 											}
 										}}
 										value={cityId}
-										//class="block py-2.5 px-0 w-full text-xl font-sans text-white bg-transparent border-0 border-b-2 border-white appearance-none dark:text-white dark:border-white focus:outline-none focus:ring-0 focus:border-gray-200 peer"
 										class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 											>
 										<option class="font-sans" value={0} key={0}>
