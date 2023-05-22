@@ -470,7 +470,7 @@ function UploadListings() {
 							onBlur={validateInput}
 							required
 							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="enter your title"
+							placeholder={t("enterTitle")}
 						/>
 						<div
 							className="h-[24px] text-red-600"
@@ -638,7 +638,7 @@ function UploadListings() {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder="Enter your place here"
+								placeholder={t("enterPlace")}
 							/>
 						</div>
 						<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
@@ -656,7 +656,7 @@ function UploadListings() {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder="Enter your Zip code here"
+								placeholder={t("enterPostal")}
 							/>
 						</div>
 					</div>
@@ -674,7 +674,7 @@ function UploadListings() {
 								id="address"
 								name="address"
 								required
-								placeholder="Search for a location"
+								placeholder={t("searchLocation")}
 								value={query}
 								onChange={handleSearch}
 								onBlur={validateInput}
@@ -848,7 +848,7 @@ function UploadListings() {
 							onChange={onInputChange}
 							onBlur={validateInput}
 							class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="enter your telephone number"
+							placeholder={t("pleaseEnterPhone")}
 						/>
 					</div>
 
@@ -865,7 +865,7 @@ function UploadListings() {
 							onBlur={validateInput}
 							required
 							class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							placeholder="youremail@gmail.com"
+							placeholder={t("emailExample")}
 						/>
 					</div>
 
