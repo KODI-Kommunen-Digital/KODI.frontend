@@ -53,6 +53,13 @@ const HomePage = () => {
 		navigateTo(navUrl);
 	}
 
+	function goToCitizensPage() {
+		let navUrl = `/CitizenService`
+		if(cityId)
+			navUrl = `/CitizenService?cityId=${cityId}`
+		navigateTo(navUrl);
+	}
+
 	return (
 		<section class="text-gray-600 body-font relative">
 			<HomePageNavBar />
@@ -436,7 +443,7 @@ const HomePage = () => {
 				<button
 					type="submit"
 					onClick={() => {
-						localStorage.setItem("selectedItem", "Choose one category");
+						localStorage.setItem("selectedItem", t("chooseOneCategory"));
 						navigateTo("/AllEvents");
 					}}
 					class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
@@ -512,7 +519,7 @@ const HomePage = () => {
 					<h2 className="text-4xl text-white font-bold mb-4 font-sans">{t("citizenService")}</h2>
 					<p className="mb-4 text-gray-900 text-lg font-bold font-sans">{t("findBestCitizenServicesInTheCity")}</p>
 					<a
-					onClick={() => navigateTo("/CitizenService")}
+					onClick={() => goToCitizensPage()}
 					className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 					>
 					{t("clickHereToFind")}
