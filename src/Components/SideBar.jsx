@@ -39,7 +39,13 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 			navigate(path);
 		}
 	};
-
+	// const handleClickAllListing = (val) => {
+	// 	if (val == 1) {
+	// 		navigateTo("/DashboardAdmin")
+	// 	} else if (val == 2) {
+	// 		navigateTo("/Dashboard")
+	// 	}
+	// }
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
 	const [profilePic, setProfilePic] = useState("");
@@ -98,8 +104,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 				<div
 					className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 					onClick={() => {
-						navigateTo("/Dashboard");
-						handleGetUserListings();
+						navigateTo("/Dashboard")
 					}}
 				>
 					<svg
@@ -135,8 +140,9 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 					<div
 						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 						onClick={() => {
-							navigate("/Dashboard");
-							handleGetAllListings();
+							navigate("/DashboardAdmin")
+							
+							
 						}}
 					>
 						<svg
