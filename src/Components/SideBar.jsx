@@ -39,13 +39,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 			navigate(path);
 		}
 	};
-	// const handleClickAllListing = (val) => {
-	// 	if (val == 1) {
-	// 		navigateTo("/DashboardAdmin")
-	// 	} else if (val == 2) {
-	// 		navigateTo("/Dashboard")
-	// 	}
-	// }
+
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
 	const [profilePic, setProfilePic] = useState("");
