@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
-import UploadContribution from "../Components/UploadContribution";
 import STYLEIMAGE from "../assets/styleimage.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -20,24 +19,24 @@ import THREEIMAGE from "../assets/03.png";
 const HomePage = () => {
 	const { t } = useTranslation();
 	window.scrollTo(0, 0);
-	const [cityId, setCityId] = useState(0);
+	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
+	const [listings, setListings] = useState([]);
 	const urlParams = new URLSearchParams(window.location.search);
+	
 
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
 		setCityId(urlParams.get('cityId'))
-	}, []);
-
-	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		getListings({ statusId: 1, pageNo: 1, pageSize: 8 }).then((response) => {
+		getListings({ cityId: urlParams.get('cityId'), statusId: 1, pageNo: 1, pageSize: 8 }).then((response) => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
 	}, []);
+
+
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
