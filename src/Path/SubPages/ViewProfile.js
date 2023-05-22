@@ -45,28 +45,8 @@ const ViewProfile = () => {
 	const [user, setUser] = useState();
 	const [userSocial, setUserSocial] = useState([]);
 
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-			getListingsById(cityId, listingId).then((listingsResponse) => {
-				setInput(listingsResponse.data.data);
-			});
-		}
-	}, []);
-
 	//populate the events titles starts
 	const [listings, setListings] = useState([]);
-	useEffect(() => {
-		getUserListings().then((response) => {
-			setListings(response.data.data);
-		});
-	}, []);
 
 	//populate the events titles Ends
 
@@ -168,6 +148,9 @@ const ViewProfile = () => {
 				.catch((error) => {
 					console.log(error);
 				});
+			getUserListings(null, userId).then((response) => {
+				setListings(response.data.data);
+			});
 		} else {
 			getProfile()
 				.then((response) => {
@@ -177,6 +160,9 @@ const ViewProfile = () => {
 				.catch((error) => {
 					console.log(error);
 				});
+				getUserListings().then((response) => {
+				setListings(response.data.data);
+			});
 		}
 	}, []);
 

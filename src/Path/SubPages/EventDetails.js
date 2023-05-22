@@ -118,6 +118,7 @@ const EventDetails = () => {
 						}
 					});
 				}
+				
 				setCreatedAt(
 					new Intl.DateTimeFormat("de-DE").format(
 						Date.parse(listingsResponse.data.data.createdAt)
@@ -246,7 +247,14 @@ const EventDetails = () => {
 	);
 	const [favButton, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
+
 		try {
+			if (isLoggedIn) {
+			navigateTo("/Favorite");
+			} else {
+				window.sessionStorage.setItem("redirectTo", "/Favorite");
+				navigateTo("/login");
+			}
 			var postData = {
 				cityId: cityId,
 				listingId: listingId,
