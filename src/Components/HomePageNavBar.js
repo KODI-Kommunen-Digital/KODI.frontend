@@ -67,6 +67,7 @@ export default function HomePageNavBar() {
 								src={LOGO}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {
+									window.localStorage.removeItem("selectedCity");
 									navigateTo("/")
 									window.location.reload();
 									}

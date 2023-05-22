@@ -36,7 +36,6 @@ const HomePage = () => {
 			setListings(response.data.data);
 		});
 		document.title = "Heidi Home";
-		console.log(listings)
 	}, []);
 
 	let navigate = useNavigate();
@@ -47,7 +46,10 @@ const HomePage = () => {
 	};
 
 	function goToAllListingsPage(category) {
-		navigateTo(`/AllEvents?categoryId=${category}`);
+		let navUrl = `/AllEvents?categoryId=${category}`
+		if(cityId)
+			navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`
+		navigateTo(navUrl);
 	}
 
 	return (
