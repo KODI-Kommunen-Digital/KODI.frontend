@@ -354,34 +354,40 @@ const HomePage = () => {
 
 				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-					{cities.map((city) => (
-						<div
-							onClick={() => {
-								localStorage.setItem("selectedCity", city.name);
-								navigateTo(`/AllEvents?cityId=${city.id}`);
-							}}
-							class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-						>
-							<div class="relative h-80 rounded overflow-hidden">
-								<img
-									alt="ecommerce"
-									class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-									src={
+					{cities.map((city) => {
+						if(city.id !== Number(cityId)){  
+							return (
+								<div
+								  onClick={() => {
+									localStorage.setItem("selectedCity", city.name);
+									navigateTo(`/AllEvents?cityId=${city.id}`);
+								  }}
+								  class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+								>
+								  <div class="relative h-80 rounded overflow-hidden">
+									<img
+									  alt="ecommerce"
+									  class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+									  src={
 										city.image
-										? process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image : CITYIMAGE
-									}
-								/>
-								<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-									<h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
+										  ? process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image
+										  : CITYIMAGE
+									  }
+									/>
+									<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+									  <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
 										{city.name}
-									</h1>
-									<p class="mb-4 ml-4 font-sans">{t("entries")}</p>
+									  </h1>
+									  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
+									</div>
+								  </div>
 								</div>
-							</div>
+							  );
+							}
+							return null;
+						  })}
 						</div>
-					))}
-					</div>
-				</div>
+					  </div>
 
 			<div className="my-4 bg-gray-200 h-[1px]"></div>
 
