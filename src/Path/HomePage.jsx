@@ -115,6 +115,7 @@ const HomePage = () => {
                       } else {
                         localStorage.setItem("selectedCity", t("allCities"));
                         urlParams.delete("cityId");
+						setCityId(0)
                       }
                     }}
                     value={cityId || 0}
