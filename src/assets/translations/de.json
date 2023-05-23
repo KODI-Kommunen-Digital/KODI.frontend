@@ -88,6 +88,7 @@
     "eventStartDate": "Veranstaltungsstart",
     "eventStartTime": "Event Start Time",
     "favourites": "Favoriten",
+    "failedToFetchData":"Ihre Profilinformationen konnten nicht abgerufen werden. Bitte versuchen Sie es erneut!",
     "filteryourResult": "Filter deine Ergebnisse",
     "findBestCitizenServicesInTheCity": "Finde die gesamten Bürgerservices deines Ortes",
     "firstName": "Vorname",
@@ -234,5 +235,15 @@
     "website": "Website",
     "writeSomethingHere": "Schreibe hier etwas...",
     "zipCode": "Postleitzahl",
-    "ztoatitle": "Z - A (Titel)"
+    "ztoatitle": "Z - A (Titel)",
+
+    "this_field_cannot_be_empty":"Dieses Feld kann nicht leer sein.",
+    "entered_email_not_valid":"Die eingegebene E-Mail ist ungültig. Bitte geben Sie eine gültige Email-Adresse ein.",
+    "enter_valid_social_media":"Bitte geben Sie ein gültiges soziales Medium ein.",
+    "enter_valid_phone_number":"Die eingegebene Telefonnummer ist ungültig. Bitte geben Sie eine gültige Nummer ein.",
+    "your_changes_were_saved_successfully":"Ihre Änderungen wurden erfolgreich gespeichert.",
+    "enter_current_password":"Bitte geben Sie Ihr aktuelles Passwort ein.",
+    "enter_a_new_password":"Bitte geben Sie ein neues Passwort ein.",
+    "confirm_your_password":"Bitte bestätigen Sie Ihr neues Passwort.",
+    "password_do_not_match":"Das neue Passwort und das Bestätigungspasswort stimmen nicht überein."
 }
