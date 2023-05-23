@@ -4,7 +4,7 @@ import STYLEIMAGE from "../assets/styleimage.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
-import { sortRecent } from "../Services/helper";
+import { sortLatestFirst } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
 import Footer from "../Components/Footer";
