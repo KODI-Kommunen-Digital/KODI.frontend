@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getProfile, getProfileByIds } from "../../Services/usersApi";
-import { sortRecent } from "../../Services/helper";
+import { sortLatestFirst } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
@@ -188,7 +188,7 @@ const EventDetails = () => {
 	useEffect(() => {
 		if (selectedCategoryId) {
 			getListings({ categoryId: selectedCategoryId }).then((response) => {
-				// const sortedListings = sortRecent(response.data.data);
+				// const sortedListings = sortLatestFirst(response.data.data);
 				// setListings(sortedListings);
 				setListings(response.data.data);
 			});

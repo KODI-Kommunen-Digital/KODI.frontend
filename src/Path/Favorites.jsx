@@ -9,8 +9,8 @@ import { getFavoriteListings } from "../Services/favoritesApi";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
-	sortRecent,
-	sortOldest,
+	sortLatestFirst,
+	sortOldestFirst,
 } from "../Services/helper";
 import Footer from "../Components/Footer";
 
@@ -75,10 +75,10 @@ const Favorites = () => {
 				setFavListings([...sortByTitleZA(favListings)]);
 				break;
 			case "recent":
-				setFavListings([...sortRecent(favListings)]);
+				setFavListings([...sortLatestFirst(favListings)]);
 				break;
 			case "oldest":
-				setFavListings([...sortOldest(favListings)]);
+				setFavListings([...sortOldestFirst(favListings)]);
 				break;
 			default:
 				break;

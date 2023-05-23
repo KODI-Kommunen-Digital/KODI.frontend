@@ -1,8 +1,3 @@
-
-//  var arr1 = data.listings
-//  console.log(arr)
-
-//functions to sort the categories based on title
 const sortByTitleAZ = (arr) => {
 	arr.sort(function (a, b) {
 		var titleA = a.title.toLowerCase();
@@ -13,7 +8,7 @@ const sortByTitleAZ = (arr) => {
 	});
 	return arr;
 };
-//sortByTitleAZ(arr1)
+
 const sortByTitleZA = (arr) => {
 	arr.sort(function (a, b) {
 		var titleA = a.title.toLowerCase();
@@ -26,25 +21,26 @@ const sortByTitleZA = (arr) => {
 	return arr;
 };
 
-//functions to sort the categories based on date
-const sortRecent = (arr) => {
-	arr.sort(function (a, b) {
-		var dateA = new Date(a.date);
-		var dateB = new Date(b.date);
-		return dateA - dateB;
-	});
-	arr.reverse();
-	return arr;
-};
-const sortOldest = (arr) => {
-	arr.sort(function (a, b) {
-		var dateA = new Date(a.date);
-		var dateB = new Date(b.date);
-		return dateA - dateB;
-	});
-	return arr;
-};
+const sortLatestFirst = (arr) => {
+	arr.sort(compareDateTime);
+	return arr.reverse()
+}
 
-//console.log(sortByTitleAZ(arr))
+const sortOldestFirst = (arr) => {
+	arr.sort(compareDateTime);
+	return arr
+}
+const compareDateTime = (a, b) => {
+	const dateA = new Date(a.createdAt);
+	const dateB = new Date(b.createdAt);
+  
+	if (dateA < dateB) {
+	  return -1;
+	}
+	if (dateA > dateB) {
+	  return 1;
+	}
+	return 0;
+  };
 
-module.exports = { sortByTitleAZ, sortByTitleZA, sortRecent, sortOldest };
+module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst };

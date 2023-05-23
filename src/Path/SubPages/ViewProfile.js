@@ -16,8 +16,8 @@ import { getVillages } from "../../Services/villages";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
-	sortRecent,
-	sortOldest,
+	sortLatestFirst,
+	sortOldestFirst,
 } from "../../Services/helper";
 
 const ViewProfile = () => {
@@ -68,10 +68,10 @@ const ViewProfile = () => {
 				setListings([...sortByTitleZA(listings)]);
 				break;
 			case "recent":
-				setListings([...sortRecent(listings)]);
+				setListings([...sortLatestFirst(listings)]);
 				break;
 			case "oldest":
-				setListings([...sortOldest(listings)]);
+				setListings([...sortOldestFirst(listings)]);
 				break;
 			default:
 				break;
