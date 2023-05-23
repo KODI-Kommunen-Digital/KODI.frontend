@@ -362,7 +362,7 @@ const HomePage = () => {
 				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 					{cities.map((city) => {
-						if(city.id !== Number(cityId)){  
+						if(city.id !== Number(cityId)){
 							return (
 								<div
 								  onClick={() => {
