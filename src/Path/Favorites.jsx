@@ -3,7 +3,7 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
-import LISTINGSIMAGE from "../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getFavoriteListings } from "../Services/favoritesApi";
 import {

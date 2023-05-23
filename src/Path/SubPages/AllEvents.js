@@ -8,7 +8,7 @@ import {
 	sortOldest,
 } from "../../Services/helper";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 
 import { getListings } from "../../Services/listingsApi";
