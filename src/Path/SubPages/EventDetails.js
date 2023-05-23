@@ -9,7 +9,7 @@ import { sortRecent } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
-import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import {
 	getFavorites,
@@ -314,7 +314,7 @@ const EventDetails = () => {
 												onClick={() => handleFavorite()}
 											>
 												<span class="ml-1">
-													{favoriteId !== 0 ? t("Unfavorite") : t("Favorite")}
+													{favoriteId !== 0 ? t("unfavorite") : t("favourites")}
 												</span>
 											</button>
 										</div>

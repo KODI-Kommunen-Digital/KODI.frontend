@@ -3,6 +3,7 @@ import { socialMedia } from "../Constants/socialMedia";
 import { Select } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { getProfile } from "../Services/usersApi";
+import { useTranslation } from "react-i18next";
 
 export default function SocialMedia({ setSocialMedia }) {
 	const [loading, setLoading] = useState(false);
@@ -10,6 +11,7 @@ export default function SocialMedia({ setSocialMedia }) {
 	const [alert, setAlert] = useState("");
 	const [data, setData] = useState();
 	const [val, setVal] = useState([]);
+	const { t } = useTranslation();
 	useEffect(() => {
 		setLoading(true);
 		getProfile()
@@ -72,7 +74,7 @@ export default function SocialMedia({ setSocialMedia }) {
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
-						Social Media
+						{t("socialMedia")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
 
@@ -81,7 +83,7 @@ export default function SocialMedia({ setSocialMedia }) {
 							for="category"
 							class="block text-sm font-medium text-gray-600"
 						>
-							Add your social media accounts here
+							{t("add_social_media")}
 						</label>
 						<div class="relative mb-4">
 							<div class="relative mb-4 mt-2 border-white">
@@ -97,7 +99,7 @@ export default function SocialMedia({ setSocialMedia }) {
 														for="country"
 														class="block text-md font-medium text-gray-600"
 													>
-														Select
+														{t("select")}
 													</label>
 													<select
 														type="text"
@@ -161,10 +163,10 @@ export default function SocialMedia({ setSocialMedia }) {
 													for="country"
 													class="block text-md font-medium text-gray-600"
 												>
-													Select
+													{t("select")}
 												</label>
 												<Select
-													placeholder="Select option"
+													placeholder={t("selectOption")}
 													onChange={(e) => handleSocialMediaSelectChanges(e, i)}
 												>
 													{socialMedia.map((option) => (
@@ -228,7 +230,7 @@ export default function SocialMedia({ setSocialMedia }) {
 									class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
 									onClick={() => handleAdd("")}
 								>
-									+ Add your social media
+									{t("add_social_media")}
 								</button>
 							</div>
 							<div class="flex justify-center space-x-6 mt-7">

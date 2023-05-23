@@ -11,7 +11,7 @@ import Footer from "../Components/Footer";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import CITYIMAGE from "../assets/City.png";
-import LISTINGSIMAGE from "../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -377,15 +377,14 @@ const HomePage = () => {
 									  class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
 									  src={
 										city.image
-										  ? process.env.REACT_APP_BUCKET_HOST + "cities/" + city.image
+										  ? process.env.REACT_APP_BUCKET_HOST + city.image
 										  : CITYIMAGE
 									  }
 									/>
 									<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-									  <h1 class="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
+									  <h1 class="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4">
 										{city.name}
 									  </h1>
-									  <p class="mb-4 ml-4 font-sans">{t("entries")}</p>
 									</div>
 								  </div>
 								</div>

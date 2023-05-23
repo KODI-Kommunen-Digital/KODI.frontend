@@ -14,7 +14,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
 import { Fragment } from "react";
-import LISTINGSIMAGE from "../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -43,15 +43,34 @@ const Dashboard = () => {
 	}, [window.location.pathname]);
 
 	useEffect(() => {
-		if (pageNo == 1) {
-			fetchListings();
+		// Number of items to display per page
+		const itemsPerPage = 8; 
+
+		var listingCount = listings.length;
+		// Calculate the total number of pages
+		var totalPages = Math.ceil(listingCount / itemsPerPage); 
+		console.log(totalPages)
+		if (totalPages <= 1) {
+			// If there is only one page or no listings, set the page number to 1
+			setPageNo(1); 
+		} else {
+			// Ensure the current page number is within the valid range
+			setPageNo(Math.min(pageNo, totalPages)); 
 		}
-		else {
-			// setPageNo(1);
-			fetchListings();
-		}
+		if (pageNo >= 1) {
+			// Calculate the starting index of listings for the current page
+			var startIndex = (pageNo - 1) * itemsPerPage; 
+			// Calculate the ending index of listings for the current page
+			var endIndex = Math.min(startIndex + itemsPerPage, listingCount); 
+			// Get the listings for the current page
+			var listingsPerPage = listings.slice(startIndex, endIndex); 
+			setListings(listingsPerPage);
+			// Fetch listings when the page number is greater than 0
+			fetchListings(); 
+			}
+
 		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
-	}, [selectedStatus, viewAllListings,pageNo]);
+	}, [selectedStatus, viewAllListings, pageNo]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -344,20 +363,20 @@ const Dashboard = () => {
 															</svg>
 														</div>
 														<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-															<h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure?</h3>
+															<h3 className="text-lg leading-6 font-medium text-gray-900">{t("areyousure")}</h3>
 															<div className="mt-2">
-															<p className="text-sm text-gray-500">Do you really want to delete this listing? This action cannot be undone.</p>
+															<p className="text-sm text-gray-500">{t("doyoureallywanttodeleteListing")}</p>
 															</div>
 														</div>
 														</div>
 													</div>
 													<div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 													<button onClick={showConfirmationModal.onConfirm} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-														Delete
+														{t("delete")}
 													</button>
 
 													<button onClick={showConfirmationModal.onCancel} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
-														Cancel
+														{t("cancel")}
 													</button>
 
 													</div>
@@ -409,7 +428,7 @@ const Dashboard = () => {
 					</table>
 				</div>
 				<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
-					{pageNo != 1 ? (
+					{pageNo !== 1 ? (
 						<span
 							className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo - 1)}
@@ -422,12 +441,15 @@ const Dashboard = () => {
 					<span className="text-lg px-3">
 						{t("page")} {pageNo}
 					</span>
-					<span
+
+					{listings.length >= 10 && (
+						<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 						onClick={() => setPageNo(pageNo + 1)}
-					>
+						>
 						{">"}
-					</span>
+						</span>
+					)}
 				</div>
 			</div>
 		</section>
