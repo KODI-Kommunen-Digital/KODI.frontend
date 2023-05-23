@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getProfile, getProfileByIds } from "../../Services/usersApi";
-import { sortLatestFirst } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
