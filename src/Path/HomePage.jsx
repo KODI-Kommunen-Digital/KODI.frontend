@@ -28,7 +28,7 @@ const HomePage = () => {
     getCities().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
     });
-    setCityId(urlParams.get("cityId"));
+    setCityId(urlParams.get("cityId") || 0);
     getListings({
       cityId: urlParams.get("cityId"),
       statusId: 1,
@@ -113,7 +113,7 @@ const HomePage = () => {
                         localStorage.setItem("selectedCity", t("allCities"));
                       }
                     }}
-                    value={cityId}
+                    value={cityId || 0}
                     class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option class="font-sans" value={0} key={0}>
