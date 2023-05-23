@@ -305,7 +305,7 @@ const EventDetails = () => {
 												onClick={() => handleFavorite()}
 											>
 												<span class="ml-1">
-													{favoriteId !== 0 ? t("Unfavorite") : t("Favorite")}
+													{favoriteId !== 0 ? t("unfavorite") : t("favourites")}
 												</span>
 											</button>
 										</div>
