@@ -111,6 +111,7 @@ const HomePage = () => {
                         window.location.href = `/?cityId=${selectedCityId}`;
                       } else {
                         localStorage.setItem("selectedCity", t("allCities"));
+                        urlParams.delete("cityId");
                       }
                     }}
                     value={cityId || 0}
