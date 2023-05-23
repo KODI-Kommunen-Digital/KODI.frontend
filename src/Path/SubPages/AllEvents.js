@@ -53,7 +53,7 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { pageNo, pageSize: 12 };
+		var params = { pageNo, pageSize: 12, statusId:1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -201,7 +201,6 @@ const Events = () => {
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 								{listings &&
 									listings.map((listing) => (
-										listing.statusId === 1 &&(
 										<div
 											onClick={() => {
 												navigateTo(
@@ -239,7 +238,7 @@ const Events = () => {
 												dangerouslySetInnerHTML={{ __html: listing.description }} />
 											)}
 										</div>
-									)))}
+									))}
 							</div>
 						</div>
 					) : (
