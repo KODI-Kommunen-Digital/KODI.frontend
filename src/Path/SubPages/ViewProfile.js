@@ -398,22 +398,6 @@ const ViewProfile = () => {
 							<h1 class="text-lg text-center sm:text-left font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 								{t("profileEntries")}
 							</h1>
-							{/* <div class="w-full sm:w-auto mr-0 sm:mr-0">
-								<select
-									id="country"
-									name="country"
-									value={selectedSortOption}
-									onChange={handleSortOptionChange}
-									autocomplete="country-name"
-									class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-								>
-									<option value="">{t("sort")}</option>
-									<option value="titleAZ">{t("atoztitle")}</option>
-									<option value="titleZA">{t("ztoatitle")}</option>
-									<option value="recent">{t("recent")}</option>
-									<option value="oldest">{t("oldest")}</option>
-								</select>
-							</div> */}
 						</div>
 					</div>
 				</div>
@@ -443,22 +427,22 @@ const ViewProfile = () => {
 												}
 											/>
 										</a>
-										<div class="mt-10 px-2">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
-											{listing.title}
-										</h2>
-										</div>
-										<div className="my-4 bg-gray-200 h-[1px]"></div>
-										{listing.id && listing.categoryId == 3 ? (
-										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-											{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-											" To " +
-											new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
-										</p>
-										):(
+										<div class="mt-5 px-2">
+												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+													{listing.title}
+												</h2>
+											</div>
+											<div className="my-4 bg-gray-200 h-[1px]"></div>
+											{listing.id && listing.categoryId == 3 ? (
 											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-										</p>
-										)}
+												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+												" To " +
+												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+											</p>
+											):(
+												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+												dangerouslySetInnerHTML={{ __html: listing.description }} />
+											)}
 									</div>
 								))}
 					</div>
