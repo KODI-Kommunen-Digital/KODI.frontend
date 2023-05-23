@@ -21,7 +21,7 @@ import { categoryByName, categoryById } from "../Constants/categories";
 import { subcategoryById } from "../Constants/subcategories";
 
 function UploadListings() {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const editor = useRef(null);
 	const [listingId, setListingId] = useState(0);
 	const [newListing, setNewListing] = useState(true);

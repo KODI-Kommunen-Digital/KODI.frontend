@@ -17,25 +17,6 @@ import {
 	deleteListingsById,
 } from "../../Services/favoritesApi";
 
-// const Description = ({ content }) => {
-// 	const myStr = content;
-// 	var e = document.createElement("div");
-// 	e.innerHTML = myStr;
-// 	content = e.textContent ? e.textContent : e.innerText;
-// 	return (
-// 		<p className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
-// 			{content.indexOf("</") !== -1 ? (
-// 				<div
-// 					dangerouslySetInnerHTML={{
-// 						__html: content.replace(/(<? *script)|(<? *b)|(<? *i)/gi, "illegalscript"),
-// 					}}
-// 				></div>
-// 			) : (
-// 				content
-// 			)}
-// 		</p>
-// 	);
-// };
 
 	const Description = ({ content }) => {
 		return (

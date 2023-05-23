@@ -196,7 +196,7 @@ const ViewProfile = () => {
 												Member for 10 months
 											</p> */}
 											<p class="leading-relaxed text-base dark:text-gray-900">
-												Entries
+												{t("entries")}
 											</p>
 										</div>
 									</div>
