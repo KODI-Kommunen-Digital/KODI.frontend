@@ -73,7 +73,8 @@ const Events = () => {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
-			setListings(response.data.data);
+			var data = response.data.data
+				setListings(data);
 		});
 	}, [categoryId, cities, cityId, pageNo, window.location.href]);
 
@@ -200,6 +201,7 @@ const Events = () => {
 							<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
 								{listings &&
 									listings.map((listing) => (
+										listing.statusId === 1 &&(
 										<div
 											onClick={() => {
 												navigateTo(
@@ -220,24 +222,24 @@ const Events = () => {
 													}
 												/>
 											</a>
-											<div class="mt-10 px-2">
+											<div class="mt-5 px-2">
 												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
 													{listing.title}
 												</h2>
 											</div>
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId == 3 ? (
-											<p class="text-gray-600  title-font text-sm font-semibold text-center font-sans">
+											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
 												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
 												" To " +
 												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 											</p>
 											):(
-												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-											</p>
+												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+												dangerouslySetInnerHTML={{ __html: listing.description }} />
 											)}
 										</div>
-									))}
+									)))}
 							</div>
 						</div>
 					) : (
@@ -267,7 +269,7 @@ const Events = () => {
 					)}
 				</div>
 				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-					{pageNo != 1 ? (
+					{pageNo !== 1 ? (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo - 1)}
@@ -280,12 +282,14 @@ const Events = () => {
 					<span className="text-lg px-3">
 						{t("page")} {pageNo}
 					</span>
-					<span
-						className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-						onClick={() => setPageNo(pageNo + 1)}
-					>
-						{">"}
-					</span>
+					{listings.length > 12 &&  (
+						<span
+							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							onClick={() => setPageNo(pageNo + 1)}
+						>
+							{">"}
+						</span>
+					)}
 				</div>
 			</div>
 			<div className="bottom-0 w-full">

@@ -18,12 +18,11 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
+	//window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
 	const urlParams = new URLSearchParams(window.location.search);
-	
 
 	useEffect(() => {
 		getCities().then((citiesResponse) => {
@@ -78,7 +77,7 @@ const HomePage = () => {
 							</div>
 
 							<div class="absolute w-96 m-auto inset-0 flex mb-40 flex-col items-center justify-end bg-opacity-50 text-white z--1">
-								<div class="relative mb-4 flex w-full flex-wrap items-stretch">
+								<div class="relative mb-4 flex sm:w-full w-80 flex-wrap items-stretch">
 									<select
 										id="city"
 										name="city"
@@ -402,7 +401,7 @@ const HomePage = () => {
 			</h2>
 
 			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-start">
+				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
 					{listings &&
 						listings
 							.map((listing) => (
@@ -425,7 +424,7 @@ const HomePage = () => {
 											src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
 										/>
 									</a>
-									<div class="mt-10 px-2">
+									<div class="mt-5 px-2">
 										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
 											{listing.title}
 										</h2>
@@ -438,9 +437,13 @@ const HomePage = () => {
 										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 									</p>
 									):(
-										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-									</p>
+										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+										dangerouslySetInnerHTML={{ __html: listing.description }} />
 									)}
+									{/* <div class="m-5 px-2">
+										<p class="text-gray-600 h-[1.5rem] title-font text-sm font-semibold text-center font-sans truncate"
+										dangerouslySetInnerHTML={{ __html: listing.description }} />
+									</div> */}
 								</div>
 							))}
 				</div>
@@ -450,7 +453,7 @@ const HomePage = () => {
 						localStorage.setItem("selectedItem", t("chooseOneCategory"));
 						navigateTo("/AllEvents");
 					}}
-					class="w-96 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+					class="w-full sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 				>
 					{t("viewMore")}
 				</button>
