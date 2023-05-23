@@ -282,7 +282,7 @@ const Events = () => {
 					<span className="text-lg px-3">
 						{t("page")} {pageNo}
 					</span>
-					{listings.length > 12 &&  (
+					{listings.length >= 12 &&  (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo + 1)}
