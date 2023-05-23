@@ -640,22 +640,22 @@ const EventDetails = () => {
 											}
 										/>
 									</a>
-									<div class="mt-10 px-2">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
-											{listing.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
-									{listing.id && listing.categoryId == 3 ? (
-									<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-										{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-										" To " +
-										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
-									</p>
-									):(
-										<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-									</p>
-									)}
+									<div class="mt-5 px-2">
+												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+													{listing.title}
+												</h2>
+											</div>
+											<div className="my-4 bg-gray-200 h-[1px]"></div>
+											{listing.id && listing.categoryId == 3 ? (
+											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+												" To " +
+												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+											</p>
+											):(
+												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+												dangerouslySetInnerHTML={{ __html: listing.description }} />
+											)}
 								</div>
 							))}
 					</div>
