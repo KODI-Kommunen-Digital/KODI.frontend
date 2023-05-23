@@ -43,15 +43,34 @@ const Dashboard = () => {
 	}, [window.location.pathname]);
 
 	useEffect(() => {
-		if (pageNo == 1) {
-			fetchListings();
+		// Number of items to display per page
+		const itemsPerPage = 8; 
+
+		var listingCount = listings.length;
+		// Calculate the total number of pages
+		var totalPages = Math.ceil(listingCount / itemsPerPage); 
+		console.log(totalPages)
+		if (totalPages <= 1) {
+			// If there is only one page or no listings, set the page number to 1
+			setPageNo(1); 
+		} else {
+			// Ensure the current page number is within the valid range
+			setPageNo(Math.min(pageNo, totalPages)); 
 		}
-		else {
-			// setPageNo(1);
-			fetchListings();
-		}
+		if (pageNo >= 1) {
+			// Calculate the starting index of listings for the current page
+			var startIndex = (pageNo - 1) * itemsPerPage; 
+			// Calculate the ending index of listings for the current page
+			var endIndex = Math.min(startIndex + itemsPerPage, listingCount); 
+			// Get the listings for the current page
+			var listingsPerPage = listings.slice(startIndex, endIndex); 
+			setListings(listingsPerPage);
+			// Fetch listings when the page number is greater than 0
+			fetchListings(); 
+			}
+
 		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
-	}, [selectedStatus, viewAllListings,pageNo]);
+	}, [selectedStatus, viewAllListings, pageNo]);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -409,7 +428,7 @@ const Dashboard = () => {
 					</table>
 				</div>
 				<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
-					{pageNo != 1 ? (
+					{pageNo !== 1 ? (
 						<span
 							className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo - 1)}
@@ -422,12 +441,15 @@ const Dashboard = () => {
 					<span className="text-lg px-3">
 						{t("page")} {pageNo}
 					</span>
-					<span
+
+					{listings.length >= 10 && (
+						<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 						onClick={() => setPageNo(pageNo + 1)}
-					>
+						>
 						{">"}
-					</span>
+						</span>
+					)}
 				</div>
 			</div>
 		</section>
