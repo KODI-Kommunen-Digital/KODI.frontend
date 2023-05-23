@@ -85,6 +85,8 @@ const EventDetails = () => {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
+				var statusIdResponse = (listingsResponse.data.data.statusId)
+				if (statusIdResponse === 1){
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
@@ -114,6 +116,10 @@ const EventDetails = () => {
 						Date.parse(listingsResponse.data.data.createdAt)
 					)
 				);
+				}
+				else {
+					navigateTo("/error")		
+				}
 			});
 		}
 	}, [t, window.location.href ]);
