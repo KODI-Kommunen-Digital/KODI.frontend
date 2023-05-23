@@ -44,23 +44,29 @@ function UploadListings() {
 	const [subCategories, setSubCategories] = useState(subcategoryById);
 	const navigate = useNavigate();
 
+	const [initialLoad, setInitialLoad] = useState(true);
+
 	useEffect(() => {
+	if (initialLoad) {
 		window.scrollTo(0, 0);
+		setInitialLoad(false);
+	} else {
 		const _ = async () => {
-			if (image1 !== null) {
-				const form = new FormData();
-				form.append("image", image1);
-				const filePath = await uploadImage(form);
-				setInput((prevInput) => ({
-					...prevInput,
-					logo: filePath.data.path,
-					removeImage: false,
-				}));
-			}
+		if (image1 !== null) {
+			const form = new FormData();
+			form.append("image", image1);
+			const filePath = await uploadImage(form);
+			setInput((prevInput) => ({
+			...prevInput,
+			logo: filePath.data.path,
+			removeImage: false,
+			}));
+		}
 		};
 
 		_();
-	}, [image1]);
+	}
+	}, [initialLoad, image1]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -88,6 +94,7 @@ function UploadListings() {
 	}
 
 	function handleInputChange1(e) {
+		e.preventDefault();
 		const file = e.target.files[0];
 		setImage1(file);
 	}
@@ -184,7 +191,7 @@ function UploadListings() {
 					setSuccessMessage(false);
 					navigate("/Dashboard");
 				}, 5000);
-				
+
 			} catch (error) {
 				setErrorMessage(t("changesNotSaved"));
 				setSuccessMessage(false);
@@ -241,14 +248,48 @@ function UploadListings() {
 
 	const [description, setDescription] = useState("");
 
-	const onDescriptionChange = (newContent) => {
-		setInput((prev) => ({
+	// const onDescriptionChange = (newContent) => {
+	// 	setInput((prev) => ({
+	// 		...prev,
+	// 		description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
+	// 	}));
+	// 	console.log(input)
+	// 	setDescription(newContent);
+	// };
+
+		const onDescriptionChange = (newContent) => {
+			const hasNumberedList = newContent.includes("<ol>");
+			const hasBulletList = newContent.includes("<ul>");
+			let descriptions = [];
+			let listType = "";
+			if (hasNumberedList) {
+			const regex = /<li>(.*?)<\/li>/gi;
+			const matches = newContent.match(regex);
+			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+			descriptions = descriptions.map((description, index) => `${index + 1}. ${description}`);
+			listType = "ol";
+			} else if (hasBulletList) {
+			const regex = /<li>(.*?)<\/li>/gi;
+			const matches = newContent.match(regex);
+			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+			descriptions = descriptions.map((description) => `- ${description}`);
+			listType = "ul";
+			} else {
+			// No list tags found, treat the input as plain text
+			descriptions.push(newContent);
+			}
+
+			const listHTML = `<${listType}>${descriptions.map((description) => `<li>${description}</li>`).join("")}</${listType}>`;
+
+			setInput((prev) => ({
 			...prev,
-			description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
-		}));
-		setDescription(newContent);
-	};
-	
+			description: listHTML,
+			}));
+
+			console.log(input);
+			setDescription(newContent);
+		};
+
 	const getErrorMessage = (name, value) => {
 		switch (name) {
 			case "title":
@@ -285,7 +326,7 @@ function UploadListings() {
 				} else {
 					return "";
 				}
-				
+
 			case "startDate":
 				if (!value && parseInt(input.categoryId) == categoryByName.events) {
 					return t("pleaseEnterStartDate");
@@ -921,7 +962,7 @@ function UploadListings() {
 								{t("addLogoHere")}
 							</label>
 							<div
-								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 bg-slate-200`}
+								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
 								onDrop={handleDrop1}
 								onDragOver={handleDragOver}
 								onDragEnter={handleDragEnter}
@@ -961,20 +1002,18 @@ function UploadListings() {
 										</svg>
 										<p className="mt-1 text-sm text-gray-600">
 											{t("dragAndDropFile")}
-											<label
-												htmlFor="image1-upload"
-												className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
-											>
-												{t("upload")}
-											</label>{" "}
-											{t("chooseaAFile")}
 										</p>
-										<input
-											id="image1-upload"
-											type="file"
-											className="sr-only"
-											onChange={handleInputChange1}
-										/>
+										<div class="relative mb-4 mt-8">
+											<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
+												<span className="button-label">{t("upload")}</span>
+												<input
+													id="image1-upload"
+													type="file"
+													className="sr-only"
+													onChange={handleInputChange1}
+												/>
+											</label>
+										</div>
 									</div>
 								)}
 							</div>

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
-	sortRecent,
-	sortOldest,
+	sortLatestFirst,
+	sortOldestFirst,
 } from "../../Services/helper";
 import HOMEPAGEIMG from "../../assets/homeimage.jpg";
-import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 
 import { getListings } from "../../Services/listingsApi";
@@ -98,10 +98,10 @@ const Events = () => {
 				setListings([...sortByTitleZA(listings)]);
 				break;
 			case "recent":
-				setListings([...sortRecent(listings)]);
+				setListings([...sortLatestFirst(listings)]);
 				break;
 			case "oldest":
-				setListings([...sortOldest(listings)]);
+				setListings([...sortOldestFirst(listings)]);
 				break;
 			default:
 				break;

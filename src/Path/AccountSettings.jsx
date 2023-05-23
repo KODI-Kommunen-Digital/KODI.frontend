@@ -19,12 +19,27 @@
 		phoneNumber: "",
 	});
 
+	// useEffect(() => {
+	// 	document.title = "Heidi - Account Settings";
+	// 	getProfile().then((response) => {
+	// 	setInput(response.data.data);
+	// 	console.log(response.data.data)
+	// 	});
+	// }, []);
+
 	useEffect(() => {
 		document.title = "Heidi - Account Settings";
 		getProfile().then((response) => {
-		setInput(response.data.data);
+		  const { username, email, phoneNumber } = response.data.data;
+		  setInput((prev) => ({
+			...prev,
+			username,
+			email,
+			phoneNumber,
+		  }));
+		  console.log(input)
 		});
-	}, []);
+	  }, []);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -35,6 +50,7 @@
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		//console.log(input)
 		setInput((prev) => ({
 		...prev,
 		[name]: value,
@@ -47,14 +63,14 @@
 		await updateProfile(input);
 		setAlertInfo(true);
 		setAlertType("success");
-		setAlertMessage("You data has been updated");
+		setAlertMessage(t("personalInfoSave"));
 		setTimeout(() => {
 			setAlertInfo(false);
 		}, 5000);
 		} catch (err) {
 		setAlertInfo(true);
 		setAlertType("danger");
-		setAlertMessage("Failed. " + err.response.data.message);
+		setAlertMessage(t("changesNotSaved"));
 		}
 	};
 
@@ -137,7 +153,7 @@
 						value={input.email}
 						id="email"
 						class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-						placeholder="Enter your email here"
+						placeholder={t("enter_email")}
 						onChange={onInputChange}
 					/>
 					</div>
@@ -154,7 +170,7 @@
 						value={input.phoneNumber}
 						id="phoneNumber"
 						class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-						placeholder="Enter your phone number here"
+						placeholder={t("enter_phone")}
 						onChange={onInputChange}
 					/>
 					</div>

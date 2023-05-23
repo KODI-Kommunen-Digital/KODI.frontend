@@ -8,17 +8,16 @@ import {
 	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
-import { sortRecent } from "../Services/helper";
+import { sortLatestFirst } from "../Services/helper";
 import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
 import { Fragment } from "react";
-import LISTINGSIMAGE from "../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import Error from "./Error";
 const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {

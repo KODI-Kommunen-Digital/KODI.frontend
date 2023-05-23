@@ -4,14 +4,14 @@ import STYLEIMAGE from "../assets/styleimage.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
-import { sortRecent } from "../Services/helper";
+import { sortLatestFirst } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
 import Footer from "../Components/Footer";
 
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import CITYIMAGE from "../assets/City.png";
-import LISTINGSIMAGE from "../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -362,7 +362,7 @@ const HomePage = () => {
 				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 					{cities.map((city) => {
-						if(city.id !== Number(cityId)){  
+						if(city.id !== Number(cityId)){
 							return (
 								<div
 								  onClick={() => {

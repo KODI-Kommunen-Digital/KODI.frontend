@@ -5,18 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getProfile, getProfileByIds } from "../../Services/usersApi";
-import { sortRecent } from "../../Services/helper";
+import { sortLatestFirst } from "../../Services/helper";
 import { getListingsById } from "../../Services/listingsApi";
 import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
-import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import {
 	getFavorites,
 	postFavoriteListingsData,
 	deleteListingsById,
 } from "../../Services/favoritesApi";
-
 
 	const Description = ({ content }) => {
 		return (
@@ -93,6 +92,7 @@ const EventDetails = () => {
 					setUser(res.data.data);
 				});
 				setSelectedCategoryId(listingsResponse.data.data.categoryId)
+				setListingId(listingsResponse.data.data.id);
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
 				setImagePath(listingsResponse.data.data.logo);
@@ -110,7 +110,6 @@ const EventDetails = () => {
 						}
 					});
 				}
-				
 				setCreatedAt(
 					new Intl.DateTimeFormat("de-DE").format(
 						Date.parse(listingsResponse.data.data.createdAt)
@@ -191,15 +190,25 @@ const EventDetails = () => {
 	const [categoryId, setCategoryId] = useState();
 	const [selectedCategoryId, setSelectedCategoryId] = useState(0);
 
-	useEffect(() => {
-		if (selectedCategoryId) {
+	// useEffect(() => {
+	// 	if (selectedCategoryId) {
+	// 		getListings({ categoryId: selectedCategoryId }).then((response) => {
+	// 			setListings(response.data.data);
+	// 		});
+	// 	}
+	// }, [selectedCategoryId]);
+
+		useEffect(() => {
+			if (selectedCategoryId) {
 			getListings({ categoryId: selectedCategoryId }).then((response) => {
-				// const sortedListings = sortRecent(response.data.data);
-				// setListings(sortedListings);
-				setListings(response.data.data);
+				const filteredListings = response.data.data.filter(
+				(listing) => listing.id !== listingId
+				);
+				setListings(filteredListings);
 			});
-		}
-	}, [selectedCategoryId]);
+			}
+		}, [selectedCategoryId, listingId]);
+
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 
@@ -396,6 +405,20 @@ const EventDetails = () => {
 						</h1>
 						<Description content={description} />
 					</div>
+					{/* <div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+						<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+							{t("description")}
+						</h1>
+						{typeof description === "string" ? (
+							<p>{description}</p>
+						) : (
+							<ul style={{ listStyleType: "disc", marginLeft: "1rem" }}>
+								{description.map((item, index) => (
+									<li key={index}>{item}</li>
+								))}
+							</ul>
+						)}
+					</div> */}
 				</div>
 
 				{userSocial && userSocial.length > 0  ? (
@@ -544,7 +567,7 @@ const EventDetails = () => {
 								</button>
 							</div>
 						</div>
-					
+
 					</div>
 				) : (
 					<div class="w-full sm:h-72 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">

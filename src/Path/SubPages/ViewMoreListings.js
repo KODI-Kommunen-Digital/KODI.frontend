@@ -3,8 +3,8 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
-	sortRecent,
-	sortOldest,
+	sortLatestFirst,
+	sortOldestFirst,
 } from "../../Services/helper";
 import Footer from "../../Components/Footer";
 import { getUserListings } from "../../Services/usersApi";
@@ -156,19 +156,19 @@ const ViewMoreListings = () => {
 	useEffect(() => {
 		if (cityId && categoryId) {
 			getListingsByCity(cityId, { categoryId: categoryId }).then((response) => {
-				const sortedListings = sortRecent(response.data.data);
+				const sortedListings = sortLatestFirst(response.data.data);
 				const slicedListing = sortedListings;
 				setListings([...slicedListing]);
 			});
 		} else if (categoryId) {
 			getListings({ categoryId: categoryId }).then((response) => {
-				const sortedListings = sortRecent(response.data.data);
+				const sortedListings = sortLatestFirst(response.data.data);
 				const slicedListing = sortedListings;
 				setListings([...slicedListing]);
 			});
 		} else {
 			getAllListings().then((response) => {
-				const sortedListings = sortRecent(response.data.data);
+				const sortedListings = sortLatestFirst(response.data.data);
 				const slicedListing = sortedListings;
 				setListings([...slicedListing]);
 			});

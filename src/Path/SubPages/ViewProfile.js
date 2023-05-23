@@ -3,7 +3,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LISTINGSIMAGE from "../../assets/ListingsImage.png";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
 import {
@@ -16,8 +16,8 @@ import { getVillages } from "../../Services/villages";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
-	sortRecent,
-	sortOldest,
+	sortLatestFirst,
+	sortOldestFirst,
 } from "../../Services/helper";
 
 const ViewProfile = () => {
@@ -68,10 +68,10 @@ const ViewProfile = () => {
 				setListings([...sortByTitleZA(listings)]);
 				break;
 			case "recent":
-				setListings([...sortRecent(listings)]);
+				setListings([...sortLatestFirst(listings)]);
 				break;
 			case "oldest":
-				setListings([...sortOldest(listings)]);
+				setListings([...sortOldestFirst(listings)]);
 				break;
 			default:
 				break;
