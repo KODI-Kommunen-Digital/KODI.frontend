@@ -88,6 +88,7 @@
     "eventStartDate": "Veranstaltungsstart",
     "eventStartTime": "Event Start Time",
     "favourites": "Favoriten",
+    "failedToFetchData":"Ihre Profilinformationen konnten nicht abgerufen werden. Bitte versuchen Sie es erneut!",
     "filteryourResult": "Filter deine Ergebnisse",
     "findBestCitizenServicesInTheCity": "Finde die gesamten Bürgerservices deines Ortes",
     "firstName": "Vorname",
@@ -234,5 +235,8 @@
     "website": "Website",
     "writeSomethingHere": "Schreibe hier etwas...",
     "zipCode": "Postleitzahl",
-    "ztoatitle": "Z - A (Titel)"
+    "ztoatitle": "Z - A (Titel)",
+
+    "this_field_cannot_be_empty":"Dieses Feld kann nicht leer sein",
+    "entered_email_not_valid":"Die eingegebene E-Mail ist ungültig. Bitte geben Sie eine gültige Email-Adresse ein"
 }

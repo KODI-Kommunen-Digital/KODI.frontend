@@ -75,7 +75,8 @@ class ProfilePage extends React.Component {
 	}
 
 	componentDidMount() {
-		document.title = "Your Profile";
+		const { t } = this.props;
+		document.title = "Heidi - Profile";
 		this.setPageLoading(true);
 		getProfile()
 			.then((response) => {
@@ -88,7 +89,7 @@ class ProfilePage extends React.Component {
 				this.setPageLoading(false);
 				this.setAlertInfo(
 					true,
-					"Failed to fetch your profile info, please try again!",
+					t("failedToFetchData"),
 					"danger"
 				);
 			});
@@ -152,10 +153,11 @@ class ProfilePage extends React.Component {
 		}
 	}
 	handleProfileChange(event) {
+		const { t } = this.props;
 		if (event.target.name === "firstname") {
 			if (!event.target.value) {
 				this.setShowError("firstname", true);
-				this.setErrorMessage("firstname", "This field cannot be empty");
+				this.setErrorMessage("firstname",t("this_field_cannot_be_empty"));
 			} else {
 				this.setShowError("firstname", false);
 				this.setErrorMessage("firstname", "");
@@ -164,7 +166,7 @@ class ProfilePage extends React.Component {
 		if (event.target.name === "lastname") {
 			if (!event.target.value) {
 				this.setShowError("lastname", true);
-				this.setErrorMessage("lastname", "This field cannot be empty");
+				this.setErrorMessage("lastname", t("this_field_cannot_be_empty"));
 			} else {
 				this.setShowError("lastname", false);
 				this.setErrorMessage("lastname", "");

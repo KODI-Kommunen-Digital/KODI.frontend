@@ -88,6 +88,7 @@
     "eventStartDate": "Event Start Date",
     "eventStartTime": "Event Start Time",
     "favourites": "Favourites",
+    "failedToFetchData":"Failed to fetch your profile info, please try again!",
     "filteryourResult": "Filter your result",
     "findBestCitizenServicesInTheCity": "Find the best citizen services in the city",
     "firstName": "First Name",
@@ -234,5 +235,8 @@
     "website": "Website",
     "writeSomethingHere": "Write something here...",
     "zipCode": "Zip Code",
-    "ztoatitle": "Z - A (title)"
+    "ztoatitle": "Z - A (title)",
+
+    "this_field_cannot_be_empty":"This field cannot be empty",
+    "entered_email_not_valid":"The entered email is invalid. Please enter a valid email"
 }
