@@ -263,29 +263,32 @@ function UploadListings() {
 			let descriptions = [];
 			let listType = "";
 			if (hasNumberedList) {
-			const regex = /<li>(.*?)<\/li>/gi;
+			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
 			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
 			descriptions = descriptions.map((description, index) => `${index + 1}. ${description}`);
 			listType = "ol";
 			} else if (hasBulletList) {
-			const regex = /<li>(.*?)<\/li>/gi;
+			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
 			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
 			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
 			} else {
 			// No list tags found, treat the input as plain text
-			descriptions.push(newContent);
+			setInput((prev) => ({
+				...prev,
+				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+			}));
+			console.log(input);
+			setDescription(newContent);
+			return;
 			}
-
 			const listHTML = `<${listType}>${descriptions.map((description) => `<li>${description}</li>`).join("")}</${listType}>`;
-
 			setInput((prev) => ({
 			...prev,
 			description: listHTML,
 			}));
-
 			console.log(input);
 			setDescription(newContent);
 		};

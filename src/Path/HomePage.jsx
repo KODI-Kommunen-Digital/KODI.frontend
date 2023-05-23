@@ -437,7 +437,7 @@ const HomePage = () => {
 										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 									</p>
 									):(
-										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate hover:overflow-ellipsis"
 										dangerouslySetInnerHTML={{ __html: listing.description }} />
 									)}
 									{/* <div class="m-5 px-2">
