@@ -238,5 +238,12 @@
     "ztoatitle": "Z - A (title)",
 
     "this_field_cannot_be_empty":"This field cannot be empty",
-    "entered_email_not_valid":"The entered email is invalid. Please enter a valid email"
+    "entered_email_not_valid":"The entered email is invalid. Please enter a valid email",
+    "enter_valid_social_media":"Please enter a valid social media",
+    "enter_valid_phone_number":"The entered phone number is invalid. Please enter a valid number",
+    "your_changes_were_saved_successfully":"Your changes were saved succesfully",
+    "enter_current_password":"Please enter your current password",
+    "enter_a_new_password":"Please enter a new password.",
+    "confirm_your_password":"Please confirm your new password.",
+    "password_do_not_match":"The new password and confirmation password do not match."
 }

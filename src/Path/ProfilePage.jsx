@@ -179,7 +179,7 @@ class ProfilePage extends React.Component {
 				this.setShowError("email", true);
 				this.setErrorMessage(
 					"email",
-					"The entered email is invalid. Please enter a valid email"
+					t("entered_email_not_valid")
 				);
 			} else {
 				this.setShowError("email", false);
@@ -191,7 +191,7 @@ class ProfilePage extends React.Component {
 				this.setShowError("socialMedia", true);
 				this.setErrorMessage(
 					"socialMedia",
-					"Please enter a valid social media"
+					t("enter_valid_social_media")
 				);
 			} else {
 				this.setShowError("socialMedia", false);
@@ -204,7 +204,7 @@ class ProfilePage extends React.Component {
 				this.setShowError("phoneNumber", true);
 				this.setErrorMessage(
 					"phoneNumber",
-					"The entered phone number is invalid. Please enter a valid number"
+					t("enter_valid_phone_number")
 				);
 			} else {
 				this.setShowError("phoneNumber", false);
@@ -240,7 +240,7 @@ class ProfilePage extends React.Component {
 								this.setState(newState, () => {
 									this.setAlertInfo(
 										true,
-										"Your changes were saved succesfully",
+										t("your_changes_were_saved_successfully"),
 										"success"
 									);
 									setInterval(() => {
@@ -294,11 +294,12 @@ class ProfilePage extends React.Component {
 	}
 
 	handleUpdatePassword = () => {
+		const { t } = this.props;
 		const { currentPassword, newPassword, confirmPassword } = this.state;
 		if (currentPassword === "") {
 			this.setState({
 				showError: true,
-				errorMessage: "Please enter your current password.",
+				errorMessage: t("enter_current_password"),
 			});
 			return;
 		}
@@ -306,7 +307,7 @@ class ProfilePage extends React.Component {
 		if (newPassword === "") {
 			this.setState({
 				showError: true,
-				errorMessage: "Please enter a new password.",
+				errorMessage: t("enter_a_new_password"),
 			});
 			return;
 		}
@@ -314,7 +315,7 @@ class ProfilePage extends React.Component {
 		if (confirmPassword === "") {
 			this.setState({
 				showError: true,
-				errorMessage: "Please confirm your new password.",
+				errorMessage: t("confirm_your_password"),
 			});
 			return;
 		}
@@ -323,7 +324,7 @@ class ProfilePage extends React.Component {
 			this.setState({
 				showError: true,
 				errorMessage:
-					"The new password and confirmation password do not match.",
+					t("password_do_not_match"),
 			});
 			return;
 		}
