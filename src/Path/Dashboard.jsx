@@ -42,33 +42,13 @@ const Dashboard = () => {
 	}, [window.location.pathname]);
 
 	useEffect(() => {
-		// Number of items to display per page
-		const itemsPerPage = 8; 
-
-		var listingCount = listings.length;
-		// Calculate the total number of pages
-		var totalPages = Math.ceil(listingCount / itemsPerPage); 
-		console.log(totalPages)
-		if (totalPages <= 1) {
-			// If there is only one page or no listings, set the page number to 1
-			setPageNo(1); 
-		} else {
-			// Ensure the current page number is within the valid range
-			setPageNo(Math.min(pageNo, totalPages)); 
+		if (pageNo == 1) {
+			fetchListings();
 		}
-		if (pageNo >= 1) {
-			// Calculate the starting index of listings for the current page
-			var startIndex = (pageNo - 1) * itemsPerPage; 
-			// Calculate the ending index of listings for the current page
-			var endIndex = Math.min(startIndex + itemsPerPage, listingCount); 
-			// Get the listings for the current page
-			var listingsPerPage = listings.slice(startIndex, endIndex); 
-			setListings(listingsPerPage);
-			// Fetch listings when the page number is greater than 0
-			fetchListings(); 
+		else {
+			// setPageNo(1);
+			fetchListings();
 			}
-
-		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
 	}, [selectedStatus, viewAllListings, pageNo]);
 
 	let navigate = useNavigate();
