@@ -103,6 +103,9 @@ const HomePage = () => {
                     autocomplete="city-name"
                     onChange={(e) => {
                       const selectedCityId = e.target.value;
+                      const urlParams = new URLSearchParams(
+                        window.location.search
+                      );
                       const selectedCity = cities.find(
                         (city) => city.id.toString() === selectedCityId
                       );
