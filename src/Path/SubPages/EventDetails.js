@@ -116,7 +116,7 @@ const EventDetails = () => {
 			
 			});
 		}
-	}, [t, window.location.href ]);
+	}, [t, window.location.href,cityId ]);
 
 	const [villages, setVillages] = useState([]);
 	async function onCityChange(e) {
@@ -195,7 +195,7 @@ const EventDetails = () => {
 			setListings(filteredListings);
 		});
 		}
-	}, [selectedCategoryId, listingId]);
+	}, [selectedCategoryId, listingId, selectedCategoryId,cityId]);
 
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
