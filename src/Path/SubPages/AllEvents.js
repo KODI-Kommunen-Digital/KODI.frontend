@@ -53,7 +53,7 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		var params = { pageNo, pageSize: 12, statusId:1 };
+		var params = { pageNo, pageSize: 9, statusId:1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => cityId == c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -281,7 +281,7 @@ const Events = () => {
 					<span className="text-lg px-3">
 						{t("page")} {pageNo}
 					</span>
-					{listings.length >= 12 &&  (
+					{listings.length >= 9 &&  (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo + 1)}
