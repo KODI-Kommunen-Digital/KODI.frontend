@@ -66,6 +66,7 @@ const EventDetails = () => {
 	const [cityId, setCityId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		var params = { statusId: 1 };
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
@@ -82,9 +83,8 @@ const EventDetails = () => {
 			}
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
-			getListingsById(cityId, listingId).then((listingsResponse) => {
+			getListingsById(cityId, listingId,params).then((listingsResponse) => {
 				var statusIdResponse = (listingsResponse.data.data.statusId)
-				if (statusIdResponse === 1){
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
@@ -114,10 +114,7 @@ const EventDetails = () => {
 						Date.parse(listingsResponse.data.data.createdAt)
 					)
 				);
-				}
-				else {
-					navigateTo("/error")		
-				}
+			
 			});
 		}
 	}, [t, window.location.href ]);
@@ -147,7 +144,7 @@ const EventDetails = () => {
 			setDashboarddata(response);
 		});
 	}, []);
-
+ 	
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -404,20 +401,6 @@ const EventDetails = () => {
 						</h1>
 						<Description content={description} />
 					</div>
-					{/* <div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
-						<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-							{t("description")}
-						</h1>
-						{typeof description === "string" ? (
-							<p>{description}</p>
-						) : (
-							<ul style={{ listStyleType: "disc", marginLeft: "1rem" }}>
-								{description.map((item, index) => (
-									<li key={index}>{item}</li>
-								))}
-							</ul>
-						)}
-					</div> */}
 				</div>
 
 				{userSocial && userSocial.length > 0  ? (
@@ -666,7 +649,6 @@ const EventDetails = () => {
 					</div>
 				</div>
 			</div>
-
 			<div className="bottom-0 w-full">
 				<Footer />
 			</div>
