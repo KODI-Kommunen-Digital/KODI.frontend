@@ -421,7 +421,7 @@ const Dashboard = () => {
 						{t("page")} {pageNo}
 					</span>
 
-					{listings.length >= 10 && (
+					{listings.length >= 9 && (
 						<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 						onClick={() => setPageNo(pageNo + 1)}
