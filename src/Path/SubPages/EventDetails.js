@@ -84,7 +84,6 @@ const EventDetails = () => {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId,params).then((listingsResponse) => {
-				var statusIdResponse = (listingsResponse.data.data.statusId)
 				setInput(listingsResponse.data.data);
 				var cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
@@ -186,24 +185,17 @@ const EventDetails = () => {
 	const [categoryId, setCategoryId] = useState();
 	const [selectedCategoryId, setSelectedCategoryId] = useState(0);
 
-	// useEffect(() => {
-	// 	if (selectedCategoryId) {
-	// 		getListings({ categoryId: selectedCategoryId }).then((response) => {
-	// 			setListings(response.data.data);
-	// 		});
-	// 	}
-	// }, [selectedCategoryId]);
 
-		useEffect(() => {
-			if (selectedCategoryId) {
-			getListings({ categoryId: selectedCategoryId }).then((response) => {
-				const filteredListings = response.data.data.filter(
-				(listing) => listing.id !== listingId
-				);
-				setListings(filteredListings);
-			});
-			}
-		}, [selectedCategoryId, listingId]);
+	useEffect(() => {
+		if (selectedCategoryId) {
+		getListings({ categoryId: selectedCategoryId,statusId:1 }).then((response) => {
+			const filteredListings = response.data.data.filter(
+			(listing) => listing.id !== listingId
+			);
+			setListings(filteredListings);
+		});
+		}
+	}, [selectedCategoryId, listingId]);
 
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
