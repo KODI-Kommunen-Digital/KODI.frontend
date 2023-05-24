@@ -28,35 +28,34 @@ export default function SocialMedia({ setSocialMedia }) {
 				);
 			});
 	}, []);
-
 	const handleAdd = (value) => {
 		console.log(user);
 		if (val.length === socialMedia.length) {
 			setAlert("All Social added");
 		} else {
-			setVal([...val, { "": value }]);
+			setVal([...val, { [value]: "" }]);
 		}
 	};
 
 	const handleDelete = (index) => {
-		var list = [...val];
-		list = list.filter((obj, idx) => {
-			return idx !== index;
-		});
-		console.log(list);
-		setVal(list);
-		setData({ socialMedia: JSON.stringify(list) });
+		const updatedVal = val.filter((_, idx) => idx !== index);
+		console.log(updatedVal);
+		setVal(updatedVal);
+		const updatedData = JSON.stringify(updatedVal);
+		setData({ ...data, socialMedia: updatedData });
 	};
 
 	const handleSocialMediaSelectChanges = (event, idx) => {
-		let temp = val;
+		const temp = [...val];
+		const selectedPlatform = event.target.value;
 		if (
-			Object.keys(user.socialMedia).indexOf(event.target.value) === -1 &&
-			Object.keys(val).indexOf(event.target.value) === -1
+			!user.socialMedia.hasOwnProperty(selectedPlatform) &&
+			!temp[idx].hasOwnProperty(selectedPlatform)
 		) {
-			delete temp[idx][""];
-			delete temp[idx][Object.keys(temp[idx])[0]];
-			temp[idx][event.target.value] = "";
+			const currentKey = Object.keys(temp[idx])[0];
+			const updatedTemp = { ...temp[idx], [selectedPlatform]: temp[idx][currentKey] };
+			delete updatedTemp[currentKey];
+			temp[idx] = updatedTemp;
 			setVal([...temp]);
 		} else {
 			setAlert("This Social already added Delete to add new link");
@@ -64,11 +63,14 @@ export default function SocialMedia({ setSocialMedia }) {
 	};
 
 	const handleSocialMediaLinkChanges = (event, idx) => {
-		let temp = val;
-		temp[idx][Object.keys(temp[idx])[0]] = event.target.value;
-		setVal([...temp]);
-		setSocialMedia(temp);
+		const temp = [...val];
+		const currentPlatform = Object.keys(temp[idx])[0];
+		temp[idx][currentPlatform] = event.target.value;
+		setVal(temp);
+		const updatedData = JSON.stringify(temp);
+		setData({ ...data, socialMedia: updatedData });
 	};
+
 	return (
 		<div>
 			<div class="container w-auto px-5 py-2 bg-slate-600">
