@@ -49,8 +49,6 @@ const Dashboard = () => {
 			// setPageNo(1);
 			fetchListings();
 			}
-
-		//When status/viewAllListings is changed, the page number is set to 1 and listings are fetched
 	}, [selectedStatus, viewAllListings, pageNo]);
 
 	let navigate = useNavigate();
