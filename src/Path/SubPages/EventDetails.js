@@ -198,7 +198,7 @@ const EventDetails = () => {
 			setListings(filteredListings);
 		});
 		}
-	}, [selectedCategoryId, listingId,cityId]);
+	}, [selectedCategoryId, listingId]);
 
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
