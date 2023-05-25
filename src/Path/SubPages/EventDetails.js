@@ -187,9 +187,9 @@ const EventDetails = () => {
 
 
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
+		// const searchParams = new URLSearchParams(window.location.search);
+		// var cityId = searchParams.get("cityId");
+		// setCityId(cityId);
 		if (selectedCategoryId) {
 		getListings({ categoryId: selectedCategoryId,statusId:1,cityId:cityId }).then((response) => {
 			const filteredListings = response.data.data.filter(
