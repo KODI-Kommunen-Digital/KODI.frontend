@@ -187,9 +187,6 @@ const EventDetails = () => {
 
 
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
 		if (selectedCategoryId) {
 		getListings({ categoryId: selectedCategoryId,statusId:1 }).then((response) => {
 			const filteredListings = response.data.data.filter(
@@ -198,7 +195,7 @@ const EventDetails = () => {
 			setListings(filteredListings);
 		});
 		}
-	}, [selectedCategoryId, listingId, cityId]);
+	}, [selectedCategoryId, listingId]);
 
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
@@ -606,7 +603,7 @@ const EventDetails = () => {
 								<div
 									onClick={() =>{
 										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${cityId}`
+											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
 										)
 									}
 									}
