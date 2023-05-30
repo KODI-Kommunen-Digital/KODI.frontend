@@ -42,7 +42,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    var params = {};
+    var params = { statusId: 1 };
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
       params.cityId = cityId;
@@ -115,6 +115,7 @@ const HomePage = () => {
                       } else {
                         localStorage.setItem("selectedCity", t("allCities"));
                         urlParams.delete("cityId");
+						setCityId(0)
                       }
                     }}
                     value={cityId || 0}
