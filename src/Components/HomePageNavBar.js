@@ -16,6 +16,17 @@ export default function HomePageNavBar() {
 	};
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	useEffect(() => {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
+			setIsLoggedIn(true);
+		}
+	}, []);
 
 	const handleLoginLogout = () => {
 		if (isLoggedIn) {
@@ -25,9 +36,6 @@ export default function HomePageNavBar() {
 			const refreshToken =
 				window.localStorage.getItem("refreshToken") ||
 				window.sessionStorage.getItem("refreshToken");
-				if (accessToken || refreshToken) {
-					setIsLoggedIn(true);
-				}
 			logout({ accesToken: accessToken, refreshToken: refreshToken });
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
@@ -121,7 +129,7 @@ export default function HomePageNavBar() {
 							{isLoggedIn && (
 								<a
 									onClick={handleGotoDashboard}
-									className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+									className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
 								>
 									{t("dashboard")}
 								</a>
