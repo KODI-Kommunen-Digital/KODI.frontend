@@ -414,49 +414,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
-
-      <h2 class="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold">
-        {t("recentListings")}
-      </h2>
-
-
-				<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-					<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-					{cities.map((city) => {
-						if(city.id !== Number(cityId)){
-							return (
-								<div
-								  onClick={() => {
-									localStorage.setItem("selectedCity", city.name);
-									navigateTo(`/AllEvents?cityId=${city.id}`);
-								  }}
-								  class="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-								>
-								  <div class="relative h-80 rounded overflow-hidden">
-									<img
-									  alt="ecommerce"
-									  class="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-									  src={
-										city.image
-										  ? process.env.REACT_APP_BUCKET_HOST + city.image
-										  : CITYIMAGE
-									  }
-									/>
-									<div class="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-									  <h1 class="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4">
-										{city.name}
-									  </h1>
-									</div>
-								  </div>
-								</div>
-							  );
-							}
-							return null;
-						  })}
-						</div>
-					  </div>
-
 			<div className="my-4 bg-gray-200 h-[1px]"></div>
 
 			<h2 class="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold">
@@ -500,27 +457,27 @@ const HomePage = () => {
 										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 									</p>
 									):(
-										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate hover:overflow-ellipsis"
+										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 										dangerouslySetInnerHTML={{ __html: listing.description }} />
 									)}
 									{/* <div class="m-5 px-2">
 										<p class="text-gray-600 h-[1.5rem] title-font text-sm font-semibold text-center font-sans truncate"
 										dangerouslySetInnerHTML={{ __html: listing.description }} />
 									</div> */}
-              </div>
-            ))}
-        </div>
-        <button
-          type="submit"
-          onClick={() => {
-            localStorage.setItem("selectedItem", t("chooseOneCategory"));
-            navigateTo("/AllEvents");
-          }}
-          class="w-full sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
-        >
-          {t("viewMore")}
-        </button>
-      </div>
+              			</div>
+            		))}
+        		</div>
+				<button
+				type="submit"
+				onClick={() => {
+					localStorage.setItem("selectedItem", t("chooseOneCategory"));
+					navigateTo("/AllEvents");
+				}}
+				class="w-full sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+				>
+				{t("viewMore")}
+				</button>
+			</div>
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
