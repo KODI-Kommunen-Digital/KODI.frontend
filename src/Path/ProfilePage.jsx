@@ -76,9 +76,10 @@ class ProfilePage extends React.Component {
 	}
 
 	componentDidMount() {
-		const { isLoggedIn } = this.props;
-		if (!isLoggedIn) {
-			window.location.href = '/login';
+		const accessToken = window.localStorage.getItem("accessToken") || window.sessionStorage.getItem("accessToken");
+		const refreshToken = window.localStorage.getItem("refreshToken") || window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+		this.navigateTo("/login");
 		}
 		const { t } = this.props;
 		document.title = "Heidi - Profile";
