@@ -1,4 +1,3 @@
-import axiosInstance from "../api/axiosInstance";
 import axios from "axios";
 
 function getUserId() {
@@ -16,5 +15,5 @@ export async function login(credentials) {
 }
 
 export async function logout(credentials) {
-	return axiosInstance.post(`users/${getUserId()}/logout`, credentials);
+	return axios.post(`users/${getUserId()}/logout`, credentials);
 }
