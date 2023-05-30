@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../Services/login";
+import { useLocation } from 'react-router-dom';
 
 export default function HomePageNavBar() {
 	let navigate = useNavigate();
@@ -16,18 +17,6 @@ export default function HomePageNavBar() {
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	useEffect(() => {
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
-	}, []);
-
 	const handleLoginLogout = () => {
 		if (isLoggedIn) {
 			const accessToken =
@@ -36,6 +25,9 @@ export default function HomePageNavBar() {
 			const refreshToken =
 				window.localStorage.getItem("refreshToken") ||
 				window.sessionStorage.getItem("refreshToken");
+				if (accessToken || refreshToken) {
+					setIsLoggedIn(true);
+				}
 			logout({ accesToken: accessToken, refreshToken: refreshToken });
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
@@ -54,6 +46,20 @@ export default function HomePageNavBar() {
 	const handleGotoDashboard = () => {
 		navigateTo("/Dashboard");
 	};
+
+	const location = useLocation();
+	const searchParams = new URLSearchParams(location.search);
+	const terminalViewParam = searchParams.get('terminalView');
+	const buttonClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
+	const [showNavBar, setShowNavBar] = useState(true);
+		useEffect(() => {
+		if (terminalViewParam === 'true') {
+			setShowNavBar(false);
+		} else {
+			setShowNavBar(true);
+		}
+		}, [terminalViewParam]);
+
 	return (
 		<div class="w-full fixed top-0 z-10">
 			<Popover className="relative bg-white mr-0 ml-0 px-10">
@@ -65,14 +71,15 @@ export default function HomePageNavBar() {
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {
-									window.localStorage.removeItem("selectedCity");
-									navigateTo("/")
-									window.location.reload();
+									if (terminalViewParam === 'true') {
+										navigateTo("/AllEvents?terminalView=true");
+									} else {
+										navigateTo("/");
 									}
-								}
+								}}
 							/>
 						</div>
-						<div className="-my-2 -mr-2 lg:hidden">
+						<div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
 							<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
 								<span className="sr-only">Open menu</span>
 								<Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -81,7 +88,7 @@ export default function HomePageNavBar() {
 
 						<div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
 							<a
-								class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 cursor-pointer"
+								class={`text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 cursor-pointer ${buttonClass}`}
 								onClick={() => {
 									if (isLoggedIn) {
 										navigateTo("/Favorite");
@@ -107,7 +114,7 @@ export default function HomePageNavBar() {
 							</a>
 							<a
 								onClick={handleLoginLogout}
-								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
 							>
 								{isLoggedIn ? t("logOut") : t("login")}
 							</a>
@@ -124,7 +131,7 @@ export default function HomePageNavBar() {
 									localStorage.setItem("selectedItem", t("chooseOneCategory"));
 									isLoggedIn ? navigateTo("/UploadListings") : navigateTo("/login");
 								}}
-								className="ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
 							>
 								{t("submit")}
 							</a>

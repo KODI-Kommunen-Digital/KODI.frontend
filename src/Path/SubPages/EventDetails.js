@@ -281,8 +281,8 @@ const EventDetails = () => {
 
 	return (
 		<section class="text-gray-600 bg-white body-font">
-			{/* <HomePageNavBar /> */}
-			{showNavBar && <HomePageNavBar />}
+			<HomePageNavBar />
+			{/* {showNavBar && <HomePageNavBar />} */}
 
 			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
 				<div className="grid grid-cols-1 gap-4 col-span-2">

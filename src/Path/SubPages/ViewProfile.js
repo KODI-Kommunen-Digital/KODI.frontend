@@ -185,8 +185,8 @@ const ViewProfile = () => {
 
 	return (
 		<section class="text-gray-600 bg-white body-font">
-			{/* <HomePageNavBar /> */}
-			{showNavBar && <HomePageNavBar />}
+			<HomePageNavBar />
+			{/* {showNavBar && <HomePageNavBar />} */}
 
 			<div class="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 px-4 sm:px-6 sm:pt-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
@@ -428,11 +428,13 @@ const ViewProfile = () => {
 									.map((listing) => (
 										<div
 											key={listing.id}
-											onClick={() =>
-												navigateTo(
-													`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-												)
-											}
+											onClick={() => {
+												let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
+												if (terminalViewParam === 'true') {
+												url += '&terminalView=true';
+												}
+												navigateTo(url);
+											}}
 											class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 										>
 											<a class="block relative h-64 rounded overflow-hidden">

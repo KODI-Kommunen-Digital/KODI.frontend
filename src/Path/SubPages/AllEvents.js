@@ -7,7 +7,6 @@ import {
 	sortLatestFirst,
 	sortOldestFirst,
 } from "../../Services/helper";
-import HOMEPAGEIMG from "../../assets/homeimage.jpg";
 import { useLocation } from 'react-router-dom';
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
@@ -125,16 +124,16 @@ const Events = () => {
 
 	return (
 		<section class="text-gray-600 body-font relative">
-			{/* <HomePageNavBar /> */}
-			{showNavBar && <HomePageNavBar />}
-			<div className={`container-fluid py-0 mr-0 ml-0 ${mtClass} w-full flex flex-col`}>
+			<HomePageNavBar />
+			{/* {showNavBar && <HomePageNavBar />} */}
+			<div className={`container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col`}>
 				<div class="w-full mr-0 ml-0">
-					<div class={`lg:h-64 md:h-64 h-72 overflow-hidden ${pyClass}`}>
+					<div class={`lg:h-64 md:h-64 h-72 overflow-hidden py-1`}>
 						<div class="relative lg:h-64 md:h-64 h-72">
 							<img
 								alt="ecommerce"
 								class="object-cover object-center h-full w-full"
-								src={HOMEPAGEIMG}
+								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
