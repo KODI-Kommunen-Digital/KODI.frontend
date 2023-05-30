@@ -9,7 +9,6 @@ import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
 import Footer from "../Components/Footer";
 
-import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import CITYIMAGE from "../assets/City.png";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
@@ -18,11 +17,12 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
   const { t } = useTranslation();
-  //window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   const [cityId, setCityId] = useState();
   const [cities, setCities] = useState([]);
   const [listings, setListings] = useState([]);
   const urlParams = new URLSearchParams(window.location.search);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     getCities().then((citiesResponse) => {
@@ -42,6 +42,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
+    const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
+			setIsLoggedIn(true);
+		}
     var params = { statusId: 1 };
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
@@ -87,7 +96,7 @@ const HomePage = () => {
               <img
                 alt="ecommerce"
                 class="object-cover object-center h-full w-full"
-                src={HOMEPAGEIMG}
+                src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
               />
               <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 class="font-sans mb-40 text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
@@ -421,64 +430,90 @@ const HomePage = () => {
 				{t("recentListings")}
 			</h2>
 
-			<div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-				<div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-					{listings &&
-						listings
-							.map((listing) => (
-								<div
-									onClick={() => {
-										localStorage.setItem(
-											"selectedCategoryId",
-											listing.categoryId
-										);
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-										);
-									}}
-									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-								>
-									<a class="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
-										/>
-									</a>
-									<div class="mt-5 px-2">
-										<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
-											{listing.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
-									{listing.id && listing.categoryId == 3 ? (
-									<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-										{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-										" To " +
-										new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
-									</p>
-									):(
-										<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-										dangerouslySetInnerHTML={{ __html: listing.description }} />
-									)}
-									{/* <div class="m-5 px-2">
-										<p class="text-gray-600 h-[1.5rem] title-font text-sm font-semibold text-center font-sans truncate"
-										dangerouslySetInnerHTML={{ __html: listing.description }} />
-									</div> */}
-              			</div>
-            		))}
-        		</div>
-				<button
-				type="submit"
-				onClick={() => {
-					localStorage.setItem("selectedItem", t("chooseOneCategory"));
-					navigateTo("/AllEvents");
-				}}
-				class="w-full sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
-				>
-				{t("viewMore")}
-				</button>
-			</div>
+      {listings && listings.length > 0 ? (
+        <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          <div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
+            {listings &&
+              listings
+                .map((listing) => (
+                  <div
+                    onClick={() => {
+                      localStorage.setItem(
+                        "selectedCategoryId",
+                        listing.categoryId
+                      );
+                      navigateTo(
+                        `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+                      );
+                    }}
+                    class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+                  >
+                    <a class="block relative h-64 rounded overflow-hidden">
+                      <img
+                        alt="ecommerce"
+                        class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                        src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
+                      />
+                    </a>
+                    <div class="mt-5 px-2">
+                      <h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+                        {listing.title}
+                      </h2>
+                    </div>
+                    <div className="my-4 bg-gray-200 h-[1px]"></div>
+                    {listing.id && listing.categoryId == 3 ? (
+                    <p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+                      {new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+                      " To " +
+                      new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+                    </p>
+                    ):(
+                      <p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+                      dangerouslySetInnerHTML={{ __html: listing.description }} />
+                    )}
+                    {/* <div class="m-5 px-2">
+                      <p class="text-gray-600 h-[1.5rem] title-font text-sm font-semibold text-center font-sans truncate"
+                      dangerouslySetInnerHTML={{ __html: listing.description }} />
+                    </div> */}
+                      </div>
+                  ))}
+              </div>
+          <button
+          type="submit"
+          onClick={() => {
+            localStorage.setItem("selectedItem", t("chooseOneCategory"));
+            navigateTo("/AllEvents");
+          }}
+          class="w-full sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+          >
+          {t("viewMore")}
+          </button>
+        </div>
+      ) : (
+        <div>
+          <div class="flex items-center justify-center">
+            <h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+              {t("currently_no_listings")}
+            </h1>
+          </div>
+          <div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+            <span class="font-sans text-black">
+              {t("to_upload_new_listing")}
+            </span>
+            <a
+              class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+              onClick={() => {
+                localStorage.setItem("selectedItem", "Choose one category");
+                isLoggedIn
+                  ? navigateTo("/UploadListings")
+                  : navigateTo("/login");
+              }}
+            >
+              {t("click_here")}
+            </a>
+          </div>
+        </div>
+      )}
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 

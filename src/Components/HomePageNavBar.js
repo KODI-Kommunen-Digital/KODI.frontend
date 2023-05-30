@@ -2,8 +2,6 @@ import { Fragment, useState, useEffect } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
-import LOGO from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../Services/login";
 
@@ -64,7 +62,7 @@ export default function HomePageNavBar() {
 						<div>
 							<img
 								class="mx-auto lg:h-10 md:h-8 h-5 w-auto cursor-pointer"
-								src={LOGO}
+								src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {
 									window.localStorage.removeItem("selectedCity");

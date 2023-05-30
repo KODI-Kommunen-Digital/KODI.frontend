@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
+import { useLocation } from 'react-router-dom';
 import {
 	getUserListings,
 	getProfile,
@@ -34,6 +35,8 @@ const ViewProfile = () => {
 	const [newListing, setNewListing] = useState(true);
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { t, i18n } = useTranslation();
 	const [input, setInput] = useState({
 
 		categoryId: 0,
@@ -58,6 +61,28 @@ const ViewProfile = () => {
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
 	}
+
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		var params = { statusId: 1 };
+		var cityId = searchParams.get("cityId");
+		setCityId(cityId);
+		var listingId = searchParams.get("listingId");
+		setListingId(listingId);
+		if (listingId && cityId) {
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
+			if (accessToken || refreshToken) {
+				setIsLoggedIn(true);
+			}
+			setNewListing(false);
+			getVillages(cityId).then((response) => setVillages(response.data.data));
+		}
+	}, [t, window.location.href,cityId ]);
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -111,29 +136,8 @@ const ViewProfile = () => {
 
 	const [selectedLink, setSelectedLink] = useState("current");
 
-	const { t, i18n } = useTranslation();
-
-	const [location, setLocation] = useState("");
-
-	function handleLocationChange(event) {
-		setLocation(event.target.value);
-	}
-
 	function handleLocationSubmit(event) {
 		event.preventDefault();
-	}
-
-	function getCurrentLocation() {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				setLocation(
-					`${position.coords.latitude}, ${position.coords.longitude}`
-				);
-			},
-			(error) => {
-				console.error(error);
-			}
-		);
 	}
 
 	useEffect(() => {
@@ -166,9 +170,23 @@ const ViewProfile = () => {
 		}
 	}, []);
 
+	const location = useLocation();
+	const searchParams = new URLSearchParams(location.search);
+	const terminalViewParam = searchParams.get('terminalView');
+	const favClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
+	const [showNavBar, setShowNavBar] = useState(true);
+		useEffect(() => {
+		if (terminalViewParam === 'true') {
+			setShowNavBar(false);
+		} else {
+			setShowNavBar(true);
+		}
+		}, [terminalViewParam]);
+
 	return (
 		<section class="text-gray-600 bg-white body-font">
-			<HomePageNavBar />
+			{/* <HomePageNavBar /> */}
+			{showNavBar && <HomePageNavBar />}
 
 			<div class="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 px-4 sm:px-6 sm:pt-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
@@ -214,7 +232,7 @@ const ViewProfile = () => {
 					</div>
 				</div>
 
-				{userSocial && userSocial !== {} ? (
+				{userSocial && userSocial.length > 0  ? (
 					<div class="w-full h-80 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 							<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
@@ -351,7 +369,7 @@ const ViewProfile = () => {
 						</div>
 					</div>
 				) : (
-					<div class="w-full h-48 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div class="w-full h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 							<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900">
 								{t("contactInfo")}
@@ -401,52 +419,78 @@ const ViewProfile = () => {
 						</div>
 					</div>
 				</div>
-				<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-						{listings &&
-							listings
-								.filter((listing) => listing.statusId === 1)
-								.map((listing) => (
-									<div
-										key={listing.id}
-										onClick={() =>
-											navigateTo(
-												`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-											)
-										}
-										class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-									>
-										<a class="block relative h-64 rounded overflow-hidden">
-											<img
-												alt="ecommerce"
-												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-												src={
-													listing.logo
-														? process.env.REACT_APP_BUCKET_HOST + listing.logo
-														: LISTINGSIMAGE
-												}
-											/>
-										</a>
-										<div class="mt-5 px-2">
-												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
-													{listing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{listing.id && listing.categoryId == 3 ? (
-											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-												" To " +
-												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
-											</p>
-											):(
-												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-												dangerouslySetInnerHTML={{ __html: listing.description }} />
-											)}
-									</div>
-								))}
+				{listings && listings.length > 0 ? (
+					<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+						<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+							{listings &&
+								listings
+									.filter((listing) => listing.statusId === 1)
+									.map((listing) => (
+										<div
+											key={listing.id}
+											onClick={() =>
+												navigateTo(
+													`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+												)
+											}
+											class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+										>
+											<a class="block relative h-64 rounded overflow-hidden">
+												<img
+													alt="ecommerce"
+													class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													src={
+														listing.logo
+															? process.env.REACT_APP_BUCKET_HOST + listing.logo
+															: LISTINGSIMAGE
+													}
+												/>
+											</a>
+											<div class="mt-5 px-2">
+													<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+														{listing.title}
+													</h2>
+												</div>
+												<div className="my-4 bg-gray-200 h-[1px]"></div>
+												{listing.id && listing.categoryId == 3 ? (
+												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+													{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+													" To " +
+													new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+												</p>
+												):(
+													<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													dangerouslySetInnerHTML={{ __html: listing.description }} />
+												)}
+										</div>
+									))}
+						</div>
 					</div>
-				</div>
+				) : (
+					<div>
+						<div class="flex items-center justify-center">
+							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								{t("currently_no_listings")}
+							</h1>
+						</div>
+						<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							<span class="font-sans text-black">
+								{t("to_upload_new_listing")}
+							</span>
+							<a
+								class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+								onClick={() => {
+									localStorage.setItem("selectedItem", "Choose one category");
+									isLoggedIn
+										? navigateTo("/UploadListings")
+										: navigateTo("/login");
+								}}
+							>
+								{t("click_here")}
+							</a>
+						</div>
+					</div>
+				)}
 			</div>
 
 			<div className="bottom-0 w-full">
