@@ -16,5 +16,5 @@ export async function login(credentials) {
 }
 
 export async function logout(credentials) {
-	return axiosInstance.post(`/${getUserId()}/logout`, credentials);
+	return axiosInstance.post(`users/${getUserId()}/logout`, credentials);
 }
