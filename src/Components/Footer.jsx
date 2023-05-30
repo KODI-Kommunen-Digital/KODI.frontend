@@ -1,10 +1,24 @@
 import React, {useState, useEffect} from 'react';
 import { useTranslation } from "react-i18next";
+import { useLocation } from 'react-router-dom';
 
 function Footer (props) {
 
 	const { t } = useTranslation();
-	
+
+	const location = useLocation();
+	const searchParams = new URLSearchParams(location.search);
+	const terminalViewParam = searchParams.get('terminalView');
+	const footerClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
+	const [showNavBar, setShowNavBar] = useState(true);
+		useEffect(() => {
+		if (terminalViewParam === 'true') {
+			setShowNavBar(false);
+		} else {
+			setShowNavBar(true);
+		}
+		}, [terminalViewParam]);
+
     return (
         <footer class="text-center lg:text-left bg-black text-white">
 				<div class="mx-6 py-10 text-center md:text-left">
@@ -38,7 +52,7 @@ function Footer (props) {
 								</svg>
 								{t("smart_regions")}
 							</h6>
-							<div class="uppercase font-semibold mb-4 flex justify-center md:justify-start gap-4">
+							<div className={`${footerClass} uppercase font-semibold mb-4 flex justify-center md:justify-start gap-4`}>
 								<a
 									href="https://www.facebook.com/people/HEIDI-Heimat-Digital/100063686672976/"
 									class=" text-white rounded-full bg-gray-500 p-2"
@@ -94,17 +108,17 @@ function Footer (props) {
 							<h6 class="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
 								{t("learn_more")}
 							</h6>
-							<p class="mb-4">
+							<p className={`${footerClass} mb-4`}>
 								<a href="https://heidi-app.de/" class="text-gray-600 font-sans">
 								{t("developer_community")}
 								</a>
 							</p>
-							<p class="mb-4">
+							<p className={`${footerClass} mb-4`}>
 								<a href="https://heidi-app.de/" class="text-gray-600 font-sans">
 								{t("contact_us")}
 								</a>
 							</p>
-							<p class="mb-4">
+							<p className={`${footerClass} mb-4`}>
 								<a href="/login" class="text-gray-600 font-sans">
 									{t("login")}
 								</a>
@@ -119,7 +133,7 @@ function Footer (props) {
 								{t("imprint")}
 								</a>
 							</p>
-							<p class="mb-4">
+							<p className={`${footerClass} mb-4`}>
 								<a href="/PrivacyPolicy" class="text-gray-600 font-sans">
 								{t("terms_conditions")}
 								</a>
@@ -129,7 +143,7 @@ function Footer (props) {
 								{t("data_protection")}
 								</a>
 							</p>
-							<p>
+							<p className={`${footerClass}`}>
 								<a href="/PrivacyPolicy" class="text-gray-600 font-sans">
 								{t("right_withdrawal")}
 								</a>
