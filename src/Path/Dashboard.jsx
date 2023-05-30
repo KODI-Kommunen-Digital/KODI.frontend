@@ -17,6 +17,7 @@ import { Fragment } from "react";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { logout } from "../Services/login";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -28,7 +29,7 @@ const Dashboard = () => {
 	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
-	
+
 	useEffect(() => {
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
@@ -40,6 +41,14 @@ const Dashboard = () => {
 		}
 		document.title = "Dashboard";
 	}, [window.location.pathname]);
+
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	useEffect(() =>{
+		if (!isLoggedIn) {
+			navigateTo("/login");
+		}
+	},[])
 
 	useEffect(() => {
 		if (pageNo == 1) {
