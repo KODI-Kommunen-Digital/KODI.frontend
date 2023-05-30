@@ -10,6 +10,7 @@ import { getVillages } from "../../Services/villages";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
+import { useLocation } from 'react-router-dom';
 import {
 	getFavorites,
 	postFavoriteListingsData,
@@ -113,7 +114,6 @@ const EventDetails = () => {
 						Date.parse(listingsResponse.data.data.createdAt)
 					)
 				);
-			
 			});
 		}
 	}, [t, window.location.href,cityId ]);
@@ -143,7 +143,7 @@ const EventDetails = () => {
 			setDashboarddata(response);
 		});
 	}, []);
- 	
+
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -173,12 +173,6 @@ const EventDetails = () => {
 
 	const [selectedLink, setSelectedLink] = useState("current");
 
-	const [location, setLocation] = useState("");
-
-	function handleLocationChange(event) {
-		setLocation(event.target.value);
-	}
-
 	function handleLocationSubmit(event) {
 		event.preventDefault();
 	}
@@ -199,19 +193,6 @@ const EventDetails = () => {
 
 
 	const [selectedSortOption, setSelectedSortOption] = useState("");
-
-	function getCurrentLocation() {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				setLocation(
-					`${position.coords.latitude}, ${position.coords.longitude}`
-				);
-			},
-			(error) => {
-				console.error(error);
-			}
-		);
-	}
 
 	const [userName, setUserName] = useState("");
 	const [firstname, setFirstname] = useState("");
@@ -285,9 +266,23 @@ const EventDetails = () => {
 		navigateTo(`/users?id=${user.id}`);
 	}
 
+	const location = useLocation();
+	const searchParams = new URLSearchParams(location.search);
+	const terminalViewParam = searchParams.get('terminalView');
+	const favClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
+	const [showNavBar, setShowNavBar] = useState(true);
+		useEffect(() => {
+		if (terminalViewParam === 'true') {
+			setShowNavBar(false);
+		} else {
+			setShowNavBar(true);
+		}
+		}, [terminalViewParam]);
+
 	return (
 		<section class="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
+			{/* {showNavBar && <HomePageNavBar />} */}
 
 			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
@@ -301,7 +296,7 @@ const EventDetails = () => {
 											{title}
 										</span>
 										</h1>
-										<div class="flex items-center">
+										<div class={`flex items-center ${favClass}`}>
 											<button
 												type="button"
 												class={handleClassName}
@@ -544,7 +539,7 @@ const EventDetails = () => {
 
 					</div>
 				) : (
-					<div class="w-full sm:h-72 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div class="w-full sm:h-72 md:h-80 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
 								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
@@ -575,11 +570,15 @@ const EventDetails = () => {
 								</div>
 							</div>
 
-							<div class="flex justify-center lg:mt-7 md:mt-7">
+							<div class="flex justify-center lg:mt-7 md:mt-7 mt-7">
 								<button
-									onClick={() =>
-										navigateTo(`/ViewProfile?userId=${user.id}`)
-									}
+									onClick={() => {
+										let url = `/ViewProfile?userId=${user.id}`;
+										if (terminalViewParam === 'true') {
+										url += '&terminalView=true';
+										}
+										navigateTo(url);
+									}}
 									type="submit"
 									class="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 								>
@@ -596,50 +595,77 @@ const EventDetails = () => {
 				<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 					{t("similarItems")}
 				</h1>
-				<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-						{listings &&
-							listings.map((listing) => (
-								<div
-									onClick={() =>{
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-										)
-									}
-									}
-									class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-								>
-									<a class="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-											src={
-												listing.logo
-													? process.env.REACT_APP_BUCKET_HOST + listing.logo
-													: LISTINGSIMAGE
+				{listings && listings.length > 0 ? (
+					<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+						<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+							{listings &&
+								listings.map((listing) => (
+									<div
+										onClick={() => {
+											let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
+											if (terminalViewParam === 'true') {
+											url += '&terminalView=true';
 											}
-										/>
-									</a>
-									<div class="mt-5 px-2">
-												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
-													{listing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{listing.id && listing.categoryId == 3 ? (
-											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
-												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-												" To " +
-												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
-											</p>
-											):(
-												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-												dangerouslySetInnerHTML={{ __html: listing.description }} />
-											)}
-								</div>
-							))}
+											navigateTo(url);
+										}}
+										class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+									>
+										<a class="block relative h-64 rounded overflow-hidden">
+											<img
+												alt="ecommerce"
+												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+												src={
+													listing.logo
+														? process.env.REACT_APP_BUCKET_HOST + listing.logo
+														: LISTINGSIMAGE
+												}
+											/>
+										</a>
+										<div class="mt-5 px-2">
+													<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+														{listing.title}
+													</h2>
+												</div>
+												<div className="my-4 bg-gray-200 h-[1px]"></div>
+												{listing.id && listing.categoryId == 3 ? (
+												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+													{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
+													" To " +
+													new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+												</p>
+												):(
+													<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													dangerouslySetInnerHTML={{ __html: listing.description }} />
+												)}
+									</div>
+								))}
+						</div>
 					</div>
-				</div>
+				) : (
+					<div>
+						<div class="flex items-center justify-center">
+							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								{t("currently_no_listings")}
+							</h1>
+						</div>
+						<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							<span class="font-sans text-black">
+								{t("to_upload_new_listing")}
+							</span>
+							<a
+								class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+								onClick={() => {
+									localStorage.setItem("selectedItem", "Choose one category");
+									isLoggedIn
+										? navigateTo("/UploadListings")
+										: navigateTo("/login");
+								}}
+							>
+								{t("click_here")}
+							</a>
+						</div>
+					</div>
+				)}
 			</div>
 			<div className="bottom-0 w-full">
 				<Footer />
