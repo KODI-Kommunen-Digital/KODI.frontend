@@ -31,6 +31,15 @@ const Dashboard = () => {
 	const [selectedStatus, setSelectedStatus] = useState(null);
 
 	useEffect(() => {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
@@ -41,14 +50,6 @@ const Dashboard = () => {
 		}
 		document.title = "Dashboard";
 	}, [window.location.pathname]);
-
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() =>{
-		if (!isLoggedIn) {
-			navigateTo("/login");
-		}
-	},[])
 
 	useEffect(() => {
 		if (pageNo == 1) {

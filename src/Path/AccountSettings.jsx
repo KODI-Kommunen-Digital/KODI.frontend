@@ -19,15 +19,17 @@
 		phoneNumber: "",
 	});
 
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	useEffect(() =>{
-		if (!isLoggedIn) {
-			navigateTo("/login");
-		}
-	},[])
-
 	useEffect(() => {
 		document.title = "Heidi - Account Settings";
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		getProfile().then((response) => {
 		  const { username, email, phoneNumber } = response.data.data;
 		  setInput((prev) => ({

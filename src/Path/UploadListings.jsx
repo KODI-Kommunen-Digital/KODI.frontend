@@ -46,6 +46,12 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	const [initialLoad, setInitialLoad] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	// useEffect(() =>{
+	// 	if (!isLoggedIn) {
+	// 		navigateTo("/login");
+	// 	}
+	// },[])
 
 	useEffect(() => {
 	if (initialLoad) {
@@ -208,6 +214,15 @@ function UploadListings() {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
@@ -252,12 +267,6 @@ function UploadListings() {
 			navigate(path);
 		}
 	};
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	useEffect(() =>{
-		if (!isLoggedIn) {
-			navigateTo("/login");
-		}
-	},[])
 
 	const [description, setDescription] = useState("");
 
