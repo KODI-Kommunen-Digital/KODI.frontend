@@ -284,7 +284,7 @@ const EventDetails = () => {
 			<HomePageNavBar />
 			{/* {showNavBar && <HomePageNavBar />} */}
 
-			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-3 lg:px-8">
+			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
 					<div class="lg:w-full md:w-full h-64">
 						<div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
@@ -591,7 +591,7 @@ const EventDetails = () => {
 				)}
 			</div>
 
-			<div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 py-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
+			<div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
 				<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 					{t("similarItems")}
 				</h1>

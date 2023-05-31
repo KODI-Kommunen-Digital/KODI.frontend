@@ -82,7 +82,7 @@ class ProfilePage extends React.Component {
 		this.navigateTo("/login");
 		}
 		const { t } = this.props;
-		document.title = "Heidi - Profile";
+		document.title = "Profile";
 		this.setPageLoading(true);
 		getProfile()
 			.then((response) => {
