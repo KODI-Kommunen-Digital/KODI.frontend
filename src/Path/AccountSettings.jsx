@@ -1,4 +1,4 @@
-	import React, { useState, useEffect, Fragment } from "react";
+	import React, { useState, useEffect } from "react";
 	import SideBar from "../Components/SideBar";
 	import { useNavigate } from "react-router-dom";
 	import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@
 	import { getProfile, updateProfile, deleteAccount, logout } from "../Services/usersApi";
 
 	const AccountSettings = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
@@ -50,7 +50,6 @@
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
-		//console.log(input)
 		setInput((prev) => ({
 		...prev,
 		[name]: value,
