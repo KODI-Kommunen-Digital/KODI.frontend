@@ -17,6 +17,7 @@ import { Fragment } from "react";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { logout } from "../Services/login";
 
 const dashboardStyle = require("../Path/Dashboard.css");
 
@@ -28,8 +29,17 @@ const Dashboard = () => {
 	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
-	
+
 	useEffect(() => {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});

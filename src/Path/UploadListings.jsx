@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { logout } from "../Services/login";
 import {
 	getListingsById,
 	postListingsData,
@@ -45,6 +46,12 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	const [initialLoad, setInitialLoad] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	// useEffect(() =>{
+	// 	if (!isLoggedIn) {
+	// 		navigateTo("/login");
+	// 	}
+	// },[])
 
 	useEffect(() => {
 	if (initialLoad) {
@@ -207,6 +214,15 @@ function UploadListings() {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
@@ -244,6 +260,12 @@ function UploadListings() {
 			[name]: value,
 		}));
 		validateInput(e);
+	};
+
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
 	};
 
 	const [description, setDescription] = useState("");

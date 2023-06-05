@@ -3,7 +3,7 @@
 	import { useNavigate } from "react-router-dom";
 	import { useTranslation } from "react-i18next";
 	import "../index.css";
-	import { FaBell } from "react-icons/fa";
+	import { logout } from "../Services/login";
 	import Alert from "../Components/Alert";
 	import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
 
@@ -19,16 +19,17 @@
 		phoneNumber: "",
 	});
 
-	// useEffect(() => {
-	// 	document.title = "Heidi - Account Settings";
-	// 	getProfile().then((response) => {
-	// 	setInput(response.data.data);
-	// 	console.log(response.data.data)
-	// 	});
-	// }, []);
-
 	useEffect(() => {
 		document.title = "Heidi - Account Settings";
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
+		}
 		getProfile().then((response) => {
 		  const { username, email, phoneNumber } = response.data.data;
 		  setInput((prev) => ({

@@ -26,7 +26,7 @@ function ChangeImage({ setInput, input }) {
 			setInput("image", res.data.path);
 		});
 	}
-	
+
 	return (
 		<>
 			{file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
@@ -56,6 +56,7 @@ class ProfilePage extends React.Component {
 			input: {
 				socialMedia: "",
 			},
+			isLoggedIn: false,
 			profile: {},
 			alertInfo: { show: false, message: "", type: null },
 			showError: {},
@@ -75,8 +76,13 @@ class ProfilePage extends React.Component {
 	}
 
 	componentDidMount() {
+		const accessToken = window.localStorage.getItem("accessToken") || window.sessionStorage.getItem("accessToken");
+		const refreshToken = window.localStorage.getItem("refreshToken") || window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+		this.navigateTo("/login");
+		}
 		const { t } = this.props;
-		document.title = "Heidi - Profile";
+		document.title = "Profile";
 		this.setPageLoading(true);
 		getProfile()
 			.then((response) => {
@@ -213,7 +219,7 @@ class ProfilePage extends React.Component {
 		}
 		this.setProfile(event.target.name, event.target.value);
 	}
-	updateChanges() {	
+	updateChanges() {
 		const { t } = this.props;
 		let valid = true;
 		for (let property in this.state.showError) {

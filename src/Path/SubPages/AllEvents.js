@@ -124,11 +124,11 @@ const Events = () => {
 
 	return (
 		<section class="text-gray-600 body-font relative">
-			<HomePageNavBar />
-			{/* {showNavBar && <HomePageNavBar />} */}
-			<div className={`container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col`}>
+			{/* <HomePageNavBar /> */}
+			{showNavBar && <HomePageNavBar />}
+			<div className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}>
 				<div class="w-full mr-0 ml-0">
-					<div class={`lg:h-64 md:h-64 h-72 overflow-hidden py-1`}>
+					<div class={`lg:h-64 md:h-64 h-72 overflow-hidden ${pyClass}`}>
 						<div class="relative lg:h-64 md:h-64 h-72">
 							<img
 								alt="ecommerce"

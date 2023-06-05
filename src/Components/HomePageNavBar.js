@@ -60,6 +60,7 @@ export default function HomePageNavBar() {
 	const searchParams = new URLSearchParams(location.search);
 	const terminalViewParam = searchParams.get('terminalView');
 	const buttonClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
+	const gobackClass = terminalViewParam === 'true' ? 'visible' : 'hidden';
 	const [showNavBar, setShowNavBar] = useState(true);
 		useEffect(() => {
 		if (terminalViewParam === 'true') {
@@ -73,21 +74,21 @@ export default function HomePageNavBar() {
 		<div class="w-full fixed top-0 z-10">
 			<Popover className="relative bg-white mr-0 ml-0 px-10">
 				<div className="w-full">
-					<div className="flex items-center justify-between border-gray-100 py-5 lg:justify-start lg:space-x-10">
+					<div className={`flex items-center justify-between border-gray-100 py-5 lg:justify-start lg:space-x-10 ${buttonClass}`}>
 						<div>
 							<img
-								class="mx-auto lg:h-10 md:h-8 h-5 w-auto cursor-pointer"
+								class={`mx-auto lg:h-10 md:h-8 h-5 w-auto cursor-pointer ${buttonClass}`}
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {
-									if (terminalViewParam === 'true') {
-										navigateTo("/AllEvents?terminalView=true");
-									} else {
-										navigateTo("/");
+									window.localStorage.removeItem("selectedCity");
+									navigateTo("/")
+									window.location.reload();
 									}
-								}}
+								}
 							/>
 						</div>
+
 						<div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
 							<Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
 								<span className="sr-only">Open menu</span>
@@ -146,6 +147,22 @@ export default function HomePageNavBar() {
 							</a>
 						</div>
 					</div>
+
+						<div className={`flex items-center justify-center border-gray-100 py-5 lg:justify-center lg:space-x-10 ${gobackClass}`}>
+							<a
+								onClick={() => {
+									if (terminalViewParam === 'true') {
+										navigateTo("/AllEvents?terminalView=true");
+									} else {
+										navigateTo("/");
+									}
+								}}
+								className={`font-sans inline-flex whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
+								>
+								<span class="mx-2">&#8592;</span> {t("gobacktoalllistings")}
+							</a>
+
+						</div>
 				</div>
 
 				<Transition
