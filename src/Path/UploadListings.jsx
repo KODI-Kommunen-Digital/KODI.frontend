@@ -405,14 +405,18 @@ function UploadListings() {
 	const handleResultSelect = (result) => {
 		setQuery(result.display_name);
 		setSelectedResult(result);
-		if (marker) {
-			marker.setLatLng([result.lat, result.lon]);
-		} else {
-			const newMarker = L.marker([result.lat, result.lon]).addTo(map);
-			setMarker(newMarker);
-		}
-		map.setView([result.lat, result.lon], 13);
 		setResults([]);
+	
+		if (map) { // Check if the map object is available
+			if (marker) {
+				marker.setLatLng([result.lat, result.lon]);
+			} else {
+				const newMarker = L.marker([result.lat, result.lon]).addTo(map);
+				setMarker(newMarker);
+			}
+	
+			map.setView([result.lat, result.lon], 13);
+		}
 	};
 
 	useEffect(() => {
@@ -582,28 +586,30 @@ function UploadListings() {
 					</div>
 
 					{
-						parseInt(cityId) ?
-						<div class="relative mb-4">
-							<label for="title" class="block text-sm font-medium text-gray-600">
-								{t("village")}
-							</label>
-							<select
-								type="villageId"
-								id="villageId"
-								name="villageId"
-								value={input.villageId}
-								onChange={onInputChange}
-								onBlur={validateInput}
-								autocomplete="country-name"
-								class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-							>
-								<option value={0}>{t("select")}</option>
-								{villages.map((village) => (
-									<option value={Number(village.id)}>{village.name}</option>
-								))}
-							</select>
-						</div> :
-						<span/>
+						villages.length > 0 && parseInt(cityId) ? (
+							<div class="relative mb-4">
+								<label for="title" class="block text-sm font-medium text-gray-600">
+									{t("village")}
+								</label>
+								<select
+									type="villageId"
+									id="villageId"
+									name="villageId"
+									value={input.villageId}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									autocomplete="country-name"
+									class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+								>
+									<option value={0}>{t("select")}</option>
+									{villages.map((village) => (
+										<option value={Number(village.id)}>{village.name}</option>
+									))}
+								</select>
+							</div>
+						) : (
+							<span />
+						)
 					}
 
 					<div class="relative mb-4">

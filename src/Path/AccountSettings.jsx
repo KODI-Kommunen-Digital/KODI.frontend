@@ -1,14 +1,12 @@
-	import React, { useState, useEffect, Fragment } from "react";
+	import React, { useState, useEffect, useNavigate } from "react";
 	import SideBar from "../Components/SideBar";
-	import { useNavigate } from "react-router-dom";
 	import { useTranslation } from "react-i18next";
 	import "../index.css";
-	import { logout } from "../Services/login";
 	import Alert from "../Components/Alert";
 	import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
 
 	const AccountSettings = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
@@ -40,7 +38,7 @@
 		  }));
 		  console.log(input)
 		});
-	  }, []);
+	}, []);
 
 	let navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -51,7 +49,6 @@
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
-		//console.log(input)
 		setInput((prev) => ({
 		...prev,
 		[name]: value,
@@ -107,7 +104,7 @@
 	}
 
 	return (
-		<section className="bg-slate-600 body-font relative h-screen">
+		<section className="bg-slate-600 body-font relative h-full">
 		<SideBar />
 		<>
 			<div class="container w-auto px-5 py-2 bg-slate-600">
@@ -194,6 +191,30 @@
 				)}
 			</div>
 			</div>
+
+			<div class="container w-auto px-5 py-2 bg-slate-600">
+				<div class="bg-white mt-4 p-6">
+					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+					{t("allDevices")}
+					<div className="my-4 bg-gray-600 text-base h-[1px]">
+						<label class="block px-2 py-2 text-gray-600">
+						{t("alldevicesdescription")}
+						</label>
+					</div>
+					</h2>
+					<div className="py-2 mt-1 px-2">
+					<button
+						className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+						id="finalbutton"
+						class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+						onClick={() => navigateTo("/AllDevices")}
+					>
+						{t("devices")}
+					</button>
+					</div>
+				</div>
+			</div>
+
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 			<div class="bg-white mt-4 p-6">
 				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">

@@ -7,10 +7,30 @@ function getUserId() {
 	);
 }
 
+// export async function login(credentials) {
+// 	return axios.post(
+// 		`${process.env.REACT_APP_API_BASE_URL}/users/login`,
+// 		credentials
+// 	);
+// }
+
 export async function login(credentials) {
+	const deviceInfo = {
+		deviceName: navigator.userAgent,
+		browserName: navigator.userAgent,
+	};
+
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+			DeviceInfo: JSON.stringify(deviceInfo),
+		},
+	};
+
 	return axios.post(
 		`${process.env.REACT_APP_API_BASE_URL}/users/login`,
-		credentials
+		credentials,
+		config
 	);
 }
 

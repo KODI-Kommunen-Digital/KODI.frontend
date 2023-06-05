@@ -246,5 +246,35 @@
     "enter_current_password":"Bitte geben Sie Ihr aktuelles Passwort ein.",
     "enter_a_new_password":"Bitte geben Sie ein neues Passwort ein.",
     "confirm_your_password":"Bitte bestätigen Sie Ihr neues Passwort.",
-    "password_do_not_match":"Das neue Passwort und das Bestätigungspasswort stimmen nicht überein."
+    "password_do_not_match":"Das neue Passwort und das Bestätigungspasswort stimmen nicht überein.",
+
+
+    "allDevices": "Alle angeschlossenen Geräte anzeigen",
+    "alldevicesdescription": "Klicken Sie auf diese Schaltfläche, um alle angeschlossenen Geräte anzuzeigen",
+    "alldevicepagetitle": "Dies sind die Geräte, auf denen Ihr Konto aktiv ist",
+    "logoutofalldevices": "Abmelden aller Geräte",
+    "privacypolicy": "Privacy Settings",
+    "devices": "Geräte",
+    "acceptAll": "Accept all",
+    "saveoncomputer": "Save on computer",
+    "acceptessential": "Only accept essential cookies",
+    "return": "Return",
+    "individualprivicy": "Individual privacy settings",
+
+    "privacypolicyp1": "Wir benötigen deine Zustimmung, bevor du unsere Website weiter besuchen kannst. Wenn du unter 16 Jahre alt bist und deine Zustimmung zu freiwilligen Diensten geben möchtest, musst du deine Erziehungsberechtigten um Erlaubnis bitten.",
+    "privacypolicyp2": "Wir verwenden Cookies und andere Technologien auf unserer Website. Einige von ihnen sind unerlässlich, während andere uns helfen, diese Website und dein Erlebnis zu verbessern. Personenbezogene Daten können verarbeitet werden (z. B. IP-Adressen), z. B. für personalisierte Werbung und Inhalte oder zur Messung von Werbung und Inhalten. Weitere Informationen über die Verwendung deiner Daten findest du in unserer",
+    "privacypolicyp5": "Datenschutzerklärung",
+    "privacypolicyp6": ". Du kannst deine Auswahl jederzeit widerrufen oder ändern unter",
+    "privacypolicyp7": "Einstellungen",
+    "privacypolicyp4": "Inhalte von Videoplattformen und Social-Media-Plattformen sind standardmäßig blockiert. Wenn Cookies von externen Medien akzeptiert werden, erfordert der Zugriff auf diese Inhalte keine manuelle Zustimmung mehr.",
+    "privacypolicyp3": "Notwendige Cookies ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.",
+    "privacypolicyh1": "Notwendige",
+    "privacypolicyh2": "Externe Medien",
+    "privacypolicyp8": "Wir benötigen deine Zustimmung, bevor du unsere Website weiter besuchen kannst. Wenn du unter 16 Jahre alt bist und deine Zustimmung zu freiwilligen Diensten geben möchtest, musst du deine Erziehungsberechtigten um Erlaubnis bitten. Wir verwenden Cookies und andere Technologien auf unserer Website. Einige davon sind unverzichtbar, während andere uns helfen, diese Website und deine Erfahrungen zu verbessern. Personenbezogene Daten können verarbeitet werden (z. B. IP-Adressen), z. B. für personalisierte Werbung und Inhalte oder zur Messung von Werbung und Inhalten. Weitere Informationen über die Verwendung deiner Daten findest du in unserer ",
+    "privacypolicyp9": "Datenschutzerklärung",
+    "privacypolicyp10":  ". Hier findest du eine Übersicht über alle verwendeten Cookies. Du kannst deine Zustimmung zu ganzen Kategorien geben oder dir weitere Informationen anzeigen lassen und so nur bestimmte Cookies auswählen.",
+    "privacypolicyp11": "Notwendige Cookies ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.",
+    "privacypolicyp12": "Inhalte von Videoplattformen und Social-Media-Plattformen sind standardmäßig blockiert. Wenn Cookies von externen Medien akzeptiert werden, erfordert der Zugriff auf diese Inhalte keine manuelle Zustimmung mehr.",
+    "privacypolicyh3": "Notwendige",
+    "privacypolicyh4": "Externe Medien"
 }
