@@ -3,9 +3,8 @@
 	import { useNavigate } from "react-router-dom";
 	import { useTranslation } from "react-i18next";
 	import "../index.css";
-	import { logout } from "../Services/login";
 	import Alert from "../Components/Alert";
-	import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
+	import { getProfile, updateProfile, deleteAccount, logout } from "../Services/usersApi";
 
 	const AccountSettings = () => {
 	const { t, i18n } = useTranslation();

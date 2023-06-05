@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../Resource/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
-import { getProfile } from "../Services/usersApi";
-import { logout } from "../Services/login";
+import { getProfile, logout } from "../Services/usersApi";
 
 function SideBar({ handleGetAllListings, handleGetUserListings }) {
 	const { t } = useTranslation();

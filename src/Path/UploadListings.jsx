@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { logout } from "../Services/login";
 import {
 	getListingsById,
 	postListingsData,
