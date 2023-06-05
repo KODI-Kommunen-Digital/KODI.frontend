@@ -4,26 +4,58 @@ import logo from "../Resource/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile } from "../Services/usersApi";
+import { logout } from "../Services/login";
 
 function SideBar({ handleGetAllListings, handleGetUserListings }) {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	let navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
+	useEffect(() => {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
+			setIsLoggedIn(true);
+		}
+	}, []);
 
 	const handleLogout = () => {
+		if(isLoggedIn){
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
 		try {
-			window.localStorage.removeItem("accessToken");
-			window.localStorage.removeItem("refreshToken");
-			window.localStorage.removeItem("userId");
-			window.localStorage.removeItem("selectedItem");
-			window.sessionStorage.removeItem("accessToken");
-			window.sessionStorage.removeItem("refreshToken");
-			window.sessionStorage.removeItem("userId");
-			window.sessionStorage.removeItem("selectedItem");
-			setLoggedIn(false);
-			window.location.href = "/";
+			logout({ accesToken: accessToken, refreshToken: refreshToken }).then(()=>{
+				window.localStorage.removeItem("accessToken");
+				window.localStorage.removeItem("refreshToken");
+				window.localStorage.removeItem("userId");
+				window.localStorage.removeItem("selectedItem");
+				window.sessionStorage.removeItem("accessToken");
+				window.sessionStorage.removeItem("refreshToken");
+				window.sessionStorage.removeItem("userId");
+				window.sessionStorage.removeItem("selectedItem");
+				setLoggedIn(false);
+				navigateTo("/");
+			})
 		} catch (error) {
 			console.log(error);
 		}
+	}else {
+		navigateTo("/login");
+	}
 	};
 
 	function openSidebar() {
@@ -33,23 +65,14 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 		}
 	}
 
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
-
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
-	const [profilePic, setProfilePic] = useState("");
 	const [userRole, setUserRole] = useState(3);
 	useEffect(() => {
 		getProfile()
 			.then((response) => {
 				setFirstname(response.data.data.firstname);
 				setLastname(response.data.data.lastname);
-				setProfilePic(response.data.data.image);
 				setUserRole(response.data.data.roleId);
 			})
 			.catch((error) => {

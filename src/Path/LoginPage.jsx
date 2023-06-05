@@ -4,11 +4,11 @@ import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass } from "../Services/usersApi";
-import { login } from "../Services/login";
+import { login, getDevice } from "../Services/login";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 
 	const userRef = useRef();
 	const [rememberMe, setRememberMe] = useState(false);
@@ -25,9 +25,19 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		document.title = "Heidi - Login";
+
+		userRef.current.focus();
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken?.length === 456 || refreshToken?.length === 456) {
+			routeChangeToUpload();
+		}
 	}, []);
 
-	//const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handlePasswordChange = (event) => {
@@ -43,21 +53,6 @@ const LoginPage = () => {
 		navigate(path);
 	});
 
-	useEffect(() => {
-		userRef.current.focus();
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken?.length === 456 || refreshToken?.length === 456) {
-			routeChangeToUpload();
-		}
-	}, []);
-	// useEffect(() => {
-	//   setErrMsg('');
-	// }, [user,pwd]);
 	const routeChangeToRegister = () => {
 		let path = `/Register`;
 		navigate(path);

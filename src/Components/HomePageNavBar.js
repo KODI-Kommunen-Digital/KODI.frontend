@@ -36,17 +36,18 @@ export default function HomePageNavBar() {
 			const refreshToken =
 				window.localStorage.getItem("refreshToken") ||
 				window.sessionStorage.getItem("refreshToken");
-			logout({ accesToken: accessToken, refreshToken: refreshToken });
-			window.localStorage.removeItem("accessToken");
-			window.localStorage.removeItem("refreshToken");
-			window.localStorage.removeItem("userId");
-			window.localStorage.removeItem("selectedItem");
-			window.sessionStorage.removeItem("accessToken");
-			window.sessionStorage.removeItem("refreshToken");
-			window.sessionStorage.removeItem("userId");
-			window.sessionStorage.removeItem("selectedItem");
-			setIsLoggedIn(false);
-			navigateTo("/");
+			logout({ accesToken: accessToken, refreshToken: refreshToken }).then(() => {
+				window.localStorage.removeItem("accessToken");
+				window.localStorage.removeItem("refreshToken");
+				window.localStorage.removeItem("userId");
+				window.localStorage.removeItem("selectedItem");
+				window.sessionStorage.removeItem("accessToken");
+				window.sessionStorage.removeItem("refreshToken");
+				window.sessionStorage.removeItem("userId");
+				window.sessionStorage.removeItem("selectedItem");
+				setIsLoggedIn(false);
+				navigateTo("/");
+			})
 		} else {
 			navigateTo("/login");
 		}
