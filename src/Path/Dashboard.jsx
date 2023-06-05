@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
-import DeleteConfirmation from "../Components/DeleteConfirmation";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
 	getListings,
@@ -8,7 +7,6 @@ import {
 	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
-import { sortLatestFirst } from "../Services/helper";
 import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
@@ -17,9 +15,6 @@ import { Fragment } from "react";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { logout } from "../Services/login";
-
-const dashboardStyle = require("../Path/Dashboard.css");
 
 const Dashboard = () => {
 	window.scrollTo(0, 0);

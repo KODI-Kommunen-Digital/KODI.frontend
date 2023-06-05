@@ -3,7 +3,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../Services/login";
+import { logout } from "../Services/usersApi";
 import { useLocation } from 'react-router-dom';
 
 export default function HomePageNavBar() {

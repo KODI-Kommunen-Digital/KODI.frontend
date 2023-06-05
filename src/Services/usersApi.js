@@ -46,3 +46,11 @@ export async function register(credentials) {
 export async function verifyEmail(credentials) {
 	return axios.post(`/users/VerifyEmail`, credentials);
 }
+
+export async function login(credentials) {
+	return axios.post(`/users/login`, credentials);
+}
+
+export async function logout(credentials) {
+	return axios.post(`users/${getUserId()}/logout`, credentials);
+}
