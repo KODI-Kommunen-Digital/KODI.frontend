@@ -1,12 +1,13 @@
-	import React, { useState, useEffect, useNavigate } from "react";
+	import React, { useState, useEffect, Fragment } from "react";
 	import SideBar from "../Components/SideBar";
+	import { useNavigate } from "react-router-dom";
 	import { useTranslation } from "react-i18next";
 	import "../index.css";
 	import Alert from "../Components/Alert";
 	import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
 
 	const AccountSettings = () => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
@@ -49,6 +50,7 @@
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		//console.log(input)
 		setInput((prev) => ({
 		...prev,
 		[name]: value,
