@@ -41,7 +41,7 @@
                         <div className="text-center">
                             <img
                                 class="mx-auto h-10 w-auto cursor-pointer"
-                                src={HEIDI_Logo}
+                                src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                                 alt="HEDI- Heimat Digital"
                             />
                         </div>
@@ -96,7 +96,7 @@
                         {t("individualprivicy")}
                     </button>
                     </div>
-                    <p className="text-sm font-normal mt-4 mb-2 text-center"> Cookie Details | <a href="/PrivacyPolicy">Data protection</a> | <a href="/ImprintPage">Imprint</a> </p>
+                    <p className="text-sm font-normal mt-4 mb-2 text-center"><a href="/PrivacyPolicy">{t("dataprotection")}</a> | <a href="/ImprintPage">{t("imprint")}</a> </p>
 
                 </div>
             </div> )}
@@ -108,7 +108,7 @@
                         <div className="text-center">
                             <img
                                 class="mx-auto h-10 w-auto cursor-pointer"
-                                src={HEIDI_Logo}
+                                src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                                 alt="HEDI- Heimat Digital"
                             />
                         </div>
