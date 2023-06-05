@@ -246,5 +246,36 @@
     "enter_current_password":"Please enter your current password",
     "enter_a_new_password":"Please enter a new password.",
     "confirm_your_password":"Please confirm your new password.",
-    "password_do_not_match":"The new password and confirmation password do not match."
+    "password_do_not_match":"The new password and confirmation password do not match.",
+
+
+    
+    "allDevices": "See all connected devices",
+    "alldevicesdescription": "Click on this button you can see all of you connected devices",
+    "devices": "Devices",
+    "alldevicepagetitle": "These are the devices that your account is active",
+    "logoutofalldevices": "Logout of all devices",
+    "privacypolicy": "Privacy Settings",
+    "acceptAll": "Accept all",
+    "saveoncomputer": "Save on computer",
+    "acceptessential": "Only accept essential cookies",
+    "return": "Return",
+    "individualprivicy": "Individual privacy settings",
+
+    "privacypolicyp1": "We need your consent before you can continue browsing our website. If you are under the age of 16 and wish to give your consent to volunteer services, you must ask your legal guardian for permission.",
+    "privacypolicyp2": "We use cookies and other technologies on our website. Some of them are essential, while others help us to improve this website and your experience. Personal data can be processed (e.g. IP addresses), e.g. for personalized ads and content or ad and content measurement. You can find more information about the use of your data in our",
+    "privacypolicyp5": "data protection declaration",
+    "privacypolicyp6": ". You can revoke or adjust your selection at any time under",
+    "privacypolicyp7": "Settings",
+    "privacypolicyp4": "Content from video platforms and social media platforms is blocked by default. If cookies from external media are accepted, access to this content no longer requires manual consent.",
+    "privacypolicyp3": "Essential cookies enable basic functions and are required for the website to function properly.",
+    "privacypolicyh1": "Essential",
+    "privacypolicyh2": "External Media",
+    "privacypolicyp8": "We need your consent before you can continue browsing our website. If you are under the age of 16 and wish to give your consent to volunteer services, you must ask your legal guardian for permission. We use cookies and other technologies on our website. Some of them are essential, while others help us to improve this website and your experience. Personal data can be processed (e.g. IP addresses), e.g. for personalized ads and content or ad and content measurement. You can find more information about the use of your data in our ",
+    "privacypolicyp9": "data protection declaration",
+    "privacypolicyp10":  ". Here you will find an overview of all cookies used. You can give your consent to entire categories or have further information displayed and thus only select certain cookies.",
+    "privacypolicyp11": "Essential cookies enable basic functions and are required for the website to function properly.",
+    "privacypolicyp12": "Content from video platforms and social media platforms is blocked by default. If cookies from external media are accepted, access to this content no longer requires manual consent.",
+    "privacypolicyh3": "Essential",
+    "privacypolicyh4": "External Media"
 }
