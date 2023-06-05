@@ -8,6 +8,7 @@ import { sortLatestFirst } from "../Services/helper";
 import { getCities } from "../Services/cities";
 import { getCategory } from "../Services/CategoryApi";
 import Footer from "../Components/Footer";
+import PrivacyPolicyPopup from './PrivacyPolicyPopup';
 
 import CITYIMAGE from "../assets/City.png";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
@@ -86,9 +87,25 @@ const HomePage = () => {
     navigateTo(navUrl);
   }
 
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const hasAcceptedPrivacyPolicy = localStorage.getItem('privacyPolicyAccepted');
+
+    if (!hasAcceptedPrivacyPolicy) {
+      setShowPopup(true); // Show the popup if privacy policy is not accepted
+    }
+  }, []);
+
+  const handlePrivacyPolicyAccept = () => {
+    localStorage.setItem('privacyPolicyAccepted', 'true');
+    setShowPopup(false);
+  };
+
   return (
     <section class="text-gray-600 body-font relative">
       <HomePageNavBar />
+      {showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
       <div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
         <div class="w-full mr-0 ml-0">
           <div class="h-[35rem] overflow-hidden px-0 py-1">
@@ -433,6 +450,7 @@ const HomePage = () => {
       {listings && listings.length > 0 ? (
         <div class="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
+          {/* <div class="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 lg:gap-[4.97rem] justify-center lg:justify-start"> */}
             {listings &&
               listings
                 .map((listing) => (
