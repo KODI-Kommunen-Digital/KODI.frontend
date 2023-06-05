@@ -159,25 +159,25 @@ const Dashboard = () => {
 									<div
 										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(null)}
-									>
+										style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("allListings")}
 									</div>
 									<div
 										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Active)}
-									>
+										style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("active")}
 									</div>
 									<div
 										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Pending)}
-									>
+										style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("pending")}
 									</div>
 									<div
 										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Inactive)}
-									>
+										style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("inactive")}
 									</div>
 								</div>
@@ -223,13 +223,13 @@ const Dashboard = () => {
 												<div
 													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() => setSelectedStatus(null)}
-												>
+													style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{t("allListings")}
 												</div>
 												<div
 													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() => setSelectedStatus(statusByName.Active)}
-												>
+													style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{t("active")}
 												</div>
 												<div
@@ -237,7 +237,7 @@ const Dashboard = () => {
 													onClick={() =>
 														setSelectedStatus(statusByName.Pending)
 													}
-												>
+													style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{t("pending")}
 												</div>
 												<div
@@ -245,7 +245,7 @@ const Dashboard = () => {
 													onClick={() =>
 														setSelectedStatus(statusByName.Inactive)
 													}
-												>
+													style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{t("inactive")}
 												</div>
 											</div>
@@ -266,24 +266,24 @@ const Dashboard = () => {
 					<table class="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
 						<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
 							<tr>
-								<th scope="col" class="px-6 sm:px-6 py-3">
+								<th scope="col" class="px-6 sm:px-6 py-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("listings")}
 								</th>
-								<th scope="col" class="px-6 sm:px-3 py-3 hidden lg:table-cell">
+								<th scope="col" class="px-6 sm:px-3 py-3 hidden lg:table-cell" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("category")}
 								</th>
-								<th scope="col" class="px-6 py-3 hidden lg:table-cell">
+								<th scope="col" class="px-6 py-3 hidden lg:table-cell" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("date_of_creation")}
 								</th>
-								<th scope="col" class="px-6 py-3">
+								<th scope="col" class="px-6 py-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("action")}
 								</th>
 								{viewAllListings && (
-									<th scope="col" class="px-6 py-3">
+									<th scope="col" class="px-6 py-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("username")}
 									</th>
 								)}
-								<th scope="col" class="px-6 py-3 text-center">
+								<th scope="col" class="px-6 py-3 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("status")}
 								</th>
 							</tr>
@@ -307,28 +307,28 @@ const Dashboard = () => {
 												alt="avatar"
 											/>
 											<div class="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
-												<div class="font-normal text-gray-500 truncate">
+												<div class="font-normal text-gray-500 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{listing.title}
 												</div>
 											</div>
 										</th>
-										<td class="px-6 py-4 hidden lg:table-cell">
+										<td class="px-6 py-4 hidden lg:table-cell" style={{ fontFamily: 'Poppins, sans-serif' }}>
 											{categoryById[listing.categoryId]}
 										</td>
-										<td class="px-6 py-4 hidden lg:table-cell">
+										<td class="px-6 py-4 hidden lg:table-cell" style={{ fontFamily: 'Poppins, sans-serif' }}>
 											{new Date(listing.createdAt).toLocaleString("de")}
 										</td>
 										<td class="px-6 py-4">
 											<a
 												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 												onClick={() => goToEditListingsPage(listing)}
-											>
+												style={{ fontFamily: 'Poppins, sans-serif' }}>
 												{t("edit")}
 											</a>
 											<a
 											className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 											onClick={() => deleteListingOnClick(listing)}
-											>
+											style={{ fontFamily: 'Poppins, sans-serif' }}>
 											{t("delete")}
 											</a>
 											{showConfirmationModal.visible && (
@@ -371,7 +371,7 @@ const Dashboard = () => {
 										</td>
 										{viewAllListings && (
 											<td class="px-6 py-4">
-												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+												<a class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{listing.username}
 												</a>
 											</td>
@@ -389,7 +389,7 @@ const Dashboard = () => {
 															handleChangeInStatus(e.target.value, listing)
 														}
 														value={listing.statusId}
-													>
+														style={{ fontFamily: 'Poppins, sans-serif' }}>
 														{Object.keys(status).map((state) => {
 															return (
 																<>
@@ -401,7 +401,7 @@ const Dashboard = () => {
 														})}
 													</Select>
 												) : (
-													<h1>{status[listing.statusId]}</h1>
+													<h1 style={{ fontFamily: 'Poppins, sans-serif' }}>{status[listing.statusId]}</h1>
 												)}
 											</div>
 										</td>
@@ -416,13 +416,13 @@ const Dashboard = () => {
 						<span
 							className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 							onClick={() => setPageNo(pageNo - 1)}
-						>
+							style={{ fontFamily: 'Poppins, sans-serif' }}>
 							{"<"}{" "}
 						</span>
 					) : (
 						<span />
 					)}
-					<span className="text-lg px-3">
+					<span className="text-lg px-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("page")} {pageNo}
 					</span>
 
@@ -430,7 +430,7 @@ const Dashboard = () => {
 						<span
 						className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 						onClick={() => setPageNo(pageNo + 1)}
-						>
+						style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{">"}
 						</span>
 					)}

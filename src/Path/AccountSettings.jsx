@@ -110,10 +110,10 @@
 		<>
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 			<div class="bg-white mt-4 p-6 space-y-10">
-				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
 				{t("updatePassword")}
 				<div className="my-4 bg-gray-600 text-base h-[1px]">
-					<label class="block px-2 py-2 text-gray-600">
+					<label class="block px-2 py-2 text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("Need_to_change_your_password")}
 					</label>
 				</div>
@@ -124,26 +124,26 @@
 				onClick={() => {
 					navigateTo("/PasswordUpdate");
 				}}
-				>
+				style={{ fontFamily: 'Poppins, sans-serif' }}>
 				{t("updatePassword")}
 				</button>
 			</div>
 			</div>
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 			<div class="bg-white mt-4 p-6">
-				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
 				{t("personalInformation")}
 				<div className="my-4 bg-gray-600 h-[1px]" />
 				</h2>
 				<div class="relative mb-4">
 				<div class="pb-6">
-					<label class="block px-2 text-sm font-medium text-gray-500">
+					<label class="block px-2 text-sm font-medium text-gray-500" style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("displayed_publicly")}
 					</label>
 				</div>
 				<div class="py-2 grid grid-cols-1 md:grid-cols-2">
 					<div class="mt-1 px-2">
-					<label class="block text-md font-medium text-gray-600">
+					<label class="block text-md font-medium text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("emailId")}
 					</label>
 					<input
@@ -153,6 +153,7 @@
 						id="email"
 						class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 						placeholder={t("enter_email")}
+						style={{ fontFamily: 'Poppins, sans-serif' }}
 						onChange={onInputChange}
 					/>
 					</div>
@@ -160,7 +161,7 @@
 					<label
 						htmlFor="phoneNumber"
 						class="block text-md font-medium text-gray-600"
-					>
+						style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("phoneNumber")}
 					</label>
 					<input
@@ -170,6 +171,7 @@
 						id="phoneNumber"
 						class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 						placeholder={t("enter_phone")}
+						style={{ fontFamily: 'Poppins, sans-serif' }}
 						onChange={onInputChange}
 					/>
 					</div>
@@ -181,7 +183,7 @@
 					id="finalbutton"
 					class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 					onClick={handleSave}
-				>
+					style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("saveChanges")}{" "}
 				</button>
 				</div>
@@ -195,10 +197,10 @@
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6">
-					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("allDevices")}
 					<div className="my-4 bg-gray-600 text-base h-[1px]">
-						<label class="block px-2 py-2 text-gray-600">
+						<label class="block px-2 py-2 text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("alldevicesdescription")}
 						</label>
 					</div>
@@ -209,7 +211,7 @@
 						id="finalbutton"
 						class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 						onClick={() => navigateTo("/AllDevices")}
-					>
+						style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("devices")}
 					</button>
 					</div>
@@ -218,10 +220,10 @@
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 			<div class="bg-white mt-4 p-6">
-				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+				<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
 				{t("deleteAccount")}
 				<div className="my-4 bg-gray-600 text-base h-[1px]">
-					<label class="block px-2 py-2 text-gray-600">
+					<label class="block px-2 py-2 text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("need_to_delete_account")}
 					</label>
 				</div>
@@ -232,6 +234,7 @@
 					id="finalbutton"
 					class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 					onClick={deleteAccountOnClick}
+					style={{ fontFamily: 'Poppins, sans-serif' }}
 				>
 					{t("deleteAccount")}{" "}
 				</button>

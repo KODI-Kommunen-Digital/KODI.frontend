@@ -314,49 +314,49 @@ const EventDetails = () => {
 												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("news")}</p>
 											) : null}
 											{input.categoryId == 2 ? (
-												<p className="text-start">{t("roadTraffic")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("roadTraffic")}</p>
 											) : null}
 											{input.categoryId == 3 ? (
-												<p className="text-start">{t("events")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("events")}</p>
 											) : null}
 											{input.categoryId == 4 ? (
-												<p className="text-start">{t("clubs")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("clubs")}</p>
 											) : null}
 											{input.categoryId == 5 ? (
-												<p className="text-start">{t("regionalProducts")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("regionalProducts")}</p>
 											) : null}
 											{input.categoryId == 6 ? (
-												<p className="text-start">{t("offerSearch")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("offerSearch")}</p>
 											) : null}
 											{input.categoryId == 7 ? (
-												<p className="text-start">{t("newCitizenInfo")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("newCitizenInfo")}</p>
 											) : null}
 											{input.categoryId == 8 ? (
-												<p className="text-start">{t("defectReport")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("defectReport")}</p>
 											) : null}
 											{input.categoryId == 9 ? (
-												<p className="text-start">{t("lostAndFound")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("lostAndFound")}</p>
 											) : null}
 											{input.categoryId == 10 ? (
-												<p className="text-start">{t("companyPortaits")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("companyPortaits")}</p>
 											) : null}
 											{input.categoryId == 11 ? (
-												<p className="text-start">
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{t("carpoolingPublicTransport")}
 												</p>
 											) : null}
 											{input.categoryId == 12 ? (
-												<p className="text-start">{t("offers")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("offers")}</p>
 											) : null}
 										</div>
 										{input.id && input.categoryId == 3 ? (
-											<p class="leading-relaxed text-base dark:text-gray-900">
+											<p class="leading-relaxed text-base dark:text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
 												{new Date(input.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
 												" - to - " +
 												new Date(input.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 											</p>
 											):(
-												<p class="leading-relaxed text-base dark:text-gray-900">
+												<p class="leading-relaxed text-base dark:text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
 												</p>
 										)}
 									</div>
@@ -382,7 +382,7 @@ const EventDetails = () => {
 						</div>
 					</div>
 					<div class="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
-						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 							{t("description")}
 						</h1>
 						<Description content={description} />
@@ -393,7 +393,7 @@ const EventDetails = () => {
 					<div class="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("ownerInfo")}
 								</h1>
 							</div>
@@ -412,10 +412,10 @@ const EventDetails = () => {
 									/>
 								</div>
 								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
+									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{firstname + " " + lastname}
 									</h2>
-									<p class="leading-relaxed text-base dark:text-gray-900">
+									<p class="leading-relaxed text-base dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("uploaded_on")}
 										{createdAt}
 									</p>
@@ -529,7 +529,7 @@ const EventDetails = () => {
 									}
 									type="submit"
 									class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-								>
+									style={{ fontFamily: 'Poppins, sans-serif' }}>
 									<span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
 								</button>
@@ -541,13 +541,13 @@ const EventDetails = () => {
 					<div class="w-full sm:h-72 md:h-80 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("ownerInfo")}
 								</h1>
 							</div>
 							<div class="my-4 bg-gray-200 h-[1px]"></div>
 
-							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
+							<div class="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
 								<div class="flex justify-center sm:justify-start">
 									<img
 										class="rounded-full h-20 w-20"
@@ -560,10 +560,10 @@ const EventDetails = () => {
 									/>
 								</div>
 								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900">
+									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{firstname + " " + lastname}
 									</h2>
-									<p class="leading-relaxed text-base dark:text-gray-900">
+									<p class="leading-relaxed text-base dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 										{t("uploaded_at") + " " + createdAt}
 									</p>
 								</div>
@@ -580,7 +580,7 @@ const EventDetails = () => {
 									}}
 									type="submit"
 									class="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-								>
+									style={{ fontFamily: 'Poppins, sans-serif' }}>
 									<span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
 								</button>
@@ -621,19 +621,19 @@ const EventDetails = () => {
 											/>
 										</a>
 										<div class="mt-5 px-2">
-													<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+													<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 														{listing.title}
 													</h2>
 												</div>
 												<div className="my-4 bg-gray-200 h-[1px]"></div>
 												{listing.id && listing.categoryId == 3 ? (
-												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
 													" To " +
 													new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 												</p>
 												):(
-													<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"  style={{ fontFamily: 'Poppins, sans-serif' }}
 													dangerouslySetInnerHTML={{ __html: listing.description }} />
 												)}
 									</div>
@@ -643,12 +643,12 @@ const EventDetails = () => {
 				) : (
 					<div>
 						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 								{t("currently_no_listings")}
 							</h1>
 						</div>
 						<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-							<span class="font-sans text-black">
+							<span class="font-sans text-black"  style={{ fontFamily: 'Poppins, sans-serif' }}>
 								{t("to_upload_new_listing")}
 							</span>
 							<a
@@ -659,7 +659,7 @@ const EventDetails = () => {
 										? navigateTo("/UploadListings")
 										: navigateTo("/login");
 								}}
-							>
+								style={{ fontFamily: 'Poppins, sans-serif' }}>
 								{t("click_here")}
 							</a>
 						</div>

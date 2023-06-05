@@ -29,7 +29,7 @@ const AllDevices = () => {
 		<>
         <div className="container w-auto px-5 py-2 bg-slate-600">
             <div className="bg-white mt-4 p-6">
-                <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+                <h2 className="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {t("alldevicepagetitle")}
                 </h2>
                 <div className="my-4 bg-gray-600 text-base h-[1px]" />
@@ -54,7 +54,7 @@ const AllDevices = () => {
                 className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
                 id="finalbutton"
                 class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
-                >
+                style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {t("logoutofalldevices")}
                 </button>
             </div>
