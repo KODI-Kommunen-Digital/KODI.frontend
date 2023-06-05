@@ -282,7 +282,6 @@ const EventDetails = () => {
 	return (
 		<section class="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
-			{/* {showNavBar && <HomePageNavBar />} */}
 
 			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
@@ -292,7 +291,7 @@ const EventDetails = () => {
 								<form method="POST">
 									<div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
 										<h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-										<span class="inline-block max-w-full break-words">
+										<span class="inline-block max-w-full break-words" style={{ fontFamily: 'Poppins, sans-serif' }}>
 											{title}
 										</span>
 										</h1>
@@ -302,7 +301,7 @@ const EventDetails = () => {
 												class={handleClassName}
 												onClick={() => handleFavorite()}
 											>
-												<span class="ml-1">
+												<span class="ml-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{favoriteId !== 0 ? t("unfavorite") : t("favourites")}
 												</span>
 											</button>
@@ -312,7 +311,7 @@ const EventDetails = () => {
 									<div class="flex flex-wrap gap-1 justify-between mt-6">
 										<div>
 											{input.categoryId == 1 ? (
-												<p className="text-start">{t("news")}</p>
+												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("news")}</p>
 											) : null}
 											{input.categoryId == 2 ? (
 												<p className="text-start">{t("roadTraffic")}</p>
