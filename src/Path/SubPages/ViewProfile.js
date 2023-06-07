@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
-import { useLocation, useNavigate } from "react-router-dom";
 import { getUserListings, getProfile } from "../../Services/usersApi";
 import { getVillages } from "../../Services/villages";
 import {

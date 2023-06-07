@@ -108,7 +108,7 @@ const LoginPage = () => {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage("Login Failed. " + err.response.data.message);
+			setAlertMessage("Login Failed. Please check Username / Password and try again");
 		}
 	};
 
