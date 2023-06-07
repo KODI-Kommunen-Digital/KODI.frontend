@@ -18,7 +18,6 @@ import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/SubPages/CitizenService";
-import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
 
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
@@ -56,7 +55,6 @@ const App = () => {
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
-					<Route path="/ViewMoreListings" element={<ViewMoreListings />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
