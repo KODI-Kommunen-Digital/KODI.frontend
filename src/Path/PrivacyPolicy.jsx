@@ -114,25 +114,25 @@ export default function ImprintPage() {
 				</p>
 				<br />
 				<p class="font-sans font-semibold text-black  mb-1 text-sm title-font">
-					Stabsstelle Smart Region AUF
+					{/* Stabsstelle Smart Region AUF */}Ilzer Land e.V.
 				</p>
 				<br />
 				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Gemeinde Fuchstal
+					{/* Gemeinde Fuchstal */}1. Vorsitzender Werner Weny
 				</p>
 				<br />
 				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Geschäftsstelle im Rathaus Fuchstal in Leeder,
+					{/* Geschäftsstelle im Rathaus Fuchstal in Leeder, */}Marktplatz 11
 				</p>
 				<br />
 				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Bahnhofstraße 1
+					{/* Bahnhofstraße 1 */}94157 Perlesreut
 				</p>
 				<br />
-				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
+				{/* <p class="font-sans font-semibold text-black mb-1 text-sm title-font">
 					86925 Fuchstal
 				</p>
-				<br />
+				<br /> */}
 
 				<p class="font-sans font-bold text-black mb-1 text-2xl title-font">
 					{t("contact")} :
@@ -140,15 +140,16 @@ export default function ImprintPage() {
 				<br />
 
 				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Telefon: 08243 9699-30
+					{/* Telefon: 08243 9699-30 */} Telefon : +49 8555 4076115
 				</p>
 				<br />
-				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
+				{/* <p class="font-sans font-semibold text-black mb-1 text-sm title-font">
 					Telefax: 08243 9699-25
 				</p>
-				<br />
+				<br /> */}
 				<p class="font-sans font-semibold text-black mb-1 text-sm title-font">
-					{t("Email")}: smartregionauf@vgem-fuchstal.de
+					{/* {t("Email")}: smartregionauf@vgem-fuchstal.de */}
+					{t("Email")} : info@ilzerland.
 				</p>
 				<br />
 
@@ -168,11 +169,11 @@ export default function ImprintPage() {
 					{t("Righttoobject1")}
 				</p>
 				<br />
-				<p class="font-sans font-bold text-black  mb-1 text-xl title-font">
+				<p class="font-sans font-bold text-black  mb-1 text-sm title-font">
 					{t("Righttoobject2")}
 				</p>
 				<br />
-				<p class="font-sans font-bold text-black  mb-1 text-xl title-font">
+				<p class="font-sans font-bold text-black  mb-1 text-sm title-font">
 					{t("Rightofappeal")}
 				</p>
 				<br />
