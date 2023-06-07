@@ -105,7 +105,7 @@
 	}
 
 	return (
-		<section className="bg-slate-600 body-font relative h-full">
+		<section className="bg-slate-600 body-font relative h-screen">
 		<SideBar />
 		<>
 			<div class="container w-auto px-5 py-2 bg-slate-600">
@@ -195,7 +195,7 @@
 			</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
+			{/* <div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6">
 					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
 					{t("allDevices")}
@@ -216,7 +216,7 @@
 					</button>
 					</div>
 				</div>
-			</div>
+			</div> */}
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 			<div class="bg-white mt-4 p-6">
