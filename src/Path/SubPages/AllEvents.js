@@ -136,7 +136,7 @@ const Events = () => {
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
 							/>
 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
+								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
@@ -149,7 +149,7 @@ const Events = () => {
 												onChange={(e) => setCityId(e.target.value)}
 												value={cityId}
 												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
+												style={{ fontFamily: 'Poppins, sans-serif' }}>
 												<option class="font-sans" value={0} key={0}>
 													{t("allCities")}
 												</option>
@@ -172,7 +172,7 @@ const Events = () => {
 												onChange={(e) => setCategoryId(e.target.value)}
 												value={categoryId}
 												class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
+												style={{ fontFamily: 'Poppins, sans-serif' }}>
 												<option class="font-sans" value={0} key={0}>
 													{t("allCategories")}
 												</option>
@@ -193,7 +193,7 @@ const Events = () => {
 												onChange={handleSortOptionChange}
 												autocomplete="country-name"
 												class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-											>
+												style={{ fontFamily: 'Poppins, sans-serif' }}>
 												<option value="">{t("sort")}</option>
 												<option value="titleAZ">{t("atoztitle")}</option>
 												<option value="titleZA">{t("ztoatitle")}</option>
@@ -238,20 +238,19 @@ const Events = () => {
 												/>
 											</a>
 											<div class="mt-5 px-2">
-												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate">
+												<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
 													{listing.title}
 												</h2>
 											</div>
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId == 3 ? (
-											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans">
+											<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans" style={{ fontFamily: 'Poppins, sans-serif' }}>
 												{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
 												" To " +
 												new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
 											</p>
 											):(
-												<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-												dangerouslySetInnerHTML={{ __html: listing.description }} />
+												<p className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate" style={{ fontFamily: 'Poppins, sans-serif' }} dangerouslySetInnerHTML={{ __html: listing.description }} />
 											)}
 										</div>
 									))}
@@ -260,16 +259,17 @@ const Events = () => {
 					) : (
 						<div>
 							<div class="flex items-center justify-center">
-								<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
 									{t("currently_no_listings")}
 								</h1>
 							</div>
-							<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl" style={{ fontFamily: 'Poppins, sans-serif' }}>
 								<span class="font-sans text-black">
 									{t("to_upload_new_listing")}
 								</span>
 								<a
 									class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+									style={{ fontFamily: 'Poppins, sans-serif' }}
 									onClick={() => {
 										localStorage.setItem("selectedItem", "Choose one category");
 										isLoggedIn
@@ -287,6 +287,7 @@ const Events = () => {
 					{pageNo !== 1 ? (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							style={{ fontFamily: 'Poppins, sans-serif' }}
 							onClick={() => setPageNo(pageNo - 1)}
 						>
 							{"<"}{" "}
@@ -294,12 +295,13 @@ const Events = () => {
 					) : (
 						<span />
 					)}
-					<span className="text-lg px-3">
+					<span className="text-lg px-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
 						{t("page")} {pageNo}
 					</span>
 					{listings.length >= 9 &&  (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							style={{ fontFamily: 'Poppins, sans-serif' }}
 							onClick={() => setPageNo(pageNo + 1)}
 						>
 							{">"}
