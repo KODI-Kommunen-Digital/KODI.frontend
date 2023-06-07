@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { resetPass,login } from "../Services/usersApi";
+import { resetPass, login } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 const LoginPage = () => {

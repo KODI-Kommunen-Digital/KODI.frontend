@@ -94,7 +94,7 @@
 // 			default:
 // 				break;
 // 		}
-// 	}, [selectedSortOption]);
+// 	}, [selectedSortOption, listings]);
 
 // 	const [content, setContent] = useState("A");
 // 	const handleButtonClick = (value) => {

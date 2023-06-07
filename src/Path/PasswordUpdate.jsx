@@ -110,7 +110,12 @@ const PasswordUpdate = () => {
 		<div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 			<div class="w-full max-w-md space-y-8">
 				<div>
-					<img onClick={() => navigate("/")} class="mx-auto h-20 w-auto cursor-pointer" src={HEIDI_Logo} alt="HEIDI" />
+					<img
+						onClick={() => navigate("/")}
+						class="mx-auto h-20 w-auto cursor-pointer"
+						src={HEIDI_Logo}
+						alt="HEIDI"
+					/>
 					<h3 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
 						{t("updatePassword")}
 					</h3>
