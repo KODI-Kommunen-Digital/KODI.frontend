@@ -18,7 +18,6 @@ import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/SubPages/CitizenService";
-import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
 
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
@@ -32,8 +31,6 @@ import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
 import "./i18n";
-
-//import OpenStreetMap from './Components/OpenStreetMap';
 
 const App = () => {
 	useEffect(() => {
@@ -52,17 +49,24 @@ const App = () => {
 					<Route path="/" element={<HomePage />} />
 					<Route path="/Places" element={<Places />} />
 
-					<Route path="/HomePage/EventDetails" exact element={<EventDetails />} />
+					<Route
+						path="/HomePage/EventDetails"
+						exact
+						element={<EventDetails />}
+					/>
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
-					<Route path="/ViewMoreListings" element={<ViewMoreListings />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
 					<Route path="/AccountSettings" element={<AccountSettings />} exact />
 					<Route path="/AllDevices" element={<AllDevices />} exact />
-					<Route path="/PrivacyPolicyPopup" element={<PrivacyPolicyPopup />} exact />
+					<Route
+						path="/PrivacyPolicyPopup"
+						element={<PrivacyPolicyPopup />}
+						exact
+					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
@@ -72,7 +76,7 @@ const App = () => {
 					<Route path="/ImprintPage" element={<ImprintPage />} />
 					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
-					<Route path="/Favorite" element={<Favorites/>}/>
+					<Route path="/Favorite" element={<Favorites />} />
 					<Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
 					<Route path="/OverviewPage" element={<OverviewPage />} />

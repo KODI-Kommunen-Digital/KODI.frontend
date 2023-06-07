@@ -76,10 +76,14 @@ class ProfilePage extends React.Component {
 	}
 
 	componentDidMount() {
-		const accessToken = window.localStorage.getItem("accessToken") || window.sessionStorage.getItem("accessToken");
-		const refreshToken = window.localStorage.getItem("refreshToken") || window.sessionStorage.getItem("refreshToken");
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
 		if (!accessToken && !refreshToken) {
-		this.navigateTo("/login");
+			this.navigateTo("/login");
 		}
 		const { t } = this.props;
 		document.title = "Profile";
@@ -93,11 +97,7 @@ class ProfilePage extends React.Component {
 			})
 			.catch((error) => {
 				this.setPageLoading(false);
-				this.setAlertInfo(
-					true,
-					t("failedToFetchData"),
-					"danger"
-				);
+				this.setAlertInfo(true, t("failedToFetchData"), "danger");
 			});
 	}
 	componentDidUpdate() {
@@ -163,7 +163,7 @@ class ProfilePage extends React.Component {
 		if (event.target.name === "firstname") {
 			if (!event.target.value) {
 				this.setShowError("firstname", true);
-				this.setErrorMessage("firstname",t("this_field_cannot_be_empty"));
+				this.setErrorMessage("firstname", t("this_field_cannot_be_empty"));
 			} else {
 				this.setShowError("firstname", false);
 				this.setErrorMessage("firstname", "");
@@ -183,10 +183,7 @@ class ProfilePage extends React.Component {
 				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (!re.test(event.target.value)) {
 				this.setShowError("email", true);
-				this.setErrorMessage(
-					"email",
-					t("entered_email_not_valid")
-				);
+				this.setErrorMessage("email", t("entered_email_not_valid"));
 			} else {
 				this.setShowError("email", false);
 				this.setErrorMessage("email", "");
@@ -195,10 +192,7 @@ class ProfilePage extends React.Component {
 		if (event.target.name === "socialMedia") {
 			if (!event.target.value) {
 				this.setShowError("socialMedia", true);
-				this.setErrorMessage(
-					"socialMedia",
-					t("enter_valid_social_media")
-				);
+				this.setErrorMessage("socialMedia", t("enter_valid_social_media"));
 			} else {
 				this.setShowError("socialMedia", false);
 				this.setErrorMessage("socialMedia", "");
@@ -208,10 +202,7 @@ class ProfilePage extends React.Component {
 			let re = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
 			if (!re.test(event.target.value)) {
 				this.setShowError("phoneNumber", true);
-				this.setErrorMessage(
-					"phoneNumber",
-					t("enter_valid_phone_number")
-				);
+				this.setErrorMessage("phoneNumber", t("enter_valid_phone_number"));
 			} else {
 				this.setShowError("phoneNumber", false);
 				this.setErrorMessage("phoneNumber", "");
@@ -260,11 +251,7 @@ class ProfilePage extends React.Component {
 							if (newState.updatingProfile !== false) {
 								newState.updatingProfile = false;
 								this.setState(newState, () => {
-									this.setAlertInfo(
-										true,
-										t("changesNotSaved"),
-										"danger"
-									);
+									this.setAlertInfo(true, t("changesNotSaved"), "danger");
 									setInterval(() => {
 										this.setAlertInfo(false, "", null);
 									}, 5000);
@@ -274,11 +261,7 @@ class ProfilePage extends React.Component {
 				});
 			}
 		} else {
-			this.setAlertInfo(
-				true,
-				t("invalidData"),
-				"danger"
-			);
+			this.setAlertInfo(true, t("invalidData"), "danger");
 			setInterval(() => {
 				this.setAlertInfo(false, "", null);
 			}, 5000);
@@ -329,8 +312,7 @@ class ProfilePage extends React.Component {
 		if (newPassword !== confirmPassword) {
 			this.setState({
 				showError: true,
-				errorMessage:
-					t("password_do_not_match"),
+				errorMessage: t("password_do_not_match"),
 			});
 			return;
 		}
@@ -383,16 +365,25 @@ class ProfilePage extends React.Component {
 					<div>
 						<div class="container w-auto px-5 py-2">
 							<div class="bg-white mt-4 p-6">
-								<h2 class="text-gray-900 text-lg mb-4 font-medium title-font" style={{ fontFamily: 'Poppins, sans-serif' }}>
+								<h2
+									class="text-gray-900 text-lg mb-4 font-medium title-font"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+								>
 									{t("account")}
 									<div className="my-4 bg-gray-600 h-[1px]" />
 								</h2>
 								<div class="relative mb-4">
 									<div class="pb-8">
-										<label class="block px-2 text-lg font-medium text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
+										<label
+											class="block px-2 text-lg font-medium text-gray-600"
+											style={{ fontFamily: "Poppins, sans-serif" }}
+										>
 											{t("profile")}
 										</label>
-										<label class="block px-2 text-sm font-medium text-gray-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+										<label
+											class="block px-2 text-sm font-medium text-gray-400"
+											style={{ fontFamily: "Poppins, sans-serif" }}
+										>
 											{t("displayed_publicly")}
 										</label>
 									</div>
@@ -401,7 +392,8 @@ class ProfilePage extends React.Component {
 											<label
 												htmlFor="firstname"
 												class="block text-md font-medium text-gray-600"
-												style={{ fontFamily: 'Poppins, sans-serif' }}>
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
 												{t("firstName")} *
 											</label>
 											<input
@@ -413,7 +405,7 @@ class ProfilePage extends React.Component {
 												required
 												defaultValue={this.state.profile.firstname}
 												onChange={this.handleProfileChange}
-												style={{ fontFamily: 'Poppins, sans-serif' }}
+												style={{ fontFamily: "Poppins, sans-serif" }}
 											/>
 											<div
 												className="h-[24px] text-red-600"
@@ -430,7 +422,8 @@ class ProfilePage extends React.Component {
 											<label
 												htmlFor="lastname"
 												class="block text-md font-medium text-gray-600"
-												style={{ fontFamily: 'Poppins, sans-serif' }}>
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
 												{t("lastName")} *
 											</label>
 											<input
@@ -442,7 +435,7 @@ class ProfilePage extends React.Component {
 												placeholder={t("pleaseEnterLastName")}
 												defaultValue={this.state.profile.lastname}
 												onChange={this.handleProfileChange}
-												style={{ fontFamily: 'Poppins, sans-serif' }}
+												style={{ fontFamily: "Poppins, sans-serif" }}
 											/>
 											<div
 												className="h-[24px] text-red-600"
@@ -461,7 +454,8 @@ class ProfilePage extends React.Component {
 											<label
 												htmlFor="username"
 												class="block text-md font-medium text-gray-600"
-												style={{ fontFamily: 'Poppins, sans-serif' }}>
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
 												{t("username")}
 											</label>
 											<input
@@ -473,7 +467,7 @@ class ProfilePage extends React.Component {
 												required
 												defaultValue={this.state.profile.username}
 												onChange={this.handleProfileChange}
-												style={{ fontFamily: 'Poppins, sans-serif' }}
+												style={{ fontFamily: "Poppins, sans-serif" }}
 												disabled={true}
 											/>
 										</div>
@@ -491,14 +485,18 @@ class ProfilePage extends React.Component {
 													<img
 														class="rounded-full h-20 w-20"
 														src={
-																this.state.profile.image
-																? (process.env.REACT_APP_BUCKET_HOST + this.state.profile.image)
+															this.state.profile.image
+																? process.env.REACT_APP_BUCKET_HOST +
+																  this.state.profile.image
 																: PROFILEIMAGE
-															}
+														}
 														alt="profile"
 													/>
 												</div>
-												<div class="flex flex-col justify-center items-start" style={{ fontFamily: 'Poppins, sans-serif' }}>
+												<div
+													class="flex flex-col justify-center items-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
 													<ChangeImage
 														input={this.state}
 														setInput={this.setProfile.bind(this)}
@@ -508,7 +506,8 @@ class ProfilePage extends React.Component {
 													<button
 														onClick={() => this.setProfile("image", "")}
 														class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center"
-														style={{ fontFamily: 'Poppins, sans-serif' }}>
+														style={{ fontFamily: "Poppins, sans-serif" }}
+													>
 														{t("remove")}
 													</button>
 												</div>
@@ -520,7 +519,8 @@ class ProfilePage extends React.Component {
 											<label
 												htmlFor="description"
 												class="block text-md font-medium text-gray-600"
-												style={{ fontFamily: 'Poppins, sans-serif' }}>
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
 												{t("description")}
 											</label>
 											<textarea
@@ -530,7 +530,7 @@ class ProfilePage extends React.Component {
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 												placeholder={t("enter_description")}
 												defaultValue={this.state.profile.description}
-												style={{ fontFamily: 'Poppins, sans-serif' }}
+												style={{ fontFamily: "Poppins, sans-serif" }}
 												onChange={this.handleProfileChange}
 											/>
 										</div>
@@ -540,7 +540,8 @@ class ProfilePage extends React.Component {
 											<label
 												htmlFor="website"
 												class="block text-md font-medium text-gray-600"
-												style={{ fontFamily: 'Poppins, sans-serif' }}>
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
 												{t("url/website")}
 											</label>
 											<input
@@ -550,7 +551,7 @@ class ProfilePage extends React.Component {
 												class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 												placeholder={t("enter_website")}
 												defaultValue={this.state.profile.website}
-												style={{ fontFamily: 'Poppins, sans-serif' }}
+												style={{ fontFamily: "Poppins, sans-serif" }}
 												onChange={this.handleProfileChange}
 											/>
 										</div>
@@ -568,7 +569,8 @@ class ProfilePage extends React.Component {
 										disabled={
 											!this.state.formValid || this.state.updatingProfile
 										}
-										style={{ fontFamily: 'Poppins, sans-serif' }}>
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
 										{t("saveChanges")}
 										{this.state.updatingProfile && (
 											<svg
