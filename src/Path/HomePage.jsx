@@ -36,7 +36,7 @@ const HomePage = () => {
       pageNo: 1,
       pageSize: 8,
     }).then((response) => {
-      setListings(response.data.data);
+      setListings([...sortLatestFirst(response.data.data)]);
     });
     document.title = "Heidi Home";
   }, []);
@@ -63,7 +63,7 @@ const HomePage = () => {
     window.history.replaceState({}, "", newUrl);
     getListings(params).then((response) => {
       var data = response.data.data;
-      setListings(data);
+      setListings([...sortLatestFirst(data)]);
     });
   }, [cities, cityId, window.location.href]);
 
