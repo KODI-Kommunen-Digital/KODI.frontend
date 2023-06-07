@@ -62,5 +62,5 @@ export async function uploadProfilePic(formData) {
 }
 
 export async function deleteProfilePic() {
-  return axios.post(`/users/${getUserId()}/imageDelete`);
+  return axios.delete(`/users/${getUserId()}/imageDelete`);
 }

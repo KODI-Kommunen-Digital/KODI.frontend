@@ -21,7 +21,7 @@ export async function postListingsData(cityId, newListingsDataObj) {
   return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
 }
 
-export async function uploadListingImage(formData) {
+export async function uploadListingImage(formData, cityId, listingsId) {
   return axios.post(
     `/cities/${cityId}/listings/${listingsId}/imageUpload`,
     formData,
@@ -33,8 +33,8 @@ export async function uploadListingImage(formData) {
   );
 }
 
-export async function deleteListingImage() {
-  return axios.post(`/cities/${cityId}/listings/${listingsId}/imageDelete`);
+export async function deleteListingImage(cityId, listingsId) {
+  return axios.delete(`/cities/${cityId}/listings/${listingsId}/imageDelete`);
 }
 
 export async function updateListingsData(
