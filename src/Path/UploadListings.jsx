@@ -10,7 +10,8 @@ import {
 	getListingsById,
 	postListingsData,
 	updateListingsData,
-	uploadImage,
+	uploadListingImage,
+	deleteListingImage
 } from "../Services/listingsApi";
 
 import { getCities } from "../Services/cities";
