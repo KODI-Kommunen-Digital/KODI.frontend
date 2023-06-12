@@ -17,4 +17,4 @@ export const subcategoryById = {
     6: "tod",
     7: "local",
     8: "clubnews"
- }
+}

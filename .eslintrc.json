@@ -21,6 +21,8 @@
     "rules": {
         "react-hooks/rules-of-hooks": "error", 
         "react-hooks/exhaustive-deps": "warn" ,
+        // "indent":["error", 4],
+        // "no-tabs": 0,
         "no-var": "error",
         "camelcase": ["error", {
             "properties": "always"

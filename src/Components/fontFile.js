@@ -1,7 +1,7 @@
 module.exports = {
     theme: {
-      fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
-      },
+        fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+        },
     },
-  };
+};

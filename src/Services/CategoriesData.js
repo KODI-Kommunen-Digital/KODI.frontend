@@ -1,5 +1,5 @@
-//var baseUrl = "www.someapi.com"
-var categoriesObj = {
+// var baseUrl = "www.someapi.com"
+const categoriesObj = {
 
     "categories": [
         "News",
@@ -14,8 +14,8 @@ var categoriesObj = {
         "Company Portraits",
         "Carpooling And Public Transport",
         "Offers"
-     ],
-     "listings":[
+    ],
+    "listings":[
 
         {
             "title":"tile1",
@@ -46,7 +46,7 @@ var categoriesObj = {
             "date": "2011-01-20"
         }
 
-        ]
+    ]
 };
 
 export async function getCategoriesdata() {
