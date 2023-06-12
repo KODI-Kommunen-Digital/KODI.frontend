@@ -51,6 +51,10 @@ export async function login(credentials) {
 	return axios.post(`/users/login`, credentials);
 }
 
+export async function getDevice() {
+	return axios.get(`/users/devices`);
+}
+
 export async function logout(credentials) {
 	return axios.post(`users/${getUserId()}/logout`, credentials);
 }
