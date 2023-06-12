@@ -32,8 +32,6 @@ import PasswordUpdate from "./Path/PasswordUpdate";
 import HEIDI_Logo from "./Resource/HEIDI_Logo.png";
 import "./i18n";
 
-//import OpenStreetMap from './Components/OpenStreetMap';
-
 const App = () => {
 	useEffect(() => {
 		const link =
@@ -51,7 +49,11 @@ const App = () => {
 					<Route path="/" element={<HomePage />} />
 					<Route path="/Places" element={<Places />} />
 
-					<Route path="/HomePage/EventDetails" exact element={<EventDetails />} />
+					<Route
+						path="/HomePage/EventDetails"
+						exact
+						element={<EventDetails />}
+					/>
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
@@ -60,7 +62,11 @@ const App = () => {
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
 					<Route path="/AccountSettings" element={<AccountSettings />} exact />
 					<Route path="/AllDevices" element={<AllDevices />} exact />
-					<Route path="/PrivacyPolicyPopup" element={<PrivacyPolicyPopup />} exact />
+					<Route
+						path="/PrivacyPolicyPopup"
+						element={<PrivacyPolicyPopup />}
+						exact
+					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
@@ -70,7 +76,7 @@ const App = () => {
 					<Route path="/ImprintPage" element={<ImprintPage />} />
 					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
-					<Route path="/Favorite" element={<Favorites/>}/>
+					<Route path="/Favorite" element={<Favorites />} />
 					<Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
 					<Route path="/OverviewPage" element={<OverviewPage />} />
