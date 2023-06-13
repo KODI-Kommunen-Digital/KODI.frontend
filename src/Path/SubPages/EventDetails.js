@@ -117,7 +117,7 @@ const EventDetails = () => {
 				);
 			});
 		}
-	}, [t, cityId, isLoggedIn]);
+	}, [t, cityId, window.location.href, isLoggedIn]);
 
 	// const [villages, setVillages] = useState([]);
 	// async function onCityChange(e) {

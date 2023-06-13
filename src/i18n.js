@@ -5,21 +5,21 @@ import deTranslation from "./assets/translations/de.json";
 
 // the translations
 const resources = {
-    en: {
-        translation: enTranslation,
-    },
-    de: {
-        translation: deTranslation,
-    },
+	en: {
+		translation: enTranslation,
+	},
+	de: {
+		translation: deTranslation,
+	},
 };
 
 i18n.use(initReactI18next).init({
-    resources,
-    lng: "de",
-    keySeparator: false,
-    interpolation: {
-        escapeValue: false,
-    },
+	resources,
+	lng: "en",
+	keySeparator: false,
+	interpolation: {
+		escapeValue: false,
+	},
 });
 
 export default i18n;
