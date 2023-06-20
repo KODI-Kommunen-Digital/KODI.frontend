@@ -29,6 +29,14 @@ export async function uploadImage(formData) {
 	});
 }
 
+export async function uploadPDF(formData) {
+	return axios.post(`/users/${getUserId()}/pdfUpload`, formData, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
+}
+
 export async function updateListingsData(
 	cityId,
 	newListingsDataObj,

@@ -11,6 +11,7 @@ import {
 	postListingsData,
 	updateListingsData,
 	uploadImage,
+	uploadPDF,
 } from "../Services/listingsApi";
 
 import { getCities } from "../Services/cities";
@@ -35,7 +36,6 @@ function UploadListings() {
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
-	const [image2, setImage2] = useState(null);
 	const [dragging, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
@@ -45,34 +45,56 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	const [initialLoad, setInitialLoad] = useState(true);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	// useEffect(() =>{
-	// 	if (!isLoggedIn) {
-	// 		navigateTo("/login");
-	// 	}
-	// },[])
+	const [pdf, setPdf] = useState(null);
 
 	useEffect(() => {
-	if (initialLoad) {
-		window.scrollTo(0, 0);
-		setInitialLoad(false);
-	} else {
-		const _ = async () => {
-		if (image1 !== null) {
-			const form = new FormData();
-			form.append("image", image1);
-			const filePath = await uploadImage(form);
-			setInput((prevInput) => ({
-			...prevInput,
-			logo: filePath.data.path,
-			removeImage: false,
-			}));
-		}
-		};
+		if (initialLoad) {
+			window.scrollTo(0, 0);
+			setInitialLoad(false);
+		} else {
+			const updateInputState = async () => {
+				if (image1 !== null) {
+					const form = new FormData();
+					form.append("image", image1);
+					try {
+						const filePath = await uploadImage(form);
+						if (filePath?.data?.status === "success") {
+							setInput((prevInput) => ({
+								...prevInput,
+								logo: filePath?.data?.path || null,
+								removeImage: false,
+							}));
+						} else {
+							console.error("Image upload failed:", filePath?.data?.message);
+						}
+					} catch (error) {
+						console.error("Image upload error:", error);
+					}
+				}
 
-		_();
-	}
-	}, [initialLoad, image1]);
+				if (pdf !== null) {
+					const form = new FormData();
+					form.append("pdf", pdf);
+					try {
+						const filePath = await uploadPDF(form);
+						console.log(filePath.data);
+						if (filePath?.data?.status === "success") {
+							setInput((prevInput) => ({
+								...prevInput,
+								pdf: filePath?.data?.path || null,
+							}));
+						} else {
+							console.error("PDF upload failed:", filePath?.data?.message);
+						}
+					} catch (error) {
+						console.error("PDF upload error:", error);
+					}
+				}
+			};
+
+			updateInputState();
+		}
+	}, [initialLoad, image1, pdf]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -95,14 +117,25 @@ function UploadListings() {
 		e.preventDefault();
 		e.stopPropagation();
 		const file = e.dataTransfer.files[0];
-		setImage1(file);
+		if (file && file.type.startsWith("image/")) {
+			setImage1(file);
+		}
 		setDragging(false);
 	}
 
-	function handleInputChange1(e) {
+	function handleDropPDF(event) {
+		event.preventDefault();
+		const file = event.dataTransfer.files[0];
+		setPdf(file);
+		setDragging(false);
+	}
+
+	function handleInputChange(e) {
 		e.preventDefault();
 		const file = e.target.files[0];
-		setImage1(file);
+		if (file && file.type.startsWith("image/")) {
+			setImage1(file);
+		}
 	}
 
 	function handleRemoveImage1() {
@@ -110,37 +143,20 @@ function UploadListings() {
 		setInput((prevInput) => ({ ...prevInput, logo: null, removeImage: true }));
 	}
 
-	function handleDrop2(e) {
+	function handlePDFInputChange(e) {
 		e.preventDefault();
-		e.stopPropagation();
-		const file = e.dataTransfer.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
-		setDragging(false);
-	}
-
-	function handleInputChange2(e) {
 		const file = e.target.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
+		setPdf(file);
 	}
 
-	function handleRemoveImage2() {
-		setImage2(null);
-		setInput((prevInput) => ({ ...prevInput, media: "" }));
+	function handleRemovePDF() {
+		setPdf(null);
 	}
 	//Drag and Drop ends
 
 	//Sending data to backend starts
 	const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
 	const [input, setInput] = useState({
-		//"villageId": 1,
 		categoryId: 0,
 		subcategoryId: 0,
 		cityId: 0,
@@ -153,7 +169,7 @@ function UploadListings() {
 		email: "",
 		description: "",
 		logo: null,
-		//media: null,
+		pdf: null,
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
@@ -162,6 +178,7 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -170,15 +187,15 @@ function UploadListings() {
 		description: "",
 		cityId: "",
 		startDate: "",
-		endDate: ""
+		endDate: "",
 	});
 
 	const handleSubmit = async (event) => {
 		let valid = true;
 		for (let key in error) {
 			var errorMessage = getErrorMessage(key, input[key]);
-			var newError = error
-			newError[key] = errorMessage
+			var newError = error;
+			newError[key] = errorMessage;
 			setError(newError);
 			if (errorMessage) {
 				valid = false;
@@ -197,7 +214,6 @@ function UploadListings() {
 					setSuccessMessage(false);
 					navigate("/Dashboard");
 				}, 5000);
-
 			} catch (error) {
 				setErrorMessage(t("changesNotSaved"));
 				setSuccessMessage(false);
@@ -230,15 +246,15 @@ function UploadListings() {
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
-				let listingData = listingsResponse.data.data
+				let listingData = listingsResponse.data.data;
 				if (listingData.startDate)
-					listingData.startDate = listingData.startDate.slice(0,10)
+					listingData.startDate = listingData.startDate.slice(0, 10);
 				if (listingData.endDate)
-					listingData.endDate = listingData.endDate.slice(0,10)
+					listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
 				setDescription(listingData.description);
-				setCategoryId(listingData.categoryId)
+				setCategoryId(listingData.categoryId);
 			});
 		}
 	}, []);
@@ -250,7 +266,7 @@ function UploadListings() {
 				valid = false;
 			}
 		}
-	}, [error])
+	}, [error]);
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
@@ -278,24 +294,26 @@ function UploadListings() {
 	// 	setDescription(newContent);
 	// };
 
-		const onDescriptionChange = (newContent) => {
-			const hasNumberedList = newContent.includes("<ol>");
-			const hasBulletList = newContent.includes("<ul>");
-			let descriptions = [];
-			let listType = "";
-			if (hasNumberedList) {
+	const onDescriptionChange = (newContent) => {
+		const hasNumberedList = newContent.includes("<ol>");
+		const hasBulletList = newContent.includes("<ul>");
+		let descriptions = [];
+		let listType = "";
+		if (hasNumberedList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
 			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map((description, index) => `${index + 1}. ${description}`);
+			descriptions = descriptions.map(
+				(description, index) => `${index + 1}. ${description}`
+			);
 			listType = "ol";
-			} else if (hasBulletList) {
+		} else if (hasBulletList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
 			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
 			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
-			} else {
+		} else {
 			// No list tags found, treat the input as plain text
 			setInput((prev) => ({
 				...prev,
@@ -304,15 +322,17 @@ function UploadListings() {
 			console.log(input);
 			setDescription(newContent);
 			return;
-			}
-			const listHTML = `<${listType}>${descriptions.map((description) => `<li>${description}</li>`).join("")}</${listType}>`;
-			setInput((prev) => ({
+		}
+		const listHTML = `<${listType}>${descriptions
+			.map((description) => `<li>${description}</li>`)
+			.join("")}</${listType}>`;
+		setInput((prev) => ({
 			...prev,
 			description: listHTML,
-			}));
-			console.log(input);
-			setDescription(newContent);
-		};
+		}));
+		console.log(input);
+		setDescription(newContent);
+	};
 
 	const getErrorMessage = (name, value) => {
 		switch (name) {
@@ -376,13 +396,13 @@ function UploadListings() {
 			default:
 				return "";
 		}
-	}
+	};
 
 	const validateInput = (e) => {
 		let { name, value } = e.target;
 		var errorMessage = getErrorMessage(name, value);
-		setError(prevState => {
-			return { ...prevState, [name]: errorMessage }
+		setError((prevState) => {
+			return { ...prevState, [name]: errorMessage };
 		});
 	};
 	//Sending data to backend ends
@@ -405,15 +425,16 @@ function UploadListings() {
 		setQuery(result.display_name);
 		setSelectedResult(result);
 		setResults([]);
-	
-		if (map) { // Check if the map object is available
+
+		if (map) {
+			// Check if the map object is available
 			if (marker) {
 				marker.setLatLng([result.lat, result.lon]);
 			} else {
 				const newMarker = L.marker([result.lat, result.lon]).addTo(map);
 				setMarker(newMarker);
 			}
-	
+
 			map.setView([result.lat, result.lon], 13);
 		}
 	};
@@ -474,7 +495,7 @@ function UploadListings() {
 		}));
 		if (parseInt(cityId))
 			getVillages(cityId).then((response) => setVillages(response.data.data));
-		validateInput(e)
+		validateInput(e);
 	}
 	const [categoryId, setCategoryId] = useState(0);
 	const [subcategoryId, setSubcategoryId] = useState(0);
@@ -484,7 +505,7 @@ function UploadListings() {
 		setCategoryId(categoryId);
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
-		validateInput(event)
+		validateInput(event);
 
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("categoryId", categoryId);
@@ -497,7 +518,7 @@ function UploadListings() {
 		let subcategoryId = event.target.value;
 		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		setSubcategoryId(subcategoryId);
-		validateInput(event)
+		validateInput(event);
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("subcategoryId", subcategoryId);
 		if (subcategoryId === 0) {
@@ -508,16 +529,16 @@ function UploadListings() {
 	};
 
 	function formatDateTime(dateTimeString) {
-		return dateTimeString.replace('T', ' ');
+		return dateTimeString.replace("T", " ");
 	}
 
 	return (
 		<section class="bg-slate-600 body-font relative">
 			<SideBar
-				// handleGetAllListings={() => {
-				// }}
-				// handleGetUserListings={() => {
-				// }}
+			// handleGetAllListings={() => {
+			// }}
+			// handleGetUserListings={() => {
+			// }}
 			/>
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
@@ -544,9 +565,7 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.title
-									? "visible"
-									: "hidden",
+								visibility: error.title ? "visible" : "hidden",
 							}}
 						>
 							{error.title}
@@ -575,41 +594,40 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.cityId
-									? "visible"
-									: "hidden",
+								visibility: error.cityId ? "visible" : "hidden",
 							}}
 						>
 							{error.cityId}
 						</div>
 					</div>
 
-					{
-						villages.length > 0 && parseInt(cityId) ? (
-							<div class="relative mb-4">
-								<label for="title" class="block text-sm font-medium text-gray-600">
-									{t("village")}
-								</label>
-								<select
-									type="villageId"
-									id="villageId"
-									name="villageId"
-									value={input.villageId}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									autocomplete="country-name"
-									class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-								>
-									<option value={0}>{t("select")}</option>
-									{villages.map((village) => (
-										<option value={Number(village.id)}>{village.name}</option>
-									))}
-								</select>
-							</div>
-						) : (
-							<span />
-						)
-					}
+					{villages.length > 0 && parseInt(cityId) ? (
+						<div class="relative mb-4">
+							<label
+								for="title"
+								class="block text-sm font-medium text-gray-600"
+							>
+								{t("village")}
+							</label>
+							<select
+								type="villageId"
+								id="villageId"
+								name="villageId"
+								value={input.villageId}
+								onChange={onInputChange}
+								onBlur={validateInput}
+								autocomplete="country-name"
+								class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							>
+								<option value={0}>{t("select")}</option>
+								{villages.map((village) => (
+									<option value={Number(village.id)}>{village.name}</option>
+								))}
+							</select>
+						</div>
+					) : (
+						<span />
+					)}
 
 					<div class="relative mb-4">
 						<label
@@ -642,16 +660,14 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.categoryId
-									? "visible"
-									: "hidden",
+								visibility: error.categoryId ? "visible" : "hidden",
 							}}
 						>
 							{error.categoryId}
 						</div>
 					</div>
 
-					{categoryId == categoryByName.news  && (
+					{categoryId == categoryByName.news && (
 						<div class="relative mb-4">
 							<label
 								for="subcategoryId"
@@ -683,9 +699,7 @@ function UploadListings() {
 							<div
 								className="h-[24px] text-red-600"
 								style={{
-									visibility: error.subcategoryId
-										? "visible"
-										: "hidden",
+									visibility: error.subcategoryId ? "visible" : "hidden",
 								}}
 							>
 								{error.selectedSubCategory}
@@ -813,9 +827,7 @@ function UploadListings() {
 									<div
 										className="h-[24px] text-red-600"
 										style={{
-											visibility: error.startDate
-												? "visible"
-												: "hidden",
+											visibility: error.startDate ? "visible" : "hidden",
 										}}
 									>
 										{error.startDate}
@@ -842,7 +854,7 @@ function UploadListings() {
 										type="datetime-local"
 										id="endDate"
 										name="endDate"
-										value={input.endDate.replace('T', ' ')}
+										value={input.endDate.replace("T", " ")}
 										onChange={onInputChange}
 										onBlur={validateInput}
 										class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -851,9 +863,7 @@ function UploadListings() {
 									<div
 										className="h-[24px] text-red-600"
 										style={{
-											visibility: error.endDate
-												? "visible"
-												: "hidden",
+											visibility: error.endDate ? "visible" : "hidden",
 										}}
 									>
 										{error.endDate}
@@ -957,10 +967,10 @@ function UploadListings() {
 							onBlur={(range, source, editor) => {
 								validateInput({
 									target: {
-										name:"description",
-										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, "")
-									}
-								})
+										name: "description",
+										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
+									},
+								});
 							}}
 							placeholder={t("writeSomethingHere")}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -968,9 +978,7 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.description
-									? "visible"
-									: "hidden",
+								visibility: error.description ? "visible" : "hidden",
 							}}
 						>
 							{error.description}
@@ -979,7 +987,7 @@ function UploadListings() {
 				</div>
 			</div>
 
-			{categoryId != categoryByName.roadTraffic  && (
+			{categoryId != categoryByName.roadTraffic && (
 				<div class="container w-auto px-5 py-2 bg-slate-600">
 					<div class="bg-white mt-4 p-6 space-y-10">
 						<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -1031,7 +1039,7 @@ function UploadListings() {
 											/>
 										</svg>
 										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropFile")}
+											{t("dragAndDropImage")}
 										</p>
 										<div class="relative mb-4 mt-8">
 											<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
@@ -1040,7 +1048,7 @@ function UploadListings() {
 													id="image1-upload"
 													type="file"
 													className="sr-only"
-													onChange={handleInputChange1}
+													onChange={handleInputChange}
 												/>
 											</label>
 										</div>
@@ -1048,13 +1056,73 @@ function UploadListings() {
 								)}
 							</div>
 						</div>
+
+						{(categoryId == categoryByName.officialnotification ||
+							categoryId == categoryByName.regionalProducts ||
+							categoryId == categoryByName.news ||
+							categoryId == categoryByName.offerSearch) && (
+							<div>
+								<label className="block text-sm font-medium text-gray-700">
+									{t("addPDFHere")}
+								</label>
+								<div
+									className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+									onDrop={handleDropPDF}
+									onDragOver={handleDragOver}
+									onDragEnter={handleDragEnter}
+									onDragLeave={handleDragLeave}
+								>
+									{pdf || input.pdf ? (
+										<div className="flex flex-col items-center">
+											<p>{pdf ? pdf.name : input.pdf}</p>
+											<button
+												className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+												onClick={handleRemovePDF}
+											>
+												{t("remove")}
+											</button>
+										</div>
+									) : (
+										<div className="text-center">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="mx-auto h-12 w-12"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
+													clipRule="evenodd"
+												/>
+											</svg>
+											<p className="mt-1 text-sm text-gray-600">
+												{t("dragAndDropPDF")}
+											</p>
+											<div class="relative mb-4 mt-8">
+												<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
+													<span className="button-label">{t("upload")}</span>
+													<input
+														id="pdf-upload"
+														type="file"
+														accept="application/pdf"
+														className="sr-only"
+														onChange={handlePDFInputChange}
+													/>
+												</label>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 			)}
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<div class="relative mb-4 mt-8 border-white">
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6">
+					<div className="py-2 mt-1 px-2">
 						<button
 							type="button"
 							onClick={handleSubmit}

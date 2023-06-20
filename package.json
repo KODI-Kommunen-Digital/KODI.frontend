@@ -31,14 +31,28 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^2.1.4"
+    "ua-parser-js": "^1.0.35",
+    "web-vitals": "^2.1.4",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier-eslint": "^15.0.1",
+    "tailwindcss": "^3.2.4"
   },
   "scripts": {
+    "lint": "eslint",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "pm2 start --name WEB npm -- start"
+    "deploy": "pm2 start --name WEB npm -- start",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "eslintConfig": {
     "extends": [
@@ -59,6 +73,5 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.2.4"
   }
 }
