@@ -22,6 +22,8 @@ import CitizenService from "./Path/SubPages/CitizenService";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
+import CreateGroup from "./Path/CreateGroup";
+import YourGroups from "./Path/YourGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
@@ -33,63 +35,65 @@ import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
 
 const App = () => {
-    useEffect(() => {
-        const link =
+	useEffect(() => {
+		const link =
 			document.querySelector("link[rel*='icon']") ||
 			document.createElement("link");
-        link.type = "image/x-icon";
-        link.rel = "shortcut icon";
-        link.href = HeidiLogo;
-        document.getElementsByTagName("head")[0].appendChild(link);
-    }, []);
-    return (
-        <BrowserRouter>
-            <div>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/Places" element={<Places />} />
+		link.type = "image/x-icon";
+		link.rel = "shortcut icon";
+		link.href = HeidiLogo;
+		document.getElementsByTagName("head")[0].appendChild(link);
+	}, []);
+	return (
+		<BrowserRouter>
+			<div>
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/Places" element={<Places />} />
 
-                    <Route
-                        path="/HomePage/EventDetails"
-                        exact
-                        element={<EventDetails />}
-                    />
-                    <Route path="/AllEvents" element={<AllEvents />} />
-                    <Route path="/ViewProfile" element={<ViewProfile />} />
-                    <Route path="/CitizenService" element={<CitizenService />} />
+					<Route
+						path="/HomePage/EventDetails"
+						exact
+						element={<EventDetails />}
+					/>
+					<Route path="/AllEvents" element={<AllEvents />} />
+					<Route path="/ViewProfile" element={<ViewProfile />} />
+					<Route path="/CitizenService" element={<CitizenService />} />
 
-                    <Route path="/Dashboard" element={<Dashboard />} exact />
-                    <Route path="/DashboardAdmin" element={<Dashboard />} exact />
-                    <Route path="/AccountSettings" element={<AccountSettings />} exact />
-                    <Route path="/AllDevices" element={<AllDevices />} exact />
-                    <Route
-                        path="/PrivacyPolicyPopup"
-                        element={<PrivacyPolicyPopup />}
-                        exact
-                    />
-                    <Route path="/UploadListings" element={<UploadListings />} exact />
-                    <Route path="/ProfilePage" element={<ProfilePage />} />
-                    <Route path="/PasswordForgot" element={<PasswordForgot />} />
-                    <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/Register" element={<Register />} />
-                    <Route path="/ImprintPage" element={<ImprintPage />} />
-                    <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+					<Route path="/Dashboard" element={<Dashboard />} exact />
+					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
+					<Route path="/AccountSettings" element={<AccountSettings />} exact />
+					<Route path="/AllDevices" element={<AllDevices />} exact />
+					<Route
+						path="/PrivacyPolicyPopup"
+						element={<PrivacyPolicyPopup />}
+						exact
+					/>
+					<Route path="/UploadListings" element={<UploadListings />} exact />
+					<Route path="/CreateGroup" element={<CreateGroup />} exact />
+					<Route path="/YourGroups" element={<YourGroups />} exact />
+					<Route path="/ProfilePage" element={<ProfilePage />} />
+					<Route path="/PasswordForgot" element={<PasswordForgot />} />
+					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/Register" element={<Register />} />
+					<Route path="/ImprintPage" element={<ImprintPage />} />
+					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
-                    <Route path="/Favorite" element={<Favorites />} />
-                    <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
+					<Route path="/Favorite" element={<Favorites />} />
+					<Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
-                    <Route path="/OverviewPage" element={<OverviewPage />} />
-                    <Route
-                        path="/OverviewPage/NewsCategories"
-                        element={<OverviewPageNewsCategories />}
-                    />
-                    <Route path="/VerifyEmail" element={<VerifyEmail />} />
-                    <Route path="*" element={<Error />} />
-                </Routes>
-            </div>
-        </BrowserRouter>
-    );
+					<Route path="/OverviewPage" element={<OverviewPage />} />
+					<Route
+						path="/OverviewPage/NewsCategories"
+						element={<OverviewPageNewsCategories />}
+					/>
+					<Route path="/VerifyEmail" element={<VerifyEmail />} />
+					<Route path="*" element={<Error />} />
+				</Routes>
+			</div>
+		</BrowserRouter>
+	);
 };
 
 export default App;
