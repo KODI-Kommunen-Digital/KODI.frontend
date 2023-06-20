@@ -123,14 +123,15 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {/* Geschäftsstelle im Rathaus Fuchstal in Leeder, */}Marktplatz 11
+                    {/* Geschäftsstelle im Rathaus Fuchstal in Leeder, */}
+                    Marktplatz 11
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     {/* Bahnhofstraße 1 */}94157 Perlesreut
                 </p>
                 <br />
-                {/* <p class="font-sans font-semibold text-black mb-1 text-sm title-font">
+                {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
 					86925 Fuchstal
 				</p>
 				<br /> */}
@@ -144,7 +145,7 @@ export default function ImprintPage() {
                     {/* Telefon: 08243 9699-30 */} Telefon : +49 8555 4076115
                 </p>
                 <br />
-                {/* <p class="font-sans font-semibold text-black mb-1 text-sm title-font">
+                {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
 					Telefax: 08243 9699-25
 				</p>
 				<br /> */}
@@ -256,7 +257,7 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-					Cookies
+                    Cookies
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -282,7 +283,7 @@ export default function ImprintPage() {
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     {t("Serverlogfiles1")}
                 </p>
-                {/* <p class="font-sans font-semibold text-black mb-1 text-sm title-font">
+                {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
 					{t("Serverlogfiles2")}
 				</p> */}
                 <br />
@@ -510,7 +511,7 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-					PayPal
+                    PayPal
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -530,7 +531,7 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-					Stripe
+                    Stripe
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -551,7 +552,7 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-					a. Youtube
+                    a. Youtube
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -575,7 +576,7 @@ export default function ImprintPage() {
                 </p>
                 <br />
                 <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-					c. Google Maps
+                    c. Google Maps
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">

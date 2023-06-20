@@ -577,7 +577,7 @@ function UploadListings() {
     }
 
     return (
-        <section class="bg-slate-600 body-font relative">
+        <section className="bg-slate-600 body-font relative">
             <SideBar
             // handleGetAllListings={() => {
             // }}
@@ -585,16 +585,16 @@ function UploadListings() {
             // }}
             />
 
-            <div class="container w-auto px-5 py-2 bg-slate-600">
-                <div class="bg-white mt-4 p-6 space-y-10">
-                    <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+            <div className="container w-auto px-5 py-2 bg-slate-600">
+                <div className="bg-white mt-4 p-6 space-y-10">
+                    <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
                         {t("uploadPost")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="title"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("title")} *
                         </label>
@@ -606,7 +606,7 @@ function UploadListings() {
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
-                            class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
                         <div
@@ -619,10 +619,10 @@ function UploadListings() {
                         </div>
                     </div>
 
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="title"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("city")} *
                         </label>
@@ -634,7 +634,7 @@ function UploadListings() {
                             onChange={onCityChange}
                             autocomplete="country-name"
                             disabled={!newListing}
-                            class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
                             <option value={0}>{t("select")}</option>
                             {cities.map((city) => (
@@ -654,10 +654,10 @@ function UploadListings() {
                     </div>
 
                     {villages.length > 0 && parseInt(cityId) ? (
-                        <div class="relative mb-4">
+                        <div className="relative mb-4">
                             <label
                                 for="title"
-                                class="block text-sm font-medium text-gray-600"
+                                className="block text-sm font-medium text-gray-600"
                             >
                                 {t("village")}
                             </label>
@@ -669,7 +669,7 @@ function UploadListings() {
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 autocomplete="country-name"
-                                class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                             >
                                 <option value={0}>{t("select")}</option>
                                 {villages.map((village) => (
@@ -683,10 +683,10 @@ function UploadListings() {
                         <span />
                     )}
 
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="dropdown"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("category")} *
                         </label>
@@ -698,15 +698,15 @@ function UploadListings() {
                             onChange={handleCategoryChange}
                             required
                             disabled={!newListing}
-                            class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
-                            <option class="font-sans" value={0} key={0}>
+                            <option className="font-sans" value={0} key={0}>
                                 {t("chooseOneCategory")}
                             </option>
                             {Object.keys(categories).map((key) => {
                                 return (
                                     <option
-                                        class="font-sans"
+                                        className="font-sans"
                                         value={key}
                                         key={key}
                                     >
@@ -728,10 +728,10 @@ function UploadListings() {
                     </div>
 
                     {categoryId == categoryByName.news && (
-                        <div class="relative mb-4">
+                        <div className="relative mb-4">
                             <label
                                 for="subcategoryId"
-                                class="block text-sm font-medium text-gray-600"
+                                className="block text-sm font-medium text-gray-600"
                             >
                                 {t("subCategory")} *
                             </label>
@@ -743,15 +743,15 @@ function UploadListings() {
                                 onChange={handleSubcategoryChange}
                                 onBlur={validateInput}
                                 required
-                                class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             >
-                                <option class="font-sans" value={0} key={0}>
+                                <option className="font-sans" value={0} key={0}>
                                     {t("chooseOneCategory")}
                                 </option>
                                 {Object.keys(subCategories).map((key) => {
                                     return (
                                         <option
-                                            class="font-sans"
+                                            className="font-sans"
                                             value={key}
                                             key={key}
                                         >
@@ -773,11 +773,11 @@ function UploadListings() {
                         </div>
                     )}
 
-                    <div class="relative mb-4 grid grid-cols-2 gap-4">
-                        <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                    <div className="relative mb-4 grid grid-cols-2 gap-4">
+                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                             <label
                                 for="place"
-                                class="block text-sm font-medium text-gray-600"
+                                className="block text-sm font-medium text-gray-600"
                             >
                                 {t("place")}
                             </label>
@@ -788,14 +788,14 @@ function UploadListings() {
                                 value={input.place}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
-                                class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 placeholder={t("enterPlace")}
                             />
                         </div>
-                        <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                             <label
                                 for="zipCode"
-                                class="block text-sm font-medium text-gray-600"
+                                className="block text-sm font-medium text-gray-600"
                             >
                                 {t("zipCode")}
                             </label>
@@ -806,16 +806,16 @@ function UploadListings() {
                                 value={input.zipCode}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
-                                class="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 placeholder={t("enterPostal")}
                             />
                         </div>
                     </div>
 
-                    <div class="col-span-6">
+                    <div className="col-span-6">
                         <label
                             for="address"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("streetAddress")}
                         </label>
@@ -831,7 +831,7 @@ function UploadListings() {
                                 onBlur={validateInput}
                                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             />
-                            <ul class="cursor-pointer mt-4 space-y-2">
+                            <ul className="cursor-pointer mt-4 space-y-2">
                                 {results.map((result) => (
                                     <li
                                         key={result.place_id}
@@ -845,7 +845,7 @@ function UploadListings() {
                             </ul>
                             <button
                                 onClick={handleSearch}
-                                class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
+                                className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
                                 type="submit"
                             >
                                 {t("search")}
@@ -864,13 +864,13 @@ function UploadListings() {
                     </div>
 
                     {categoryId == categoryByName.events && (
-                        <div class="relative mb-4">
-                            <div class="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="relative">
-                                    <div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                        <div className="relative mb-4">
+                            <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="relative">
+                                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                                         <svg
                                             aria-hidden="true"
-                                            class="w-5 h-5 text-gray-600 dark:text-gray-400"
+                                            className="w-5 h-5 text-gray-600 dark:text-gray-400"
                                             fill="currentColor"
                                             viewBox="0 0 20 20"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -878,7 +878,7 @@ function UploadListings() {
                                     </div>
                                     <label
                                         for="startDate"
-                                        class="block text-sm font-medium text-gray-600"
+                                        className="block text-sm font-medium text-gray-600"
                                     >
                                         {t("eventStartDate")} *
                                     </label>
@@ -889,7 +889,7 @@ function UploadListings() {
                                         value={input.startDate}
                                         onChange={onInputChange}
                                         onBlur={validateInput}
-                                        class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                         placeholder="Start Date"
                                     />
                                     <div
@@ -904,11 +904,11 @@ function UploadListings() {
                                     </div>
                                 </div>
 
-                                <div class="relative">
-                                    <div class="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                                <div className="relative">
+                                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                                         <svg
                                             aria-hidden="true"
-                                            class="w-5 h-5 text-gray-600 dark:text-gray-400"
+                                            className="w-5 h-5 text-gray-600 dark:text-gray-400"
                                             fill="currentColor"
                                             viewBox="0 0 20 20"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -916,7 +916,7 @@ function UploadListings() {
                                     </div>
                                     <label
                                         for="endDate"
-                                        class="block text-sm font-medium text-gray-600"
+                                        className="block text-sm font-medium text-gray-600"
                                     >
                                         {t("eventEndDate")} *
                                     </label>
@@ -927,7 +927,7 @@ function UploadListings() {
                                         value={input.endDate.replace("T", " ")}
                                         onChange={onInputChange}
                                         onBlur={validateInput}
-                                        class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                         placeholder="End Date"
                                     />
                                     <div
@@ -947,11 +947,11 @@ function UploadListings() {
 
                     {(categoryId == categoryByName.offers ||
                         categoryId == categoryByName.regionalProducts) && (
-                        <div class="relative mb-4 grid grid-cols-2 gap-4">
-                            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                        <div className="relative mb-4 grid grid-cols-2 gap-4">
+                            <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                                 <label
                                     for="place"
-                                    class="block text-sm font-medium text-gray-600"
+                                    className="block text-sm font-medium text-gray-600"
                                 >
                                     {t("originalPrice")}
                                 </label>
@@ -963,14 +963,14 @@ function UploadListings() {
                                     onChange={onInputChange}
                                     onBlur={validateInput}
                                     required
-                                    class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="Enter the price of the product"
                                 />
                             </div>
-                            <div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                            <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                                 <label
                                     for="place"
-                                    class="block text-sm font-medium text-gray-600"
+                                    className="block text-sm font-medium text-gray-600"
                                 >
                                     {t("discountedPrice")}
                                 </label>
@@ -982,17 +982,17 @@ function UploadListings() {
                                     onChange={onInputChange}
                                     onBlur={validateInput}
                                     required
-                                    class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="Enter the price of the product"
                                 />
                             </div>
                         </div>
                     )}
 
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="place"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("telephone")}
                         </label>
@@ -1003,15 +1003,15 @@ function UploadListings() {
                             value={input.phone}
                             onChange={onInputChange}
                             onBlur={validateInput}
-                            class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("pleaseEnterPhone")}
                         />
                     </div>
 
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="place"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("email")}
                         </label>
@@ -1023,15 +1023,15 @@ function UploadListings() {
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
-                            class="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("emailExample")}
                         />
                     </div>
 
-                    <div class="relative mb-4">
+                    <div className="relative mb-4">
                         <label
                             for="description"
-                            class="block text-sm font-medium text-gray-600"
+                            className="block text-sm font-medium text-gray-600"
                         >
                             {t("description")} *
                         </label>
@@ -1072,9 +1072,9 @@ function UploadListings() {
             </div>
 
             {categoryId != categoryByName.roadTraffic && (
-                <div class="container w-auto px-5 py-2 bg-slate-600">
-                    <div class="bg-white mt-4 p-6 space-y-10">
-                        <h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+                <div className="container w-auto px-5 py-2 bg-slate-600">
+                    <div className="bg-white mt-4 p-6 space-y-10">
+                        <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
                             {t("uploadLogo")}
                             <div className="my-4 bg-gray-600 h-[1px]"></div>
                         </h2>
@@ -1129,7 +1129,7 @@ function UploadListings() {
                                         <p className="mt-1 text-sm text-gray-600">
                                             {t("dragAndDropImage")}
                                         </p>
-                                        <div class="relative mb-4 mt-8">
+                                        <div className="relative mb-4 mt-8">
                                             <label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
                                                 <span className="button-label">
                                                     {t("upload")}
@@ -1189,7 +1189,7 @@ function UploadListings() {
                                             <p className="mt-1 text-sm text-gray-600">
                                                 {t("dragAndDropPDF")}
                                             </p>
-                                            <div class="relative mb-4 mt-8">
+                                            <div className="relative mb-4 mt-8">
                                                 <label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
                                                     <span className="button-label">
                                                         {t("upload")}
@@ -1221,13 +1221,13 @@ function UploadListings() {
                             type="button"
                             onClick={handleSubmit}
                             disabled={updating}
-                            class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+                            className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}
                             {updating && (
                                 <svg
                                     aria-hidden="true"
-                                    class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
+                                    className="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
                                     viewBox="0 0 100 101"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
