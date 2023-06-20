@@ -49,16 +49,24 @@ const AllDevices = () => {
 							</div>
 						</div>
 
-						<ul>
-							{devices.map((device) => (
-								<li key={device.id}>{device.deviceName}</li>
-							))}
-						</ul>
+						{devices && Array.isArray(devices) && devices.length > 0 ? (
+							<ul>
+								{devices.map((device) => (
+									<li key={device.id}>{device.deviceName}</li>
+								))}
+							</ul>
+						) : (
+							<p
+								className="text-gray-900 text-md mb-4 font-medium title-font"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								Loading devices...
+							</p>
+						)}
 
 						<button
-							className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 							id="finalbutton"
-							class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+							className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("logoutofalldevices")}

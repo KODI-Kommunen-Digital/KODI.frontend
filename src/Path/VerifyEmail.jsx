@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { verifyEmail } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -6,139 +6,142 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import Footer from "../Components/Footer";
 
 const VerifyEmail = () => {
-	const { t } = useTranslation();
-	window.scrollTo(0, 0);
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
-	const [verifyState, setVerifyState] = useState("pending");
-	const [makeVerifyEmailCall, setMakeVerifyEmailCall] = useState(false);
-	const [token, setToken] = useState("");
-	const [userId, setUserId] = useState(0);
-	useEffect(() => {
-		var url = window.location;
-		var params = new URLSearchParams(url.search);
-		setToken(params.get("token"));
-		setUserId(params.get("userId"));
-		setMakeVerifyEmailCall(true);
-	}, []);
+    const { t } = useTranslation();
+    window.scrollTo(0, 0);
+    const navigate = useNavigate();
+    const navigateTo = useCallback(
+        (path) => {
+            if (path) {
+                navigate(path);
+            }
+        },
+        [navigate]
+    );
+    const [verifyState, setVerifyState] = useState("pending");
+    const [makeVerifyEmailCall, setMakeVerifyEmailCall] = useState(false);
+    const [token, setToken] = useState("");
+    const [userId, setUserId] = useState(0);
+    useEffect(() => {
+        const url = window.location;
+        const params = new URLSearchParams(url.search);
+        setToken(params.get("token"));
+        setUserId(params.get("userId"));
+        setMakeVerifyEmailCall(true);
+    }, []);
 
-	const [count, setCount] = useState(10);
-	const [redirect, setRedirect] = useState(false);
+    const [count, setCount] = useState(10);
+    const [redirect, setRedirect] = useState(false);
 
-	useEffect(() => {
-		verifyEmail({
-			token,
-			userId,
-			language: "de",
-		})
-			.then((response) => {
-				setRedirect(true);
-				setVerifyState("success");
-				setTimeout(() => {
-					navigateTo("/login");
-				}, 5000);
-			})
-			.catch((e) => {
-				setVerifyState("failed");
-			});
-	}, [makeVerifyEmailCall]);
+    useEffect(() => {
+        verifyEmail({
+            token,
+            userId,
+            language: "de",
+        })
+            .then((response) => {
+                setRedirect(true);
+                setVerifyState("success");
+                setTimeout(() => {
+                    navigateTo("/login");
+                }, 5000);
+            })
+            .catch((e) => {
+                setVerifyState("failed");
+            });
+    }, [makeVerifyEmailCall, navigateTo, token, userId]);
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			if (count > 0) {
-				setCount(count - 1);
-			} else {
-				setRedirect(true);
-				//window.location.href = '/';
-			}
-		}, 1000);
-		return () => clearTimeout(timer);
-	}, [count]);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (count > 0) {
+                setCount(count - 1);
+            } else {
+                setRedirect(true);
+                // window.location.href = '/';
+            }
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [count]);
 
-	return (
-		<section>
-			<HomePageNavBar />
-			<div className="main-content">
-				{verifyState === "success" ? (
-					<div>
-						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
-								{t("email_verified")}
-							</h1>
-						</div>
+    return (
+        <section>
+            <HomePageNavBar />
+            <div className="main-content">
+                {verifyState === "success" ? (
+                    <div>
+                        <div className="flex items-center justify-center">
+                            <h1 className=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
+                                {t("email_verified")}
+                            </h1>
+                        </div>
 
-						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-								{t("heidi_full_extend")}
-								<button
-									type="submit"
-									onClick={() => navigateTo("/login")}
-									class="w-96 mt-20 mx-auto rounded bg-black px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
-								>
-									{t("goback")}
-								</button>
-							</h1>
-						</div>
+                        <div className="flex items-center justify-center">
+                            <h1 className=" m-auto mt-20 text-center font-sans font-semibold text-lg">
+                                {t("heidi_full_extend")}
+                                <button
+                                    type="submit"
+                                    onClick={() => navigateTo("/login")}
+                                    className="w-96 mt-20 mx-auto rounded bg-black px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+                                >
+                                    {t("goback")}
+                                </button>
+                            </h1>
+                        </div>
 
-						<div class="flex items-center justify-center"></div>
+                        <div className="flex items-center justify-center"></div>
 
-						<div className="flex items-center justify-center">
-							{redirect ? (
-								<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-									{t("please_wait")}
-								</h1>
-							) : (
-								<h1 class=" m-auto mt-20 text-center font-sans font-semibold text-lg">
-									{t("redirecting_in")} ( {count} ) {t("seconds")}
-								</h1>
-							)}
-						</div>
-					</div>
-				) : verifyState === "pending" ? (
-					<div>
-						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
-								{t("email_being_verified")}
-							</h1>
-						</div>
-						<div class="flex items-center justify-center pt-5">
-							<svg
-								aria-hidden="true"
-								class="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
-								viewBox="0 0 100 101"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-									fill="currentColor"
-								/>
-								<path
-									d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-									fill="currentFill"
-								/>
-							</svg>
-						</div>
-					</div>
-				) : (
-					<div>
-						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-40 mb-40 text-center font-sans font-bold sm:text-2xl text-lg">
-								{t("email_verification_not_succesfull")}
-							</h1>
-						</div>
-					</div>
-				)}
-			</div>
-			<div className="sm:fixed bottom-0 w-full">
-				<Footer />
-			</div>
-		</section>
-	);
+                        <div className="flex items-center justify-center">
+                            {redirect ? (
+                                <h1 className=" m-auto mt-20 text-center font-sans font-semibold text-lg">
+                                    {t("please_wait")}
+                                </h1>
+                            ) : (
+                                <h1 className=" m-auto mt-20 text-center font-sans font-semibold text-lg">
+                                    {t("redirecting_in")} ( {count} ) {t("seconds")}
+                                </h1>
+                            )}
+                        </div>
+                    </div>
+                ) : verifyState === "pending" ? (
+                    <div>
+                        <div className="flex items-center justify-center">
+                            <h1 className=" m-auto mt-40 mb-40 text-center font-sans font-bold text-2xl">
+                                {t("email_being_verified")}
+                            </h1>
+                        </div>
+                        <div className="flex items-center justify-center pt-5">
+                            <svg
+                                aria-hidden="true"
+                                className="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
+                                viewBox="0 0 100 101"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="currentColor"
+                                />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentFill"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        <div className="flex items-center justify-center">
+                            <h1 className=" m-auto mt-40 mb-40 text-center font-sans font-bold sm:text-2xl text-lg">
+                                {t("email_verification_not_succesfull")}
+                            </h1>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="sm:fixed bottom-0 w-full">
+                <Footer />
+            </div>
+        </section>
+    );
 };
 
 export default VerifyEmail;

@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import Alert from "../Components/Alert";
-import {
-	getProfile,
-	updateProfile,
-	deleteAccount,
-	logout,
-} from "../Services/usersApi";
+import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
 
 const AccountSettings = () => {
 	const { t } = useTranslation();
@@ -22,6 +17,16 @@ const AccountSettings = () => {
 		email: "",
 		phoneNumber: "",
 	});
+
+	const navigate = useNavigate();
+	const navigateTo = useCallback(
+		(path) => {
+			if (path) {
+				navigate(path);
+			}
+		},
+		[navigate]
+	);
 
 	useEffect(() => {
 		document.title = "Heidi - Account Settings";
@@ -42,16 +47,8 @@ const AccountSettings = () => {
 				email,
 				phoneNumber,
 			}));
-			console.log(input);
 		});
-	}, []);
-
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
+	}, [input, navigateTo]);
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
@@ -113,16 +110,16 @@ const AccountSettings = () => {
 		<section className="bg-slate-600 body-font relative h-full">
 			<SideBar />
 			<>
-				<div class="container w-auto px-5 py-2 bg-slate-600">
-					<div class="bg-white mt-4 p-6 space-y-10">
+				<div className="container w-auto px-5 py-2 bg-slate-600">
+					<div className="bg-white mt-4 p-6 space-y-10">
 						<h2
-							class="text-gray-900 text-lg mb-4 font-medium title-font"
+							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("updatePassword")}
 							<div className="my-4 bg-gray-600 text-base h-[1px]">
 								<label
-									class="block px-2 py-2 text-gray-600"
+									className="block px-2 py-2 text-gray-600"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("Need_to_change_your_password")}
@@ -131,7 +128,7 @@ const AccountSettings = () => {
 						</h2>
 						<button
 							id="finalbutton"
-							class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+							className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 							onClick={() => {
 								navigateTo("/PasswordUpdate");
 							}}
@@ -141,28 +138,28 @@ const AccountSettings = () => {
 						</button>
 					</div>
 				</div>
-				<div class="container w-auto px-5 py-2 bg-slate-600">
-					<div class="bg-white mt-4 p-6">
+				<div className="container w-auto px-5 py-2 bg-slate-600">
+					<div className="bg-white mt-4 p-6">
 						<h2
-							class="text-gray-900 text-lg mb-4 font-medium title-font"
+							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("personalInformation")}
 							<div className="my-4 bg-gray-600 h-[1px]" />
 						</h2>
-						<div class="relative mb-4">
-							<div class="pb-6">
+						<div className="relative mb-4">
+							<div className="pb-6">
 								<label
-									class="block px-2 text-sm font-medium text-gray-500"
+									className="block px-2 text-sm font-medium text-gray-500"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("displayed_publicly")}
 								</label>
 							</div>
-							<div class="py-2 grid grid-cols-1 md:grid-cols-2">
-								<div class="mt-1 px-2">
+							<div className="py-2 grid grid-cols-1 md:grid-cols-2">
+								<div className="mt-1 px-2">
 									<label
-										class="block text-md font-medium text-gray-600"
+										className="block text-md font-medium text-gray-600"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("emailId")}
@@ -172,16 +169,16 @@ const AccountSettings = () => {
 										name="email"
 										value={input.email}
 										id="email"
-										class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_email")}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 										onChange={onInputChange}
 									/>
 								</div>
-								<div class="mt-1 px-2">
+								<div className="mt-1 px-2">
 									<label
 										htmlFor="phoneNumber"
-										class="block text-md font-medium text-gray-600"
+										className="block text-md font-medium text-gray-600"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("phoneNumber")}
@@ -191,7 +188,7 @@ const AccountSettings = () => {
 										name="phoneNumber"
 										value={input.phoneNumber}
 										id="phoneNumber"
-										class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 										onChange={onInputChange}
@@ -203,7 +200,7 @@ const AccountSettings = () => {
 							<button
 								className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
-								class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+								// className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 								onClick={handleSave}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
@@ -211,23 +208,23 @@ const AccountSettings = () => {
 							</button>
 						</div>
 						{alertInfo && (
-							<div class="py-2 mt-1 px-2">
+							<div className="py-2 mt-1 px-2">
 								<Alert type={alertType} message={alertMessage} />
 							</div>
 						)}
 					</div>
 				</div>
 
-				<div class="container w-auto px-5 py-2 bg-slate-600">
-					<div class="bg-white mt-4 p-6">
+				<div className="container w-auto px-5 py-2 bg-slate-600">
+					<div className="bg-white mt-4 p-6">
 						<h2
-							class="text-gray-900 text-lg mb-4 font-medium title-font"
+							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("allDevices")}
 							<div className="my-4 bg-gray-600 text-base h-[1px]">
 								<label
-									class="block px-2 py-2 text-gray-600"
+									className="block px-2 py-2 text-gray-600"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("alldevicesdescription")}
@@ -236,9 +233,9 @@ const AccountSettings = () => {
 						</h2>
 						<div className="py-2 mt-1 px-2">
 							<button
-								className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								// className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
-								class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+								className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 								onClick={() => navigateTo("/AllDevices")}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
@@ -248,16 +245,16 @@ const AccountSettings = () => {
 					</div>
 				</div>
 
-				<div class="container w-auto px-5 py-2 bg-slate-600">
-					<div class="bg-white mt-4 p-6">
+				<div className="container w-auto px-5 py-2 bg-slate-600">
+					<div className="bg-white mt-4 p-6">
 						<h2
-							class="text-gray-900 text-lg mb-4 font-medium title-font"
+							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("deleteAccount")}
 							<div className="my-4 bg-gray-600 text-base h-[1px]">
 								<label
-									class="block px-2 py-2 text-gray-600"
+									className="block px-2 py-2 text-gray-600"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("need_to_delete_account")}
@@ -266,9 +263,9 @@ const AccountSettings = () => {
 						</h2>
 						<div className="py-2 mt-1 px-2">
 							<button
-								className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								// className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
-								class="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+								className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 								onClick={deleteAccountOnClick}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>

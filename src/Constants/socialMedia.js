@@ -1,4 +1,4 @@
-var socialMedia = [
+const socialMedia = [
     "Facebook",
     "Instagram",
     "LinkedIn",

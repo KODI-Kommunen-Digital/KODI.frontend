@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
@@ -11,7 +11,6 @@ import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import { Select } from "@chakra-ui/react";
-import { Fragment } from "react";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -20,10 +19,17 @@ const Dashboard = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listings, setListings] = useState([]);
-	const [userRole, setUserRole] = useState(3);
+	const [, setUserRole] = useState(3);
 	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
+
+	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
 	useEffect(() => {
 		const accessToken =
@@ -33,12 +39,12 @@ const Dashboard = () => {
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
 		if (!accessToken && !refreshToken) {
-			navigateTo("/login");
+			window.location.href = "/login";
 		}
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
-		if (window.location.pathname == "/Dashboard") {
+		if (window.location.pathname === "/Dashboard") {
 			setViewAllListings(false);
 		} else {
 			setViewAllListings(true);
@@ -46,50 +52,36 @@ const Dashboard = () => {
 		document.title = "Dashboard";
 	}, [window.location.pathname]);
 
+	const fetchListings = useCallback(() => {
+		if (viewAllListings === true) {
+			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
+				setListings(response.data.data);
+			});
+		}
+		if (viewAllListings === false) {
+			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
+				setListings(response.data.data);
+			});
+		}
+	}, [selectedStatus, viewAllListings, pageNo]);
+
 	useEffect(() => {
-		if (pageNo == 1) {
+		if (pageNo === 1) {
 			fetchListings();
 		} else {
 			// setPageNo(1);
 			fetchListings();
 		}
-	}, [selectedStatus, viewAllListings, pageNo]);
-
-	let navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
-
-	function handleDashboardChange(event) {
-		setListings({
-			...listings,
-			[event.target.name]: event.target.value,
-		});
-	}
-
-	function fetchListings() {
-		if (viewAllListings == true) {
-			getListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings(response.data.data);
-			});
-		}
-		if (viewAllListings == false) {
-			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
-				setListings(response.data.data);
-			});
-		}
-	}
+	}, [fetchListings, pageNo]);
 
 	function getStatusClass(statusId) {
-		if (status[statusId] == "Active") {
+		if (status[statusId] === "Active") {
 			return "bg-green-400";
 		}
-		if (status[statusId] == "Inactive") {
+		if (status[statusId] === "Inactive") {
 			return "bg-red-400";
 		}
-		if (status[statusId] == "Pending") {
+		if (status[statusId] === "Pending") {
 			return "bg-yellow-400";
 		}
 	}
@@ -97,14 +89,14 @@ const Dashboard = () => {
 	function handleChangeInStatus(newStatusId, listing) {
 		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
 			.then((res) => {
-				let tempListings = listings;
+				const tempListings = listings;
 				tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
 				setListings([...tempListings]);
 			})
 			.catch((error) => console.log(error));
 	}
 
-	//Navigate to Edit Listings page Starts
+	// Navigate to Edit Listings page Starts
 	function goToEditListingsPage(listing) {
 		navigateTo(
 			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
@@ -146,41 +138,41 @@ const Dashboard = () => {
 		);
 	}
 
-	//Navigate to Edit Listings page Starts
+	// Navigate to Edit Listings page Starts
 
 	return (
 		<section className="bg-slate-600 body-font relative">
 			<SideBar />
 
-			<div class="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
+			<div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
 				<Popover className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
 					<div className="w-full">
 						<div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
-							<div class="hidden lg:block">
-								<div class="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
+							<div className="hidden lg:block">
+								<div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
 									<div
-										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(null)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("allListings")}
 									</div>
 									<div
-										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Active)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("active")}
 									</div>
 									<div
-										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Pending)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("pending")}
 									</div>
 									<div
-										class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Inactive)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
@@ -189,10 +181,10 @@ const Dashboard = () => {
 								</div>
 							</div>
 
-							<div class="-my-2 -mr-2 lg:hidden">
-								<Popover.Button class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-									<span class="sr-only">Open menu</span>
-									<Bars3Icon class="h-6 w-6" aria-hidden="true" />
+							<div className="-my-2 -mr-2 lg:hidden">
+								<Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+									<span className="sr-only">Open menu</span>
+									<Bars3Icon className="h-6 w-6" aria-hidden="true" />
 								</Popover.Button>
 							</div>
 						</div>
@@ -220,28 +212,28 @@ const Dashboard = () => {
 										</Popover.Button>
 									</div>
 
-									<div class="space-y-1">
+									<div className="space-y-1">
 										<div
-											class="lg:hidden flex justify-center text-center"
+											className="lg:hidden flex justify-center text-center"
 											id="mobile-menu"
 										>
-											<div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+											<div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
 												<div
-													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() => setSelectedStatus(null)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("allListings")}
 												</div>
 												<div
-													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() => setSelectedStatus(statusByName.Active)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("active")}
 												</div>
 												<div
-													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() =>
 														setSelectedStatus(statusByName.Pending)
 													}
@@ -250,7 +242,7 @@ const Dashboard = () => {
 													{t("pending")}
 												</div>
 												<div
-													class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 													onClick={() =>
 														setSelectedStatus(statusByName.Inactive)
 													}
@@ -268,38 +260,38 @@ const Dashboard = () => {
 				</Popover>
 			</div>
 
-			<html class="h-full bg-gray-100" />
-			<body class="h-full" />
+			<html className="h-full bg-gray-100" />
+			<body className="h-full" />
 
-			<div class="container w-auto px-0 lg:px-5 py-2 bg-slate-600 h-screen">
-				<div class="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-					<table class="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
-						<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
+			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 h-screen">
+				<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
+					<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
+						<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
 							<tr>
 								<th
 									scope="col"
-									class="px-6 sm:px-6 py-3"
+									className="px-6 sm:px-6 py-3"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("listings")}
 								</th>
 								<th
 									scope="col"
-									class="px-6 sm:px-3 py-3 hidden lg:table-cell"
+									className="px-6 sm:px-3 py-3 hidden lg:table-cell"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("category")}
 								</th>
 								<th
 									scope="col"
-									class="px-6 py-3 hidden lg:table-cell"
+									className="px-6 py-3 hidden lg:table-cell"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("date_of_creation")}
 								</th>
 								<th
 									scope="col"
-									class="px-6 py-3"
+									className="px-6 py-3"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("action")}
@@ -307,7 +299,7 @@ const Dashboard = () => {
 								{viewAllListings && (
 									<th
 										scope="col"
-										class="px-6 py-3"
+										className="px-6 py-3"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("username")}
@@ -315,7 +307,7 @@ const Dashboard = () => {
 								)}
 								<th
 									scope="col"
-									class="px-6 py-3 text-center"
+									className="px-6 py-3 text-center"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("status")}
@@ -325,14 +317,17 @@ const Dashboard = () => {
 						<tbody>
 							{listings.map((listing) => {
 								return (
-									<tr class="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50">
+									<tr
+										key={listing.id}
+										className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
+									>
 										<th
 											scope="row"
-											class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+											className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
 											onClick={() => goToEventDetailsPage(listing)}
 										>
 											<img
-												class="w-10 h-10 rounded-full hidden sm:table-cell"
+												className="w-10 h-10 rounded-full hidden sm:table-cell"
 												src={
 													listing.logo
 														? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -340,9 +335,9 @@ const Dashboard = () => {
 												}
 												alt="avatar"
 											/>
-											<div class="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
+											<div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
 												<div
-													class="font-normal text-gray-500 truncate"
+													className="font-normal text-gray-500 truncate"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{listing.title}
@@ -350,20 +345,20 @@ const Dashboard = () => {
 											</div>
 										</th>
 										<td
-											class="px-6 py-4 hidden lg:table-cell"
+											className="px-6 py-4 hidden lg:table-cell"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
 											{categoryById[listing.categoryId]}
 										</td>
 										<td
-											class="px-6 py-4 hidden lg:table-cell"
+											className="px-6 py-4 hidden lg:table-cell"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
 											{new Date(listing.createdAt).toLocaleString("de")}
 										</td>
-										<td class="px-6 py-4">
+										<td className="px-6 py-4">
 											<a
-												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
+												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 												onClick={() => goToEditListingsPage(listing)}
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
@@ -446,19 +441,19 @@ const Dashboard = () => {
 											)}
 										</td>
 										{viewAllListings && (
-											<td class="px-6 py-4">
+											<td className="px-6 py-4">
 												<a
-													class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{listing.username}
 												</a>
 											</td>
 										)}
-										<td class="px-6 py-4">
-											<div class="flex items-center">
+										<td className="px-6 py-4">
+											<div className="flex items-center">
 												<div
-													class={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+													className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
 														listing.statusId
 													)} mr-2`}
 												></div>
