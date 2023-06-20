@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HEIDI_Logo from "../Resource/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { resetPass, login, getDevice } from "../Services/usersApi";
+import { resetPass, login } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 
 
@@ -36,7 +36,6 @@ const LoginPage = () => {
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
 			routeChangeToUpload();
 		}
-		getDevice()
 	}, []);
 
 	const [showPassword, setShowPassword] = useState(false);
@@ -167,7 +166,7 @@ const LoginPage = () => {
 								/>
 							</div>
 							<div class="relative">
-								<label for="password" class="sr-only">
+								<label htmlFor="password" class="sr-only">
 									{t("password")}
 								</label>
 								<input
@@ -203,7 +202,7 @@ const LoginPage = () => {
 									}}
 								/>
 								<label
-									for="remember-me"
+									htmlFor="remember-me"
 									class="ml-2 block text-sm text-gray-900"
 								>
 									{t("rememberMe")}
@@ -285,7 +284,7 @@ const LoginPage = () => {
 						<>
 							<div id="myDIV" class="text-sm">
 								{t("forgotPasswordMessage")}
-								<label for="username" class="sr-only">
+								<label htmlFor="username" class="sr-only">
 									{t("username")}
 								</label>
 								<input

@@ -1,4 +1,13 @@
 import axios from "../api/axiosInstance";
+import UAParser from 'ua-parser-js';
+
+const parser = new UAParser();
+const userAgent = parser.getResult();
+
+const browserName = userAgent.browser.name;
+const deviceType = userAgent.os.name + ", " +userAgent.device.vendor + " " + userAgent.device.model;
+const headers = {browserName, deviceType}
+
 
 export function getUserId() {
 	return (
@@ -48,11 +57,11 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-	return axios.post(`/users/login`, credentials);
+	return axios.post(`/users/login`, credentials, {headers});
 }
 
 export async function getDevice() {
-	return axios.get(`/users/devices`);
+	return axios.post(`/users/devices`);
 }
 
 export async function logout(credentials) {
