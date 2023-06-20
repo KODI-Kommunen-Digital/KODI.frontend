@@ -117,14 +117,13 @@ const AccountSettings = () => {
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("updatePassword")}
-							<div className="my-4 bg-gray-600 text-base h-[1px]">
-								<label
-									className="block px-2 py-2 text-gray-600"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("Need_to_change_your_password")}
-								</label>
-							</div>
+							<div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+							<label
+								className="block px-2 text-sm font-medium text-gray-500"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{t("Need_to_change_your_password")}
+							</label>
 						</h2>
 						<button
 							id="finalbutton"
@@ -136,26 +135,21 @@ const AccountSettings = () => {
 						>
 							{t("updatePassword")}
 						</button>
-					</div>
-				</div>
-				<div className="container w-auto px-5 py-2 bg-slate-600">
-					<div className="bg-white mt-4 p-6">
+
 						<h2
 							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("personalInformation")}
-							<div className="my-4 bg-gray-600 h-[1px]" />
+							<div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+							<label
+								className="block px-2 text-sm font-medium text-gray-500"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{t("displayed_publicly")}
+							</label>
 						</h2>
 						<div className="relative mb-4">
-							<div className="pb-6">
-								<label
-									className="block px-2 text-sm font-medium text-gray-500"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("displayed_publicly")}
-								</label>
-							</div>
 							<div className="py-2 grid grid-cols-1 md:grid-cols-2">
 								<div className="mt-1 px-2">
 									<label
@@ -212,25 +206,21 @@ const AccountSettings = () => {
 								<Alert type={alertType} message={alertMessage} />
 							</div>
 						)}
-					</div>
-				</div>
 
-				<div className="container w-auto px-5 py-2 bg-slate-600">
-					<div className="bg-white mt-4 p-6">
 						<h2
 							className="text-gray-900 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("allDevices")}
-							<div className="my-4 bg-gray-600 text-base h-[1px]">
-								<label
-									className="block px-2 py-2 text-gray-600"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("alldevicesdescription")}
-								</label>
-							</div>
+							<div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+							<label
+								className="block px-2 text-sm font-medium text-gray-500"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{t("alldevicesdescription")}
+							</label>
 						</h2>
+
 						<div className="py-2 mt-1 px-2">
 							<button
 								// className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
@@ -252,14 +242,13 @@ const AccountSettings = () => {
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("deleteAccount")}
-							<div className="my-4 bg-gray-600 text-base h-[1px]">
-								<label
-									className="block px-2 py-2 text-gray-600"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("need_to_delete_account")}
-								</label>
-							</div>
+							<div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+							<label
+								className="block px-2 text-sm font-medium text-gray-500"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{t("need_to_delete_account")}
+							</label>
 						</h2>
 						<div className="py-2 mt-1 px-2">
 							<button
