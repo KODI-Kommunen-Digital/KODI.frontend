@@ -11,6 +11,7 @@ import {
 	postListingsData,
 	updateListingsData,
 	uploadImage,
+	uploadPDF,
 } from "../Services/listingsApi";
 
 import { getCities } from "../Services/cities";
@@ -35,7 +36,6 @@ function UploadListings() {
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
-	const [image2, setImage2] = useState(null);
 	const [dragging, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
@@ -45,34 +45,56 @@ function UploadListings() {
 	const navigate = useNavigate();
 
 	const [initialLoad, setInitialLoad] = useState(true);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	// useEffect(() =>{
-	// 	if (!isLoggedIn) {
-	// 		navigateTo("/login");
-	// 	}
-	// },[])
+	const [pdf, setPdf] = useState(null);
 
 	useEffect(() => {
 		if (initialLoad) {
 			window.scrollTo(0, 0);
 			setInitialLoad(false);
 		} else {
-			const _ = async () => {
+			const updateInputState = async () => {
 				if (image1 !== null) {
 					const form = new FormData();
 					form.append("image", image1);
-					const filePath = await uploadImage(form);
-					setInput((prevInput) => ({
-						...prevInput,
-						logo: filePath.data.path,
-						removeImage: false,
-					}));
+					try {
+						const filePath = await uploadImage(form);
+						if (filePath?.data?.status === "success") {
+							setInput((prevInput) => ({
+								...prevInput,
+								logo: filePath?.data?.path || null,
+								removeImage: false,
+							}));
+						} else {
+							console.error("Image upload failed:", filePath?.data?.message);
+						}
+					} catch (error) {
+						console.error("Image upload error:", error);
+					}
+				}
+
+				if (pdf !== null) {
+					const form = new FormData();
+					form.append("pdf", pdf);
+					try {
+						const filePath = await uploadPDF(form);
+						console.log(filePath.data);
+						if (filePath?.data?.status === "success") {
+							setInput((prevInput) => ({
+								...prevInput,
+								pdf: filePath?.data?.path || null,
+							}));
+						} else {
+							console.error("PDF upload failed:", filePath?.data?.message);
+						}
+					} catch (error) {
+						console.error("PDF upload error:", error);
+					}
 				}
 			};
 
-			_();
+			updateInputState();
 		}
-	}, [initialLoad, image1]);
+	}, [initialLoad, image1, pdf]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -95,14 +117,25 @@ function UploadListings() {
 		e.preventDefault();
 		e.stopPropagation();
 		const file = e.dataTransfer.files[0];
-		setImage1(file);
+		if (file && file.type.startsWith("image/")) {
+			setImage1(file);
+		}
 		setDragging(false);
 	}
 
-	function handleInputChange1(e) {
+	function handleDropPDF(event) {
+		event.preventDefault();
+		const file = event.dataTransfer.files[0];
+		setPdf(file);
+		setDragging(false);
+	}
+
+	function handleInputChange(e) {
 		e.preventDefault();
 		const file = e.target.files[0];
-		setImage1(file);
+		if (file && file.type.startsWith("image/")) {
+			setImage1(file);
+		}
 	}
 
 	function handleRemoveImage1() {
@@ -110,37 +143,20 @@ function UploadListings() {
 		setInput((prevInput) => ({ ...prevInput, logo: null, removeImage: true }));
 	}
 
-	function handleDrop2(e) {
+	function handlePDFInputChange(e) {
 		e.preventDefault();
-		e.stopPropagation();
-		const file = e.dataTransfer.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
-		setDragging(false);
-	}
-
-	function handleInputChange2(e) {
 		const file = e.target.files[0];
-		setImage2(file);
-		setInput((prevInput) => ({
-			...prevInput,
-			media: URL.createObjectURL(file),
-		})); //send as url image
+		setPdf(file);
 	}
 
-	function handleRemoveImage2() {
-		setImage2(null);
-		setInput((prevInput) => ({ ...prevInput, media: "" }));
+	function handleRemovePDF() {
+		setPdf(null);
 	}
 	//Drag and Drop ends
 
 	//Sending data to backend starts
 	const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
 	const [input, setInput] = useState({
-		//"villageId": 1,
 		categoryId: 0,
 		subcategoryId: 0,
 		cityId: 0,
@@ -153,7 +169,7 @@ function UploadListings() {
 		email: "",
 		description: "",
 		logo: null,
-		//media: null,
+		pdf: null,
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
@@ -162,6 +178,7 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -1022,7 +1039,7 @@ function UploadListings() {
 											/>
 										</svg>
 										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropFile")}
+											{t("dragAndDropImage")}
 										</p>
 										<div class="relative mb-4 mt-8">
 											<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
@@ -1031,7 +1048,7 @@ function UploadListings() {
 													id="image1-upload"
 													type="file"
 													className="sr-only"
-													onChange={handleInputChange1}
+													onChange={handleInputChange}
 												/>
 											</label>
 										</div>
@@ -1039,13 +1056,73 @@ function UploadListings() {
 								)}
 							</div>
 						</div>
+
+						{(categoryId == categoryByName.officialnotification ||
+							categoryId == categoryByName.regionalProducts ||
+							categoryId == categoryByName.news ||
+							categoryId == categoryByName.offerSearch) && (
+							<div>
+								<label className="block text-sm font-medium text-gray-700">
+									{t("addPDFHere")}
+								</label>
+								<div
+									className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+									onDrop={handleDropPDF}
+									onDragOver={handleDragOver}
+									onDragEnter={handleDragEnter}
+									onDragLeave={handleDragLeave}
+								>
+									{pdf || input.pdf ? (
+										<div className="flex flex-col items-center">
+											<p>{pdf ? pdf.name : input.pdf}</p>
+											<button
+												className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+												onClick={handleRemovePDF}
+											>
+												{t("remove")}
+											</button>
+										</div>
+									) : (
+										<div className="text-center">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="mx-auto h-12 w-12"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
+													clipRule="evenodd"
+												/>
+											</svg>
+											<p className="mt-1 text-sm text-gray-600">
+												{t("dragAndDropPDF")}
+											</p>
+											<div class="relative mb-4 mt-8">
+												<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
+													<span className="button-label">{t("upload")}</span>
+													<input
+														id="pdf-upload"
+														type="file"
+														accept="application/pdf"
+														className="sr-only"
+														onChange={handlePDFInputChange}
+													/>
+												</label>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 			)}
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<div class="relative mb-4 mt-8 border-white">
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6">
+					<div className="py-2 mt-1 px-2">
 						<button
 							type="button"
 							onClick={handleSubmit}
