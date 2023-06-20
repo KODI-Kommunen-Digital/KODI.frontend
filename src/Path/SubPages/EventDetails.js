@@ -1,47 +1,48 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { getDashboarddata } from "../../Services/dashboarddata";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings } from "../../Services/listingsApi";
-import { getProfile, getProfileByIds } from "../../Services/usersApi";
-import { getListingsById } from "../../Services/listingsApi";
-import { getVillages } from "../../Services/villages";
+import { getListings, getListingsById } from "../../Services/listingsApi";
+import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
-import { useLocation } from 'react-router-dom';
+import PropTypes from "prop-types";
 import {
 	getFavorites,
 	postFavoriteListingsData,
 	deleteListingsById,
 } from "../../Services/favoritesApi";
 
-	const Description = ({ content }) => {
-		return (
+const Description = ({ content }) => {
+	return (
 		<p
 			className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
 			dangerouslySetInnerHTML={{ __html: content }}
 		></p>
-		);
-	};
+	);
+};
+
+Description.propTypes = {
+	content: PropTypes.string.isRequired,
+};
 
 const EventDetails = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
-	const [newListing, setNewListing] = useState(true);
+	// const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
 	const [createdAt, setCreatedAt] = useState("");
 	const [title, setTitle] = useState("");
 	const [userSocial, setUserSocial] = useState([]);
 	const [user, setUser] = useState();
-	const [imagePath, setImagePath] = useState("");
-	const [successMessage, setSuccessMessage] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
+	// const [imagePath, setImagePath] = useState("");
+	const [, setSuccessMessage] = useState("");
+	const [, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 
 	const [input, setInput] = useState({
 		categoryId: 0,
@@ -67,10 +68,10 @@ const EventDetails = () => {
 	const [cityId, setCityId] = useState(0);
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		var params = { statusId: 1 };
-		var cityId = searchParams.get("cityId");
+		const params = { statusId: 1 };
+		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		var listingId = searchParams.get("listingId");
+		const listingId = searchParams.get("listingId");
 		setListingId(listingId);
 		if (listingId && cityId) {
 			const accessToken =
@@ -82,23 +83,23 @@ const EventDetails = () => {
 			if (accessToken || refreshToken) {
 				setIsLoggedIn(true);
 			}
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-			getListingsById(cityId, listingId,params).then((listingsResponse) => {
+			// setNewListing(false);
+			// getVillages(cityId).then((response) => setVillages(response.data.data));
+			getListingsById(cityId, listingId, params).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
-				var cityUserId = listingsResponse.data.data.userId;
-				getProfile(cityUserId, {cityId, cityUser: true}).then((res) => {
+				const cityUserId = listingsResponse.data.data.userId;
+				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
 					setUser(res.data.data);
 				});
-				setSelectedCategoryId(listingsResponse.data.data.categoryId)
+				setSelectedCategoryId(listingsResponse.data.data.categoryId);
 				setListingId(listingsResponse.data.data.id);
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
-				setImagePath(listingsResponse.data.data.logo);
+				// setImagePath(listingsResponse.data.data.logo);
 				if (isLoggedIn) {
 					getFavorites().then((response) => {
-						var favorite = response.data.data.filter(
-							(f) => f.listingId == listingId
+						const favorite = response.data.data.filter(
+							(f) => f.listingId === listingId
 						)[0];
 						if (favorite) {
 							setFavoriteId(favorite.id);
@@ -116,88 +117,56 @@ const EventDetails = () => {
 				);
 			});
 		}
-	}, [t, window.location.href,cityId ]);
+	}, [t, cityId, window.location.href, isLoggedIn]);
 
-	const [villages, setVillages] = useState([]);
-	async function onCityChange(e) {
-		const cityId = e.target.value;
-		setCityId(cityId);
-		setInput((prev) => ({
-			...prev,
-			villageId: 0,
-		}));
-		getVillages(cityId).then((response) => setVillages(response.data.data));
-	}
+	// const [villages, setVillages] = useState([]);
+	// async function onCityChange(e) {
+	// 	const cityId = e.target.value;
+	// 	setCityId(cityId);
+	// 	setInput((prev) => ({
+	// 		...prev,
+	// 		villageId: 0,
+	// 	}));
+	// 	getVillages(cityId).then((response) => setVillages(response.data.data));
+	// }
 
-	//populate the events titles starts
-	const [categoriesdata, setCategoriesdata] = useState({
-		categoriesListings: [],
-	});
 	useEffect(() => {
 		document.title = "Event Details";
 	}, []);
 
-	const [dashboarddata, setDashboarddata] = useState({ listings: [] });
+	const [, setDashboarddata] = useState({ listings: [] });
 	useEffect(() => {
 		getDashboarddata().then((response) => {
 			setDashboarddata(response);
 		});
 	}, []);
 
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
 			navigate(path);
 		}
 	};
 
-	function handleCategoriesChange(event) {
-		setCategoriesdata({
-			...categoriesdata,
-			[event.target.name]: event.target.value,
-		});
-	}
-
-	const [content, setContent] = useState("A");
-
-	const handleButtonClick = (value) => {
-		setContent(value);
-	};
-
-	const [customerServiceDataload, setcustomerServiceDataload] = useState(false);
-
-	const onCancel = () => {
-		setcustomerServiceDataload(false);
-		setSelectedLink("current");
-	};
-
-	const [selectedLink, setSelectedLink] = useState("current");
-
-	function handleLocationSubmit(event) {
-		event.preventDefault();
-	}
-	const [categoryId, setCategoryId] = useState();
 	const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-
 
 	useEffect(() => {
 		if (selectedCategoryId) {
-		getListings({ categoryId: selectedCategoryId,statusId:1 }).then((response) => {
-			const filteredListings = response.data.data.filter(
-			(listing) => listing.id !== listingId
+			getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
+				(response) => {
+					const filteredListings = response.data.data.filter(
+						(listing) => listing.id !== listingId
+					);
+					setListings(filteredListings);
+				}
 			);
-			setListings(filteredListings);
-		});
 		}
 	}, [selectedCategoryId, listingId]);
 
-
-	const [selectedSortOption, setSelectedSortOption] = useState("");
-
-	const [userName, setUserName] = useState("");
+	const [, setUserName] = useState("");
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
-	const [profilePic, setProfilePic] = useState("");
+	const [, setProfilePic] = useState("");
 
 	useEffect(() => {
 		if (user) {
@@ -219,14 +188,13 @@ const EventDetails = () => {
 	const [handleClassName, setHandleClassName] = useState(
 		"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
 	);
-	const [favButton, setFavButton] = useState("Favorite");
+	const [, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
-
 		try {
 			if (isLoggedIn) {
-				var postData = {
-					cityId: cityId,
-					listingId: listingId,
+				const postData = {
+					cityId,
+					listingId,
 				};
 
 				if (favoriteId !== 0) {
@@ -237,23 +205,21 @@ const EventDetails = () => {
 						"text-white-900 mt-2 bg-cyan border border-cyan-900 hover:text-cyan-500 focus:ring-4 focus:outline-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-cyan-500 mb-2 mr-2 sm:mr-2"
 					);
 					setFavButton(t("Unfavorite"));
-				}
-				else {
+				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-							.then((response) => {
-								setFavoriteId(response.data.id);
-								setSuccessMessage(t("List added to the favorites"));
-								setHandleClassName(
-									"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-								);
-								setFavButton(t("Favorite"));
-							})
-							.catch((err) => console.log("Error", err))
+								.then((response) => {
+									setFavoriteId(response.data.id);
+									setSuccessMessage(t("List added to the favorites"));
+									setHandleClassName(
+										"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+									);
+									setFavButton(t("Favorite"));
+								})
+								.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
-			}
-			else {
+			} else {
 				window.sessionStorage.setItem("redirectTo", "/Favorite");
 				navigateTo("/login");
 			}
@@ -262,115 +228,184 @@ const EventDetails = () => {
 		}
 	};
 
-	function goToViewProfilePage(listing) {
-		navigateTo(`/users?id=${user.id}`);
-	}
-
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
-	const terminalViewParam = searchParams.get('terminalView');
-	const favClass = terminalViewParam === 'true' ? 'hidden' : 'visible';
-	const [showNavBar, setShowNavBar] = useState(true);
-		useEffect(() => {
-		if (terminalViewParam === 'true') {
+	const terminalViewParam = searchParams.get("terminalView");
+	const favClass = terminalViewParam === "true" ? "hidden" : "visible";
+	const [, setShowNavBar] = useState(true);
+	useEffect(() => {
+		if (terminalViewParam === "true") {
 			setShowNavBar(false);
 		} else {
 			setShowNavBar(true);
 		}
-		}, [terminalViewParam]);
+	}, [terminalViewParam]);
 
 	return (
-		<section class="text-gray-600 bg-white body-font">
+		<section className="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
 
-			<div class="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
+			<div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
-					<div class="lg:w-full md:w-full h-64">
-						<div class="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
-							<div class="mt-5 md:col-span-2 md:mt-0">
+					<div className="lg:w-full md:w-full h-64">
+						<div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+							<div className="mt-5 md:col-span-2 md:mt-0">
 								<form method="POST">
-									<div class="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-										<h1 class="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-										<span class="inline-block max-w-full break-words" style={{ fontFamily: 'Poppins, sans-serif' }}>
-											{title}
-										</span>
+									<div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+										<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+											<span
+												className="inline-block max-w-full break-words"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
+												{title}
+											</span>
 										</h1>
-										<div class={`flex items-center ${favClass}`}>
+										<div className={`flex items-center ${favClass}`}>
 											<button
 												type="button"
-												class={handleClassName}
+												className={handleClassName}
 												onClick={() => handleFavorite()}
 											>
-												<span class="ml-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
+												<span
+													className="ml-1"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
 													{favoriteId !== 0 ? t("unfavorite") : t("favourites")}
 												</span>
 											</button>
 										</div>
 									</div>
 
-									<div class="flex flex-wrap gap-1 justify-between mt-6">
+									<div className="flex flex-wrap gap-1 justify-between mt-6">
 										<div>
-											{input.categoryId == 1 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("news")}</p>
+											{input.categoryId === 1 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("news")}
+												</p>
 											) : null}
-											{input.categoryId == 2 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("roadTraffic")}</p>
+											{input.categoryId === 2 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("roadTraffic")}
+												</p>
 											) : null}
-											{input.categoryId == 3 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("events")}</p>
+											{input.categoryId === 3 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("events")}
+												</p>
 											) : null}
-											{input.categoryId == 4 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("clubs")}</p>
+											{input.categoryId === 4 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("clubs")}
+												</p>
 											) : null}
-											{input.categoryId == 5 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("regionalProducts")}</p>
+											{input.categoryId === 5 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("regionalProducts")}
+												</p>
 											) : null}
-											{input.categoryId == 6 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("offerSearch")}</p>
+											{input.categoryId === 6 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("offerSearch")}
+												</p>
 											) : null}
-											{input.categoryId == 7 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("newCitizenInfo")}</p>
+											{input.categoryId === 7 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("newCitizenInfo")}
+												</p>
 											) : null}
-											{input.categoryId == 8 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("defectReport")}</p>
+											{input.categoryId === 8 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("defectReport")}
+												</p>
 											) : null}
-											{input.categoryId == 9 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("lostAndFound")}</p>
+											{input.categoryId === 9 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("lostAndFound")}
+												</p>
 											) : null}
-											{input.categoryId == 10 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("companyPortaits")}</p>
+											{input.categoryId === 10 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("companyPortaits")}
+												</p>
 											) : null}
-											{input.categoryId == 11 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>
+											{input.categoryId === 11 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
 													{t("carpoolingPublicTransport")}
 												</p>
 											) : null}
-											{input.categoryId == 12 ? (
-												<p className="text-start" style={{ fontFamily: 'Poppins, sans-serif' }}>{t("offers")}</p>
+											{input.categoryId === 12 ? (
+												<p
+													className="text-start"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("offers")}
+												</p>
 											) : null}
 										</div>
-										{input.id && input.categoryId == 3 ? (
-											<p class="leading-relaxed text-base dark:text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
-												{new Date(input.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-												" - to - " +
-												new Date(input.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+										{input.id && input.categoryId === 3 ? (
+											<p
+												className="leading-relaxed text-base dark:text-gray-900"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
+												{new Date(
+													input.startDate.slice(0, 10)
+												).toLocaleDateString("de-DE") +
+													" - to - " +
+													new Date(
+														input.endDate.slice(0, 10)
+													).toLocaleDateString("de-DE")}
 											</p>
-											):(
-												<p class="leading-relaxed text-base dark:text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
-												</p>
+										) : (
+											<p
+												className="leading-relaxed text-base dark:text-gray-900"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											></p>
 										)}
 									</div>
 								</form>
 							</div>
 						</div>
 					</div>
-					<div class="container-fluid lg:w-full md:w-full">
-						<div class=" mr-0 ml-0 mt-4">
-							<div class="h-96 overflow-hidden px-0 py-0 shadow-xl">
-								<div class="relative h-96">
+					<div className="container-fluid lg:w-full md:w-full">
+						<div className=" mr-0 ml-0 mt-4">
+							<div className="h-96 overflow-hidden px-0 py-0 shadow-xl">
+								<div className="relative h-96">
 									<img
 										alt="listing"
-										class="object-cover object-center h-full w-full"
+										className="object-cover object-center h-full w-full"
 										src={
 											input.logo
 												? process.env.REACT_APP_BUCKET_HOST + input.logo
@@ -381,28 +416,34 @@ const EventDetails = () => {
 							</div>
 						</div>
 					</div>
-					<div class="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
-						<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+					<div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+						<h1
+							className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+						>
 							{t("description")}
 						</h1>
 						<Description content={description} />
 					</div>
 				</div>
 
-				{userSocial && userSocial.length > 0  ? (
-					<div class="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+				{userSocial && userSocial.length > 0 ? (
+					<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
-							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+							<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
+								<h1
+									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+								>
 									{t("ownerInfo")}
 								</h1>
 							</div>
-							<div class="my-4 bg-gray-200 h-[1px]"></div>
+							<div className="my-4 bg-gray-200 h-[1px]"></div>
 
-							<div class="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
-								<div class="flex flex-col justify-center items-start">
+							<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 sm:grid-cols-2">
+								<div className="flex flex-col justify-center items-start">
 									<img
-										class="rounded-full h-20 w-20"
+										className="rounded-full h-20 w-20"
 										src={
 											user?.image
 												? process.env.REACT_APP_BUCKET_HOST + user?.image
@@ -411,29 +452,35 @@ const EventDetails = () => {
 										alt={user?.lastname}
 									/>
 								</div>
-								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+									<h2
+										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
 										{firstname + " " + lastname}
 									</h2>
-									<p class="leading-relaxed text-base dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+									<p
+										className="leading-relaxed text-base dark:text-gray-900"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
 										{t("uploaded_on")}
 										{createdAt}
 									</p>
 								</div>
 							</div>
 
-							<div class="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1 justify-Start">
+							<div className="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1 justify-Start">
 								{userSocial?.Facebook && (
-									<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<div className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 										<button
 											type="button"
 											data-te-ripple-init
 											data-te-ripple-color="light"
-											class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-500"
+											className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-500"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												class="h-4 w-4"
+												className="h-4 w-4"
 												fill="currentColor"
 												viewBox="0 0 24 24"
 											>
@@ -443,16 +490,16 @@ const EventDetails = () => {
 									</div>
 								)}
 								{userSocial?.Instagram && (
-									<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<div className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 										<button
 											type="button"
 											data-te-ripple-init
 											data-te-ripple-color="light"
-											class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-pink-600"
+											className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-pink-600"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												class="h-4 w-4"
+												className="h-4 w-4"
 												fill="currentColor"
 												viewBox="0 0 24 24"
 											>
@@ -462,16 +509,16 @@ const EventDetails = () => {
 									</div>
 								)}
 								{userSocial?.LinkedIn && (
-									<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<div className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 										<button
 											type="button"
 											data-te-ripple-init
 											data-te-ripple-color="light"
-											class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-sky-600"
+											className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-sky-600"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												class="h-4 w-4"
+												className="h-4 w-4"
 												fill="currentColor"
 												viewBox="0 0 24 24"
 											>
@@ -481,16 +528,16 @@ const EventDetails = () => {
 									</div>
 								)}
 								{userSocial?.Youtube && (
-									<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<div className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 										<button
 											type="button"
 											data-te-ripple-init
 											data-te-ripple-color="light"
-											class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-red-600"
+											className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-red-600"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												class="h-4 w-4"
+												className="h-4 w-4"
 												fill="currentColor"
 												viewBox="0 0 24 24"
 											>
@@ -500,16 +547,16 @@ const EventDetails = () => {
 									</div>
 								)}
 								{userSocial?.Twitter && (
-									<div class="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
+									<div className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2">
 										<button
 											type="button"
 											data-te-ripple-init
 											data-te-ripple-color="light"
-											class="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-400"
+											className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg bg-blue-400"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
-												class="h-4 w-4"
+												className="h-4 w-4"
 												fill="currentColor"
 												viewBox="0 0 24 24"
 											>
@@ -520,7 +567,7 @@ const EventDetails = () => {
 								)}
 							</div>
 
-							<div class="flex justify-center my-4">
+							<div className="flex justify-center my-4">
 								<button
 									onClick={() =>
 										navigateTo(
@@ -528,29 +575,32 @@ const EventDetails = () => {
 										)
 									}
 									type="submit"
-									class="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{ fontFamily: 'Poppins, sans-serif' }}>
-									<span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+									className="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+								>
+									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
 								</button>
 							</div>
 						</div>
-
 					</div>
 				) : (
-					<div class="w-full sm:h-72 md:h-80 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full sm:h-72 md:h-80 h-[25rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
-							<div class="p-4 space-y-0 md:space-y-6 sm:p-4">
-								<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+							<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
+								<h1
+									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+								>
 									{t("ownerInfo")}
 								</h1>
 							</div>
-							<div class="my-4 bg-gray-200 h-[1px]"></div>
+							<div className="my-4 bg-gray-200 h-[1px]"></div>
 
-							<div class="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
-								<div class="flex justify-center sm:justify-start">
+							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
+								<div className="flex justify-center sm:justify-start">
 									<img
-										class="rounded-full h-20 w-20"
+										className="rounded-full h-20 w-20"
 										src={
 											user?.image
 												? process.env.REACT_APP_BUCKET_HOST + user?.image
@@ -559,29 +609,36 @@ const EventDetails = () => {
 										alt={user?.lastname}
 									/>
 								</div>
-								<div class="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-									<h2 class="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+									<h2
+										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
 										{firstname + " " + lastname}
 									</h2>
-									<p class="leading-relaxed text-base dark:text-gray-900"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+									<p
+										className="leading-relaxed text-base dark:text-gray-900"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
 										{t("uploaded_at") + " " + createdAt}
 									</p>
 								</div>
 							</div>
 
-							<div class="flex justify-center lg:mt-7 md:mt-7 mt-7">
+							<div className="flex justify-center lg:mt-7 md:mt-7 mt-7">
 								<button
 									onClick={() => {
 										let url = `/ViewProfile?userId=${user.id}`;
-										if (terminalViewParam === 'true') {
-										url += '&terminalView=true';
+										if (terminalViewParam === "true") {
+											url += "&terminalView=true";
 										}
 										navigateTo(url);
 									}}
 									type="submit"
-									class="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{ fontFamily: 'Poppins, sans-serif' }}>
-									<span class="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+									className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+								>
+									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
 								</button>
 							</div>
@@ -590,76 +647,101 @@ const EventDetails = () => {
 				)}
 			</div>
 
-			<div class="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-				<h1 class="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+			<div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
+				<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 					{t("similarItems")}
 				</h1>
 				{listings && listings.length > 0 ? (
-					<div class="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-						<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+					<div className="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
+						<div className="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
 							{listings &&
-								listings.map((listing) => (
-									<div
-										onClick={() => {
-											let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
-											if (terminalViewParam === 'true') {
-											url += '&terminalView=true';
-											}
-											navigateTo(url);
-										}}
-										class="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
-									>
-										<a class="block relative h-64 rounded overflow-hidden">
-											<img
-												alt="ecommerce"
-												class="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-												src={
-													listing.logo
-														? process.env.REACT_APP_BUCKET_HOST + listing.logo
-														: LISTINGSIMAGE
+								listings
+									.filter((listing) => listing.statusId === 1)
+									.map((listing) => (
+										<div
+											key={listing.id}
+											onClick={() => {
+												let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
+												if (terminalViewParam === "true") {
+													url += "&terminalView=true";
 												}
-											/>
-										</a>
-										<div class="mt-5 px-2">
-													<h2 class="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"  style={{ fontFamily: 'Poppins, sans-serif' }}>
-														{listing.title}
-													</h2>
-												</div>
-												<div className="my-4 bg-gray-200 h-[1px]"></div>
-												{listing.id && listing.categoryId == 3 ? (
-												<p class="text-gray-600 title-font text-sm font-semibold text-center font-sans"  style={{ fontFamily: 'Poppins, sans-serif' }}>
-													{new Date(listing.startDate.slice(0, 10)).toLocaleDateString('de-DE') +
-													" To " +
-													new Date(listing.endDate.slice(0, 10)).toLocaleDateString('de-DE')}
+												navigateTo(url);
+											}}
+											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+										>
+											<a className="block relative h-64 rounded overflow-hidden">
+												<img
+													alt="ecommerce"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													src={
+														listing.logo
+															? process.env.REACT_APP_BUCKET_HOST + listing.logo
+															: LISTINGSIMAGE
+													}
+												/>
+											</a>
+											<div className="mt-5 px-2">
+												<h2
+													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{listing.title}
+												</h2>
+											</div>
+											<div className="my-4 bg-gray-200 h-[1px]"></div>
+											{listing.id && listing.categoryId === 3 ? (
+												<p
+													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{new Date(
+														listing.startDate.slice(0, 10)
+													).toLocaleDateString("de-DE") +
+														" To " +
+														new Date(
+															listing.endDate.slice(0, 10)
+														).toLocaleDateString("de-DE")}
 												</p>
-												):(
-													<p class="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"  style={{ fontFamily: 'Poppins, sans-serif' }}
-													dangerouslySetInnerHTML={{ __html: listing.description }} />
-												)}
-									</div>
-								))}
+											) : (
+												<p
+													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+													dangerouslySetInnerHTML={{
+														__html: listing.description,
+													}}
+												/>
+											)}
+										</div>
+									))}
 						</div>
 					</div>
 				) : (
 					<div>
-						<div class="flex items-center justify-center">
-							<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+						<div className="flex items-center justify-center">
+							<h1
+								className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
 								{t("currently_no_listings")}
 							</h1>
 						</div>
-						<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-							<span class="font-sans text-black"  style={{ fontFamily: 'Poppins, sans-serif' }}>
+						<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+							<span
+								className="font-sans text-black"
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
 								{t("to_upload_new_listing")}
 							</span>
 							<a
-								class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+								className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 								onClick={() => {
 									localStorage.setItem("selectedItem", "Choose one category");
 									isLoggedIn
 										? navigateTo("/UploadListings")
 										: navigateTo("/login");
 								}}
-								style={{ fontFamily: 'Poppins, sans-serif' }}>
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
 								{t("click_here")}
 							</a>
 						</div>

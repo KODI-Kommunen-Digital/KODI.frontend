@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import SideBar from "../Components/SideBar";
 import Alert from "../Components/Alert";
 import "./bodyContainer.css";
+import PropTypes from "prop-types";
 import SocialMedia from "../Components/socialMedia";
 import {
   getProfile,
@@ -10,9 +11,9 @@ import {
 } from "../Services/usersApi";
 // import { socialMedia } from "../Constants/socialMedia";
 import { uploadProfilePic, deleteProfilePic } from "../Services/usersApi";
+
 import { useTranslation, withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
-// import ('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');
 
 function ChangeImage({ setInput, input }) {
   const { t } = useTranslation();
@@ -609,4 +610,8 @@ class ProfilePage extends React.Component {
     );
   }
 }
+
+ProfilePage.propTypes = {
+    t: PropTypes.func.isRequired,
+};
 export default withTranslation()(ProfilePage);

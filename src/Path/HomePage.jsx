@@ -7,12 +7,9 @@ import { getListings } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
-import {
-  sortByTitleAZ,
-  sortByTitleZA,
-  sortLatestFirst,
-  sortOldestFirst,
-} from "../Services/helper";
+import { sortLatestFirst } from "../Services/helper";
+
+
 import CITYIMAGE from "../assets/City.png";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
@@ -20,87 +17,92 @@ import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
-  const { t } = useTranslation();
-  window.scrollTo(0, 0);
-  const [cityId, setCityId] = useState();
-  const [cities, setCities] = useState([]);
-  const [listings, setListings] = useState([]);
-  const urlParams = new URLSearchParams(window.location.search);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { t } = useTranslation();
+	window.scrollTo(0, 0);
+	const [cityId, setCityId] = useState();
+	const [cities, setCities] = useState([]);
+	const [listings, setListings] = useState([]);
+	// const urlParams = new URLSearchParams(window.location.search);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
-    });
-    setCityId(urlParams.get("cityId") || 0);
-    getListings({
-      cityId: urlParams.get("cityId"),
-      statusId: 1,
-      pageNo: 1,
-      pageSize: 8,
-    }).then((response) => {
-      setListings([...sortLatestFirst(response.data.data)]);
-    });
-    document.title = "Heidi Home";
-  }, []);
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		getCities().then((citiesResponse) => {
+			setCities(citiesResponse.data.data);
+		});
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken || refreshToken) {
-      setIsLoggedIn(true);
-    }
-    var params = { statusId: 1 };
-    if (parseInt(cityId)) {
-      urlParams.set("cityId", cityId);
-      params.cityId = cityId;
-    } else {
-      urlParams.delete("cityId"); // Remove cityId parameter from URL
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.replaceState({}, "", newUrl);
-    getListings(params).then((response) => {
-      var data = response.data.data;
-      setListings([...sortLatestFirst(data)]);
-    });
-  }, [cities, cityId, window.location.href]);
+		setCityId(urlParams.get("cityId") || 0);
 
-  let navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
+		getListings({
+			cityId: urlParams.get("cityId"),
+			statusId: 1,
+			pageNo: 1,
+			pageSize: 8,
+		}).then((response) => {
+			setListings([...sortLatestFirst(response.data.data)]);
+		});
 
-  function goToAllListingsPage(category) {
-    let navUrl = `/AllEvents?categoryId=${category}`;
-    if (cityId)
-      navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`;
-    navigateTo(navUrl);
-  }
+		document.title = "Heidi Home";
+	}, []);
 
-  function goToCitizensPage() {
-    let navUrl = `/CitizenService`;
-    if (cityId) navUrl = `/CitizenService?cityId=${cityId}`;
-    navigateTo(navUrl);
-  }
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
+			setIsLoggedIn(true);
+		}
+		const params = { statusId: 1 };
+		if (parseInt(cityId)) {
+			urlParams.set("cityId", cityId);
+			params.cityId = cityId;
+		} else {
+			urlParams.delete("cityId"); // Remove cityId parameter from URL
+		}
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.replaceState({}, "", newUrl);
+		getListings(params).then((response) => {
+			const data = response.data.data;
+			setListings([...sortLatestFirst(data)]);
+		});
+	}, [cities, cityId]);
 
-  const [showPopup, setShowPopup] = useState(false);
+	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
-  useEffect(() => {
-    const hasAcceptedPrivacyPolicy = localStorage.getItem(
-      "privacyPolicyAccepted"
-    );
+	function goToAllListingsPage(category) {
+		let navUrl = `/AllEvents?categoryId=${category}`;
+		if (cityId)
+			navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`;
+		navigateTo(navUrl);
+	}
 
-    if (!hasAcceptedPrivacyPolicy) {
-      setShowPopup(true); // Show the popup if privacy policy is not accepted
-    }
-  }, []);
+	function goToCitizensPage() {
+		let navUrl = `/CitizenService`;
+		if (cityId) navUrl = `/CitizenService?cityId=${cityId}`;
+		navigateTo(navUrl);
+	}
+
+	const [showPopup, setShowPopup] = useState(false);
+
+
+	useEffect(() => {
+		const hasAcceptedPrivacyPolicy = localStorage.getItem(
+			"privacyPolicyAccepted"
+		);
+
+		if (!hasAcceptedPrivacyPolicy) {
+			setShowPopup(true); // Show the popup if privacy policy is not accepted
+		}
+	}, []);
 
   const handlePrivacyPolicyAccept = () => {
     localStorage.setItem("privacyPolicyAccepted", "true");
@@ -497,6 +499,7 @@ const HomePage = () => {
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
+
       <h2
         class="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -610,7 +613,8 @@ const HomePage = () => {
         </div>
       )}
 
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
+			<div className="my-4 bg-gray-200 h-[1px]"></div>
+
 
       <div class="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
         <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
@@ -710,21 +714,21 @@ const HomePage = () => {
             </a>
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
-            <img
-              src={STYLEIMAGE}
-              alt="Image 1"
-              className="w-full md:w-98 mb-2"
-            />
-          </div>
-        </div>
-      </div>
+					<div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
+						<img
+							src={STYLEIMAGE}
+							alt="Image 1"
+							className="w-full md:w-98 mb-2"
+						/>
+					</div>
+				</div>
+			</div>
 
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
-    </section>
-  );
+			<div className="bottom-0 w-full">
+				<Footer />
+			</div>
+		</section>
+	);
 };
 
 export default HomePage;
