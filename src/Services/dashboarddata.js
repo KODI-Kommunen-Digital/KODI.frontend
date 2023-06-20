@@ -1,4 +1,4 @@
-var dashboardObj = {
+const dashboardObj = {
 
     "listings": [
         {

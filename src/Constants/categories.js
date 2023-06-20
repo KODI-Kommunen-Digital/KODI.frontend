@@ -25,4 +25,4 @@ export const categoryById = {
     10: "companyPortaits",
     11: "carpoolingPublicTransport",
     12: "offers"
- }
+}

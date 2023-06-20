@@ -1,2 +1,5 @@
-/node_modules
-package.json
+node_modules/
+bin/
+build/
+package.json/
+src\Path\UploadListings.jsx
