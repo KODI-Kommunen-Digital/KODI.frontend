@@ -98,9 +98,11 @@ const EventDetails = () => {
 				// setImagePath(listingsResponse.data.data.logo);
 				if (isLoggedIn) {
 					getFavorites().then((response) => {
-						const favorite = response.data.data.filter(
-							(f) => f.listingId === listingId
-						)[0];
+						const favorite = response.data.data.find(
+							(f) =>
+								f.listingId === parseInt(listingId) &&
+								f.cityId === parseInt(cityId)
+						);
 						if (favorite) {
 							setFavoriteId(favorite.id);
 							setFavButton(t("Unfavorite"));
