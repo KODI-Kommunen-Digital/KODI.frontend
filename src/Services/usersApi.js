@@ -1,4 +1,13 @@
 import axios from "../api/axiosInstance";
+import UAParser from 'ua-parser-js';
+
+const parser = new UAParser();
+const userAgent = parser.getResult();
+
+const browserName = userAgent.browser.name;
+const deviceType = userAgent.os.name + ", " +userAgent.device.vendor + " " + userAgent.device.model;
+const headers = {browserName, deviceType}
+
 
 export function getUserId() {
 	return (
