@@ -18,7 +18,6 @@ import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/SubPages/CitizenService";
-import ViewMoreListings from "./Path/SubPages/ViewMoreListings";
 
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
