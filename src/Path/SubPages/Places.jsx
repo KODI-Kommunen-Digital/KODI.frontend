@@ -259,39 +259,39 @@
 // 	}
 
 // 	return (
-// 		<section class="text-gray-600 body-font relative">
+// 		<section className="text-gray-600 body-font relative">
 // 			<HomePageNavBar />
-// 			<div class="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
-// 				<div class="w-full mr-0 ml-0">
-// 					<div class="h-64 overflow-hidden px-1 py-1">
-// 						<div class="relative h-64">
+// 			<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+// 				<div className="w-full mr-0 ml-0">
+// 					<div className="h-64 overflow-hidden px-1 py-1">
+// 						<div className="relative h-64">
 // 							<img
 // 								alt="ecommerce"
-// 								class="object-cover object-center h-full w-full"
+// 								className="object-cover object-center h-full w-full"
 // 								src={HOMEPAGEIMG}
 // 							/>
-// 							<div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-// 								<h1 class="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
+// 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+// 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4">
 // 									{selectedItemLocation}
 // 								</h1>
 // 								<div>
-// 									<div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
-// 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+// 									<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+// 										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
 // 											{cities.map((city) => (
 // 												<select
 // 													id="button-filter"
 // 													name="country"
 // 													autocomplete="country-name"
 // 													onChange={handleLocationChange}
-// 													class="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+// 													className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 // 												>
-// 													<option class="font-sans" value="Default">
+// 													<option className="font-sans" value="Default">
 // 														{selectedItemLocation}
 // 													</option>
 // 													{cities.map(
 // 														(city) =>
 // 															selectedItemLocation !== city.name && (
-// 																<option class="font-sans" value={city.id}>
+// 																<option className="font-sans" value={city.id}>
 // 																	{city.name}
 // 																</option>
 // 															)
@@ -300,13 +300,13 @@
 // 											))}
 // 										</div>
 
-// 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+// 										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
 // 											<select
 // 												id="button-filter"
 // 												name="country"
 // 												autocomplete="country-name"
 // 												onChange={handleCategoryChange}
-// 												class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+// 												className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 // 											>
 // 												<option>{t("chooseOneCategory")}</option>
 // 												<option value="News">News</option>
@@ -334,14 +334,14 @@
 // 											</select>
 // 										</div>
 
-// 										<div class="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
+// 										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 w-full">
 // 											<select
 // 												id="country"
 // 												name="country"
 // 												value={selectedSortOption}
 // 												onChange={handleSortOptionChange}
 // 												autocomplete="country-name"
-// 												class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+// 												className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 // 											>
 // 												<option value="">{t("sort")}</option>
 // 												<option value="titleAZ">{t("atoztitle")}</option>
@@ -359,8 +359,8 @@
 // 			</div>
 
 // 			{listings && listings.length > 0 ? (
-// 				<div class="bg-white p-6 mt-20 mb-20 flex flex-wrap gap-10 justify-center">
-// 					<div class="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
+// 				<div className="bg-white p-6 mt-20 mb-20 flex flex-wrap gap-10 justify-center">
+// 					<div className="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
 // 						{listings &&
 // 							listings.map((listing) => (
 // 								<div
@@ -394,18 +394,18 @@
 // 				</div>
 // 			) : (
 // 				<div>
-// 					<div class="flex items-center justify-center">
-// 						<h1 class=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+// 					<div className="flex items-center justify-center">
+// 						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 // 							Currently there is no listings to display !
 // 						</h1>
 // 					</div>
 
-// 					<div class="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-// 						<span class="font-sans text-black">
+// 					<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+// 						<span className="font-sans text-black">
 // 							To see all of our listings,{" "}
 // 						</span>
 // 						<a
-// 							class="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+// 							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
 // 							onClick={() => {
 // 								localStorage.setItem("selectedItem", "Choose one category");
 // 								navigateTo("/ViewMoreListings");

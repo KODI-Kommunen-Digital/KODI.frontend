@@ -98,9 +98,11 @@ const EventDetails = () => {
 				// setImagePath(listingsResponse.data.data.logo);
 				if (isLoggedIn) {
 					getFavorites().then((response) => {
-						const favorite = response.data.data.filter(
-							(f) => f.listingId === listingId
-						)[0];
+						const favorite = response.data.data.find(
+							(f) =>
+								f.listingId === parseInt(listingId) &&
+								f.cityId === parseInt(cityId)
+						);
 						if (favorite) {
 							setFavoriteId(favorite.id);
 							setFavButton(t("Unfavorite"));
@@ -255,7 +257,9 @@ const EventDetails = () => {
 										<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
 											<span
 												className="inline-block max-w-full break-words"
-												style={{ fontFamily: "Poppins, sans-serif" }}
+												style={{
+													fontFamily: "Poppins, sans-serif",
+												}}
 											>
 												{title}
 											</span>
@@ -268,7 +272,9 @@ const EventDetails = () => {
 											>
 												<span
 													className="ml-1"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{favoriteId !== 0 ? t("unfavorite") : t("favourites")}
 												</span>
@@ -281,7 +287,9 @@ const EventDetails = () => {
 											{input.categoryId === 1 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("news")}
 												</p>
@@ -289,7 +297,9 @@ const EventDetails = () => {
 											{input.categoryId === 2 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("roadTraffic")}
 												</p>
@@ -297,7 +307,9 @@ const EventDetails = () => {
 											{input.categoryId === 3 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("events")}
 												</p>
@@ -305,7 +317,9 @@ const EventDetails = () => {
 											{input.categoryId === 4 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("clubs")}
 												</p>
@@ -313,7 +327,9 @@ const EventDetails = () => {
 											{input.categoryId === 5 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("regionalProducts")}
 												</p>
@@ -321,7 +337,9 @@ const EventDetails = () => {
 											{input.categoryId === 6 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("offerSearch")}
 												</p>
@@ -329,7 +347,9 @@ const EventDetails = () => {
 											{input.categoryId === 7 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("newCitizenInfo")}
 												</p>
@@ -337,7 +357,9 @@ const EventDetails = () => {
 											{input.categoryId === 8 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("defectReport")}
 												</p>
@@ -345,7 +367,9 @@ const EventDetails = () => {
 											{input.categoryId === 9 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("lostAndFound")}
 												</p>
@@ -353,7 +377,9 @@ const EventDetails = () => {
 											{input.categoryId === 10 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("companyPortaits")}
 												</p>
@@ -361,7 +387,9 @@ const EventDetails = () => {
 											{input.categoryId === 11 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("carpoolingPublicTransport")}
 												</p>
@@ -369,7 +397,9 @@ const EventDetails = () => {
 											{input.categoryId === 12 ? (
 												<p
 													className="text-start"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{t("offers")}
 												</p>
@@ -378,7 +408,9 @@ const EventDetails = () => {
 										{input.id && input.categoryId === 3 ? (
 											<p
 												className="leading-relaxed text-base dark:text-gray-900"
-												style={{ fontFamily: "Poppins, sans-serif" }}
+												style={{
+													fontFamily: "Poppins, sans-serif",
+												}}
 											>
 												{new Date(
 													input.startDate.slice(0, 10)
@@ -391,7 +423,9 @@ const EventDetails = () => {
 										) : (
 											<p
 												className="leading-relaxed text-base dark:text-gray-900"
-												style={{ fontFamily: "Poppins, sans-serif" }}
+												style={{
+													fontFamily: "Poppins, sans-serif",
+												}}
 											></p>
 										)}
 									</div>
@@ -433,7 +467,9 @@ const EventDetails = () => {
 							<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
 								<h1
 									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-									style={{ fontFamily: "Poppins, sans-serif" }}
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
 								>
 									{t("ownerInfo")}
 								</h1>
@@ -455,13 +491,17 @@ const EventDetails = () => {
 								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 									<h2
 										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
 									>
 										{firstname + " " + lastname}
 									</h2>
 									<p
 										className="leading-relaxed text-base dark:text-gray-900"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
 									>
 										{t("uploaded_on")}
 										{createdAt}
@@ -576,7 +616,9 @@ const EventDetails = () => {
 									}
 									type="submit"
 									className="group relative flex w-72 md:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{ fontFamily: "Poppins, sans-serif" }}
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
 								>
 									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
@@ -590,7 +632,9 @@ const EventDetails = () => {
 							<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
 								<h1
 									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-									style={{ fontFamily: "Poppins, sans-serif" }}
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
 								>
 									{t("ownerInfo")}
 								</h1>
@@ -612,13 +656,17 @@ const EventDetails = () => {
 								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
 									<h2
 										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
 									>
 										{firstname + " " + lastname}
 									</h2>
 									<p
 										className="leading-relaxed text-base dark:text-gray-900"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
 									>
 										{t("uploaded_at") + " " + createdAt}
 									</p>
@@ -636,7 +684,9 @@ const EventDetails = () => {
 									}}
 									type="submit"
 									className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{ fontFamily: "Poppins, sans-serif" }}
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
 								>
 									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
 									{t("viewProfile")}
@@ -669,6 +719,7 @@ const EventDetails = () => {
 											}}
 											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 										>
+											{process.env.REACT_APP_BUCKET_HOST + listing.logo}
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"
@@ -683,7 +734,9 @@ const EventDetails = () => {
 											<div className="mt-5 px-2">
 												<h2
 													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{listing.title}
 												</h2>
@@ -692,7 +745,9 @@ const EventDetails = () => {
 											{listing.id && listing.categoryId === 3 ? (
 												<p
 													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 												>
 													{new Date(
 														listing.startDate.slice(0, 10)
@@ -705,7 +760,9 @@ const EventDetails = () => {
 											) : (
 												<p
 													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
 													dangerouslySetInnerHTML={{
 														__html: listing.description,
 													}}
