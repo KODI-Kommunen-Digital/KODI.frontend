@@ -223,8 +223,6 @@
     "unfavorite":"Unfavorite",
     "updatePassword": "Update Password",
     "upload": "Upload",
-    "createGroup": "Create Group",
-    "yourGroups": "Your Groups",
     "uploadArea": "Upload the first post here",
     "uploadAreaDescription": "Whether event, offers or news. Here you can easily upload a contribution",
     "uploaded_at": "Uploaded at ",
@@ -437,6 +435,14 @@
     "googlewebfonts1": "This site uses so-called web fonts provided by Google for the uniform display of fonts. The Google Fonts are installed locally. There is no connection to Google servers. Further information on Google Web Fonts can be found at https://developers.google.com/fonts/faq and in Google's data protection declaration: https://policies.google.com/privacy?hl=de.",
     "gmap1": "This site uses the Google Maps map service via an API. The provider is Google Ireland Limited (“Google”), Gordon House, Barrow Street, Dublin 4, Ireland. In order to use the functions of Google Maps, it is necessary to save your IP address. This information is usually transmitted to a Google server in the USA and stored there. The provider of this site has no influence on this data transfer. Google Maps is used in the interest of an attractive presentation of our online offers and to make it easier to find the places we have indicated on the website. This represents a legitimate interest within the meaning of Article 6 Paragraph 1 Letter f GDPR. If a corresponding consent has been requested, the processing takes place exclusively on the basis of Article 6 Paragraph 1 Letter a GDPR; the consent can be revoked at any time. More information on handling user data can be found in Google's data protection declaration: https://policies.google.com/privacy?hl=de.",
     "gmap2": "i.e. Changes to this Privacy Policy",
-    "gmap3": "We reserve the right to change this data protection declaration. The current version of the data protection declaration is always available at heidi-app.de/datenschutz."
+    "gmap3": "We reserve the right to change this data protection declaration. The current version of the data protection declaration is always available at heidi-app.de/datenschutz.",
+
+    "createGroup": "Create Group",
+    "yourGroups": "Your Groups",
+    "currently_no_groups": "Curently no groups are present",
+    "to_create_new_group": "To create a new group",
+    "noDevicesLoggedIn": "Currently there are no no devices",
+    "clickTologOut": "Click on the box to Logout of this device",
+    "logotofeachdevice": "Click on the devices to logout from it"
 
 }

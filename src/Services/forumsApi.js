@@ -1,26 +1,6 @@
 import axios from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
 
-export async function getAllForums() {
-	return axios.get(`/listings`);
-}
-
-export async function getForums(params) {
-	return axios.get(`/listings`, { params });
-}
-
-export async function getForumsByCity(cityId, params) {
-	return axios.get(`/cities/${cityId}/listings`, { params });
-}
-
-export async function getForumsById(cityId, listingsId) {
-	return axios.get(`/cities/${cityId}/listings/${listingsId}`);
-}
-
-export async function postForumsData(cityId, newListingsDataObj) {
-	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
-}
-
 export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);
 }
@@ -33,11 +13,12 @@ export async function uploadImage(formData) {
 	});
 }
 
-export async function updateForumsData(cityId, newListingsDataObj, listingsId) {
-	return axios.patch(
-		`/cities/${cityId}/listings/${listingsId}`,
-		newListingsDataObj
-	);
+export async function updateForumsData(cityId, newForumDataObj, forumsId) {
+	return axios.patch(`/cities/${cityId}/forums/${forumsId}`, newForumDataObj);
+}
+
+export async function postForumsData(cityId, newForumDataObj) {
+	return axios.post(`/cities/${cityId}/forums`, newForumDataObj);
 }
 
 export async function deleteForums(cityId, listingsId) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -19,14 +19,11 @@ const AccountSettings = () => {
 	});
 
 	const navigate = useNavigate();
-	const navigateTo = useCallback(
-		(path) => {
-			if (path) {
-				navigate(path);
-			}
-		},
-		[navigate]
-	);
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
 	useEffect(() => {
 		document.title = "Heidi - Account Settings";
@@ -48,7 +45,7 @@ const AccountSettings = () => {
 				phoneNumber,
 			}));
 		});
-	}, [input, navigateTo]);
+	}, []);
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
@@ -107,7 +104,7 @@ const AccountSettings = () => {
 	}
 
 	return (
-		<section className="bg-slate-600 body-font relative h-full">
+		<section className="bg-slate-600 body-font relative h-screen">
 			<SideBar />
 			<>
 				<div className="container w-auto px-5 py-2 bg-slate-600">
@@ -152,10 +149,7 @@ const AccountSettings = () => {
 						<div className="relative mb-4">
 							<div className="py-2 grid grid-cols-1 md:grid-cols-2">
 								<div className="mt-1 px-2">
-									<label
-										className="block text-md font-medium text-gray-600"
-										style={{ fontFamily: "Poppins, sans-serif" }}
-									>
+									<label className="block text-sm font-medium text-gray-600">
 										{t("emailId")}
 									</label>
 									<input
@@ -172,8 +166,7 @@ const AccountSettings = () => {
 								<div className="mt-1 px-2">
 									<label
 										htmlFor="phoneNumber"
-										className="block text-md font-medium text-gray-600"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										className="block text-sm font-medium text-gray-600"
 									>
 										{t("phoneNumber")}
 									</label>
