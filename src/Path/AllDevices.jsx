@@ -146,7 +146,7 @@ const AllDevices = () => {
 							</>
 						) : (
 							<p
-								className="text-gray-900 text-md mb-4 font-medium title-font"
+								className="p-2.5 mt-3 flex items-center rounded-md cursor-pointer text-black"
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{t("noDevicesLoggedIn")}
