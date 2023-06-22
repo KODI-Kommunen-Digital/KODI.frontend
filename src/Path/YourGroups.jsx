@@ -36,12 +36,39 @@ const YourGroups = () => {
 									))}
 							</ul>
 						) : (
-							<p
-								className="text-gray-900 text-md mb-4 font-medium title-font"
-								style={{ fontFamily: "Poppins, sans-serif" }}
-							>
-								Loading groups...
-							</p>
+							<div>
+								<div className="flex items-center justify-center">
+									<h1
+										className="m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
+										{t("currently_no_groups")}
+									</h1>
+								</div>
+								<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+									<span
+										className="font-sans text-black"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
+										{t("to_create_new_group")}
+									</span>
+									<a
+										className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+										onClick={() => {
+											localStorage.setItem(
+												"selectedItem",
+												"Choose one category"
+											);
+											isLoggedIn
+												? navigateTo("/UploadListings")
+												: navigateTo("/login");
+										}}
+									>
+										{t("click_here")}
+									</a>
+								</div>
+							</div>
 						)}
 					</div>
 				</div>
