@@ -31,10 +31,10 @@ const AllDevices = () => {
 		});
 	}, []);
 
-	const handleLoginLogout = () => {
+	const handleLoginLogout = async () => {
 		if (isLoggedIn) {
 			try {
-				logoutOfAllDevices();
+				await logoutOfAllDevices();
 				window.localStorage.removeItem("accessToken");
 				window.localStorage.removeItem("refreshToken");
 				window.localStorage.removeItem("userId");
@@ -53,12 +53,24 @@ const AllDevices = () => {
 		}
 	};
 
-	const handleLoginLogoutOneDevice = (ids) => {
+	const handleLoginLogoutOneDevice = async (ids) => {
 		try {
-			logoutOfOneDevice(ids);
-			setDevices(devices.filter((device) => device.id !== ids)); // Remove device from devices state
+			await logoutOfOneDevice(ids);
+			window.localStorage.removeItem("accessToken");
+			window.localStorage.removeItem("refreshToken");
+			window.localStorage.removeItem("userId");
+			window.localStorage.removeItem("selectedItem");
+			window.sessionStorage.removeItem("accessToken");
+			window.sessionStorage.removeItem("refreshToken");
+			window.sessionStorage.removeItem("userId");
+			window.sessionStorage.removeItem("selectedItem");
+			if (devices.find((device) => device.id === ids)) {
+				navigateTo("/");
+			} else {
+				setDevices(devices.filter((device) => device.id !== ids));
+			}
+
 			setIsLoggedIn(false);
-			navigateTo("/");
 		} catch (err) {
 			console.log(err);
 		}
@@ -134,12 +146,14 @@ const AllDevices = () => {
 												</span>
 											</div>
 
-											<p
-												className="text-sm text-red-600 ml-1 items-center"
-												style={{ fontFamily: "Poppins, sans-serif" }}
-											>
-												{t("clickTologOut")}
-											</p>
+											<div className="sm:ml-4 ml-0 text-black font-bold flex flex-col sm:flex-row items-center sm:items-start">
+												<p
+													className="text-sm text-red-600 ml-1 items-center"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("clickTologOut")}
+												</p>
+											</div>
 										</div>
 									</div>
 								))}
