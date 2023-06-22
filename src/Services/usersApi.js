@@ -92,6 +92,6 @@ export async function logoutOfAllDevices() {
 	return axios.delete(`/users/${getUserId()}/loginDevices`);
 }
 
-export async function logoutOfOneDevice(ids) {
-	return axios.delete(`/users/${getUserId()}/loginDevices?id=${ids}`);
+export async function logoutOfOneDevice(id) {
+	return axios.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }
