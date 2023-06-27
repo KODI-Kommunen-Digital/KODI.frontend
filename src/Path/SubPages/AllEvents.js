@@ -52,7 +52,8 @@ const Events = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const params = { pageNo, pageSize: 9, statusId: 1 };
         if (parseInt(cityId)) {
-            setCityName(cities.find((c) => cityId === c.id)?.name);
+            setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
+            console.log(cities , cityId)
             urlParams.set("cityId", cityId);
             params.cityId = cityId;
         } else {
