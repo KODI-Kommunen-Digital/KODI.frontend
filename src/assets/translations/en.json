@@ -251,12 +251,12 @@
     "password_do_not_match":"The new password and confirmation password do not match.",
 
 
-    
+
     "allDevices": "See all connected devices",
     "alldevicesdescription": "Click on this button you can see all of you connected devices",
     "devices": "Devices",
     "alldevicepagetitle": "These are the devices that your account is active",
-    "logoutofalldevices": "Logout of all devices",
+    "logoutOfAllDevices": "Logout of all devices",
     "privacypolicy": "Privacy Settings",
     "acceptAll": "Accept all",
     "saveoncomputer": "Save on computer",

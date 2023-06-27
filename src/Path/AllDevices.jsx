@@ -189,7 +189,7 @@ const AllDevices = () => {
 							className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
-							{t("logoutofalldevices")}
+							{t("logoutOfAllDevices")}
 						</button>
 						{showConfirmationModal.visible && (
 							<div className="fixed z-10 inset-0 overflow-y-auto">
