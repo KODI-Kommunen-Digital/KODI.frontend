@@ -448,6 +448,8 @@
     "pendingRequest": "Pending Joining Requests",
     "groupName": "Group Name",
     "logout": "Logout",
-    "doYouReallyWantToLogoutAccount":"Do you really want to logout of all devices? This will include your current device."
+    "doYouReallyWantToLogoutAccount":"Do you really want to logout of all devices? This will include your current device.",
+    "UnknownDevice": "Unknown Device",
+    "UnknownBrowser": "Unknown Browser"
 
 }

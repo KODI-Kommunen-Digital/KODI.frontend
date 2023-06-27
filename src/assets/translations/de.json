@@ -457,5 +457,7 @@
     "pendingRequest": "Ausstehende Beitrittsanfragen",
     "groupName": "Gruppenname",
     "logout": "Ausloggen",
-    "doYouReallyWantToLogoutAccount":"Möchten Sie sich wirklich von allen Geräten abmelden? Dazu gehört auch Ihr aktuelles Gerät."
+    "doYouReallyWantToLogoutAccount":"Möchten Sie sich wirklich von allen Geräten abmelden? Dazu gehört auch Ihr aktuelles Gerät.",
+    "UnknownDevice": "Unbekanntes Gerät",
+    "UnknownBrowser": "Unbekannter Browser"
 }

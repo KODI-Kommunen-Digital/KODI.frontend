@@ -31,7 +31,7 @@ const AllDevices = () => {
 		});
 	}, []);
 
-	const handleLoginLogout = async () => {
+	const handleLogout = async () => {
 		if (isLoggedIn) {
 			try {
 				await logoutOfAllDevices();
@@ -53,23 +53,11 @@ const AllDevices = () => {
 		}
 	};
 
-	const handleLoginLogoutOneDevice = async (ids) => {
+	const handleLogoutOneDevice = async (ids) => {
 		try {
 			await logoutOfOneDevice(ids);
-			window.localStorage.removeItem("accessToken");
-			window.localStorage.removeItem("refreshToken");
-			window.localStorage.removeItem("userId");
-			window.localStorage.removeItem("selectedItem");
-			window.sessionStorage.removeItem("accessToken");
-			window.sessionStorage.removeItem("refreshToken");
-			window.sessionStorage.removeItem("userId");
-			window.sessionStorage.removeItem("selectedItem");
-			if (devices.find((device) => device.id === ids)) {
-				navigateTo("/");
-			} else {
-				setDevices(devices.filter((device) => device.id !== ids));
-			}
 
+			setDevices(devices.filter((device) => device.id !== ids));
 			setIsLoggedIn(false);
 		} catch (err) {
 			console.log(err);
@@ -92,7 +80,7 @@ const AllDevices = () => {
 	function logoutAccountOnClick() {
 		setShowConfirmationModal({
 			visible: true,
-			onConfirm: () => handleLoginLogout(),
+			onConfirm: () => handleLogout(),
 			onCancel: () => setShowConfirmationModal({ visible: false }),
 		});
 	}
@@ -135,7 +123,7 @@ const AllDevices = () => {
 								{devices.map((device) => (
 									<div
 										key={device.id}
-										onClick={() => handleLoginLogoutOneDevice(device.id)}
+										onClick={() => handleLogoutOneDevice(device.id)}
 										className="p-2.5 mt-3 flex items-center rounded-md cursor-pointer text-black"
 									>
 										<div className="border items-center sm:items-start space-y-2 sm:space-y-0 border-gray-300 transition-all duration-300 hover:bg-red-200 hover:shadow-lg transform hover:-translate-y-1 rounded-md p-2.5 flex flex-col sm:flex-row w-full sm:space-x-4">
@@ -152,13 +140,13 @@ const AllDevices = () => {
 													style={{ fontFamily: "Poppins, sans-serif" }}
 													className="font-bold overflow-hidden whitespace-nowrap overflow-ellipsis"
 												>
-													{device.device}
+													{device.device || t("UnknownDevice")}
 												</h1>
 												<span
 													style={{ fontFamily: "Poppins, sans-serif" }}
 													className="font-bold text-gray-500 ml-1"
 												>
-													({device.browser})
+													({device.browser || t("UnknownBrowser")})
 												</span>
 											</div>
 
