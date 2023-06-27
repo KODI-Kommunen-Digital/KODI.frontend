@@ -53,7 +53,8 @@
     "eject": "react-scripts eject",
     "deploy": "pm2 start --name WEB npm -- start",
     "lint:fix": "eslint --fix --ext .js,.jsx .",
-    "prepare": "husky install && bash -c 'chmod ug+x .husky/*'"
+    "prepare": "husky install && bash -c 'chmod ug+x .husky/*'",
+    "husky": "^8.0.3"
   },
   "eslintConfig": {
     "extends": [
@@ -74,6 +75,5 @@
     ]
   },
   "devDependencies": {
-    "husky": "^8.0.3"
   }
 }
