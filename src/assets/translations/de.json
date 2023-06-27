@@ -253,7 +253,7 @@
     "allDevices": "Alle angeschlossenen Geräte anzeigen",
     "alldevicesdescription": "Klicken Sie auf diese Schaltfläche, um alle angeschlossenen Geräte anzuzeigen",
     "alldevicepagetitle": "Dies sind die Geräte, auf denen Ihr Konto aktiv ist",
-    "logoutofalldevices": "Abmelden aller Geräte",
+    "logoutOfAllDevices": "Abmelden aller Geräte",
     "privacypolicy": "Datenschutzeinstellungen",
     "devices": "Geräte",
     "acceptAll": "Akzeptiere alle",
@@ -444,5 +444,18 @@
     "googlewebfonts1": "Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten so genannte Web Fonts, die von Google bereitgestellt werden. Die Google Fonts sind lokal installiert. Eine Verbindung zu Servern von Google findet dabei nicht statt. Weitere Informationen zu Google Web Fonts finden Sie unter https://developers.google.com/fonts/faq und in der Datenschutzerklärung von Google: https://policies.google.com/privacy?hl=de.",
     "gmap1": "Diese Seite nutzt über eine API den Kartendienst Google Maps. Anbieter ist die Google Ireland Limited (“Google”), Gordon House, Barrow Street, Dublin 4, Irland. Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Der Anbieter dieser Seite hat keinen Einfluss auf diese Datenübertragung. Die Nutzung von Google Maps erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und an einer leichten Auffindbarkeit der von uns auf der Website angegebenen Orte. Dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO; die Einwilligung ist jederzeit widerrufbar. Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung von Google: https://policies.google.com/privacy?hl=de.",
     "gmap2": "d. Änderungen dieser Datenschutzerklärung",
-    "gmap3": "Wir behalten uns vor, diese Datenschutzerklärung zu ändern. Die aktuelle Fassung der Datenschutzerklärung ist stets heidi-app.de/datenschutz abrufbar."
+    "gmap3": "Wir behalten uns vor, diese Datenschutzerklärung zu ändern. Die aktuelle Fassung der Datenschutzerklärung ist stets heidi-app.de/datenschutz abrufbar.",
+
+    "createGroup": "Gruppe erstellen",
+    "myGroups": "Meine Gruppen",
+    "currently_no_groups": "Zur Zeit sind keine Gruppen vorhanden !",
+    "to_create_new_group": "Um eine neue Gruppe zu erstellen, ",
+    "noDevicesLoggedIn": "Derzeit gibt es keine anderen Geräte",
+    "clickTologOut": "Klicken Sie auf das Kästchen, um sich von diesem Gerät abzumelden",
+    "logotofeachdevice": "Tippen Sie auf ein Gerät, um sich davon abzumelden.",
+    "allGroups": "Alle Gruppe",
+    "pendingRequest": "Ausstehende Beitrittsanfragen",
+    "groupName": "Gruppenname",
+    "logout": "Ausloggen",
+    "doYouReallyWantToLogoutAccount":"Möchten Sie sich wirklich von allen Geräten abmelden? Dazu gehört auch Ihr aktuelles Gerät."
 }

@@ -279,29 +279,29 @@ const Dashboard = () => {
 								<th
 									scope="col"
 									className="px-6 sm:px-3 py-3 hidden lg:table-cell text-center"
-									style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("category")}
 								</th>
 								<th
 									scope="col"
 									className="px-6 py-3 hidden lg:table-cell text-center"
-									style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("date_of_creation")}
 								</th>
 								<th
 									scope="col"
 									className="px-6 py-3 text-center"
-									style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("action")}
 								</th>
 								{viewAllListings && (
 									<th
 										scope="col"
-										className="px-6 py-3"
-										style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+										className="px-6 py-3 text-center"
+										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("username")}
 									</th>
@@ -309,7 +309,7 @@ const Dashboard = () => {
 								<th
 									scope="col"
 									className="px-6 py-3 text-center"
-									style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("status")}
 								</th>
@@ -442,7 +442,7 @@ const Dashboard = () => {
 											)}
 										</td>
 										{viewAllListings && (
-											<td className="px-6 py-4">
+											<td className="px-6 py-4 text-center">
 												<a
 													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 													style={{ fontFamily: "Poppins, sans-serif" }}
