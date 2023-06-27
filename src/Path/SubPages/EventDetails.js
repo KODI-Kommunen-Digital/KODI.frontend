@@ -719,7 +719,7 @@ const EventDetails = () => {
 											}}
 											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
 										>
-											{process.env.REACT_APP_BUCKET_HOST + listing.logo}
+											{/* {process.env.REACT_APP_BUCKET_HOST + listing.logo} */}
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"

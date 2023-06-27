@@ -441,11 +441,13 @@
     "myGroups": "My Groups",
     "currently_no_groups": "Curently no groups are present !",
     "to_create_new_group": "To create a new group, ",
-    "noDevicesLoggedIn": "Currently there are no no devices",
+    "noDevicesLoggedIn": "Currently there are no other devices",
     "clickTologOut": "Click on the box to Logout of this device",
     "logotofeachdevice": "Tap a device to logout from it.",
     "allGroups": "All Group",
     "pendingRequest": "Pending Joining Requests",
-    "groupName": "Group Name"
+    "groupName": "Group Name",
+    "logout": "Logout",
+    "doYouReallyWantToLogoutAccount":"Do you really want to logout of all devices? This will include your current device."
 
 }
