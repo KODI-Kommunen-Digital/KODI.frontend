@@ -202,7 +202,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 				<div
 					className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 					onClick={() => {
-						navigateTo("/YourGroups");
+						navigateTo("/MyGroups");
 					}}
 				>
 					<svg
@@ -216,7 +216,7 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 						className="text-[15px] ml-4 text-gray-200 font-bold"
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
-						{t("yourGroups")}
+						{t("myGroups")}
 					</span>
 				</div>
 

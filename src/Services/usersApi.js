@@ -84,8 +84,8 @@ export async function deleteProfilePic() {
 	return axios.delete(`/users/${getUserId()}/imageDelete`);
 }
 
-export async function fetchDeviceList() {
-	return axios.get(`/users/${getUserId()}/loginDevices`);
+export async function fetchDeviceList(params) {
+	return axios.post(`/users/${getUserId()}/loginDevices`, { params });
 }
 
 export async function logoutOfAllDevices() {
