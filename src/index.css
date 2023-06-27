@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');*/
+
+.cancelButton{
+    display: flex;
+    gap: 1rem;
+}
+
+.errorPage{
+    position: relative;
+    top: 10rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 60%;
+    height: 40%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 50px;
+}
+
+#finalbutton:hover{
+    transform: scale(1.02);
+}
+
+.err{
+    color: rgb(255, 0, 0);
+    font-family: sans-serif;
+    font-size: small;
+}
