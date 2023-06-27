@@ -1095,7 +1095,7 @@ function UploadListings() {
 							</div>
 						</div>
 
-						{(categoryId == categoryByName.officialnotification ||
+						{/* {(categoryId == categoryByName.officialnotification ||
 							categoryId == categoryByName.regionalProducts ||
 							categoryId == categoryByName.news ||
 							categoryId == categoryByName.offerSearch) && (
@@ -1153,7 +1153,7 @@ function UploadListings() {
 									)}
 								</div>
 							</div>
-						)}
+						)} */}
 					</div>
 				</div>
 			)}
