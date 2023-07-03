@@ -20,7 +20,6 @@ const Events = () => {
     const [cityId, setCityId] = useState(null);
     const [cities, setCities] = useState([]);
     const [categoryId, setCategoryId] = useState(0);
-    // const [categories, setCategories] = useState(categoryById);
     const [selectedCategory, setCategoryName] = useState("");
     const [selectedCity, setCityName] = useState("");
     const [selectedSortOption, setSelectedSortOption] = useState("");
@@ -31,11 +30,11 @@ const Events = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
         const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
         if (accessToken || refreshToken) {
             setIsLoggedIn(true);
         }
@@ -53,7 +52,7 @@ const Events = () => {
         const params = { pageNo, pageSize: 9, statusId: 1 };
         if (parseInt(cityId)) {
             setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-            console.log(cities , cityId)
+            console.log(cities, cityId)
             urlParams.set("cityId", cityId);
             params.cityId = cityId;
         } else {
@@ -89,20 +88,20 @@ const Events = () => {
 
     useEffect(() => {
         switch (selectedSortOption) {
-        case "titleAZ":
-            setListings([...sortByTitleAZ(listings)]);
-            break;
-        case "titleZA":
-            setListings([...sortByTitleZA(listings)]);
-            break;
-        case "recent":
-            setListings([...sortLatestFirst(listings)]);
-            break;
-        case "oldest":
-            setListings([...sortOldestFirst(listings)]);
-            break;
-        default:
-            break;
+            case "titleAZ":
+                setListings([...sortByTitleAZ(listings)]);
+                break;
+            case "titleZA":
+                setListings([...sortByTitleZA(listings)]);
+                break;
+            case "recent":
+                setListings([...sortLatestFirst(listings)]);
+                break;
+            case "oldest":
+                setListings([...sortOldestFirst(listings)]);
+                break;
+            default:
+                break;
         }
     }, [selectedSortOption, listings]);
 
@@ -221,62 +220,62 @@ const Events = () => {
                         <div className="bg-white flex flex-wrap gap-10 justify-center">
                             <div className="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 min-w-[272px]">
                                 {listings &&
-									listings.map((listing) => (
-									    <div
-									        key={listing.id}
-									        onClick={() => {
-									            let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
-									            if (terminalViewParam === "true") {
-									                url += "&terminalView=true";
-									            }
-									            navigateTo(url);
-									        }}
-									        className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-									    >
-									        <a className="block relative h-64 rounded overflow-hidden">
-									            <img
-									                alt="ecommerce"
-									                className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-									                src={
-									                    listing.logo
-									                        ? process.env.REACT_APP_BUCKET_HOST + listing.logo
-									                        : LISTINGSIMAGE
-									                }
-									            />
-									        </a>
-									        <div className="mt-5 px-2">
-									            <h2
-									                className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-									                style={{ fontFamily: "Poppins, sans-serif" }}
-									            >
-									                {listing.title}
-									            </h2>
-									        </div>
-									        <div className="my-4 bg-gray-200 h-[1px]"></div>
-									        {listing.id && listing.categoryId === 3 ? (
-									            <p
-									                className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
-									                style={{ fontFamily: "Poppins, sans-serif" }}
-									            >
-									                {new Date(
-									                    listing.startDate.slice(0, 10)
-									                ).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-														    listing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-									            </p>
-									        ) : (
-									            <p
-									                className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-									                style={{ fontFamily: "Poppins, sans-serif" }}
-									                dangerouslySetInnerHTML={{
-									                    __html: listing.description,
-									                }}
-									            />
-									        )}
-									    </div>
-									))}
+                                    listings.map((listing) => (
+                                        <div
+                                            key={listing.id}
+                                            onClick={() => {
+                                                let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
+                                                if (terminalViewParam === "true") {
+                                                    url += "&terminalView=true";
+                                                }
+                                                navigateTo(url);
+                                            }}
+                                            className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+                                        >
+                                            <a className="block relative h-64 rounded overflow-hidden">
+                                                <img
+                                                    alt="ecommerce"
+                                                    className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                                                    src={
+                                                        listing.logo
+                                                            ? process.env.REACT_APP_BUCKET_HOST + listing.logo
+                                                            : LISTINGSIMAGE
+                                                    }
+                                                />
+                                            </a>
+                                            <div className="mt-5 px-2">
+                                                <h2
+                                                    className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
+                                                    {listing.title}
+                                                </h2>
+                                            </div>
+                                            <div className="my-4 bg-gray-200 h-[1px]"></div>
+                                            {listing.id && listing.categoryId === 3 ? (
+                                                <p
+                                                    className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
+                                                    {new Date(
+                                                        listing.startDate.slice(0, 10)
+                                                    ).toLocaleDateString("de-DE") +
+                                                        " To " +
+                                                        new Date(
+                                                            listing.endDate.slice(0, 10)
+                                                        ).toLocaleDateString("de-DE")}
+                                                </p>
+                                            ) : (
+                                                <p
+                                                    className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: listing.description,
+                                                    }}
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                     ) : (

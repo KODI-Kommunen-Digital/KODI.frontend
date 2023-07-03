@@ -21,7 +21,6 @@ const HomePage = () => {
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
-	// const urlParams = new URLSearchParams(window.location.search);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {

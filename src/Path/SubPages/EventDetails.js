@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
@@ -32,13 +31,11 @@ const EventDetails = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
-	// const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
 	const [createdAt, setCreatedAt] = useState("");
 	const [title, setTitle] = useState("");
 	const [userSocial, setUserSocial] = useState([]);
 	const [user, setUser] = useState();
-	// const [imagePath, setImagePath] = useState("");
 	const [, setSuccessMessage] = useState("");
 	const [, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
@@ -83,8 +80,6 @@ const EventDetails = () => {
 			if (accessToken || refreshToken) {
 				setIsLoggedIn(true);
 			}
-			// setNewListing(false);
-			// getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId, params).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
 				const cityUserId = listingsResponse.data.data.userId;
@@ -95,7 +90,6 @@ const EventDetails = () => {
 				setListingId(listingsResponse.data.data.id);
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
-				// setImagePath(listingsResponse.data.data.logo);
 				if (isLoggedIn) {
 					getFavorites().then((response) => {
 						const favorite = response.data.data.find(
@@ -121,26 +115,8 @@ const EventDetails = () => {
 		}
 	}, [t, cityId, window.location.href, isLoggedIn]);
 
-	// const [villages, setVillages] = useState([]);
-	// async function onCityChange(e) {
-	// 	const cityId = e.target.value;
-	// 	setCityId(cityId);
-	// 	setInput((prev) => ({
-	// 		...prev,
-	// 		villageId: 0,
-	// 	}));
-	// 	getVillages(cityId).then((response) => setVillages(response.data.data));
-	// }
-
 	useEffect(() => {
 		document.title = "Event Details";
-	}, []);
-
-	const [, setDashboarddata] = useState({ listings: [] });
-	useEffect(() => {
-		getDashboarddata().then((response) => {
-			setDashboarddata(response);
-		});
 	}, []);
 
 	const navigate = useNavigate();
@@ -210,15 +186,15 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-								.then((response) => {
-									setFavoriteId(response.data.id);
-									setSuccessMessage(t("List added to the favorites"));
-									setHandleClassName(
-										"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-									);
-									setFavButton(t("Favorite"));
-								})
-								.catch((err) => console.log("Error", err))
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {

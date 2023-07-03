@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
-import { getDashboarddata } from "../Services/dashboarddata";
 import { useNavigate } from "react-router-dom";
 import HOMEPAGEIMG from "../assets/homeimage.jpg";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
@@ -16,26 +15,22 @@ import Footer from "../Components/Footer";
 
 const Favorites = () => {
     window.scrollTo(0, 0);
-    const [, setDashboarddata] = useState({ listings: [] });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [selectedSortOption] = useState("");
 
     useEffect(() => {
         const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
         const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
         if (accessToken || refreshToken) {
             setIsLoggedIn(true);
         }
     }, []);
 
     useEffect(() => {
-        getDashboarddata().then((response) => {
-            setDashboarddata(response);
-        });
         document.title = "Favourites";
     }, []);
 
@@ -57,20 +52,20 @@ const Favorites = () => {
 
     useEffect(() => {
         switch (selectedSortOption) {
-        case "titleAZ":
-            setFavListings([...sortByTitleAZ(favListings)]);
-            break;
-        case "titleZA":
-            setFavListings([...sortByTitleZA(favListings)]);
-            break;
-        case "recent":
-            setFavListings([...sortLatestFirst(favListings)]);
-            break;
-        case "oldest":
-            setFavListings([...sortOldestFirst(favListings)]);
-            break;
-        default:
-            break;
+            case "titleAZ":
+                setFavListings([...sortByTitleAZ(favListings)]);
+                break;
+            case "titleZA":
+                setFavListings([...sortByTitleZA(favListings)]);
+                break;
+            case "recent":
+                setFavListings([...sortLatestFirst(favListings)]);
+                break;
+            case "oldest":
+                setFavListings([...sortOldestFirst(favListings)]);
+                break;
+            default:
+                break;
         }
     }, [selectedSortOption, favListings]);
 
@@ -102,34 +97,34 @@ const Favorites = () => {
                 <div className="bg-white p-6 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
                     <div className="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
                         {favListings &&
-							favListings.map((favListing) => (
-							    <div
-							        key={favListing.id}
-							        onClick={() =>
-							            navigateTo(
-							                `/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
-							            )
-							        }
-							        className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
-							    >
-							        <a className="block relative h-64 rounded overflow-hidden">
-							            <img
-							                alt="ecommerce"
-							                className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
-							                src={
-							                    favListing.logo
-							                        ? process.env.REACT_APP_BUCKET_HOST + favListing.logo
-							                        : LISTINGSIMAGE
-							                }
-							            />
-							        </a>
-							        <div className="mt-10">
-							            <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
-							                {favListing.title}
-							            </h2>
-							        </div>
-							    </div>
-							))}
+                            favListings.map((favListing) => (
+                                <div
+                                    key={favListing.id}
+                                    onClick={() =>
+                                        navigateTo(
+                                            `/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
+                                        )
+                                    }
+                                    className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-xl rounded-lg cursor-pointer"
+                                >
+                                    <a className="block relative h-64 rounded overflow-hidden">
+                                        <img
+                                            alt="ecommerce"
+                                            className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+                                            src={
+                                                favListing.logo
+                                                    ? process.env.REACT_APP_BUCKET_HOST + favListing.logo
+                                                    : LISTINGSIMAGE
+                                            }
+                                        />
+                                    </a>
+                                    <div className="mt-10">
+                                        <h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans">
+                                            {favListing.title}
+                                        </h2>
+                                    </div>
+                                </div>
+                            ))}
                     </div>
                 </div>
             ) : (

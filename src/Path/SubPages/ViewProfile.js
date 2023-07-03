@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
@@ -17,11 +16,7 @@ import {
 
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
-	const [, setDashboarddata] = useState({ listings: [] });
 	useEffect(() => {
-		getDashboarddata().then((response) => {
-			setDashboarddata(response);
-		});
 		document.title = "Profile | Smart Regions";
 	}, []);
 
