@@ -61,6 +61,7 @@ const Dashboard = () => {
 		if (viewAllListings === false) {
 			getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
 				setListings(response.data.data);
+				console.log(response.data.data);
 			});
 		}
 	}, [selectedStatus, viewAllListings, pageNo]);
@@ -260,8 +261,8 @@ const Dashboard = () => {
 				</Popover>
 			</div>
 
-			<html className="h-full bg-gray-100" />
-			<body className="h-full" />
+			{/* <html className="h-full bg-gray-100" />
+			<body className="h-full" /> */}
 
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 h-screen">
 				<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
@@ -271,27 +272,27 @@ const Dashboard = () => {
 								<th
 									scope="col"
 									className="px-6 sm:px-6 py-3"
-									style={{ fontFamily: "Poppins, sans-serif" }}
+									style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
 								>
 									{t("listings")}
 								</th>
 								<th
 									scope="col"
-									className="px-6 sm:px-3 py-3 hidden lg:table-cell"
+									className="px-6 sm:px-3 py-3 hidden lg:table-cell text-center"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("category")}
 								</th>
 								<th
 									scope="col"
-									className="px-6 py-3 hidden lg:table-cell"
+									className="px-6 py-3 hidden lg:table-cell text-center"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("date_of_creation")}
 								</th>
 								<th
 									scope="col"
-									className="px-6 py-3"
+									className="px-6 py-3 text-center"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
 									{t("action")}
@@ -299,7 +300,7 @@ const Dashboard = () => {
 								{viewAllListings && (
 									<th
 										scope="col"
-										className="px-6 py-3"
+										className="px-6 py-3 text-center"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("username")}
@@ -345,18 +346,18 @@ const Dashboard = () => {
 											</div>
 										</th>
 										<td
-											className="px-6 py-4 hidden lg:table-cell"
+											className="px-6 py-4 hidden lg:table-cell text-center"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
 											{categoryById[listing.categoryId]}
 										</td>
 										<td
-											className="px-6 py-4 hidden lg:table-cell"
+											className="px-6 py-4 hidden lg:table-cell text-center"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
 											{new Date(listing.createdAt).toLocaleString("de")}
 										</td>
-										<td className="px-6 py-4">
+										<td className="px-6 py-4 text-center">
 											<a
 												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 												onClick={() => goToEditListingsPage(listing)}
@@ -365,7 +366,7 @@ const Dashboard = () => {
 												{t("edit")}
 											</a>
 											<a
-												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
 												onClick={() => deleteListingOnClick(listing)}
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
@@ -441,7 +442,7 @@ const Dashboard = () => {
 											)}
 										</td>
 										{viewAllListings && (
-											<td className="px-6 py-4">
+											<td className="px-6 py-4 text-center">
 												<a
 													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 													style={{ fontFamily: "Poppins, sans-serif" }}
@@ -451,7 +452,7 @@ const Dashboard = () => {
 											</td>
 										)}
 										<td className="px-6 py-4">
-											<div className="flex items-center">
+											<div className="flex items-center justify-center">
 												<div
 													className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
 														listing.statusId

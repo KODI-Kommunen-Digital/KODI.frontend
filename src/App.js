@@ -22,8 +22,6 @@ import CitizenService from "./Path/SubPages/CitizenService";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
-import CreateGroup from "./Path/CreateGroup";
-import YourGroups from "./Path/YourGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
@@ -70,8 +68,6 @@ const App = () => {
 						exact
 					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
-					<Route path="/CreateGroup" element={<CreateGroup />} exact />
-					<Route path="/YourGroups" element={<YourGroups />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
