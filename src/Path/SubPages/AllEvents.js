@@ -20,7 +20,6 @@ const Events = () => {
 	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
-	// const [categories, setCategories] = useState(categoryById);
 	const [selectedCategory, setCategoryName] = useState("");
 	const [selectedCity, setCityName] = useState("");
 	const [selectedSortOption, setSelectedSortOption] = useState("");

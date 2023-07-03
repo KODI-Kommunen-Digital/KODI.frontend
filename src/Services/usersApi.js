@@ -65,7 +65,7 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-	return axios.post(`/users/login`, credentials, { headers });
+  return axios.post(`/users/login`, credentials, {headers});
 }
 
 export async function logout(credentials) {
