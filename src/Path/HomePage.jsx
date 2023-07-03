@@ -526,8 +526,7 @@ const HomePage = () => {
 
 			{listings && listings.length > 0 ? (
 				<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-					<div className="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center">
-						{/* <div className="relative place-items-center bg-white p-6 mt-4 mb-4 flex flex-wrap gap-10 lg:gap-[4.97rem] justify-center lg:justify-start"> */}
+					<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 						{listings &&
 							listings.map((listing) => (
 								<div
@@ -541,7 +540,7 @@ const HomePage = () => {
 											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
 										);
 									}}
-									className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+									className="w-full h-full shadow-lg rounded-lg cursor-pointer"
 								>
 									<a className="block relative h-64 rounded overflow-hidden">
 										<img
