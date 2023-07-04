@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
@@ -8,6 +7,7 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
+// import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import {
 	getFavorites,
@@ -32,13 +32,11 @@ const EventDetails = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
-	// const [newListing, setNewListing] = useState(true);
 	const [description, setDescription] = useState("");
 	const [createdAt, setCreatedAt] = useState("");
 	const [title, setTitle] = useState("");
 	const [userSocial, setUserSocial] = useState([]);
 	const [user, setUser] = useState();
-	// const [imagePath, setImagePath] = useState("");
 	const [, setSuccessMessage] = useState("");
 	const [, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
@@ -66,6 +64,7 @@ const EventDetails = () => {
 
 	const [favoriteId, setFavoriteId] = useState(0);
 	const [cityId, setCityId] = useState(0);
+
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const params = { statusId: 1 };
@@ -83,8 +82,6 @@ const EventDetails = () => {
 			if (accessToken || refreshToken) {
 				setIsLoggedIn(true);
 			}
-			// setNewListing(false);
-			// getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId, params).then((listingsResponse) => {
 				setInput(listingsResponse.data.data);
 				const cityUserId = listingsResponse.data.data.userId;
@@ -95,7 +92,6 @@ const EventDetails = () => {
 				setListingId(listingsResponse.data.data.id);
 				setDescription(listingsResponse.data.data.description);
 				setTitle(listingsResponse.data.data.title);
-				// setImagePath(listingsResponse.data.data.logo);
 				if (isLoggedIn) {
 					getFavorites().then((response) => {
 						const favorite = response.data.data.find(
@@ -121,26 +117,8 @@ const EventDetails = () => {
 		}
 	}, [t, cityId, window.location.href, isLoggedIn]);
 
-	// const [villages, setVillages] = useState([]);
-	// async function onCityChange(e) {
-	// 	const cityId = e.target.value;
-	// 	setCityId(cityId);
-	// 	setInput((prev) => ({
-	// 		...prev,
-	// 		villageId: 0,
-	// 	}));
-	// 	getVillages(cityId).then((response) => setVillages(response.data.data));
-	// }
-
 	useEffect(() => {
 		document.title = "Event Details";
-	}, []);
-
-	const [, setDashboarddata] = useState({ listings: [] });
-	useEffect(() => {
-		getDashboarddata().then((response) => {
-			setDashboarddata(response);
-		});
 	}, []);
 
 	const navigate = useNavigate();
@@ -717,12 +695,12 @@ const EventDetails = () => {
 												}
 												navigateTo(url);
 											}}
-											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
 										>
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 													src={
 														listing.logo
 															? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -743,7 +721,7 @@ const EventDetails = () => {
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId === 3 ? (
 												<p
-													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}
@@ -758,7 +736,7 @@ const EventDetails = () => {
 												</p>
 											) : (
 												<p
-													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}

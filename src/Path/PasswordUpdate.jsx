@@ -11,13 +11,6 @@ const PasswordUpdate = () => {
         document.title = "Heidi - Update Password";
     }, []);
 
-    // const token =
-    // 	window.localStorage.getItem("accessToken") ||
-    // 	window.sessionStorage.getItem("accessToken");
-    // const userId =
-    // 	window.localStorage.getItem("userId") ||
-    // 	window.sessionStorage.getItem("userId");
-
     const [alertInfo, setAlertInfo] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertType, setAlertType] = useState("");
@@ -73,33 +66,33 @@ const PasswordUpdate = () => {
             const stateObj = { ...prev, [name]: "" };
 
             switch (name) {
-            case "oldPassword":
-                if (!value) {
-                    stateObj[name] = t("pleaseEnterOldPassword");
-                }
-                break;
-            case "password":
-                if (!value) {
-                    stateObj[name] = t("pleaseEnterNewPassword");
-                } else if (input.confirmPassword && value !== input.confirmPassword) {
-                    stateObj.confirmPassword = t("passwordsDoNotMatch");
-                } else {
-                    stateObj.confirmPassword = input.confirmPassword
-                        ? ""
-                        : error.confirmPassword;
-                }
-                break;
+                case "oldPassword":
+                    if (!value) {
+                        stateObj[name] = t("pleaseEnterOldPassword");
+                    }
+                    break;
+                case "password":
+                    if (!value) {
+                        stateObj[name] = t("pleaseEnterNewPassword");
+                    } else if (input.confirmPassword && value !== input.confirmPassword) {
+                        stateObj.confirmPassword = t("passwordsDoNotMatch");
+                    } else {
+                        stateObj.confirmPassword = input.confirmPassword
+                            ? ""
+                            : error.confirmPassword;
+                    }
+                    break;
 
-            case "confirmPassword":
-                if (!value) {
-                    stateObj[name] = t("pleaseConfirmPassword");
-                } else if (input.password && value !== input.password) {
-                    stateObj[name] = t("passwordsDoNotMatch");
-                }
-                break;
+                case "confirmPassword":
+                    if (!value) {
+                        stateObj[name] = t("pleaseConfirmPassword");
+                    } else if (input.password && value !== input.password) {
+                        stateObj[name] = t("passwordsDoNotMatch");
+                    }
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
 
             return stateObj;

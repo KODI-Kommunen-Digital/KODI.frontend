@@ -74,8 +74,8 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const handleDeleteAccount = () => {

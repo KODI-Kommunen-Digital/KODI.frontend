@@ -1,4 +1,3 @@
-// var baseUrl = "www.someapi.com"
 const categoriesObj = {
 	categories: [
 		"News",
