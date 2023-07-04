@@ -59,7 +59,7 @@ const HomePage = () => {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			urlParams.delete("cityId"); // Remove cityId parameter from URL
+			urlParams.delete("cityId");
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
@@ -97,7 +97,7 @@ const HomePage = () => {
 		);
 
 		if (!hasAcceptedPrivacyPolicy) {
-			setShowPopup(true); // Show the popup if privacy policy is not accepted
+			setShowPopup(true);
 		}
 	}, []);
 
@@ -171,51 +171,6 @@ const HomePage = () => {
 									</select>
 								</div>
 							</div>
-
-							{/* <div className="absolute w-full m-auto inset-0 flex mb-40 flex-col items-center justify-end bg-opacity-50 text-white z--1">
-								<div className="relative mb-4 flex flex-wrap items-stretch sm:w-full md:w-80">
-									<select
-										id="city"
-										name="city"
-										autoComplete="city-name"
-										onChange={(e) => {
-											const selectedCityId = e.target.value;
-											const urlParams = new URLSearchParams(
-												window.location.search
-											);
-											const selectedCity = cities.find(
-												(city) => city.id.toString() === selectedCityId
-											);
-											if (selectedCity) {
-												localStorage.setItem("selectedCity", selectedCity.name);
-												window.location.href = `/?cityId=${selectedCityId}`;
-											} else {
-												localStorage.setItem("selectedCity", t("allCities"));
-												urlParams.delete("cityId");
-												setCityId(0);
-											}
-										}}
-										value={cityId || 0}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
-										</option>
-										{cities.map((city) => (
-											<option
-												className="font-sans"
-												value={city.id}
-												key={city.id}
-											>
-												{city.name}
-											</option>
-										))}
-									</select>
-								</div>
-							</div> */}
 						</div>
 					</div>
 				</div>

@@ -163,21 +163,21 @@ const Dashboard = () => {
 										onClick={() => setSelectedStatus(statusByName.Active)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("Active")}
+										{t("active")}
 									</div>
 									<div
 										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Pending)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("Pending")}
+										{t("pending")}
 									</div>
 									<div
 										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Inactive)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("Inactive")}
+										{t("inactive")}
 									</div>
 								</div>
 							</div>
@@ -231,7 +231,7 @@ const Dashboard = () => {
 													onClick={() => setSelectedStatus(statusByName.Active)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("Active")}
+													{t("active")}
 												</div>
 												<div
 													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
@@ -240,7 +240,7 @@ const Dashboard = () => {
 													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("Pending")}
+													{t("pending")}
 												</div>
 												<div
 													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
@@ -249,7 +249,7 @@ const Dashboard = () => {
 													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("Inactive")}
+													{t("inactive")}
 												</div>
 											</div>
 										</div>
@@ -470,7 +470,7 @@ const Dashboard = () => {
 															return (
 																<>
 																	<option className="p-0" value={state}>
-																		{t(status[state])}
+																		{t(status[state].toLowerCase())}
 																	</option>
 																</>
 															);
@@ -478,7 +478,7 @@ const Dashboard = () => {
 													</Select>
 												) : (
 													<h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-														{status[listing.statusId]}
+														{t(status[listing.statusId].toLowerCase())}
 													</h1>
 												)}
 											</div>
