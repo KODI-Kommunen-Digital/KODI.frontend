@@ -323,7 +323,7 @@ class ProfilePage extends React.Component {
 		}
 
 		updatePassword({ currentPassword, newPassword })
-			.then((response) => {})
+			.then((response) => { })
 			.catch((error) => {
 				console.error(error);
 			});
@@ -331,18 +331,6 @@ class ProfilePage extends React.Component {
 
 	render() {
 		const { t } = this.props;
-		// const {
-		//     data,
-		//     validateInput,
-		//     setInput,
-		//     setData,
-		//     handleChangeImage,
-		//     handleRemoveImage,
-		//     i,
-		//     inputFile,
-		// } = this.props;
-
-		// const userSocialMedia = this.state.profile.socialMedia;
 		return (
 			<div className="bg-slate-600">
 				<SideBar />
@@ -497,7 +485,7 @@ class ProfilePage extends React.Component {
 														src={
 															this.state.profile.image
 																? process.env.REACT_APP_BUCKET_HOST +
-																  this.state.profile.image
+																this.state.profile.image
 																: PROFILEIMAGE
 														}
 														alt="profile"

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { getDashboarddata } from "../../Services/dashboarddata";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
@@ -17,11 +16,7 @@ import {
 
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
-	const [, setDashboarddata] = useState({ listings: [] });
 	useEffect(() => {
-		getDashboarddata().then((response) => {
-			setDashboarddata(response);
-		});
 		document.title = "Profile | Smart Regions";
 	}, []);
 
@@ -404,12 +399,12 @@ const ViewProfile = () => {
 												}
 												navigateTo(url);
 											}}
-											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+											className="w-full h-full shadow-lg rounded-xl cursor-pointer"
 										>
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 													src={
 														listing.logo
 															? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -428,7 +423,7 @@ const ViewProfile = () => {
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId === 3 ? (
 												<p
-													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{new Date(
@@ -441,7 +436,7 @@ const ViewProfile = () => {
 												</p>
 											) : (
 												<p
-													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 													dangerouslySetInnerHTML={{
 														__html: listing.description,
