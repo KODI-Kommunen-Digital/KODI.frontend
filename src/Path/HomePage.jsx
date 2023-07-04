@@ -112,8 +112,8 @@ const HomePage = () => {
 			{showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
 			<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
 				<div className="w-full mr-0 ml-0">
-					<div className="h-[35rem] overflow-hidden px-0 py-1">
-						<div className="relative h-[35rem]">
+					<div className="h-[35rem] lg:h-full overflow-hidden px-0 py-1">
+						<div className="relative h-[35rem]  lg:h-full">
 							<img
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"
@@ -121,16 +121,58 @@ const HomePage = () => {
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1
-									className="font-sans mb-40 text-4xl md:text-6xl lg:text-7xl text-center font-bold tracking-wide"
+									className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl text-center font-bold tracking-wide"
 									style={{
 										fontFamily: "Poppins, sans-serif",
 									}}
 								>
 									{t("homePageHeading")}
 								</h1>
+								<div className="relative w-full px-4 mb-4 md:w-80">
+									<select
+										id="city"
+										name="city"
+										autoComplete="city-name"
+										onChange={(e) => {
+											const selectedCityId = e.target.value;
+											const urlParams = new URLSearchParams(
+												window.location.search
+											);
+											const selectedCity = cities.find(
+												(city) => city.id.toString() === selectedCityId
+											);
+											if (selectedCity) {
+												localStorage.setItem("selectedCity", selectedCity.name);
+												window.location.href = `/?cityId=${selectedCityId}`;
+											} else {
+												localStorage.setItem("selectedCity", t("allCities"));
+												urlParams.delete("cityId");
+												setCityId(0);
+											}
+										}}
+										value={cityId || 0}
+										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
+									>
+										<option className="font-sans" value={0} key={0}>
+											{t("allCities")}
+										</option>
+										{cities.map((city) => (
+											<option
+												className="font-sans"
+												value={city.id}
+												key={city.id}
+											>
+												{city.name}
+											</option>
+										))}
+									</select>
+								</div>
 							</div>
 
-							<div className="absolute w-full m-auto inset-0 flex mb-40 flex-col items-center justify-end bg-opacity-50 text-white z--1">
+							{/* <div className="absolute w-full m-auto inset-0 flex mb-40 flex-col items-center justify-end bg-opacity-50 text-white z--1">
 								<div className="relative mb-4 flex flex-wrap items-stretch sm:w-full md:w-80">
 									<select
 										id="city"
@@ -154,7 +196,7 @@ const HomePage = () => {
 											}
 										}}
 										value={cityId || 0}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -173,7 +215,7 @@ const HomePage = () => {
 										))}
 									</select>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>
@@ -201,7 +243,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(1);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer "
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer "
 					>
 						<div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 							<svg
@@ -223,7 +265,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(2);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -245,7 +287,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(3);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -267,7 +309,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(4);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -289,7 +331,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(5);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -311,7 +353,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(6);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -333,7 +375,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(7);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -355,7 +397,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(8);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -378,7 +420,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(9);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -400,7 +442,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(10);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -422,7 +464,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(11);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -444,7 +486,7 @@ const HomePage = () => {
 						onClick={() => {
 							goToAllListingsPage(12);
 						}}
-						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+						className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 					>
 						<div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
 							<svg
@@ -483,7 +525,7 @@ const HomePage = () => {
 										localStorage.setItem("selectedCity", city.name);
 										navigateTo(`/AllEvents?cityId=${city.id}`);
 									}}
-									className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+									className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 								>
 									<div className="relative h-80 rounded overflow-hidden">
 										<img
@@ -539,12 +581,12 @@ const HomePage = () => {
 											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
 										);
 									}}
-									className="w-full h-full shadow-lg rounded-lg cursor-pointer"
+									className="w-full h-full shadow-lg rounded-xl cursor-pointer"
 								>
 									<a className="block relative h-64 rounded overflow-hidden">
 										<img
 											alt="ecommerce"
-											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 											src={
 												listing.logo
 													? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -565,7 +607,7 @@ const HomePage = () => {
 									<div className="my-4 bg-gray-200 h-[1px]"></div>
 									{listing.id && parseInt(listing.categoryId) === 3 ? (
 										<p
-											className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 											style={{
 												fontFamily: "Poppins, sans-serif",
 											}}
@@ -580,7 +622,7 @@ const HomePage = () => {
 										</p>
 									) : (
 										<p
-											className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 											style={{
 												fontFamily: "Poppins, sans-serif",
 											}}
@@ -641,7 +683,7 @@ const HomePage = () => {
 
 			<div className="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 				<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
 						<div className="relative h-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"
@@ -668,7 +710,7 @@ const HomePage = () => {
 							</div>
 						</div>
 					</div>
-					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
 						<div className="relative h-96 w-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"
@@ -695,7 +737,7 @@ const HomePage = () => {
 							</div>
 						</div>
 					</div>
-					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-lg cursor-pointer">
+					<div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
 						<div className="relative h-96 w-96 rounded overflow-hidden w-auto">
 							<img
 								alt="ecommerce"

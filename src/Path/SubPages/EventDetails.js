@@ -7,6 +7,7 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
+// import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import {
 	getFavorites,
@@ -63,6 +64,7 @@ const EventDetails = () => {
 
 	const [favoriteId, setFavoriteId] = useState(0);
 	const [cityId, setCityId] = useState(0);
+
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const params = { statusId: 1 };
@@ -186,15 +188,15 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-							.then((response) => {
-								setFavoriteId(response.data.id);
-								setSuccessMessage(t("List added to the favorites"));
-								setHandleClassName(
-									"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
-								);
-								setFavButton(t("Favorite"));
-							})
-							.catch((err) => console.log("Error", err))
+								.then((response) => {
+									setFavoriteId(response.data.id);
+									setSuccessMessage(t("List added to the favorites"));
+									setHandleClassName(
+										"text-gray-900 mt-2 bg-white border border-gray-900 hover:text-cyan-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:focus:ring-gray-500 mb-2 mr-2 sm:mr-2"
+									);
+									setFavButton(t("Favorite"));
+								})
+								.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {
@@ -693,12 +695,12 @@ const EventDetails = () => {
 												}
 												navigateTo(url);
 											}}
-											className="lg:w-96 md:w-64 h-96 pb-20 w-full shadow-lg rounded-lg cursor-pointer"
+											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
 										>
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 													src={
 														listing.logo
 															? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -719,7 +721,7 @@ const EventDetails = () => {
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId === 3 ? (
 												<p
-													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}
@@ -734,7 +736,7 @@ const EventDetails = () => {
 												</p>
 											) : (
 												<p
-													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}

@@ -163,21 +163,21 @@ const Dashboard = () => {
 										onClick={() => setSelectedStatus(statusByName.Active)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("active")}
+										{t("Active")}
 									</div>
 									<div
 										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Pending)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("pending")}
+										{t("Pending")}
 									</div>
 									<div
 										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
 										onClick={() => setSelectedStatus(statusByName.Inactive)}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("inactive")}
+										{t("Inactive")}
 									</div>
 								</div>
 							</div>
@@ -231,7 +231,7 @@ const Dashboard = () => {
 													onClick={() => setSelectedStatus(statusByName.Active)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("active")}
+													{t("Active")}
 												</div>
 												<div
 													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
@@ -240,7 +240,7 @@ const Dashboard = () => {
 													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("pending")}
+													{t("Pending")}
 												</div>
 												<div
 													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
@@ -249,7 +249,7 @@ const Dashboard = () => {
 													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													{t("inactive")}
+													{t("Inactive")}
 												</div>
 											</div>
 										</div>
@@ -470,7 +470,7 @@ const Dashboard = () => {
 															return (
 																<>
 																	<option className="p-0" value={state}>
-																		{status[state]}
+																		{t(status[state])}
 																	</option>
 																</>
 															);
