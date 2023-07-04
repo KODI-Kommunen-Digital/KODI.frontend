@@ -235,7 +235,7 @@ const Events = () => {
 											<a className="block relative h-64 rounded overflow-hidden">
 												<img
 													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-500"
+													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 													src={
 														listing.logo
 															? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -254,7 +254,7 @@ const Events = () => {
 											<div className="my-4 bg-gray-200 h-[1px]"></div>
 											{listing.id && listing.categoryId === 3 ? (
 												<p
-													className="text-gray-600 title-font text-sm font-semibold text-center font-sans"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{new Date(
@@ -267,7 +267,7 @@ const Events = () => {
 												</p>
 											) : (
 												<p
-													className="text-gray-600 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 													dangerouslySetInnerHTML={{
 														__html: listing.description,
