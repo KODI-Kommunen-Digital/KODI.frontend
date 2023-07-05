@@ -437,5 +437,10 @@
     "logout": "Logout",
     "doYouReallyWantToLogoutAccount": "Do you really want to logout of all devices? This will include your current device.",
     "UnknownDevice": "Unknown Device",
-    "UnknownBrowser": "Unknown Browser"
+    "UnknownBrowser": "Unknown Browser",
+    "dragAndDropImage": "Drag and drop your image here, or click the Upload button.",
+    "dragAndDropPDF": "Drag and drop your PDF here, or click the Upload button.",
+
+    "groupCreated": "Ihre Gruppe wurde erstellt",
+    "groupChangesNotSaved": "Your changes are not saved. Try again"
 }

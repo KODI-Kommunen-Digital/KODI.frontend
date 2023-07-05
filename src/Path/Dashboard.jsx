@@ -470,7 +470,7 @@ const Dashboard = () => {
 															return (
 																<>
 																	<option className="p-0" value={state}>
-																		{status[state]}
+																		{t(status[state].toLowerCase())}
 																	</option>
 																</>
 															);
@@ -478,7 +478,7 @@ const Dashboard = () => {
 													</Select>
 												) : (
 													<h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-														{status[listing.statusId]}
+														{t(status[listing.statusId].toLowerCase())}
 													</h1>
 												)}
 											</div>

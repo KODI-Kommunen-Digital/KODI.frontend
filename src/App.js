@@ -11,7 +11,6 @@ import PrivacyPolicy from "./Path/PrivacyPolicy";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePage from "./Path/HomePage";
-import Places from "./Path/SubPages/Places";
 import Favorites from "./Path/Favorites";
 
 import EventDetails from "./Path/SubPages/EventDetails";
@@ -22,6 +21,8 @@ import CitizenService from "./Path/SubPages/CitizenService";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
+import CreateGroup from "./Path/CreateGroup";
+import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
@@ -47,8 +48,6 @@ const App = () => {
 			<div>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/Places" element={<Places />} />
-
 					<Route
 						path="/HomePage/EventDetails"
 						exact
@@ -68,6 +67,8 @@ const App = () => {
 						exact
 					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
+					<Route path="/CreateGroup" element={<CreateGroup />} exact />
+					<Route path="/MyGroups" element={<MyGroups />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
