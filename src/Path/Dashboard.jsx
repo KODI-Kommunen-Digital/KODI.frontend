@@ -54,12 +54,12 @@ const Dashboard = () => {
 
     const fetchListings = useCallback(() => {
         if (viewAllListings === true) {
-            getListings({ statusId: selectedStatus, pageNo }).then((response) => {
+            getListings({ statusId: selectedStatus, pageNo, sortByCreatedDate: true }).then((response) => {
                 setListings(response.data.data);
             });
         }
         if (viewAllListings === false) {
-            getUserListings({ statusId: selectedStatus, pageNo }).then((response) => {
+            getUserListings({ statusId: selectedStatus, pageNo, sortByCreatedDate: true }).then((response) => {
                 setListings(response.data.data);
                 console.log(response.data.data);
             });
