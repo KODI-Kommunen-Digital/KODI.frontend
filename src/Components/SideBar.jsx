@@ -4,9 +4,8 @@ import logo from "../assets/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
-import PropTypes from "prop-types";
 
-function SideBar({ handleGetAllListings, handleGetUserListings }) {
+function SideBar() {
 	const { t } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -244,10 +243,5 @@ function SideBar({ handleGetAllListings, handleGetUserListings }) {
 		</div>
 	);
 }
-
-SideBar.propTypes = {
-	handleGetAllListings: PropTypes.func.isRequired,
-	handleGetUserListings: PropTypes.func.isRequired,
-};
 
 export default SideBar;
