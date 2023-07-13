@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import { getUserForums } from "../Services/forumsApi";
-import { status } from "../Constants/status";
 import GROUPIMAGE from "../assets/GroupImage.avif";
+import { useNavigate } from "react-router-dom";
 
-const MyGroups = () => {
+const GroupMembers = () => {
 	const { t } = useTranslation();
 	const [forums, setForums] = useState([]);
 	const [, setIsLoggedIn] = useState(false);
@@ -28,18 +27,6 @@ const MyGroups = () => {
 		});
 	}, []);
 	const [pageNo, setPageNo] = useState(1);
-
-	function getStatusClass(statusId) {
-		if (status[statusId] === "Active") {
-			return "bg-green-400";
-		}
-		if (status[statusId] === "Inactive") {
-			return "bg-red-400";
-		}
-		if (status[statusId] === "Pending") {
-			return "bg-yellow-400";
-		}
-	}
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -63,30 +50,21 @@ const MyGroups = () => {
 										className="px-6 sm:px-6 py-3"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "16.67%",
-										}}
-									>
-										{t("groupName")}
-									</th>
-									<th
-										scope="col"
-										className="px-6 sm:px-6 py-3 text-center"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-											width: "16.67%",
+											width: "33.3%",
 										}}
 									>
 										{t("members")}
 									</th>
+
 									<th
 										scope="col"
 										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "16.67%",
+											width: "33.3%",
 										}}
 									>
-										{t("date_of_creation")}
+										{t("date_of_joining")}
 									</th>
 
 									<th
@@ -102,20 +80,10 @@ const MyGroups = () => {
 
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-											width: "16.67%",
-										}}
-									>
-										{t("privacy")}
-									</th>
-									<th
-										scope="col"
 										className="px-6 py-3 text-center"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("status")}
+										{t("action")}
 									</th>
 								</tr>
 							</thead>
@@ -150,14 +118,6 @@ const MyGroups = () => {
 											</th>
 
 											<td
-												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
-												style={{ fontFamily: "Poppins, sans-serif" }}
-												onClick={() => navigateTo("/MyGroups/GroupMembers")}
-											>
-												{t("members")}
-											</td>
-
-											<td
 												className="px-6 py-4 hidden lg:table-cell text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
@@ -170,27 +130,14 @@ const MyGroups = () => {
 											>
 												{forum.isAdmin === 1 ? "You are admin" : "Member"}
 											</td>
-											<td
-												className="px-6 py-4 hidden lg:table-cell text-center"
-												style={{ fontFamily: "Poppins, sans-serif" }}
-											>
-												{forum.isPrivate === 1
-													? "Private group"
-													: "Public group"}
-											</td>
-											<td className="px-6 py-4">
-												<div className="flex items-center justify-center">
-													<div
-														className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-															forum.statusId
-														)} mr-2`}
-													></div>
-													<h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-														{status[forum.statusId]
-															? t(status[forum.statusId].toLowerCase())
-															: ""}
-													</h1>
-												</div>
+
+											<td className="px-6 py-4 text-center">
+												<a
+													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("remove")}
+												</a>
 											</td>
 										</tr>
 									);
@@ -198,6 +145,18 @@ const MyGroups = () => {
 							</tbody>
 						</table>
 					</div>
+
+					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-left cursor-pointer">
+						<button
+							type="button"
+							className="text-lg px-3"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+							onClick={() => navigateTo("/MyGroups")}
+						>
+							{t("backToMyGroups")}
+						</button>
+					</div>
+
 					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
 						{pageNo !== 1 ? (
 							<span
@@ -233,4 +192,4 @@ const MyGroups = () => {
 	);
 };
 
-export default MyGroups;
+export default GroupMembers;

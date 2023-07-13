@@ -33,6 +33,9 @@ import PasswordUpdate from "./Path/PasswordUpdate";
 import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
 
+import ViewPost from "./Path/ViewPost";
+import GroupMembers from "./Path/GroupMembers";
+
 const App = () => {
 	useEffect(() => {
 		const link =
@@ -67,8 +70,6 @@ const App = () => {
 						exact
 					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
-					<Route path="/CreateGroup" element={<CreateGroup />} exact />
-					<Route path="/MyGroups" element={<MyGroups />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />
 					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
@@ -87,6 +88,15 @@ const App = () => {
 					/>
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
+
+					<Route path="/ViewPost" element={<ViewPost />} />
+					<Route path="/CreateGroup" element={<CreateGroup />} exact />
+					<Route path="/MyGroups" element={<MyGroups />} exact />
+					<Route
+						path="/MyGroups/GroupMembers"
+						element={<GroupMembers />}
+						exact
+					/>
 				</Routes>
 			</div>
 		</BrowserRouter>
