@@ -62,8 +62,6 @@
     "discountedPrice": "Discounted Price",
     "discoverMorePlaces": "Discover more places",
     "displayed_publicly": "This information will be displayed publicly, so be careful what you share",
-    "dragAndDropImage": "Drag and drop your image here, or Click the upload button",
-    "dragAndDropPDF": "Drag and drop your pdf here, or Click the upload button",
     "doyoureallywanttodeleteListing": "Do you really want to delete this listing? This action cannot be reverted.",
     "doyoureallywanttodeleteAccount": "Do you really want to delete your Account? It will be deleted permanently.",
     "dragNDrop": "Drag & Drop",
@@ -441,6 +439,9 @@
     "dragAndDropImage": "Drag and drop your image here, or click the Upload button.",
     "dragAndDropPDF": "Drag and drop your PDF here, or click the Upload button.",
 
-    "groupCreated": "Ihre Gruppe wurde erstellt",
-    "groupChangesNotSaved": "Your changes are not saved. Try again"
+    "groupCreated": "Your group has been created",
+    "groupChangesNotSaved": "Your changes are not saved. Try again",
+    "members": "Members",
+    "date_of_joining": "Date of Joining",
+    "backToMyGroups": "Go back to My Groups"
 }
