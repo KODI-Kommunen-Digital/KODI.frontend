@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
+import getInstance from "../api/axiosInstance";
+const axios = getInstance(process.env.REACT_APP_FORUMS_API_BASE_URL)
 
 export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);

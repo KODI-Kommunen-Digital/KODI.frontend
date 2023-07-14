@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
+import getInstance from "../api/axiosInstance";
+const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
 
 export async function getAllListings() {
   return axios.get(`/listings`);
