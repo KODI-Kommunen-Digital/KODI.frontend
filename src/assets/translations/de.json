@@ -440,10 +440,11 @@
     "UnknownBrowser": "Unbekannter Browser",
     "dragAndDropImage": "Ziehen Sie Ihr Bild hierher und legen Sie es dort ab, oder klicken Sie auf die Schaltfläche „Hochladen“.",
     "dragAndDropPDF": "Ziehen Sie Ihr PDF hierher und legen Sie es dort ab, oder klicken Sie auf die Schaltfläche „Hochladen“.",
-
     "groupCreated": "Ihre Gruppe wurde erstellt",
     "groupChangesNotSaved": "Ihre Änderungen werden nicht gespeichert. Versuchen Sie es erneut",
     "members": "Memberview",
     "date_of_joining": "Beitrittsdatum",
-    "backToMyGroups": "Gehen Sie zurück zu Meine Gruppen"
+    "backToMyGroups": "Gehen Sie zurück zu Meine Gruppen",
+    "digitalCityHall": "Digitales Rathaus",
+    "forums": "Foren"
 }

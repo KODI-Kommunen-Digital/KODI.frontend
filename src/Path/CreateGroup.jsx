@@ -178,7 +178,7 @@ function CreateGroup() {
 				setErrorMessage(false);
 				setTimeout(() => {
 					setSuccessMessage(false);
-					navigate("/Dashboard");
+					navigate("/MyGroups");
 				}, 5000);
 			} catch (error) {
 				setErrorMessage(t("changesNotSaved"));
@@ -276,7 +276,6 @@ function CreateGroup() {
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
 			}));
-			console.log(input);
 			setDescription(newContent);
 			return;
 		}
@@ -287,7 +286,6 @@ function CreateGroup() {
 			...prev,
 			description: listHTML,
 		}));
-		console.log(input);
 		setDescription(newContent);
 	};
 
@@ -443,18 +441,18 @@ function CreateGroup() {
 							</label>
 							<div className="relative">
 								<div
-									className={`w-10 h-6 rounded-full shadow-inner ${
-										input.visibility === "private"
+									className={`w-10 h-6 rounded-full shadow-inner 
+										${input.visibility === "private"
 											? "bg-blue-500"
 											: "bg-gray-300"
-									}`}
+										}`}
 								></div>
 								<div
-									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
-										input.visibility === "private"
+									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
+										${input.visibility === "private"
 											? "translate-x-full"
 											: "translate-x-0"
-									}`}
+										}`}
 								></div>
 								<input
 									type="checkbox"
