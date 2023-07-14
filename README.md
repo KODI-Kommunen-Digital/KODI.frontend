@@ -19,6 +19,9 @@ git remote add origin https://github.com/NiHa-HEIDI/Smart-region-M.Frontend.git
 git branch -M main
 git push -uf origin main
 ```
+## Detailed documentation 
+
+[Document](https://github.com/HEIDI-Heimat-Digital/documentation/wiki)
 
 ## Integrate with your tools
 
