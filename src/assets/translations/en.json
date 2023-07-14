@@ -437,5 +437,12 @@
     "logout": "Logout",
     "doYouReallyWantToLogoutAccount": "Do you really want to logout of all devices? This will include your current device.",
     "UnknownDevice": "Unknown Device",
-    "UnknownBrowser": "Unknown Browser"
+    "UnknownBrowser": "Unknown Browser",
+    "groupCreated": "Your group has been created",
+    "groupChangesNotSaved": "Your changes are not saved. Try again",
+    "members": "Members",
+    "date_of_joining": "Date of Joining",
+    "backToMyGroups": "Go back to My Groups",
+    "digitalCityHall": "Digital City Hall",
+    "forums": "Forums"
 }
