@@ -17,9 +17,9 @@ const CitizenService = () => {
             image: "/admin/forums"
         },
         {
-            title: "digitalCityHall",
-            link: "DigitalCityHall",
-            image: "/admin/DigitalCityHall"
+            title: "digitalManagement",
+            link: "digitalManagement",
+            image: "/admin/digitalManagement"
         }
     ]);
     const [cities, setCities] = useState({});

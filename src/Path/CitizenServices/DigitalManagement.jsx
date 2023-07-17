@@ -6,7 +6,7 @@ import HOMEPAGEIMG from "./../../assets/homeimage.jpg";
 import Footer from "../../Components/Footer";
 import { getCitizenServices, getCities } from "../../Services/cities";
 
-const DigitalCityHall = () => {
+const DigitalManagement = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [citizenServiceData, setcitizenServiceData] = useState([]);
@@ -84,7 +84,7 @@ const DigitalCityHall = () => {
                             />
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                                 <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-                                    {t("digitalCityHall")}
+                                    {t("digitalManagement")}
                                 </h1>
 
                                 <div className="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
@@ -184,4 +184,4 @@ const DigitalCityHall = () => {
     );
 };
 
-export default DigitalCityHall;
+export default DigitalManagement;
