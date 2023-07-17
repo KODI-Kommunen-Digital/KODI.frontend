@@ -14,12 +14,12 @@ const CitizenService = () => {
         {
             title: "forums",
             link: "Forums",
-            image: "/admin/forums"
+            image: "admin/Forums.jpg"
         },
         {
             title: "digitalManagement",
             link: "digitalManagement",
-            image: "/admin/digitalManagement"
+            image: "admin/DigitalManagement.jpg"
         }
     ]);
     const [cities, setCities] = useState({});
