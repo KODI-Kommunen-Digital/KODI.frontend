@@ -17,7 +17,7 @@ import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
-import DigitalCityHall from "./Path/CitizenServices/DigitalCityHall";
+import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
 import Forums from "./Path/CitizenServices/Forums";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
@@ -60,7 +60,7 @@ const App = () => {
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
-					<Route path="/CitizenService/DigitalCityHall" element={<DigitalCityHall />} />
+					<Route path="/CitizenService/DigitalManagement" element={<DigitalManagement />} />
 					<Route path="/CitizenService/Forums" element={<Forums />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
