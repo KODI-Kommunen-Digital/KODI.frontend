@@ -1,6 +1,5 @@
 import { getUserId } from "./usersApi";
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_FORUMS_API_BASE_URL)
+import axios from "../api/axiosInstanceForum";
 
 export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);
@@ -40,4 +39,12 @@ export async function imageUpload(cityId, forumsId) {
 
 export async function imageUpdate(cityId, forumsId) {
 	return axios.patch(`/cities/${cityId}/forums/${forumsId}/imageUpload`);
+}
+
+export async function getAllForums(cityId) {
+	return axios.get(`/cities/${cityId}/forums`);
+}
+
+export async function forumPosts(cityId, forumsId, postData) {
+	return axios.post(`/cities/${cityId}/forums/${forumsId}`, postData);
 }
