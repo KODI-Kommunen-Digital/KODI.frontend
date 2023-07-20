@@ -3,7 +3,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
-import { getAllForums, getUserForumsMembers } from "../../Services/forumsApi";
+import { getAllForums, getUserForumsMembers, forumMemberRequests } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 
@@ -19,6 +19,7 @@ const Forums = () => {
     const [membersCount, setMembersCount] = useState();
     const [isMember, setIsMember] = useState(false);
     const [requestPending, setRequestPending] = useState(false);
+    const [isStatus, setIsStatus] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -44,8 +45,6 @@ const Forums = () => {
         const params = { pageNo, pageSize: 9, statusId: 1 };
         if (parseInt(cityId)) {
             setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-            console.log(cities, cityId);
-            urlParams.set("cityId", cityId);
             params.cityId = cityId;
         } else {
             setCityName(t("allCities"));
@@ -74,6 +73,50 @@ const Forums = () => {
             navigate(path);
         }
     };
+    const handleClick = (listing) => {
+        // Check if the listing is private
+        // data=[{forumId:listing.id,
+        // userId:2, statusId:1}]
+        if (listing.isPrivate === 0) {
+            // Set the status message for public groups
+            forumMemberRequests(cityId, listing.id).then((response) => {
+                const data = response.data.data;
+                console.log(data)
+                setIsStatus(false);
+            })
+            console.log("You have successfully joined the group", isStatus);
+        } else {
+            // Set the status message for private groups
+            forumMemberRequests(cityId, listing.id).then((response) => {
+                const data = response.data.data;
+                console.log(data)
+                setIsStatus(true);
+            })
+            console.log("Your request has been sent", isStatus);
+        }
+        let url = `/cities/${1}/forums/${listing.id}`;
+        if (terminalViewParam === "true") {
+            url += "&terminalView=true";
+        }
+        navigateTo(url);
+    };
+
+    useEffect(() => {
+        console.log("isStatus:", isStatus);
+
+        if (isStatus) {
+            // Code to handle actions for private groups
+
+
+        } else {
+            // Code to handle actions for public groups
+            forumMemberRequests().then((response) => {
+                const data = response.data.data;
+                console.log(data)
+            })
+        }
+    }, [isStatus]);
+
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -200,72 +243,12 @@ const Forums = () => {
                 <div>
                     {listings && listings.length > 0 ? (
                         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-                            {/* <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-                                {listings &&
-                                    listings.map((listing) => (
-                                        <div
-                                            key={listing.id}
-                                            onClick={() => {
-                                                let url = `/cities/${1}/forums/${listing.id}`;
-                                                if (terminalViewParam === "true") {
-                                                    url += "&terminalView=true";
-                                                }
-                                                navigateTo(url);
-                                            }}
-                                            className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-                                        >
-                                            <a className="block relative h-64 rounded overflow-hidden">
-                                                <img
-                                                    alt="ecommerce"
-                                                    className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-                                                    src={
-                                                        listing.image
-                                                            ? process.env.REACT_APP_BUCKET_HOST + listing.image
-                                                            : LISTINGSIMAGE
-                                                    }
-                                                />
-                                            </a>
-                                            <div className="mt-5 px-2">
-                                                <div
-                                                    className="flex justify-between items-center"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
-                                                        {listing.forumName}
-                                                    </h2>
-                                                    {listing.isPrivate === 0 ? (
-                                                        <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
-                                                            Public
-                                                        </h2>
-                                                    ) : (
-                                                        checkIfMember(cityId, listing.id) && isMember ? (
-                                                            <button>Request Access</button>
-                                                        ) : (
-                                                            <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
-                                                                Private
-                                                            </h2>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="my-4 bg-gray-200 h-[1px]"></div>
-                                        </div>
-                                    ))}
-                            </div> */}
                             <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
                                 {listings &&
                                     listings.map((listing) => (
-                                        <div
-                                            key={listing.id}
-                                            onClick={() => {
-                                                let url = `/cities/${1}/forums/${listing.id}`;
-                                                if (terminalViewParam === "true") {
-                                                    url += "&terminalView=true";
-                                                }
-                                                navigateTo(url);
-                                            }}
-                                            className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-                                        >
+
+                                        <div key={listing.id} onClick={() => handleClick(listing)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
+
                                             <a className="block relative h-64 rounded overflow-hidden">
                                                 {!isMember ? (
                                                     listing.isPrivate ? (
@@ -296,11 +279,9 @@ const Forums = () => {
                                                                         : LISTINGSIMAGE
                                                                 }
                                                             />
-
                                                             <div className="absolute inset-0 flex items-center justify-center">
                                                                 <p className="text-Black font-bold text-lg">Join the Group</p>
                                                             </div>
-
                                                         </>
                                                     )
                                                 ) : (
@@ -390,6 +371,7 @@ const Forums = () => {
                         </div>
                     )}
                 </div>
+
                 <div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
                     {pageNo !== 1 ? (
                         <span
@@ -419,7 +401,6 @@ const Forums = () => {
                     )}
                 </div>
             </div>
-
             <div className="bottom-0 w-full">
                 <Footer />
             </div>
