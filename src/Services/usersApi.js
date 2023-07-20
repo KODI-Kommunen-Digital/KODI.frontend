@@ -65,7 +65,7 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-  return axios.post(`/users/login`, credentials, {headers});
+	return axios.post(`/users/login`, credentials, { headers });
 }
 
 export async function logout(credentials) {
@@ -85,7 +85,6 @@ export async function deleteProfilePic() {
 }
 
 export async function fetchDeviceList(params) {
-	console.log(params);
 	return axios.post(`/users/${getUserId()}/loginDevices`, {
 		refreshToken: params,
 	});

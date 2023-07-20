@@ -27,7 +27,6 @@ const AllDevices = () => {
 		}
 		fetchDeviceList(refreshToken).then((response) => {
 			setDevices(response.data.data);
-			console.log(response.data.data);
 		});
 	}, []);
 
@@ -73,8 +72,8 @@ const AllDevices = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function logoutAccountOnClick() {

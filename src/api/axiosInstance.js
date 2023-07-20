@@ -4,26 +4,6 @@ const instance = axios.create({
 	baseURL: process.env.REACT_APP_API_BASE_URL,
 });
 
-const refreshInstance = axios.create({
-	baseURL: process.env.REACT_APP_API_BASE_URL,
-});
-
-const handleLogout = () => {
-	try {
-		window.localStorage.removeItem("accessToken");
-		window.localStorage.removeItem("refreshToken");
-		window.localStorage.removeItem("userId");
-		window.localStorage.removeItem("selectedItem");
-		window.sessionStorage.removeItem("accessToken");
-		window.sessionStorage.removeItem("refreshToken");
-		window.sessionStorage.removeItem("userId");
-		window.sessionStorage.removeItem("selectedItem");
-		window.location.href = "/login?sessionExpired=true";
-	} catch (error) {
-		return error;
-	}
-};
-
 instance.interceptors.request.use(
 	async (config) => {
 		const token =
@@ -56,12 +36,10 @@ instance.interceptors.response.use(
 						window.localStorage.getItem("userId") ||
 						window.sessionStorage.getItem("userId");
 					if (refreshToken && userId) {
-						const response = await refreshInstance.post(
-							`users/${userId}/refresh`,
-							{
-								refreshToken,
-							}
-						);
+						const response = await instance.post(`users/${userId}/refresh`, {
+							refreshToken,
+						});
+
 						if (window.localStorage.getItem("refreshToken")) {
 							window.localStorage.setItem(
 								"accessToken",
@@ -82,16 +60,14 @@ instance.interceptors.response.use(
 							);
 						}
 						return instance(originalRequest);
-					} else {
-						handleLogout();
-						return Promise.reject(error);
 					}
 				} catch (refreshError) {
-					handleLogout();
+					// If refreshing the token fails, redirect to login
+					window.location.href = "/login";
 					return Promise.reject(refreshError);
 				}
 			} else {
-				handleLogout();
+				window.location.href = "/login";
 				return Promise.reject(error);
 			}
 		}

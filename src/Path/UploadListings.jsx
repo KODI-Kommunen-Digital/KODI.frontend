@@ -60,7 +60,6 @@ function UploadListings() {
 					form.append("pdf", pdf);
 					try {
 						const filePath = await uploadPDF(form);
-						console.log(filePath.data);
 						if (filePath?.data?.status === "success") {
 							setInput((prevInput) => ({
 								...prevInput,
@@ -165,7 +164,6 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -319,7 +317,6 @@ function UploadListings() {
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
 			}));
-			console.log(input);
 			setDescription(newContent);
 			return;
 		}
@@ -330,7 +327,6 @@ function UploadListings() {
 			...prev,
 			description: listHTML,
 		}));
-		console.log(input);
 		setDescription(newContent);
 	};
 
@@ -534,7 +530,7 @@ function UploadListings() {
 
 	return (
 		<section className="bg-slate-600 body-font relative">
-			<SideBar/>
+			<SideBar />
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6 space-y-10">

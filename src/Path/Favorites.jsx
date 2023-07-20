@@ -66,7 +66,6 @@ const Favorites = () => {
 		const params = { pageNo, pageSize: 9, statusId: 1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-			console.log(cities, cityId);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
@@ -102,9 +101,9 @@ const Favorites = () => {
 
 	const [favListings, setFavListings] = useState([]);
 	useEffect(() => {
-        getFavoriteListings().then((response) => {
-					setFavListings(response.data.data);
-			});
+		getFavoriteListings().then((response) => {
+			setFavListings(response.data.data);
+		});
 	}, []);
 
 	// Selected Items Deletion Ends
@@ -245,7 +244,7 @@ const Favorites = () => {
 													src={
 														favListing.logo
 															? process.env.REACT_APP_BUCKET_HOST +
-															  favListing.logo
+															favListing.logo
 															: LISTINGSIMAGE
 													}
 												/>
