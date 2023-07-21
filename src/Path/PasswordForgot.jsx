@@ -52,29 +52,33 @@ const PasswordForgot = () => {
             const stateObj = { ...prev, [name]: "" };
 
             switch (name) {
-            case "password":
-                if (!value) {
-                    stateObj[name] = "Please enter new Password.";
-                } else if (input.confirmPassword && value !== input.confirmPassword) {
-                    stateObj.confirmPassword =
-							"Password and Confirm Password does not match.";
-                } else {
-                    stateObj.confirmPassword = input.confirmPassword
-                        ? ""
-                        : error.confirmPassword;
-                }
-                break;
+                case "password":
+                    if (!value) {
+                        stateObj[name] = "Please enter new Password.";
+                    } else if (
+                        input.confirmPassword &&
+                        value !== input.confirmPassword
+                    ) {
+                        stateObj.confirmPassword =
+                            "Password and Confirm Password does not match.";
+                    } else {
+                        stateObj.confirmPassword = input.confirmPassword
+                            ? ""
+                            : error.confirmPassword;
+                    }
+                    break;
 
-            case "confirmPassword":
-                if (!value) {
-                    stateObj[name] = "Please enter Confirm Password.";
-                } else if (input.password && value !== input.password) {
-                    stateObj[name] = "Password and Confirm Password does not match.";
-                }
-                break;
+                case "confirmPassword":
+                    if (!value) {
+                        stateObj[name] = "Please enter Confirm Password.";
+                    } else if (input.password && value !== input.password) {
+                        stateObj[name] =
+                            "Password and Confirm Password does not match.";
+                    }
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
 
             return stateObj;
@@ -93,7 +97,9 @@ const PasswordForgot = () => {
             setUpdatingPassword(false);
             setAlertInfo(true);
             setAlertType("success");
-            setAlertMessage("Your password is updated. Redirecting to login in 5s");
+            setAlertMessage(
+                "Your password is updated. Redirecting to login in 5s"
+            );
             setTimeout(() => {
                 routeChangeToLogin();
             }, 5000);
@@ -137,7 +143,9 @@ const PasswordForgot = () => {
                                 className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                 placeholder={t("pleaseEnterPassword")}
                             ></input>
-                            {error.password && <span className="err">{error.password}</span>}
+                            {error.password && (
+                                <span className="err">{error.password}</span>
+                            )}
                         </div>
                         <div>
                             <label htmlFor="password" className="sr-only">
@@ -154,7 +162,9 @@ const PasswordForgot = () => {
                                 placeholder={t("pleaseConfirmPassword")}
                             ></input>
                             {error.confirmPassword && (
-                                <span className="err">{error.confirmPassword}</span>
+                                <span className="err">
+                                    {error.confirmPassword}
+                                </span>
                             )}
                         </div>
                     </div>
