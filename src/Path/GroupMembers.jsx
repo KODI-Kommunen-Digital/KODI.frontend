@@ -5,6 +5,7 @@ import "../index.css";
 import { getForumMembers } from "../Services/forumsApi";
 import GROUPIMAGE from "../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
+// import { getCities } from "../Services/cities";
 
 const GroupMembers = () => {
 	const { t } = useTranslation();
@@ -19,6 +20,7 @@ const GroupMembers = () => {
 		const forumIdParam = urlParams.get("id");
 		getForumMembers(cityIdParam, forumIdParam).then((response) => {
 			setMembers(response.data.data);
+			console.log(response.data.data);
 			setCityId(cityIdParam);
 			setForumId(forumIdParam);
 		});
