@@ -14,7 +14,7 @@ import {
 	uploadListingImage,
 	deleteListingImage,
 } from "../Services/listingsApi";
-
+import { getProfile } from "../Services/usersApi";
 import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
@@ -54,7 +54,6 @@ function UploadListings() {
 			setInitialLoad(false);
 		} else {
 			const updateInputState = async () => {
-
 				if (pdf !== null) {
 					const form = new FormData();
 					form.append("pdf", pdf);
@@ -165,7 +164,6 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -208,7 +206,11 @@ function UploadListings() {
 				} else if (input.removeImage) {
 					await deleteListingImage(cityId, input.id);
 				}
-				setSuccessMessage(t("listingUpdated"));
+				var userProfile = await getProfile(userId);
+				var isAdmin = userProfile.data.data.roleId === 1 ? "true" : "false";
+				isAdmin
+					? setSuccessMessage(t("listingUpdatedAdmin"))
+					: setSuccessMessage(t("listingUpdated"));
 				setErrorMessage(false);
 				setTimeout(() => {
 					setSuccessMessage(false);
@@ -534,7 +536,7 @@ function UploadListings() {
 
 	return (
 		<section className="bg-slate-600 body-font relative">
-			<SideBar/>
+			<SideBar />
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6 space-y-10">
@@ -881,47 +883,47 @@ function UploadListings() {
 
 					{(categoryId == categoryByName.offers ||
 						categoryId == categoryByName.regionalProducts) && (
-							<div className="relative mb-4 grid grid-cols-2 gap-4">
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("originalPrice")}
-									</label>
-									<input
-										type="text"
-										id="originalPrice"
-										name="originalPrice"
-										value={input.originalPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("discountedPrice")}
-									</label>
-									<input
-										type="text"
-										id="discountedPrice"
-										name="discountedPrice"
-										value={input.discountedPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
+						<div className="relative mb-4 grid grid-cols-2 gap-4">
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("originalPrice")}
+								</label>
+								<input
+									type="text"
+									id="originalPrice"
+									name="originalPrice"
+									value={input.originalPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
 							</div>
-						)}
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("discountedPrice")}
+								</label>
+								<input
+									type="text"
+									id="discountedPrice"
+									name="discountedPrice"
+									value={input.discountedPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
+							</div>
+						</div>
+					)}
 
 					<div className="relative mb-4">
 						<label

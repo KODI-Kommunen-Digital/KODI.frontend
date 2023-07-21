@@ -40,8 +40,8 @@ const Events = () => {
 		}
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
-            const pageNoParam = parseInt(urlParams.get("pageNo"));
-            if (pageNoParam) setPageNo(pageNoParam);
+			const pageNoParam = parseInt(urlParams.get("pageNo"));
+			if (pageNoParam) setPageNo(pageNoParam);
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 			const categoryIdParam = urlParams.get("categoryId");
@@ -54,7 +54,6 @@ const Events = () => {
 		const params = { pageSize: 9, statusId: 1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-			console.log(cities, cityId);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
@@ -70,8 +69,8 @@ const Events = () => {
 			urlParams.delete("categoryId");
 		}
 		if (pageNo > 1) {
-            params.pageNo = pageNo;
-            urlParams.set("pageNo", pageNo);
+			params.pageNo = pageNo;
+			urlParams.set("pageNo", pageNo);
 		} else {
 			urlParams.delete("pageNo");
 		}
