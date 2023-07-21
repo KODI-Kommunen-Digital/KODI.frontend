@@ -1,7 +1,7 @@
 const categoriesObj = {
 	categories: [
 		"News",
-		"Road Works / Traffic",
+		"Eat or Drink",
 		"Events",
 		"Clubs",
 		"Regional Products",
