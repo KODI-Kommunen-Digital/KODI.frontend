@@ -2,28 +2,25 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../index.css";
-import { getUserForums } from "../Services/forumsApi";
+import { getForumMembers } from "../Services/forumsApi";
 import GROUPIMAGE from "../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
 
 const GroupMembers = () => {
 	const { t } = useTranslation();
-	const [forums, setForums] = useState([]);
-	const [, setIsLoggedIn] = useState(false);
+	const [members, setMembers] = useState([]);
+	const [, setCityId] = useState(0);
+	const [, setForumId] = useState(0);
 
 	useEffect(() => {
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
-		getUserForums().then((response) => {
-			setForums(response.data.data);
-			console.log(response.data.data);
+		const urlParams = new URLSearchParams(window.location.search);
+		document.title = "Heidi - Forum Members";
+		const cityIdParam = urlParams.get("cityId");
+		const forumIdParam = urlParams.get("id");
+		getForumMembers(cityIdParam, forumIdParam).then((response) => {
+			setMembers(response.data.data);
+			setCityId(cityIdParam);
+			setForumId(forumIdParam);
 		});
 	}, []);
 	const [pageNo, setPageNo] = useState(1);
@@ -88,10 +85,10 @@ const GroupMembers = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{forums.map((forum) => {
+								{members.map((member, index) => {
 									return (
 										<tr
-											key={forum.id}
+											key={index}
 											className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
 										>
 											<th
@@ -101,8 +98,8 @@ const GroupMembers = () => {
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
 													src={
-														forum.logo
-															? process.env.REACT_APP_BUCKET_HOST + forum.logo
+														member.logo
+															? process.env.REACT_APP_BUCKET_HOST + member.logo
 															: GROUPIMAGE
 													}
 													alt="avatar"
@@ -112,7 +109,7 @@ const GroupMembers = () => {
 														className="font-normal text-gray-500 truncate"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
-														{forum.forumName}
+														{member.username}
 													</div>
 												</div>
 											</th>
@@ -121,14 +118,14 @@ const GroupMembers = () => {
 												className="px-6 py-4 hidden lg:table-cell text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{new Date(forum.JoinedAt).toLocaleString("de")}
+												{new Date(member.JoinedAt).toLocaleString("de")}
 											</td>
 
 											<td
 												className="px-6 py-4 hidden lg:table-cell text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{forum.isAdmin === 1 ? "You are admin" : "Member"}
+												{member.isAdmin === 1 ? "You are admin" : "Member"}
 											</td>
 
 											<td className="px-6 py-4 text-center">
@@ -176,7 +173,7 @@ const GroupMembers = () => {
 							{t("page")} {pageNo}
 						</span>
 
-						{forums.length >= 9 && (
+						{members.length >= 9 && (
 							<span
 								className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
 								onClick={() => setPageNo(pageNo + 1)}
