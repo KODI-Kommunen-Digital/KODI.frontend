@@ -16,8 +16,9 @@ import Favorites from "./Path/Favorites";
 import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
-import CitizenService from "./Path/SubPages/CitizenService";
-
+import CitizenService from "./Path/CitizenService";
+import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
+import Forums from "./Path/CitizenServices/Forums";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
@@ -59,6 +60,8 @@ const App = () => {
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
+					<Route path="/CitizenService/DigitalManagement" element={<DigitalManagement />} />
+					<Route path="/CitizenService/Forums" element={<Forums />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />

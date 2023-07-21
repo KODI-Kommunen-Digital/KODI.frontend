@@ -438,10 +438,12 @@
     "UnknownBrowser": "Unknown Browser",
     "dragAndDropImage": "Drag and drop your image here, or click the Upload button.",
     "dragAndDropPDF": "Drag and drop your PDF here, or click the Upload button.",
-
     "groupCreated": "Your group has been created",
     "groupChangesNotSaved": "Your changes are not saved. Try again",
     "members": "Members",
     "date_of_joining": "Date of Joining",
-    "backToMyGroups": "Go back to My Groups"
+    "backToMyGroups": "Go back to My Groups",
+    "digitalManagement": "Digital Management",
+    "forums": "Forums",
+    "comingSoon": "Coming Soon"
 }

@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
 import UAParser from "ua-parser-js";
+import getInstance from "../api/axiosInstance";
+const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
 
 const parser = new UAParser();
 const userAgent = parser.getResult();

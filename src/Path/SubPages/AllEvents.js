@@ -17,7 +17,7 @@ import Footer from "../../Components/Footer";
 const Events = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [cityId, setCityId] = useState(null);
+	const [cityId, setCityId] = useState("");
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
 	const [selectedCategory, setCategoryName] = useState("");
@@ -40,6 +40,8 @@ const Events = () => {
 		}
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
+            const pageNoParam = parseInt(urlParams.get("pageNo"));
+            if (pageNoParam) setPageNo(pageNoParam);
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 			const categoryIdParam = urlParams.get("categoryId");
@@ -49,7 +51,7 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageNo, pageSize: 9, statusId: 1 };
+		const params = { pageSize: 9, statusId: 1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			console.log(cities, cityId);
@@ -66,6 +68,12 @@ const Events = () => {
 		} else {
 			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
+		}
+		if (pageNo > 1) {
+            params.pageNo = pageNo;
+            urlParams.set("pageNo", pageNo);
+		} else {
+			urlParams.delete("pageNo");
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
@@ -220,9 +228,9 @@ const Events = () => {
 						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 								{listings &&
-									listings.map((listing) => (
+									listings.map((listing, index) => (
 										<div
-											key={listing.id}
+											key={index}
 											onClick={() => {
 												let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
 												if (terminalViewParam === "true") {

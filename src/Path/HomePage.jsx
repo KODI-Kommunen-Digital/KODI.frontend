@@ -524,9 +524,9 @@ const HomePage = () => {
 				<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 						{listings &&
-							listings.map((listing) => (
+							listings.map((listing, index) => (
 								<div
-									key={listing.id}
+									key={index}
 									onClick={() => {
 										localStorage.setItem(
 											"selectedCategoryId",
