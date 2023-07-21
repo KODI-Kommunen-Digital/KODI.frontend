@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Under Maintenance</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    .container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #222;
+    }
+    .background-image {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .background-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(8px);
+    }
+    .content {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      max-width: 600px;
+    }
+    .logo {
+      max-width: 80px;
+      height: auto;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .message {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 2rem;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      font-family: "Poppins", sans-serif;
+      line-height: 1.6;
+    }
+    .message h1 {
+      margin-bottom: 0.5rem;
+      font-size: 48px;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .content {
+        padding: 1rem;
+        max-width: 100%;
+      }
+      .logo {
+        max-width: 60px;
+      }
+      .message h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="background-image">
+      <img src="https://unsa1heidi.obs.eu-de.otc.t-systems.com/admin/Homepage.jpg" alt="Image">
+    </div>
+
+    <div class="content">
+      <img class="logo" src="https://unsa1heidi.obs.eu-de.otc.t-systems.com/admin/logo.png" alt="HEDI - Heimat Digital">
+      <div class="message">
+        <h1>Vielen Dank, dass du unsere Seite besuchst.</h1>
+        <h2>Hier entsteht in Kürze ein smartes, digitales Projekt um unsere Region nachhaltig zu digitalisieren. Sei gespannt!</h2>
+        <h2>Dein Smart City Team vom Ilzer Land</h2>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
