@@ -31,7 +31,6 @@ export default function SocialMedia({ setSocialMedia }) {
             });
     }, []);
     const handleAdd = (value) => {
-        console.log(user);
         if (val.length === socialMedia.length) {
             setAlert("All Social added");
         } else {
@@ -41,7 +40,6 @@ export default function SocialMedia({ setSocialMedia }) {
 
     const handleDelete = (index) => {
         const updatedVal = val.filter((_, idx) => idx !== index);
-        console.log(updatedVal);
         setVal(updatedVal);
         const updatedData = JSON.stringify(updatedVal);
         setData({ ...data, socialMedia: updatedData });
@@ -55,7 +53,7 @@ export default function SocialMedia({ setSocialMedia }) {
                 user.socialMedia,
                 selectedPlatform
             ) &&
-			!Object.prototype.hasOwnProperty.call(temp[idx], selectedPlatform)
+            !Object.prototype.hasOwnProperty.call(temp[idx], selectedPlatform)
         ) {
             const currentKey = Object.keys(temp[idx])[0];
             const updatedTemp = {
@@ -102,71 +100,71 @@ export default function SocialMedia({ setSocialMedia }) {
                         <div className="relative mb-4">
                             <div className="relative mb-4 mt-2 border-white">
                                 {user.socialMedia &&
-									Object.keys(JSON.parse(user.socialMedia)).map((data, i) => {
-									    return JSON.parse(user.socialMedia)[data] !== "" ? (
-									        <div
-									            key={i}
-									            className="items-stretch py-2 grid grid-cols-1 md:grid-cols-3 gap-4"
-									        >
-									            <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									                <label
-									                    htmlFor="country"
-									                    className="block text-md font-medium text-gray-600"
-									                    style={{ fontFamily: "Poppins, sans-serif" }}
-									                >
-									                    {t("select")}
-									                </label>
-									                <select
-									                    type="text"
-									                    id="selected"
-									                    name="selected"
-									                    value={data || ""}
-									                    disabled
-									                    autoComplete="country-name"
-									                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									                >
-									                    {socialMedia.map((option) => (
-									                        <option key={option} value={option}>
-									                            {option}
-									                        </option>
-									                    ))}
-									                </select>
-									            </div>
-									            <div className="mt-2 px-0 ml-2">
-									                <label
-									                    htmlFor="lastName"
-									                    className="block text-md font-medium text-gray-600"
-									                    style={{ fontFamily: "Poppins, sans-serif" }}
-									                >
-														Link
-									                </label>
-									                <input
-									                    type="text"
-									                    id="socialMedia"
-									                    name="socialMedia"
-									                    defaultValue={JSON.parse(user.socialMedia)[data]}
-									                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-									                    placeholder="ainfo@heidi-app.de"
-									                    style={{ fontFamily: "Poppins, sans-serif" }}
-									                    disabled
-									                />
-									            </div>
-									            <div className="flex ml-2 mt-8">
-									                <button onClick={() => handleDelete(i)}>
-									                    <svg
-									                        xmlns="http://www.w3.org/2000/svg"
-									                        className="w-5 h-5"
-									                        viewBox="0 0 512 512"
-									                    >
-									                        <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
-									                    </svg>
-									                </button>
-									            </div>
-									        </div>
-									    ) : (
-									        <></>
-									    );
-									})}
+                                    Object.keys(JSON.parse(user.socialMedia)).map((data, i) => {
+                                        return JSON.parse(user.socialMedia)[data] !== "" ? (
+                                            <div
+                                                key={i}
+                                                className="items-stretch py-2 grid grid-cols-1 md:grid-cols-3 gap-4"
+                                            >
+                                                <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+                                                    <label
+                                                        htmlFor="country"
+                                                        className="block text-md font-medium text-gray-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {t("select")}
+                                                    </label>
+                                                    <select
+                                                        type="text"
+                                                        id="selected"
+                                                        name="selected"
+                                                        value={data || ""}
+                                                        disabled
+                                                        autoComplete="country-name"
+                                                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                                    >
+                                                        {socialMedia.map((option) => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="mt-2 px-0 ml-2">
+                                                    <label
+                                                        htmlFor="lastName"
+                                                        className="block text-md font-medium text-gray-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        Link
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="socialMedia"
+                                                        name="socialMedia"
+                                                        defaultValue={JSON.parse(user.socialMedia)[data]}
+                                                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                        placeholder="ainfo@heidi-app.de"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className="flex ml-2 mt-8">
+                                                    <button onClick={() => handleDelete(i)}>
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            className="w-5 h-5"
+                                                            viewBox="0 0 512 512"
+                                                        >
+                                                            <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        );
+                                    })}
                             </div>
                             <div className="relative mb-4 mt-2 border-white">
                                 {val.map((data, i) => {
@@ -217,7 +215,7 @@ export default function SocialMedia({ setSocialMedia }) {
                                                     htmlFor="lastName"
                                                     className="block text-md font-medium text-gray-600"
                                                 >
-													Link
+                                                    Link
                                                 </label>
                                                 <input
                                                     type="text"

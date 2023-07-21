@@ -36,7 +36,9 @@ const LoginPage = () => {
 		document.title = "Heidi - Login";
 		const searchParams = new URLSearchParams(location.search);
 		if (searchParams.get("sessionExpired") === "true") {
-			settimeOutAlertMessage("Your session has expired. Please login again.");
+			settimeOutAlertMessage(
+				"Your session has expired. Please login again."
+			);
 			setAlertType("danger");
 			setTimeout(() => {
 				settimeOutAlertMessage("");
@@ -91,7 +93,10 @@ const LoginPage = () => {
 					"refreshToken",
 					response.data.data.refreshToken
 				);
-				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"userId",
+					response.data.data.userId
+				);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -101,7 +106,10 @@ const LoginPage = () => {
 					"refreshToken",
 					response.data.data.refreshToken
 				);
-				window.sessionStorage.setItem("userId", response.data.data.userId);
+				window.sessionStorage.setItem(
+					"userId",
+					response.data.data.userId
+				);
 			}
 			setUser("");
 			setPwd("");
@@ -276,12 +284,18 @@ const LoginPage = () => {
 						</div>
 						{alertInfo && (
 							<div className="py-2 mt-1 px-2">
-								<Alert type={alertType} message={alertMessage} />
+								<Alert
+									type={alertType}
+									message={alertMessage}
+								/>
 							</div>
 						)}
 						{timeOutAlertMessage && (
 							<div className="py-2 mt-1 px-2">
-								<Alert type={alertType} message={timeOutAlertMessage} />
+								<Alert
+									type={alertType}
+									message={timeOutAlertMessage}
+								/>
 							</div>
 						)}
 						<div className="text-sm">
@@ -307,7 +321,9 @@ const LoginPage = () => {
 									id="username"
 									name="username"
 									value={userReset}
-									onChange={(e) => setUserReset(e.target.value)}
+									onChange={(e) =>
+										setUserReset(e.target.value)
+									}
 									required
 									className="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("username") + "*"}
