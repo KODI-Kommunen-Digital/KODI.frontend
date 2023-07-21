@@ -10,7 +10,7 @@ export async function getUserForumsPost(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/post`);
 }
 
-export async function getUserForumsMembers(cityId, forumsId) {
+export async function getForumMembers(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/members`);
 }
 
