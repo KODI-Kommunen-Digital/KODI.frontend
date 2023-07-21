@@ -113,7 +113,7 @@ const HomePage = () => {
 			<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
 				<div className="w-full mr-0 ml-0">
 					<div className="h-[35rem] lg:h-full overflow-hidden px-0 py-1">
-						<div className="relative h-[35rem]  lg:h-full">
+						<div className="relative h-[35rem]">
 							<img
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"
