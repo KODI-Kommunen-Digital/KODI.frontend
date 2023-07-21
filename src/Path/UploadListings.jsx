@@ -209,7 +209,7 @@ function UploadListings() {
 				} else if (input.removeImage) {
 					await deleteListingImage(cityId, input.id);
 				}
-				var userProfile = await getProfile(7);
+				var userProfile = await getProfile(userId);
 				var isAdmin = userProfile.data.data.roleId === 1 ? "true" : "false";
 				isAdmin ? setSuccessMessage(t("listingUpdatedAdmin")) : setSuccessMessage(t("listingUpdated"));
 				setErrorMessage(false);
