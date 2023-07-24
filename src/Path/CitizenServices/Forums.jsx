@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
-import { getAllForums, getUserForumsMembers, forumMemberRequests } from "../../Services/forumsApi";
+import { getAllForums, getUserForums, forumMemberRequests } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 
@@ -13,14 +13,12 @@ const Forums = () => {
     const [cityId, setCityId] = useState(1);
     const [cities, setCities] = useState([]);
     const [cityName, setCityName] = useState("");
-    const [listings, setListings] = useState([]);
+    const [forums, setForums] = useState([]);
     const [pageNo, setPageNo] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [membersCount, setMembersCount] = useState();
     const [isMember, setIsMember] = useState(false);
     const [requestPending, setRequestPending] = useState(false);
     const [isStatus, setIsStatus] = useState(false);
-
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken =
@@ -54,68 +52,51 @@ const Forums = () => {
         window.history.replaceState({}, "", newUrl);
         getAllForums(cityId).then((response) => {
             const data = response.data.data;
-            setListings(data);
+            setForums(data);
         });
     }, [cities, cityId, pageNo, t]);
-    const checkIfMember = (cityId, forumId) => {
+    const checkIfMember = (forumId) => {
         if (isLoggedIn) {
-            getUserForumsMembers(cityId, forumId).then((response) => {
+            getUserForums().then((response) => {
                 const data = response.data.data;
-                console.log(data)
-                setIsMember(true);
-                setMembersCount(data.length)
+                console.log("data", data)
+                data.id === forumId ? setIsMember(false) : setIsMember(true);
             });
         }
     }
-    const navigate = useNavigate();
-    const navigateTo = (path) => {
-        if (path) {
-            navigate(path);
-        }
-    };
-    const handleClick = (listing) => {
+    // const navigate = useNavigate();
+    // const navigateTo = (path) => {
+    //     if (path) {
+    //         navigate(path);
+    //     }
+    // };
+    const handleClick = (cityId, forum) => {
         // Check if the listing is private
-        // data=[{forumId:listing.id,
-        // userId:2, statusId:1}]
-        if (listing.isPrivate === 0) {
+        console.log(forum)
+        if (forum.isPrivate === 0) {
             // Set the status message for public groups
-            forumMemberRequests(cityId, listing.id).then((response) => {
+            setIsStatus(false);
+            forumMemberRequests(cityId, forum.id).then((response) => {
                 const data = response.data.data;
                 console.log(data)
-                setIsStatus(false);
             })
             console.log("You have successfully joined the group", isStatus);
         } else {
             // Set the status message for private groups
-            forumMemberRequests(cityId, listing.id).then((response) => {
+            setIsStatus(true);
+            forumMemberRequests(cityId, forum.id).then((response) => {
                 const data = response.data.data;
                 console.log(data)
-                setIsStatus(true);
             })
             console.log("Your request has been sent", isStatus);
         }
-        let url = `/cities/${1}/forums/${listing.id}`;
-        if (terminalViewParam === "true") {
-            url += "&terminalView=true";
-        }
-        navigateTo(url);
+        // Navigate to the particular forum page.
+        // let url = `/cities/${cityId}/forums/${forum.id}`;
+        // if (terminalViewParam === "true") {
+        //     url += "&terminalView=true";
+        // }
+        // navigateTo(url);
     };
-
-    useEffect(() => {
-        console.log("isStatus:", isStatus);
-
-        if (isStatus) {
-            // Code to handle actions for private groups
-
-
-        } else {
-            // Code to handle actions for public groups
-            forumMemberRequests().then((response) => {
-                const data = response.data.data;
-                console.log(data)
-            })
-        }
-    }, [isStatus]);
 
 
     const location = useLocation();
@@ -241,24 +222,24 @@ const Forums = () => {
 
             <div className="mt-5 mb-20 p-6">
                 <div>
-                    {listings && listings.length > 0 ? (
+                    {forums && forums.length > 0 ? (
                         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
                             <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-                                {listings &&
-                                    listings.map((listing) => (
+                                {forums &&
+                                    forums.map((forum) => (
 
-                                        <div key={listing.id} onClick={() => handleClick(listing)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
+                                        <div key={forum.id} onClick={() => handleClick(cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
 
                                             <a className="block relative h-64 rounded overflow-hidden">
                                                 {!isMember ? (
-                                                    listing.isPrivate ? (
+                                                    forum.isPrivate ? (
                                                         <>
                                                             <img
                                                                 alt="ecommerce"
                                                                 className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
                                                                 src={
-                                                                    listing.image
-                                                                        ? process.env.REACT_APP_BUCKET_HOST + listing.image
+                                                                    forum.image
+                                                                        ? process.env.REACT_APP_BUCKET_HOST + forum.image
                                                                         : LISTINGSIMAGE
                                                                 }
                                                             />
@@ -274,8 +255,8 @@ const Forums = () => {
                                                                 alt="ecommerce"
                                                                 className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
                                                                 src={
-                                                                    listing.image
-                                                                        ? process.env.REACT_APP_BUCKET_HOST + listing.image
+                                                                    forum.image
+                                                                        ? process.env.REACT_APP_BUCKET_HOST + forum.image
                                                                         : LISTINGSIMAGE
                                                                 }
                                                             />
@@ -290,8 +271,8 @@ const Forums = () => {
                                                             alt="ecommerce"
                                                             className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
                                                             src={
-                                                                listing.image
-                                                                    ? process.env.REACT_APP_BUCKET_HOST + listing.image
+                                                                forum.image
+                                                                    ? process.env.REACT_APP_BUCKET_HOST + forum.image
                                                                     : LISTINGSIMAGE
                                                             }
                                                         />
@@ -305,14 +286,14 @@ const Forums = () => {
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
                                                     <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
-                                                        {listing.forumName}
+                                                        {forum.forumName}
                                                     </h2>
-                                                    {listing.isPrivate === 0 ? (
+                                                    {forum.isPrivate === 0 ? (
                                                         <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
                                                             Public
                                                         </h2>
                                                     ) : (
-                                                        checkIfMember(cityId, listing.id) && isMember ? (
+                                                        checkIfMember(forum.id) && isMember ? (
                                                             <button onClick={() => setRequestPending(true)}>
                                                                 Request Access
                                                             </button>
@@ -328,9 +309,9 @@ const Forums = () => {
                                                     <h2 className="text-gray-500 title-font text-lg font-sans truncate">
                                                         <p> City:{cityName}</p>
                                                     </h2>
-                                                    <h2 className="text-gray-500 title-font text-lg  font-sans truncate">
-                                                        <p> Members: {membersCount}</p>
-                                                    </h2>
+                                                    {/* <h2 className="text-gray-500 title-font text-lg  font-sans truncate">
+                                                        <p> Members: {checkIfMember() && membersCount}</p>
+                                                    </h2> */}
                                                 </div>
                                             </div>
                                             <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -360,9 +341,6 @@ const Forums = () => {
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                     onClick={() => {
                                         localStorage.setItem("selectedItem", "Choose one category");
-                                        isLoggedIn
-                                            ? navigateTo("/CreateGroup")
-                                            : navigateTo("/login");
                                     }}
                                 >
                                     {t("click_here")}
@@ -390,7 +368,7 @@ const Forums = () => {
                     >
                         {t("page")} {pageNo}
                     </span>
-                    {listings.length >= 9 && (
+                    {forums.length >= 9 && (
                         <span
                             className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
                             style={{ fontFamily: "Poppins, sans-serif" }}
@@ -409,3 +387,4 @@ const Forums = () => {
 };
 
 export default Forums;
+
