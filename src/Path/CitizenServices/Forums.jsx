@@ -59,7 +59,6 @@ const Forums = () => {
         if (isLoggedIn) {
             getUserForums().then((response) => {
                 const data = response.data.data;
-                console.log("data", data)
                 data.id === forumId ? setIsMember(false) : setIsMember(true);
             });
         }
@@ -72,7 +71,6 @@ const Forums = () => {
     // };
     const handleClick = (cityId, forum) => {
         // Check if the listing is private
-        console.log(forum)
         if (forum.isPrivate === 0) {
             // Set the status message for public groups
             setIsStatus(false);
