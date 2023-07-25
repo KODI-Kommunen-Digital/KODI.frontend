@@ -115,8 +115,8 @@ const Dashboard = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		listing: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function handleDelete(listing) {

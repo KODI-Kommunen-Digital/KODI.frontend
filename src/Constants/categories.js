@@ -1,28 +1,26 @@
 export const categoryByName = {
 	news: 1,
-	officialnotification: 2,
 	events: 3,
 	clubs: 4,
 	regionalProducts: 5,
 	offerSearch: 6,
 	newCitizenInfo: 7,
-	defectReport: 8,
 	lostAndFound: 9,
 	companyPortaits: 10,
 	carpoolingPublicTransport: 11,
 	offers: 12,
+	eatOrDrink: 13,
 };
 export const categoryById = {
-	1: "news",
-	2: "officialnotification",
-	3: "events",
-	4: "clubs",
-	5: "regionalProducts",
-	6: "offerSearch",
-	7: "newCitizenInfo",
-	8: "defectReport",
-	9: "lostAndFound",
-	10: "companyPortaits",
-	11: "carpoolingPublicTransport",
-	12: "offers",
+	1: "news", // Nachricht
+	3: "events", // Veranstaltungen
+	4: "clubs", // Vereine
+	5: "regionalProducts", // Regionale Produkte
+	6: "offerSearch", // Ich biete / suche
+	7: "newCitizenInfo", // Neubürgerinfos
+	9: "lostAndFound", // Fundbüro
+	10: "companyPortaits", // Firmenportraits
+	11: "carpoolingPublicTransport", // Mitfahrbank / ÖPNV
+	12: "offers", // Angebote
+	13: "eatOrDrink", // Essen / Trinken
 };

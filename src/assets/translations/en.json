@@ -188,7 +188,8 @@
     "remove": "Remove",
     "removeFilter": "Remove Filter",
     "right_withdrawal": "Right of withdrawal",
-    "roadTraffic": "Road works / Traffic",
+    "roadTraffic": " Road and Traffic",
+    "eatOrDrink": "Eat or Drink",
     "saveChanges": "Save changes",
     "search": "Search",
     "searchLocation": "Search for a location",
@@ -446,5 +447,7 @@
     "backToMyGroups": "Go back to My Groups",
     "digitalManagement": "Digital Management",
     "forums": "Forums",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "show": "Show",
+    "hide": "Hide"
 }
