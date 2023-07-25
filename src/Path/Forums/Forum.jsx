@@ -102,33 +102,32 @@ const Forum = () => {
                         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
                             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
                                 {forumPosts &&
-                                    forumPosts.map((data) => (
+                                    forumPosts.map((forumPost, index) => (
                                         <div
-                                            key={data.id}
-                                            className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                                            key={index}
+                                            onClick={() => {
+                                                navigateTo(`/Forum/ViewPost?id=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`)
+                                            }}
+                                            className="w-full h-full shadow-lg rounded-lg cursor-pointer"
                                         >
-                                            <div className="relative h-80 rounded overflow-hidden">
-                                                <a
-                                                    target="_blank"
-                                                    rel="noreferrer noopener"
-                                                    onClick={() => {
-                                                        navigateTo(`/Forum/ViewPost?id=${data.id}&forumId=${forumId}&cityId=${cityId}`)
-                                                    }}
+                                            <a className="block relative h-64 rounded overflow-hidden">
+                                                <img
+                                                    alt="ecommerce"
+                                                    className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+                                                    src={
+                                                        forumPost.image
+                                                            ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
+                                                            : HOMEPAGEIMG
+                                                    }
+                                                />
+                                            </a>
+                                            <div className="my-5 px-2">
+                                                <h2
+                                                    className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    <img
-                                                        alt={data.title}
-                                                        className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                                                        src={data.image ? process.env.REACT_APP_BUCKET_HOST + data.image : HOMEPAGEIMG}
-                                                    />
-                                                    <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                                                        <h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-                                                            {data.title}
-                                                        </h1>
-                                                        <p className="mb-4 ml-4 font-sans">
-                                                            { }
-                                                        </p>
-                                                    </div>
-                                                </a>
+                                                    {forumPost.title}
+                                                </h2>
                                             </div>
                                         </div>
                                     ))}
