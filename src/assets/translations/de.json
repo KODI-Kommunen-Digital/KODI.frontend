@@ -452,5 +452,6 @@
     "forums": "Foren",
     "comingSoon": "Demnächst",
     "show": "anzeigen",
-    "hide": "verbergen"
+    "hide": "verbergen",
+    "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut"
 }

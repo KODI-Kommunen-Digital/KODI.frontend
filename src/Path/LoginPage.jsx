@@ -127,7 +127,7 @@ const LoginPage = () => {
 			setAlertInfo(true);
 			setAlertType("danger");
 			setAlertMessage(
-				"Login Failed. Please check Username / Password and try again"
+				t("checkUsernameOrPassword")
 			);
 		}
 	};
