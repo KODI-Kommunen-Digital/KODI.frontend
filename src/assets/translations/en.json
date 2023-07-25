@@ -50,6 +50,7 @@
     "createAnAccountDescription": "Create an account to be able to actively participate in city events.",
     "currently_no_listings": "Currently there is no listings to display !",
     "currently_no_services": "Currently there is no citizen services to display !",
+    "currently_no_posts": "Currently there is no posts to display !",
     "dashboard": "Dashboard",
     "data_protection": "Data protection",
     "date": "Date",
@@ -217,6 +218,7 @@
     "time": "Time",
     "title": "Title",
     "to_upload_new_listing": "To upload a new listing, ",
+    "to_upload_new_post": "To upload a new post, ",
     "tod": "Topic of the day",
     "unfavorite": "Unfavorite",
     "updatePassword": "Update Password",
@@ -445,5 +447,7 @@
     "backToMyGroups": "Go back to My Groups",
     "digitalManagement": "Digital Management",
     "forums": "Forums",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "createPost": "Create Post",
+    "groupMembers": "Group Members"
 }

@@ -4,16 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HOMEPAGEIMG from "./../../assets/homeimage.jpg";
 import Footer from "../../Components/Footer";
-import { getCitizenServices, getCities } from "../../Services/cities";
+import { getForum, getForumPosts } from "../../Services/forumsApi";
 
-const DigitalCityHall = () => {
-    window.scrollTo(0, 0);
+const Forum = () => {
     const { t } = useTranslation();
-    const [citizenServiceData, setcitizenServiceData] = useState([]);
-    const [cities, setCities] = useState({});
-    const [citiesArray, setCitiesArray] = useState([]);
-    const [isLoggedIn] = useState(false);
+    const [forumPosts, setForumPosts] = useState([]);
+    const [forum, setFourm] = useState({});
+    const [, setIsValidForum] = useState(false);
     const [cityId, setCityId] = useState(null);
+    const [forumId, setForumId] = useState(null);
     const [pageNo] = useState(1);
 
     const navigate = useNavigate();
@@ -25,29 +24,33 @@ const DigitalCityHall = () => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        document.title = "Heidi - Digital Rathouse";
-        getCities().then((response) => {
-            setCitiesArray(response.data.data);
-            const temp = {};
-            for (const city of response.data.data) {
-                temp[city.id] = city.name;
-            }
-            setCities(temp);
-            const cityIdParam = urlParams.get("cityId");
-            if (cityIdParam) setCityId(cityIdParam);
-        });
+        const cityIdParam = parseInt(urlParams.get("cityId"));
+        const forumIdParam = parseInt(urlParams.get("forumId"));
+        document.title = "Heidi - Forums";
+        if (cityIdParam && forumIdParam) {
+            getForum(cityIdParam, forumIdParam).then((response) => {
+                if (response.data.data) {
+                    setFourm(response.data.data);
+                    getForumPosts(cityIdParam, forumIdParam, { pageNo, pageSize: 12 }).then((response2) => {
+                        setForumPosts(response2.data.data);
+                    })
+                    setCityId(cityIdParam);
+                    setForumId(forumIdParam);
+                    setIsValidForum(true);
+                }
+            });
+        }
     }, []);
 
     useEffect(() => {
         const params = { pageNo, pageSize: 12 };
         const urlParams = new URLSearchParams(window.location.search);
         params.cityId = cityId;
+        params.forumId = forumId;
+        params.pageNo = pageNo;
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
-        getCitizenServices(params).then((response) => {
-            setcitizenServiceData(response.data.data);
-        });
-    }, [cityId, pageNo]);
+    }, [pageNo]);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -59,68 +62,50 @@ const DigitalCityHall = () => {
         }
     }, []);
 
-    useEffect(() => {
-        const params = {};
-        if (cityId !== 0) {
-            params.cityId = cityId;
-        }
-        getCitizenServices(params).then((response) => {
-            setcitizenServiceData(response.data.data);
-        });
-    }, [cityId]);
-
     return (
         <section className="text-gray-600 bg-white body-font">
             <HomePageNavBar />
 
             <div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
                 <div className="w-full mr-0 ml-0">
-                    <div className="h-64 overflow-hidden px-0 py-1">
-                        <div className="relative h-64">
+                    <div className="h-96 overflow-hidden px-0 py-1">
+                        <div className="relative h-96">
                             <img
-                                alt="ecommerce"
+                                alt="forumImage"
                                 className="object-cover object-center h-full w-full"
-                                src={HOMEPAGEIMG}
+                                src={forum.image ? process.env.REACT_APP_BUCKET_HOST + forum.image : HOMEPAGEIMG}
                             />
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                                 <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-                                    {t("digitalCityHall")}
+                                    {forum.forumName}
                                 </h1>
-
-                                <div className="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
-                                    <select
-                                        id="city"
-                                        name="city"
-                                        autoComplete="city-name"
-                                        onChange={(e) => setCityId(e.target.value)}
-                                        value={cityId}
-                                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    >
-                                        <option className="font-sans" value={0} key={0}>
-                                            {t("allCities")}
-                                        </option>
-                                        {citiesArray.map((city) => (
-                                            <option
-                                                className="font-sans"
-                                                value={city.id}
-                                                key={city.id}
-                                            >
-                                                {city.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {citizenServiceData && citizenServiceData.length > 0 ? (
+            <h1 className="text-xs md:text-xl lg:text-xl text-center font-bold my-4 font-sans">
+                {forum.description}
+            </h1>
+            <div className="text-center">
+                <a
+                    onClick={() => navigateTo(`/MyGroups/GroupMembers?id=${forumId}&cityId=${cityId}`)}
+                    className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                >
+                    {t("groupMembers")}
+                </a>
+                <a
+                    onClick={() => navigateTo(`/UploadPosts?id=${forumId}&cityId=${cityId}`)}
+                    className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                >
+                    {t("createPost")}
+                </a>
+            </div>
+            {forumPosts && forumPosts.length > 0 ? (
                 <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-                        {citizenServiceData &&
-                            citizenServiceData.map((data) => (
+                        {forumPosts &&
+                            forumPosts.map((data) => (
                                 <div
                                     key={data.id}
                                     className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
@@ -129,20 +114,21 @@ const DigitalCityHall = () => {
                                         <a
                                             target="_blank"
                                             rel="noreferrer noopener"
-                                            href={data.link}
+                                            onClick={() => {
+                                                navigateTo(`/Forum/ViewPost?id=${data.id}&forumId=${forumId}&cityId=${cityId}`)
+                                            }}
                                         >
                                             <img
-                                                onClick={() => window.open(data.link, "_blank")}
                                                 alt={data.title}
                                                 className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                                                src={process.env.REACT_APP_BUCKET_HOST + data.image}
+                                                src={data.image ? process.env.REACT_APP_BUCKET_HOST + data.image : HOMEPAGEIMG}
                                             />
                                             <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                                                 <h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
                                                     {data.title}
                                                 </h1>
                                                 <p className="mb-4 ml-4 font-sans">
-                                                    {cities[data.cityId]}
+                                                    { }
                                                 </p>
                                             </div>
                                         </a>
@@ -155,20 +141,17 @@ const DigitalCityHall = () => {
                 <div>
                     <div className="flex items-center justify-center">
                         <h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-                            {t("currently_no_services")}
+                            {t("currently_no_posts")}
                         </h1>
                     </div>
                     <div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
                         <span className="font-sans text-black">
-                            {t("to_upload_new_listing")}
+                            {t("to_upload_new_post")}
                         </span>
                         <a
-                            className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+                            className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
                             onClick={() => {
-                                localStorage.setItem("selectedItem", "Choose one category");
-                                isLoggedIn
-                                    ? navigateTo("/UploadListings")
-                                    : navigateTo("/login");
+                                navigateTo(`/UploadPosts?id=${forumId}&cityId=${cityId}`)
                             }}
                         >
                             {t("click_here")}
@@ -184,4 +167,4 @@ const DigitalCityHall = () => {
     );
 };
 
-export default DigitalCityHall;
+export default Forum;

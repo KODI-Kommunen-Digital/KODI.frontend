@@ -5,7 +5,7 @@ import HOMEPAGEIMG from "./../../assets/homeimage.jpg";
 import Footer from "../../Components/Footer";
 import { getCities } from "../../Services/cities";
 
-const Forums = () => {
+const AllForums = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [citiesArray, setCitiesArray] = useState([]);
@@ -110,4 +110,4 @@ const Forums = () => {
     );
 };
 
-export default Forums;
+export default AllForums;
