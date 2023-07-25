@@ -13,7 +13,8 @@ const Forum = () => {
     const [, setIsValidForum] = useState(false);
     const [cityId, setCityId] = useState(null);
     const [forumId, setForumId] = useState(null);
-    const [pageNo] = useState(1);
+    const [pageNo, setPageNo] = useState(1);
+    const pageSize = 12;
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -26,12 +27,14 @@ const Forum = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const cityIdParam = parseInt(urlParams.get("cityId"));
         const forumIdParam = parseInt(urlParams.get("forumId"));
+        const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
         document.title = "Heidi - Forums";
+        setPageNo(pageNoParam)
         if (cityIdParam && forumIdParam) {
             getForum(cityIdParam, forumIdParam).then((response) => {
                 if (response.data.data) {
                     setFourm(response.data.data);
-                    getForumPosts(cityIdParam, forumIdParam, { pageNo, pageSize: 12 }).then((response2) => {
+                    getForumPosts(cityIdParam, forumIdParam, { pageNo: pageNoParam, pageSize }).then((response2) => {
                         setForumPosts(response2.data.data);
                     })
                     setCityId(cityIdParam);
@@ -43,24 +46,17 @@ const Forum = () => {
     }, []);
 
     useEffect(() => {
-        const params = { pageNo, pageSize: 12 };
-        const urlParams = new URLSearchParams(window.location.search);
-        params.cityId = cityId;
-        params.forumId = forumId;
-        params.pageNo = pageNo;
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-    }, [pageNo]);
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cityId = urlParams.get("cityId");
-        if (parseInt(cityId)) {
-            urlParams.set("cityId", cityId);
-        } else {
-            urlParams.delete("cityId");
+        if (cityId && forumId) {
+            const params = { pageNo, pageSize };
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set("pageNo", pageNo);
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+            getForumPosts(cityId, forumId, params).then((response) => {
+                setForumPosts(response.data.data);
+            })
         }
-    }, []);
+    }, [pageNo]);
 
     return (
         <section className="text-gray-600 bg-white body-font">
@@ -159,6 +155,34 @@ const Forum = () => {
                     </div>
                 </div>
             )}
+            <div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+                {pageNo !== 1 ? (
+                    <span
+                        className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        onClick={() => setPageNo(pageNo - 1)}
+                    >
+                        {"<"}{" "}
+                    </span>
+                ) : (
+                    <span />
+                )}
+                <span
+                    className="text-lg px-3"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                    {t("page")} {pageNo}
+                </span>
+                {forumPosts.length >= pageSize && (
+                    <span
+                        className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        onClick={() => setPageNo(pageNo + 1)}
+                    >
+                        {">"}
+                    </span>
+                )}
+            </div>
 
             <div className="bottom-0 w-full">
                 <Footer />
