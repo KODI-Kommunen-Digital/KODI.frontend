@@ -35,15 +35,6 @@ const LoginPage = () => {
 	useEffect(() => {
 		document.title = "Heidi - Login";
 		const searchParams = new URLSearchParams(location.search);
-		if (searchParams.get("sessionExpired") === "true") {
-			settimeOutAlertMessage(
-				"Your session has expired. Please login again."
-			);
-			setAlertType("danger");
-			setTimeout(() => {
-				settimeOutAlertMessage("");
-			}, TIMEOUT_DURATION);
-		}
 
 		userRef.current.focus();
 		const accessToken =
@@ -54,6 +45,16 @@ const LoginPage = () => {
 			window.sessionStorage.getItem("refreshToken");
 		if (accessToken?.length === 456 || refreshToken?.length === 456) {
 			routeChangeToUpload();
+		}
+
+		if (searchParams.get("sessionExpired") === "true") {
+			settimeOutAlertMessage(
+				"Your session has expired. Please login again."
+			);
+			setAlertType("danger");
+			setTimeout(() => {
+				settimeOutAlertMessage("");
+			}, TIMEOUT_DURATION);
 		}
 	}, [routeChangeToUpload, location]);
 
