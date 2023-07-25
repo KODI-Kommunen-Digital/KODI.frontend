@@ -18,7 +18,7 @@ import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
-import Forums from "./Path/CitizenServices/Forums";
+import Forums from "./Path/CitizenServices/AllForums";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";

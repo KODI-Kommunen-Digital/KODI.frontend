@@ -1,5 +1,6 @@
 import { getUserId } from "./usersApi";
-import axios from "../api/axiosInstanceForum";
+import { forumInstance } from "../api/axiosInstance";
+const axios = forumInstance;
 
 export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);

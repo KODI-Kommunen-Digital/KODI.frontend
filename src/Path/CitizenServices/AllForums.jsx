@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useLocation } from "react-router-dom";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getAllForums, getUserForums, forumMemberRequests } from "../../Services/forumsApi";
@@ -14,11 +13,10 @@ const Forums = () => {
     const [cities, setCities] = useState([]);
     const [cityName, setCityName] = useState("");
     const [forums, setForums] = useState([]);
+    const [userForums, setUserForums] = useState([]);
     const [pageNo, setPageNo] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isMember, setIsMember] = useState(false);
-    const [requestPending, setRequestPending] = useState(false);
-    const [isStatus, setIsStatus] = useState(false);
+    const [, setMemberRequest] = useState();
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken =
@@ -50,78 +48,92 @@ const Forums = () => {
         }
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
+        if (isLoggedIn) {
+            getUserForums().then((response) => {
+                const data = response.data.data;
+                setUserForums(data)
+            });
+        }
         getAllForums(cityId).then((response) => {
             const data = response.data.data;
             setForums(data);
         });
     }, [cities, cityId, pageNo, t]);
+
     const checkIfMember = (forumId) => {
-        if (isLoggedIn) {
-            getUserForums().then((response) => {
-                const data = response.data.data;
-                data.id === forumId ? setIsMember(false) : setIsMember(true);
-            });
-        }
+        const isForumMember = userForums.find((data) => data.forumId === forumId);
+        return isForumMember;
     }
-    // const navigate = useNavigate();
-    // const navigateTo = (path) => {
-    //     if (path) {
-    //         navigate(path);
-    //     }
-    // };
-    const handleClick = (cityId, forum) => {
-        // Check if the listing is private
-        if (forum.isPrivate === 0) {
+    const handlePublicGroup = async (cityId, forumId) => {
+        try {
+            const response = await forumMemberRequests(cityId, forumId);
+            const data = response.data.data;
+            setMemberRequest(data);
             // Set the status message for public groups
-            setIsStatus(false);
-            forumMemberRequests(cityId, forum.id).then((response) => {
-                const data = response.data.data;
-                console.log(data)
-            })
-            console.log("You have successfully joined the group", isStatus);
-        } else {
-            // Set the status message for private groups
-            setIsStatus(true);
-            forumMemberRequests(cityId, forum.id).then((response) => {
-                const data = response.data.data;
-                console.log(data)
-            })
-            console.log("Your request has been sent", isStatus);
+        } catch (error) {
+            console.error('Error fetching forum member requests:', error);
         }
-        // Navigate to the particular forum page.
-        // let url = `/cities/${cityId}/forums/${forum.id}`;
-        // if (terminalViewParam === "true") {
-        //     url += "&terminalView=true";
-        // }
-        // navigateTo(url);
+    };
+
+    const handlePrivateGroup = async (cityId, forumId) => {
+        try {
+            const response = await forumMemberRequests(cityId, forumId);
+            const data = response.data.data;
+            setMemberRequest(data);
+            // Set the status message for private groups
+        } catch (error) {
+            console.error('Error fetching forum member requests:', error);
+        }
     };
 
 
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
-    const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
-    const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
-    const [showNavBar, setShowNavBar] = useState(true);
-    useEffect(() => {
-        if (terminalViewParam === "true") {
-            setShowNavBar(false);
-        } else {
-            setShowNavBar(true);
+    const handleClick = async (cityId, forum) => {
+        if (!forum || forum.isPrivate === undefined) {
+            // Invalid forum object or isPrivate property is missing
+            console.error('Invalid forum object or missing isPrivate property');
+            return;
         }
-    }, [terminalViewParam]);
+
+        if (!checkIfMember(forum.id)) {
+            if (forum.isPrivate === 0) {
+                // Handle public groups
+                await handlePublicGroup(cityId, forum.id);
+            } else {
+                // Handle private groups
+                await handlePrivateGroup(cityId, forum.id);
+            }
+        }
+    };
+
+    const handleChange = (e) => {
+        const selectedCityId = e.target.value;
+        const urlParams = new URLSearchParams(
+            window.location.search
+        );
+        const selectedCity = cities.find(
+            (city) => city.id.toString() === selectedCityId
+        );
+        if (selectedCity) {
+            localStorage.setItem("selectedCity", selectedCity.name);
+            window.location.href = `/?cityId=${selectedCityId}`;
+        } else {
+            localStorage.setItem("selectedCity", t("allCities"));
+            urlParams.delete("cityId");
+            setCityId(0);
+        }
+    }
 
     return (
         <section className="text-gray-600 body-font relative">
-            {showNavBar && <HomePageNavBar />}
+            {<HomePageNavBar />}
             <div
-                className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
+                className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col`}
             >
                 <div className="w-full mr-0 ml-0">
-                    <div className={`lg:h-64 md:h-64 h-72 overflow-hidden ${pyClass}`}>
+                    <div className={`lg:h-64 md:h-64 h-72 overflow-hidden`}>
                         <div className="relative lg:h-64 md:h-64 h-72">
                             <img
-                                alt="ecommerce"
+                                alt="homepage"
                                 className="object-cover object-center h-full w-full"
                                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
                             />
@@ -132,32 +144,13 @@ const Forums = () => {
                                             id="city"
                                             name="city"
                                             autoComplete="city-name"
-                                            onChange={(e) => {
-                                                const selectedCityId = e.target.value;
-                                                const urlParams = new URLSearchParams(
-                                                    window.location.search
-                                                );
-                                                const selectedCity = cities.find(
-                                                    (city) => city.id.toString() === selectedCityId
-                                                );
-                                                if (selectedCity) {
-                                                    localStorage.setItem("selectedCity", selectedCity.name);
-                                                    window.location.href = `/?cityId=${selectedCityId}`;
-                                                } else {
-                                                    localStorage.setItem("selectedCity", t("allCities"));
-                                                    urlParams.delete("cityId");
-                                                    setCityId(0);
-                                                }
-                                            }}
+                                            onChange={(e) => handleChange(e)}
                                             value={cityId || 0}
                                             className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             style={{
                                                 fontFamily: "Poppins, sans-serif",
                                             }}
                                         >
-                                            <option className="font-sans" value={0} key={0}>
-                                                {t("allCities")}
-                                            </option>
                                             {cities.map((city) => (
                                                 <option
                                                     className="font-sans"
@@ -177,23 +170,6 @@ const Forums = () => {
                                 id="city"
                                 name="city"
                                 autoComplete="city-name"
-                                onChange={(e) => {
-                                    const selectedCityId = e.target.value;
-                                    const urlParams = new URLSearchParams(
-                                        window.location.search
-                                    );
-                                    const selectedCity = cities.find(
-                                        (city) => city.id.toString() === selectedCityId
-                                    );
-                                    if (selectedCity) {
-                                        localStorage.setItem("selectedCity", selectedCity.name);
-                                        window.location.href = `/?cityId=${selectedCityId}`;
-                                    } else {
-                                        localStorage.setItem("selectedCity", t("allCities"));
-                                        urlParams.delete("cityId");
-                                        setCityId(0);
-                                    }
-                                }}
                                 value={cityId || 0}
                                 className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 style={{
@@ -225,15 +201,25 @@ const Forums = () => {
                             <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
                                 {forums &&
                                     forums.map((forum) => (
-
                                         <div key={forum.id} onClick={() => handleClick(cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
-
                                             <a className="block relative h-64 rounded overflow-hidden">
-                                                {!isMember ? (
+                                                {checkIfMember(forum.id) ? (
+                                                    <>
+                                                        <img
+                                                            alt="forumImage"
+                                                            className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+                                                            src={
+                                                                forum.image
+                                                                    ? process.env.REACT_APP_BUCKET_HOST + forum.image
+                                                                    : LISTINGSIMAGE
+                                                            }
+                                                        />
+                                                    </>
+                                                ) : (
                                                     forum.isPrivate ? (
                                                         <>
                                                             <img
-                                                                alt="ecommerce"
+                                                                alt="forumImage"
                                                                 className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
                                                                 src={
                                                                     forum.image
@@ -241,16 +227,16 @@ const Forums = () => {
                                                                         : LISTINGSIMAGE
                                                                 }
                                                             />
-                                                            {!requestPending && (
-                                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                                    <p className="text-Black font-bold text-lg">Make a Request</p>
-                                                                </div>
-                                                            )}
+
+                                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                                <p className="text-Black font-bold text-lg">Make a Request</p>
+                                                            </div>
+
                                                         </>
                                                     ) : (
                                                         <>
                                                             <img
-                                                                alt="ecommerce"
+                                                                alt="forumImage"
                                                                 className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
                                                                 src={
                                                                     forum.image
@@ -263,18 +249,6 @@ const Forums = () => {
                                                             </div>
                                                         </>
                                                     )
-                                                ) : (
-                                                    <>
-                                                        <img
-                                                            alt="ecommerce"
-                                                            className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-                                                            src={
-                                                                forum.image
-                                                                    ? process.env.REACT_APP_BUCKET_HOST + forum.image
-                                                                    : LISTINGSIMAGE
-                                                            }
-                                                        />
-                                                    </>
                                                 )
                                                 }
                                             </a>
@@ -291,16 +265,11 @@ const Forums = () => {
                                                             Public
                                                         </h2>
                                                     ) : (
-                                                        checkIfMember(forum.id) && isMember ? (
-                                                            <button onClick={() => setRequestPending(true)}>
-                                                                Request Access
-                                                            </button>
-                                                        ) : (
-                                                            <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
-                                                                Private
-                                                            </h2>
-                                                        )
-                                                    )}
+                                                        <h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
+                                                            Private
+                                                        </h2>
+                                                    )
+                                                    }
                                                 </div>
                                                 <div className="flex justify-between items-center"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}>

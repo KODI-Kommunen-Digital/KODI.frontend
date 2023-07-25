@@ -1,5 +1,5 @@
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
+import { instance } from "../api/axiosInstance";
+const axios = instance
 
 export async function getVillages(cityId) {
     return axios.get(`/cities/${cityId}/villages`);

@@ -1,6 +1,6 @@
 import { getUserId } from "./usersApi";
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
+import { instance } from "../api/axiosInstance";
+const axios = instance
 
 export async function getFavorites() {
     return axios.get(`/users/${getUserId()}/favorites`);
@@ -13,6 +13,6 @@ export async function deleteListingsById(favoriteId) {
     return axios.delete(`/users/${getUserId()}/favorites/${favoriteId}`);
 }
 
-export async function postFavoriteListingsData( favoriteListing) {
+export async function postFavoriteListingsData(favoriteListing) {
     return axios.post(`/users/${getUserId()}/favorites`, favoriteListing);
 }
