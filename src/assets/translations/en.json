@@ -449,5 +449,6 @@
     "forums": "Forums",
     "comingSoon": "Coming Soon",
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again"
 }
