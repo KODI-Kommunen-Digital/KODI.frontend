@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'; // Make sure you have the correct import statement
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,9 @@ const Forums = () => {
     const [pageNo, setPageNo] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [, setMemberRequest] = useState();
+    const [hasSentRequest, setHasSentRequest] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken =
@@ -58,7 +62,7 @@ const Forums = () => {
             const data = response.data.data;
             setForums(data);
         });
-    }, [cities, cityId, pageNo, t]);
+    }, [cities, cityId, pageNo, t, isLoggedIn]);
 
     const checkIfMember = (forumId) => {
         const isForumMember = userForums.find((data) => data.forumId === forumId);
@@ -85,7 +89,11 @@ const Forums = () => {
             console.error('Error fetching forum member requests:', error);
         }
     };
-
+    const navigateTo = (path) => {
+        if (path) {
+            navigate(path);
+        }
+    };
 
     const handleClick = async (cityId, forum) => {
         if (!forum || forum.isPrivate === undefined) {
@@ -94,14 +102,21 @@ const Forums = () => {
             return;
         }
 
-        if (!checkIfMember(forum.id)) {
+        if (!checkIfMember(forum.id) && hasSentRequest === false) {
             if (forum.isPrivate === 0) {
                 // Handle public groups
                 await handlePublicGroup(cityId, forum.id);
+                setHasSentRequest(true)
             } else {
                 // Handle private groups
                 await handlePrivateGroup(cityId, forum.id);
+                setHasSentRequest(true)
             }
+        } else {
+            setHasSentRequest(false)
+        }
+        if (checkIfMember(forum.id)) {
+            navigateTo(`Forum?/cities=${cityId}/forums=${forum.id}`);
         }
     };
 
@@ -122,6 +137,7 @@ const Forums = () => {
             setCityId(0);
         }
     }
+
 
     return (
         <section className="text-gray-600 body-font relative">
