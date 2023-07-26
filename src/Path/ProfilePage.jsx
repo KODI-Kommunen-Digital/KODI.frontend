@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import SideBar from "../Components/SideBar";
 import Alert from "../Components/Alert";
 import "./bodyContainer.css";
@@ -9,52 +9,17 @@ import {
 	updateProfile,
 	updatePassword,
 	uploadProfilePic,
+	deleteProfilePic
 } from "../Services/usersApi";
 
-import { useTranslation, withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 
-function ChangeImage({ setInput }) {
-	ChangeImage.propTypes = {
-		setInput: PropTypes.func.isRequired,
-	};
-	const { t } = useTranslation();
-	const inputFile = useRef(null);
-	let file = false;
-	function handleChangeImage(e) {
-		file = e.target.files[0];
-		const form = new FormData();
-		form.append("image", file);
-		uploadProfilePic(form).then((res) => {
-			setInput("image", res.data.path);
-		});
-	}
-
-	return (
-		<>
-			{file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
-			<button
-				onClick={() => inputFile.current.click()}
-				className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
-			>
-				{t("change")}
-			</button>
-			<input
-				onChange={handleChangeImage}
-				className="sr-only"
-				type="file"
-				id="file"
-				ref={inputFile}
-				style={{ display: "none" }}
-			/>
-		</>
-	);
-}
 
 class ProfilePage extends React.Component {
 	constructor(props) {
 		super(props);
-
+		this.inputFile = React.createRef();
 		this.state = {
 			input: {
 				socialMedia: "",
@@ -67,6 +32,8 @@ class ProfilePage extends React.Component {
 			formValid: true,
 			pageLoading: true,
 			updatingProfile: false,
+
+			currentFile: null,
 			val: [{ selected: "", socialMedia: "" }],
 			data: {
 				socialMedia: {},
@@ -76,6 +43,10 @@ class ProfilePage extends React.Component {
 		this.updateChanges = this.updateChanges.bind(this);
 		this.setProfile = this.setProfile.bind(this);
 		this.setSocialMedia = this.setSocialMedia.bind(this);
+		this.handleChangeImage = this.handleChangeImage.bind(this); // Bind the method to the class instance
+		this.handleRemoveImage = this.handleRemoveImage.bind(this);
+
+
 	}
 
 	componentDidMount() {
@@ -96,6 +67,7 @@ class ProfilePage extends React.Component {
 				const newState = Object.assign({}, this.state);
 				newState.profile = response.data.data;
 				newState.pageLoading = false;
+				this.setState({ profileImage: response.data.data.image });
 				this.setState(newState);
 			})
 			.catch((error) => {
@@ -283,10 +255,6 @@ class ProfilePage extends React.Component {
 		}
 	}
 
-	handleRemoveImage() {
-		this.setProfile("image", null);
-	}
-
 	handleUpdatePassword = () => {
 		const { t } = this.props;
 		const { currentPassword, newPassword, confirmPassword } = this.state;
@@ -329,8 +297,46 @@ class ProfilePage extends React.Component {
 			});
 	};
 
+	handleChangeImage(e) {
+		const selectedFile = e.target.files[0];
+		if (!selectedFile) return; // Handle the case when no image is selected
+		const form = new FormData();
+		form.append("image", selectedFile);
+		uploadProfilePic(form)
+			.then((res) => {
+				const profileImage = res.data.path;
+				this.setState({
+					currentFile: selectedFile,
+					profile: { ...this.state.profile, image: profileImage },
+				});
+			})
+			.catch((error) => {
+				// Handle any errors during the image upload if needed.
+				console.error("Error uploading image:", error);
+			});
+	}
+
+	handleRemoveImage() {
+		// Call the deleteProfilePic function to remove the image from the server
+		deleteProfilePic()
+			.then(() => {
+				// On successful removal, reset the currentFile and profile image to PROFILEIMAGE
+				this.setState({
+					currentFile: null, // Clear the currentFile for image preview
+					image: null, // Reset the profileImage state to default PROFILEIMAGE
+					profileImage: PROFILEIMAGE,
+				});
+			})
+			.catch((error) => {
+				// Handle any errors during image removal if needed
+				console.error("Error removing image:", error);
+			});
+	}
+
 	render() {
 		const { t } = this.props;
+		const { profileImage, currentFile } = this.state;
+
 		return (
 			<div className="bg-slate-600">
 				<SideBar />
@@ -480,35 +486,54 @@ class ProfilePage extends React.Component {
 											</label>
 											<div className="py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 space-y-2 sm:space-y-0">
 												<div className="flex flex-col justify-center items-start">
-													<img
+													{currentFile ? (
+														<img
+															className="rounded-full h-20 w-20"
+															src={URL.createObjectURL(currentFile)}
+															alt="Profile Preview"
+														/>
+													) : profileImage ? (
+														<img
+															className="rounded-full h-20 w-20"
+															src={process.env.REACT_APP_BUCKET_HOST + profileImage}
+															alt="Profile"
+														/>
+													) : (<img
 														className="rounded-full h-20 w-20"
-														src={
-															this.state.profile.image
-																? process.env.REACT_APP_BUCKET_HOST +
-																this.state.profile.image
-																: PROFILEIMAGE
-														}
-														alt="profile"
+														src={PROFILEIMAGE}
+														alt="Profile"
 													/>
+													)}
 												</div>
+
 												<div
 													className="flex flex-col justify-center items-start"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}
 												>
-													<ChangeImage
-														input={this.state}
-														setInput={this.setProfile.bind(this)}
-													/>
+													<>
+														<button
+															onClick={() => this.inputFile.current.click()}
+															className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+														>
+															{t("change")}
+														</button>
+														<input
+															onChange={this.handleChangeImage}
+															className="sr-only"
+															type="file"
+															id="file"
+															ref={this.inputFile}
+															style={{ display: "none" }}
+														/>
+													</>
+
 												</div>
 												<div className="flex flex-col justify-center items-start">
 													<button
-														onClick={() => this.setProfile("image", "")}
+														onClick={currentFile ? () => this.setState({ currentFile: null }) : this.handleRemoveImage}
 														className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center w-full sm:w-auto"
-														style={{
-															fontFamily: "Poppins, sans-serif",
-														}}
 													>
 														{t("remove")}
 													</button>
