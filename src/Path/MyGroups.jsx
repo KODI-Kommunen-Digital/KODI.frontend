@@ -120,10 +120,10 @@ const MyGroups = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{forums.map((forum) => {
+								{forums.map((forum, index) => {
 									return (
 										<tr
-											key={forum.id}
+											key={index}
 											className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
 										>
 											<th
@@ -152,7 +152,7 @@ const MyGroups = () => {
 											<td
 												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
-												onClick={() => navigateTo("/MyGroups/GroupMembers")}
+												onClick={() => navigateTo(`/MyGroups/GroupMembers?id=${forum.forumId}&cityId=${forum.cityId}`)}
 											>
 												{t("members")}
 											</td>
