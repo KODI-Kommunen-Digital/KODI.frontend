@@ -450,5 +450,8 @@
     "comingSoon": "Coming Soon",
     "createPost": "Create Post",
     "groupMembers": "Group Members",
-    "comment": "Comment"
+    "comment": "Comment",
+    "writeComment": "Write a comment...",
+    "showComments": "Show comments",
+    "hideComments": "Hide comments"
 }

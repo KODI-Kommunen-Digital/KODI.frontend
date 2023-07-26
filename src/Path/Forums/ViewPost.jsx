@@ -5,9 +5,8 @@ import Footer from "../../Components/Footer";
 import UserProfile from "../../Components/UserProfile";
 import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 import PropTypes from "prop-types";
-import { getForumPost } from "../../Services/forumsApi";
+import { getForumPost, createComment, getComments } from "../../Services/forumsApi";
 import { getProfile } from "../../Services/usersApi";
-import { Comments } from "../../Constants/Comments";
 
 const Description = ({ content }) => {
     return (
@@ -27,27 +26,88 @@ const ViewPost = () => {
     const { t } = useTranslation();
     const [user, setUser] = useState({});
     const [forumPost, setForumPost] = useState({});
+    const [cityId, setCityId] = useState(null);
+    const [forumId, setForumId] = useState(null);
+    const [postId, setPostId] = useState(null);
     const [createdAt, setCreatedAt] = useState("");
     const [showComments, setShowComments] = useState(false);
-    const [showReplyBox, setShowReplyBox] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
-    const toggleReply = () => {
-        setShowReplyBox(!showReplyBox);
-    };
+    const [newComment, setNewComment] = useState("");
+    const [comments, setComments] = useState([]);
+    const [pageNo,] = useState(1);
+    const pageSize = 2;
 
     const toggleComments = () => {
+        if (!showComments) {
+            fetchComments();
+        }
         setShowComments(!showComments);
     };
 
+    const toggleReply = (parentId) => {
+        const comment = comments.find(c => c.id === parentId)
+        comment.showReplyBox = !comment.showReplyBox;
+        setComments([...comments])
+    };
+
+    const setReply = (parentId, newReply) => {
+        const comment = comments.find(c => c.id === parentId)
+        comment.newReply = newReply;
+        setComments([...comments])
+    };
+
+    const postComment = (parentId = null) => {
+        if (parentId) {
+            const comment = comments.find(c => c.id === parentId)
+            if (comment.newReply) {
+                const commentData = { comment: comment.newReply, parentId }
+                createComment(cityId, forumId, postId, commentData).then((response) => {
+                    if (comment.replies) {
+                        comment.replies.unshift(response.data.data)
+                    } else {
+                        comment.replies = [response.data.data];
+                    }
+                    setComments([...comments]);
+                    comment.newReply = "";
+                });
+            }
+            setComments([...comments]);
+        } else {
+            if (newComment) {
+                const commentData = { comment: newComment }
+                createComment(cityId, forumId, postId, commentData).then((response) => {
+                    comments.unshift(response.data.data);
+                    setComments([...comments]);
+                    setNewComment("");
+                });
+            }
+        }
+    };
+
+    const fetchComments = (parentId = null) => {
+        const params = { pageNo, pageSize }
+        if (parentId) {
+            params.parentId = parentId;
+        }
+        getComments(cityId, forumId, postId, params).then((response) => {
+            if (parentId) {
+                const comment = comments.find(c => c.id === parentId)
+                comment.replies = [...response.data.data];
+                setComments([...comments]);
+            } else {
+                setComments([...comments.concat(response.data.data)]);
+            }
+        });
+    };
+
     useEffect(() => {
+        document.title = "HEIDI - View Post";
         const searchParams = new URLSearchParams(window.location.search);
         const cityId = searchParams.get("cityId");
+        setCityId(cityId);
         const forumId = searchParams.get("forumId");
+        setForumId(forumId);
         const postId = searchParams.get("postId");
+        setPostId(postId);
         if (forumId && cityId && postId) {
             getForumPost(cityId, forumId, postId)
                 .then((forumsResponse) => {
@@ -69,10 +129,6 @@ const ViewPost = () => {
                     console.error("Error fetching user forums post:", error);
                 });
         }
-    }, []);
-
-    useEffect(() => {
-        document.title = "View Post";
     }, []);
 
 
@@ -115,94 +171,66 @@ const ViewPost = () => {
                     <div className="overflow-hidden mb-10">
                         <Description content={forumPost.description} />
                     </div>
+                    <form className="mb-6">
+                        <div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                            <label htmlFor="comment" className="sr-only">
+                                Your comment
+                            </label>
+                            <textarea
+                                id="comment"
+                                rows="2"
+                                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                placeholder={t("writeComment")}
+                                value={newComment}
+                                onChange={(event) => setNewComment(event.target.value)}
+                            ></textarea>
+                        </div>
+                        <div
+                            className="mt-2 px-4 py-2 w-24 text-sm font-medium text-white bg-blue-800 rounded-xl hover:bg-blue-700 focus:outline-none focus:bg-blue-700 cursor-pointer"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                            onClick={() => postComment()}
+                        >
+                            {t("comment")}
+                        </div>
+                    </form>
 
                     <a
-                        className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                        className="ml-0 sm:w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-4 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         onClick={toggleComments}
                     >
-                        {t("comment")}
+                        {showComments ? t("hideComments") : t("showComments")}
                     </a>
-
                     {showComments && (
                         <div className="comment-section">
-                            {Comments.map((comment) => (
-                                <article
+                            {comments.map((comment) => (
+                                <div
                                     key={comment.id}
                                     className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
                                 >
-                                    <footer className="flex justify-between items-center mb-2">
+                                    <div className="flex justify-between items-center mb-2">
                                         <div className="flex items-center">
                                             <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                                                 <img
                                                     className="mr-2 w-6 h-6 rounded-full"
-                                                    src={comment.user.avatar}
-                                                    alt={comment.user.username}
                                                 />
-                                                {comment.user.username}
+                                                {comment.userId}
                                             </p>
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                 <time dateTime="2022-02-08" title="February 8th, 2022">
-                                                    Feb. 8, 2022
+                                                    {comment.createdAt}
                                                 </time>
                                             </p>
                                         </div>
-                                        <div className="relative">
-                                            <button
-                                                id={`dropdownComment${comment.id}Button`}
-                                                data-dropdown-toggle={`dropdownComment${comment.id}`}
-                                                className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-400 bg-white rounded-xl hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                                                type="button"
-                                                onClick={toggleDropdown}
-                                            >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    aria-hidden="true"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                                                </svg>
-                                                <span className="sr-only">Comment settings</span>
-                                            </button>
-                                            <div
-                                                id={`dropdownComment${comment.id}`}
-                                                className={`${isDropdownOpen ? "" : "hidden"
-                                                    } absolute z-10 w-36 mt-1 bg-white rounded-xl divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 right-0`}
-                                            >
-                                                <ul
-                                                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                    aria-labelledby={`dropdownComment${comment.id}Button`}
-                                                >
-                                                    <li>
-                                                        <a
-                                                            href="#"
-                                                            className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                                        >
-                                                            Remove
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#"
-                                                            className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                                        >
-                                                            Report
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </footer>
+                                    </div>
                                     <p className="text-gray-500 dark:text-gray-400">
-                                        {comment.comment}
+                                        {comment.comments}
                                     </p>
                                     <div className="flex items-center mt-4 space-x-4">
                                         <button
                                             type="button"
                                             className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
-                                            onClick={toggleReply}
+                                            onClick={() => toggleReply(comment.id)}
                                         >
                                             <svg
                                                 aria-hidden="true"
@@ -221,19 +249,49 @@ const ViewPost = () => {
                                             </svg>
                                             Reply
                                         </button>
+                                        <button
+                                            type="button"
+                                            className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+                                            onClick={() => {
+                                                comment.showReplies = !comment.showReplies;
+                                                setComments([...comments])
+                                                if (comment.showReplies) {
+                                                    fetchComments(comment.id)
+                                                }
+                                            }}
+                                        >
+                                            <svg
+                                                aria-hidden="true"
+                                                className="mr-1 w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                                ></path>
+                                            </svg>
+                                            {!comment.showReplies ? `View ${comment.ChildrenCount} reply(s)` : "Hide replies"}
+                                        </button>
                                     </div>
-                                    {showReplyBox && (
+                                    {comment.showReplyBox && (
                                         <div className="mt-4">
                                             <textarea
                                                 className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300 dark:text-white dark:bg-gray-800"
                                                 rows="2"
                                                 placeholder="Write a reply..."
+                                                value={comment.newReply}
+                                                onChange={(event) => setReply(comment.id, event.target.value)}
                                             ></textarea>
                                             <button
                                                 className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
                                                 type="button"
                                                 onClick={() => {
-                                                    // Handle reply submission logic here
+                                                    postComment(comment.id)
                                                 }}
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
@@ -241,29 +299,32 @@ const ViewPost = () => {
                                             </button>
                                         </div>
                                     )}
-                                </article>
-                            ))}
-
-                            <form className="mb-6">
-                                <div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                    <label htmlFor="comment" className="sr-only">
-                                        Your comment
-                                    </label>
-                                    <textarea
-                                        id="comment"
-                                        rows="2"
-                                        className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                                        placeholder="Write a comment..."
-                                        required
-                                    ></textarea>
+                                    {comment.showReplies && comment.replies && comment.replies.map(reply => (
+                                        <div
+                                            key={reply.id}
+                                            className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
+                                        >
+                                            <div className="flex justify-between items-center mb-2">
+                                                <div className="flex items-center">
+                                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                        <img
+                                                            className="mr-2 w-6 h-6 rounded-full"
+                                                        />
+                                                        {reply.userId}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                        <time dateTime="2022-02-08" title="February 8th, 2022">
+                                                            {reply.createdAt}
+                                                        </time>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p className="text-gray-500 dark:text-gray-400">
+                                                {reply.comments}
+                                            </p>
+                                        </div>))}
                                 </div>
-                                <a
-                                    className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded-xl hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
-                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                >
-                                    Post comment
-                                </a>
-                            </form>
+                            ))}
                         </div>
                     )}
                 </div>

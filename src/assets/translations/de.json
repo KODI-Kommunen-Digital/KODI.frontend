@@ -452,5 +452,8 @@
     "comingSoon": "Demnächst",
     "createPost": "Posten erstellen",
     "groupMembers": "Gruppenmitglieder",
-    "comment": "Kommentar"
+    "comment": "Kommentar",
+    "writeComment": "Einen Kommentar schreiben...",
+    "showComments": "Kommentare anzeigen",
+    "hideComments": "Kommentare ausblenden"
 }

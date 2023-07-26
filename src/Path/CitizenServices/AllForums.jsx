@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
@@ -116,7 +116,7 @@ const AllForums = () => {
             setHasSentRequest(false)
         }
         if (checkIfMember(forum.id)) {
-            navigateTo(`Forum?/cities=${cityId}/forums=${forum.id}`);
+            navigateTo(`/Forum?cityId=${cityId}&forumId=${forum.id}`);
         }
     };
 
