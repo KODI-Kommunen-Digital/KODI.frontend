@@ -1,6 +1,6 @@
 import UAParser from "ua-parser-js";
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
+import { instance } from "../api/axiosInstance";
+const axios = instance
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
@@ -66,7 +66,7 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-  return axios.post(`/users/login`, credentials, {headers});
+	return axios.post(`/users/login`, credentials, { headers });
 }
 
 export async function logout(credentials) {
