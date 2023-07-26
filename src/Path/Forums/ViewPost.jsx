@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
-import POSTS from "../../assets/POSTS.png";
 import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import PropTypes from "prop-types";
 import { getForumPost } from "../../Services/forumsApi";
+import { getProfile } from "../../Services/usersApi";
 import { Comments } from "../../Constants/Comments";
 
 const Description = ({ content }) => {
@@ -20,22 +20,16 @@ const Description = ({ content }) => {
 };
 
 Description.propTypes = {
-    content: PropTypes.string.isRequired,
+    content: PropTypes.string
 };
 
 const ViewPost = () => {
     // window.scrollTo(0, 0);
     const { t } = useTranslation();
-    const [description, setDescription] = useState("");
     const [userSocial, setUserSocial] = useState([]);
-    const [user] = useState();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [forumPosts, setforumPosts] = useState([]);
-    const [, setForumId] = useState(0);
-    const [cityId, setCityId] = useState(0);
-    const [postId, setPostId] = useState(0);
+    const [user, setUser] = useState({});
+    const [forumPost, setForumPost] = useState({});
     const [createdAt, setCreatedAt] = useState("");
-    const [title, setTitle] = useState("");
     const [showComments, setShowComments] = useState(false);
     const [showReplyBox, setShowReplyBox] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -54,31 +48,21 @@ const ViewPost = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         const cityId = searchParams.get("cityId");
-        setCityId(cityId);
         const forumId = searchParams.get("forumId");
-        setForumId(forumId);
         const postId = searchParams.get("postId");
-        setPostId(postId);
         if (forumId && cityId && postId) {
-            const accessToken =
-                window.localStorage.getItem("accessToken") ||
-                window.sessionStorage.getItem("accessToken");
-            const refreshToken =
-                window.localStorage.getItem("refreshToken") ||
-                window.sessionStorage.getItem("refreshToken");
-            if (accessToken || refreshToken) {
-                setIsLoggedIn(true);
-            }
-
             getForumPost(cityId, forumId, postId)
                 .then((forumsResponse) => {
-                    const posts = forumsResponse.data.posts;
-                    if (posts.length > 0) {
-                        const forumPost = posts[0];
-                        console.log(forumPost);
-                        setforumPosts(forumPost);
-                        setDescription(forumPost.description);
-                        setTitle(forumPost.title);
+                    const forumPost = forumsResponse.data.data;
+                    console.log(forumPost)
+                    getProfile(forumPost.userId).then((userResponse) => {
+                        const user = userResponse.data.data;
+                        console.log(user)
+                        setUser(user);
+                        setUserSocial(user.socialMedia)
+                    })
+                    setForumPost(forumPost);
+                    if (forumPost.createdAt) {
                         setCreatedAt(
                             new Intl.DateTimeFormat("de-DE").format(
                                 Date.parse(forumPost.createdAt)
@@ -90,7 +74,7 @@ const ViewPost = () => {
                     console.error("Error fetching user forums post:", error);
                 });
         }
-    }, [t, cityId, window.location.href, isLoggedIn, postId]);
+    }, []);
 
     useEffect(() => {
         document.title = "View Post";
@@ -102,41 +86,6 @@ const ViewPost = () => {
             navigate(path);
         }
     };
-
-    const [, setUserName] = useState("");
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
-    const [, setProfilePic] = useState("");
-
-    useEffect(() => {
-        if (user) {
-            try {
-                const socialMedia = user.socialMedia
-                    ? JSON.parse(user.socialMedia)
-                    : {};
-                setUserSocial(socialMedia);
-                setUserName(user.userName);
-                setFirstname(user.firstname);
-                setLastname(user.lastname);
-                setProfilePic(user.image);
-            } catch (error) {
-                console.error("Error parsing user.socialMedia:", error);
-            }
-        }
-    }, [user]);
-
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
-    const [, setShowNavBar] = useState(true);
-
-    useEffect(() => {
-        if (terminalViewParam === "true") {
-            setShowNavBar(false);
-        } else {
-            setShowNavBar(true);
-        }
-    }, [terminalViewParam]);
 
     return (
         <section className="text-gray-600 bg-white body-font">
@@ -152,7 +101,7 @@ const ViewPost = () => {
                                     fontFamily: "Poppins, sans-serif",
                                 }}
                             >
-                                {title}
+                                {forumPost.title}
                             </span>
                         </h1>
                     </div>
@@ -165,8 +114,8 @@ const ViewPost = () => {
                                         alt="listing"
                                         className="object-cover object-center h-full w-full"
                                         src={
-                                            forumPosts.image
-                                                ? process.env.REACT_APP_BUCKET_HOST + forumPosts.image
+                                            forumPost.image
+                                                ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
                                                 : POSTSLOGO
                                         }
                                     />
@@ -175,7 +124,7 @@ const ViewPost = () => {
                         </div>
                     </div>
                     <div className="overflow-hidden mb-10">
-                        <Description content={description} />
+                        <Description content={forumPost.description} />
                     </div>
 
                     <a
@@ -364,7 +313,7 @@ const ViewPost = () => {
                                             fontFamily: "Poppins, sans-serif",
                                         }}
                                     >
-                                        {firstname + " " + lastname}
+                                        {user.firstname + " " + user.lastname}
                                     </h2>
                                     <p
                                         className="leading-relaxed text-base dark:text-gray-900"
@@ -529,7 +478,7 @@ const ViewPost = () => {
                                             fontFamily: "Poppins, sans-serif",
                                         }}
                                     >
-                                        {firstname + " " + lastname}
+                                        {user.firstname + " " + user.lastname}
                                     </h2>
                                     <p
                                         className="leading-relaxed text-base dark:text-gray-900"
@@ -545,11 +494,7 @@ const ViewPost = () => {
                             <div className="flex justify-center lg:mt-7 md:mt-7 mt-7">
                                 <button
                                     onClick={() => {
-                                        let url = `/ViewProfile?userId=${user.id}`;
-                                        if (terminalViewParam === "true") {
-                                            url += "&terminalView=true";
-                                        }
-                                        navigateTo(url);
+                                        navigateTo(`/ViewProfile?userId=${user.id}`);
                                     }}
                                     type="submit"
                                     className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-xl border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
@@ -561,113 +506,6 @@ const ViewPost = () => {
                                     {t("viewProfile")}
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            <div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-                <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-                    {t("similarItems")}
-                </h1>
-                {forumPosts && forumPosts.length > 0 ? (
-                    <div className="bg-white p-0 mt-10 mb-10 flex flex-wrap gap-10 justify-center">
-                        <div className="grid grid-1 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8">
-                            {forumPosts &&
-                                forumPosts.map((forum) => (
-                                    <div
-                                        key={forum.id}
-                                        onClick={() => {
-                                            let url = `/HomePage/EventDetails?listingId=${forum.id}&cityId=${forum.cityId}`;
-                                            if (terminalViewParam === "true") {
-                                                url += "&terminalView=true";
-                                            }
-                                            navigateTo(url);
-                                        }}
-                                        className="w-full h-full shadow-lg rounded-xl cursor-pointer"
-                                    >
-                                        <a className="block relative h-64 rounded-xl overflow-hidden">
-                                            <img
-                                                alt="ecommerce"
-                                                className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-                                                src={
-                                                    forumPosts.logo
-                                                        ? process.env.REACT_APP_BUCKET_HOST +
-                                                        forumPosts.logo
-                                                        : POSTS
-                                                }
-                                            />
-                                        </a>
-                                        <div className="mt-5 px-2">
-                                            <h2
-                                                className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                }}
-                                            >
-                                                {forum.title}
-                                            </h2>
-                                        </div>
-                                        <div className="my-4 bg-gray-200 h-[1px]"></div>
-                                        {forum.id && forum.categoryId === 3 ? (
-                                            <p
-                                                className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                }}
-                                            >
-                                                {new Date(
-                                                    forum.startDate.slice(0, 10)
-                                                ).toLocaleDateString("de-DE") +
-                                                    " To " +
-                                                    new Date(
-                                                        forum.endDate.slice(0, 10)
-                                                    ).toLocaleDateString("de-DE")}
-                                            </p>
-                                        ) : (
-                                            <p
-                                                className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                }}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: forum.description,
-                                                }}
-                                            />
-                                        )}
-                                    </div>
-                                ))}
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <div className="flex items-center justify-center">
-                            <h1
-                                className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("currently_no_listings")}
-                            </h1>
-                        </div>
-                        <div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-                            <span
-                                className="font-sans text-black"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("to_upload_new_listing")}
-                            </span>
-                            <a
-                                className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
-                                onClick={() => {
-                                    localStorage.setItem("selectedItem", "Choose one category");
-                                    isLoggedIn
-                                        ? navigateTo("/UploadListings")
-                                        : navigateTo("/login");
-                                }}
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("click_here")}
-                            </a>
                         </div>
                     </div>
                 )}

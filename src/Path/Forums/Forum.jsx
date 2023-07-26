@@ -106,7 +106,7 @@ const Forum = () => {
                                         <div
                                             key={index}
                                             onClick={() => {
-                                                navigateTo(`/Forum/ViewPost?id=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`)
+                                                navigateTo(`/Forum/ViewPost?postId=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`)
                                             }}
                                             className="w-full h-full shadow-lg rounded-lg cursor-pointer"
                                         >
