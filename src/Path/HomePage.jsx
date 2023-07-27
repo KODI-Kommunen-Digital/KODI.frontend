@@ -17,6 +17,7 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
+	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
@@ -34,7 +35,7 @@ const HomePage = () => {
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
-		const cityId = parseInt(urlParams.get("cityId"))
+		const cityId = parseInt(urlParams.get("cityId"));
 		if (cityId) {
 			setCityId(cityId);
 		}
@@ -85,9 +86,7 @@ const HomePage = () => {
 	};
 	const onCityChange = (e) => {
 		const selectedCityId = e.target.value;
-		const urlParams = new URLSearchParams(
-			window.location.search
-		);
+		const urlParams = new URLSearchParams(window.location.search);
 		const selectedCity = cities.find(
 			(city) => city.id.toString() === selectedCityId
 		);
@@ -99,7 +98,7 @@ const HomePage = () => {
 			urlParams.delete("cityId");
 			setCityId(0);
 		}
-	}
+	};
 
 	function goToAllListingsPage(category) {
 		let navUrl = `/AllEvents?categoryId=${category}`;
