@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
+import { instance } from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
+const axios = instance;
 
 export async function getAllListings() {
 	return axios.get(`/listings`);
