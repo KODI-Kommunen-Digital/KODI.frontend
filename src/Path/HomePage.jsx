@@ -17,22 +17,30 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
+		const hasAcceptedPrivacyPolicy = localStorage.getItem(
+			"privacyPolicyAccepted"
+		);
+
+		if (!hasAcceptedPrivacyPolicy) {
+			setShowPopup(true);
+		}
 		const urlParams = new URLSearchParams(window.location.search);
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 		});
-
-		setCityId(urlParams.get("cityId") || 0);
+		const cityId = parseInt(urlParams.get("cityId"))
+		if (cityId) {
+			setCityId(cityId);
+		}
 
 		getListings({
-			cityId: urlParams.get("cityId"),
+			cityId,
 			statusId: 1,
 			pageNo: 1,
 			pageSize: 8,
@@ -75,6 +83,23 @@ const HomePage = () => {
 			navigate(path);
 		}
 	};
+	const onCityChange = (e) => {
+		const selectedCityId = e.target.value;
+		const urlParams = new URLSearchParams(
+			window.location.search
+		);
+		const selectedCity = cities.find(
+			(city) => city.id.toString() === selectedCityId
+		);
+		if (selectedCity) {
+			localStorage.setItem("selectedCity", selectedCity.name);
+			window.location.href = `?cityId=${selectedCityId}`;
+		} else {
+			localStorage.setItem("selectedCity", t("allCities"));
+			urlParams.delete("cityId");
+			setCityId(0);
+		}
+	}
 
 	function goToAllListingsPage(category) {
 		let navUrl = `/AllEvents?categoryId=${category}`;
@@ -90,16 +115,6 @@ const HomePage = () => {
 	}
 
 	const [showPopup, setShowPopup] = useState(false);
-
-	useEffect(() => {
-		const hasAcceptedPrivacyPolicy = localStorage.getItem(
-			"privacyPolicyAccepted"
-		);
-
-		if (!hasAcceptedPrivacyPolicy) {
-			setShowPopup(true);
-		}
-	}, []);
 
 	const handlePrivacyPolicyAccept = () => {
 		localStorage.setItem("privacyPolicyAccepted", "true");
@@ -133,23 +148,7 @@ const HomePage = () => {
 										id="city"
 										name="city"
 										autoComplete="city-name"
-										onChange={(e) => {
-											const selectedCityId = e.target.value;
-											const urlParams = new URLSearchParams(
-												window.location.search
-											);
-											const selectedCity = cities.find(
-												(city) => city.id.toString() === selectedCityId
-											);
-											if (selectedCity) {
-												localStorage.setItem("selectedCity", selectedCity.name);
-												window.location.href = `/?cityId=${selectedCityId}`;
-											} else {
-												localStorage.setItem("selectedCity", t("allCities"));
-												urlParams.delete("cityId");
-												setCityId(0);
-											}
-										}}
+										onChange={onCityChange}
 										value={cityId || 0}
 										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										style={{
