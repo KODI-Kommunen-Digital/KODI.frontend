@@ -32,7 +32,7 @@ class ProfilePage extends React.Component {
 			formValid: true,
 			pageLoading: true,
 			updatingProfile: false,
-
+			profileImage: null,
 			currentFile: null,
 			val: [{ selected: "", socialMedia: "" }],
 			data: {
@@ -304,7 +304,7 @@ class ProfilePage extends React.Component {
 		form.append("image", selectedFile);
 		uploadProfilePic(form)
 			.then((res) => {
-				const profileImage = res.data.path;
+				const profileImage = res.data.image;
 				this.setState({
 					currentFile: selectedFile,
 					profile: { ...this.state.profile, image: profileImage },
@@ -317,14 +317,14 @@ class ProfilePage extends React.Component {
 	}
 
 	handleRemoveImage() {
-		// Call the deleteProfilePic function to remove the image from the server
+		// deleteProfilePic function to remove the image from the server
 		deleteProfilePic()
 			.then(() => {
-				// On successful removal, reset the currentFile and profile image to PROFILEIMAGE
+				// On successful removal, reset the currentFile,profileImage and  image to PROFILEIMAGE
 				this.setState({
-					currentFile: null, // Clear the currentFile for image preview
-					image: null, // Reset the profileImage state to default PROFILEIMAGE
-					profileImage: PROFILEIMAGE,
+					currentFile: null,
+					image: PROFILEIMAGE,
+					profileImage: null,
 				});
 			})
 			.catch((error) => {
@@ -335,7 +335,7 @@ class ProfilePage extends React.Component {
 
 	render() {
 		const { t } = this.props;
-		const { profileImage, currentFile } = this.state;
+		const { profileImage, currentFile, profile } = this.state;
 
 		return (
 			<div className="bg-slate-600">
@@ -486,23 +486,24 @@ class ProfilePage extends React.Component {
 											</label>
 											<div className="py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 space-y-2 sm:space-y-0">
 												<div className="flex flex-col justify-center items-start">
-													{currentFile ? (
+													{currentFile instanceof File || currentFile instanceof Blob ? (
 														<img
 															className="rounded-full h-20 w-20"
 															src={URL.createObjectURL(currentFile)}
-															alt="Profile Preview"
+															alt="currentImage Preview"
 														/>
-													) : profileImage ? (
+													) : profileImage || profile.image && !profileImage == null || !profile.image == null ? (
 														<img
 															className="rounded-full h-20 w-20"
 															src={process.env.REACT_APP_BUCKET_HOST + profileImage}
-															alt="Profile"
+															alt="ProfileImage"
 														/>
-													) : (<img
-														className="rounded-full h-20 w-20"
-														src={PROFILEIMAGE}
-														alt="Profile"
-													/>
+													) : (
+														<img
+															className="rounded-full h-20 w-20"
+															src={PROFILEIMAGE}
+															alt="PROFILEIMAGE"
+														/>
 													)}
 												</div>
 
