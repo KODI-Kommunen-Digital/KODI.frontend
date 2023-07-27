@@ -50,6 +50,7 @@
     "createAnAccountDescription": "Erstelle ein Konto, um die volle Funktionsvielfalt nutzen zu können",
     "currently_no_listings": "Derzeit gibt es keine anzuzeigenden Einträge !",
     "currently_no_services": "Derzeit können keine Bürgerdienste angezeigt werden",
+    "currently_no_posts": "Derzeit sind keine Beiträge zu sehen!",
     "dashboard": "Dashboard",
     "data_protection": "Datenschutzerklärung",
     "date": "Datum",
@@ -222,6 +223,7 @@
     "time": "Zeit",
     "title": "Titel",
     "to_upload_new_listing": "Um einen neuen Eintrag hochzuladen, ",
+    "to_upload_new_post": "Um einen neuen Beitrag hochzuladen, ",
     "tod": "Die aktuellsten News",
     "unfavorite": "Aus Favoriten entfernen",
     "updatePassword": "Passwort aktualisieren",
@@ -455,5 +457,7 @@
     "reportedPosts": "Gemeldete Beiträge",
     "show": "anzeigen",
     "hide": "verbergen",
-    "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut"
+    "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut",
+    "createPost": "Posten erstellen",
+    "groupMembers": "Gruppenmitglieder"
 }

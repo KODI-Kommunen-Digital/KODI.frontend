@@ -67,11 +67,7 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-	return axios.post(
-		process.env.REACT_APP_API_BASE_URL + `/users/login`,
-		credentials,
-		{ headers }
-	);
+	return axios.post(`/users/login`, credentials, { headers });
 }
 
 export async function logout(credentials) {
