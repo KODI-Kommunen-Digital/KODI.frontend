@@ -115,8 +115,8 @@ const Dashboard = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		listing: null,
-		onConfirm: () => { },
-		onCancel: () => { },
+		onConfirm: () => {},
+		onCancel: () => {},
 	});
 
 	function handleDelete(listing) {
@@ -504,10 +504,10 @@ const Dashboard = () => {
 							</tbody>
 						</table>
 					</div>
-					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
+					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
 						{pageNo !== 1 ? (
 							<span
-								className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
 								onClick={() => setPageNo(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
@@ -517,7 +517,7 @@ const Dashboard = () => {
 							<span />
 						)}
 						<span
-							className="text-lg px-3"
+							className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("page")} {pageNo}
@@ -525,7 +525,7 @@ const Dashboard = () => {
 
 						{listings.length >= 9 && (
 							<span
-								className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
 								onClick={() => setPageNo(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
