@@ -12,14 +12,12 @@ import {
 } from "../Services/forumsApi";
 
 import { getCities } from "../Services/cities";
-import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 
 function CreateGroup() {
 	const { t } = useTranslation();
 	const editor = useRef(null);
-	const [listingId, setListingId] = useState(0);
 	const [newListing, setNewListing] = useState(true);
 	const [updating, setUpdating] = useState(false);
 
@@ -40,7 +38,6 @@ function CreateGroup() {
 	};
 
 	const [initialLoad, setInitialLoad] = useState(true);
-	const [pdf, setPdf] = useState(null);
 
 	useEffect(() => {
 		if (initialLoad) {
@@ -66,30 +63,11 @@ function CreateGroup() {
 						console.error("Image upload error:", error);
 					}
 				}
-
-				if (pdf !== null) {
-					const form = new FormData();
-					form.append("pdf", pdf);
-					try {
-						const filePath = await uploadPDF(form);
-						console.log(filePath.data);
-						if (filePath?.data?.status === "success") {
-							setInput((prevInput) => ({
-								...prevInput,
-								pdf: filePath?.data?.path || null,
-							}));
-						} else {
-							console.error("PDF upload failed:", filePath?.data?.message);
-						}
-					} catch (error) {
-						console.error("PDF upload error:", error);
-					}
-				}
 			};
 
 			updateInputState();
 		}
-	}, [initialLoad, image1, pdf]);
+	}, [initialLoad, image1]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -132,7 +110,6 @@ function CreateGroup() {
 	}
 
 	//Sending data to backend starts
-	const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
 	const [input, setInput] = useState({
 		title: "",
 		description: "",
@@ -207,10 +184,8 @@ function CreateGroup() {
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
 		if (listingId && cityId) {
 			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getForumsById(cityId, listingId).then((listingsResponse) => {
 				let listingData = listingsResponse.data.data;
 				if (listingData.startDate)
@@ -332,16 +307,15 @@ function CreateGroup() {
 		});
 	}, []);
 
-	useEffect(() => {
-		setInput((prevState) => ({
-			...prevState,
-			selected: val.map((item) => item.selected),
-		}));
-	}, [val]);
+	// useEffect(() => {
+	// 	setInput((prevState) => ({
+	// 		...prevState,
+	// 		selected: val.map((item) => item.selected),
+	// 	}));
+	// }, [val]);
 
 	//Social Media ends
 	const [cityId, setCityId] = useState(0);
-	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
 	async function onCityChange(e) {
 		const cityId = e.target.value;
@@ -351,8 +325,6 @@ function CreateGroup() {
 			cityId: cityId,
 			villageId: 0,
 		}));
-		if (parseInt(cityId))
-			getVillages(cityId).then((response) => setVillages(response.data.data));
 		validateInput(e);
 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -442,17 +414,11 @@ function CreateGroup() {
 							<div className="relative">
 								<div
 									className={`w-10 h-6 rounded-full shadow-inner 
-										${input.visibility === "private"
-											? "bg-blue-500"
-											: "bg-gray-300"
-										}`}
+										${input.visibility === "private" ? "bg-blue-500" : "bg-gray-300"}`}
 								></div>
 								<div
 									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
-										${input.visibility === "private"
-											? "translate-x-full"
-											: "translate-x-0"
-										}`}
+										${input.visibility === "private" ? "translate-x-full" : "translate-x-0"}`}
 								></div>
 								<input
 									type="checkbox"

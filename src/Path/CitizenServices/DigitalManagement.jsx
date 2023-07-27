@@ -13,7 +13,7 @@ const DigitalManagement = () => {
     const [citiesArray, setCitiesArray] = useState([]);
     const [isLoggedIn] = useState(false);
     const [cityId, setCityId] = useState(null);
-    const [pageNo] = useState(1);
+    const pageNo = 1;
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -45,28 +45,10 @@ const DigitalManagement = () => {
         window.history.replaceState({}, "", newUrl);
         getCitizenServices(params).then((response) => {
             setcitizenServiceData(response.data.data);
-        });
-    }, [cityId, pageNo]);
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cityId = urlParams.get("cityId");
-        if (parseInt(cityId)) {
-            urlParams.set("cityId", cityId);
-        } else {
-            urlParams.delete("cityId");
-        }
-    }, []);
-
-    useEffect(() => {
-        const params = {};
-        if (cityId !== 0) {
-            params.cityId = cityId;
-        }
-        getCitizenServices(params).then((response) => {
-            setcitizenServiceData(response.data.data);
+            if (cityId) { window.location.replace(response.data.data[0].link); }
         });
     }, [cityId]);
+
 
     return (
         <section className="text-gray-600 bg-white body-font">
