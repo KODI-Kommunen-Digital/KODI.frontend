@@ -26,6 +26,7 @@ const CitizenService = () => {
     const [citiesArray, setCitiesArray] = useState([]);
     const [isLoggedIn] = useState(false);
     const [cityId, setCityId] = useState(null);
+    // const [citizenServices, setcitizenServices] = useState([]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -48,6 +49,14 @@ const CitizenService = () => {
             if (cityIdParam) setCityId(cityIdParam);
         });
     }, []);
+
+    // useEffect(() => {
+    //     if (cityId) {
+    //         getCitizenServices({ cityId }).then((response) => {
+    //             setcitizenServices(response.data.data);
+    //         });
+    //     }
+    // }, [cityId]);
 
     return (
         <section className="text-gray-600 bg-white body-font">
@@ -109,7 +118,7 @@ const CitizenService = () => {
                                         <a
                                             rel="noreferrer noopener"
                                             onClick={() => {
-                                                navigateTo(data.link);
+                                                navigateTo(data.link + `?cityId=${cityId}`);
                                             }}>
                                             <img
                                                 alt={data.title}

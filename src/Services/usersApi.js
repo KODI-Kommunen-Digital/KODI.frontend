@@ -1,6 +1,6 @@
+import axiosInstance from "../api/axiosInstance";
+import axios from "axios";
 import UAParser from "ua-parser-js";
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
@@ -28,53 +28,57 @@ export function getUserId() {
 }
 
 export async function getProfileByIds(ids) {
-	return axios.get(`/users?id=${ids}`);
+	return axiosInstance.get(`/users?id=${ids}`);
 }
 
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();
-	return axios.get(`/users/${userId}`, { params });
+	return axiosInstance.get(`/users/${userId}`, { params });
 }
 
 export async function updateProfile(newProfileObj) {
-	return axios.patch(`/users/${getUserId()}`, newProfileObj);
+	return axiosInstance.patch(`/users/${getUserId()}`, newProfileObj);
 }
 
 export async function getUserListings(params = {}, userId) {
 	if (!userId) userId = getUserId();
-	return axios.get(`/users/${userId}/listings`, { params });
+	return axiosInstance.get(`/users/${userId}/listings`, { params });
 }
 
 export async function deleteAccount() {
-	return axios.delete(`/users/${getUserId()}`);
+	return axiosInstance.delete(`/users/${getUserId()}`);
 }
 
 export async function resetPass(credentials) {
-	return axios.post(`/users/forgotPassword`, credentials);
+	return axiosInstance.post(`/users/forgotPassword`, credentials);
 }
 
 export async function updatePassword(credentials) {
-	return axios.post(`/users/resetPassword`, credentials);
+	return axiosInstance.post(`/users/resetPassword`, credentials);
 }
 
 export async function register(credentials) {
-	return axios.post(`/users/register`, credentials);
+	return axiosInstance.post(`/users/register`, credentials);
 }
 
 export async function verifyEmail(credentials) {
-	return axios.post(`/users/VerifyEmail`, credentials);
+	return axiosInstance.post(`/users/VerifyEmail`, credentials);
 }
 
 export async function login(credentials) {
-  return axios.post(`/users/login`, credentials, {headers});
+	return axios.post(
+		process.env.REACT_APP_API_BASE_URL + `/users/login`,
+		credentials,
+		{ headers }
+	);
 }
 
 export async function logout(credentials) {
-	return axios.post(`users/${getUserId()}/logout`, credentials);
+	return axiosInstance.post(`users/${getUserId()}/logout`, credentials);
 }
 
 export async function uploadProfilePic(formData) {
-	return axios.post(`/users/${getUserId()}/imageUpload`, formData, {
+	return axiosInstance.post(`/users/${getUserId()}/imageUpload`, formData, {
 		headers: {
 			"Content-Type": "multipart/form-data",
 		},
@@ -82,20 +86,19 @@ export async function uploadProfilePic(formData) {
 }
 
 export async function deleteProfilePic() {
-	return axios.delete(`/users/${getUserId()}/imageDelete`);
+	return axiosInstance.delete(`/users/${getUserId()}/imageDelete`);
 }
 
 export async function fetchDeviceList(params) {
-	console.log(params);
-	return axios.post(`/users/${getUserId()}/loginDevices`, {
+	return axiosInstance.post(`/users/${getUserId()}/loginDevices`, {
 		refreshToken: params,
 	});
 }
 
 export async function logoutOfAllDevices() {
-	return axios.delete(`/users/${getUserId()}/loginDevices`);
+	return axiosInstance.delete(`/users/${getUserId()}/loginDevices`);
 }
 
 export async function logoutOfOneDevice(id) {
-	return axios.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
+	return axiosInstance.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }

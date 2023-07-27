@@ -1,10 +1,13 @@
-import getInstance from "../api/axiosInstance";
-const axios = getInstance(process.env.REACT_APP_API_BASE_URL)
+import axios from "axios";
+
+const instance = axios.create({
+	baseURL: process.env.REACT_APP_API_BASE_URL,
+});
 
 export async function getCities(params) {
-	return axios.get(`/cities`, { params });
+	return instance.get(`/cities`, { params });
 }
 
 export async function getCitizenServices(params) {
-	return axios.get("/citizenServices", { params });
+	return instance.get("/citizenServices", { params });
 }
