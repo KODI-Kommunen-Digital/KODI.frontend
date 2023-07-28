@@ -13,7 +13,7 @@ const CitizenService = () => {
     const [citizenServiceData] = useState([
         {
             title: "forums",
-            link: "Forums",
+            link: "AllForums",
             image: "admin/Forums.jpg"
         },
         {

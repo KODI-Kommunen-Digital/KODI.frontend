@@ -6,11 +6,19 @@ export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);
 }
 
-export async function getUserForumsPost(cityId, forumsId) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/post`);
+export async function getForumPost(cityId, forumsId, postId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/postforums/${postId}`);
 }
 
-export async function getUserForumsMembers(cityId, forumsId) {
+export async function getForumPosts(cityId, forumsId, params) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/post`, { params });
+}
+
+export async function getForum(cityId, forumsId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}`);
+}
+
+export async function getForumMembers(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/members`);
 }
 

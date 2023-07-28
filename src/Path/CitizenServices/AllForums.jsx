@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'; // Make sure you have the correct import statement
+import { useNavigate } from 'react-router-dom';
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import { getAllForums, getUserForums, forumMemberRequests } from "../../Services
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 
-const Forums = () => {
+const AllForums = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [cityId, setCityId] = useState(1);
@@ -129,7 +129,7 @@ const Forums = () => {
         );
         if (selectedCity) {
             localStorage.setItem("selectedCity", selectedCity.name);
-            setCityId(parseInt(selectedCityId)); // Update the cityId state with the selected city ID
+            setCityId(parseInt(selectedCityId));
         } else {
             localStorage.setItem("selectedCity", t("allCities"));
             urlParams.delete("cityId");
@@ -367,4 +367,4 @@ const Forums = () => {
     );
 };
 
-export default Forums;
+export default AllForums;
