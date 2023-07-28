@@ -559,7 +559,7 @@ const EventDetails = () => {
 						</div>
 					</div>
 				) : (
-					<div className="w-full h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full h-80 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div className="flex justify-between">
 								<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
