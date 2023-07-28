@@ -89,13 +89,14 @@ const Forums = () => {
             console.error('Error fetching forum member requests:', error);
         }
     };
-    const navigateTo = (path) => {
-        if (path) {
-            navigate(path);
+    const navigateTo = (cityId, forumId) => {
+        if (cityId && forumId) {
+            navigate(`/Forum?cities=${cityId}/forums=${forumId}`);
         }
     };
 
-    const handleClick = async (cityId, forum) => {
+    const handleClick = async (e, cityId, forum) => {
+        e.preventDefault()
         if (!forum || forum.isPrivate === undefined) {
             // Invalid forum object or isPrivate property is missing
             console.error('Invalid forum object or missing isPrivate property');
@@ -116,28 +117,25 @@ const Forums = () => {
             setHasSentRequest(false)
         }
         if (checkIfMember(forum.id)) {
-            navigateTo(`Forum?/cities=${cityId}/forums=${forum.id}`);
+            navigateTo(cityId, forum.id); // Use navigateTo with cityId and forum.id as parameters
         }
     };
 
     const handleChange = (e) => {
         const selectedCityId = e.target.value;
-        const urlParams = new URLSearchParams(
-            window.location.search
-        );
+        const urlParams = new URLSearchParams(window.location.search);
         const selectedCity = cities.find(
             (city) => city.id.toString() === selectedCityId
         );
         if (selectedCity) {
             localStorage.setItem("selectedCity", selectedCity.name);
-            window.location.href = `/?cityId=${selectedCityId}`;
+            setCityId(parseInt(selectedCityId)); // Update the cityId state with the selected city ID
         } else {
             localStorage.setItem("selectedCity", t("allCities"));
             urlParams.delete("cityId");
             setCityId(0);
         }
     }
-
 
     return (
         <section className="text-gray-600 body-font relative">
@@ -217,7 +215,7 @@ const Forums = () => {
                             <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
                                 {forums &&
                                     forums.map((forum) => (
-                                        <div key={forum.id} onClick={() => handleClick(cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
+                                        <div key={forum.id} onClick={(e) => handleClick(e, cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
                                             <a className="block relative h-64 rounded overflow-hidden">
                                                 {checkIfMember(forum.id) ? (
                                                     <>
@@ -370,4 +368,3 @@ const Forums = () => {
 };
 
 export default Forums;
-
