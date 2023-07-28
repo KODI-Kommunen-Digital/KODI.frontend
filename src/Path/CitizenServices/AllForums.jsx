@@ -89,10 +89,8 @@ const AllForums = () => {
             console.error('Error fetching forum member requests:', error);
         }
     };
-    const navigateTo = (cityId, forumId) => {
-        if (cityId && forumId) {
-            navigate(`/Forum?cities=${cityId}/forums=${forumId}`);
-        }
+    const navigateTo = (path) => {
+        navigate(path);
     };
 
     const handleClick = async (e, cityId, forum) => {
@@ -116,8 +114,9 @@ const AllForums = () => {
         } else {
             setHasSentRequest(false)
         }
-        if (checkIfMember(forum.id)) {
-            navigateTo(cityId, forum.id); // Use navigateTo with cityId and forum.id as parameters
+        if (checkIfMember(forum.id) && cityId && forum.id) {
+            const path = `/Forum?cities=${cityId}/forums=${forum.id}`
+            navigateTo(path);
         }
     };
 
