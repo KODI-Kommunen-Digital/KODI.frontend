@@ -66,10 +66,7 @@ function UploadListings() {
 								pdf: filePath?.data?.path || null,
 							}));
 						} else {
-							console.error(
-								"PDF upload failed:",
-								filePath?.data?.message
-							);
+							console.error("PDF upload failed:", filePath?.data?.message);
 						}
 					} catch (error) {
 						console.error("PDF upload error:", error);
@@ -211,7 +208,9 @@ function UploadListings() {
 				}
 				var userProfile = await getProfile(userId);
 				var isAdmin = userProfile.data.data.roleId === 1 ? "true" : "false";
-				isAdmin ? setSuccessMessage(t("listingUpdatedAdmin")) : setSuccessMessage(t("listingUpdated"));
+				isAdmin
+					? setSuccessMessage(t("listingUpdatedAdmin"))
+					: setSuccessMessage(t("listingUpdated"));
 				setErrorMessage(false);
 				setTimeout(() => {
 					setSuccessMessage(false);
@@ -247,9 +246,7 @@ function UploadListings() {
 		setListingId(listingId);
 		if (listingId && cityId) {
 			setNewListing(false);
-			getVillages(cityId).then((response) =>
-				setVillages(response.data.data)
-			);
+			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				let listingData = listingsResponse.data.data;
 				if (listingData.startDate)
@@ -307,9 +304,7 @@ function UploadListings() {
 		if (hasNumberedList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
-			descriptions = matches.map((match) =>
-				match.replace(/<\/?li>/gi, "")
-			);
+			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
 			descriptions = descriptions.map(
 				(description, index) => `${index + 1}. ${description}`
 			);
@@ -317,12 +312,8 @@ function UploadListings() {
 		} else if (hasBulletList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
-			descriptions = matches.map((match) =>
-				match.replace(/<\/?li>/gi, "")
-			);
-			descriptions = descriptions.map(
-				(description) => `- ${description}`
-			);
+			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
 		} else {
 			// No list tags found, treat the input as plain text
@@ -369,10 +360,7 @@ function UploadListings() {
 				}
 
 			case "subCategoryId":
-				if (
-					!value &&
-					parseInt(input.categoryId) == categoryByName.news
-				) {
+				if (!value && parseInt(input.categoryId) == categoryByName.news) {
 					return t("pleaseSelectSubcategory");
 				} else {
 					return "";
@@ -386,10 +374,7 @@ function UploadListings() {
 				}
 
 			case "startDate":
-				if (
-					!value &&
-					parseInt(input.categoryId) == categoryByName.events
-				) {
+				if (!value && parseInt(input.categoryId) == categoryByName.events) {
 					return t("pleaseEnterStartDate");
 				} else {
 					return "";
@@ -511,9 +496,7 @@ function UploadListings() {
 			villageId: 0,
 		}));
 		if (parseInt(cityId))
-			getVillages(cityId).then((response) =>
-				setVillages(response.data.data)
-			);
+			getVillages(cityId).then((response) => setVillages(response.data.data));
 		validateInput(e);
 	}
 	const [categoryId, setCategoryId] = useState(0);
@@ -613,9 +596,7 @@ function UploadListings() {
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
-								<option value={Number(city.id)}>
-									{city.name}
-								</option>
+								<option value={Number(city.id)}>{city.name}</option>
 							))}
 						</select>
 						<div
@@ -648,9 +629,7 @@ function UploadListings() {
 							>
 								<option value={0}>{t("select")}</option>
 								{villages.map((village) => (
-									<option value={Number(village.id)}>
-										{village.name}
-									</option>
+									<option value={Number(village.id)}>{village.name}</option>
 								))}
 							</select>
 						</div>
@@ -680,11 +659,7 @@ function UploadListings() {
 							</option>
 							{Object.keys(categories).map((key) => {
 								return (
-									<option
-										className="font-sans"
-										value={key}
-										key={key}
-									>
+									<option className="font-sans" value={key} key={key}>
 										{t(categories[key])}
 									</option>
 								);
@@ -693,9 +668,7 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.categoryId
-									? "visible"
-									: "hidden",
+								visibility: error.categoryId ? "visible" : "hidden",
 							}}
 						>
 							{error.categoryId}
@@ -725,11 +698,7 @@ function UploadListings() {
 								</option>
 								{Object.keys(subCategories).map((key) => {
 									return (
-										<option
-											className="font-sans"
-											value={key}
-											key={key}
-										>
+										<option className="font-sans" value={key} key={key}>
 											{t(subCategories[key])}
 										</option>
 									);
@@ -738,9 +707,7 @@ function UploadListings() {
 							<div
 								className="h-[24px] text-red-600"
 								style={{
-									visibility: error.subcategoryId
-										? "visible"
-										: "hidden",
+									visibility: error.subcategoryId ? "visible" : "hidden",
 								}}
 							>
 								{error.selectedSubCategory}
@@ -810,9 +777,7 @@ function UploadListings() {
 								{results.map((result) => (
 									<li
 										key={result.place_id}
-										onClick={() =>
-											handleResultSelect(result)
-										}
+										onClick={() => handleResultSelect(result)}
 									>
 										{result.display_name}
 									</li>
@@ -870,9 +835,7 @@ function UploadListings() {
 									<div
 										className="h-[24px] text-red-600"
 										style={{
-											visibility: error.startDate
-												? "visible"
-												: "hidden",
+											visibility: error.startDate ? "visible" : "hidden",
 										}}
 									>
 										{error.startDate}
@@ -908,9 +871,7 @@ function UploadListings() {
 									<div
 										className="h-[24px] text-red-600"
 										style={{
-											visibility: error.endDate
-												? "visible"
-												: "hidden",
+											visibility: error.endDate ? "visible" : "hidden",
 										}}
 									>
 										{error.endDate}
@@ -922,47 +883,47 @@ function UploadListings() {
 
 					{(categoryId == categoryByName.offers ||
 						categoryId == categoryByName.regionalProducts) && (
-							<div className="relative mb-4 grid grid-cols-2 gap-4">
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("originalPrice")}
-									</label>
-									<input
-										type="text"
-										id="originalPrice"
-										name="originalPrice"
-										value={input.originalPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("discountedPrice")}
-									</label>
-									<input
-										type="text"
-										id="discountedPrice"
-										name="discountedPrice"
-										value={input.discountedPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
+						<div className="relative mb-4 grid grid-cols-2 gap-4">
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("originalPrice")}
+								</label>
+								<input
+									type="text"
+									id="originalPrice"
+									name="originalPrice"
+									value={input.originalPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
 							</div>
-						)}
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("discountedPrice")}
+								</label>
+								<input
+									type="text"
+									id="discountedPrice"
+									name="discountedPrice"
+									value={input.discountedPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
+							</div>
+						</div>
+					)}
 
 					<div className="relative mb-4">
 						<label
@@ -1016,16 +977,12 @@ function UploadListings() {
 							name="description"
 							ref={editor}
 							value={description}
-							onChange={(newContent) =>
-								onDescriptionChange(newContent)
-							}
+							onChange={(newContent) => onDescriptionChange(newContent)}
 							onBlur={(range, source, editor) => {
 								validateInput({
 									target: {
 										name: "description",
-										value: editor
-											.getHTML()
-											.replace(/(<br>|<\/?p>)/gi, ""),
+										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
 									},
 								});
 							}}
@@ -1035,9 +992,7 @@ function UploadListings() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.description
-									? "visible"
-									: "hidden",
+								visibility: error.description ? "visible" : "hidden",
 							}}
 						>
 							{error.description}
@@ -1071,12 +1026,8 @@ function UploadListings() {
 											className="object-contain h-64 w-full mb-4"
 											src={
 												image1
-													? URL.createObjectURL(
-														image1
-													)
-													: process.env
-														.REACT_APP_BUCKET_HOST +
-													input.logo
+													? URL.createObjectURL(image1)
+													: process.env.REACT_APP_BUCKET_HOST + input.logo
 											}
 											alt="uploaded"
 										/>
@@ -1106,9 +1057,7 @@ function UploadListings() {
 										</p>
 										<div className="relative mb-4 mt-8">
 											<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
-												<span className="button-label">
-													{t("upload")}
-												</span>
+												<span className="button-label">{t("upload")}</span>
 												<input
 													id="image1-upload"
 													type="file"
@@ -1219,9 +1168,7 @@ function UploadListings() {
 						{successMessage && (
 							<Alert type={"success"} message={successMessage} />
 						)}
-						{errorMessage && (
-							<Alert type={"danger"} message={errorMessage} />
-						)}
+						{errorMessage && <Alert type={"danger"} message={errorMessage} />}
 					</div>
 				</div>
 			</div>

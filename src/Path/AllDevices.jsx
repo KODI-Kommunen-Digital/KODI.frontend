@@ -73,8 +73,8 @@ const AllDevices = () => {
 
     const [showConfirmationModal, setShowConfirmationModal] = useState({
         visible: false,
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
     });
 
     function logoutAccountOnClick() {
