@@ -453,7 +453,10 @@
     "createPost": "Posten erstellen",
     "groupMembers": "Gruppenmitglieder",
     "comment": "Kommentar",
+    "reply": "Antwort",
     "writeComment": "Einen Kommentar schreiben...",
     "showComments": "Kommentare anzeigen",
-    "hideComments": "Kommentare ausblenden"
+    "hideComments": "Kommentare ausblenden",
+    "showMoreComments": "Weitere Kommentare anzeigen",
+    "showMoreReplies": "Weitere Antworten anzeigen"
 }

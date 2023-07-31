@@ -141,8 +141,9 @@ const MyGroups = () => {
 												/>
 												<div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
 													<div
-														className="font-normal text-gray-500 truncate"
+														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
 														style={{ fontFamily: "Poppins, sans-serif" }}
+														onClick={() => navigateTo(`/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`)}
 													>
 														{forum.forumName}
 													</div>

@@ -451,7 +451,10 @@
     "createPost": "Create Post",
     "groupMembers": "Group Members",
     "comment": "Comment",
+    "reply": "Reply",
     "writeComment": "Write a comment...",
     "showComments": "Show comments",
-    "hideComments": "Hide comments"
+    "hideComments": "Hide comments",
+    "showMoreComments": "Show more comments",
+    "showMoreReplies": "Show more replies"
 }

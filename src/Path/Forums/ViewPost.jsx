@@ -7,6 +7,7 @@ import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 import PropTypes from "prop-types";
 import { getForumPost, createComment, getComments } from "../../Services/forumsApi";
 import { getProfile } from "../../Services/usersApi";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 
 const Description = ({ content }) => {
     return (
@@ -31,10 +32,11 @@ const ViewPost = () => {
     const [postId, setPostId] = useState(null);
     const [createdAt, setCreatedAt] = useState("");
     const [showComments, setShowComments] = useState(false);
+    const [showMoreComments, setShowMoreComments] = useState(true);
     const [newComment, setNewComment] = useState("");
     const [comments, setComments] = useState([]);
-    const [pageNo,] = useState(1);
-    const pageSize = 2;
+    const [pageNo, setPageNo] = useState(1);
+    const pageSize = 5;
 
     const toggleComments = () => {
         if (!showComments) {
@@ -61,10 +63,13 @@ const ViewPost = () => {
             if (comment.newReply) {
                 const commentData = { comment: comment.newReply, parentId }
                 createComment(cityId, forumId, postId, commentData).then((response) => {
+                    const commentResonse = response.data.data;
+                    comment.childrenCount += 1;
+                    comment.showReplies = true;
                     if (comment.replies) {
-                        comment.replies.unshift(response.data.data)
+                        comment.replies.unshift(commentResonse)
                     } else {
-                        comment.replies = [response.data.data];
+                        comment.replies = [commentResonse];
                     }
                     setComments([...comments]);
                     comment.newReply = "";
@@ -75,7 +80,9 @@ const ViewPost = () => {
             if (newComment) {
                 const commentData = { comment: newComment }
                 createComment(cityId, forumId, postId, commentData).then((response) => {
-                    comments.unshift(response.data.data);
+                    const commentResonse = response.data.data;
+                    commentResonse.childrenCount = 0;
+                    comments.unshift(commentResonse);
                     setComments([...comments]);
                     setNewComment("");
                 });
@@ -85,16 +92,30 @@ const ViewPost = () => {
 
     const fetchComments = (parentId = null) => {
         const params = { pageNo, pageSize }
+        let comment = {}
         if (parentId) {
             params.parentId = parentId;
+            comment = comments.find(c => c.id === parentId);
+            if (comment.replies && comment.replies.length === comment.childrenCount) {
+                return;
+            }
+            if (comment.pageNo)
+                comment.pageNo += 1
+            else
+                comment.pageNo = 1;
+            params.pageNo = comment.pageNo;
         }
         getComments(cityId, forumId, postId, params).then((response) => {
             if (parentId) {
-                const comment = comments.find(c => c.id === parentId)
-                comment.replies = [...response.data.data];
+                comment.replies = comment.replies ? [...comment.replies.concat(response.data.data)] : [...response.data.data];
                 setComments([...comments]);
             } else {
-                setComments([...comments.concat(response.data.data)]);
+                if (response.data.data.length === 0) {
+                    setShowMoreComments(false)
+                } else {
+                    setShowMoreComments(true)
+                    setComments([...comments.concat(response.data.data)]);
+                }
             }
         });
     };
@@ -131,6 +152,11 @@ const ViewPost = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (pageNo !== 1) {
+            fetchComments()
+        }
+    }, [pageNo])
 
     return (
         <section className="text-gray-600 bg-white body-font">
@@ -173,9 +199,6 @@ const ViewPost = () => {
                     </div>
                     <form className="mb-6">
                         <div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                            <label htmlFor="comment" className="sr-only">
-                                Your comment
-                            </label>
                             <textarea
                                 id="comment"
                                 rows="2"
@@ -202,129 +225,150 @@ const ViewPost = () => {
                         {showComments ? t("hideComments") : t("showComments")}
                     </a>
                     {showComments && (
-                        <div className="comment-section">
-                            {comments.map((comment) => (
-                                <div
-                                    key={comment.id}
-                                    className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
-                                >
-                                    <div className="flex justify-between items-center mb-2">
-                                        <div className="flex items-center">
-                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                                                <img
-                                                    className="mr-2 w-6 h-6 rounded-full"
-                                                />
-                                                {comment.userId}
-                                            </p>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                <time dateTime="2022-02-08" title="February 8th, 2022">
-                                                    {comment.createdAt}
-                                                </time>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p className="text-gray-500 dark:text-gray-400">
-                                        {comment.comments}
-                                    </p>
-                                    <div className="flex items-center mt-4 space-x-4">
-                                        <button
-                                            type="button"
-                                            className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
-                                            onClick={() => toggleReply(comment.id)}
-                                        >
-                                            <svg
-                                                aria-hidden="true"
-                                                className="mr-1 w-4 h-4"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                                ></path>
-                                            </svg>
-                                            Reply
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
-                                            onClick={() => {
-                                                comment.showReplies = !comment.showReplies;
-                                                setComments([...comments])
-                                                if (comment.showReplies) {
-                                                    fetchComments(comment.id)
-                                                }
-                                            }}
-                                        >
-                                            <svg
-                                                aria-hidden="true"
-                                                className="mr-1 w-4 h-4"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                                ></path>
-                                            </svg>
-                                            {!comment.showReplies ? `View ${comment.ChildrenCount} reply(s)` : "Hide replies"}
-                                        </button>
-                                    </div>
-                                    {comment.showReplyBox && (
-                                        <div className="mt-4">
-                                            <textarea
-                                                className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300 dark:text-white dark:bg-gray-800"
-                                                rows="2"
-                                                placeholder="Write a reply..."
-                                                value={comment.newReply}
-                                                onChange={(event) => setReply(comment.id, event.target.value)}
-                                            ></textarea>
-                                            <button
-                                                className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
-                                                type="button"
-                                                onClick={() => {
-                                                    postComment(comment.id)
-                                                }}
-                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                            >
-                                                Submit Reply
-                                            </button>
-                                        </div>
-                                    )}
-                                    {comment.showReplies && comment.replies && comment.replies.map(reply => (
-                                        <div
-                                            key={reply.id}
-                                            className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
-                                        >
-                                            <div className="flex justify-between items-center mb-2">
-                                                <div className="flex items-center">
-                                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                                                        <img
-                                                            className="mr-2 w-6 h-6 rounded-full"
-                                                        />
-                                                        {reply.userId}
-                                                    </p>
-                                                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                        <time dateTime="2022-02-08" title="February 8th, 2022">
-                                                            {reply.createdAt}
-                                                        </time>
-                                                    </p>
-                                                </div>
+                        <div>
+                            <div className="comment-section">
+                                {comments.map((comment, index) => (
+                                    <div
+                                        key={index}
+                                        className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
+                                    >
+                                        <div className="flex justify-between items-center mb-2">
+                                            <div className="flex items-center">
+                                                <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                    <img
+                                                        className="mr-2 w-6 h-6 rounded-full" src={
+                                                            comment.image
+                                                                ? process.env.REACT_APP_BUCKET_HOST + comment.image
+                                                                : PROFILEIMAGE
+                                                        }
+                                                    />
+                                                    {comment.firstname} {comment.lastname} (@{comment.username})
+                                                </p>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                    <time dateTime="2022-02-08" title="February 8th, 2022">
+                                                        {new Date(comment.createdAt).toLocaleString("de")}
+                                                    </time>
+                                                </p>
                                             </div>
-                                            <p className="text-gray-500 dark:text-gray-400">
-                                                {reply.comments}
-                                            </p>
-                                        </div>))}
-                                </div>
-                            ))}
+                                        </div>
+                                        <p className="text-gray-500 dark:text-gray-400">
+                                            {comment.comment}
+                                        </p>
+                                        <div className="flex items-center mt-4 space-x-4">
+                                            <button
+                                                type="button"
+                                                className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+                                                onClick={() => toggleReply(comment.id)}
+                                            >
+                                                <svg
+                                                    aria-hidden="true"
+                                                    className="mr-1 w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                                    ></path>
+                                                </svg>
+                                                {t("reply")}
+                                            </button>
+                                            {comment.childrenCount !== 0 && <button
+                                                type="button"
+                                                className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+                                                onClick={() => {
+                                                    comment.showReplies = !comment.showReplies;
+                                                    setComments([...comments])
+                                                    if (comment.showReplies) {
+                                                        fetchComments(comment.id)
+                                                    }
+                                                }}
+                                            >
+                                                <svg
+                                                    aria-hidden="true"
+                                                    className="mr-1 w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                                    ></path>
+                                                </svg>
+                                                {!comment.showReplies ? `View ${comment.childrenCount} reply(s)` : "Hide replies"}
+                                            </button>}
+                                        </div>
+                                        {comment.showReplyBox && (
+                                            <div className="mt-4">
+                                                <textarea
+                                                    className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300 dark:text-white dark:bg-gray-800"
+                                                    rows="2"
+                                                    placeholder="Write a reply..."
+                                                    value={comment.newReply}
+                                                    onChange={(event) => setReply(comment.id, event.target.value)}
+                                                ></textarea>
+                                                <button
+                                                    className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+                                                    type="button"
+                                                    onClick={() => {
+                                                        postComment(comment.id)
+                                                    }}
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
+                                                    {t("reply")}
+                                                </button>
+                                            </div>
+                                        )}
+                                        {comment.showReplies && comment.replies && comment.replies.map((reply, index) => (
+                                            <div
+                                                key={index}
+                                                className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <div className="flex items-center">
+                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                            <img
+                                                                className="mr-2 w-6 h-6 rounded-full"
+                                                            />
+                                                            {reply.userId}
+                                                        </p>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                            <time dateTime="2022-02-08" title="February 8th, 2022">
+                                                                {reply.createdAt}
+                                                            </time>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <p className="text-gray-500 dark:text-gray-400">
+                                                    {reply.comment}
+                                                </p>
+                                            </div>))}
+                                        {comment.showReplies && comment.replies && comment.childrenCount > comment.replies.length && (
+                                            <button
+                                                type="button"
+                                                className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+                                                onClick={() => fetchComments(comment.id)}
+                                            >
+                                                {t("showMoreReplies")}
+                                            </button>)}
+                                    </div>
+                                ))}
+                            </div>
+                            {showMoreComments && (<button
+                                type="button"
+                                className="mt-2 px-4 py-2 w-48 text-sm font-medium text-white bg-blue-800 rounded-xl hover:bg-blue-700 focus:outline-none focus:bg-blue-700 cursor-pointer"
+                                onClick={() => setPageNo(pageNo + 1)}
+                            >
+                                {t("showMoreComments")}
+                            </button>)}
                         </div>
                     )}
                 </div>

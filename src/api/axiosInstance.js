@@ -69,7 +69,7 @@ const createInstance = (baseURL) => {
 							window.sessionStorage.getItem("userId");
 						if (refreshToken && userId) {
 							// Create a new axios instance for the token refresh request
-							const refreshInstance = axios.create({ baseURL });
+							const refreshInstance = axios.create({ baseURL: process.env.REACT_APP_API_BASE_URL });
 							// Send a request to the server to refresh the access token using the refresh token
 							const response = await refreshInstance.post(
 								`users/${userId}/refresh`,
