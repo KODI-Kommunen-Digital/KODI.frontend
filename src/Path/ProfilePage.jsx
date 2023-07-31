@@ -304,10 +304,8 @@ class ProfilePage extends React.Component {
 		form.append("image", selectedFile);
 		uploadProfilePic(form)
 			.then((res) => {
-				const profileImage = res.data.image;
 				this.setState({
 					currentFile: selectedFile,
-					profile: { ...this.state.profile, image: profileImage },
 				});
 			})
 			.catch((error) => {
@@ -335,7 +333,7 @@ class ProfilePage extends React.Component {
 
 	render() {
 		const { t } = this.props;
-		const { profileImage, currentFile, profile } = this.state;
+		const { currentFile, profile } = this.state;
 
 		return (
 			<div className="bg-slate-600">
@@ -486,25 +484,29 @@ class ProfilePage extends React.Component {
 											</label>
 											<div className="py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 space-y-2 sm:space-y-0">
 												<div className="flex flex-col justify-center items-start">
-													{currentFile instanceof File || currentFile instanceof Blob ? (
+
+													{currentFile && currentFile instanceof File || currentFile instanceof Blob ? (
 														<img
 															className="rounded-full h-20 w-20"
 															src={URL.createObjectURL(currentFile)}
 															alt="currentImage Preview"
 														/>
-													) : profileImage || profile.image && !profileImage == null || !profile.image == null ? (
-														<img
-															className="rounded-full h-20 w-20"
-															src={process.env.REACT_APP_BUCKET_HOST + profileImage}
-															alt="ProfileImage"
-														/>
-													) : (
-														<img
-															className="rounded-full h-20 w-20"
-															src={PROFILEIMAGE}
-															alt="PROFILEIMAGE"
-														/>
-													)}
+													) :
+														profile.image && profile.image !== null ? (
+															<img
+																className="rounded-full h-20 w-20"
+																src={process.env.REACT_APP_BUCKET_HOST + profile.image}
+																alt="ProfileImage"
+															/>
+														) : (
+
+															<img
+																className="rounded-full h-20 w-20"
+																src={PROFILEIMAGE}
+																alt="PROFILEIMAGE"
+															/>
+														)
+													}
 												</div>
 
 												<div
