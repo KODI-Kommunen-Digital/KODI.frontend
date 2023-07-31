@@ -14,7 +14,11 @@ export default function SocialMedia({ setSocialMedia }) {
     useEffect(() => {
         getProfile().then((response) => {
             setUser(response.data.data);
-            setVal(JSON.parse(response.data.data.socialMedia));
+            setVal(
+                JSON.parse(response.data.data.socialMedia).length === undefined
+                    ? []
+                    : JSON.parse(response.data.data.socialMedia)
+            );
         });
     }, []);
     useEffect(() => {
