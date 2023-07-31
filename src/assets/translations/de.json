@@ -100,7 +100,6 @@
     "getVerifiedDescription": "Eine Überprüfung ist notwendig, um eine regelmäßige Qualität sicherzustellen.",
     "goback": "Zum Login",
     "heidi_all_rights_reserved": "HEIDI Theme - Alle Rechte vorbehalten.",
-    "waldi_all_rights_reserved": "Waldi Theme - Alle Rechte vorbehalten.",
     "heidi_full_extend": "Du kannst HEIDI nun vollständig nutzen.",
     "heidi_mail": "info@heidi-app.de",
     "homePageHeading": "Finde alles in deiner Nähe",
@@ -450,8 +449,9 @@
     "backToMyGroups": "Gehen Sie zurück zu Meine Gruppen",
     "digitalManagement": "Digitales Verwaltung",
     "forums": "Foren",
-    "comingSoon": "Demnächst",
+    "comingSoon": "Hey! Wir kochen es. Demnächst...",
     "show": "anzeigen",
     "hide": "verbergen",
+    "waldi_all_rights_reserved": "© WALDI - ALL RIGHTS RESERVED ®2023",
     "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut"
 }

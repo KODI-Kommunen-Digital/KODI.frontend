@@ -17,4 +17,5 @@ export const subcategoryById = {
 	6: "tod", // Die aktuellsten News
 	7: "local", // Lokales
 	8: "clubnews", // Vereinsnews
+	10: "officialnotification", // Amtliche Mitteilung
 };
