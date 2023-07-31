@@ -466,5 +466,8 @@
     "showComments": "Kommentare anzeigen",
     "hideComments": "Kommentare ausblenden",
     "showMoreComments": "Weitere Kommentare anzeigen",
-    "showMoreReplies": "Weitere Antworten anzeigen"
+    "showMoreReplies": "Weitere Antworten anzeigen",
+    "hideReplies": "Antworten ausblenden",
+    "showReplyCount": "Ansicht {{count}} Antwort(en)",
+    "writeReply": "Eine Antwort schreiben..."
 }

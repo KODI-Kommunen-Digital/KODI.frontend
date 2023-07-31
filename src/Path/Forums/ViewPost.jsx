@@ -303,7 +303,7 @@ const ViewPost = () => {
                                                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                                                     ></path>
                                                 </svg>
-                                                {!comment.showReplies ? `View ${comment.childrenCount} reply(s)` : "Hide replies"}
+                                                {!comment.showReplies ? t('showReplyCount', { count: comment.childrenCount }) : t('hideReplies')}
                                             </button>}
                                         </div>
                                         {comment.showReplyBox && (
@@ -311,7 +311,7 @@ const ViewPost = () => {
                                                 <textarea
                                                     className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300 dark:text-white dark:bg-gray-800"
                                                     rows="2"
-                                                    placeholder="Write a reply..."
+                                                    placeholder={t("writeReply")}
                                                     value={comment.newReply}
                                                     onChange={(event) => setReply(comment.id, event.target.value)}
                                                 ></textarea>
