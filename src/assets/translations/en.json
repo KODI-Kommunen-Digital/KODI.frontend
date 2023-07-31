@@ -450,5 +450,7 @@
     "comingSoon": "Coming Soon",
     "show": "Show",
     "hide": "Hide",
-    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again"
+    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
+    "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
+    "pleaseEnterAValidLink": "Please enter a valid link"
 }
