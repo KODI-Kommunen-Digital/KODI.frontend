@@ -109,7 +109,8 @@ export default function SocialMedia({ setSocialMedia }) {
                         </label>
                         <div className="relative mb-4">
                             <div className="relative mb-4 mt-2 border-white">
-                                {val.length > 0 &&
+                                {val &&
+                                    val.length > 0 &&
                                     val.map((data, i) => {
                                         return (
                                             <div
