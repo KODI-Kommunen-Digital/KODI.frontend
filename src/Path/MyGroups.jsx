@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import { getUserForums, deleteForums } from "../Services/forumsApi";
-import { status } from "../Constants/status";
+// import { status } from "../Constants/status";
 import GROUPIMAGE from "../assets/GroupImage.avif";
 
 const MyGroups = () => {
@@ -28,17 +28,17 @@ const MyGroups = () => {
 	}, []);
 	const [pageNo, setPageNo] = useState(1);
 
-	function getStatusClass(statusId) {
-		if (status[statusId] === "Active") {
-			return "bg-green-400";
-		}
-		if (status[statusId] === "Inactive") {
-			return "bg-red-400";
-		}
-		if (status[statusId] === "Pending") {
-			return "bg-yellow-400";
-		}
-	}
+	// function getStatusClass(statusId) {
+	// 	if (status[statusId] === "Active") {
+	// 		return "bg-green-400";
+	// 	}
+	// 	if (status[statusId] === "Inactive") {
+	// 		return "bg-red-400";
+	// 	}
+	// 	if (status[statusId] === "Pending") {
+	// 		return "bg-yellow-400";
+	// 	}
+	// }
 
 	function goToEditForumsPage(forum) {
 		navigateTo(`/CreateGroup?forumId=${forum.id}&cityId=${forum.cityId}`);
@@ -85,7 +85,7 @@ const MyGroups = () => {
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
+						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-xl">
 							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
 								<tr>
 									<th
@@ -147,13 +147,13 @@ const MyGroups = () => {
 									>
 										{t("action")}
 									</th>
-									<th
+									{/* <th
 										scope="col"
 										className="px-6 py-3 text-center"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
 										{t("status")}
-									</th>
+									</th> */}
 								</tr>
 							</thead>
 							<tbody>
@@ -236,7 +236,7 @@ const MyGroups = () => {
 													{t("delete")}
 												</a>
 												{showConfirmationModal.visible && (
-													<div className="fixed z-10 inset-0 overflow-y-auto">
+													<div className="fixed z-50 inset-0 overflow-y-auto">
 														<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 															<div
 																className="fixed inset-0 transition-opacity"
@@ -305,7 +305,7 @@ const MyGroups = () => {
 												)}
 											</td>
 
-											<td className="px-6 py-4">
+											{/* <td className="px-6 py-4">
 												<div className="flex items-center justify-center">
 													<div
 														className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
@@ -318,7 +318,7 @@ const MyGroups = () => {
 															: ""}
 													</h1>
 												</div>
-											</td>
+											</td> */}
 										</tr>
 									);
 								})}
