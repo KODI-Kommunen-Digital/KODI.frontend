@@ -69,7 +69,6 @@ const Dashboard = () => {
 				sortByCreatedDate: true,
 			}).then((response) => {
 				setListings(response.data.data);
-				console.log(response.data.data);
 			});
 		}
 	}, [selectedStatus, viewAllListings, pageNo]);

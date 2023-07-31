@@ -40,10 +40,6 @@ const MyGroups = () => {
 	// 	}
 	// }
 
-	function goToEditForumsPage(forum) {
-		navigateTo(`/CreateGroup?forumId=${forum.id}&cityId=${forum.cityId}`);
-	}
-
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		forum: null,
@@ -223,7 +219,11 @@ const MyGroups = () => {
 											<td className="px-6 py-4 text-center">
 												<a
 													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
-													onClick={() => goToEditForumsPage(forum)}
+													onClick={() =>
+														navigateTo(
+															`/CreateGroup?forumId?id=${forum.forumId}&cityId=${forum.cityId}`
+														)
+													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("edit")}
