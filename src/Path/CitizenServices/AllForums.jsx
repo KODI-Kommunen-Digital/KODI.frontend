@@ -93,8 +93,7 @@ const AllForums = () => {
         navigate(path);
     };
 
-    const handleClick = async (e, cityId, forum) => {
-        e.preventDefault()
+    const handleClick = async (cityId, forum) => {
         if (!forum || forum.isPrivate === undefined) {
             // Invalid forum object or isPrivate property is missing
             console.error('Invalid forum object or missing isPrivate property');
@@ -115,11 +114,10 @@ const AllForums = () => {
             setHasSentRequest(false)
         }
         if (checkIfMember(forum.id) && cityId && forum.id) {
-            const path = `/Forum?cities=${cityId}/forums=${forum.id}`
+            const path = `/Forum?cities=${cityId}&forumId=${forum.id}`
             navigateTo(path);
         }
     };
-
     const handleChange = (e) => {
         const selectedCityId = e.target.value;
         const urlParams = new URLSearchParams(window.location.search);
@@ -129,12 +127,14 @@ const AllForums = () => {
         if (selectedCity) {
             localStorage.setItem("selectedCity", selectedCity.name);
             setCityId(parseInt(selectedCityId));
+            urlParams.set("cityId", selectedCityId);
         } else {
             localStorage.setItem("selectedCity", t("allCities"));
             urlParams.delete("cityId");
             setCityId(0);
         }
-    }
+        window.history.replaceState({}, "", `?${urlParams.toString()}`);
+    };
 
     return (
         <section className="text-gray-600 body-font relative">
@@ -214,7 +214,7 @@ const AllForums = () => {
                             <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
                                 {forums &&
                                     forums.map((forum) => (
-                                        <div key={forum.id} onClick={(e) => handleClick(e, cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
+                                        <div key={forum.id} onClick={() => handleClick(cityId, forum)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
                                             <a className="block relative h-64 rounded overflow-hidden">
                                                 {checkIfMember(forum.id) ? (
                                                     <>
