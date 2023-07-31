@@ -459,5 +459,12 @@
     "hide": "verbergen",
     "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut",
     "createPost": "Posten erstellen",
-    "groupMembers": "Gruppenmitglieder"
+    "groupMembers": "Gruppenmitglieder",
+    "comment": "Kommentar",
+    "reply": "Antwort",
+    "writeComment": "Einen Kommentar schreiben...",
+    "showComments": "Kommentare anzeigen",
+    "hideComments": "Kommentare ausblenden",
+    "showMoreComments": "Weitere Kommentare anzeigen",
+    "showMoreReplies": "Weitere Antworten anzeigen"
 }
