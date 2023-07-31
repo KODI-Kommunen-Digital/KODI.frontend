@@ -42,7 +42,6 @@ const HomePage = () => {
 		}
 
 		getListings({
-			// cityId,
 			statusId: 1,
 			pageNo: 1,
 			pageSize: 8,
