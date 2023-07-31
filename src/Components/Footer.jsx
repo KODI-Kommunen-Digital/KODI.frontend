@@ -165,13 +165,7 @@ function Footer(props) {
 			</div>
 			<div className="text-center p-6 bg-black">
 				<div className="my-4 text-gray-600 h-[1px]"></div>
-				<span className="font-sans">{t("heidi_all_rights_reserved")}</span>
-				<a
-					className="text-white font-semibold underline font-sans"
-					href="https://heidi-app.de/"
-				>
-					HeimatDigital
-				</a>
+				<span className="font-sans">{t("waldi_all_rights_reserved")}</span>
 			</div>
 		</footer>
 	);

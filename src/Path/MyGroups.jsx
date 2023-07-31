@@ -139,7 +139,7 @@ const MyGroups = () => {
 													}
 													alt="avatar"
 												/>
-												<div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem]">
+												<div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
 													<div
 														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
 														style={{ fontFamily: "Poppins, sans-serif" }}
@@ -153,7 +153,11 @@ const MyGroups = () => {
 											<td
 												className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
-												onClick={() => navigateTo(`/MyGroups/GroupMembers?id=${forum.forumId}&cityId=${forum.cityId}`)}
+												onClick={() =>
+													navigateTo(
+														`/MyGroups/GroupMembers?id=${forum.forumId}&cityId=${forum.cityId}`
+													)
+												}
 											>
 												{t("members")}
 											</td>
@@ -199,10 +203,10 @@ const MyGroups = () => {
 							</tbody>
 						</table>
 					</div>
-					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center text-white bg-black rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 float-right cursor-pointer">
+					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
 						{pageNo !== 1 ? (
 							<span
-								className="text-md px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
 								onClick={() => setPageNo(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
@@ -212,7 +216,7 @@ const MyGroups = () => {
 							<span />
 						)}
 						<span
-							className="text-lg px-3"
+							className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("page")} {pageNo}
@@ -220,7 +224,7 @@ const MyGroups = () => {
 
 						{forums.length >= 9 && (
 							<span
-								className="text-lg px-3 hover:bg-gray-800 cursor-pointer rounded-lg"
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
 								onClick={() => setPageNo(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
