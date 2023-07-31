@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
@@ -90,9 +90,7 @@ const AllForums = () => {
         }
     };
     const navigateTo = (path) => {
-        if (path) {
-            navigate(path);
-        }
+        navigate(path);
     };
 
     const handleClick = async (cityId, forum) => {
@@ -115,29 +113,28 @@ const AllForums = () => {
         } else {
             setHasSentRequest(false)
         }
-        if (checkIfMember(forum.id)) {
-            navigateTo(`Forum?/cities=${cityId}/forums=${forum.id}`);
+        if (checkIfMember(forum.id) && cityId && forum.id) {
+            const path = `/Forum?cities=${cityId}&forumId=${forum.id}`
+            navigateTo(path);
         }
     };
-
     const handleChange = (e) => {
         const selectedCityId = e.target.value;
-        const urlParams = new URLSearchParams(
-            window.location.search
-        );
+        const urlParams = new URLSearchParams(window.location.search);
         const selectedCity = cities.find(
             (city) => city.id.toString() === selectedCityId
         );
         if (selectedCity) {
             localStorage.setItem("selectedCity", selectedCity.name);
-            window.location.href = `/?cityId=${selectedCityId}`;
+            setCityId(parseInt(selectedCityId));
+            urlParams.set("cityId", selectedCityId);
         } else {
             localStorage.setItem("selectedCity", t("allCities"));
             urlParams.delete("cityId");
             setCityId(0);
         }
-    }
-
+        window.history.replaceState({}, "", `?${urlParams.toString()}`);
+    };
 
     return (
         <section className="text-gray-600 body-font relative">
