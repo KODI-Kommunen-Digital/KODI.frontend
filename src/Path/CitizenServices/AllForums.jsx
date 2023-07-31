@@ -114,7 +114,7 @@ const AllForums = () => {
             setHasSentRequest(false)
         }
         if (checkIfMember(forum.id) && cityId && forum.id) {
-            const path = `/Forum?cities=${cityId}&forumId=${forum.id}`
+            const path = `/Forum?cityId=${cityId}&forumId=${forum.id}`
             navigateTo(path);
         }
     };
