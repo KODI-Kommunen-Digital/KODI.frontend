@@ -22,9 +22,7 @@ export default function SocialMedia({ setSocialMedia }) {
             setTimeout(() => setAlert(false), 5000);
         }
     }, [alert]);
-    // useEffect(() => {
-    //     setSocialMedia({ socialMedia: JSON.stringify(val) });
-    // }, [val]);
+
     const handleAdd = (value) => {
         if (
             val.length === 0 ||
