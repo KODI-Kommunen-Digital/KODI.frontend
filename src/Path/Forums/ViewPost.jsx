@@ -337,8 +337,13 @@ const ViewPost = () => {
                                                         <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                                                             <img
                                                                 className="mr-2 w-6 h-6 rounded-full"
+                                                                src={
+                                                                    comment.image
+                                                                        ? process.env.REACT_APP_BUCKET_HOST + comment.image
+                                                                        : PROFILEIMAGE
+                                                                }
                                                             />
-                                                            {reply.userId}
+                                                            {comment.firstname} {comment.lastname} (@{comment.username})
                                                         </p>
                                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                                             <time dateTime="2022-02-08" title="February 8th, 2022">
