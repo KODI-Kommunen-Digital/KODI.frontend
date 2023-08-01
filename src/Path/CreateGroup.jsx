@@ -186,16 +186,12 @@ function CreateGroup() {
 		var listingId = searchParams.get("listingId");
 		if (listingId && cityId) {
 			setNewListing(false);
-			getForumsById(cityId, listingId).then((listingsResponse) => {
-				let listingData = listingsResponse.data.data;
-				if (listingData.startDate)
-					listingData.startDate = listingData.startDate.slice(0, 10);
-				if (listingData.endDate)
-					listingData.endDate = listingData.endDate.slice(0, 10);
-				listingData.cityId = cityId;
-				setInput(listingData);
-				setDescription(listingData.description);
-				setCategoryId(listingData.categoryId);
+			getForum(cityId, forumsId).then((forumsResponse) => {
+				let forumsData = forumsResponse.data.data;
+				forumsData.cityId = cityId;
+				setInput(forumsData);
+				setDescription(forumsData.description);
+				setCategoryId(forumsData.categoryId);
 			});
 		}
 	}, []);
@@ -307,13 +303,6 @@ function CreateGroup() {
 		});
 	}, []);
 
-	// useEffect(() => {
-	// 	setInput((prevState) => ({
-	// 		...prevState,
-	// 		selected: val.map((item) => item.selected),
-	// 	}));
-	// }, [val]);
-
 	//Social Media ends
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
@@ -361,7 +350,7 @@ function CreateGroup() {
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
 						<div

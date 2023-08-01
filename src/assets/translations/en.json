@@ -456,5 +456,15 @@
     "hide": "Hide",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "createPost": "Create Post",
-    "groupMembers": "Group Members"
+    "groupMembers": "Group Members",
+    "comment": "Comment",
+    "reply": "Reply",
+    "writeComment": "Write a comment...",
+    "showComments": "Show comments",
+    "hideComments": "Hide comments",
+    "showMoreComments": "Show more comments",
+    "showMoreReplies": "Show more replies",
+    "hideReplies": "Hide replies",
+    "showReplyCount": "View {{count}} reply(s)",
+    "writeReply": "Write a reply..."
 }

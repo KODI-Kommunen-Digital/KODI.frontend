@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HOMEPAGEIMG from "./../assets/homeimage.jpg";
 import Footer from "../Components/Footer";
 import { getCities } from "../Services/cities";
 
@@ -25,7 +24,6 @@ const CitizenService = () => {
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [isLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
-	// const [citizenServices, setcitizenServices] = useState([]);
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -68,7 +66,7 @@ const CitizenService = () => {
 							<img
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"
-								src={HOMEPAGEIMG}
+								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">

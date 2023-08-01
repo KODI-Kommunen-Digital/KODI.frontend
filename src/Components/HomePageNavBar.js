@@ -71,14 +71,14 @@ export default function HomePageNavBar() {
 
 	return (
 		<div className="w-full fixed top-0 z-10">
-			<Popover className="relative bg-white mr-0 ml-0 px-10">
+			<Popover className="relative bg-white mr-0 ml-0 px-10 py-5">
 				<div className="w-full">
 					<div
-						className={`flex items-center justify-between border-gray-100 py-5 lg:justify-start lg:space-x-10 ${buttonClass}`}
+						className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
 					>
 						<div>
 							<img
-								className={`mx-auto lg:h-10 md:h-8 h-10 w-auto cursor-pointer ${buttonClass}`}
+								className={`mx-auto lg:h-12 md:h-12 h-10 w-auto cursor-pointer ${buttonClass}`}
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {
