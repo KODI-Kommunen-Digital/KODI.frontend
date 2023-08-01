@@ -7,23 +7,19 @@ import { getProfile } from "../Services/usersApi";
 import { useTranslation } from "react-i18next";
 
 export default function SocialMedia({ setSocialMedia }) {
-    const [user, setUser] = useState({});
     const [val, setVal] = useState([]);
     const [alert, setAlert] = useState(false);
     const { t } = useTranslation();
     useEffect(() => {
         getProfile().then((response) => {
-            setUser(response.data.data);
-            setVal(
-                JSON.parse(response.data.data.socialMedia).length === undefined
-                    ? []
-                    : JSON.parse(response.data.data.socialMedia)
-            );
+            if (response.data.data.socialMedia) {
+                setVal(JSON.parse(response.data.data.socialMedia));
+            }
         });
     }, []);
     useEffect(() => {
         if (alert) {
-            setTimeout(() => setAlert(false), 5000);
+            setTimeout(() => setAlert(false), 10000);
         }
     }, [alert]);
 
@@ -52,13 +48,7 @@ export default function SocialMedia({ setSocialMedia }) {
         );
         if (filter.length > 0) {
             setAlert(t("canNotSelectSameSocialMediaTwice"));
-        } else if (
-            !Object.prototype.hasOwnProperty.call(
-                user.socialMedia,
-                selectedPlatform
-            ) &&
-            !Object.prototype.hasOwnProperty.call(temp[idx], selectedPlatform)
-        ) {
+        } else {
             const currentKey = Object.keys(temp[idx])[0];
             const updatedTemp = {
                 ...temp[idx],
