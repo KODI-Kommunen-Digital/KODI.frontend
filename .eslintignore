@@ -3,3 +3,4 @@ bin/
 build/
 package.json/
 src\Path\UploadListings.jsx/
+src\Path\Forums\UploadPosts.jsx/

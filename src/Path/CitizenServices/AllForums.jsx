@@ -17,7 +17,7 @@ const AllForums = () => {
 	const [cityId, setCityId] = useState(1);
 	const [cities, setCities] = useState([]);
 	const [cityName, setCityName] = useState("");
-	const [forums, setForums] = useState([]);
+	const [forum, setForums] = useState([]);
 	const [userForums, setUserForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -210,11 +210,11 @@ const AllForums = () => {
 
 			<div className="mt-5 mb-20 p-6">
 				<div>
-					{forums && forums.length > 0 ? (
+					{forum && forum.length > 0 ? (
 						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-								{forums &&
-									forums.map((forum) => (
+								{forum &&
+									forum.map((forum) => (
 										<div
 											key={forum.id}
 											onClick={() => handleClick(cityId, forum)}
@@ -278,32 +278,27 @@ const AllForums = () => {
 													className="flex justify-between items-center"
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
-													<h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
+													<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
 														{forum.forumName}
 													</h2>
 													{forum.isPrivate === 0 ? (
-														<h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
+														<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
 															Public
 														</h2>
 													) : (
-														<h2 className="text-gray-900 title-font text-lg font-bold font-sans truncate">
+														<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
 															Private
 														</h2>
 													)}
 												</div>
-												<div
-													className="flex justify-between items-center"
+												<div className="my-4 bg-gray-200 h-[1px]"></div>
+												<h2
 													style={{ fontFamily: "Poppins, sans-serif" }}
+													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 												>
-													<h2 className="text-gray-500 title-font text-lg font-sans truncate">
-														<p> City:{cityName}</p>
-													</h2>
-													{/* <h2 className="text-gray-500 title-font text-lg  font-sans truncate">
-                                                        <p> Members: {checkIfMember() && membersCount}</p>
-                                                    </h2> */}
-												</div>
+													{cityName}
+												</h2>
 											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
 										</div>
 									))}
 							</div>
@@ -357,7 +352,7 @@ const AllForums = () => {
 					>
 						{t("page")} {pageNo}
 					</span>
-					{forums.length >= 9 && (
+					{forum.length >= 9 && (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							style={{ fontFamily: "Poppins, sans-serif" }}

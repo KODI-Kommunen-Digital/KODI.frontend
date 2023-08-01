@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import { getUserForums, deleteForums } from "../Services/forumsApi";
-// import { status } from "../Constants/status";
 import GROUPIMAGE from "../assets/GroupImage.avif";
 
 const MyGroups = () => {
 	const { t } = useTranslation();
-	const [forums, setForums] = useState([]);
+	const [forum, setForums] = useState([]);
 	const [, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
@@ -28,18 +27,6 @@ const MyGroups = () => {
 	}, []);
 	const [pageNo, setPageNo] = useState(1);
 
-	// function getStatusClass(statusId) {
-	// 	if (status[statusId] === "Active") {
-	// 		return "bg-green-400";
-	// 	}
-	// 	if (status[statusId] === "Inactive") {
-	// 		return "bg-red-400";
-	// 	}
-	// 	if (status[statusId] === "Pending") {
-	// 		return "bg-yellow-400";
-	// 	}
-	// }
-
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		forum: null,
@@ -51,7 +38,7 @@ const MyGroups = () => {
 		deleteForums(forum.cityId, forum.id)
 			.then((res) => {
 				setForums(
-					forums.filter((f) => f.cityId !== forum.cityId || f.id !== forum.id)
+					forum.filter((f) => f.cityId !== forum.cityId || f.id !== forum.id)
 				);
 				setShowConfirmationModal({ visible: false }); // hide the confirmation modal
 			})
@@ -153,7 +140,7 @@ const MyGroups = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{forums.map((forum, index) => {
+								{forum.map((forum, index) => {
 									return (
 										<tr
 											key={index}
@@ -174,9 +161,8 @@ const MyGroups = () => {
 												/>
 												<div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
 													<div
-														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+														className="font-normal text-gray-500 truncate"
 														style={{ fontFamily: "Poppins, sans-serif" }}
-														onClick={() => navigateTo(`/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`)}
 													>
 														{forum.forumName}
 													</div>
@@ -222,7 +208,7 @@ const MyGroups = () => {
 													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 													onClick={() =>
 														navigateTo(
-															`/CreateGroup?forumId?id=${forum.forumId}&cityId=${forum.cityId}`
+															`/CreateGroup?forumId=${forum.forumId}&cityId=${forum.cityId}`
 														)
 													}
 													style={{ fontFamily: "Poppins, sans-serif" }}
@@ -345,7 +331,7 @@ const MyGroups = () => {
 							{t("page")} {pageNo}
 						</span>
 
-						{forums.length >= 9 && (
+						{forum.length >= 9 && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
 								onClick={() => setPageNo(pageNo + 1)}

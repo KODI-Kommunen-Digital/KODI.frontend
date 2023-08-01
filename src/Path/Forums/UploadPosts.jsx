@@ -1,42 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./bodyContainer.css";
-import SideBar from "../Components/SideBar";
+import "../bodyContainer.css";
+import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
-	postForumsData,
-	updateForumsData,
+	getUserForums,
 	getForum,
+	forumPosts,
+	updateForumPosts,
 	imageUpload,
-} from "../Services/forumsApi";
+} from "../../Services/forumsApi";
 
-import { getCities } from "../Services/cities";
+import { getCities } from "../../Services/cities";
 import FormData from "form-data";
-import Alert from "../Components/Alert";
+import Alert from "../../Components/Alert";
 
-function CreateGroup() {
+function UploadPosts() {
 	const { t } = useTranslation();
 	const editor = useRef(null);
-	const [newGroup, setNewGroup] = useState(true);
+	const [newPost, setNewPost] = useState(true);
 	const [updating, setUpdating] = useState(false);
-
-	//Drag and Drop starts
+	const [cityId, setCityId] = useState(0);
+	const [cities, setCities] = useState([]);
+	// Drag and Drop starts
 	const [image1, setImage1] = useState(null);
-	const [dragging, setDragging] = useState(false);
+	const [, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
-
-	const handleGroupTypeChange = (event) => {
-		const groupType = event.target.checked ? "private" : "public";
-		setInput((prevInput) => ({
-			...prevInput,
-			visibility: groupType,
-		}));
-	};
 
 	const [initialLoad, setInitialLoad] = useState(true);
 
@@ -110,7 +104,7 @@ function CreateGroup() {
 		setInput((prevInput) => ({ ...prevInput, image: null, removeImage: true }));
 	}
 
-	//Sending data to backend starts
+	// Sending data to backend starts
 	const [input, setInput] = useState({
 		title: "",
 		description: "",
@@ -120,39 +114,18 @@ function CreateGroup() {
 	});
 
 	const [error, setError] = useState({
-		categoryId: "",
-		subcategoryId: "",
 		title: "",
 		description: "",
 		cityId: "",
-		startDate: "",
-		endDate: "",
 	});
-
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		var forumId = searchParams.get("forumId");
-		if (forumId && cityId) {
-			setNewGroup(true);
-			getForum(cityId, forumId).then((forumsResponse) => {
-				let forumsData = forumsResponse.data.data;
-				console.log(forumsResponse.data.data);
-				forumsData.cityId = cityId;
-				setInput(forumsData);
-				setDescription(forumsData.description);
-			});
-		}
-	}, []);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		let valid = true;
-		for (let key in error) {
-			var errorMessage = getErrorMessage(key, input[key]);
-			var newError = error;
+		for (const key in error) {
+			const errorMessage = getErrorMessage(key, input[key]);
+			const newError = error;
 			newError[key] = errorMessage;
 			setError(newError);
 			if (errorMessage) {
@@ -163,16 +136,15 @@ function CreateGroup() {
 		if (valid) {
 			setUpdating(true);
 			try {
-				input.isPrivate = input.visibility == "private";
-				var response = newGroup
-					? await postForumsData(cityId, input)
-					: await updateForumsData(cityId, input, forumId);
+				var response = newPost
+					? await forumPosts(cityId, forumId, input)
+					: await updateForumPosts(cityId, input, forumId);
 
-				setSuccessMessage(t("groupCreated"));
+				setSuccessMessage(t("postCreated"));
 				setErrorMessage(false);
 				setTimeout(() => {
 					setSuccessMessage(false);
-					navigate("/MyGroups");
+					navigate(`/Forum?cityId=${cityId}&forumId=${forumId}`);
 				}, 5000);
 			} catch (error) {
 				setErrorMessage(t("changesNotSaved"));
@@ -281,16 +253,63 @@ function CreateGroup() {
 		});
 	};
 	//Sending data to backend ends
+	const [forumId, setForumId] = useState(null);
+	const [forum, setForums] = useState([]);
 
 	useEffect(() => {
-		getCities({ hasForum: true }).then((citiesResponse) => {
-			setCities(citiesResponse.data.data);
-		});
+		const searchParams = new URLSearchParams(window.location.search);
+		var cityId = searchParams.get("cityId");
+		setCityId(cityId);
+		var forumId = searchParams.get("forumId");
+		if (forumId && cityId) {
+			setNewPost(true);
+			getForum(cityId, forumId).then((forumsResponse) => {
+				let forumsData = forumsResponse.data.data;
+				forumsData.cityId = cityId;
+				setInput(forumsData);
+			});
+		}
 	}, []);
 
-	//Social Media ends
-	const [cityId, setCityId] = useState(0);
-	const [cities, setCities] = useState([]);
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const citiesResponse = await getCities({ hasForum: true });
+				setCities(citiesResponse.data.data);
+				const response = await getUserForums();
+				setForums(response.data.data);
+
+				const urlParams = new URLSearchParams(location.search);
+				const forumIdFromUrl = Number(urlParams.get("forumId"));
+				if (!isNaN(forumIdFromUrl)) {
+					setForumId(forumIdFromUrl);
+					setInput((prev) => ({
+						...prev,
+						forumId: forumIdFromUrl,
+					}));
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		}
+
+		fetchData();
+	}, [location.search]);
+
+	async function onForumChange(e) {
+		const forumId = e.target.value;
+		setForumId(forumId);
+		setInput((prev) => ({
+			...prev,
+			forumId: forumId,
+		}));
+		validateInput(e);
+
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("forumId", forumId);
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.replaceState({}, "", newUrl);
+	}
 	async function onCityChange(e) {
 		const cityId = e.target.value;
 		setCityId(cityId);
@@ -308,29 +327,32 @@ function CreateGroup() {
 	}
 
 	return (
-		<section class="bg-slate-600 body-font relative">
+		<section className="bg-slate-600 body-font relative">
 			<SideBar />
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6 space-y-10">
 					<h2
 						style={{
 							fontFamily: "Poppins, sans-serif",
 						}}
-						class="text-gray-900 text-lg mb-4 font-medium title-font"
+						className="text-gray-900 text-lg mb-4 font-medium title-font"
 					>
-						{t("createGroup")}
+						{t("createPost")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
-							{t("forumName")} *
+					<div className="relative mb-4">
+						<label
+							for="title"
+							className="block text-sm font-medium text-gray-600"
+						>
+							{t("title")} *
 						</label>
 						<input
 							type="text"
 							id="title"
 							name="title"
-							value={input.forumName}
+							value={input.title}
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
@@ -347,8 +369,11 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
+					<div className="relative mb-4">
+						<label
+							for="title"
+							className="block text-sm font-medium text-gray-600"
+						>
 							{t("city")} *
 						</label>
 						<select
@@ -358,8 +383,7 @@ function CreateGroup() {
 							value={cityId}
 							onChange={onCityChange}
 							autocomplete="country-name"
-							disabled={newGroup}
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
@@ -376,52 +400,43 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div className="relative mb-4 flex items-center">
-						<div className="flex items-center">
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 mr-2"
-							>
-								Public
-							</label>
-							<div className="relative">
-								<div
-									className={`w-10 h-6 rounded-full shadow-inner ${
-										input.visibility === "private"
-											? "bg-blue-500"
-											: "bg-gray-300"
-									}`}
-								></div>
-								<div
-									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
-										input.visibility === "private"
-											? "translate-x-full"
-											: "translate-x-0"
-									}`}
-								></div>
-								<input
-									type="checkbox"
-									id="groupType"
-									name="groupType"
-									value="private"
-									checked={input.visibility === "private"}
-									onChange={handleGroupTypeChange}
-									className="sr-only"
-								/>
-							</div>
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 ml-2"
-							>
-								Private
-							</label>
+					<div className="relative mb-4">
+						<label
+							for="title"
+							className="block text-sm font-medium text-gray-600"
+						>
+							{t("forums")} *
+						</label>
+						<select
+							type="text"
+							id="forumId"
+							name="forumId"
+							value={forumId}
+							onChange={onForumChange}
+							autoComplete="country-name"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+						>
+							<option value={0}>{t("select")}</option>
+							{forum.map((forum) => (
+								<option value={Number(forum.forumId)} key={forum.forumId}>
+									{forum.forumName}
+								</option>
+							))}
+						</select>
+						<div
+							className="h-[24px] text-red-600"
+							style={{
+								visibility: error.cityId ? "visible" : "hidden",
+							}}
+						>
+							{error.cityId}
 						</div>
 					</div>
 
-					<div class="relative mb-4">
+					<div className="relative mb-4">
 						<label
 							for="description"
-							class="block text-sm font-medium text-gray-600"
+							className="block text-sm font-medium text-gray-600"
 						>
 							{t("description")} *
 						</label>
@@ -455,9 +470,9 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6 space-y-10">
+					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
@@ -508,7 +523,7 @@ function CreateGroup() {
 									<p className="mt-1 text-sm text-gray-600">
 										{t("dragAndDropImage")}
 									</p>
-									<div class="relative mb-4 mt-8">
+									<div className="relative mb-4 mt-8">
 										<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
 											<span className="button-label">{t("upload")}</span>
 											<input
@@ -533,9 +548,9 @@ function CreateGroup() {
 							type="button"
 							onClick={handleSubmit}
 							disabled={updating}
-							class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+							className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
-							{t("createGroup")}
+							{t("createPost")}
 						</button>
 					</div>
 					<div>
@@ -550,4 +565,4 @@ function CreateGroup() {
 	);
 }
 
-export default CreateGroup;
+export default UploadPosts;

@@ -469,5 +469,7 @@
     "showMoreReplies": "Weitere Antworten anzeigen",
     "hideReplies": "Antworten ausblenden",
     "showReplyCount": "Ansicht {{count}} Antwort(en)",
-    "writeReply": "Eine Antwort schreiben..."
+    "writeReply": "Eine Antwort schreiben...",
+    "postCreated": "Ihr Beitrag ist erstellt",
+    "forumName": "Forum Name"
 }

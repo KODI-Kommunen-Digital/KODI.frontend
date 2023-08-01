@@ -18,6 +18,7 @@ import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
+import UploadPosts from "./Path/Forums/UploadPosts";
 import AllForums from "./Path/CitizenServices/AllForums";
 import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
 import OverviewPage from "./Path/Listings/OverviewPage";
@@ -61,7 +62,10 @@ const App = () => {
 					<Route path="/AllEvents" element={<AllEvents />} />
 					<Route path="/ViewProfile" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
-					<Route path="/CitizenService/DigitalManagement" element={<DigitalManagement />} />
+					<Route
+						path="/CitizenService/DigitalManagement"
+						element={<DigitalManagement />}
+					/>
 					<Route path="/CitizenService/AllForums" element={<AllForums />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
@@ -95,6 +99,7 @@ const App = () => {
 
 					<Route path="/Forum/ViewPost" element={<ViewPost />} />
 					<Route path="/Forum" element={<Forum />} />
+					<Route path="/UploadPosts" element={<UploadPosts />} />
 					<Route path="/CreateGroup" element={<CreateGroup />} exact />
 					<Route path="/MyGroups" element={<MyGroups />} exact />
 					<Route
