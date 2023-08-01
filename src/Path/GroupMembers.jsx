@@ -1,27 +1,31 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import { getForumMembers } from "../Services/forumsApi";
 import GROUPIMAGE from "../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import ForumNavbar from "../Components/ForumNavbar";
 
 const GroupMembers = () => {
 	const { t } = useTranslation();
 	const [members, setMembers] = useState([]);
-	const [, setCityId] = useState(0);
-	const [, setForumId] = useState(0);
+	const [cityId, setCityId] = useState(0);
+	const [forumId, setForumId] = useState(0);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		document.title = "Heidi - Forum Members";
-		const cityIdParam = urlParams.get("cityId");
-		const forumIdParam = urlParams.get("id");
+		const cityUsers =
+			JSON.parse(window.localStorage.getItem("cityUsers") ||
+				window.sessionStorage.getItem("cityUsers"));
+		const cityIdParam = parseInt(urlParams.get("cityId"));
+		const forumIdParam = parseInt(urlParams.get("forumId"));
+		const cityUserId = cityUsers.find(cu => cu.cityId === cityIdParam).cityUserId;
 		getForumMembers(cityIdParam, forumIdParam).then((response) => {
 			setMembers(response.data.data);
-			console.log(response.data.data);
+			setIsAdmin(response.data.data.find(m => m.cityUserId === cityUserId).isAdmin)
 			setCityId(cityIdParam);
 			setForumId(forumIdParam);
 		});
@@ -38,110 +42,7 @@ const GroupMembers = () => {
 	return (
 		<section className="bg-slate-600 body-font relative h-screen">
 			<SideBar />
-			<div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
-				<Popover className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
-					<div className="w-full">
-						<div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
-							<div className="hidden lg:block">
-								<div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
-									<div
-										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("members")}
-									</div>
-									<div
-										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("memberRequest")}
-									</div>
-									<div
-										className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("reportedPosts")}
-									</div>
-								</div>
-							</div>
-
-							<div className="-my-2 -mr-2 lg:hidden">
-								<Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-									<span className="sr-only">Open menu</span>
-									<Bars3Icon className="h-6 w-6" aria-hidden="true" />
-								</Popover.Button>
-							</div>
-						</div>
-					</div>
-
-					<Transition
-						as={Fragment}
-						enter="duration-200 ease-out"
-						enterFrom="opacity-0 scale-95"
-						enterTo="opacity-100 scale-100"
-						leave="duration-100 ease-in"
-						leaveFrom="opacity-100 scale-100"
-						leaveTo="opacity-0 scale-95"
-					>
-						<Popover.Panel
-							focus
-							className="absolute inset-x-0 top-0 origin-top-right transform p-0 transition lg:hidden"
-						>
-							<div className="divide-y-2 divide-gray-50 bg-black shadow-lg ring-1 ring-black ring-opacity-5">
-								<div className="space-y-6 py-6 px-5">
-									<div className="-my-2 -mr-2 lg:hidden flex justify-end">
-										<Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-											<span className="sr-only">Close menu</span>
-											<XMarkIcon className="h-6 w-6" aria-hidden="true" />
-										</Popover.Button>
-									</div>
-
-									<div className="space-y-1">
-										<div
-											className="lg:hidden flex justify-center text-center"
-											id="mobile-menu"
-										>
-											<div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-												<div
-													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-													style={{
-														fontFamily: "Poppins, sans-serif",
-													}}
-												>
-													{t("members")}
-												</div>
-												<div
-													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-													style={{
-														fontFamily: "Poppins, sans-serif",
-													}}
-												>
-													{t("memberRequest")}
-												</div>
-												<div
-													className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-													style={{
-														fontFamily: "Poppins, sans-serif",
-													}}
-												>
-													{t("reportedPosts")}
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</Popover.Panel>
-					</Transition>
-				</Popover>
-			</div>
-
+			{isAdmin && <ForumNavbar cityId={cityId} forumId={forumId} />}
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
@@ -224,7 +125,7 @@ const GroupMembers = () => {
 												className="px-6 py-4 text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{new Date(member.JoinedAt).toLocaleString("de")}
+												{new Date(member.joinedAt).toLocaleString("de")}
 											</td>
 
 											<td
