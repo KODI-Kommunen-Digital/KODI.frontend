@@ -453,5 +453,6 @@
     "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
-    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com"
+    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
+    "userNameValidation": "Username should contain only lower cases or underscore. The username should start with a lower case"
 }
