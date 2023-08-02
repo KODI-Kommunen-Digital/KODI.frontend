@@ -95,6 +95,12 @@ function CreateGroup() {
 		endDate: "",
 	});
 
+	const handleImageUpload = async (id) => {
+		const form = new FormData();
+		form.append("image", image1);
+		await uploadForumImage(form, cityId, id);
+	} 
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -118,14 +124,10 @@ function CreateGroup() {
 					: await updateForumsData(cityId, input, forumsId);
 					if (newListing) {
 						if (image1) {
-							const form = new FormData();
-							form.append("image", image1);
-							await uploadForumImage(form, cityId, response.data.id);
+							handleImageUpload(response.data.id)
 						}
 					} else if (image1) {
-						const form = new FormData();
-						form.append("image", image1);
-						await uploadForumImage(form, cityId, input.id);
+						handleImageUpload(input.id)
 					} else if (input.removeImage) {
 						await deleteForumImage(cityId, input.id);
 					}
