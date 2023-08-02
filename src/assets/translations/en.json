@@ -452,6 +452,6 @@
     "hide": "Hide",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
-    "pleaseEnterAValidLink": "Please enter a valid link Ex: https://www.example.com",
+    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
     "waldi_all_rights_reserved": "© WALDI - ALL RIGHTS RESERVED ®2023"
 }

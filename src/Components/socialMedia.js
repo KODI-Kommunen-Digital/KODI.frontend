@@ -83,7 +83,6 @@ export default function SocialMedia({ setSocialMedia }) {
         temp[idx][currentPlatform] = event.target.value;
 
         const r = /^((https):\/\/)(www\.)?([A-z]+)\.([A-z]{2,})/;
-
         if (r.test(event.target.value)) {
             setSocialMedia({ socialMedia: JSON.stringify(val) });
         } else {

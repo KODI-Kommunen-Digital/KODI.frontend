@@ -454,6 +454,6 @@
     "hide": "verbergen",
     "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut",
     "canNotSelectSameSocialMediaTwice": "Sie haben dieses Social Media bereits bereitgestellt",
-    "pleaseEnterAValidLink":"Bitte geben Sie einen gültigen Link ein, z. B.: https://www.example.com",
+    "pleaseEnterAValidLink":"Bitte geben Sie einen gültigen Link ein, der mit „https://“ beginnt. Beispiel: https://www.example.com",
     "waldi_all_rights_reserved": "© WALDI - ALL RIGHTS RESERVED ®2023"
 }
