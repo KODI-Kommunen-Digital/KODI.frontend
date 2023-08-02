@@ -116,8 +116,9 @@ function CreateGroup() {
 		description: "",
 		image: null,
 		removeImage: false,
-		visibility: "public",
+		visibility: "",
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -138,7 +139,7 @@ function CreateGroup() {
 			setNewGroup(true);
 			getForum(cityId, forumId).then((forumsResponse) => {
 				let forumsData = forumsResponse.data.data;
-				console.log(forumsResponse.data.data);
+				// console.log(forumsResponse.data.data);
 				forumsData.cityId = cityId;
 				setInput(forumsData);
 				setDescription(forumsData.description);
@@ -358,7 +359,6 @@ function CreateGroup() {
 							value={cityId}
 							onChange={onCityChange}
 							autocomplete="country-name"
-							disabled={newGroup}
 							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
@@ -376,47 +376,78 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div className="relative mb-4 flex items-center">
-						<div className="flex items-center">
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 mr-2"
-							>
-								Public
-							</label>
-							<div className="relative">
-								<div
-									className={`w-10 h-6 rounded-full shadow-inner ${
-										input.visibility === "private"
-											? "bg-blue-500"
-											: "bg-gray-300"
-									}`}
-								></div>
-								<div
-									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
-										input.visibility === "private"
-											? "translate-x-full"
-											: "translate-x-0"
-									}`}
-								></div>
-								<input
-									type="checkbox"
-									id="groupType"
-									name="groupType"
-									value="private"
-									checked={input.visibility === "private"}
-									onChange={handleGroupTypeChange}
-									className="sr-only"
-								/>
+					{input.isPrivate === 1 ? (
+						<div className="relative mb-4 flex items-center">
+							<div className="flex items-center">
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 mr-2"
+								>
+									Public
+								</label>
+								<div className="relative">
+									<div
+										className={`w-10 h-6 rounded-full shadow-inner bg-blue-500`}
+									></div>
+									<div
+										className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
+										translate-x-full`}
+									></div>
+									<input
+										type="checkbox"
+										id="groupType"
+										name="groupType"
+										value={input.visibility}
+										checked={input.visibility === "private"}
+										onChange={handleGroupTypeChange}
+										className="sr-only"
+									/>
+								</div>
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 ml-2"
+								>
+									Private
+								</label>
 							</div>
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 ml-2"
-							>
-								Private
-							</label>
 						</div>
-					</div>
+					) : (
+						<div className="relative mb-4 flex items-center">
+							<div className="flex items-center">
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 mr-2"
+								>
+									Public
+								</label>
+								<div className="relative">
+									<div
+										className={`w-10 h-6 rounded-full shadow-inner
+										${input.visibility === "private" ? "bg-blue-500" : "bg-gray-300"}`}
+									></div>
+									<div
+										className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
+										${input.visibility === "private" ? "translate-x-full" : "translate-x-0"}`}
+									></div>
+									<input
+										type="checkbox"
+										id="groupType"
+										name="groupType"
+										value={input.visibility}
+										checked={input.visibility === "private"}
+										onChange={handleGroupTypeChange}
+										className="sr-only"
+									/>
+								</div>
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 ml-2"
+								>
+									Private
+								</label>
+							</div>
+						</div>
+					)}
 
 					<div class="relative mb-4">
 						<label

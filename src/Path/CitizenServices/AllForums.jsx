@@ -282,11 +282,11 @@ const AllForums = () => {
 														{forum.forumName}
 													</h2>
 													{forum.isPrivate === 0 ? (
-														<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
+														<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
 															Public
 														</h2>
 													) : (
-														<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
+														<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
 															Private
 														</h2>
 													)}
@@ -321,7 +321,7 @@ const AllForums = () => {
 									{t("to_upload_new_listing")}
 								</span>
 								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 									onClick={() => {
 										localStorage.setItem("selectedItem", "Choose one category");
