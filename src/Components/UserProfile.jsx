@@ -64,7 +64,7 @@ function UserProfile({ user }) {
 							<button
 								onClick={() =>
 									navigateTo(
-										user ? `/ViewProfile?userId=${user.id}` : "/ViewProfile"
+										user ? `/ViewProfile/${user.username}` : "/ViewProfile"
 									)
 								}
 								type="submit"
@@ -154,6 +154,7 @@ UserProfile.propTypes = {
 		firstname: PropTypes.string,
 		lastname: PropTypes.string,
 		email: PropTypes.string,
+		username: PropTypes.string,
 		socialMedia: PropTypes.string,
 		image: PropTypes.string,
 		id: PropTypes.number,
