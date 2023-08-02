@@ -83,9 +83,17 @@ const Register = () => {
             const stateObj = { ...prev, [name]: "" };
 
             switch (name) {
-            case "username":
+                case "username":
                 if (!value) {
                     stateObj[name] = t("pleaseEnterUsername");
+                } else if (
+                    value[0] === value[0].toUpperCase() ||
+                    /\s/.test(value) ||
+                    /^_/.test(value) ||
+                    /^[^a-z_]/.test(value)
+                ) {
+                    stateObj[name] =
+                        "Username should start with a lowercase letter, may contain underscores, and not contain spaces or start with a special character or number.";
                 }
                 break;
             case "email":
