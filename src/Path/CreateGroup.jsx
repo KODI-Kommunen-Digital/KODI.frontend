@@ -8,7 +8,8 @@ import "react-quill/dist/quill.snow.css";
 import {
 	postForumsData,
 	updateForumsData,
-	uploadImage,
+	uploadForumImage,
+	deleteForumImage
 } from "../Services/forumsApi";
 
 import { getCities } from "../Services/cities";
@@ -23,7 +24,6 @@ function CreateGroup() {
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
-	const [dragging, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
@@ -37,48 +37,15 @@ function CreateGroup() {
 		}));
 	};
 
-	const [initialLoad, setInitialLoad] = useState(true);
-
-	useEffect(() => {
-		if (initialLoad) {
-			window.scrollTo(0, 0);
-			setInitialLoad(false);
-		} else {
-			const updateInputState = async () => {
-				if (image1 !== null) {
-					const form = new FormData();
-					form.append("image", image1);
-					try {
-						const filePath = await uploadImage(form);
-						if (filePath?.data?.status === "success") {
-							setInput((prevInput) => ({
-								...prevInput,
-								image: filePath?.data?.path || null,
-								removeImage: false,
-							}));
-						} else {
-							console.error("Image upload failed:", filePath?.data?.message);
-						}
-					} catch (error) {
-						console.error("Image upload error:", error);
-					}
-				}
-			};
-
-			updateInputState();
-		}
-	}, [initialLoad, image1]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragging(true);
 	}
 
 	function handleDragLeave(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragging(false);
 	}
 
 	function handleDragOver(e) {
@@ -93,7 +60,6 @@ function CreateGroup() {
 		if (file && file.type.startsWith("image/")) {
 			setImage1(file);
 		}
-		setDragging(false);
 	}
 
 	function handleInputChange(e) {
@@ -129,6 +95,12 @@ function CreateGroup() {
 		endDate: "",
 	});
 
+	const handleImageUpload = async (id) => {
+		const form = new FormData();
+		form.append("image", image1);
+		await uploadForumImage(form, cityId, id);
+	} 
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -150,7 +122,15 @@ function CreateGroup() {
 				var response = newListing
 					? await postForumsData(cityId, input)
 					: await updateForumsData(cityId, input, forumsId);
-
+					if (newListing) {
+						if (image1) {
+							handleImageUpload(response.data.id)
+						}
+					} else if (image1) {
+						handleImageUpload(input.id)
+					} else if (input.removeImage) {
+						await deleteForumImage(cityId, input.id);
+					}
 				setSuccessMessage(t("groupCreated"));
 				setErrorMessage(false);
 				setTimeout(() => {
