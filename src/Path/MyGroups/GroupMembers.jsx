@@ -110,12 +110,15 @@ const GroupMembers = () => {
                                                     }
                                                     alt="avatar"
                                                 />
-                                                <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
+                                                <div className="pl-0 sm:pl-3 overflow-hidden max-w">
                                                     <div
                                                         className="font-normal text-gray-500 truncate"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        onClick={() =>
+                                                            navigateTo(`/ViewProfile/${member.username}`)
+                                                        }
                                                     >
-                                                        {member.username}
+                                                        {member.firstname} {member.lastname} (@{member.username})
                                                     </div>
                                                 </div>
                                             </th>

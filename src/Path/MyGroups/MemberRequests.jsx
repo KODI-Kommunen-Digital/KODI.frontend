@@ -97,6 +97,9 @@ const MemberRequests = () => {
                                                     <div
                                                         className="font-normal text-gray-500 truncate"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        onClick={() =>
+                                                            navigateTo(`/ViewProfile/${member.username}`)
+                                                        }
                                                     >
                                                         {member.firstname} {member.lastname} (@{member.username})
                                                     </div>
@@ -112,10 +115,16 @@ const MemberRequests = () => {
 
                                             <td className="px-6 py-4 text-center">
                                                 <a
-                                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+                                                    className="font-medium text-blue-600 px-2 dark:text-blue-500 hover:underline cursor-pointer text-center"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
                                                     {t("remove")}
+                                                </a>
+                                                <a
+                                                    className="font-medium text-blue-600 px-2 dark:text-blue-500 hover:underline cursor-pointer text-center"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
+                                                    {t("accept")}
                                                 </a>
                                             </td>
                                         </tr>
