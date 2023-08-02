@@ -60,3 +60,7 @@ export async function updateListingsData(
 export async function deleteListing(cityId, listingsId) {
 	return axios.delete(`/cities/${cityId}/listings/${listingsId}`);
 }
+
+export async function getListingsCount() {
+	return axios.get(`/categories/listingsCount`);
+}

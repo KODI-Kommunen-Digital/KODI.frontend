@@ -71,10 +71,10 @@ export default function HomePageNavBar() {
 
 	return (
 		<div className="w-full fixed top-0 z-10">
-			<Popover className="relative bg-white mr-0 ml-0 px-10">
+			<Popover className="relative bg-white mr-0 ml-0 px-10 py-5">
 				<div className="w-full">
 					<div
-						className={`flex items-center justify-between border-gray-100 py-5 lg:justify-start lg:space-x-10 ${buttonClass}`}
+						className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
 					>
 						<div>
 							<img
@@ -151,7 +151,7 @@ export default function HomePageNavBar() {
 					</div>
 
 					<div
-						className={`flex items-center justify-center border-gray-100 py-5 lg:justify-center lg:space-x-10 ${gobackClass}`}
+						className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
 					>
 						<a
 							onClick={() => {
