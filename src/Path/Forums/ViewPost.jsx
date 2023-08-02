@@ -114,11 +114,11 @@ const ViewPost = () => {
 					: [...response.data.data];
 				setComments([...comments]);
 			} else {
-				if (response.data.data.length === 0) {
-					setShowMoreComments(false);
-				} else {
+				if (response.data.data.length > 0) {
 					setShowMoreComments(true);
 					setComments([...comments.concat(response.data.data)]);
+				} else {
+					setShowMoreComments(false);
 				}
 			}
 		});
