@@ -36,7 +36,8 @@ import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
 
 import ViewPost from "./Path/Forums/ViewPost";
-import GroupMembers from "./Path/GroupMembers";
+import GroupMembers from "./Path/MyGroups/GroupMembers";
+import MemberRequests from "./Path/MyGroups/MemberRequests";
 
 const App = () => {
 	useEffect(() => {
@@ -97,11 +98,8 @@ const App = () => {
 					<Route path="/Forum" element={<Forum />} />
 					<Route path="/CreateGroup" element={<CreateGroup />} exact />
 					<Route path="/MyGroups" element={<MyGroups />} exact />
-					<Route
-						path="/MyGroups/GroupMembers"
-						element={<GroupMembers />}
-						exact
-					/>
+					<Route path="/MyGroups/GroupMembers" element={<GroupMembers />} exact />
+					<Route path="/MyGroups/MemberRequests" element={<MemberRequests />} exact />
 				</Routes>
 			</div>
 		</BrowserRouter>

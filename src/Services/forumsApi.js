@@ -58,6 +58,10 @@ export async function forumPosts(cityId, forumsId, postData) {
 	return axios.post(`/cities/${cityId}/forums/${forumsId}`, postData);
 }
 
+export async function getForumMemberRequests(cityId, forumsId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
+}
+
 export async function forumMemberRequests(cityId, forumsId) {
 	return axios.post(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
 }
