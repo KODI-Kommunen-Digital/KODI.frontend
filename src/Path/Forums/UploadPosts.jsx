@@ -10,7 +10,6 @@ import {
 	getForum,
 	forumPosts,
 	updateForumPosts,
-	imageUpload,
 } from "../../Services/forumsApi";
 
 import { getCities } from "../../Services/cities";
