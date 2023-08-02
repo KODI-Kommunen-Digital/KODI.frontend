@@ -153,8 +153,8 @@ const MyGroups = () => {
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
 													src={
-														forum.logo
-															? process.env.REACT_APP_BUCKET_HOST + forum.logo
+														forum.image
+															? process.env.REACT_APP_BUCKET_HOST + forum.image
 															: GROUPIMAGE
 													}
 													alt="avatar"
