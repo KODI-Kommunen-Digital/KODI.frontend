@@ -244,7 +244,7 @@ const Favorites = () => {
 													src={
 														favListing.logo
 															? process.env.REACT_APP_BUCKET_HOST +
-															favListing.logo
+															  favListing.logo
 															: LISTINGSIMAGE
 													}
 												/>
@@ -297,7 +297,7 @@ const Favorites = () => {
 									{t("to_upload_new_listing")}
 								</span>
 								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
 									onClick={() => {
 										localStorage.setItem(
 											"selectedItem",
