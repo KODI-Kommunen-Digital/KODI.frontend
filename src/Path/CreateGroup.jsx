@@ -8,8 +8,13 @@ import "react-quill/dist/quill.snow.css";
 import {
 	postForumsData,
 	updateForumsData,
+<<<<<<< HEAD
 	getForum,
 	imageUpload,
+=======
+	uploadForumImage,
+	deleteForumImage
+>>>>>>> f395cb7ac049054dc207514d093c63c1116cd567
 } from "../Services/forumsApi";
 
 import { getCities } from "../Services/cities";
@@ -24,7 +29,6 @@ function CreateGroup() {
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
-	const [dragging, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
@@ -38,6 +42,7 @@ function CreateGroup() {
 		}));
 	};
 
+<<<<<<< HEAD
 	const [initialLoad, setInitialLoad] = useState(true);
 
 	useEffect(() => {
@@ -69,17 +74,17 @@ function CreateGroup() {
 			updateInputState();
 		}
 	}, [initialLoad, image1]);
+=======
+>>>>>>> f395cb7ac049054dc207514d093c63c1116cd567
 
 	function handleDragEnter(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragging(true);
 	}
 
 	function handleDragLeave(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		setDragging(false);
 	}
 
 	function handleDragOver(e) {
@@ -94,7 +99,6 @@ function CreateGroup() {
 		if (file && file.type.startsWith("image/")) {
 			setImage1(file);
 		}
-		setDragging(false);
 	}
 
 	function handleInputChange(e) {
@@ -130,6 +134,7 @@ function CreateGroup() {
 		endDate: "",
 	});
 
+<<<<<<< HEAD
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		var cityId = searchParams.get("cityId");
@@ -146,6 +151,13 @@ function CreateGroup() {
 			});
 		}
 	}, []);
+=======
+	const handleImageUpload = async (id) => {
+		const form = new FormData();
+		form.append("image", image1);
+		await uploadForumImage(form, cityId, id);
+	} 
+>>>>>>> f395cb7ac049054dc207514d093c63c1116cd567
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -167,8 +179,21 @@ function CreateGroup() {
 				input.isPrivate = input.visibility == "private";
 				var response = newGroup
 					? await postForumsData(cityId, input)
+<<<<<<< HEAD
 					: await updateForumsData(cityId, input, forumId);
 
+=======
+					: await updateForumsData(cityId, input, forumsId);
+					if (newListing) {
+						if (image1) {
+							handleImageUpload(response.data.id)
+						}
+					} else if (image1) {
+						handleImageUpload(input.id)
+					} else if (input.removeImage) {
+						await deleteForumImage(cityId, input.id);
+					}
+>>>>>>> f395cb7ac049054dc207514d093c63c1116cd567
 				setSuccessMessage(t("groupCreated"));
 				setErrorMessage(false);
 				setTimeout(() => {

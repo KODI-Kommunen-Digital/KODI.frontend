@@ -15,7 +15,7 @@ const resources = {
 
 i18n.use(initReactI18next).init({
 	resources,
-	lng: "en",
+	lng: process.env.REACT_APP_LANG || "de",
 	keySeparator: false,
 	interpolation: {
 		escapeValue: false,
