@@ -7,7 +7,7 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
-// import { toast } from "react-toastify";
+import UserProfile from "../../Components/UserProfile";
 import PropTypes from "prop-types";
 import {
 	getFavorites,
@@ -46,7 +46,6 @@ const EventDetails = () => {
 		categoryId: 0,
 		subcategoryId: 0,
 		statusId: "pending",
-		sourceId: 1,
 		userId: 2,
 		title: "",
 		place: "",
@@ -87,6 +86,7 @@ const EventDetails = () => {
 				const cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
 					setUser(res.data.data);
+					console.log(res.data.data);
 				});
 				setSelectedCategoryId(listingsResponse.data.data.categoryId);
 				setListingId(listingsResponse.data.data.id);
@@ -166,7 +166,7 @@ const EventDetails = () => {
 	}, [user]);
 
 	const [handleClassName, setHandleClassName] = useState(
-		"rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
+		"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 	);
 	const [, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
@@ -182,7 +182,7 @@ const EventDetails = () => {
 					setFavoriteId(0);
 					setSuccessMessage(t("list removed from the favorites"));
 					setHandleClassName(
-						"rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
+						"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 					);
 					setFavButton(t("Unfavorite"));
 				} else {
@@ -192,7 +192,7 @@ const EventDetails = () => {
 									setFavoriteId(response.data.id);
 									setSuccessMessage(t("List added to the favorites"));
 									setHandleClassName(
-										"rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
+										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 									);
 									setFavButton(t("Favorite"));
 								})
@@ -231,7 +231,7 @@ const EventDetails = () => {
 						<div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
 							<div className="mt-5 md:col-span-2 md:mt-0">
 								<form method="POST">
-									<div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+									<div className="flex flex-row sm:flex-row sm:items-center text-start justify-between">
 										<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
 											<span
 												className="inline-block max-w-full break-words"
@@ -471,93 +471,7 @@ const EventDetails = () => {
 				</div>
 
 				{userSocial && userSocial.length > 0 ? (
-					<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full sm:h-96 bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
-						<div>
-							<div className="flex justify-between">
-								<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
-									<h1
-										className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("ownerInfo")}
-									</h1>
-								</div>
-
-								<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
-									<button
-										onClick={() =>
-											navigateTo(
-												user ? `/ViewProfile?userId=${user.id}` : "/ViewProfile"
-											)
-										}
-										type="submit"
-										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-										{t("viewProfile")}
-									</button>
-								</div>
-							</div>
-							<div className="my-4 bg-gray-200 h-[1px]"></div>
-
-							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
-								<div className="flex justify-center sm:justify-start">
-									<img
-										className="rounded-full h-20 w-20"
-										src={
-											user?.image
-												? process.env.REACT_APP_BUCKET_HOST + user?.image
-												: PROFILEIMAGE
-										}
-										alt={user?.lastname}
-									/>
-								</div>
-								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-									<h2
-										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{firstname + " " + lastname}
-									</h2>
-									<p
-										className="leading-relaxed text-base dark:text-gray-900"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{user?.email}
-									</p>
-								</div>
-							</div>
-
-							{/* <div className="flex justify-center lg:mt-7 md:mt-7 mt-7">
-								<button
-									onClick={() => {
-										let url = `/ViewProfile?userId=${user.id}`;
-										if (terminalViewParam === "true") {
-											url += "&terminalView=true";
-										}
-										navigateTo(url);
-									}}
-									type="submit"
-									className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{
-										fontFamily: "Poppins, sans-serif",
-									}}
-								>
-									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-									{t("viewProfile")}
-								</button>
-							</div> */}
-						</div>
-					</div>
+					<UserProfile user={user} />
 				) : (
 					<div className="w-full h-80 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
