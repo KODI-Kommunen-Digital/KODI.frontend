@@ -60,7 +60,7 @@ const App = () => {
 						element={<EventDetails />}
 					/>
 					<Route path="/AllEvents" element={<AllEvents />} />
-					<Route path="/ViewProfile" element={<ViewProfile />} />
+					<Route path="/ViewProfile/:username" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
 					<Route
 						path="/CitizenService/DigitalManagement"

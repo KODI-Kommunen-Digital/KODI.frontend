@@ -151,7 +151,7 @@ export default function HomePageNavBar() {
 					</div>
 
 					<div
-						className={`flex items-center justify-center border-gray-100 py-5 lg:justify-center lg:space-x-10 ${gobackClass}`}
+						className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
 					>
 						<a
 							onClick={() => {

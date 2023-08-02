@@ -452,12 +452,8 @@
     "forumName": "Forum Name",
     "postCreated": "Your post is created",
     "groupPosts": "Group Posts",
-    "comingSoon": "Coming Soon",
     "memberRequest": "Member Requests",
     "reportedPosts": "Reported Posts",
-    "show": "Show",
-    "hide": "Hide",
-    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "createPost": "Create Post",
     "groupMembers": "Group Members",
     "comment": "Comment",
@@ -469,5 +465,12 @@
     "showMoreReplies": "Show more replies",
     "hideReplies": "Hide replies",
     "showReplyCount": "View {{count}} reply(s)",
-    "writeReply": "Write a reply..."
+    "writeReply": "Write a reply...",
+    "comingSoon": "Hey! We are cooking it up. Coming soon...",
+    "show": "Show",
+    "hide": "Hide",
+    "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
+    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
+    "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
+    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com"
 }

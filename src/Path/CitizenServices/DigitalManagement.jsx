@@ -6,6 +6,7 @@ import Footer from "../../Components/Footer";
 import { getCitizenServices, getCities } from "../../Services/cities";
 
 const DigitalManagement = () => {
+	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [citizenServiceData, setcitizenServiceData] = useState([]);
 	const [cities, setCities] = useState({});

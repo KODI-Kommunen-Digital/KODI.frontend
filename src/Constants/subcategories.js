@@ -15,4 +15,5 @@ export const subcategoryById = {
 	5: "sports", // Sport
 	7: "local", // Lokales
 	8: "clubnews", // Vereinsnews
+	10: "officialnotification", // Amtliche Mitteilung
 };
