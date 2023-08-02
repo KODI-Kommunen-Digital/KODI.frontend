@@ -92,8 +92,7 @@ const Register = () => {
                     /^_/.test(value) ||
                     /^[^a-z_]/.test(value)
                 ) {
-                    stateObj[name] =
-                        "Username should start with a lowercase letter, may contain underscores, and not contain spaces or start with a special character or number.";
+                    stateObj[name] = t("userNameValidation");
                 }
                 break;
             case "email":
