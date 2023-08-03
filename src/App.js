@@ -38,6 +38,7 @@ import "./i18n";
 import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
+import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 
 const App = () => {
 	useEffect(() => {
@@ -103,6 +104,7 @@ const App = () => {
 					<Route path="/MyGroups" element={<MyGroups />} exact />
 					<Route path="/MyGroups/GroupMembers" element={<GroupMembers />} exact />
 					<Route path="/MyGroups/MemberRequests" element={<MemberRequests />} exact />
+					<Route path="/MyGroups/ReportedPosts" element={<ReportedPosts />} exact />
 				</Routes>
 			</div>
 		</BrowserRouter>

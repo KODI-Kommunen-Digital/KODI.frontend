@@ -111,3 +111,11 @@ export async function getComments(cityId, forumsId, postId, params) {
 		{ params }
 	);
 }
+
+export async function getReportedPosts(cityId, forumsId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
+}
+
+export async function updatePost(cityId, forumsId, postId, patchData) {
+	return axios.patch(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`, patchData);
+}
