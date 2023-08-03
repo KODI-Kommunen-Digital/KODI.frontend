@@ -84,15 +84,17 @@ const Register = () => {
 
             switch (name) {
                 case "username":
-                if (!value) {
-                    stateObj[name] = t("pleaseEnterUsername");
-                } else if (
-                    value[0] === value[0].toUpperCase() ||
-                    /\s/.test(value) ||
-                    /^_/.test(value) ||
-                    /^[^a-z_]/.test(value)
-                ) {
-                    stateObj[name] = t("userNameValidation");
+                    if (!value) {
+                        stateObj[name] = t("pleaseEnterUsername");
+                    } else if (value.length < 6) {
+                        stateObj[name] = t("userNameTooShort");
+                    } else if (
+                        value[0] === value[0].toUpperCase() ||
+                        /\s/.test(value) ||
+                        /^_/.test(value) ||
+                        /^[^a-z_]/.test(value)
+                    ) {
+                        stateObj[name] = t("userNameValidation");
                 }
                 break;
             case "email":
@@ -103,12 +105,14 @@ const Register = () => {
             case "password":
                 if (!value) {
                     stateObj[name] = t("pleaseEnterPassword");
+                } else if (!/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%&]).{8,}/.test(value)) {
+                    stateObj[name] = t("passwordValidation");
                 } else if (input.confirmPassword && value !== input.confirmPassword) {
                     stateObj.confirmPassword = t("passwordsDoNotMatch");
+                } else if (value.includes(input.username)) {
+                    stateObj[name] = t("passwordContainsUsername");
                 } else {
-                    stateObj.confirmPassword = input.confirmPassword
-                        ? ""
-                        : error.confirmPassword;
+                    stateObj.confirmPassword = input.confirmPassword ? "" : error.confirmPassword;
                 }
                 break;
 
