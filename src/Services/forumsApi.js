@@ -83,3 +83,11 @@ export async function createComment(cityId, forumsId, postId, commentData) {
 export async function getComments(cityId, forumsId, postId, params) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`, { params });
 }
+
+export async function getReportedPosts(cityId, forumsId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
+}
+
+export async function updatePost(cityId, forumsId, postId, patchData) {
+	return axios.patch(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`, patchData);
+}

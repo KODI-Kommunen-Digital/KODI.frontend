@@ -449,6 +449,7 @@
     "date_of_joining": "Date of Joining",
     "dateOfRequest": "Requested Date",
     "backToMyGroups": "Go back to My Groups",
+    "numberOfReports": "Number of Reports",
     "digitalManagement": "Digital Management",
     "forums": "Forums",
     "memberRequest": "Member Requests",
@@ -471,5 +472,11 @@
     "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
-    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com"
+    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
+    "viewReports": "View Reports",
+    "hidePost": "Hide",
+    "unHidePost": "Unhide",
+    "hiddenPost": "Hidden Post",
+    "yes": "Yes",
+    "no": "No"
 }
