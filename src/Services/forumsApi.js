@@ -35,12 +35,15 @@ export async function deleteForums(cityId, forumsId) {
 }
 
 export async function uploadForumImage(formData, cityId, forumsId) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/imageUpload`, formData,
-	{
-		headers: {
-			"Content-Type": "multipart/form-data",
-		},
-	});
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/imageUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
 }
 
 export async function deleteForumImage(cityId, forumsId) {
@@ -55,21 +58,40 @@ export async function forumPosts(cityId, forumsId, postData) {
 	return axios.post(`/cities/${cityId}/forums/${forumsId}`, postData);
 }
 
-export async function getForumMemberRequests(cityId, forumsId) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
-}
-
-export async function uploadForumPostImage(formData, cityId, forumsId, postId) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`, formData,
-	{
-		headers: {
-			"Content-Type": "multipart/form-data",
-		},
+export async function getForumMemberRequests(cityId, forumsId, params) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`, {
+		params,
 	});
 }
 
+export async function getForumMemberRequestStatus(
+	cityId,
+	forumsId,
+	memberId,
+	data
+) {
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberId}`,
+		data
+	);
+}
+
+export async function uploadForumPostImage(formData, cityId, forumsId, postId) {
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+}
+
 export async function deleteForumPostImage(cityId, forumsId, postId) {
-	return axios.delete(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageDelete`);
+	return axios.delete(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageDelete`
+	);
 }
 
 export async function forumMemberRequests(cityId, forumsId) {
@@ -77,9 +99,15 @@ export async function forumMemberRequests(cityId, forumsId) {
 }
 
 export async function createComment(cityId, forumsId, postId, commentData) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`, commentData);
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`,
+		commentData
+	);
 }
 
 export async function getComments(cityId, forumsId, postId, params) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`, { params });
+	return axios.get(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`,
+		{ params }
+	);
 }
