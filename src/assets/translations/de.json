@@ -452,8 +452,12 @@
     "comingSoon": "Hey! Wir kochen es. Demnächst...",
     "show": "anzeigen",
     "hide": "verbergen",
+    "waldi_all_rights_reserved": "- ALLE RECHTE VORBEHALTEN ®2023",
     "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut",
     "canNotSelectSameSocialMediaTwice": "Sie haben dieses Social Media bereits bereitgestellt",
-    "pleaseEnterAValidLink":"Bitte geben Sie einen gültigen Link ein",
-    "waldi_all_rights_reserved": "© WALDI - ALL RIGHTS RESERVED ®2023"
+    "pleaseEnterAValidLink":"Bitte geben Sie einen gültigen Link ein, der mit „https://“ beginnt. Beispiel: https://www.example.com",
+    "userNameValidation": "Der Benutzername sollte nur Kleinbuchstaben oder Unterstriche und mindestens 6 Zeichen enthalten. Der Benutzername sollte mit einem Kleinbuchstaben beginnen",
+    "userNameTooShort": "Benutzername ist zu kurz",
+    "passwordValidation": "Das Passwort sollte mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und mindestens 8 Zeichen einschließlich Sonderzeichen enthalten @ # $ % &",
+    "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten"
 }

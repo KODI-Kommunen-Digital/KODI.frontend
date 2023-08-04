@@ -450,8 +450,12 @@
     "comingSoon": "Hey! We are cooking it up. Coming soon...",
     "show": "Show",
     "hide": "Hide",
+    "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
-    "pleaseEnterAValidLink": "Please enter a valid link",
-    "waldi_all_rights_reserved": "© WALDI - ALL RIGHTS RESERVED ®2023"
+    "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
+    "userNameValidation": "Username should contain only lower cases or underscore and minimum 6 characters. The username should start with a lower case",
+    "userNameTooShort": "Username is too short",
+    "passwordValidation": "Password should contain atleast an upper case, a lower case, one number and minimum 8 characters including special characters @ # $ % &",
+    "passwordContainsUsername": "Password should not contains username"
 }

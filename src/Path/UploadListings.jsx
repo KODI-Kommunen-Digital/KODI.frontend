@@ -146,9 +146,7 @@ function UploadListings() {
 		categoryId: 0,
 		subcategoryId: 0,
 		cityId: 0,
-		statusId: 3,
-		sourceId: 1,
-		userId: 2,
+		statusId: 1,
 		title: "",
 		place: "",
 		phone: "",
@@ -206,8 +204,8 @@ function UploadListings() {
 				} else if (input.removeImage) {
 					await deleteListingImage(cityId, input.id);
 				}
-				var userProfile = await getProfile(userId);
-				var isAdmin = userProfile.data.data.roleId === 1 ? "true" : "false";
+				var userProfile = await getProfile();
+				var isAdmin = userProfile.data.data.roleId === 1;
 				isAdmin
 					? setSuccessMessage(t("listingUpdatedAdmin"))
 					: setSuccessMessage(t("listingUpdated"));
