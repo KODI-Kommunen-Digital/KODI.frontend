@@ -14,7 +14,6 @@ import {
 	sortLatestFirst,
 	sortOldestFirst,
 } from "../../Services/helper";
-
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
 	useEffect(() => {
@@ -27,8 +26,8 @@ const ViewProfile = () => {
 	const [, setVillages] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { t } = useTranslation();
-
-	const [user, setUser] = useState();
+	const location = useLocation();
+	const [user, setUser] = useState(location.state?.user);
 	const [userSocial, setUserSocial] = useState([]);
 
 	const [listings, setListings] = useState([]);
@@ -83,8 +82,7 @@ const ViewProfile = () => {
 	};
 
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const userId = searchParams.get("userId");
+		const userId = user.id
 		if (userId) {
 			getProfile(userId)
 				.then((response) => {
@@ -110,12 +108,12 @@ const ViewProfile = () => {
 				setListings(response.data.data);
 			});
 		}
-	}, []);
+	}, [user.id]);
 
-	const location = useLocation();
+
 	const searchParams = new URLSearchParams(location.search);
 	const terminalViewParam = searchParams.get("terminalView");
-	const [, setShowNavBar] = useState(true);
+	const [showNavBar, setShowNavBar] = useState(true);
 	useEffect(() => {
 		if (terminalViewParam === "true") {
 			setShowNavBar(false);
@@ -126,8 +124,8 @@ const ViewProfile = () => {
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
-			<HomePageNavBar />
-			{/* {showNavBar && <HomePageNavBar />} */}
+			{/* <HomePageNavBar /> */}
+			{showNavBar && <HomePageNavBar />}
 
 			<div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">

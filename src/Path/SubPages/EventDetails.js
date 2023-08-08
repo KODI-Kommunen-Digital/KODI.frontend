@@ -41,7 +41,6 @@ const EventDetails = () => {
 	const [, setErrorMessage] = useState("");
 	const [listings, setListings] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 	const [input, setInput] = useState({
 		categoryId: 0,
 		subcategoryId: 0,
@@ -86,7 +85,6 @@ const EventDetails = () => {
 				const cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
 					setUser(res.data.data);
-					console.log(res.data.data);
 				});
 				setSelectedCategoryId(listingsResponse.data.data.categoryId);
 				setListingId(listingsResponse.data.data.id);
@@ -115,7 +113,7 @@ const EventDetails = () => {
 				);
 			});
 		}
-	}, [t, cityId, window.location.href, isLoggedIn]);
+	}, [t, cityId, isLoggedIn]);
 
 	useEffect(() => {
 		document.title = "Event Details";
@@ -188,15 +186,15 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-								.then((response) => {
-									setFavoriteId(response.data.id);
-									setSuccessMessage(t("List added to the favorites"));
-									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-									);
-									setFavButton(t("Favorite"));
-								})
-								.catch((err) => console.log("Error", err))
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {
@@ -207,6 +205,17 @@ const EventDetails = () => {
 			setErrorMessage(t("Error", error));
 		}
 	};
+
+	const handleUserProfile = () => {
+		try {
+			if (user) {
+				navigate(`/ViewProfile/${user.username}`, { state: { user } });
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
@@ -489,11 +498,7 @@ const EventDetails = () => {
 
 								<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
 									<button
-										onClick={() =>
-											navigateTo(
-												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-											)
-										}
+										onClick={handleUserProfile}
 										type="submit"
 										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
 										style={{
