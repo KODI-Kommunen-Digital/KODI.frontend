@@ -90,26 +90,72 @@ const Forum = () => {
 						</div>
 					</div>
 
-					<div className="text-center lg:px-10 md:px-5 sm:px-0 px-2 py-6">
-						<a
-							onClick={() =>
-								navigateTo(
-									`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
-								)
-							}
-							className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
-						>
-							{t("groupMembers")}
-						</a>
-						<a
-							onClick={() =>
-								navigateTo(`/UploadPosts?forumId=${forumId}&cityId=${cityId}`)
-							}
-							className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
-						>
-							{t("createPost")}
-						</a>
-					</div>
+					{forum.isPrivate ? (
+						<div className="text-center lg:px-10 md:px-5 sm:px-0 px-2 py-6">
+							<a
+								onClick={() =>
+									navigateTo(
+										`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
+									)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("request")}
+							</a>
+						</div>
+					) : !forum.isPrivate ? (
+						<div className="text-center lg:px-10 md:px-5 sm:px-0 px-2 py-6">
+							<a
+								onClick={() =>
+									navigateTo(
+										`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
+									)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("request")}
+							</a>
+							<a
+								onClick={() =>
+									navigateTo(
+										`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
+									)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("groupMembers")}
+							</a>
+							<a
+								onClick={() =>
+									navigateTo(`/UploadPosts?forumId=${forumId}&cityId=${cityId}`)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("createPost")}
+							</a>
+						</div>
+					) : (
+						<div className="text-center lg:px-10 md:px-5 sm:px-0 px-2 py-6">
+							<a
+								onClick={() =>
+									navigateTo(
+										`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
+									)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("groupMembers")}
+							</a>
+							<a
+								onClick={() =>
+									navigateTo(`/UploadPosts?forumId=${forumId}&cityId=${cityId}`)
+								}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+							>
+								{t("createPost")}
+							</a>
+						</div>
+					)}
 
 					<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
 						<div className="overflow-hidden sm:p-0 mt-[0rem] px-0 py-0">
@@ -125,74 +171,89 @@ const Forum = () => {
 						</div>
 					</div>
 
-					<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
-						<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
-							{t("groupPosts")}
-						</h1>
-						{forumPosts && forumPosts.length > 0 ? (
-							<div className="bg-white lg:px-0 md:px-0 sm:px-0 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-								<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-									{forumPosts &&
-										forumPosts.map((forumPost, index) => (
-											<div
-												key={index}
-												onClick={() => {
-													navigateTo(
-														`/Forum/ViewPost?postId=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`
-													);
-												}}
-												className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-											>
-												<a className="block relative h-64 rounded overflow-hidden">
-													<img
-														alt="ecommerce"
-														className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-														src={
-															forumPost.image
-																? process.env.REACT_APP_BUCKET_HOST +
-																  forumPost.image
-																: process.env.REACT_APP_BUCKET_HOST +
-																  "admin/Homepage.jpg"
-														}
-													/>
-												</a>
-												<div className="my-5 px-2">
-													<h2
-														className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-														style={{ fontFamily: "Poppins, sans-serif" }}
-													>
-														{forumPost.title}
-													</h2>
+					{forum.isPrivate ? (
+						<div>
+							<div className="flex items-center justify-center">
+								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+									This group is private
+								</h1>
+							</div>
+							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+								<span className="font-sans text-black">
+									To join the group, click the Follow request button!
+								</span>
+							</div>
+						</div>
+					) : (
+						<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
+							<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+								{t("groupPosts")}
+							</h1>
+							{forumPosts && forumPosts.length > 0 ? (
+								<div className="bg-white lg:px-0 md:px-0 sm:px-0 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+									<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+										{forumPosts &&
+											forumPosts.map((forumPost, index) => (
+												<div
+													key={index}
+													onClick={() => {
+														navigateTo(
+															`/Forum/ViewPost?postId=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`
+														);
+													}}
+													className="w-full h-full shadow-lg rounded-lg cursor-pointer"
+												>
+													<a className="block relative h-64 rounded overflow-hidden">
+														<img
+															alt="ecommerce"
+															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+															src={
+																forumPost.image
+																	? process.env.REACT_APP_BUCKET_HOST +
+																	  forumPost.image
+																	: process.env.REACT_APP_BUCKET_HOST +
+																	  "admin/Homepage.jpg"
+															}
+														/>
+													</a>
+													<div className="my-5 px-2">
+														<h2
+															className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{forumPost.title}
+														</h2>
+													</div>
 												</div>
-											</div>
-										))}
+											))}
+									</div>
 								</div>
-							</div>
-						) : (
-							<div>
-								<div className="flex items-center justify-center">
-									<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-										{t("currently_no_posts")}
-									</h1>
+							) : (
+								<div>
+									<div className="flex items-center justify-center">
+										<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+											{t("currently_no_posts")}
+										</h1>
+									</div>
+									<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+										<span className="font-sans text-black">
+											{t("to_upload_new_post")}
+										</span>
+										<a
+											className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+											onClick={() => {
+												navigateTo(
+													`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
+												);
+											}}
+										>
+											{t("click_here")}
+										</a>
+									</div>
 								</div>
-								<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-									<span className="font-sans text-black">
-										{t("to_upload_new_post")}
-									</span>
-									<a
-										className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-										onClick={() => {
-											navigateTo(
-												`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
-											);
-										}}
-									>
-										{t("click_here")}
-									</a>
-								</div>
-							</div>
-						)}
-					</div>
+							)}
+						</div>
+					)}
 					<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 						{pageNo !== 1 ? (
 							<span

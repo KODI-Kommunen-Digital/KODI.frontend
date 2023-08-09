@@ -221,7 +221,7 @@ const AllForums = () => {
 											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
 										>
 											<a className="block relative h-64 rounded overflow-hidden">
-												{checkIfMember(forum.id) ? (
+												{checkIfMember(forum.id) && forum.isPrivate ? (
 													<>
 														<img
 															alt="forumImage"
@@ -233,12 +233,25 @@ const AllForums = () => {
 																	: LISTINGSIMAGE
 															}
 														/>
+
+														{/* <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-800 bg-opacity-50 text-white">
+															<div className="border border-white p-4">
+																<h1
+																	className="text-lg md:text-lg font-sans font-bold mb-0"
+																	style={{
+																		fontFamily: "Poppins, sans-serif",
+																	}}
+																>
+																	Make a Request
+																</h1>
+															</div>
+														</div> */}
 													</>
-												) : forum.isPrivate ? (
+												) : (
 													<>
 														<img
 															alt="forumImage"
-															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
+															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 															src={
 																forum.image
 																	? process.env.REACT_APP_BUCKET_HOST +
@@ -247,29 +260,18 @@ const AllForums = () => {
 															}
 														/>
 
-														<div className="absolute inset-0 flex items-center justify-center">
-															<p className="text-Black font-bold text-lg">
-																Make a Request
-															</p>
-														</div>
-													</>
-												) : (
-													<>
-														<img
-															alt="forumImage"
-															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000 filter blur"
-															src={
-																forum.image
-																	? process.env.REACT_APP_BUCKET_HOST +
-																	  forum.image
-																	: LISTINGSIMAGE
-															}
-														/>
-														<div className="absolute inset-0 flex items-center justify-center">
-															<p className="text-Black font-bold text-lg">
-																Join the Group
-															</p>
-														</div>
+														{/* <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-800 bg-opacity-50 text-white">
+															<div className="border border-white p-4">
+																<h1
+																	className="text-lg md:text-lg font-sans font-bold mb-0"
+																	style={{
+																		fontFamily: "Poppins, sans-serif",
+																	}}
+																>
+																	Join Group
+																</h1>
+															</div>
+														</div> */}
 													</>
 												)}
 											</a>
