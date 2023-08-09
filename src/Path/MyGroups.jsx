@@ -11,6 +11,13 @@ const MyGroups = () => {
 	const [forum, setForums] = useState([]);
 	const [, setIsLoggedIn] = useState(false);
 
+	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
+
 	useEffect(() => {
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
@@ -53,13 +60,6 @@ const MyGroups = () => {
 			onCancel: () => setShowConfirmationModal({ visible: false }),
 		});
 	}
-
-	const navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
 
 	return (
 		<section className="bg-slate-600 body-font relative h-screen">
@@ -291,21 +291,6 @@ const MyGroups = () => {
 													</div>
 												)}
 											</td>
-
-											{/* <td className="px-6 py-4">
-												<div className="flex items-center justify-center">
-													<div
-														className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-															forum.statusId
-														)} mr-2`}
-													></div>
-													<h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-														{status[forum.statusId]
-															? t(status[forum.statusId].toLowerCase())
-															: ""}
-													</h1>
-												</div>
-											</td> */}
 										</tr>
 									);
 								})}

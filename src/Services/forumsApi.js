@@ -35,12 +35,15 @@ export async function deleteForums(cityId, forumsId) {
 }
 
 export async function uploadForumImage(formData, cityId, forumsId) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/imageUpload`, formData,
-	{
-		headers: {
-			"Content-Type": "multipart/form-data",
-		},
-	});
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/imageUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
 }
 
 export async function deleteForumImage(cityId, forumsId) {
@@ -62,17 +65,40 @@ export async function updateForumPosts(cityId, forumsId, postId, postData) {
 	);
 }
 
-export async function uploadForumPostImage(formData, cityId, forumsId, postId) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`, formData,
-	{
-		headers: {
-			"Content-Type": "multipart/form-data",
-		},
+export async function getForumMemberRequests(cityId, forumsId, params) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`, {
+		params,
 	});
 }
 
+export async function getForumMemberRequestStatus(
+	cityId,
+	forumsId,
+	memberId,
+	data
+) {
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberId}`,
+		data
+	);
+}
+
+export async function uploadForumPostImage(formData, cityId, forumsId, postId) {
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+}
+
 export async function deleteForumPostImage(cityId, forumsId, postId) {
-	return axios.delete(`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageDelete`);
+	return axios.delete(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageDelete`
+	);
 }
 
 export async function forumMemberRequests(cityId, forumsId) {
@@ -91,4 +117,12 @@ export async function getComments(cityId, forumsId, postId, params) {
 		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/comments`,
 		{ params }
 	);
+}
+
+export async function getReportedPosts(cityId, forumsId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
+}
+
+export async function updatePost(cityId, forumsId, postId, patchData) {
+	return axios.patch(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`, patchData);
 }
