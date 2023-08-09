@@ -326,11 +326,12 @@ function UploadListings() {
 		const listHTML = `<${listType}>${descriptions
 			.map((description) => `<li>${description}</li>`)
 			.join("")}</${listType}>`;
+		// Update text color to white
+		const whiteTextListHTML = `<div style="color: white">${listHTML}</div>`;
 		setInput((prev) => ({
 			...prev,
-			description: listHTML,
+			description: whiteTextListHTML,
 		}));
-		console.log(input);
 		setDescription(newContent);
 	};
 
