@@ -123,6 +123,16 @@ export async function getReportedPosts(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
 }
 
+export async function reportedComments(cityId, forumsId, postId, postData) {
+	return axios.get(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/reports`,
+		postData
+	);
+}
+
 export async function updatePost(cityId, forumsId, postId, patchData) {
-	return axios.patch(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`, patchData);
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}`,
+		patchData
+	);
 }

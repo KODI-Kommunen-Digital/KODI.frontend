@@ -18,6 +18,7 @@ import Alert from "../../Components/Alert";
 
 function UploadPosts() {
 	const { t } = useTranslation();
+	window.scrollTo(0, 0);
 	const editor = useRef(null);
 	const [newPost, setNewPost] = useState(true);
 	const [updating, setUpdating] = useState(false);
@@ -32,36 +33,6 @@ function UploadPosts() {
 	const navigate = useNavigate();
 
 	const [initialLoad, setInitialLoad] = useState(true);
-
-	useEffect(() => {
-		if (initialLoad) {
-			window.scrollTo(0, 0);
-			setInitialLoad(false);
-		} else {
-			const updateInputState = async () => {
-				if (image1 !== null) {
-					const form = new FormData();
-					form.append("image", image1);
-					try {
-						const filePath = await imageUpload(form);
-						if (filePath?.data?.status === "success") {
-							setInput((prevInput) => ({
-								...prevInput,
-								image: filePath?.data?.path || null,
-								removeImage: false,
-							}));
-						} else {
-							console.error("Image upload failed:", filePath?.data?.message);
-						}
-					} catch (error) {
-						console.error("Image upload error:", error);
-					}
-				}
-			};
-
-			updateInputState();
-		}
-	}, [initialLoad, image1]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();

@@ -17,7 +17,7 @@ const AllForums = () => {
 	const [cityId, setCityId] = useState(1);
 	const [cities, setCities] = useState([]);
 	const [cityName, setCityName] = useState("");
-	const [forum, setForums] = useState([]);
+	const [forums, setForums] = useState([]);
 	const [userForums, setUserForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -210,11 +210,11 @@ const AllForums = () => {
 
 			<div className="mt-5 mb-20 p-6">
 				<div>
-					{forum && forum.length > 0 ? (
+					{forums && forums.length > 0 ? (
 						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-								{forum &&
-									forum.map((forum) => (
+								{forums &&
+									forums.map((forum) => (
 										<div
 											key={forum.id}
 											onClick={() => handleClick(cityId, forum)}
@@ -354,7 +354,7 @@ const AllForums = () => {
 					>
 						{t("page")} {pageNo}
 					</span>
-					{forum.length >= 9 && (
+					{forums.length >= 9 && (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							style={{ fontFamily: "Poppins, sans-serif" }}
