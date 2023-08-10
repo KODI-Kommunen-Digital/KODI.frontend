@@ -483,5 +483,7 @@
     "hiddenPost": "Hidden Post",
     "yes": "Yes",
     "no": "No",
-    "request": "Follow Request"
+
+    "request": "Follow Request",
+    "reportedComments": "Reported Comments"
 }

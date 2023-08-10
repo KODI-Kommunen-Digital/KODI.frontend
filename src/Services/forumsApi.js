@@ -123,10 +123,9 @@ export async function getReportedPosts(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
 }
 
-export async function reportedComments(cityId, forumsId, postId, postData) {
+export async function reportedComments(cityId, forumsId, postId) {
 	return axios.get(
-		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/reports`,
-		postData
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/reports`
 	);
 }
 
