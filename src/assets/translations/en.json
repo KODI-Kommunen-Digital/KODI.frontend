@@ -452,6 +452,9 @@
     "numberOfReports": "Number of Reports",
     "digitalManagement": "Digital Management",
     "forums": "Forums",
+    "forumName": "Forum Name",
+    "postCreated": "Your post is created",
+    "groupPosts": "Group Posts",
     "memberRequest": "Member Requests",
     "reportedPosts": "Reported Posts",
     "createPost": "Create Post",
@@ -479,5 +482,8 @@
     "unHidePost": "Unhide",
     "hiddenPost": "Hidden Post",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+
+    "request": "Follow Request",
+    "reportedComments": "Reported Comments"
 }

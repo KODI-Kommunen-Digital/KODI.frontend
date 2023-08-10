@@ -55,7 +55,14 @@ export async function getAllForums(cityId) {
 }
 
 export async function forumPosts(cityId, forumsId, postData) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}`, postData);
+	return axios.post(`/cities/${cityId}/forums/${forumsId}/posts`, postData);
+}
+
+export async function updateForumPosts(cityId, forumsId, postId, postData) {
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}`,
+		postData
+	);
 }
 
 export async function getForumMemberRequests(cityId, forumsId, params) {
@@ -116,6 +123,15 @@ export async function getReportedPosts(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
 }
 
+export async function reportedComments(cityId, forumsId, postId) {
+	return axios.get(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/reports`
+	);
+}
+
 export async function updatePost(cityId, forumsId, postId, patchData) {
-	return axios.patch(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`, patchData);
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}`,
+		patchData
+	);
 }

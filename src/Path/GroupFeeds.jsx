@@ -296,7 +296,7 @@ const GroupFeeds = () => {
 									{t("to_upload_new_listing")}
 								</span>
 								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 									onClick={() => {
 										localStorage.setItem("selectedItem", "Choose one category");

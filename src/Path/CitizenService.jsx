@@ -24,7 +24,6 @@ const CitizenService = () => {
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [isLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
-	// const [citizenServices, setcitizenServices] = useState([]);
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {

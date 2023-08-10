@@ -78,7 +78,7 @@ export default function HomePageNavBar() {
 					>
 						<div>
 							<img
-								className={`mx-auto lg:h-10 md:h-8 h-10 w-auto cursor-pointer ${buttonClass}`}
+								className={`mx-auto lg:h-12 md:h-12 h-10 w-auto cursor-pointer ${buttonClass}`}
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 								alt="HEDI- Heimat Digital"
 								onClick={() => {

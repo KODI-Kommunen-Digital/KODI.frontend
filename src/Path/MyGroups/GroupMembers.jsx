@@ -6,6 +6,7 @@ import { getForumMembers } from "../../Services/forumsApi";
 import GROUPIMAGE from "../../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
 import ForumNavbar from "../../Components/ForumNavbar";
+// import Modal from "../../Components/ReportedComments";
 
 const GroupMembers = () => {
 	const { t } = useTranslation();
@@ -155,6 +156,7 @@ const GroupMembers = () => {
 												>
 													{t("remove")}
 												</a>
+												{/* <Modal /> */}
 												<a
 													className="font-medium hover:underline cursor-pointer text-center"
 													style={{
