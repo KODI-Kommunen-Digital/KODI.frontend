@@ -30,7 +30,13 @@ function UserProfile({ user }) {
 	};
 	useEffect(() => {
 		if (user && user.socialMedia) {
-			const socialMediaList = JSON.parse(user.socialMedia);
+			let socialMediaList = JSON.parse(user.socialMedia);
+			if (
+				typeof socialMediaList === "object" &&
+				Object.keys(socialMediaList).length === 0
+			) {
+				socialMediaList = [];
+			}
 			const tempUserSocial = {};
 			for (const socialMedia of socialMediaList) {
 				Object.assign(tempUserSocial, socialMedia);
@@ -38,6 +44,7 @@ function UserProfile({ user }) {
 			setUserSocial(tempUserSocial);
 		}
 	}, [user]);
+
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
