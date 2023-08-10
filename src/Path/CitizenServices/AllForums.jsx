@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
-import {
-	getAllForums,
-	getUserForums,
-	forumMemberRequests,
-} from "../../Services/forumsApi";
+import { getAllForums, getUserForums } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 
@@ -21,7 +17,6 @@ const AllForums = () => {
 	const [userForums, setUserForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [, setMemberRequest] = useState();
 	const [hasSentRequest, setHasSentRequest] = useState(false);
 	const navigate = useNavigate();
 
@@ -71,27 +66,27 @@ const AllForums = () => {
 		const isForumMember = userForums.find((data) => data.forumId === forumId);
 		return isForumMember;
 	};
-	const handlePublicGroup = async (cityId, forumId) => {
-		try {
-			const response = await forumMemberRequests(cityId, forumId);
-			const data = response.data.data;
-			setMemberRequest(data);
-			// Set the status message for public groups
-		} catch (error) {
-			console.error("Error fetching forum member requests:", error);
-		}
-	};
+	// const handlePublicGroup = async (cityId, forumId) => {
+	// 	try {
+	// 		const response = await forumMemberRequests(cityId, forumId);
+	// 		const data = response.data.data;
+	// 		setMemberRequest(data);
+	// 		// Set the status message for public groups
+	// 	} catch (error) {
+	// 		console.error("Error fetching forum member requests:", error);
+	// 	}
+	// };
 
-	const handlePrivateGroup = async (cityId, forumId) => {
-		try {
-			const response = await forumMemberRequests(cityId, forumId);
-			const data = response.data.data;
-			setMemberRequest(data);
-			// Set the status message for private groups
-		} catch (error) {
-			console.error("Error fetching forum member requests:", error);
-		}
-	};
+	// const handlePrivateGroup = async (cityId, forumId) => {
+	// 	try {
+	// 		const response = await forumMemberRequests(cityId, forumId);
+	// 		const data = response.data.data;
+	// 		setMemberRequest(data);
+	// 		// Set the status message for private groups
+	// 	} catch (error) {
+	// 		console.error("Error fetching forum member requests:", error);
+	// 	}
+	// };
 	const navigateTo = (path) => {
 		navigate(path);
 	};
@@ -106,11 +101,11 @@ const AllForums = () => {
 		if (!checkIfMember(forum.id) && hasSentRequest === false) {
 			if (forum.isPrivate === 0) {
 				// Handle public groups
-				await handlePublicGroup(cityId, forum.id);
+				// await handlePublicGroup(cityId, forum.id);
 				setHasSentRequest(true);
 			} else {
 				// Handle private groups
-				await handlePrivateGroup(cityId, forum.id);
+				// await handlePrivateGroup(cityId, forum.id);
 				setHasSentRequest(true);
 			}
 		} else {

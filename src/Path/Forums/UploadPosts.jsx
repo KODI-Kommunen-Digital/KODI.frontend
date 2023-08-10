@@ -13,7 +13,6 @@ import {
 } from "../../Services/forumsApi";
 
 import { getCities } from "../../Services/cities";
-import FormData from "form-data";
 import Alert from "../../Components/Alert";
 
 function UploadPosts() {
@@ -31,8 +30,6 @@ function UploadPosts() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
-
-	const [initialLoad, setInitialLoad] = useState(true);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -106,9 +103,11 @@ function UploadPosts() {
 		if (valid) {
 			setUpdating(true);
 			try {
-				var response = newPost
-					? await forumPosts(cityId, forumId, input)
-					: await updateForumPosts(cityId, input, forumId);
+				if (newPost) {
+					await forumPosts(cityId, forumId, input);
+				} else {
+					await updateForumPosts(cityId, input, forumId);
+				}
 
 				setSuccessMessage(t("postCreated"));
 				setErrorMessage(false);
@@ -130,10 +129,9 @@ function UploadPosts() {
 	};
 
 	useEffect(() => {
-		let valid = true;
-		for (let property in error) {
+		for (const property in error) {
 			if (error[property]) {
-				valid = false;
+				break; // No need to continue checking if an error is found
 			}
 		}
 	}, [error]);
@@ -216,25 +214,24 @@ function UploadPosts() {
 	};
 
 	const validateInput = (e) => {
-		let { name, value } = e.target;
-		var errorMessage = getErrorMessage(name, value);
+		const { name, value } = e.target;
+		const errorMessage = getErrorMessage(name, value);
 		setError((prevState) => {
 			return { ...prevState, [name]: errorMessage };
 		});
 	};
-	//Sending data to backend ends
 	const [forumId, setForumId] = useState(null);
 	const [forum, setForums] = useState([]);
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		var cityId = searchParams.get("cityId");
+		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		var forumId = searchParams.get("forumId");
+		const forumId = searchParams.get("forumId");
 		if (forumId && cityId) {
 			setNewPost(true);
 			getForum(cityId, forumId).then((forumsResponse) => {
-				let forumsData = forumsResponse.data.data;
+				const forumsData = forumsResponse.data.data;
 				forumsData.cityId = cityId;
 				setInput(forumsData);
 			});
@@ -313,7 +310,7 @@ function UploadPosts() {
 					</h2>
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("title")} *
@@ -341,7 +338,7 @@ function UploadPosts() {
 
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("city")} *
@@ -352,12 +349,16 @@ function UploadPosts() {
 							name="cityId"
 							value={cityId}
 							onChange={onCityChange}
-							autocomplete="country-name"
+							autoComplete="country-name"
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
-							<option value={0}>{t("select")}</option>
+							<option value={0} key={0}>
+								{t("select")}
+							</option>
 							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
+								<option value={Number(city.id)} key={city.id}>
+									{city.name}
+								</option>
 							))}
 						</select>
 						<div
@@ -372,7 +373,7 @@ function UploadPosts() {
 
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("forums")} *
@@ -405,7 +406,7 @@ function UploadPosts() {
 
 					<div className="relative mb-4">
 						<label
-							for="description"
+							htmlFor="description"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("description")} *

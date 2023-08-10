@@ -20,8 +20,7 @@
     ],
     "ignorePatterns": [
         "src/Path/UploadListings.jsx",
-        "src/Path/CreateGroup.jsx",
-        "src/Path/Forums/UploadPosts.jsx"
+        "src/Path/CreateGroup.jsx"
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
