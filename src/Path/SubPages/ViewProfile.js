@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
-import { getUserListings, getProfile } from "../../Services/usersApi";
+import {
+	getUserListings,
+	getProfile,
+	fetchUsers,
+} from "../../Services/usersApi";
 import { getVillages } from "../../Services/villages";
 import ContactInfo from "../../Components/ContactInfo";
 import {
@@ -83,20 +87,28 @@ const ViewProfile = () => {
 	};
 
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const userId = searchParams.get("userId");
-		if (userId) {
-			getProfile(userId)
+		const pathSegments = window.location.pathname.split("/");
+		const username = pathSegments[pathSegments.length - 1];
+
+		if (username) {
+			fetchUsers({ username: username })
 				.then((response) => {
-					setUser(response.data.data);
-					setUserSocial(JSON.parse(response.data.data.socialMedia));
+					const userData = response.data.data[0]; // Assuming user data is the first element in the array
+					setUser(userData);
+					console.log(userData);
+					setUserSocial(parseSocialMedia(userData.socialMedia));
+					const userId = response.data.data[0].id; // Assuming userId is a property in the response data
+					getUserListings(null, userId)
+						.then((listingsResponse) => {
+							setListings(listingsResponse.data.data);
+						})
+						.catch((error) => {
+							console.log(error);
+						});
 				})
 				.catch((error) => {
 					console.log(error);
 				});
-			getUserListings(null, userId).then((response) => {
-				setListings(response.data.data);
-			});
 		} else {
 			getProfile()
 				.then((response) => {
@@ -111,6 +123,20 @@ const ViewProfile = () => {
 			});
 		}
 	}, []);
+
+	function parseSocialMedia(socialMediaString) {
+		try {
+			const socialMediaArray = JSON.parse(socialMediaString);
+			return socialMediaArray.map((item) => {
+				const platform = Object.keys(item)[0];
+				const link = item[platform];
+				return { platform, link };
+			});
+		} catch (error) {
+			console.error("Error parsing socialMedia:", error);
+			return []; // Return an empty array or handle the error as needed
+		}
+	}
 
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);

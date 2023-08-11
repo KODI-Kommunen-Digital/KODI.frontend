@@ -39,7 +39,7 @@ function ContactInfo({ user }) {
 	}, [user]);
 	return (
 		<div>
-			<div className="w-full h-full lg:h-[21rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+			<div className="w-full h-full lg:h-[18rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
 					<h1
 						className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900"
