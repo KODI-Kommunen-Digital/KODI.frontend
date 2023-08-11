@@ -17,7 +17,6 @@ const AllForums = () => {
 	const [userForums, setUserForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [hasSentRequest, setHasSentRequest] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -66,55 +65,13 @@ const AllForums = () => {
 		const isForumMember = userForums.find((data) => data.forumId === forumId);
 		return isForumMember;
 	};
-	// const handlePublicGroup = async (cityId, forumId) => {
-	// 	try {
-	// 		const response = await forumMemberRequests(cityId, forumId);
-	// 		const data = response.data.data;
-	// 		setMemberRequest(data);
-	// 		// Set the status message for public groups
-	// 	} catch (error) {
-	// 		console.error("Error fetching forum member requests:", error);
-	// 	}
-	// };
-
-	// const handlePrivateGroup = async (cityId, forumId) => {
-	// 	try {
-	// 		const response = await forumMemberRequests(cityId, forumId);
-	// 		const data = response.data.data;
-	// 		setMemberRequest(data);
-	// 		// Set the status message for private groups
-	// 	} catch (error) {
-	// 		console.error("Error fetching forum member requests:", error);
-	// 	}
-	// };
 	const navigateTo = (path) => {
 		navigate(path);
 	};
 
 	const handleClick = async (cityId, forum) => {
-		if (!forum || forum.isPrivate === undefined) {
-			// Invalid forum object or isPrivate property is missing
-			console.error("Invalid forum object or missing isPrivate property");
-			return;
-		}
-
-		if (!checkIfMember(forum.id) && hasSentRequest === false) {
-			if (forum.isPrivate === 0) {
-				// Handle public groups
-				// await handlePublicGroup(cityId, forum.id);
-				setHasSentRequest(true);
-			} else {
-				// Handle private groups
-				// await handlePrivateGroup(cityId, forum.id);
-				setHasSentRequest(true);
-			}
-		} else {
-			setHasSentRequest(false);
-		}
-		if (checkIfMember(forum.id) && cityId && forum.id) {
-			const path = `/Forum?cityId=${cityId}&forumId=${forum.id}`;
-			navigateTo(path);
-		}
+		const path = `/Forum?cityId=${cityId}&forumId=${forum.id}`;
+		navigateTo(path);
 	};
 	const handleChange = (e) => {
 		const selectedCityId = e.target.value;
@@ -228,19 +185,6 @@ const AllForums = () => {
 																	: LISTINGSIMAGE
 															}
 														/>
-
-														{/* <div className="absolute inset-0 flex flex-col justify-center items-center bg-gray-800 bg-opacity-50 text-white">
-															<div className="border border-white p-4">
-																<h1
-																	className="text-lg md:text-lg font-sans font-bold mb-0"
-																	style={{
-																		fontFamily: "Poppins, sans-serif",
-																	}}
-																>
-																	Make a Request
-																</h1>
-															</div>
-														</div> */}
 													</>
 												) : (
 													<>

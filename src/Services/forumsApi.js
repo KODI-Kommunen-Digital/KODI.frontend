@@ -22,6 +22,12 @@ export async function getForumMembers(cityId, forumsId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/members`);
 }
 
+export async function deleteForumMembers(cityId, forumsId, memberId) {
+	return axios.delete(
+		`/cities/${cityId}/forums/${forumsId}/members/${memberId}`
+	);
+}
+
 export async function updateForumsData(cityId, newForumDataObj, forumsId) {
 	return axios.patch(`/cities/${cityId}/forums/${forumsId}`, newForumDataObj);
 }
