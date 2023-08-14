@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 import { useNavigate } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 function UserProfile({ user }) {
-	// const { t } = useTranslation();
 	const [userSocial, setUserSocial] = useState({});
 	const socialMediaSVGPathList = {
 		Facebook: {
@@ -55,43 +53,6 @@ function UserProfile({ user }) {
 		<div>
 			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div>
-					{/* <div className="flex justify-between">
-						<div className="p-4 space-y-0 md:space-y-6 sm:p-4 hidden md:block">
-							<h1
-								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900 text-center md:text-left"
-								style={{
-									fontFamily: "Poppins, sans-serif",
-								}}
-							>
-								{t("ownerInfo")}
-							</h1>
-						</div>
-
-						<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
-							{user && (
-								<div className="button-container">
-									<button
-										onClick={() =>
-											navigateTo(
-												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-											)
-										}
-										type="submit"
-										className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-										{t("viewProfile")}
-									</button>
-								</div>
-							)}
-						</div>
-					</div>
-
-					<div className="my-4 bg-gray-200 h-[1px] hidden md:block"></div> */}
-
 					<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
 						<div className="flex flex-col justify-center items-center md:items-center">
 							<img

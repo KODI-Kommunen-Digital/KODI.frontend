@@ -34,9 +34,9 @@ export function getUserName() {
 	);
 }
 
-export async function getProfileByIds(ids) {
-	return axiosInstance.get(`/users?id=${ids}`);
-}
+// export async function getProfileByIds(ids) {
+// 	return axiosInstance.get(`/users?id=${ids}`);
+// }
 
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();

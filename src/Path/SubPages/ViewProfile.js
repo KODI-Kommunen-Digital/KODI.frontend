@@ -10,7 +10,6 @@ import {
 	getProfile,
 	fetchUsers,
 } from "../../Services/usersApi";
-import { getVillages } from "../../Services/villages";
 import ContactInfo from "../../Components/ContactInfo";
 import {
 	sortByTitleAZ,
@@ -24,12 +23,6 @@ const ViewProfile = () => {
 	useEffect(() => {
 		document.title = "Profile | Smart Regions";
 	}, []);
-
-	const [, setListingId] = useState(0);
-	const [, setNewListing] = useState(true);
-	const [cityId, setCityId] = useState(0);
-	const [, setVillages] = useState([]);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { t } = useTranslation();
 
 	const [user, setUser] = useState();
@@ -38,27 +31,6 @@ const ViewProfile = () => {
 	const [listings, setListings] = useState([]);
 
 	const [selectedSortOption] = useState("");
-
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		const listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			const accessToken =
-				window.localStorage.getItem("accessToken") ||
-				window.sessionStorage.getItem("accessToken");
-			const refreshToken =
-				window.localStorage.getItem("refreshToken") ||
-				window.sessionStorage.getItem("refreshToken");
-			if (accessToken || refreshToken) {
-				setIsLoggedIn(true);
-			}
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-		}
-	}, [t, cityId]);
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -91,52 +63,35 @@ const ViewProfile = () => {
 		const username = pathSegments[pathSegments.length - 1];
 
 		if (username) {
-			fetchUsers({ username: username })
-				.then((response) => {
-					const userData = response.data.data[0]; // Assuming user data is the first element in the array
+			fetchUsers({ username: username }).then((response) => {
+				const userData = response.data.data[0];
+				if (userData) {
 					setUser(userData);
-					console.log(userData);
-					setUserSocial(parseSocialMedia(userData.socialMedia));
-					const userId = response.data.data[0].id; // Assuming userId is a property in the response data
-					getUserListings(null, userId)
-						.then((listingsResponse) => {
-							setListings(listingsResponse.data.data);
-						})
-						.catch((error) => {
-							console.log(error);
-						});
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+					const parsedSocialMedia = userData.socialMedia
+						? userData.socialMedia.split(",") // Replace with your parsing logic
+						: [];
+					setUserSocial(parsedSocialMedia);
+					const userId = userData.id; // Assuming userId is a property in the response data
+					getUserListings(null, userId).then((listingsResponse) => {
+						setListings(listingsResponse.data.data);
+					});
+				} else {
+					navigateTo("/Error");
+				}
+			});
 		} else {
-			getProfile()
-				.then((response) => {
-					setUser(response.data.data);
-					setUserSocial(JSON.parse(response.data.data.socialMedia));
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			getProfile().then((response) => {
+				setUser(response.data.data);
+				const parsedSocialMedia = response.data.data.socialMedia
+					? response.data.data.socialMedia.split(",") // Use your parsing logic
+					: [];
+				setUserSocial(parsedSocialMedia);
+			});
 			getUserListings().then((response) => {
 				setListings(response.data.data);
 			});
 		}
 	}, []);
-
-	function parseSocialMedia(socialMediaString) {
-		try {
-			const socialMediaArray = JSON.parse(socialMediaString);
-			return socialMediaArray.map((item) => {
-				const platform = Object.keys(item)[0];
-				const link = item[platform];
-				return { platform, link };
-			});
-		} catch (error) {
-			console.error("Error parsing socialMedia:", error);
-			return []; // Return an empty array or handle the error as needed
-		}
-	}
 
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
@@ -340,26 +295,6 @@ const ViewProfile = () => {
 							>
 								{t("currently_no_listings")}
 							</h1>
-						</div>
-						<div
-							className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-							style={{ fontFamily: "Poppins, sans-serif" }}
-						>
-							<span className="font-sans text-black">
-								{t("to_upload_new_listing")}
-							</span>
-							<a
-								className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-								onClick={() => {
-									localStorage.setItem("selectedItem", "Choose one category");
-									isLoggedIn
-										? navigateTo("/UploadListings")
-										: navigateTo("/login");
-								}}
-								style={{ fontFamily: "Poppins, sans-serif" }}
-							>
-								{t("click_here")}
-							</a>
 						</div>
 					</div>
 				)}
