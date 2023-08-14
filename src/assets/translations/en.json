@@ -489,5 +489,6 @@
     "requestSent": "Request Send",
     "following": "Following",
     "leaveGroup": "Leave Group",
-    "deleteGroup": "Delete Group"
+    "deleteGroup": "Delete Group",
+    "goBack": "Go back"
 }
