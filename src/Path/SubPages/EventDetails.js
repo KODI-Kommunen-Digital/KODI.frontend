@@ -206,15 +206,15 @@ const EventDetails = () => {
 		}
 	};
 
-	const handleUserProfile = () => {
-		try {
-			if (user) {
-				navigate(`/ViewProfile/${user.username}`, { state: { user } });
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// const handleUserProfile = () => {
+	// 	try {
+	// 		if (user) {
+	// 			navigate(`/ViewProfile/${user.username}`, { state: { user } });
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
 
 	const location = useLocation();
@@ -484,34 +484,6 @@ const EventDetails = () => {
 				) : (
 					<div className="w-full h-72 lg:h-52 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
-							{/* <div className="flex justify-between">
-								<div className="p-4 space-y-0 md:space-y-6 sm:p-4 hidden md:block">
-									<h1
-										className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("ownerInfo")}
-									</h1>
-								</div>
-
-								<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
-									<button
-										onClick={handleUserProfile}
-										type="submit"
-										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-										{t("viewProfile")}
-									</button>
-								</div>
-							</div>
-							<div className="my-4 bg-gray-200 h-[1px] hidden md:block"></div> */}
-
 							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
 								<div className="flex justify-center sm:justify-center">
 									<img
@@ -548,26 +520,6 @@ const EventDetails = () => {
 									</p>
 								</div>
 							</div>
-
-							{/* <div className="flex justify-center lg:mt-7 md:mt-7 mt-7">
-								<button
-									onClick={() => {
-										let url = `/ViewProfile?userId=${user.id}`;
-										if (terminalViewParam === "true") {
-											url += "&terminalView=true";
-										}
-										navigateTo(url);
-									}}
-									type="submit"
-									className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{
-										fontFamily: "Poppins, sans-serif",
-									}}
-								>
-									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-									{t("viewProfile")}
-								</button>
-							</div> */}
 						</div>
 					</div>
 				)}

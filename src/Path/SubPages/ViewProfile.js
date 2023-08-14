@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
@@ -30,12 +30,9 @@ const ViewProfile = () => {
 	const [, setVillages] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { t } = useTranslation();
-	const location = useLocation();
-	const [user, setUser] = useState(location.state?.user);
+	const [user, setUser] = useState({});
 	const [userSocial, setUserSocial] = useState([]);
-
 	const [listings, setListings] = useState([]);
-
 	const [selectedSortOption] = useState("");
 
 	useEffect(() => {
@@ -90,20 +87,23 @@ const ViewProfile = () => {
 		const username = pathSegments[pathSegments.length - 1];
 
 		if (username) {
-			fetchUsers({ username: username })
+			fetchUsers({ username })
 				.then((response) => {
 					const userData = response.data.data[0];
-					setUser(userData);
-					console.log(userData);
-					setUserSocial(parseSocialMedia(userData.socialMedia));
-					const userId = response.data.data[0].id; 
-					getUserListings(null, userId)
-						.then((listingsResponse) => {
-							setListings(listingsResponse.data.data);
-						})
-						.catch((error) => {
-							console.log(error);
-						});
+					if (!userData) {
+						navigateTo('/error')
+					} else {
+						setUser(userData);
+						setUserSocial(parseSocialMedia(userData.socialMedia));
+						const userId = response.data.data[0].id;
+						getUserListings(null, userId)
+							.then((listingsResponse) => {
+								setListings(listingsResponse.data.data);
+							})
+							.catch((error) => {
+								console.log(error);
+							});
+					}
 				})
 				.catch((error) => {
 					console.log(error);
@@ -121,7 +121,7 @@ const ViewProfile = () => {
 				setListings(response.data.data);
 			});
 		}
-	}, [user.id]);
+	}, []);
 
 	function parseSocialMedia(socialMediaString) {
 		try {
@@ -133,11 +133,11 @@ const ViewProfile = () => {
 			});
 		} catch (error) {
 			console.error("Error parsing socialMedia:", error);
-			return []; 
+			return [];
 		}
 	}
 
-	const searchParams = new URLSearchParams(location.search);
+	const searchParams = new URLSearchParams(window.location.search);
 	const terminalViewParam = searchParams.get("terminalView");
 	const [showNavBar, setShowNavBar] = useState(true);
 	useEffect(() => {
