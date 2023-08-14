@@ -244,7 +244,7 @@ const Favorites = () => {
 													src={
 														favListing.logo
 															? process.env.REACT_APP_BUCKET_HOST +
-															favListing.logo
+															  favListing.logo
 															: LISTINGSIMAGE
 													}
 												/>
@@ -290,6 +290,26 @@ const Favorites = () => {
 								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 									{t("currently_no_fav_listings")}
 								</h1>
+							</div>
+
+							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+								<span className="font-sans text-black">
+									{t("to_upload_new_listing")}
+								</span>
+								<a
+									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+									onClick={() => {
+										localStorage.setItem(
+											"selectedItem",
+											t("chooseOneCategory")
+										);
+										isLoggedIn
+											? navigateTo("/UploadListings")
+											: navigateTo("/login");
+									}}
+								>
+									{t("click_here")}
+								</a>
 							</div>
 						</div>
 					)}
