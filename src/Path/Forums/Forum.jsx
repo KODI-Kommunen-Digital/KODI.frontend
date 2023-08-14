@@ -17,7 +17,7 @@ const Forum = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [forumPosts, setForumPosts] = useState([]);
-	const [forum, setFourm] = useState({});
+	const [forums, setFourms] = useState({});
 	const [isValidForum, setIsValidForum] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const [forumId, setForumId] = useState(null);
@@ -42,7 +42,7 @@ const Forum = () => {
 		if (cityIdParam && forumIdParam) {
 			getForum(cityIdParam, forumIdParam).then((response) => {
 				if (response.data.data) {
-					setFourm(response.data.data);
+					setFourms(response.data.data);
 					getForumPosts(cityIdParam, forumIdParam, {
 						pageNo: pageNoParam,
 						pageSize,
@@ -86,11 +86,11 @@ const Forum = () => {
 					(userForum) => userForum.forumId === forumId
 				);
 				setMemberStatus(isMember);
-				const forum = userForums.find(
+				const forums = userForums.find(
 					(userForum) => userForum.forumId === forumId
 				);
-				if (forum) {
-					setMemberId(forum.memberId);
+				if (forums) {
+					setMemberId(forums.memberId);
 				}
 				const membersResponse = await getForumMembers(cityId, forumId);
 				const forumMembers = membersResponse.data.data;
@@ -121,13 +121,32 @@ const Forum = () => {
 		}
 	};
 
-	const handleDeleteGroup = async () => {
+	function goToAllForums() {
+		navigateTo(`/CitizenService`);
+	}
+
+	const handleDelete = async () => {
 		try {
 			await deleteForums(cityId, forumId);
+			goToAllForums();
 		} catch (error) {
 			console.error("Error deleting group:", error);
 		}
 	};
+
+	const [showConfirmationModal, setShowConfirmationModal] = useState({
+		visible: false,
+		onConfirm: () => {},
+		onCancel: () => {},
+	});
+
+	function handleDeleteGroup() {
+		setShowConfirmationModal({
+			visible: true,
+			onConfirm: () => handleDelete(),
+			onCancel: () => setShowConfirmationModal({ visible: false }),
+		});
+	}
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -142,15 +161,15 @@ const Forum = () => {
 										alt="forumImage"
 										className="object-cover object-center h-full w-full"
 										src={
-											forum.image
-												? process.env.REACT_APP_BUCKET_HOST + forum.image
+											forums.image
+												? process.env.REACT_APP_BUCKET_HOST + forums.image
 												: process.env.REACT_APP_BUCKET_HOST +
 												  "admin/Homepage.jpg"
 										}
 									/>
 									<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 										<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-											{forum.forumName}
+											{forums.forumName}
 										</h1>
 									</div>
 								</div>
@@ -158,7 +177,7 @@ const Forum = () => {
 						</div>
 					</div>
 
-					<div className="text-center justify-between lg:px-10 md:px-5 sm:px-0 px-4 md:py-6 py-4 bg-gray-100">
+					<div className="text-center justify-between lg:px-10 md:px-5 sm:px-0 px-4 md:py-6 py-4 bg-gray-50">
 						{memberStatus && (
 							<div className="flex flex-row md:flex-row items-center justify-center">
 								{isOnlyMember ? (
@@ -171,7 +190,7 @@ const Forum = () => {
 										</a>
 										<svg
 											onClick={handleDeleteGroup}
-											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer"
+											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer transition-transform duration-300 transform hover:scale-110"
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
 											viewBox="0 0 24 24"
@@ -181,9 +200,78 @@ const Forum = () => {
 												strokeLinecap="round"
 												strokeLinejoin="round"
 												strokeWidth={2}
-												d="M6 18L18 6M6 6l12 12"
+												d="M3 6h18M5 6l1 13h12l1-13M10 10v6M14 10v6"
 											/>
 										</svg>
+										{showConfirmationModal.visible && (
+											<div className="fixed z-50 inset-0 overflow-y-auto">
+												<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+													<div
+														className="fixed inset-0 transition-opacity"
+														aria-hidden="true"
+													>
+														<div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+													</div>
+													<span
+														className="hidden sm:inline-block sm:align-middle sm:h-screen"
+														aria-hidden="true"
+													>
+														&#8203;
+													</span>
+													<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+														<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+															<div className="sm:flex sm:items-start">
+																<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+																	<svg
+																		className="h-6 w-6 text-red-700"
+																		xmlns="http://www.w3.org/2000/svg"
+																		fill="none"
+																		viewBox="0 0 24 24"
+																		stroke="currentColor"
+																		aria-hidden="true"
+																	>
+																		<path
+																			strokeLinecap="round"
+																			strokeLinejoin="round"
+																			strokeWidth="2"
+																			d="M6 18L18 6M6 6l12 12"
+																		/>
+																	</svg>
+																</div>
+																<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+																	<h3 className="text-lg leading-6 font-medium text-gray-900">
+																		{t("areyousure")}
+																	</h3>
+																	<div className="mt-2">
+																		<p className="text-sm text-gray-500">
+																			Do you really want to delete this group?
+																			This action cannot be reverted.
+																		</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+															<button
+																onClick={showConfirmationModal.onConfirm}
+																type="button"
+																className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+															>
+																{t("delete")}
+															</button>
+
+															<button
+																onClick={showConfirmationModal.onCancel}
+																type="button"
+																className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+															>
+																{t("cancel")}
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										)}
 									</div>
 								) : (
 									<div>
@@ -195,7 +283,7 @@ const Forum = () => {
 										</a>
 										<svg
 											onClick={handleLeaveGroup}
-											className="block lg:hidden mx-4 md:mx_8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer"
+											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer transition-transform duration-300 transform hover:scale-110"
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
 											viewBox="0 0 24 24"
@@ -205,7 +293,7 @@ const Forum = () => {
 												strokeLinecap="round"
 												strokeLinejoin="round"
 												strokeWidth={2}
-												d="M6 18L18 6M6 6l12 12"
+												d="M3 6h18M5 6l1 13h12l1-13M10 10v6M14 10v6"
 											/>
 										</svg>
 									</div>
@@ -228,18 +316,12 @@ const Forum = () => {
 												`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
 											)
 										}
-										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-400 cursor-pointer"
 										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
+										height="1em"
+										viewBox="0 0 640 512"
+										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-green-600 cursor-pointer transition-transform duration-300 transform hover:scale-110"
 									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M4 6h16M4 12h16m-7 6h7"
-										/>
+										<path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z" />
 									</svg>
 								</div>
 
@@ -260,7 +342,7 @@ const Forum = () => {
 												`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
 											)
 										}
-										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer"
+										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer animate-pulse"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"
@@ -277,7 +359,7 @@ const Forum = () => {
 							</div>
 						)}
 
-						{forum.isPrivate && !memberStatus && (
+						{!memberStatus && (
 							<a
 								onClick={followRequested ? undefined : handleFollowRequest}
 								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
@@ -296,7 +378,7 @@ const Forum = () => {
 								{t("description")}
 							</h1>
 							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
-								{forum.description}
+								{forums.description}
 							</h1>
 						</div>
 					</div>
@@ -369,7 +451,8 @@ const Forum = () => {
 							</div>
 						</div>
 					)}
-					{forum.isPrivate && !memberStatus && (
+
+					{forums.isPrivate && !memberStatus && (
 						<div>
 							<div className="flex items-center justify-center">
 								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
@@ -414,7 +497,7 @@ const Forum = () => {
 					</div>
 				</div>
 			) : (
-				<h1 className="text-10xl md:text-5xl lg:text-8xl text-center font-bold my-4 font-sans py-72">
+				<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-4 font-sans py-72">
 					Invalid Forum
 				</h1>
 			)}

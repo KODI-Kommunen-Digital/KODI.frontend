@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 function UserProfile({ user }) {
-	const { t } = useTranslation();
+	// const { t } = useTranslation();
 	const [userSocial, setUserSocial] = useState({});
 	const socialMediaSVGPathList = {
 		Facebook: {
@@ -30,7 +30,13 @@ function UserProfile({ user }) {
 	};
 	useEffect(() => {
 		if (user && user.socialMedia) {
-			const socialMediaList = JSON.parse(user.socialMedia);
+			let socialMediaList = JSON.parse(user.socialMedia);
+			if (
+				typeof socialMediaList === "object" &&
+				Object.keys(socialMediaList).length === 0
+			) {
+				socialMediaList = [];
+			}
 			const tempUserSocial = {};
 			for (const socialMedia of socialMediaList) {
 				Object.assign(tempUserSocial, socialMedia);
@@ -38,6 +44,7 @@ function UserProfile({ user }) {
 			setUserSocial(tempUserSocial);
 		}
 	}, [user]);
+
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -46,12 +53,12 @@ function UserProfile({ user }) {
 	};
 	return (
 		<div>
-			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-80 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div>
-					<div className="flex justify-between">
-						<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
+					{/* <div className="flex justify-between">
+						<div className="p-4 space-y-0 md:space-y-6 sm:p-4 hidden md:block">
 							<h1
-								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900 text-center md:text-left"
 								style={{
 									fontFamily: "Poppins, sans-serif",
 								}}
@@ -61,30 +68,39 @@ function UserProfile({ user }) {
 						</div>
 
 						<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
-							<button
+							{user && (
+								<div className="button-container">
+									<button
+										onClick={() =>
+											navigateTo(
+												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+											)
+										}
+										type="submit"
+										className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+										style={{
+											fontFamily: "Poppins, sans-serif",
+										}}
+									>
+										<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+										{t("viewProfile")}
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
+
+					<div className="my-4 bg-gray-200 h-[1px] hidden md:block"></div> */}
+
+					<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
+						<div className="flex flex-col justify-center items-center md:items-center">
+							<img
+								className="rounded-full h-20 w-20"
 								onClick={() =>
 									navigateTo(
 										user ? `/ViewProfile/${user.username}` : "/ViewProfile"
 									)
 								}
-								type="submit"
-								className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
-								style={{
-									fontFamily: "Poppins, sans-serif",
-								}}
-							>
-								<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-								{t("viewProfile")}
-							</button>
-						</div>
-					</div>
-
-					<div className="my-4 bg-gray-200 h-[1px]"></div>
-
-					<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-2">
-						<div className="flex flex-col justify-center items-center md:items-start">
-							<img
-								className="rounded-full h-20 w-20"
 								src={
 									user?.image
 										? process.env.REACT_APP_BUCKET_HOST + user?.image
@@ -93,7 +109,7 @@ function UserProfile({ user }) {
 								alt={user?.lastname}
 							/>
 						</div>
-						<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+						<div className="flex-grow text-center sm:text-center mt-6 sm:mt-0">
 							<h2
 								className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
 								style={{
@@ -113,12 +129,12 @@ function UserProfile({ user }) {
 						</div>
 					</div>
 
-					<div className="bg-white mx-2 my-2 py-2 px-2 mt-4 mb-4 flex flex-wrap gap-1">
+					<div className="bg-white md:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-4 lg:mt-6 mb-2 flex flex-wrap gap-1">
 						{userSocial &&
 							Object.entries(userSocial).map(([key, value]) => (
 								<div
 									key={key}
-									className="flex justify-center py-2 px-2 sm:justify-start mx-0 my-0 gap-2"
+									className="flex py-2 px-0 md:px-2 mx-0 my-0 gap-1"
 								>
 									<button
 										type="button"
