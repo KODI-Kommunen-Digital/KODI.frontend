@@ -482,12 +482,12 @@ const EventDetails = () => {
 				{userSocial && userSocial.length > 0 ? (
 					<UserProfile user={user} />
 				) : (
-					<div className="w-full h-80 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full h-72 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div className="flex justify-between">
-								<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
+								<div className="p-4 space-y-0 md:space-y-6 sm:p-4 hidden md:block">
 									<h1
-										className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+										className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-gray-900"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -500,7 +500,7 @@ const EventDetails = () => {
 									<button
 										onClick={handleUserProfile}
 										type="submit"
-										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
+										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -510,12 +510,17 @@ const EventDetails = () => {
 									</button>
 								</div>
 							</div>
-							<div className="my-4 bg-gray-200 h-[1px]"></div>
+							<div className="my-4 bg-gray-200 h-[1px] hidden md:block"></div>
 
 							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
 								<div className="flex justify-center sm:justify-start">
 									<img
 										className="rounded-full h-20 w-20"
+										onClick={() =>
+											navigateTo(
+												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+											)
+										}
 										src={
 											user?.image
 												? process.env.REACT_APP_BUCKET_HOST + user?.image
