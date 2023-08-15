@@ -53,15 +53,17 @@ function UserProfile({ user }) {
 		<div>
 			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div>
-					<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
+					<div
+						onClick={() =>
+							navigateTo(
+								user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+							)
+						}
+						className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1"
+					>
 						<div className="flex flex-col justify-center items-center md:items-center">
 							<img
 								className="rounded-full h-20 w-20"
-								onClick={() =>
-									navigateTo(
-										user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-									)
-								}
 								src={
 									user?.image
 										? process.env.REACT_APP_BUCKET_HOST + user?.image
