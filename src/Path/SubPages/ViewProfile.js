@@ -63,8 +63,10 @@ const ViewProfile = () => {
 		const username = pathSegments[pathSegments.length - 1];
 
 		if (username) {
-			fetchUsers({ username: username }).then((response) => {
-				const userData = response.data.data[0];
+			const formattedUsername = username.replace(/%20/g, "");
+			fetchUsers({ username: formattedUsername }).then((response) => {
+				const userData = response.data.data ? response.data.data[0] : null;
+				console.log(userData);
 				if (userData) {
 					setUser(userData);
 					const parsedSocialMedia = userData.socialMedia
@@ -145,9 +147,6 @@ const ViewProfile = () => {
 											>
 												{user?.firstname + " " + user?.lastname}
 											</h2>
-											{/* <p className="leading-relaxed text-base font-semibold mb-2 dark:text-gray-900">
-												Member for 10 months
-											</p> */}
 											<p
 												className="leading-relaxed text-base dark:text-gray-900"
 												style={{ fontFamily: "Poppins, sans-serif" }}
