@@ -27,17 +27,6 @@ export function getUserId() {
 	);
 }
 
-export function getUserName() {
-	return (
-		window.localStorage.getItem("username") ||
-		window.sessionStorage.getItem("username")
-	);
-}
-
-// export async function getProfileByIds(ids) {
-// 	return axiosInstance.get(`/users?id=${ids}`);
-// }
-
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();
 	return axiosInstance.get(`/users/${userId}`, { params });
