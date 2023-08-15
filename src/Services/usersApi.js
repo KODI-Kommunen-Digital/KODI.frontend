@@ -27,13 +27,13 @@ export function getUserId() {
 	);
 }
 
-export async function getProfileByIds(ids) {
-	return axiosInstance.get(`/users?id=${ids}`);
-}
-
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();
 	return axiosInstance.get(`/users/${userId}`, { params });
+}
+
+export async function fetchUsers(params = {}) {
+	return axiosInstance.get("/users", { params });
 }
 
 export async function updateProfile(newProfileObj) {
@@ -66,7 +66,11 @@ export async function verifyEmail(credentials) {
 }
 
 export async function login(credentials) {
-	return axios.post(process.env.REACT_APP_API_BASE_URL + `/users/login`, credentials, { headers });
+	return axios.post(
+		process.env.REACT_APP_API_BASE_URL + `/users/login`,
+		credentials,
+		{ headers }
+	);
 }
 
 export async function logout(credentials) {

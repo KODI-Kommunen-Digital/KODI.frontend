@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
-import { getUserListings, getProfile } from "../../Services/usersApi";
-import { getVillages } from "../../Services/villages";
+import { getUserListings, fetchUsers } from "../../Services/usersApi";
 import ContactInfo from "../../Components/ContactInfo";
 import {
 	sortByTitleAZ,
@@ -20,12 +19,6 @@ const ViewProfile = () => {
 	useEffect(() => {
 		document.title = "Profile | Smart Regions";
 	}, []);
-
-	const [, setListingId] = useState(0);
-	const [, setNewListing] = useState(true);
-	const [cityId, setCityId] = useState(0);
-	const [, setVillages] = useState([]);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { t } = useTranslation();
 
 	const [user, setUser] = useState();
@@ -34,27 +27,6 @@ const ViewProfile = () => {
 	const [listings, setListings] = useState([]);
 
 	const [selectedSortOption] = useState("");
-
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		const listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			const accessToken =
-				window.localStorage.getItem("accessToken") ||
-				window.sessionStorage.getItem("accessToken");
-			const refreshToken =
-				window.localStorage.getItem("refreshToken") ||
-				window.sessionStorage.getItem("refreshToken");
-			if (accessToken || refreshToken) {
-				setIsLoggedIn(true);
-			}
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-		}
-	}, [t, cityId]);
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -82,33 +54,54 @@ const ViewProfile = () => {
 		}
 	};
 
+	function goBack() {
+		navigateTo(`/`);
+	}
+
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const userId = searchParams.get("userId");
-		if (userId) {
-			getProfile(userId)
-				.then((response) => {
-					setUser(response.data.data);
-					setUserSocial(JSON.parse(response.data.data.socialMedia));
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-			getUserListings(null, userId).then((response) => {
-				setListings(response.data.data);
+		const pathSegments = window.location.pathname.split("/");
+		const username = pathSegments[pathSegments.length - 1];
+
+		if (username) {
+			const formattedUsername = username.replace(/%20/g, "");
+			fetchUsers({ username: formattedUsername }).then((response) => {
+				const userData = response.data.data ? response.data.data[0] : null;
+				console.log(userData);
+				if (userData) {
+					setUser(userData);
+					const parsedSocialMedia = userData.socialMedia
+						? JSON.parse(userData.socialMedia)
+						: [];
+					setUserSocial(parsedSocialMedia);
+
+					const userId = userData.id;
+					if (userId) {
+						getUserListings(null, userId).then((listingsResponse) => {
+							setListings(listingsResponse.data.data);
+						});
+					} else {
+						navigateTo("/Error");
+					}
+				} else {
+					navigateTo("/Error");
+				}
 			});
 		} else {
-			getProfile()
-				.then((response) => {
-					setUser(response.data.data);
-					setUserSocial(JSON.parse(response.data.data.socialMedia));
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-			getUserListings().then((response) => {
-				setListings(response.data.data);
-			});
+			<div className="py-72 text-center">
+				<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+					Oops !
+				</h1>
+				<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-20 font-sans">
+					Page not found
+				</h1>
+				<a
+					onClick={() => goBack()}
+					className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+					style={{ fontFamily: "Poppins, sans-serif" }}
+				>
+					{t("goBack")}
+				</a>
+			</div>;
 		}
 	}, []);
 
@@ -154,9 +147,6 @@ const ViewProfile = () => {
 											>
 												{user?.firstname + " " + user?.lastname}
 											</h2>
-											{/* <p className="leading-relaxed text-base font-semibold mb-2 dark:text-gray-900">
-												Member for 10 months
-											</p> */}
 											<p
 												className="leading-relaxed text-base dark:text-gray-900"
 												style={{ fontFamily: "Poppins, sans-serif" }}
@@ -314,26 +304,6 @@ const ViewProfile = () => {
 							>
 								{t("currently_no_listings")}
 							</h1>
-						</div>
-						<div
-							className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-							style={{ fontFamily: "Poppins, sans-serif" }}
-						>
-							<span className="font-sans text-black">
-								{t("to_upload_new_listing")}
-							</span>
-							<a
-								className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-								onClick={() => {
-									localStorage.setItem("selectedItem", "Choose one category");
-									isLoggedIn
-										? navigateTo("/UploadListings")
-										: navigateTo("/login");
-								}}
-								style={{ fontFamily: "Poppins, sans-serif" }}
-							>
-								{t("click_here")}
-							</a>
 						</div>
 					</div>
 				)}
