@@ -473,44 +473,17 @@ const EventDetails = () => {
 				{userSocial && userSocial.length > 0 ? (
 					<UserProfile user={user} />
 				) : (
-					<div className="w-full h-80 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full h-72 lg:h-52 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
-							<div className="flex justify-between">
-								<div className="p-4 space-y-0 md:space-y-6 sm:p-4">
-									<h1
-										className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										{t("ownerInfo")}
-									</h1>
-								</div>
-
-								<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
-									<button
+							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
+								<div className="flex justify-center sm:justify-center">
+									<img
+										className="rounded-full h-20 w-20"
 										onClick={() =>
 											navigateTo(
 												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
 											)
 										}
-										type="submit"
-										className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer"
-										style={{
-											fontFamily: "Poppins, sans-serif",
-										}}
-									>
-										<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-										{t("viewProfile")}
-									</button>
-								</div>
-							</div>
-							<div className="my-4 bg-gray-200 h-[1px]"></div>
-
-							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-2">
-								<div className="flex justify-center sm:justify-start">
-									<img
-										className="rounded-full h-20 w-20"
 										src={
 											user?.image
 												? process.env.REACT_APP_BUCKET_HOST + user?.image
@@ -519,7 +492,7 @@ const EventDetails = () => {
 										alt={user?.lastname}
 									/>
 								</div>
-								<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+								<div className="flex-grow text-center sm:text-center mt-6 sm:mt-0">
 									<h2
 										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
 										style={{

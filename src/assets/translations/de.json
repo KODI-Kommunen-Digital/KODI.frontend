@@ -486,5 +486,10 @@
     "no": "Nein",
 
     "request": "Follow Request",
-    "reportedComments": "Reported Comments"
+    "reportedComments": "Reported Comments",
+    "requestSent": "Request Send",
+    "following": "Following",
+    "leaveGroup": "Leave Group",
+    "deleteGroup": "Delete Group",
+    "goBack": "Go back"
 }

@@ -53,6 +53,7 @@ const DialogueBox = () => {
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
+	// const [memberId, setMemberId] = useState(0);
 	const [memberRequests, setRequests] = useState([]);
 
 	const navigate = useNavigate();
@@ -69,8 +70,8 @@ const DialogueBox = () => {
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		getForumMemberRequests(cityIdParam, forumIdParam)
 			.then((response) => {
-				setRequests(response.data.data);
 				console.log(response.data.data);
+				setRequests(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
 			})
@@ -93,19 +94,13 @@ const DialogueBox = () => {
 		};
 
 		console.log("Data to be sent:", data);
-		sendForumMemberRequestStatus(data);
+		const memberId = memberRequests[0].requestId;
+		sendForumMemberRequestStatus(memberId, data);
 	};
 
-	const sendForumMemberRequestStatus = async (data) => {
+	const sendForumMemberRequestStatus = async (memberId, data) => {
 		try {
-			const memberIdToUse = memberRequests.map((request) => request.requestId);
-
-			await getForumMemberRequestStatus(
-				cityId,
-				forumId,
-				memberIdToUse[0],
-				data
-			);
+			await getForumMemberRequestStatus(cityId, forumId, memberId, data);
 			setShowPopup(false);
 		} catch (error) {
 			console.error("Error sending data:", error);
