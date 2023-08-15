@@ -10,7 +10,7 @@ import {
 	updateForumsData,
 	getForum,
 	uploadForumImage,
-	deleteForumImage
+	deleteForumImage,
 } from "../Services/forumsApi";
 
 import { getCities } from "../Services/cities";
@@ -37,7 +37,6 @@ function CreateGroup() {
 			visibility: groupType,
 		}));
 	};
-
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -105,7 +104,6 @@ function CreateGroup() {
 			setNewGroup(true);
 			getForum(cityId, forumId).then((forumsResponse) => {
 				let forumsData = forumsResponse.data.data;
-				// console.log(forumsResponse.data.data);
 				forumsData.cityId = cityId;
 				setInput(forumsData);
 				setDescription(forumsData.description);
@@ -116,7 +114,7 @@ function CreateGroup() {
 		const form = new FormData();
 		form.append("image", image1);
 		await uploadForumImage(form, cityId, id);
-	} 
+	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -139,15 +137,15 @@ function CreateGroup() {
 				var response = newGroup
 					? await postForumsData(cityId, input)
 					: await updateForumsData(cityId, input, forumsId);
-					if (newGroup) {
-						if (image1) {
-							handleImageUpload(response.data.id)
-						}
-					} else if (image1) {
-						handleImageUpload(input.id)
-					} else if (input.removeImage) {
-						await deleteForumImage(cityId, input.id);
+				if (newGroup) {
+					if (image1) {
+						handleImageUpload(response.data.id);
 					}
+				} else if (image1) {
+					handleImageUpload(input.id);
+				} else if (input.removeImage) {
+					await deleteForumImage(cityId, input.id);
+				}
 				setSuccessMessage(t("groupCreated"));
 				setErrorMessage(false);
 				setTimeout(() => {
@@ -413,7 +411,7 @@ function CreateGroup() {
 										id="groupType"
 										name="groupType"
 										value={input.visibility}
-										checked={input.visibility === "private"}
+										checked={input.visibility === "public"}
 										onChange={handleGroupTypeChange}
 										className="sr-only"
 									/>
