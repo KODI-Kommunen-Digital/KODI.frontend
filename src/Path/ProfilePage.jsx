@@ -32,7 +32,6 @@ class ProfilePage extends React.Component {
 			formValid: true,
 			pageLoading: true,
 			updatingProfile: false,
-			profileImage: null,
 			currentFile: null,
 			val: [{ selected: "", socialMedia: "" }],
 			data: {
@@ -68,7 +67,6 @@ class ProfilePage extends React.Component {
 				newState.profile = response.data.data;
 				newState.pageLoading = false;
 				this.setState({
-					profileImage: response.data.data.image,
 					image: response.data.data.image,
 				});
 				this.setState(newState);
@@ -321,12 +319,11 @@ class ProfilePage extends React.Component {
 		// deleteProfilePic function to remove the image from the server
 		deleteProfilePic()
 			.then(() => {
-				// On successful removal, reset the currentFile, profileImage, and image to PROFILEIMAGE
-				if (this.currentFile || (this.profile && this.profile.image) || this.profileImage) {
+				// On successful removal, reset the currentFile, and image to PROFILEIMAGE
+				if (this.currentFile || (this.profile && this.profile.image)) {
 					this.setState({
 						currentFile: null,
 						image: PROFILEIMAGE,
-						profileImage: PROFILEIMAGE,
 					})
 				}
 				this.setState(prevState => ({
