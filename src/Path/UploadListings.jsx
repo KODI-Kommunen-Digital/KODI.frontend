@@ -59,7 +59,6 @@ function UploadListings() {
 					form.append("pdf", pdf);
 					try {
 						const filePath = await uploadPDF(form);
-						console.log(filePath.data);
 						if (filePath?.data?.status === "success") {
 							setInput((prevInput) => ({
 								...prevInput,
@@ -319,7 +318,6 @@ function UploadListings() {
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
 			}));
-			console.log(input);
 			setDescription(newContent);
 			return;
 		}
@@ -330,7 +328,6 @@ function UploadListings() {
 			...prev,
 			description: listHTML,
 		}));
-		console.log(input);
 		setDescription(newContent);
 	};
 
@@ -881,47 +878,47 @@ function UploadListings() {
 
 					{(categoryId == categoryByName.offers ||
 						categoryId == categoryByName.regionalProducts) && (
-						<div className="relative mb-4 grid grid-cols-2 gap-4">
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("originalPrice")}
-								</label>
-								<input
-									type="text"
-									id="originalPrice"
-									name="originalPrice"
-									value={input.originalPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
+							<div className="relative mb-4 grid grid-cols-2 gap-4">
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("originalPrice")}
+									</label>
+									<input
+										type="text"
+										id="originalPrice"
+										name="originalPrice"
+										value={input.originalPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("discountedPrice")}
+									</label>
+									<input
+										type="text"
+										id="discountedPrice"
+										name="discountedPrice"
+										value={input.discountedPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
 							</div>
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("discountedPrice")}
-								</label>
-								<input
-									type="text"
-									id="discountedPrice"
-									name="discountedPrice"
-									value={input.discountedPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
-							</div>
-						</div>
-					)}
+						)}
 
 					<div className="relative mb-4">
 						<label
