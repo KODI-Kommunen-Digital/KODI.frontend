@@ -86,7 +86,6 @@ const EventDetails = () => {
 				const cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
 					setUser(res.data.data);
-					console.log(res.data.data);
 				});
 				setSelectedCategoryId(listingsResponse.data.data.categoryId);
 				setListingId(listingsResponse.data.data.id);
@@ -188,15 +187,15 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-								.then((response) => {
-									setFavoriteId(response.data.id);
-									setSuccessMessage(t("List added to the favorites"));
-									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-									);
-									setFavButton(t("Favorite"));
-								})
-								.catch((err) => console.log("Error", err))
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {

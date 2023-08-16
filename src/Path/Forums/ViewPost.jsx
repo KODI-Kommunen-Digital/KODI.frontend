@@ -9,9 +9,11 @@ import {
 	getForumPost,
 	createComment,
 	getComments,
+	updateForumPosts
 } from "../../Services/forumsApi";
 import { getProfile } from "../../Services/usersApi";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 const Description = ({ content }) => {
 	return (
@@ -40,6 +42,7 @@ const ViewPost = () => {
 	const [newComment, setNewComment] = useState("");
 	const [comments, setComments] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
+	const [isHidden, setIsHidden] = useState(0);
 	const pageSize = 5;
 
 	const toggleComments = () => {
@@ -124,6 +127,46 @@ const ViewPost = () => {
 		});
 	};
 
+	const handleViewClick = () => {
+		// Toggling between 0 and 1 for isHidden
+		const updatedIsHidden = isHidden === 0 ? 1 : 0;
+		if (!cityId || !forumPost.forumId || !forumPost.id) {
+			console.error("City ID, Forum ID, or Post ID is undefined");
+			return;
+		}
+
+		// Create a copy of the forumPost with the updated isHidden value
+		const updatedForumPost = { ...forumPost, isHidden: updatedIsHidden };
+		if (forumId && cityId && postId) {
+			updateForumPosts(cityId, updatedForumPost.forumId, updatedForumPost.id, {
+				isHidden: updatedIsHidden // Send the updated value
+			})
+				.then((response) => {					// Update the forumPost state with the updated isHidden value
+					setForumPost(updatedForumPost);
+					// Update the isHidden state with the updated value
+					setIsHidden(updatedIsHidden);
+				})
+				.catch((error) => {
+					if (error.response) {
+						console.error("Error Status", error.response.status);
+					} else if (error.request) {
+						console.error("No response was received", error.request);
+					} else {
+						console.error("Unknown error", error.message);
+					}
+				});
+		}
+	};
+
+
+
+	useEffect(() => {
+		// If forumPost has an isHidden property, update the isHidden state
+		if (Object.prototype.hasOwnProperty.call(forumPost, 'isHidden')) {
+			setIsHidden(forumPost.isHidden);
+		}
+	}, [forumPost]);
+
 	useEffect(() => {
 		document.title = "HEIDI - View Post";
 		const searchParams = new URLSearchParams(window.location.search);
@@ -176,7 +219,7 @@ const ViewPost = () => {
 									fontFamily: "Poppins, sans-serif",
 								}}
 							>
-								{forumPost.title}
+								{forumPost.title} 	{forumPost.isHidden ? <ViewOffIcon onClick={handleViewClick} /> : <ViewIcon onClick={handleViewClick} />}
 							</span>
 						</h1>
 					</div>
@@ -242,7 +285,7 @@ const ViewPost = () => {
 															src={
 																comment.image
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	  comment.image
+																	comment.image
 																	: PROFILEIMAGE
 															}
 														/>
@@ -314,8 +357,8 @@ const ViewPost = () => {
 														</svg>
 														{!comment.showReplies
 															? t("showReplyCount", {
-																	count: comment.childrenCount,
-															  })
+																count: comment.childrenCount,
+															})
 															: t("hideReplies")}
 													</button>
 												)}
@@ -358,7 +401,7 @@ const ViewPost = () => {
 																		src={
 																			comment.image
 																				? process.env.REACT_APP_BUCKET_HOST +
-																				  comment.image
+																				comment.image
 																				: PROFILEIMAGE
 																		}
 																	/>
