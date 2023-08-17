@@ -56,7 +56,6 @@ const ReportedComments = () => {
 		reportedComments(cityId, forumId, postId)
 			.then((response) => {
 				// setRequests(response.data.data);
-				console.log(response.data.data);
 				setCityId(response.data.data.id);
 				setForumId(response.data.data.forumId);
 				setPostId(response.data.data.postId);

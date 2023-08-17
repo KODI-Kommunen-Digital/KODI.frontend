@@ -33,7 +33,6 @@ const AllForums = () => {
 		}
 		getCities({ hasForum: true }).then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
-			console.log(citiesResponse.data.data);
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 		});
@@ -200,7 +199,7 @@ const AllForums = () => {
 																	src={
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
-																			  forum.image
+																			forum.image
 																			: LISTINGSIMAGE
 																	}
 																/>
@@ -213,7 +212,7 @@ const AllForums = () => {
 																	src={
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
-																			  forum.image
+																			forum.image
 																			: LISTINGSIMAGE
 																	}
 																/>

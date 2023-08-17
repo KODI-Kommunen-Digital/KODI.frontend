@@ -70,7 +70,6 @@ const DialogueBox = () => {
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		getForumMemberRequests(cityIdParam, forumIdParam)
 			.then((response) => {
-				console.log(response.data.data);
 				setRequests(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
@@ -86,14 +85,12 @@ const DialogueBox = () => {
 	};
 
 	const handleSendClick = () => {
-		console.log("Sending text:", text);
 
 		const data = {
 			reason: text,
 			accept: false,
 		};
 
-		console.log("Data to be sent:", data);
 		const memberId = memberRequests[0].requestId;
 		sendForumMemberRequestStatus(memberId, data);
 	};
