@@ -180,6 +180,7 @@ const ViewPost = () => {
 			getForumPost(cityId, forumId, postId)
 				.then((forumsResponse) => {
 					const forumPost = forumsResponse.data.data;
+					console.log(forumsResponse.data.data);
 					getProfile(forumPost.userId).then((userResponse) => {
 						const user = userResponse.data.data;
 						setUser(user);
@@ -226,8 +227,17 @@ const ViewPost = () => {
 
 					<div className="container-fluid lg:w-full md:w-full mb-10">
 						<div className=" mr-0 ml-0 mt-0">
-							<div className="h-96 overflow-hidden px-0 py-0 shadow-xl">
-								<div className="relative h-96">
+							<style>
+								{`
+									@media (max-width: 280px) {
+										.galaxy-fold {
+											margin-top: 6rem; /* Adjust the margin value as needed */
+										}
+									}
+								`}
+							</style>
+							<div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
+								<div className="relative h-full">
 									<img
 										alt="listing"
 										className="object-cover object-center h-full w-full"
@@ -255,23 +265,25 @@ const ViewPost = () => {
 								onChange={(event) => setNewComment(event.target.value)}
 							></textarea>
 						</div>
-						<div
-							className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
-							style={{ fontFamily: "Poppins, sans-serif" }}
-							onClick={() => postComment()}
-						>
-							{t("comment")}
+						<div className="space-x-2">
+							<div
+								className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								style={{ fontFamily: "Poppins, sans-serif" }}
+								onClick={() => postComment()}
+							>
+								{t("comment")}
+							</div>
+							<a
+								className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								style={{ fontFamily: "Poppins, sans-serif" }}
+								onClick={toggleComments}
+							>
+								{showComments ? t("hideComments") : t("showComments")}
+							</a>
 						</div>
-						<a
-							className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
-							style={{ fontFamily: "Poppins, sans-serif" }}
-							onClick={toggleComments}
-						>
-							{showComments ? t("hideComments") : t("showComments")}
-						</a>
 						{showComments && (
 							<div>
-								<div className="comment-section">
+								<div className="comment-section mt-4">
 									{comments.map((comment, index) => (
 										<div
 											key={index}

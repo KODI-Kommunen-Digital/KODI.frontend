@@ -26,7 +26,7 @@ const MyGroups = () => {
 
 	function goToEditForums(forums) {
 		navigateTo(
-			`/UploadListings?forumId=${forums.forumId}&cityId=${forums.cityId}`
+			`/CreateGroup?forumId=${forums.forumId}&cityId=${forums.cityId}`
 		);
 	}
 
@@ -90,7 +90,7 @@ const MyGroups = () => {
 									</th>
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
+										className="px-6 sm:px-6 py-3 text-center "
 										style={{
 											fontFamily: "Poppins, sans-serif",
 											width: "16.66%",
@@ -101,7 +101,7 @@ const MyGroups = () => {
 
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
+										className="px-6 sm:px-6 py-3 text-center "
 										style={{
 											fontFamily: "Poppins, sans-serif",
 											width: "16.66%",
@@ -112,7 +112,7 @@ const MyGroups = () => {
 
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
+										className="px-6 sm:px-6 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 											width: "16.66%",
@@ -122,7 +122,7 @@ const MyGroups = () => {
 									</th>
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
+										className="px-6 sm:px-6 py-3 text-center "
 										style={{
 											fontFamily: "Poppins, sans-serif",
 											width: "16.66%",
@@ -180,27 +180,27 @@ const MyGroups = () => {
 											</td>
 
 											<td
-												className="px-6 py-4 hidden lg:table-cell text-center"
+												className="px-6 py-4  text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												{new Date(forum.JoinedAt).toLocaleString("de")}
 											</td>
 
 											<td
-												className="px-6 py-4 hidden lg:table-cell text-center"
+												className="px-6 py-4  text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												{forum.isAdmin === 1 ? "You are admin" : "Member"}
 											</td>
 											<td
-												className="px-6 py-4 hidden lg:table-cell text-center"
+												className="px-6 py-4  text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												{forum.isPrivate === 1
 													? "Private group"
 													: "Public group"}
 											</td>
-											<td className="px-6 py-4 hidden lg:table-cell text-center">
+											<td className="px-6 py-4  text-center">
 												<a
 													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
 													onClick={() => goToEditForums(forum)}

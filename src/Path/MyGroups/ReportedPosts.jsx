@@ -21,6 +21,7 @@ const ReportedPosts = () => {
 		getReportedPosts(cityIdParam, forumIdParam)
 			.then((response) => {
 				setReports(response.data.data);
+				console.log(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
 			})
@@ -57,7 +58,7 @@ const ReportedPosts = () => {
 										className="px-6 sm:px-6 py-3"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "40%",
+											width: "25%",
 										}}
 									>
 										{t("reportedPosts")}
@@ -68,7 +69,7 @@ const ReportedPosts = () => {
 										className="px-3 sm:px-3 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "15%",
+											width: "25%",
 										}}
 									>
 										{t("numberOfReports")}
@@ -79,7 +80,7 @@ const ReportedPosts = () => {
 										className="px-6 sm:px-6 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "15%",
+											width: "25%",
 										}}
 									>
 										{t("hiddenPost")}
@@ -90,7 +91,7 @@ const ReportedPosts = () => {
 										className="px-6 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "30%",
+											width: "25%",
 										}}
 									>
 										{t("action")}

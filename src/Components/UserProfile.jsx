@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 import { useNavigate } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 function UserProfile({ user }) {
-	// const { t } = useTranslation();
 	const [userSocial, setUserSocial] = useState({});
 	const socialMediaSVGPathList = {
 		Facebook: {

@@ -11,26 +11,26 @@ const Modal = ({ onClose, onSend, text, handleTextChange }) => {
 	const { t } = useTranslation();
 
 	return (
-		<div className="fixed inset-0 flex justify-center items-center z-50">
-			<div className="bg-white relative w-80 p-6 rounded shadow">
+		<div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
+			<div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
 				<h2 className="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200">
 					{t("reason")}
 				</h2>
 				<textarea
-					className="w-full p-2 border rounded resize-none"
+					className="w-full p-2 border rounded-lg resize-none"
 					rows="4"
 					value={text}
 					onChange={handleTextChange}
 				/>
 				<div className="justify-center mt-4">
 					<button
-						className="w-full font-sans items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+						className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
 						onClick={onClose}
 					>
 						Cancel
 					</button>
 					<button
-						className="w-full font-sans items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+						className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 						onClick={onSend}
 					>
 						Send

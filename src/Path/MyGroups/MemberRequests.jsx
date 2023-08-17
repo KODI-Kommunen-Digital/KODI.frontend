@@ -3,7 +3,10 @@ import SideBar from "../../Components/SideBar";
 import Modal from "../../Components/DialogueBox";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getForumMemberRequests } from "../../Services/forumsApi";
+import {
+	getForumMemberRequests,
+	acceptForumMemberRequests,
+} from "../../Services/forumsApi";
 import PROFILEPICTURE from "../../assets/ProfilePicture.png";
 import { useNavigate } from "react-router-dom";
 import ForumNavbar from "../../Components/ForumNavbar";
@@ -13,6 +16,7 @@ const MemberRequests = () => {
 	const [memberRequests, setRequests] = useState([]);
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
+	const [memberRequestId, setMemberRequestId] = useState(0);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -22,11 +26,38 @@ const MemberRequests = () => {
 		getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })
 			.then((response) => {
 				setRequests(response.data.data);
+				// console.log(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
+				const firstRequestId =
+					response.data.data.find((m) => m.requestId)?.requestId || null;
+				setMemberRequestId(firstRequestId);
+				console.log(firstRequestId);
 			})
 			.catch(() => navigateTo("/Error"));
 	}, []);
+
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleAccept = async () => {
+		setIsLoading(true);
+
+		try {
+			// Assuming you want to accept the request (change `true` to `false` if rejecting)
+			const payload = { accept: true };
+
+			await acceptForumMemberRequests(
+				cityId,
+				forumId,
+				memberRequestId,
+				payload
+			);
+		} catch (error) {
+			console.error("Error accepting member request:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -128,8 +159,13 @@ const MemberRequests = () => {
 
 												<td className="px-6 py-4 text-center">
 													<a
-														className="font-medium text-blue-600 px-2 dark:text-blue-500 hover:underline cursor-pointer text-center"
+														className={`font-medium ${
+															isLoading
+																? "text-gray-400 cursor-not-allowed"
+																: "text-blue-600 hover:underline cursor-pointer"
+														} px-2 dark:text-blue-500`}
 														style={{ fontFamily: "Poppins, sans-serif" }}
+														onClick={handleAccept}
 													>
 														{t("accept")}
 													</a>
