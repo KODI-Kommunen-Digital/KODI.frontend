@@ -77,6 +77,18 @@ export async function getForumMemberRequests(cityId, forumsId, params) {
 	});
 }
 
+export async function acceptForumMemberRequests(
+	cityId,
+	forumsId,
+	memberRequestsId,
+	payload
+) {
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`,
+		payload
+	);
+}
+
 export async function getForumMemberRequestStatus(
 	cityId,
 	forumsId,

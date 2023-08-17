@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getForumMembers } from "../../Services/forumsApi";
+import {
+	getForumMembers,
+	deleteForumMembers,
+	getUserForums,
+} from "../../Services/forumsApi";
 import GROUPIMAGE from "../../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
 import ForumNavbar from "../../Components/ForumNavbar";
@@ -14,30 +18,71 @@ const GroupMembers = () => {
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
 	const [isAdmin, setIsAdmin] = useState(false);
+	const [, setForums] = useState([]);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		document.title = "Heidi - Forum Members";
-		const cityUsers = JSON.parse(
-			window.localStorage.getItem("cityUsers") ||
-				window.sessionStorage.getItem("cityUsers")
-		);
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
-		const cityUserId = cityUsers.find(
-			(cu) => cu.cityId === cityIdParam
-		)?.cityUserId;
-		getForumMembers(cityIdParam, forumIdParam)
+		getForumMembers(cityIdParam, forumIdParam).then((response) => {
+			setMembers(response.data.data);
+			console.log(response.data.data);
+			setIsAdmin(response.data.data.some((m) => m.isAdmin === 1));
+			setCityId(cityIdParam);
+			setForumId(forumIdParam);
+		});
+		getUserForums()
 			.then((response) => {
-				setMembers(response.data.data);
-				setIsAdmin(
-					response.data.data.find((m) => m.cityUserId === cityUserId)?.isAdmin
-				);
-				setCityId(cityIdParam);
-				setForumId(forumIdParam);
+				setForums(response.data.data);
 			})
 			.catch(() => navigateTo("/Error"));
 	}, []);
+
+	const handleAdminToggle = (member) => {
+		const updatedMembers = members.map((m) => {
+			if (m.cityUserId === member.cityUserId) {
+				return {
+					...m,
+					isAdmin: member.isAdmin === 1 ? 0 : 1,
+				};
+			}
+			return m;
+		});
+
+		setMembers(updatedMembers);
+	};
+
+	const [showConfirmationModal, setShowConfirmationModal] = useState({
+		visible: false,
+		members: null,
+		onConfirm: () => {},
+		onCancel: () => {},
+	});
+
+	function handleRemove(member) {
+		const searchParams = new URLSearchParams(window.location.search);
+		const cityId = searchParams.get("cityId");
+		const forumId = searchParams.get("forumId");
+		console.log("forumId:", forumId);
+		// console.log("forumUser.id:", forumUser.id);
+		console.log("memberId:", member.memberId);
+
+		deleteForumMembers(cityId, forumId, member.memberId)
+			.then(() => {
+				setShowConfirmationModal({ visible: false });
+			})
+			.catch((error) => console.log(error));
+	}
+
+	function removeMemberOnClick(members) {
+		setShowConfirmationModal({
+			visible: true,
+			members,
+			onConfirm: () => handleRemove(members),
+			onCancel: () => setShowConfirmationModal({ visible: false }),
+		});
+	}
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -61,7 +106,7 @@ const GroupMembers = () => {
 										className="px-6 sm:px-6 py-3"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "33.3%",
+											width: "20%",
 										}}
 									>
 										{t("members")}
@@ -72,7 +117,7 @@ const GroupMembers = () => {
 										className="px-6 sm:px-6 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "33.3%",
+											width: "20%",
 										}}
 									>
 										{t("date_of_joining")}
@@ -80,10 +125,10 @@ const GroupMembers = () => {
 
 									<th
 										scope="col"
-										className="px-6 sm:px-6 py-3 text-center hidden lg:table-cell"
+										className="px-6 sm:px-6 py-3 text-center"
 										style={{
 											fontFamily: "Poppins, sans-serif",
-											width: "16.67%",
+											width: "20%",
 										}}
 									>
 										{t("admin")}
@@ -91,8 +136,16 @@ const GroupMembers = () => {
 
 									<th
 										scope="col"
-										className="px-6 py-3 text-center"
-										style={{ fontFamily: "Poppins, sans-serif" }}
+										className="px-6 sm:px-6 py-3 text-center"
+										style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
+									>
+										{t("remove")}
+									</th>
+
+									<th
+										scope="col"
+										className="px-6 sm:px-6 py-3 text-center"
+										style={{ fontFamily: "Poppins, sans-serif", width: "20%" }}
 									>
 										{t("action")}
 									</th>
@@ -121,10 +174,10 @@ const GroupMembers = () => {
 												<div className="pl-0 sm:pl-3 overflow-hidden max-w">
 													<div
 														className="font-normal text-gray-500 truncate"
-														style={{ fontFamily: "Poppins, sans-serif" }}
 														onClick={() =>
 															navigateTo(`/ViewProfile/${member.username}`)
 														}
+														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														{member.firstname} {member.lastname} (@
 														{member.username})
@@ -140,29 +193,102 @@ const GroupMembers = () => {
 											</td>
 
 											<td
-												className="px-6 py-4 hidden lg:table-cell text-center"
+												className="px-6 py-4 text-center"
 												style={{
 													fontFamily: "Poppins, sans-serif",
 													color: member.isAdmin === 1 ? "green" : "red",
 												}}
 											>
-												{member.isAdmin === 1 ? "You are admin" : "Member"}
+												{member.isAdmin === 1 ? "Admin" : "Member"}
 											</td>
 
 											<td className="px-6 py-4 text-center">
 												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center pr-2"
+													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center pr-0"
+													onClick={() => removeMemberOnClick(member)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("remove")}
 												</a>
-												{/* <Modal /> */}
+												{showConfirmationModal.visible && (
+													<div className="fixed z-50 inset-0 overflow-y-auto">
+														<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+															<div
+																className="fixed inset-0 transition-opacity"
+																aria-hidden="true"
+															>
+																<div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+															</div>
+															<span
+																className="hidden sm:inline-block sm:align-middle sm:h-screen"
+																aria-hidden="true"
+															>
+																&#8203;
+															</span>
+															<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+																<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+																	<div className="sm:flex sm:items-start">
+																		<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+																			<svg
+																				className="h-6 w-6 text-red-700"
+																				xmlns="http://www.w3.org/2000/svg"
+																				fill="none"
+																				viewBox="0 0 24 24"
+																				stroke="currentColor"
+																				aria-hidden="true"
+																			>
+																				<path
+																					strokeLinecap="round"
+																					strokeLinejoin="round"
+																					strokeWidth="2"
+																					d="M6 18L18 6M6 6l12 12"
+																				/>
+																			</svg>
+																		</div>
+																		<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+																			<h3 className="text-lg leading-6 font-medium text-gray-900">
+																				{t("areyousure")}
+																			</h3>
+																			<div className="mt-2">
+																				<p className="text-sm text-gray-500">
+																					Do you really want to remove this
+																					member? This action cannot be
+																					reverted.
+																				</p>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+																	<button
+																		onClick={showConfirmationModal.onConfirm}
+																		type="button"
+																		className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+																	>
+																		{t("remove")}
+																	</button>
+
+																	<button
+																		onClick={showConfirmationModal.onCancel}
+																		type="button"
+																		className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+																	>
+																		{t("cancel")}
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												)}
+											</td>
+											<td className="px-6 py-4 text-center">
 												<a
 													className="font-medium hover:underline cursor-pointer text-center"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 														color: member.isAdmin === 1 ? "red" : "green",
 													}}
+													onClick={() => handleAdminToggle(member)}
 												>
 													{member.isAdmin === 1 ? "Remove admin" : "Make admin"}
 												</a>

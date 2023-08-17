@@ -328,7 +328,7 @@ const AllForums = () => {
 					</div>
 				</div>
 			) : (
-				<div className="py-72 text-center">
+				<div className="py-60 text-center">
 					<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 						Oops !
 					</h1>

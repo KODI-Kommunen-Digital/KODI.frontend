@@ -27,8 +27,8 @@ export function getUserId() {
 	);
 }
 
-export async function getProfileByIds(ids) {
-	return axiosInstance.get(`/users?id=${ids}`);
+export async function fetchUsers(params = {}) {
+	return axiosInstance.get("/users", { params });
 }
 
 export async function getProfile(userId, params = {}) {

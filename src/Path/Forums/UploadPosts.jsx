@@ -79,6 +79,7 @@ function UploadPosts() {
 		removeImage: false,
 		visibility: "public",
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		title: "",

@@ -77,6 +77,10 @@ const Forum = () => {
 	useEffect(() => {
 		async function checkUserMembership() {
 			const urlParams = new URLSearchParams(window.location.search);
+			const storedFollowRequested = localStorage.getItem("followRequested");
+			if (storedFollowRequested) {
+				setFollowRequested(true);
+			}
 			const cityId = parseInt(urlParams.get("cityId"));
 			const forumId = parseInt(urlParams.get("forumId"));
 			try {
@@ -106,6 +110,7 @@ const Forum = () => {
 		try {
 			await forumMemberRequests(cityId, forumId);
 			setFollowRequested(true);
+			localStorage.setItem("followRequested", "true");
 		} catch (error) {
 			console.error("Error sending follow request:", error);
 		}
