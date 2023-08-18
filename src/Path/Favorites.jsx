@@ -17,7 +17,7 @@ import Footer from "../Components/Footer";
 const Favorites = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
