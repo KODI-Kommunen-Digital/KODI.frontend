@@ -10,7 +10,6 @@ import {
 	sortLatestFirst,
 	sortOldestFirst,
 } from "../Services/helper";
-import { getListings } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
@@ -22,11 +21,10 @@ const Favorites = () => {
 	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
-	const [selectedCategory, setCategoryName] = useState("");
-	const [selectedCity, setCityName] = useState("");
+	const [, setCategoryName] = useState("");
+	const [, setCityName] = useState("");
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
-	const [listings, setListings] = useState([]);
 
 	useEffect(() => {
 		document.title = "Favourites";
@@ -80,11 +78,13 @@ const Favorites = () => {
 			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
 		}
+
+
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		getListings(params).then((response) => {
+		getFavoriteListings(params).then((response) => {
 			const data = response.data.data;
-			setListings(data);
+			setFavListings(data);
 		});
 	}, [categoryId, cities, cityId, pageNo, t]);
 
@@ -146,7 +146,7 @@ const Favorites = () => {
 									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
-									{selectedCity} : {selectedCategory}
+									{t("favorites")}
 								</h1>
 								<div>
 									<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
@@ -227,7 +227,7 @@ const Favorites = () => {
 						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 								{favListings &&
-									favListings.map((favListing) => (
+									favListings.filter(f => f.categoryId === parseInt(categoryId)).map((favListing) => (
 										<div
 											key={favListing.id}
 											onClick={() =>
@@ -288,7 +288,7 @@ const Favorites = () => {
 						<div>
 							<div className="flex items-center justify-center">
 								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-									{t("currently_no_listings")}
+									{t("currently_no_fav_listings")}
 								</h1>
 							</div>
 
@@ -332,7 +332,7 @@ const Favorites = () => {
 					>
 						{t("page")} {pageNo}
 					</span>
-					{listings.length >= 9 && (
+					{favListings.length >= 9 && (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							style={{ fontFamily: "Poppins, sans-serif" }}
