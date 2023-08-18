@@ -9,11 +9,11 @@ import {
 	getForumPost,
 	createComment,
 	getComments,
-	updateForumPosts
+	updateForumPosts,
 } from "../../Services/forumsApi";
 import { getProfile } from "../../Services/usersApi";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const Description = ({ content }) => {
 	return (
@@ -139,9 +139,10 @@ const ViewPost = () => {
 		const updatedForumPost = { ...forumPost, isHidden: updatedIsHidden };
 		if (forumId && cityId && postId) {
 			updateForumPosts(cityId, updatedForumPost.forumId, updatedForumPost.id, {
-				isHidden: updatedIsHidden // Send the updated value
+				isHidden: updatedIsHidden, // Send the updated value
 			})
-				.then((response) => {					// Update the forumPost state with the updated isHidden value
+				.then((response) => {
+					// Update the forumPost state with the updated isHidden value
 					setForumPost(updatedForumPost);
 					// Update the isHidden state with the updated value
 					setIsHidden(updatedIsHidden);
@@ -158,11 +159,9 @@ const ViewPost = () => {
 		}
 	};
 
-
-
 	useEffect(() => {
 		// If forumPost has an isHidden property, update the isHidden state
-		if (Object.prototype.hasOwnProperty.call(forumPost, 'isHidden')) {
+		if (Object.prototype.hasOwnProperty.call(forumPost, "isHidden")) {
 			setIsHidden(forumPost.isHidden);
 		}
 	}, [forumPost]);
@@ -213,16 +212,45 @@ const ViewPost = () => {
 			<div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
 					<div className="overflow-hidden mb-10">
-						<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-							<span
-								className="inline-block max-w-full break-words"
-								style={{
-									fontFamily: "Poppins, sans-serif",
-								}}
-							>
-								{forumPost.title} 	{forumPost.isHidden ? <ViewOffIcon onClick={handleViewClick} /> : <ViewIcon onClick={handleViewClick} />}
-							</span>
-						</h1>
+						<div className="flex flex-col items-start">
+							<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+								<span
+									className="inline-block max-w-full break-words"
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
+								>
+									{forumPost.title}
+								</span>
+							</h1>
+							<div className="flex items-center text-2xl md:text-3xl lg:text-3xl text-blue-400">
+								{forumPost.isHidden ? (
+									<div className="flex items-center gap-2">
+										<ViewOffIcon onClick={handleViewClick} />
+										<span
+											className="leading-relaxed text-base text-blue-400"
+											style={{
+												fontFamily: "Poppins, sans-serif",
+											}}
+										>
+											Unhide Post
+										</span>
+									</div>
+								) : (
+									<div className="flex items-center gap-2">
+										<ViewIcon onClick={handleViewClick} />
+										<span
+											className="leading-relaxed text-base text-blue-400"
+											style={{
+												fontFamily: "Poppins, sans-serif",
+											}}
+										>
+											Hide Post
+										</span>
+									</div>
+								)}
+							</div>
+						</div>
 					</div>
 
 					<div className="container-fluid lg:w-full md:w-full mb-10">
@@ -297,7 +325,7 @@ const ViewPost = () => {
 															src={
 																comment.image
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	comment.image
+																	  comment.image
 																	: PROFILEIMAGE
 															}
 														/>
@@ -369,8 +397,8 @@ const ViewPost = () => {
 														</svg>
 														{!comment.showReplies
 															? t("showReplyCount", {
-																count: comment.childrenCount,
-															})
+																	count: comment.childrenCount,
+															  })
 															: t("hideReplies")}
 													</button>
 												)}
@@ -413,7 +441,7 @@ const ViewPost = () => {
 																		src={
 																			comment.image
 																				? process.env.REACT_APP_BUCKET_HOST +
-																				comment.image
+																				  comment.image
 																				: PROFILEIMAGE
 																		}
 																	/>

@@ -137,8 +137,8 @@ export async function getComments(cityId, forumsId, postId, params) {
 	);
 }
 
-export async function getReportedPosts(cityId, forumsId) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`);
+export async function getReportedPosts(cityId, forumsId, params) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/reports`, { params });
 }
 
 export async function reportedComments(cityId, forumsId, postId) {
