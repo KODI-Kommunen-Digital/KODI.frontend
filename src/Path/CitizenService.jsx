@@ -13,26 +13,11 @@ const CitizenService = () => {
 			title: "forums",
 			link: "Forums",
 			image: "admin/Forums.jpg",
-			newWindow: false,
 		},
 		{
 			title: "digitalManagement",
 			link: "digitalManagement",
 			image: "admin/DigitalManagement.jpg",
-			newWindow: false,
-		},
-		{
-			title: "FreetimeAndTourisms",
-			link: `https://ilztal.de/`,
-			image: "admin/Forums.jpg",
-			newWindow: true,
-
-		},
-		{
-			title: "VirtualTours",
-			link: `https://ilzerland.bayern/interaktive-karte/`,
-			image: "admin/Forums.jpg",
-			newWindow: true,
 		},
 	]);
 	const [cities, setCities] = useState({});
@@ -62,18 +47,6 @@ const CitizenService = () => {
 			if (cityIdParam) setCityId(cityIdParam);
 		});
 	}, []);
-
-	// const navigateTo = (link) => {
-	// 	window.location.href = link;
-	//   };
-
-	const handleLinkClick = (data) => {
-		if (data.newWindow) {
-			window.open(data.link, '_blank');
-		} else {
-			navigateTo(data.link + `?cityId=${cityId}`);
-		}
-	};
 
 	// useEffect(() => {
 	//     if (cityId) {
@@ -145,7 +118,9 @@ const CitizenService = () => {
 									<div className="relative h-80 rounded overflow-hidden">
 										<a
 											rel="noreferrer noopener"
-											onClick={() => handleLinkClick(data)}
+											onClick={() => {
+												navigateTo(data.link + `?cityId=${cityId}`);
+											}}
 										>
 											<img
 												alt={data.title}
