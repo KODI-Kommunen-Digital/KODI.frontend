@@ -161,7 +161,7 @@ const Favorites = () => {
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities")}
+													{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
 												</option>
 												{cities.map((city) => (
 													<option
@@ -244,7 +244,7 @@ const Favorites = () => {
 													src={
 														favListing.logo
 															? process.env.REACT_APP_BUCKET_HOST +
-															  favListing.logo
+															favListing.logo
 															: LISTINGSIMAGE
 													}
 												/>
