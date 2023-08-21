@@ -161,7 +161,7 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
+											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
 										</option>
 										{cities.map((city) => (
 											<option
