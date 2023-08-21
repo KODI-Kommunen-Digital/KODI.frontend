@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
+import LoadingPage from "../../Path/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -26,6 +27,7 @@ const Events = () => {
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -52,6 +54,7 @@ const Events = () => {
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const params = { pageSize: 12, statusId: 1 };
+		setIsLoading(true);
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -79,10 +82,25 @@ const Events = () => {
 		if (window.location.pathname === "/AllEvents" && categoryId === "3") {
 			params.sortByStartDate = true;
 		}
-		getListings(params).then((response) => {
-			const data = response.data.data;
-			setListings(data);
-		});
+		const fetchData = async () => {
+			try {
+				const response = await getListings(params);
+				const data = response.data.data;
+				setListings(data);
+			} catch (error) {
+				console.error("Error fetching listings:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		const fetchDataWithDelay = () => {
+			setTimeout(() => {
+				fetchData();
+			}, 2000);
+		};
+
+		fetchDataWithDelay();
+		return () => setIsLoading(false);
 	}, [categoryId, cities, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -131,7 +149,6 @@ const Events = () => {
 
 	return (
 		<section className="text-gray-600 body-font relative">
-			{/* <HomePageNavBar /> */}
 			{showNavBar && <HomePageNavBar />}
 			<div
 				className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
@@ -231,102 +248,110 @@ const Events = () => {
 			</div>
 
 			<div className="mt-5 mb-20 p-6">
-				<div>
-					{listings && listings.length > 0 ? (
-						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-								{listings &&
-									listings.map((listing, index) => (
-										<div
-											key={index}
-											onClick={() => {
-												let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
-												if (terminalViewParam === "true") {
-													url += "&terminalView=true";
-												}
-												navigateTo(url);
-											}}
-											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-													src={
-														listing.logo
-															? process.env.REACT_APP_BUCKET_HOST + listing.logo
-															: LISTINGSIMAGE
+				{isLoading ? (
+					<LoadingPage />
+				) : (
+					<div>
+						{listings && listings.length > 0 ? (
+							<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+								<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+									{listings &&
+										listings.map((listing, index) => (
+											<div
+												key={index}
+												onClick={() => {
+													let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
+													if (terminalViewParam === "true") {
+														url += "&terminalView=true";
 													}
-												/>
-											</a>
-											<div className="mt-5 px-2">
-												<h2
-													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{listing.title}
-												</h2>
+													navigateTo(url);
+												}}
+												className="w-full h-full shadow-lg rounded-lg cursor-pointer"
+											>
+												<a className="block relative h-64 rounded overflow-hidden">
+													<img
+														alt="ecommerce"
+														className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+														src={
+															listing.logo
+																? process.env.REACT_APP_BUCKET_HOST +
+																  listing.logo
+																: LISTINGSIMAGE
+														}
+													/>
+												</a>
+												<div className="mt-5 px-2">
+													<h2
+														className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+														style={{ fontFamily: "Poppins, sans-serif" }}
+													>
+														{listing.title}
+													</h2>
+												</div>
+												<div className="my-4 bg-gray-200 h-[1px]"></div>
+												{listing.id && listing.categoryId === 3 ? (
+													<p
+														className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+														style={{ fontFamily: "Poppins, sans-serif" }}
+													>
+														{new Date(
+															listing.startDate.slice(0, 10)
+														).toLocaleDateString("de-DE") +
+															" To " +
+															new Date(
+																listing.endDate.slice(0, 10)
+															).toLocaleDateString("de-DE")}
+													</p>
+												) : (
+													<p
+														className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+														style={{ fontFamily: "Poppins, sans-serif" }}
+														dangerouslySetInnerHTML={{
+															__html: listing.description,
+														}}
+													/>
+												)}
 											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{listing.id && listing.categoryId === 3 ? (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{new Date(
-														listing.startDate.slice(0, 10)
-													).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-															listing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-												</p>
-											) : (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-													dangerouslySetInnerHTML={{
-														__html: listing.description,
-													}}
-												/>
-											)}
-										</div>
-									))}
+										))}
+								</div>
 							</div>
-						</div>
-					) : (
-						<div>
-							<div className="flex items-center justify-center">
-								<h1
-									className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+						) : (
+							<div>
+								<div className="flex items-center justify-center">
+									<h1
+										className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
+										{t("currently_no_listings")}
+									</h1>
+								</div>
+								<div
+									className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
-									{t("currently_no_listings")}
-								</h1>
+									<span className="font-sans text-black">
+										{t("to_upload_new_listing")}
+									</span>
+									<a
+										className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+										onClick={() => {
+											localStorage.setItem(
+												"selectedItem",
+												"Choose one category"
+											);
+											isLoggedIn
+												? navigateTo("/UploadListings")
+												: navigateTo("/login");
+										}}
+									>
+										{t("click_here")}
+									</a>
+								</div>
 							</div>
-							<div
-								className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-								style={{ fontFamily: "Poppins, sans-serif" }}
-							>
-								<span className="font-sans text-black">
-									{t("to_upload_new_listing")}
-								</span>
-								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-									onClick={() => {
-										localStorage.setItem("selectedItem", "Choose one category");
-										isLoggedIn
-											? navigateTo("/UploadListings")
-											: navigateTo("/login");
-									}}
-								>
-									{t("click_here")}
-								</a>
-							</div>
-						</div>
-					)}
-				</div>
+						)}
+					</div>
+				)}
 				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 					{pageNo !== 1 ? (
 						<span
