@@ -49,26 +49,35 @@ const HomePage = () => {
 			setListings([...sortLatestFirst(response.data.data)]);
 		});
 
+		// getListingsCount().then((response) => {
+		// 	const data = response.data.data;
+		// 	const sortedData = data.sort(
+		// 		(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
+		// 	);
+
+		// 	const categoriesWithZeroListings = [];
+		// 	for (let i = 1; i <= 13; i++) {
+		// 		// Assuming category IDs are from 1 to 13
+		// 		if (i !== 2 && i !== 8) {
+		// 			// Assuming no category IDs 2 and 8
+		// 			const category = sortedData.find((item) => item.categoryId === i);
+		// 			if (!category) {
+		// 				categoriesWithZeroListings.push({ categoryId: i, totalCount: "0" });
+		// 			}
+		// 		}
+		// 	}
+		// 	const finalData = sortedData.concat(categoriesWithZeroListings);
+
+		// 	setListingsCount(finalData);
+		// });
+
 		getListingsCount().then((response) => {
 			const data = response.data.data;
 			const sortedData = data.sort(
 				(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
 			);
 
-			const categoriesWithZeroListings = [];
-			for (let i = 1; i <= 13; i++) {
-				// Assuming category IDs are from 1 to 13
-				if (i !== 2 && i !== 8) {
-					// Assuming no category IDs 2 and 8
-					const category = sortedData.find((item) => item.categoryId === i);
-					if (!category) {
-						categoriesWithZeroListings.push({ categoryId: i, totalCount: "0" });
-					}
-				}
-			}
-			const finalData = sortedData.concat(categoriesWithZeroListings);
-
-			setListingsCount(finalData);
+			setListingsCount(sortedData);
 		});
 
 		document.title = "Heidi Home";
@@ -177,7 +186,7 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
+											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
 										</option>
 										{cities.map((city) => (
 											<option
@@ -533,7 +542,7 @@ const HomePage = () => {
 							localStorage.setItem("selectedItem", t("chooseOneCategory"));
 							navigateTo("/AllEvents");
 						}}
-						className="w-full rounded-xl sm:w-80 mt-10 mx-auto rounded bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
 						{t("viewMore")}
@@ -557,7 +566,7 @@ const HomePage = () => {
 							{t("to_upload_new_listing")}
 						</span>
 						<a
-							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 							onClick={() => {
 								localStorage.setItem("selectedItem", "Choose one category");

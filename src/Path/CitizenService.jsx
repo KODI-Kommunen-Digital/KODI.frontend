@@ -13,11 +13,26 @@ const CitizenService = () => {
 			title: "forums",
 			link: "Forums",
 			image: "admin/Forums.jpg",
+			newWindow: false,
 		},
 		{
 			title: "digitalManagement",
 			link: "digitalManagement",
 			image: "admin/DigitalManagement.jpg",
+			newWindow: false,
+		},
+		{
+			title: "FreetimeAndTourisms",
+			link: `https://ilztal.de/`,
+			image: "admin/Forums.jpg",
+			newWindow: true,
+
+		},
+		{
+			title: "VirtualTours",
+			link: `https://ilzerland.bayern/interaktive-karte/`,
+			image: "admin/Forums.jpg",
+			newWindow: true,
 		},
 	]);
 	const [cities, setCities] = useState({});
@@ -47,6 +62,18 @@ const CitizenService = () => {
 			if (cityIdParam) setCityId(cityIdParam);
 		});
 	}, []);
+
+	// const navigateTo = (link) => {
+	// 	window.location.href = link;
+	//   };
+
+	const handleLinkClick = (data) => {
+		if (data.newWindow) {
+			window.open(data.link, '_blank');
+		} else {
+			navigateTo(data.link + `?cityId=${cityId}`);
+		}
+	};
 
 	// useEffect(() => {
 	//     if (cityId) {
@@ -87,7 +114,7 @@ const CitizenService = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
+											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
 										</option>
 										{citiesArray.map((city) => (
 											<option
@@ -118,9 +145,7 @@ const CitizenService = () => {
 									<div className="relative h-80 rounded overflow-hidden">
 										<a
 											rel="noreferrer noopener"
-											onClick={() => {
-												navigateTo(data.link + `?cityId=${cityId}`);
-											}}
+											onClick={() => handleLinkClick(data)}
 										>
 											<img
 												alt={data.title}
@@ -153,7 +178,7 @@ const CitizenService = () => {
 							{t("to_upload_new_listing")}
 						</span>
 						<a
-							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-black"
+							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
 							onClick={() => {
 								localStorage.setItem("selectedItem", "Choose one category");
 								isLoggedIn
