@@ -9,11 +9,10 @@ import {
 	getForumPost,
 	createComment,
 	getComments,
-	updateForumPosts,
+	createReportedPosts,
 } from "../../Services/forumsApi";
 import { getProfile } from "../../Services/usersApi";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const Description = ({ content }) => {
 	return (
@@ -42,7 +41,8 @@ const ViewPost = () => {
 	const [newComment, setNewComment] = useState("");
 	const [comments, setComments] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
-	const [isHidden, setIsHidden] = useState(0);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+	const [text, setText] = useState("");
 	const pageSize = 5;
 
 	const toggleComments = () => {
@@ -127,45 +127,6 @@ const ViewPost = () => {
 		});
 	};
 
-	const handleViewClick = () => {
-		// Toggling between 0 and 1 for isHidden
-		const updatedIsHidden = isHidden === 0 ? 1 : 0;
-		if (!cityId || !forumPost.forumId || !forumPost.id) {
-			console.error("City ID, Forum ID, or Post ID is undefined");
-			return;
-		}
-
-		// Create a copy of the forumPost with the updated isHidden value
-		const updatedForumPost = { ...forumPost, isHidden: updatedIsHidden };
-		if (forumId && cityId && postId) {
-			updateForumPosts(cityId, updatedForumPost.forumId, updatedForumPost.id, {
-				isHidden: updatedIsHidden, // Send the updated value
-			})
-				.then((response) => {
-					// Update the forumPost state with the updated isHidden value
-					setForumPost(updatedForumPost);
-					// Update the isHidden state with the updated value
-					setIsHidden(updatedIsHidden);
-				})
-				.catch((error) => {
-					if (error.response) {
-						console.error("Error Status", error.response.status);
-					} else if (error.request) {
-						console.error("No response was received", error.request);
-					} else {
-						console.error("Unknown error", error.message);
-					}
-				});
-		}
-	};
-
-	useEffect(() => {
-		// If forumPost has an isHidden property, update the isHidden state
-		if (Object.prototype.hasOwnProperty.call(forumPost, "isHidden")) {
-			setIsHidden(forumPost.isHidden);
-		}
-	}, [forumPost]);
-
 	useEffect(() => {
 		document.title = "HEIDI - View Post";
 		const searchParams = new URLSearchParams(window.location.search);
@@ -199,6 +160,37 @@ const ViewPost = () => {
 		}
 	}, []);
 
+	const handleReportPost = () => {
+		const data = {
+			Reason: text,
+			accept: false,
+		};
+		sendForumMemberReportStatus(data);
+	};
+
+	const sendForumMemberReportStatus = async (data) => {
+		try {
+			await createReportedPosts(cityId, forumId, postId, data);
+			setIsPopupOpen(false);
+			setText("");
+		} catch (error) {
+			console.error(t("Error in reporting post", error));
+		}
+	};
+
+	const handleTextChange = (event) => {
+		setText(event.target.value);
+	};
+
+	const openPopup = () => {
+		setIsPopupOpen(true);
+	};
+
+	const closePopup = () => {
+		setIsPopupOpen(false);
+		setText("");
+	};
+
 	useEffect(() => {
 		if (pageNo !== 1) {
 			fetchComments();
@@ -212,7 +204,7 @@ const ViewPost = () => {
 			<div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
 					<div className="overflow-hidden mb-10">
-						<div className="flex flex-col items-start">
+						<div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
 							<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
 								<span
 									className="inline-block max-w-full break-words"
@@ -223,30 +215,46 @@ const ViewPost = () => {
 									{forumPost.title}
 								</span>
 							</h1>
-							<div className="flex items-center text-2xl md:text-3xl lg:text-3xl text-blue-400">
-								{forumPost.isHidden ? (
-									<div className="flex items-center gap-2">
-										<ViewOffIcon onClick={handleViewClick} />
-										<span
-											className="leading-relaxed text-base text-blue-400"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											Unhide Post
-										</span>
-									</div>
-								) : (
-									<div className="flex items-center gap-2">
-										<ViewIcon onClick={handleViewClick} />
-										<span
-											className="leading-relaxed text-base text-blue-400"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											Hide Post
-										</span>
+							<div className="flex my-4 items-center text-2xl md:text-3xl lg:text-3xl text-blue-400">
+								<button
+									type="button"
+									className="rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+									onClick={openPopup}
+								>
+									<span
+										className="ml-1"
+										style={{ fontFamily: "Poppins, sans-serif" }}
+									>
+										Report
+									</span>
+								</button>
+								{isPopupOpen && (
+									<div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
+										<div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
+											<h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800 dark:text-neutral-200">
+												{t("reason")}
+											</h2>
+											<textarea
+												className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
+												rows="4"
+												value={text}
+												onChange={handleTextChange}
+											/>
+											<div className="flex justify-center mt-4">
+												<button
+													className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+													onClick={closePopup}
+												>
+													Cancel
+												</button>
+												<button
+													className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+													onClick={handleReportPost}
+												>
+													Send
+												</button>
+											</div>
+										</div>
 									</div>
 								)}
 							</div>
@@ -259,7 +267,7 @@ const ViewPost = () => {
 								{`
 									@media (max-width: 280px) {
 										.galaxy-fold {
-											margin-top: 6rem; /* Adjust the margin value as needed */
+											margin-top: 1rem; /* Adjust the margin value as needed */
 										}
 									}
 								`}
