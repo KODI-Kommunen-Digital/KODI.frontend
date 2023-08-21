@@ -223,77 +223,61 @@ const Favorites = () => {
 
 			<div className="mt-5 mb-20 p-6">
 				<div>
-					{favListings && favListings.length > 0 ? (
-						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-								{favListings &&
-									favListings.filter(f => f.categoryId === parseInt(categoryId)).map((favListing) => (
-										<div
-											key={favListing.id}
-											onClick={() =>
-												navigateTo(
-													`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
-												)
-											}
-											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-													src={
-														favListing.logo
-															? process.env.REACT_APP_BUCKET_HOST +
-															favListing.logo
-															: LISTINGSIMAGE
-													}
-												/>
-											</a>
-											<div className="mt-5 px-2">
-												<h2
-													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{favListing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{favListing.id && favListing.categoryId === 3 ? (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{new Date(
-														favListing.startDate.slice(0, 10)
-													).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-															favListing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-												</p>
-											) : (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-													dangerouslySetInnerHTML={{
-														__html: favListing.description,
-													}}
-												/>
-											)}
+					{
+						favListings && (() => {
+							const filteredListings = favListings
+								.filter((favListing) => {
+									if (cityId !== '0' && parseInt(favListing.cityId) !== parseInt(cityId)) {
+										return false;
+									}
+									if (categoryId !== '0' && parseInt(favListing.categoryId) !== parseInt(categoryId)) {
+										return false;
+									}
+									return true;
+								});
+							if (filteredListings.length > 0) {
+								return (
+									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+										<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+											{filteredListings.map((favListing) => (
+												<div key={favListing.id} onClick={() => navigateTo(`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`)} className="w-full h-full shadow-lg rounded-lg cursor-pointer">
+													<a className="block relative h-64 rounded overflow-hidden">
+														<img alt="ecommerce" className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+															src={favListing.logo ? process.env.REACT_APP_BUCKET_HOST + favListing.logo : LISTINGSIMAGE} />
+													</a>
+													<div className="mt-5 px-2">
+														<h2 className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate" style={{ fontFamily: "Poppins, sans-serif" }}>
+															{favListing.title}
+														</h2>
+													</div>
+													<div className="my-4 bg-gray-200 h-[1px]"></div>
+													{favListing.categoryId === 3 ? (
+														<p className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate" style={{ fontFamily: "Poppins, sans-serif" }}>
+															{new Date(favListing.startDate.slice(0, 10)).toLocaleDateString("de-DE") + " To " + new Date(favListing.endDate.slice(0, 10)).toLocaleDateString("de-DE")}
+														</p>
+													) : (
+														<p className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate" style={{ fontFamily: "Poppins, sans-serif" }} dangerouslySetInnerHTML={{ __html: favListing.description }} />
+													)}
+												</div>
+											))}
 										</div>
-									))}
-							</div>
-						</div>
-					) : (
-						<div>
-							<div className="flex items-center justify-center">
-								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-									{t("currently_no_fav_listings")}
-								</h1>
-							</div>
-						</div>
-					)}
+									</div>
+								);
+							} else {
+								return (
+									<div>
+										<div className="flex items-center justify-center">
+											<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+												{t("currently_no_fav_listings")}
+											</h1>
+										</div>
+									</div>
+								);
+							}
+						})()
+					}
 				</div>
+
 				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 					{pageNo !== 1 ? (
 						<span
