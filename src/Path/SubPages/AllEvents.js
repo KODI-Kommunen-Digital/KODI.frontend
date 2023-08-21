@@ -51,7 +51,7 @@ const Events = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageSize: 9, statusId: 1 };
+		const params = { pageSize: 12, statusId: 1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			urlParams.set("cityId", cityId);
@@ -76,6 +76,9 @@ const Events = () => {
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
+		if (window.location.pathname === "/AllEvents" && categoryId === "3") {
+			params.sortByStartDate = true;
+		}
 		getListings(params).then((response) => {
 			const data = response.data.data;
 			setListings(data);

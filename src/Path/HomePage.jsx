@@ -7,7 +7,6 @@ import { getListings, getListingsCount } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
-import { sortLatestFirst } from "../Services/helper";
 
 import CITYIMAGE from "../assets/City.png";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
@@ -25,6 +24,7 @@ const HomePage = () => {
 	const [listingsCount, setListingsCount] = useState([]);
 
 	useEffect(() => {
+		// const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		const hasAcceptedPrivacyPolicy = localStorage.getItem(
 			"privacyPolicyAccepted"
 		);
@@ -41,34 +41,9 @@ const HomePage = () => {
 			setCityId(cityId);
 		}
 
-		getListings({
-			statusId: 1,
-			pageNo: 1,
-			pageSize: 8,
-		}).then((response) => {
-			setListings([...sortLatestFirst(response.data.data)]);
-		});
-
-		// getListingsCount().then((response) => {
-		// 	const data = response.data.data;
-		// 	const sortedData = data.sort(
-		// 		(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
-		// 	);
-
-		// 	const categoriesWithZeroListings = [];
-		// 	for (let i = 1; i <= 13; i++) {
-		// 		// Assuming category IDs are from 1 to 13
-		// 		if (i !== 2 && i !== 8) {
-		// 			// Assuming no category IDs 2 and 8
-		// 			const category = sortedData.find((item) => item.categoryId === i);
-		// 			if (!category) {
-		// 				categoriesWithZeroListings.push({ categoryId: i, totalCount: "0" });
-		// 			}
-		// 		}
-		// 	}
-		// 	const finalData = sortedData.concat(categoriesWithZeroListings);
-
-		// 	setListingsCount(finalData);
+		// getListings(params).then((response) => {
+		// 	setListings(response.data.data);
+		// 	console.log(response.data.data);
 		// });
 
 		getListingsCount().then((response) => {
@@ -94,7 +69,7 @@ const HomePage = () => {
 		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
-		const params = { statusId: 1 };
+		const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		if (parseInt(cityId)) {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
@@ -105,7 +80,7 @@ const HomePage = () => {
 		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
 			const data = response.data.data;
-			setListings([...sortLatestFirst(data)]);
+			setListings(data);
 		});
 	}, [cities, cityId]);
 

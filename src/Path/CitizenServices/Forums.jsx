@@ -3,6 +3,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import { getCities } from "../../Services/cities";
+import { useNavigate } from "react-router-dom";
 
 const Forums = () => {
 	window.scrollTo(0, 0);
@@ -10,6 +11,7 @@ const Forums = () => {
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [cityId, setCityId] = useState(null);
 	const [pageNo] = useState(1);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		document.title = "Heidi - Forums";
@@ -46,6 +48,14 @@ const Forums = () => {
 			params.cityId = cityId;
 		}
 	}, [cityId]);
+
+	const navigateTo = (path) => {
+		navigate(path);
+	};
+
+	function goToAllForums() {
+		navigateTo(`/CitizenService`);
+	}
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -98,10 +108,20 @@ const Forums = () => {
 			</div>
 
 			<div>
-				<div className="flex items-center justify-center">
-					<h1 className=" m-auto my-40 text-center font-sans font-bold text-2xl text-black">
+				<div className="pt-0 pb-20 text-center">
+					<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+						Oops !
+					</h1>
+					<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-20 font-sans">
 						{t("comingSoon")}
 					</h1>
+					<a
+						onClick={() => goToAllForums()}
+						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+						style={{ fontFamily: "Poppins, sans-serif" }}
+					>
+						{t("goBack")}
+					</a>
 				</div>
 			</div>
 
