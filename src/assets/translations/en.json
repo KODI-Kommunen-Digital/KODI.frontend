@@ -11,7 +11,7 @@
     "addLogoHere": "Add your Logo here",
     "alerts": "Alerts",
     "allCategories": "All Categories",
-    "allCities": "All Cities",
+    "allCities": "All Cities in {{regionName}}",
     "allListings": "All Listings",
     "and_the": "and the ",
     "appleVillage": "Apple village",
