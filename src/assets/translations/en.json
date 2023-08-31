@@ -466,5 +466,6 @@
     "sessionExpiredLoginAgain": "Your session has expired. Please login again.",
     "usernamePasswordNotPresent": "Username or password not present!",
     "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login.",
-    "somethingWrong": "Something went wrong, please try again later."
+    "somethingWrong": "Something went wrong, please try again later.",
+    "oldAndNewShouldNotBeSame": "New password should not be same as the old password"
 }

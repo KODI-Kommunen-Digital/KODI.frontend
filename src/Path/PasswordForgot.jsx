@@ -107,7 +107,11 @@ const PasswordForgot = () => {
             setUpdatingPassword(false);
             setAlertInfo(true);
             setAlertType("danger");
-            setAlertMessage("Failed. " + err.response.data.message);
+            if (err.response.status === 400 && err.response.data.message.includes("New password should not be same as the old password")) {
+                setAlertMessage(t("oldAndNewShouldNotBeSame"));
+            } else {
+                setAlertMessage("Failed: " + err.response.data.message);
+            }
         }
     };
 

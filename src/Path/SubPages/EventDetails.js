@@ -120,7 +120,7 @@ const EventDetails = () => {
 				);
 			})
 				.catch((error) => {
-					alert("Not a valid request");
+					navigateTo("/*")
 					console.error("Error fetching listing:", error);
 				});
 		}
