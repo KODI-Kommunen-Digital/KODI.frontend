@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
 import ProfilePage from "./Path/ProfilePage";
-import LoadingPage from "./Path/LoadingPage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
@@ -57,7 +56,6 @@ const App = () => {
 			<div>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/LoadingPage" element={<LoadingPage />} />
 					<Route
 						path="/HomePage/EventDetails"
 						exact

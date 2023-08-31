@@ -6,6 +6,7 @@ import {
 	getForumMembers,
 	deleteForumMembers,
 	getUserForums,
+	adminStatusChange,
 } from "../../Services/forumsApi";
 import GROUPIMAGE from "../../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
@@ -42,23 +43,29 @@ const GroupMembers = () => {
 			.catch(() => navigateTo("/Error"));
 	}, []);
 
-	const handleAdminToggle = (member) => {
-		const updatedMembers = members.map((m) => {
-			if (m.cityUserId === member.cityUserId) {
-				const newIsAdminValue = m.isAdmin === 1 ? 0 : 1;
-				console.log(
-					`Toggling isAdmin for member ${m.cityUserId}. New value: ${newIsAdminValue}`
-				);
+	const handleAdminToggle = async (member) => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const cityIdParam = parseInt(urlParams.get("cityId"));
+		const forumIdParam = parseInt(urlParams.get("forumId"));
+		const newIsAdminValue = member.isAdmin === 1 ? 0 : 1;
 
-				return {
-					...m,
-					isAdmin: newIsAdminValue,
-				};
-			}
-			return m;
-		});
-
-		setMembers(updatedMembers);
+		try {
+			await adminStatusChange(
+				cityIdParam,
+				forumIdParam,
+				member.memberId,
+				newIsAdminValue
+			);
+			setMembers((prevMembers) =>
+				prevMembers.map((m) =>
+					m.cityUserId === member.cityUserId
+						? { ...m, isAdmin: newIsAdminValue }
+						: m
+				)
+			);
+		} catch (error) {
+			console.error("Error changing admin status:", error);
+		}
 	};
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
@@ -289,16 +296,19 @@ const GroupMembers = () => {
 												)}
 											</td>
 											<td className="px-6 py-4 text-center">
-												<a
-													className="font-medium hover:underline cursor-pointer text-center"
+												<button
+													className={`font-medium hover:underline cursor-pointer text-center ${
+														member.isAdmin === 1
+															? "text-red-500"
+															: "text-green-500"
+													}`}
 													style={{
 														fontFamily: "Poppins, sans-serif",
-														color: member.isAdmin === 1 ? "red" : "green",
 													}}
 													onClick={() => handleAdminToggle(member)}
 												>
 													{member.isAdmin === 1 ? "Remove admin" : "Make admin"}
-												</a>
+												</button>
 											</td>
 										</tr>
 									);
