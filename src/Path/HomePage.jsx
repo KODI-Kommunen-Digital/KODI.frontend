@@ -16,7 +16,6 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
@@ -24,7 +23,6 @@ const HomePage = () => {
 	const [listingsCount, setListingsCount] = useState([]);
 
 	useEffect(() => {
-		// const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		const hasAcceptedPrivacyPolicy = localStorage.getItem(
 			"privacyPolicyAccepted"
 		);
@@ -40,11 +38,6 @@ const HomePage = () => {
 		if (cityId) {
 			setCityId(cityId);
 		}
-
-		// getListings(params).then((response) => {
-		// 	setListings(response.data.data);
-		// 	console.log(response.data.data);
-		// });
 
 		getListingsCount().then((response) => {
 			const data = response.data.data;
@@ -161,7 +154,9 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{cities.map((city) => (
 											<option

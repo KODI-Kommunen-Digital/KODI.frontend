@@ -460,11 +460,13 @@
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
     "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
-    "userNameValidation": "Username should contain only lower cases or underscore and minimum 6 characters. The username should start with a lower case",
+    "userNameValidation": "Username should contain only lower cases or underscore and minimum 6 characters. The username should start with a lower case. You should not use these special characters which are & = ' + , ; <> .",
     "userNameTooShort": "Username is too short",
+    "userNameTooLong": "Username is too long",
     "passwordValidation": "Password should contain atleast an upper case, a lower case, one number and minimum 8 characters including special characters @ # $ % &",
     "passwordContainsUsername": "Password should not contains username",
     "sessionExpired": "Your session has expired. Please login again.",
+    "pageNotFound": "Page not found!",
 
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almoset there"

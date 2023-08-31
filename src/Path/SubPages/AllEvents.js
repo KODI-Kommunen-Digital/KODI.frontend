@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import LoadingPage from "../../Path/LoadingPage";
+import LoadingPage from "../../Components/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -12,7 +12,7 @@ import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
-import { categoryById } from "../../Constants/categories";
+import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 
 const Events = () => {
@@ -60,7 +60,11 @@ const Events = () => {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			setCityName(t("allCities"));
+			setCityName(
+				t("allCities", {
+					regionName: process.env.REACT_APP_REGION_NAME,
+				})
+			);
 			urlParams.delete("cityId");
 		}
 		if (parseInt(categoryId)) {
@@ -79,7 +83,7 @@ const Events = () => {
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		if (window.location.pathname === "/AllEvents" && categoryId === "3") {
+		if (categoryId === categoryByName.events) {
 			params.sortByStartDate = true;
 		}
 		const fetchData = async () => {
@@ -163,9 +167,18 @@ const Events = () => {
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1
-									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
+									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
+									<style>
+										{`
+													@media (max-width: 280px) {
+														.galaxy-fold {
+															font-size: 30px;
+														}
+													}
+												`}
+									</style>
 									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>
@@ -183,7 +196,9 @@ const Events = () => {
 												}}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+													{t("allCities", {
+														regionName: process.env.REACT_APP_REGION_NAME,
+													})}
 												</option>
 												{cities.map((city) => (
 													<option
