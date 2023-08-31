@@ -133,6 +133,7 @@ function CreateGroup() {
 
 		if (valid) {
 			setUpdating(true);
+			event.preventDefault();
 			try {
 				input.isPrivate = input.visibility == "private";
 				var response = newGroup
@@ -336,7 +337,7 @@ function CreateGroup() {
 							name="cityId"
 							value={cityId}
 							onChange={onCityChange}
-							disabled={newGroup}
+							disabled={!newGroup}
 							autocomplete="country-name"
 							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
@@ -545,7 +546,7 @@ function CreateGroup() {
 							disabled={updating}
 							class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
-							{t("createGroup")}
+							{t("saveChanges")}
 						</button>
 					</div>
 					<div>
