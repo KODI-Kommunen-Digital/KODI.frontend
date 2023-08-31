@@ -10,7 +10,6 @@ import {
 import GROUPIMAGE from "../../assets/GroupImage.avif";
 import { useNavigate } from "react-router-dom";
 import ForumNavbar from "../../Components/ForumNavbar";
-// import Modal from "../../Components/ReportedComments";
 
 const GroupMembers = () => {
 	const { t } = useTranslation();
@@ -28,7 +27,11 @@ const GroupMembers = () => {
 		getForumMembers(cityIdParam, forumIdParam).then((response) => {
 			setMembers(response.data.data);
 			console.log(response.data.data);
-			setIsAdmin(response.data.data.some((m) => m.isAdmin === 1));
+
+			// Check if there's any member with isAdmin = 1
+			const hasAdminMember = response.data.data.some((m) => m.isAdmin === 1);
+			setIsAdmin(hasAdminMember);
+
 			setCityId(cityIdParam);
 			setForumId(forumIdParam);
 		});
@@ -42,9 +45,14 @@ const GroupMembers = () => {
 	const handleAdminToggle = (member) => {
 		const updatedMembers = members.map((m) => {
 			if (m.cityUserId === member.cityUserId) {
+				const newIsAdminValue = m.isAdmin === 1 ? 0 : 1;
+				console.log(
+					`Toggling isAdmin for member ${m.cityUserId}. New value: ${newIsAdminValue}`
+				);
+
 				return {
 					...m,
-					isAdmin: member.isAdmin === 1 ? 0 : 1,
+					isAdmin: newIsAdminValue,
 				};
 			}
 			return m;
@@ -65,7 +73,6 @@ const GroupMembers = () => {
 		const cityId = searchParams.get("cityId");
 		const forumId = searchParams.get("forumId");
 		console.log("forumId:", forumId);
-		// console.log("forumUser.id:", forumUser.id);
 		console.log("memberId:", member.memberId);
 
 		deleteForumMembers(cityId, forumId, member.memberId)
