@@ -33,8 +33,8 @@ const MyGroups = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		forums: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function handleDelete(forums) {
@@ -107,7 +107,7 @@ const MyGroups = () => {
 											width: "16.66%",
 										}}
 									>
-										{t("admin")}
+										{t("role")}
 									</th>
 
 									<th
@@ -190,31 +190,37 @@ const MyGroups = () => {
 												className="px-6 py-4  text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{forum.isAdmin === 1 ? "You are admin" : "Member"}
+												{forum.isAdmin === 1 ? t("admin") : t("member")}
 											</td>
 											<td
 												className="px-6 py-4  text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												{forum.isPrivate === 1
-													? "Private group"
-													: "Public group"}
+													? t("privateGroup") :
+													t("publicGroup")}
 											</td>
 											<td className="px-6 py-4  text-center">
-												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
-													onClick={() => goToEditForums(forum)}
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{t("edit")}
-												</a>
-												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
-													onClick={() => deleteForumOnClick(forum)}
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{t("delete")}
-												</a>
+												{
+													forum.isAdmin ? <div>
+														<a
+															className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
+															onClick={() => goToEditForums(forum)}
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{t("edit")}
+														</a>
+														<a
+															className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+															onClick={() => deleteForumOnClick(forum)}
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{t("delete")}
+														</a>
+													</div> : <div>
+														{t("onlyAdmins")}
+													</div>
+												}
 												{showConfirmationModal.visible && (
 													<div className="fixed z-50 inset-0 overflow-y-auto">
 														<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

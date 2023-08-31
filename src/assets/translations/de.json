@@ -484,7 +484,6 @@
     "hiddenPost": "Versteckte Post",
     "yes": "Ja",
     "no": "Nein",
-
     "request": "Follow Request",
     "reportedComments": "Reported Comments",
     "requestSent": "Request Send",
@@ -492,5 +491,11 @@
     "leaveGroup": "Leave Group",
     "deleteGroup": "Delete Group",
     "reasonforReport": "Reasons for report",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "privateGroup": "Private Gruppe",
+    "publicGroup": "Öffentliche Gruppe",
+    "admin": "Admin",
+    "member": "Mitglied",
+    "role": "Rolle",
+    "onlyAdmins": "Nur für Admins"
 }

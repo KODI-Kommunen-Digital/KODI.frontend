@@ -28,6 +28,7 @@ function CreateGroup() {
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
+	const [forumId, setForumId] = useState(0);
 	const navigate = useNavigate();
 
 	const handleGroupTypeChange = (event) => {
@@ -100,7 +101,8 @@ function CreateGroup() {
 		setCityId(cityId);
 		var forumId = searchParams.get("forumId");
 		if (forumId && cityId) {
-			setNewGroup(true);
+			setNewGroup(false);
+			setForumId(forumId);
 			getForum(cityId, forumId).then((forumsResponse) => {
 				let forumsData = forumsResponse.data.data;
 				forumsData.cityId = cityId;
@@ -135,7 +137,7 @@ function CreateGroup() {
 				input.isPrivate = input.visibility == "private";
 				var response = newGroup
 					? await postForumsData(cityId, input)
-					: await updateForumsData(cityId, input, forumsId);
+					: await updateForumsData(cityId, input, forumId);
 				if (newGroup) {
 					if (image1) {
 						handleImageUpload(response.data.id);
@@ -224,7 +226,7 @@ function CreateGroup() {
 
 	const getErrorMessage = (name, value) => {
 		switch (name) {
-			case "title":
+			case "forumName":
 				if (!value) {
 					return t("pleaseEnterTitle");
 				} else {
@@ -305,8 +307,8 @@ function CreateGroup() {
 						</label>
 						<input
 							type="text"
-							id="title"
-							name="title"
+							id="forumName"
+							name="forumName"
 							value={input.forumName}
 							onChange={onInputChange}
 							onBlur={validateInput}
@@ -334,6 +336,7 @@ function CreateGroup() {
 							name="cityId"
 							value={cityId}
 							onChange={onCityChange}
+							disabled={newGroup}
 							autocomplete="country-name"
 							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
