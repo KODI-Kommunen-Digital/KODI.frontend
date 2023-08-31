@@ -160,3 +160,15 @@ export async function updatePost(cityId, forumsId, postId, patchData) {
 		patchData
 	);
 }
+
+export async function adminStatusChange(
+	cityId,
+	forumsId,
+	memberId,
+	newAdminValue
+) {
+	return axios.patch(
+		`/cities/${cityId}/forums/${forumsId}/members/${memberId}`,
+		{ isAdmin: newAdminValue }
+	);
+}
