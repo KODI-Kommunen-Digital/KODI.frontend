@@ -304,7 +304,7 @@ const LoginPage = () => {
 					</div>
 					{forgotPassword && (
 						<>
-							<div id="myDIV" className="text-sm">
+							<div id="myDIV" className="text-sm space-y-4">
 								{t("forgotPasswordMessage")}
 								<label htmlFor="username" className="sr-only">
 									{t("username")}
@@ -316,7 +316,7 @@ const LoginPage = () => {
 									value={userReset}
 									onChange={(e) => setUserReset(e.target.value)}
 									required
-									className="mt-1 mb-1 relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("username") + "*"}
 								/>
 								<div className="flex gap-2">
