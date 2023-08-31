@@ -467,6 +467,7 @@
     "passwordValidation": "Das Passwort sollte mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und mindestens 8 Zeichen einschließlich Sonderzeichen enthalten @ # $ % &",
     "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten",
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "pageNotFound": "Seite nicht gefunden!",
 
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Du bist fast da"

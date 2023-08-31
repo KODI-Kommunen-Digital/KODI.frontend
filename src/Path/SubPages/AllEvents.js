@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import LoadingPage from "../../Path/LoadingPage";
+import LoadingPage from "../../Components/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -12,7 +12,7 @@ import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
-import { categoryById } from "../../Constants/categories";
+import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 
 const Events = () => {
@@ -79,7 +79,7 @@ const Events = () => {
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		if (window.location.pathname === "/AllEvents" && categoryId === "3") {
+		if (categoryId === categoryByName.events) {
 			params.sortByStartDate = true;
 		}
 		const fetchData = async () => {
@@ -183,7 +183,9 @@ const Events = () => {
 												}}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+													{t("allCities", {
+														regionName: process.env.REACT_APP_REGION_NAME,
+													})}
 												</option>
 												{cities.map((city) => (
 													<option

@@ -41,11 +41,6 @@ const HomePage = () => {
 			setCityId(cityId);
 		}
 
-		// getListings(params).then((response) => {
-		// 	setListings(response.data.data);
-		// 	console.log(response.data.data);
-		// });
-
 		getListingsCount().then((response) => {
 			const data = response.data.data;
 			const sortedData = data.sort(
@@ -161,7 +156,9 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{cities.map((city) => (
 											<option

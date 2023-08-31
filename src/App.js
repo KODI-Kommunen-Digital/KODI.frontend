@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
-import LoadingPage from "./Path/LoadingPage";
 import ProfilePage from "./Path/ProfilePage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
@@ -90,7 +89,6 @@ const App = () => {
 					/>
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
-					<Route path="/LoadingPage" element={<LoadingPage />} />
 				</Routes>
 			</div>
 		</BrowserRouter>
