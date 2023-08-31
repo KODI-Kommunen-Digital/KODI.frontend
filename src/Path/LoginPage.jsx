@@ -48,13 +48,9 @@ const LoginPage = () => {
 		}
 
 		if (searchParams.get("sessionExpired") === "true") {
-<<<<<<< HEAD
 			settimeOutAlertMessage(
 				t("sessionExpiredLoginAgain")
 			);
-=======
-			settimeOutAlertMessage(t("sessionExpired"));
->>>>>>> 642ceb905a525cacab940132a1d662fcfef52bc6
 			setAlertType("danger");
 			setTimeout(() => {
 				settimeOutAlertMessage("");
