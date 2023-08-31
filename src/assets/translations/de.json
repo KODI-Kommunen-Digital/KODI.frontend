@@ -469,5 +469,6 @@
     "usernamePasswordNotPresent": "Benutzername oder Passwort nicht vorhanden",
     "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
     "somethingWrong": "Es ist ein Fehler aufgetreten, bitte versuchen Sie es später noch einmal.",
-    "oldAndNewShouldNotBeSame": "Das neue Passwort sollte nicht mit dem alten übereinstimmen"
+    "oldAndNewShouldNotBeSame": "Das neue Passwort sollte nicht mit dem alten übereinstimmen",
+    "internalDatabaseError": "Interner Serverfehler, bitte versuchen Sie es später noch einmal"
 }

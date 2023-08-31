@@ -126,12 +126,17 @@ const LoginPage = () => {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			if (err.response.status === 400) {
+			console.log(err)
+			if (err.response.data.errorCode === 1001) {
 				setAlertMessage(t("usernamePasswordNotPresent"));
-			} else if (err.response.status === 401 && err.response.data.message.includes("Invalid")) {
+			} if (err.response.data.errorCode === 1002 || err.response.data.errorCode === 1003) {
+				setAlertMessage(t("usernamePasswordNotPresent"));
+			} else if (err.response.data.errorCode === 1004 || err.response.data.errorCode === 1005) {
 				setAlertMessage(t("checkUsernameOrPassword"));
-			} else if (err.response.status === 401 && err.response.data.message.includes("Verification email")) {
-				setAlertMessage(t("emailNotVerified"))
+			} else if (err.response.data.errorCode === 2001) {
+				setAlertMessage(t("emailNotVerified"));
+			} else if (err.response.data.errorCode === 3001) {
+				setAlertMessage(t("internalDatabaseError"));
 			} else {
 				setAlertMessage(t("somethingWrong"))
 			}
