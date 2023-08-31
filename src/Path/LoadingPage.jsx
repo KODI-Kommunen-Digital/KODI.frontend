@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const LoadingPage = () => {
+	const { t } = useTranslation();
 	return (
 		<div className="fixed inset-0 flex items-center justify-center bg-white">
 			<div className="text-center">
