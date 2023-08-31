@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
 import ProfilePage from "./Path/ProfilePage";
+import LoadingPage from "./Path/LoadingPage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
@@ -56,6 +57,7 @@ const App = () => {
 			<div>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
+					<Route path="/LoadingPage" element={<LoadingPage />} />
 					<Route
 						path="/HomePage/EventDetails"
 						exact
@@ -104,9 +106,21 @@ const App = () => {
 					<Route path="/UploadPosts" element={<UploadPosts />} />
 					<Route path="/CreateGroup" element={<CreateGroup />} exact />
 					<Route path="/MyGroups" element={<MyGroups />} exact />
-					<Route path="/MyGroups/GroupMembers" element={<GroupMembers />} exact />
-					<Route path="/MyGroups/MemberRequests" element={<MemberRequests />} exact />
-					<Route path="/MyGroups/ReportedPosts" element={<ReportedPosts />} exact />
+					<Route
+						path="/MyGroups/GroupMembers"
+						element={<GroupMembers />}
+						exact
+					/>
+					<Route
+						path="/MyGroups/MemberRequests"
+						element={<MemberRequests />}
+						exact
+					/>
+					<Route
+						path="/MyGroups/ReportedPosts"
+						element={<ReportedPosts />}
+						exact
+					/>
 				</Routes>
 			</div>
 		</BrowserRouter>

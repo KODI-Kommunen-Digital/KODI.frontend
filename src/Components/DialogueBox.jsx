@@ -53,7 +53,6 @@ const DialogueBox = () => {
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
-	// const [memberId, setMemberId] = useState(0);
 	const [memberRequests, setRequests] = useState([]);
 
 	const navigate = useNavigate();
@@ -85,7 +84,6 @@ const DialogueBox = () => {
 	};
 
 	const handleSendClick = () => {
-
 		const data = {
 			reason: text,
 			accept: false,

@@ -57,7 +57,6 @@ const Dashboard = () => {
 			getListings({
 				statusId: selectedStatus,
 				pageNo,
-				sortByCreatedDate: true,
 			}).then((response) => {
 				setListings(response.data.data);
 			});
@@ -66,7 +65,6 @@ const Dashboard = () => {
 			getUserListings({
 				statusId: selectedStatus,
 				pageNo,
-				sortByCreatedDate: true,
 			}).then((response) => {
 				setListings(response.data.data);
 			});
