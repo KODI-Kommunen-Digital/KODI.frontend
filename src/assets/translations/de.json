@@ -457,11 +457,16 @@
     "show": "anzeigen",
     "hide": "verbergen",
     "waldi_all_rights_reserved": "- ALLE RECHTE VORBEHALTEN ®2023",
-    "checkUsernameOrPassword": "Fehler bei der Anmeldung. Bitte überprüfen Sie Benutzername/Passwort und versuchen Sie es erneut",
+    "checkUsernameOrPassword": "Ungültiger Benutzername oder Passwort. Bitte überprüfen und erneut versuchen",
     "canNotSelectSameSocialMediaTwice": "Sie haben dieses Social Media bereits bereitgestellt",
-    "pleaseEnterAValidLink":"Bitte geben Sie einen gültigen Link ein, der mit „https://“ beginnt. Beispiel: https://www.example.com",
+    "pleaseEnterAValidLink": "Bitte geben Sie einen gültigen Link ein, der mit „https://“ beginnt. Beispiel: https://www.example.com",
     "userNameValidation": "Der Benutzername sollte nur Kleinbuchstaben oder Unterstriche und mindestens 6 Zeichen enthalten. Der Benutzername sollte mit einem Kleinbuchstaben beginnen",
     "userNameTooShort": "Benutzername ist zu kurz",
     "passwordValidation": "Das Passwort sollte mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und mindestens 8 Zeichen einschließlich Sonderzeichen enthalten @ # $ % &",
-    "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten"
+    "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten",
+    "pleaseCheckMail": "Bitte prüfen Sie Ihre Mails",
+    "sessionExpiredLoginAgain": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an",
+    "usernamePasswordNotPresent": "Benutzername oder Passwort nicht vorhanden",
+    "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
+    "somethingWrong": "Es ist ein Fehler aufgetreten, bitte versuchen Sie es später noch einmal."
 }

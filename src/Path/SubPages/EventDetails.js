@@ -82,6 +82,12 @@ const EventDetails = () => {
 				setIsLoggedIn(true);
 			}
 			getListingsById(cityId, listingId, params).then((listingsResponse) => {
+				if (listingsResponse.data.status === 404) {
+					// Handle 404 error
+					console.log("not found")
+					alert("The particular listing is not found");
+					return;
+				}
 				setInput(listingsResponse.data.data);
 				const cityUserId = listingsResponse.data.data.userId;
 				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
@@ -112,7 +118,11 @@ const EventDetails = () => {
 						Date.parse(listingsResponse.data.data.createdAt)
 					)
 				);
-			});
+			})
+				.catch((error) => {
+					alert("Not a valid request");
+					console.error("Error fetching listing:", error);
+				});
 		}
 	}, [t, cityId, window.location.href, isLoggedIn]);
 
@@ -187,15 +197,15 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-								.then((response) => {
-									setFavoriteId(response.data.id);
-									setSuccessMessage(t("List added to the favorites"));
-									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-									);
-									setFavButton(t("Favorite"));
-								})
-								.catch((err) => console.log("Error", err))
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+								);
+								setFavButton(t("Favorite"));
+							})
+							.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {

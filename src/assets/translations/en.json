@@ -455,11 +455,16 @@
     "show": "Show",
     "hide": "Hide",
     "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
-    "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
+    "checkUsernameOrPassword": "Invalid username or password. Please check and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
     "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
     "userNameValidation": "Username should contain only lower cases or underscore and minimum 6 characters. The username should start with a lower case",
     "userNameTooShort": "Username is too short",
     "passwordValidation": "Password should contain atleast an upper case, a lower case, one number and minimum 8 characters including special characters @ # $ % &",
-    "passwordContainsUsername": "Password should not contains username"
+    "passwordContainsUsername": "Password should not contains username",
+    "pleaseCheckMail": "Please check your mail",
+    "sessionExpiredLoginAgain": "Your session has expired. Please login again.",
+    "usernamePasswordNotPresent": "Username or password not present!",
+    "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login.",
+    "somethingWrong": "Something went wrong, please try again later."
 }

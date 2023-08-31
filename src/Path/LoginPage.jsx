@@ -49,7 +49,7 @@ const LoginPage = () => {
 
 		if (searchParams.get("sessionExpired") === "true") {
 			settimeOutAlertMessage(
-				"Your session has expired. Please login again."
+				t("sessionExpiredLoginAgain")
 			);
 			setAlertType("danger");
 			setTimeout(() => {
@@ -126,9 +126,23 @@ const LoginPage = () => {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage(
-				t("checkUsernameOrPassword")
-			);
+			console.log(err)
+			console.log(err.response.data.message);
+			if (err.response.status === 400) {
+				setAlertMessage(t("usernamePasswordNotPresent"));
+			} else if (err.response.status === 401 && err.response.data.message.includes("Invalid")) {
+				setAlertMessage(t("checkUsernameOrPassword"));
+			} else if (err.response.status === 401 && err.response.data.message.includes("Verification email")) {
+				setAlertMessage(t("emailNotVerified"))
+			} else {
+				setAlertMessage(t("somethingWrong"))
+			}
+		}
+	};
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			handleSubmit(e);
 		}
 	};
 
@@ -140,7 +154,7 @@ const LoginPage = () => {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);
 			setAlertType("success");
-			setAlertMessage("Please check your mail");
+			setAlertMessage(t("pleaseCheckMail"));
 		} catch (err) {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);
@@ -179,6 +193,7 @@ const LoginPage = () => {
 									value={user}
 									autoComplete="on"
 									onChange={(e) => setUser(e.target.value)}
+									onKeyDown={handleKeyDown}
 									required
 									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("username") + "*"}
@@ -194,6 +209,7 @@ const LoginPage = () => {
 									name="password"
 									value={pwd}
 									onChange={handlePasswordChange}
+									onKeyDown={handleKeyDown}
 									required
 									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
@@ -244,6 +260,7 @@ const LoginPage = () => {
 								type="button"
 								value="Submit"
 								id="finalbutton"
+								onKeyDown={handleKeyDown}
 								disabled={loginLoading}
 								className="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 disabled:opacity-60 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
 							>
