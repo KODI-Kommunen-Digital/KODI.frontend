@@ -16,7 +16,6 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
@@ -24,7 +23,6 @@ const HomePage = () => {
 	const [listingsCount, setListingsCount] = useState([]);
 
 	useEffect(() => {
-		// const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		const hasAcceptedPrivacyPolicy = localStorage.getItem(
 			"privacyPolicyAccepted"
 		);
