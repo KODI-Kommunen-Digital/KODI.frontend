@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 function UserProfile({ user }) {
+	const { t } = useTranslation();
 	const [userSocial, setUserSocial] = useState({});
 	const socialMediaSVGPathList = {
 		Facebook: {
@@ -51,7 +53,7 @@ function UserProfile({ user }) {
 	};
 	return (
 		<div>
-			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-64 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div>
 					<div
 						onClick={() =>
@@ -61,7 +63,7 @@ function UserProfile({ user }) {
 						}
 						className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1"
 					>
-						<div className="flex flex-col justify-center items-center md:items-center">
+						<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
 							<img
 								className="rounded-full h-20 w-20"
 								src={
@@ -71,10 +73,27 @@ function UserProfile({ user }) {
 								}
 								alt={user?.lastname}
 							/>
+							<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+								<button
+									onClick={() =>
+										navigateTo(
+											user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+										)
+									}
+									type="submit"
+									className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+									style={{
+										fontFamily: "Poppins, sans-serif",
+									}}
+								>
+									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+									{t("viewProfile")}
+								</button>
+							</div>
 						</div>
-						<div className="flex-grow text-center sm:text-center mt-6 sm:mt-0">
+						<div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
 							<h2
-								className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+								className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
 								style={{
 									fontFamily: "Poppins, sans-serif",
 								}}
@@ -82,29 +101,26 @@ function UserProfile({ user }) {
 								{user?.firstname + " " + user?.lastname}
 							</h2>
 							<p
-								className="leading-relaxed text-base dark:text-gray-900"
+								className="leading-relaxed text-base font-bold dark:text-gray-900"
 								style={{
 									fontFamily: "Poppins, sans-serif",
 								}}
 							>
-								{user?.email}
+								{user?.username}
 							</p>
 						</div>
 					</div>
 
-					<div className="bg-white md:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-4 lg:mt-6 mb-2 flex flex-wrap gap-1">
+					<div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-4 lg:mt-2 mb-2 flex flex-wrap gap-1">
 						{userSocial &&
 							Object.entries(userSocial).map(([key, value]) => (
-								<div
-									key={key}
-									className="flex py-2 px-0 md:px-2 mx-0 my-0 gap-1"
-								>
+								<div key={key} className="flex py-2 px-2 mx-0 my-0 gap-1">
 									<button
 										type="button"
 										data-te-ripple-init
 										data-te-ripple-color="light"
 										className={
-											"inline-block rounded-xl px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg " +
+											"inline-block rounded-full px-2.5 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg " +
 											socialMediaSVGPathList[key].bgColor
 										}
 										onClick={() => {

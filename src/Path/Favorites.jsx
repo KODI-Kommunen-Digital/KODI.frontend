@@ -61,7 +61,7 @@ const Favorites = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageNo, pageSize: 9, statusId: 1 };
+		const params = { pageNo, pageSize: 12, statusId: 1 };
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			urlParams.set("cityId", cityId);

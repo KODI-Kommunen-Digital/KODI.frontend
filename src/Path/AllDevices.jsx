@@ -27,7 +27,6 @@ const AllDevices = () => {
         }
         fetchDeviceList(refreshToken).then((response) => {
             setDevices(response.data.data);
-            console.log(response.data.data);
         });
     }, []);
 
@@ -60,7 +59,7 @@ const AllDevices = () => {
             setDevices(devices.filter((device) => device.id !== ids));
             setIsLoggedIn(false);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 

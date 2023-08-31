@@ -59,7 +59,6 @@ function UploadListings() {
 					form.append("pdf", pdf);
 					try {
 						const filePath = await uploadPDF(form);
-						console.log(filePath.data);
 						if (filePath?.data?.status === "success") {
 							setInput((prevInput) => ({
 								...prevInput,

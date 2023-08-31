@@ -7,7 +7,6 @@ import { getListings, getListingsCount } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
-import { sortLatestFirst } from "../Services/helper";
 
 import CITYIMAGE from "../assets/City.png";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
@@ -17,7 +16,6 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
@@ -40,36 +38,6 @@ const HomePage = () => {
 		if (cityId) {
 			setCityId(cityId);
 		}
-
-		getListings({
-			statusId: 1,
-			pageNo: 1,
-			pageSize: 8,
-		}).then((response) => {
-			setListings([...sortLatestFirst(response.data.data)]);
-		});
-
-		// getListingsCount().then((response) => {
-		// 	const data = response.data.data;
-		// 	const sortedData = data.sort(
-		// 		(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
-		// 	);
-
-		// 	const categoriesWithZeroListings = [];
-		// 	for (let i = 1; i <= 13; i++) {
-		// 		// Assuming category IDs are from 1 to 13
-		// 		if (i !== 2 && i !== 8) {
-		// 			// Assuming no category IDs 2 and 8
-		// 			const category = sortedData.find((item) => item.categoryId === i);
-		// 			if (!category) {
-		// 				categoriesWithZeroListings.push({ categoryId: i, totalCount: "0" });
-		// 			}
-		// 		}
-		// 	}
-		// 	const finalData = sortedData.concat(categoriesWithZeroListings);
-
-		// 	setListingsCount(finalData);
-		// });
 
 		getListingsCount().then((response) => {
 			const data = response.data.data;
@@ -94,7 +62,7 @@ const HomePage = () => {
 		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
-		const params = { statusId: 1 };
+		const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		if (parseInt(cityId)) {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
@@ -105,7 +73,7 @@ const HomePage = () => {
 		window.history.replaceState({}, "", newUrl);
 		getListings(params).then((response) => {
 			const data = response.data.data;
-			setListings([...sortLatestFirst(data)]);
+			setListings(data);
 		});
 	}, [cities, cityId]);
 
@@ -186,7 +154,9 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{cities.map((city) => (
 											<option

@@ -70,7 +70,7 @@ const EventDetails = () => {
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		const listingId = searchParams.get("listingId");
-		setListingId(listingId);
+		// setListingId(listingId);
 		if (listingId && cityId) {
 			const accessToken =
 				window.localStorage.getItem("accessToken") ||
@@ -81,47 +81,42 @@ const EventDetails = () => {
 			if (accessToken || refreshToken) {
 				setIsLoggedIn(true);
 			}
-			getListingsById(cityId, listingId, params).then((listingsResponse) => {
-				if (listingsResponse.data.status === 404) {
-					// Handle 404 error
-					console.log("not found")
-					alert("The particular listing is not found");
-					return;
-				}
-				setInput(listingsResponse.data.data);
-				const cityUserId = listingsResponse.data.data.userId;
-				getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-					setUser(res.data.data);
-				});
-				setSelectedCategoryId(listingsResponse.data.data.categoryId);
-				setListingId(listingsResponse.data.data.id);
-				setDescription(listingsResponse.data.data.description);
-				setTitle(listingsResponse.data.data.title);
-				if (isLoggedIn) {
-					getFavorites().then((response) => {
-						const favorite = response.data.data.find(
-							(f) =>
-								f.listingId === parseInt(listingId) &&
-								f.cityId === parseInt(cityId)
-						);
-						if (favorite) {
-							setFavoriteId(favorite.id);
-							setFavButton(t("Unfavorite"));
-						} else {
-							setFavoriteId(0);
-							setFavButton(t("Favorite"));
-						}
+			getListingsById(cityId, listingId, params)
+				.then((listingsResponse) => {
+					setInput(listingsResponse.data.data);
+					const cityUserId = listingsResponse.data.data.userId;
+					getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+						setUser(res.data.data);
 					});
-				}
-				setCreatedAt(
-					new Intl.DateTimeFormat("de-DE").format(
-						Date.parse(listingsResponse.data.data.createdAt)
-					)
-				);
-			})
+					setSelectedCategoryId(listingsResponse.data.data.categoryId);
+					setListingId(listingsResponse.data.data.id);
+					setDescription(listingsResponse.data.data.description);
+					setTitle(listingsResponse.data.data.title);
+					if (isLoggedIn) {
+						getFavorites().then((response) => {
+							const favorite = response.data.data.find(
+								(f) =>
+									f.listingId === parseInt(listingId) &&
+									f.cityId === parseInt(cityId)
+							);
+							if (favorite) {
+								setFavoriteId(favorite.id);
+								setFavButton(t("Unfavorite"));
+							} else {
+								setFavoriteId(0);
+								setFavButton(t("Favorite"));
+							}
+						});
+					}
+					setCreatedAt(
+						new Intl.DateTimeFormat("de-DE").format(
+							Date.parse(listingsResponse.data.data.createdAt)
+						)
+					);
+				})
 				.catch((error) => {
-					navigateTo("/*")
 					console.error("Error fetching listing:", error);
+					navigateTo("/*");
 				});
 		}
 	}, [t, cityId, window.location.href, isLoggedIn]);
@@ -205,8 +200,8 @@ const EventDetails = () => {
 								);
 								setFavButton(t("Favorite"));
 							})
-							.catch((err) => console.log("Error", err))
-						: console.log("Error");
+							.catch((err) => console.error("Error", err))
+						: console.error("Error");
 				}
 			} else {
 				window.sessionStorage.setItem("redirectTo", "/Favorite");
@@ -240,7 +235,7 @@ const EventDetails = () => {
 						<div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
 							<div className="mt-5 md:col-span-2 md:mt-0">
 								<form method="POST">
-									<div className="flex flex-row sm:flex-row sm:items-center text-start justify-between">
+									<div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
 										<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
 											<span
 												className="inline-block max-w-full break-words"
@@ -258,7 +253,6 @@ const EventDetails = () => {
 												onClick={() => handleFavorite()}
 											>
 												<span
-													className="ml-1 "
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}
@@ -482,7 +476,7 @@ const EventDetails = () => {
 				{userSocial && userSocial.length > 0 ? (
 					<UserProfile user={user} />
 				) : (
-					<div className="w-full h-72 lg:h-52 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							{/* <div className="flex justify-between">
 								<div className="p-4 space-y-0 md:space-y-6 sm:p-4 hidden md:block">
@@ -515,16 +509,10 @@ const EventDetails = () => {
 								</div>
 							</div>
 							<div className="my-4 bg-gray-200 h-[1px] hidden md:block"></div> */}
-
 							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
-								<div className="flex justify-center sm:justify-center">
+								<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
 									<img
 										className="rounded-full h-20 w-20"
-										onClick={() =>
-											navigateTo(
-												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-											)
-										}
 										src={
 											user?.image
 												? process.env.REACT_APP_BUCKET_HOST + user?.image
@@ -532,10 +520,29 @@ const EventDetails = () => {
 										}
 										alt={user?.lastname}
 									/>
+									<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+										<button
+											onClick={() =>
+												navigateTo(
+													user
+														? `/ViewProfile/${user.username}`
+														: "/ViewProfile"
+												)
+											}
+											type="submit"
+											className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+											style={{
+												fontFamily: "Poppins, sans-serif",
+											}}
+										>
+											<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+											{t("viewProfile")}
+										</button>
+									</div>
 								</div>
-								<div className="flex-grow text-center sm:text-center mt-6 sm:mt-0">
+								<div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
 									<h2
-										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+										className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -543,35 +550,15 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p
-										className="leading-relaxed text-base dark:text-gray-900"
+										className="leading-relaxed text-base font-bold dark:text-gray-900"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
 									>
-										{user?.email}
+										{user?.username}
 									</p>
 								</div>
 							</div>
-
-							{/* <div className="flex justify-center lg:mt-7 md:mt-7 mt-7">
-								<button
-									onClick={() => {
-										let url = `/ViewProfile?userId=${user.id}`;
-										if (terminalViewParam === "true") {
-											url += "&terminalView=true";
-										}
-										navigateTo(url);
-									}}
-									type="submit"
-									className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-									style={{
-										fontFamily: "Poppins, sans-serif",
-									}}
-								>
-									<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-									{t("viewProfile")}
-								</button>
-							</div> */}
 						</div>
 					</div>
 				)}

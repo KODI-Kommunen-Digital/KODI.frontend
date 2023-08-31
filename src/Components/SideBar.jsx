@@ -50,7 +50,7 @@ function SideBar() {
 					navigateTo("/");
 				});
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		} else {
 			navigateTo("/login");
@@ -75,7 +75,7 @@ function SideBar() {
 				setUserRole(response.data.data.roleId);
 			})
 			.catch((error) => {
-				console.log(error);
+				console.error(error);
 			});
 	}, []);
 
