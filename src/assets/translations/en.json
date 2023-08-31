@@ -452,6 +452,8 @@
     "VirtualTours": "Virtual Tours",
     "forums": "Forums",
     "comingSoon": "Hey! We are cooking it up. Coming soon...",
+    "goBack": "Go back",
+    "goToHomePage": "Go to homepage",
     "show": "Show",
     "hide": "Hide",
     "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
@@ -461,5 +463,10 @@
     "userNameValidation": "Username should contain only lower cases or underscore and minimum 6 characters. The username should start with a lower case",
     "userNameTooShort": "Username is too short",
     "passwordValidation": "Password should contain atleast an upper case, a lower case, one number and minimum 8 characters including special characters @ # $ % &",
-    "passwordContainsUsername": "Password should not contains username"
+    "passwordContainsUsername": "Password should not contains username",
+    "sessionExpired": "Your session has expired. Please login again.",
+    "pageNotFound": "Page not found!",
+
+    "loading": "Loading...",
+    "youAreAlmosetThere": "You are almoset there"
 }
