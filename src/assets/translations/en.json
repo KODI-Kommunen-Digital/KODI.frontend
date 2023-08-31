@@ -464,5 +464,8 @@
     "userNameTooShort": "Username is too short",
     "passwordValidation": "Password should contain atleast an upper case, a lower case, one number and minimum 8 characters including special characters @ # $ % &",
     "passwordContainsUsername": "Password should not contains username",
-    "sessionExpired": "Your session has expired. Please login again."
+    "sessionExpired": "Your session has expired. Please login again.",
+
+    "loading": "Loading...",
+    "youAreAlmosetThere": "You are almoset there"
 }
