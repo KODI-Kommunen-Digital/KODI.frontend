@@ -4,6 +4,7 @@ import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { updatePassword } from "../Services/usersApi";
 import { useTranslation } from "react-i18next";
 import Alert from "../Components/Alert";
+import errorCodes from "../Constants/errorCodes";
 
 const PasswordForgot = () => {
     const { t } = useTranslation();
@@ -107,7 +108,7 @@ const PasswordForgot = () => {
             setUpdatingPassword(false);
             setAlertInfo(true);
             setAlertType("danger");
-            if (err.response.status === 400 && err.response.data.message.includes("New password should not be same as the old password")) {
+            if (err.response.data.errorCode === errorCodes.NEW_OLD_PASSWORD_DIFFERENT) {
                 setAlertMessage(t("oldAndNewShouldNotBeSame"));
             } else {
                 setAlertMessage("Failed: " + err.response.data.message);

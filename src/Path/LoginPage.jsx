@@ -5,6 +5,7 @@ import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass, login } from "../Services/usersApi";
 import Alert from "../Components/Alert";
+import errorCodes from "../Constants/errorCodes";
 
 const LoginPage = () => {
 	const { t } = useTranslation();
@@ -128,15 +129,15 @@ const LoginPage = () => {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			if (err.response.data.errorCode === 1001) {
+			if (err.response.data.errorCode === errorCodes.EMPTY_PAYLOAD) {
 				setAlertMessage(t("usernamePasswordNotPresent"));
-			} else if (err.response.data.errorCode === 1002) {
+			} else if (err.response.data.errorCode === errorCodes.MISSING_USERNAME) {
 				setAlertMessage(t("uernameNotPresent"));
-			} else if (err.response.data.errorCode === 1003) {
+			} else if (err.response.data.errorCode === errorCodes.MISSING_PASSWORD) {
 				setAlertMessage(t("passwordNotPresent"));
-			} else if (err.response.data.errorCode === 1004 || err.response.data.errorCode === 1005) {
+			} else if (err.response.data.errorCode === errorCodes.INVALID_USERNAME || err.response.data.errorCode === errorCodes.INVALID_PASSWORD) {
 				setAlertMessage(t("checkUsernameOrPassword"));
-			} else if (err.response.data.errorCode === 2001) {
+			} else if (err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED) {
 				setAlertMessage(t("emailNotVerified"));
 			} else {
 				setAlertMessage(t("somethingWrong"));
