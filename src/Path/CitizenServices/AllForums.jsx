@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
-import LoadingPage from "../../Path/LoadingPage";
+import LoadingPage from "../../Components/LoadingPage";
 import { getAllForums, getUserForums } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";

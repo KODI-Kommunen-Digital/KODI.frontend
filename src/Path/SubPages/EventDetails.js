@@ -477,10 +477,10 @@ const EventDetails = () => {
 				{userSocial && userSocial.length > 0 ? (
 					<UserProfile user={user} />
 				) : (
-					<div className="w-full h-72 lg:h-64 md:h-64 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+					<div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 						<div>
 							<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
-								<div className="flex justify-center sm:justify-center">
+								<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
 									<img
 										className="rounded-full h-20 w-20"
 										onClick={() =>
@@ -495,10 +495,29 @@ const EventDetails = () => {
 										}
 										alt={user?.lastname}
 									/>
+									<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+										<button
+											onClick={() =>
+												navigateTo(
+													user
+														? `/ViewProfile/${user.username}`
+														: "/ViewProfile"
+												)
+											}
+											type="submit"
+											className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+											style={{
+												fontFamily: "Poppins, sans-serif",
+											}}
+										>
+											<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+											{t("viewProfile")}
+										</button>
+									</div>
 								</div>
-								<div className="flex-grow text-center sm:text-center mt-6 sm:mt-0">
+								<div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
 									<h2
-										className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+										className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -506,7 +525,7 @@ const EventDetails = () => {
 										{firstname + " " + lastname}
 									</h2>
 									<p
-										className="leading-relaxed text-base dark:text-gray-900"
+										className="leading-relaxed text-base font-bold dark:text-gray-900"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}

@@ -13,7 +13,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import { categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
-import LoadingPage from "../../Path/LoadingPage";
+import LoadingPage from "../../Components/LoadingPage";
 
 const Events = () => {
 	window.scrollTo(0, 0);
@@ -60,7 +60,11 @@ const Events = () => {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			setCityName(t("allCities"));
+			setCityName(
+				t("allCities", {
+					regionName: process.env.REACT_APP_REGION_NAME,
+				})
+			);
 			urlParams.delete("cityId");
 		}
 		if (parseInt(categoryId)) {
@@ -164,9 +168,18 @@ const Events = () => {
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1
-									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
+									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
 									style={{ fontFamily: "Poppins, sans-serif" }}
 								>
+									<style>
+										{`
+													@media (max-width: 280px) {
+														.galaxy-fold {
+															font-size: 30px;
+														}
+													}
+												`}
+									</style>
 									{selectedCity} : {selectedCategory}
 								</h1>
 								<div>

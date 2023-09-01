@@ -16,7 +16,6 @@ import THREEIMAGE from "../assets/03.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
-	window.scrollTo(0, 0);
 	const [cityId, setCityId] = useState();
 	const [cities, setCities] = useState([]);
 	const [listings, setListings] = useState([]);
@@ -39,15 +38,6 @@ const HomePage = () => {
 		if (cityId) {
 			setCityId(cityId);
 		}
-
-		// getListings({
-		// 	statusId: 1,
-		// 	pageNo: 1,
-		// 	pageSize: 8,
-		// }).then((response) => {
-		// 	setListings([...sortLatestFirst(response.data.data)]);
-		// });
-
 		getListingsCount().then((response) => {
 			const data = response.data.data;
 			const sortedData = data.sort(
@@ -411,8 +401,12 @@ const HomePage = () => {
 								<div
 									key={city.id}
 									onClick={() => {
+										const scrollPosition = window.scrollY;
 										localStorage.setItem("selectedCity", city.name);
 										navigateTo(`/AllEvents?cityId=${city.id}`);
+										window.addEventListener("popstate", function () {
+											window.scrollTo(0, scrollPosition);
+										});
 									}}
 									className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 								>
