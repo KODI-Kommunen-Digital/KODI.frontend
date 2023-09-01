@@ -32,13 +32,13 @@ function CreateGroup() {
 	const navigate = useNavigate();
 
 	const handleGroupTypeChange = (event) => {
-		const groupType = event.target.checked ? "private" : "public";
+		const isPrivate = event.target.checked;
 		setInput((prevInput) => ({
 			...prevInput,
-			visibility: groupType,
+			isPrivate,
+			visibility: isPrivate ? "private" : "public",
 		}));
 	};
-
 	function handleDragEnter(e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -78,22 +78,32 @@ function CreateGroup() {
 
 	//Sending data to backend starts
 	const [input, setInput] = useState({
-		title: "",
+		forumName: "",
 		description: "",
 		image: null,
 		removeImage: false,
 		visibility: "",
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
 		subcategoryId: "",
-		title: "",
+		forumName: "",
 		description: "",
 		cityId: "",
 		startDate: "",
 		endDate: "",
 	});
+
+	const onInputChange = (e) => {
+		const { name, value } = e.target;
+		setInput((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+		validateInput(e);
+	};
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
@@ -175,15 +185,6 @@ function CreateGroup() {
 			}
 		}
 	}, [error]);
-
-	const onInputChange = (e) => {
-		const { name, value } = e.target;
-		setInput((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-		validateInput(e);
-	};
 
 	const [description, setDescription] = useState("");
 
@@ -303,7 +304,10 @@ function CreateGroup() {
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
 					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
+						<label
+							for="forumName"
+							class="block text-sm font-medium text-gray-600"
+						>
 							{t("forumName")} *
 						</label>
 						<input
@@ -320,15 +324,18 @@ function CreateGroup() {
 						<div
 							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.title ? "visible" : "hidden",
+								visibility: error.forumName ? "visible" : "hidden",
 							}}
 						>
-							{error.title}
+							{error.forumName}
 						</div>
 					</div>
 
 					<div class="relative mb-4">
-						<label for="title" class="block text-sm font-medium text-gray-600">
+						<label
+							for="forumName"
+							class="block text-sm font-medium text-gray-600"
+						>
 							{t("city")} *
 						</label>
 						<select
@@ -356,78 +363,43 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					{input.isPrivate === 1 ? (
-						<div className="relative mb-4 flex items-center">
-							<div className="flex items-center">
-								<label
-									htmlFor="groupType"
-									className="block text-sm font-medium text-gray-600 mr-2"
-								>
-									Public
-								</label>
-								<div className="relative">
-									<div
-										className={`w-10 h-6 rounded-full shadow-inner bg-blue-500`}
-									></div>
-									<div
-										className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
-										translate-x-full`}
-									></div>
-									<input
-										type="checkbox"
-										id="groupType"
-										name="groupType"
-										value={input.visibility}
-										checked={input.visibility === "private"}
-										onChange={handleGroupTypeChange}
-										className="sr-only"
-									/>
-								</div>
-								<label
-									htmlFor="groupType"
-									className="block text-sm font-medium text-gray-600 ml-2"
-								>
-									Private
-								</label>
+					<div className="relative mb-4 flex items-center">
+						<div className="flex items-center">
+							<label
+								htmlFor="groupType"
+								className="block text-sm font-medium text-gray-600 mr-2"
+							>
+								Public
+							</label>
+							<div className="relative">
+								<div
+									className={`w-10 h-6 rounded-full shadow-inner ${
+										input.isPrivate ? "bg-blue-500" : "bg-gray-300"
+									}`}
+								></div>
+								<div
+									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
+										input.isPrivate ? "translate-x-full" : "translate-x-0"
+									}`}
+								></div>
+								<input
+									type="checkbox"
+									id="groupType"
+									name="groupType"
+									value={input.visibility}
+									checked={input.isPrivate}
+									onChange={handleGroupTypeChange}
+									className="sr-only"
+								/>
 							</div>
+							<label
+								htmlFor="groupType"
+								className="block text-sm font-medium text-gray-600 ml-2"
+							>
+								Private
+							</label>
 						</div>
-					) : (
-						<div className="relative mb-4 flex items-center">
-							<div className="flex items-center">
-								<label
-									htmlFor="groupType"
-									className="block text-sm font-medium text-gray-600 mr-2"
-								>
-									Public
-								</label>
-								<div className="relative">
-									<div
-										className={`w-10 h-6 rounded-full shadow-inner
-										${input.visibility === "private" ? "bg-blue-500" : "bg-gray-300"}`}
-									></div>
-									<div
-										className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform 
-										${input.visibility === "private" ? "translate-x-full" : "translate-x-0"}`}
-									></div>
-									<input
-										type="checkbox"
-										id="groupType"
-										name="groupType"
-										value={input.visibility}
-										checked={input.visibility === "public"}
-										onChange={handleGroupTypeChange}
-										className="sr-only"
-									/>
-								</div>
-								<label
-									htmlFor="groupType"
-									className="block text-sm font-medium text-gray-600 ml-2"
-								>
-									Private
-								</label>
-							</div>
-						</div>
-					)}
+					</div>
 
 					<div class="relative mb-4">
 						<label
