@@ -467,7 +467,7 @@
     "passwordContainsUsername": "Password should not contains username",
     "pleaseCheckMail": "Please check your mail",
     "sessionExpiredLoginAgain": "Your session has expired. Please login again.",
-    "usernamePasswordNotPresent": "Username or password not present!",
+    "usernamePasswordNotPresent": "Username and password not present!",
     "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login.",
     "somethingWrong": "Something went wrong, please try again later.",
     "oldAndNewShouldNotBeSame": "New password should not be same as the old password",
@@ -475,5 +475,7 @@
     "sessionExpired": "Your session has expired. Please login again.",
     "pageNotFound": "Page not found!",
     "loading": "Loading...",
-    "youAreAlmosetThere": "You are almoset there"
+    "youAreAlmosetThere": "You are almoset there",
+    "uernameNotPresent": "username not present",
+    "passwordNotPresent": "password not present"
 }

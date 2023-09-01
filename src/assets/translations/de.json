@@ -469,7 +469,7 @@
     "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten",
     "pleaseCheckMail": "Bitte prüfen Sie Ihre Mails",
     "sessionExpiredLoginAgain": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an",
-    "usernamePasswordNotPresent": "Benutzername oder Passwort nicht vorhanden",
+    "usernamePasswordNotPresent": "Benutzername und Passwort nicht vorhanden!",
     "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
     "somethingWrong": "Es ist ein Fehler aufgetreten, bitte versuchen Sie es später noch einmal.",
     "oldAndNewShouldNotBeSame": "Das neue Passwort sollte nicht mit dem alten übereinstimmen",
@@ -477,5 +477,7 @@
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
     "pageNotFound": "Seite nicht gefunden!",
     "loading": "Wird geladen...",
-    "youAreAlmosetThere": "Du bist fast da"
+    "youAreAlmosetThere": "Du bist fast da",
+    "uernameNotPresent": "Benutzername nicht vorhanden",
+    "passwordNotPresent": "Passwort nicht vorhanden"
 }

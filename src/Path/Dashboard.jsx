@@ -89,7 +89,6 @@ const Dashboard = () => {
 				pageNo,
 			}).then((response) => {
 				setListings(response.data.data);
-				console.log(response.data.data);
 			});
 		}
 	}, [selectedStatus, viewAllListings, pageNo]);
@@ -122,7 +121,7 @@ const Dashboard = () => {
 				tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
 				setListings([...tempListings]);
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => console.error(error));
 	}
 
 	// Navigate to Edit Listings page Starts
@@ -135,8 +134,8 @@ const Dashboard = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		listing: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const fetchUpdatedListings = useCallback(() => {
@@ -156,7 +155,7 @@ const Dashboard = () => {
 				fetchUpdatedListings();
 				window.location.reload();
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => console.error(error));
 	}
 
 	function deleteListingOnClick(listing) {
@@ -374,7 +373,7 @@ const Dashboard = () => {
 															src={
 																listing.logo
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	  listing.logo
+																	listing.logo
 																	: LISTINGSIMAGE
 															}
 															alt="avatar"
