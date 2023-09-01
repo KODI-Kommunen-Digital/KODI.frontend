@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import LoadingPage from "../../Components/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -14,6 +13,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
+import LoadingPage from "../../Components/LoadingPage";
 
 const Events = () => {
 	window.scrollTo(0, 0);
@@ -367,7 +367,7 @@ const Events = () => {
 						)}
 					</div>
 				)}
-				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 					{pageNo !== 1 ? (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
