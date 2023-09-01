@@ -17,11 +17,15 @@ import EventDetails from "./Path/SubPages/EventDetails";
 import AllEvents from "./Path/SubPages/AllEvents";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
+import Forum from "./Path/Forums/Forum";
+import UploadPosts from "./Path/Forums/UploadPosts";
+import AllForums from "./Path/CitizenServices/AllForums";
 import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
-import Forums from "./Path/CitizenServices/Forums";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
+import CreateGroup from "./Path/CreateGroup";
+import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
@@ -31,6 +35,11 @@ import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
 import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
+
+import ViewPost from "./Path/Forums/ViewPost";
+import GroupMembers from "./Path/MyGroups/GroupMembers";
+import MemberRequests from "./Path/MyGroups/MemberRequests";
+import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 
 const App = () => {
 	useEffect(() => {
@@ -59,7 +68,7 @@ const App = () => {
 						path="/CitizenService/DigitalManagement"
 						element={<DigitalManagement />}
 					/>
-					<Route path="/CitizenService/Forums" element={<Forums />} />
+					<Route path="/CitizenService/AllForums" element={<AllForums />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
@@ -89,6 +98,27 @@ const App = () => {
 					/>
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
+
+					<Route path="/Forum/ViewPost" element={<ViewPost />} />
+					<Route path="/Forum" element={<Forum />} />
+					<Route path="/UploadPosts" element={<UploadPosts />} />
+					<Route path="/CreateGroup" element={<CreateGroup />} exact />
+					<Route path="/MyGroups" element={<MyGroups />} exact />
+					<Route
+						path="/MyGroups/GroupMembers"
+						element={<GroupMembers />}
+						exact
+					/>
+					<Route
+						path="/MyGroups/MemberRequests"
+						element={<MemberRequests />}
+						exact
+					/>
+					<Route
+						path="/MyGroups/ReportedPosts"
+						element={<ReportedPosts />}
+						exact
+					/>
 				</Routes>
 			</div>
 		</BrowserRouter>
