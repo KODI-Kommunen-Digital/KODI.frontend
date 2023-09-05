@@ -33,7 +33,7 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
-		const params = { pageSize: 9, statusId: 1 };
+		// const params = { pageSize: 9, statusId: 1 };
 		setIsLoading(true);
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
@@ -53,20 +53,9 @@ const Dashboard = () => {
 			setViewAllListings(true);
 		}
 		document.title = "Dashboard";
-		const fetchData = async () => {
-			try {
-				const response = await getListings(params);
-				const data = response.data.data;
-				setListings(data);
-			} catch (error) {
-				console.error("Error fetching listings:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
 		const fetchDataWithDelay = () => {
 			setTimeout(() => {
-				fetchData();
+				fetchListings();
 			}, 2000);
 		};
 
