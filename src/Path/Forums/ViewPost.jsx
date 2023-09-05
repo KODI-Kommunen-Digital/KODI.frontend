@@ -30,7 +30,8 @@ Description.propTypes = {
 const ViewPost = () => {
 	// window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [user, setUser] = useState({});
+	const [postOwner, setPostOwner] = useState({});
+	const [currentUser, setCurrentUser] = useState({});
 	const [forumPost, setForumPost] = useState({});
 	const [cityId, setCityId] = useState(null);
 	const [forumId, setForumId] = useState(null);
@@ -42,12 +43,14 @@ const ViewPost = () => {
 	const [comments, setComments] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
+	const [firstCommentsLoaded, setFirstCommentsLoaded] = useState(false);
 	const [text, setText] = useState("");
 	const pageSize = 5;
 
 	const toggleComments = () => {
-		if (!showComments) {
+		if (!showComments && !firstCommentsLoaded) {
 			fetchComments();
+			setFirstCommentsLoaded(true);
 		}
 		setShowComments(!showComments);
 	};
@@ -71,6 +74,9 @@ const ViewPost = () => {
 				const commentData = { comment: comment.newReply, parentId };
 				createComment(cityId, forumId, postId, commentData).then((response) => {
 					const commentResonse = response.data.data;
+					commentResonse.firstname = currentUser.firstname;
+					commentResonse.lastname = currentUser.lastname;
+					commentResonse.username = currentUser.username;
 					comment.childrenCount += 1;
 					comment.showReplies = true;
 					if (comment.replies) {
@@ -88,6 +94,9 @@ const ViewPost = () => {
 				const commentData = { comment: newComment };
 				createComment(cityId, forumId, postId, commentData).then((response) => {
 					const commentResonse = response.data.data;
+					commentResonse.firstname = currentUser.firstname;
+					commentResonse.lastname = currentUser.lastname;
+					commentResonse.username = currentUser.username;
 					commentResonse.childrenCount = 0;
 					comments.unshift(commentResonse);
 					setComments([...comments]);
@@ -136,14 +145,21 @@ const ViewPost = () => {
 		setForumId(forumId);
 		const postId = searchParams.get("postId");
 		setPostId(postId);
+		const userId =
+			window.localStorage.getItem("userId") ||
+			window.sessionStorage.getItem("userId");
 		if (forumId && cityId && postId) {
 			getForumPost(cityId, forumId, postId)
 				.then((forumsResponse) => {
 					const forumPost = forumsResponse.data.data;
 					console.log(forumsResponse.data.data);
-					getProfile(forumPost.userId).then((userResponse) => {
+					getProfile(forumPost.userId, { cityId, cityUser: true }).then((userResponse) => {
 						const user = userResponse.data.data;
-						setUser(user);
+						setPostOwner(user);
+					});
+					getProfile(userId).then((userResponse) => {
+						const user = userResponse.data.data;
+						setCurrentUser(user);
 					});
 					setForumPost(forumPost);
 					if (forumPost.createdAt) {
@@ -333,7 +349,7 @@ const ViewPost = () => {
 															src={
 																comment.image
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	  comment.image
+																	comment.image
 																	: PROFILEIMAGE
 															}
 														/>
@@ -383,8 +399,10 @@ const ViewPost = () => {
 														onClick={() => {
 															comment.showReplies = !comment.showReplies;
 															setComments([...comments]);
-															if (comment.showReplies) {
+															if (comment.showReplies && !comment.firstRepliesLoaded) {
 																fetchComments(comment.id);
+																comment.firstRepliesLoaded = true;
+																setComments([...comments]);
 															}
 														}}
 													>
@@ -405,8 +423,8 @@ const ViewPost = () => {
 														</svg>
 														{!comment.showReplies
 															? t("showReplyCount", {
-																	count: comment.childrenCount,
-															  })
+																count: comment.childrenCount,
+															})
 															: t("hideReplies")}
 													</button>
 												)}
@@ -449,7 +467,7 @@ const ViewPost = () => {
 																		src={
 																			comment.image
 																				? process.env.REACT_APP_BUCKET_HOST +
-																				  comment.image
+																				comment.image
 																				: PROFILEIMAGE
 																		}
 																	/>
@@ -499,7 +517,7 @@ const ViewPost = () => {
 					</form>
 				</div>
 
-				<UserProfile user={user} createdAt={createdAt} />
+				<UserProfile user={postOwner} createdAt={createdAt} />
 			</div>
 			<div className="bottom-0 w-full">
 				<Footer />
