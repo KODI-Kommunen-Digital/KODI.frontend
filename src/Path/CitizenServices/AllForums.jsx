@@ -124,7 +124,6 @@ const AllForums = () => {
 	return (
 		<section className="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
-
 			{isValidForum ? (
 				<div>
 					<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
@@ -292,15 +291,15 @@ const AllForums = () => {
 												className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{t("currently_no_listings")}
+												{t("currently_no_forums")}
 											</h1>
 										</div>
-										<div
-											className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-											style={{ fontFamily: "Poppins, sans-serif" }}
-										>
-											<span className="font-sans text-black">
-												{t("to_upload_new_listing")}
+										<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+											<span
+												className="font-sans text-black"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
+												{t("to_upload_new_forum")}
 											</span>
 											<a
 												className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
@@ -310,6 +309,9 @@ const AllForums = () => {
 														"selectedItem",
 														"Choose one category"
 													);
+													isLoggedIn
+														? navigateTo("/CreateGroup")
+														: navigateTo("/login");
 												}}
 											>
 												{t("click_here")}
