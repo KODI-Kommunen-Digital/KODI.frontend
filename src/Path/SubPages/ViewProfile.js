@@ -63,7 +63,7 @@ const ViewProfile = () => {
 		const username = pathSegments[pathSegments.length - 1];
 
 		if (username) {
-			const formattedUsername = username.replace(/%20/g, "");
+			const formattedUsername = username.replace(/%20/g, " ");
 			fetchUsers({ username: formattedUsername }).then((response) => {
 				const userData = response.data.data ? response.data.data[0] : null;
 				console.log(userData);

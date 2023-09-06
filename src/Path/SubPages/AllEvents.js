@@ -69,8 +69,8 @@ const Events = () => {
 		}
 		if (parseInt(categoryId)) {
 			setCategoryName(t(categoryById[categoryId]));
-			params.categoryId = categoryId;
-			urlParams.set("categoryId", categoryId);
+			params.categoryId = parseInt(categoryId);
+			urlParams.set("categoryId", parseInt(categoryId));
 		} else {
 			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
@@ -83,13 +83,14 @@ const Events = () => {
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		if (categoryId === categoryByName.events) {
+		if (parseInt(categoryId) === categoryByName.events) {
 			params.sortByStartDate = true;
 		}
 		const fetchData = async () => {
 			try {
 				const response = await getListings(params);
 				const data = response.data.data;
+				console.log(response.data.data);
 				setListings(data);
 			} catch (error) {
 				console.error("Error fetching listings:", error);
@@ -99,7 +100,26 @@ const Events = () => {
 		};
 		const fetchDataWithDelay = () => {
 			setTimeout(() => {
-				fetchData();
+				if (urlParams.has("categoryId")) {
+					const categoryId = urlParams.get("categoryId");
+
+					// Check if sortByStartDate is also present in the URL
+					if (urlParams.has("sortByStartDate")) {
+						const params = { categoryId, sortByStartDate: true };
+						fetchData(params);
+					} else {
+						// Only categoryId is present in the URL
+						const params = { categoryId };
+						fetchData(params);
+					}
+				} else if (urlParams.has("cityId")) {
+					// Only cityId is present in the URL
+					const cityId = urlParams.get("cityId");
+					const params = { cityId };
+					fetchData(params);
+				} else {
+					fetchData();
+				}
 			}, 2000);
 		};
 

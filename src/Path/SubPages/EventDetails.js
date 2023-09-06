@@ -18,6 +18,7 @@ import {
 	postFavoriteListingsData,
 	deleteListingsById,
 } from "../../Services/favoritesApi";
+import LoadingPage from "../../Components/LoadingPage";
 
 const Description = ({ content }) => {
 	return (
@@ -70,11 +71,13 @@ const EventDetails = () => {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		const pdfLoadingTimeout = setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
 		const params = { statusId: 1 };
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		const listingId = searchParams.get("listingId");
-		// setListingId(listingId);
 		if (listingId && cityId) {
 			const accessToken =
 				window.localStorage.getItem("accessToken") ||
@@ -128,6 +131,7 @@ const EventDetails = () => {
 					navigateTo("/Error");
 				});
 		}
+		return () => clearTimeout(pdfLoadingTimeout);
 	}, [t, cityId, window.location.href, isLoggedIn]);
 
 	const navigate = useNavigate();
