@@ -469,5 +469,6 @@
     "pageNotFound": "Page not found!",
 
     "loading": "Loading...",
-    "youAreAlmosetThere": "You are almoset there"
+    "youAreAlmosetThere": "You are almoset there",
+    "downloadPdf": "Download PDF"
 }
