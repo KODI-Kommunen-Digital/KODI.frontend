@@ -512,5 +512,6 @@
     "admin": "Admin",
     "member": "Mitglied",
     "role": "Rolle",
-    "onlyAdmins": "Nur für Admins"
+    "onlyAdmins": "Nur für Admins",
+    "downloadPdf": "PDF Herunterladen"
 }
