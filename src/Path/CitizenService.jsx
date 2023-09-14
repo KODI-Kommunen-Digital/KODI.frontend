@@ -22,7 +22,6 @@ const CitizenService = () => {
 	]);
 	const [cities, setCities] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
-	const [isLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
 
 	const navigate = useNavigate();
@@ -46,14 +45,6 @@ const CitizenService = () => {
 			if (cityIdParam) setCityId(cityIdParam);
 		});
 	}, []);
-
-	// useEffect(() => {
-	//     if (cityId) {
-	//         getCitizenServices({ cityId }).then((response) => {
-	//             setcitizenServices(response.data.data);
-	//         });
-	//     }
-	// }, [cityId]);
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -80,7 +71,10 @@ const CitizenService = () => {
 										autoComplete="city-name"
 										onChange={(e) => {
 											const selectedCityId = e.target.value;
-											const newUrl = `${window.location.pathname}?cityId=${selectedCityId}`;
+											const newUrl =
+												selectedCityId === "0"
+													? `${window.location.pathname}`
+													: `${window.location.pathname}?cityId=${selectedCityId}`;
 											window.history.replaceState({}, "", newUrl);
 											setCityId(selectedCityId);
 										}}
@@ -123,7 +117,9 @@ const CitizenService = () => {
 										<a
 											rel="noreferrer noopener"
 											onClick={() => {
-												navigateTo(data.link + `?cityId=${cityId}`);
+												cityId == null || cityId === "0"
+													? navigateTo("/ForumsError")
+													: navigateTo(data.link + `?cityId=${cityId}`);
 											}}
 										>
 											<img
@@ -151,22 +147,6 @@ const CitizenService = () => {
 						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 							{t("currently_no_services")}
 						</h1>
-					</div>
-					<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-						<span className="font-sans text-black">
-							{t("to_upload_new_listing")}
-						</span>
-						<a
-							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-							onClick={() => {
-								localStorage.setItem("selectedItem", "Choose one category");
-								isLoggedIn
-									? navigateTo("/UploadListings")
-									: navigateTo("/login");
-							}}
-						>
-							{t("click_here")}
-						</a>
 					</div>
 				</div>
 			)}

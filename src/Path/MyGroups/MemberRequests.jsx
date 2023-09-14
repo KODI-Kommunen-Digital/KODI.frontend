@@ -26,13 +26,11 @@ const MemberRequests = () => {
 		getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })
 			.then((response) => {
 				setRequests(response.data.data);
-				// console.log(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
 				const firstRequestId =
 					response.data.data.find((m) => m.requestId)?.requestId || null;
 				setMemberRequestId(firstRequestId);
-				console.log(firstRequestId);
 			})
 			.catch(() => navigateTo("/Error"));
 	}, []);

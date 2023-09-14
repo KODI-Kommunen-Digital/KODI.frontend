@@ -73,7 +73,6 @@ const Forum = () => {
 	const [followRequested, setFollowRequested] = useState(false);
 	const [memberStatus, setMemberStatus] = useState(false);
 	const [isOnlyMember, setIsOnlyMember] = useState(false);
-
 	useEffect(() => {
 		async function checkUserMembership() {
 			const urlParams = new URLSearchParams(window.location.search);
@@ -82,15 +81,14 @@ const Forum = () => {
 			const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
 			document.title = "Heidi - Forums";
 			setPageNo(pageNoParam);
-			const storedFollowRequested = localStorage.getItem("followRequested");
-			if (storedFollowRequested) {
-				setFollowRequested(true);
-			}
+			// const storedFollowRequested = localStorage.getItem("followRequested");
+			// if (storedFollowRequested) {
+			// 	setFollowRequested(true);
+			// }
 			if (cityIdParam && forumIdParam) {
 				getForum(cityIdParam, forumIdParam).then((response) => {
 					if (response.data.data) {
 						setForums(response.data.data);
-						console.log(response.data.data);
 						setCityId(cityIdParam);
 						setForumId(forumIdParam);
 						setIsValidForum(true);
@@ -128,6 +126,16 @@ const Forum = () => {
 		}
 		checkUserMembership();
 	}, [forumId]);
+
+	const handleFollow = async () => {
+		try {
+			await forumMemberRequests(cityId, forumId);
+			setMemberStatus(true);
+			localStorage.setItem("memberStatus", "true");
+		} catch (error) {
+			console.error("Error sending follow request:", error);
+		}
+	};
 
 	const handleFollowRequest = async () => {
 		try {
@@ -214,8 +222,32 @@ const Forum = () => {
 								{followRequested ? t("requestSent") : t("request")}
 							</a>
 						) : (
-							<div className="flex flex-row md:flex-row items-center justify-center">
-								{isOnlyMember ? (
+							<div className="flex flex-row md:flex-row items-center md:justify-center justify-between">
+								{!memberStatus ? (
+									<div>
+										<a
+											onClick={handleFollow}
+											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+										>
+											{t("follow")}
+										</a>
+										<svg
+											onClick={handleFollow}
+											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer transition-transform duration-300 transform hover:scale-110"
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+											/>
+										</svg>
+									</div>
+								) : isOnlyMember ? (
 									<div>
 										<a
 											onClick={handleDeleteGroup}
@@ -359,7 +391,6 @@ const Forum = () => {
 										<path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z" />
 									</svg>
 								</div>
-
 								<div>
 									<a
 										onClick={() =>
@@ -377,18 +408,15 @@ const Forum = () => {
 												`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
 											)
 										}
-										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer animate-pulse"
+										className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke="currentColor"
 									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M12 4v16m8-8H4"
-										/>
+										<rect x="3" y="3" width="18" height="18" rx="2" ry="2" />{" "}
+										<line x1="12" y1="8" x2="12" y2="16" />{" "}
+										<line x1="8" y1="12" x2="16" y2="12" />
 									</svg>
 								</div>
 							</div>
