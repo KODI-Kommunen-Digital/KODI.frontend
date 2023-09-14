@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
+import ForumsError from "./Path/ForumsError";
 import ProfilePage from "./Path/ProfilePage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
@@ -98,6 +99,7 @@ const App = () => {
 					/>
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
+					<Route path="ForumsError" element={<ForumsError />} />
 
 					<Route path="/Forum/ViewPost" element={<ViewPost />} />
 					<Route path="/Forum" element={<Forum />} />

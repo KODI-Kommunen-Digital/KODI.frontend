@@ -501,8 +501,9 @@
     "yes": "Ja",
     "no": "Nein",
     "request": "Follow Request",
+    "follow": "Follow",
     "reportedComments": "Reported Comments",
-    "requestSent": "Request Send",
+    "requestSent": "Request Sent",
     "following": "Following",
     "leaveGroup": "Leave Group",
     "deleteGroup": "Delete Group",
@@ -513,5 +514,7 @@
     "member": "Mitglied",
     "role": "Rolle",
     "onlyAdmins": "Nur für Admins",
-    "downloadPdf": "PDF Herunterladen"
+    "downloadPdf": "PDF Herunterladen",
+    "to_upload_new_forum": "To upload a new forum, ",
+    "currently_no_forums": "Currently there is no forum to display !"
 }

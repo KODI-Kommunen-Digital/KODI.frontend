@@ -84,7 +84,6 @@ function CreateGroup() {
 		removeImage: false,
 		visibility: "",
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",

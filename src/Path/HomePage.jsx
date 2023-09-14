@@ -47,7 +47,7 @@ const HomePage = () => {
 			setListingsCount(sortedData);
 		});
 
-		document.title = "Heidi Home";
+		document.title = process.env.REACT_APP_NAME;
 	}, []);
 
 	useEffect(() => {

@@ -26,7 +26,6 @@ const ReportedPosts = () => {
 		getReportedPosts(cityIdParam, forumIdParam, { minReports: 1 })
 			.then((response) => {
 				setReports(response.data.data);
-				console.log(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
 			})

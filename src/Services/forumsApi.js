@@ -77,6 +77,12 @@ export async function getForumMemberRequests(cityId, forumsId, params) {
 	});
 }
 
+export async function cancelMemberRequests(cityId, forumsId, memberRequestsId) {
+	return axios.delete(
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`
+	);
+}
+
 export async function acceptForumMemberRequests(
 	cityId,
 	forumsId,
