@@ -138,7 +138,7 @@ function UploadListings() {
 		removeImage: false,
 		removePdf: false,
 	});
-	console.log(input);
+	
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -185,10 +185,8 @@ function UploadListings() {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						console.log(pdfForm);
 						await uploadListingPDF(pdfForm, cityId, response.data.id);
 					}
-					console.log(pdf);
 				} else {
 					if (image1) {
 						// Upload image if it exists
@@ -256,7 +254,6 @@ function UploadListings() {
 				if (listingData.endDate)
 					listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
-				console.log(listingData);
 				setInput(listingData);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
