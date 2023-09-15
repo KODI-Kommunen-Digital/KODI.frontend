@@ -127,16 +127,6 @@ function UploadListings() {
 			removeImage: true,
 		}));
 	}
-
-	function handlePDFInputChange(e) {
-		e.preventDefault();
-		const file = e.target.files[0];
-		setPdf(file);
-	}
-
-	function handleRemovePDF() {
-		setPdf(null);
-	}
 	//Drag and Drop ends
 
 	//Sending data to backend starts
@@ -156,7 +146,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -283,15 +272,6 @@ function UploadListings() {
 	};
 
 	const [description, setDescription] = useState("");
-
-	// const onDescriptionChange = (newContent) => {
-	// 	setInput((prev) => ({
-	// 		...prev,
-	// 		description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
-	// 	}));
-	// 	console.log(input)
-	// 	setDescription(newContent);
-	// };
 
 	const onDescriptionChange = (newContent) => {
 		const hasNumberedList = newContent.includes("<ol>");

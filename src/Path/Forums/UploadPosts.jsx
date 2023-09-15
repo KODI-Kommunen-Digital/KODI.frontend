@@ -7,13 +7,16 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
 	getUserForums,
-	getForum,
+	getPostDetails,
 	forumPosts,
+	uploadPostImage,
+	deletePostImage,
 	updateForumPosts,
 } from "../../Services/forumsApi";
 
 import { getCities } from "../../Services/cities";
 import Alert from "../../Components/Alert";
+import FormData from "form-data";
 
 function UploadPosts() {
 	const { t } = useTranslation();
@@ -77,7 +80,7 @@ function UploadPosts() {
 		description: "",
 		image: null,
 		removeImage: false,
-		visibility: "public",
+		cityId: "",
 	});
 	console.log(input);
 
@@ -86,6 +89,59 @@ function UploadPosts() {
 		description: "",
 		cityId: "",
 	});
+
+	const [forumId, setForumId] = useState(null);
+	const [forum, setForums] = useState([]);
+	const [postId, setPostId] = useState(null);
+
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const cityIdFromURL = searchParams.get("cityId");
+		const forumIdFromURL = searchParams.get("forumId");
+		const postId = searchParams.get("postId");
+		if (forumIdFromURL && cityIdFromURL && postId) {
+			setNewPost(false);
+			getPostDetails(cityIdFromURL, forumIdFromURL, postId).then(
+				(postResponse) => {
+					const postData = postResponse.data.data;
+					postData.cityId = cityIdFromURL;
+					setInput(postData);
+					setDescription(postData.description);
+				}
+			);
+		}
+	}, []);
+
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const citiesResponse = await getCities({ hasForum: true });
+				setCities(citiesResponse.data.data);
+				const response = await getUserForums();
+				setForums(response.data.data);
+
+				const urlParams = new URLSearchParams(location.search);
+				const forumIdFromUrl = Number(urlParams.get("forumId"));
+				const cityIdFromURL = Number(urlParams.get("cityId"));
+				const postIdFromURL = Number(urlParams.get("postId"));
+				if (!isNaN(forumIdFromUrl) && !isNaN(cityIdFromURL)) {
+					setForumId(forumIdFromUrl);
+					setCityId(cityIdFromURL);
+					setPostId(postIdFromURL);
+					setInput((prev) => ({
+						...prev,
+						forumId: forumIdFromUrl,
+						cityId: cityIdFromURL,
+						postId: postIdFromURL,
+					}));
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		}
+
+		fetchData();
+	}, [location.search]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -104,10 +160,27 @@ function UploadPosts() {
 		if (valid) {
 			setUpdating(true);
 			try {
+				// if (newPost) {
+				// 	await forumPosts(cityId, forumId, input);
+				// } else {
+				// 	await updateForumPosts(cityId, input, forumId, postId);
+				// }
+				const response = newPost
+					? await forumPosts(cityId, forumId, input)
+					: await updateForumPosts(cityId, input, forumId, postId);
+
 				if (newPost) {
-					await forumPosts(cityId, forumId, input);
-				} else {
-					await updateForumPosts(cityId, input, forumId);
+					if (image1) {
+						const form = new FormData();
+						form.append("image", image1);
+						await uploadPostImage(cityId, forumId, response.data.id);
+					}
+				} else if (image1) {
+					const form = new FormData();
+					form.append("image", image1);
+					await uploadPostImage(cityId, forumId, input.id);
+				} else if (input.removeImage) {
+					await deletePostImage(cityId, forumId, input.id);
 				}
 
 				setSuccessMessage(t("postCreated"));
@@ -221,48 +294,6 @@ function UploadPosts() {
 			return { ...prevState, [name]: errorMessage };
 		});
 	};
-	const [forumId, setForumId] = useState(null);
-	const [forum, setForums] = useState([]);
-
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		const forumId = searchParams.get("forumId");
-		if (forumId && cityId) {
-			setNewPost(true);
-			getForum(cityId, forumId).then((forumsResponse) => {
-				const forumsData = forumsResponse.data.data;
-				forumsData.cityId = cityId;
-				setInput(forumsData);
-			});
-		}
-	}, []);
-
-	useEffect(() => {
-		async function fetchData() {
-			try {
-				const citiesResponse = await getCities({ hasForum: true });
-				setCities(citiesResponse.data.data);
-				const response = await getUserForums();
-				setForums(response.data.data);
-
-				const urlParams = new URLSearchParams(location.search);
-				const forumIdFromUrl = Number(urlParams.get("forumId"));
-				if (!isNaN(forumIdFromUrl)) {
-					setForumId(forumIdFromUrl);
-					setInput((prev) => ({
-						...prev,
-						forumId: forumIdFromUrl,
-					}));
-				}
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		}
-
-		fetchData();
-	}, [location.search]);
 
 	async function onForumChange(e) {
 		const forumId = e.target.value;
@@ -280,12 +311,13 @@ function UploadPosts() {
 	}
 	async function onCityChange(e) {
 		const cityId = e.target.value;
-		setCityId(cityId);
+		setCityId(cityId); // Set the cityId in your component state
+
 		setInput((prev) => ({
 			...prev,
 			cityId: cityId,
-			villageId: 0,
 		}));
+
 		validateInput(e);
 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -350,6 +382,7 @@ function UploadPosts() {
 							name="cityId"
 							value={cityId}
 							onChange={onCityChange}
+							disabled={!newPost}
 							autoComplete="country-name"
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
@@ -382,9 +415,10 @@ function UploadPosts() {
 						<select
 							type="text"
 							id="forumId"
-							name="forumId"
+							name="forumName"
 							value={forumId}
 							onChange={onForumChange}
+							disabled={!newPost}
 							autoComplete="country-name"
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>

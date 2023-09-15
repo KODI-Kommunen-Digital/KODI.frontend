@@ -170,7 +170,7 @@ const EventDetails = () => {
 	}, [user]);
 
 	const [handleClassName, setHandleClassName] = useState(
-		"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+		"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 	);
 	const [, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
@@ -186,7 +186,7 @@ const EventDetails = () => {
 					setFavoriteId(0);
 					setSuccessMessage(t("list removed from the favorites"));
 					setHandleClassName(
-						"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+						"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 					);
 					setFavButton(t("Unfavorite"));
 				} else {
@@ -196,7 +196,7 @@ const EventDetails = () => {
 									setFavoriteId(response.data.id);
 									setSuccessMessage(t("List added to the favorites"));
 									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+										"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 									);
 									setFavButton(t("Favorite"));
 								})
@@ -505,7 +505,7 @@ const EventDetails = () => {
 												)
 											}
 											type="submit"
-											className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+											className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
 											style={{
 												fontFamily: "Poppins, sans-serif",
 											}}
@@ -542,7 +542,7 @@ const EventDetails = () => {
 											)
 										}
 										type="submit"
-										className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-md border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+										className="group relative flex w-48 sm:w-96 lg:mx-4 sm:mx-0 font-bold justify-center rounded-xl border border-transparent text-blue-800 bg-slate-300 py-2 px-4 text-sm shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}

@@ -79,7 +79,7 @@ function UserProfile({ user }) {
 										)
 									}
 									type="submit"
-									className="rounded-md bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+									className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
 									style={{
 										fontFamily: "Poppins, sans-serif",
 									}}

@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import UserProfile from "../../Components/UserProfile";
 import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
 	getForumPost,
 	createComment,
 	getComments,
+	deletePostDetails,
 	createReportedPosts,
 } from "../../Services/forumsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfile, getUserId } from "../../Services/usersApi";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 
 const Description = ({ content }) => {
@@ -46,6 +48,13 @@ const ViewPost = () => {
 	const [firstCommentsLoaded, setFirstCommentsLoaded] = useState(false);
 	const [text, setText] = useState("");
 	const pageSize = 5;
+	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
+	const [isUser, setIsUser] = useState(false);
 
 	const toggleComments = () => {
 		if (!showComments && !firstCommentsLoaded) {
@@ -152,11 +161,22 @@ const ViewPost = () => {
 			getForumPost(cityId, forumId, postId)
 				.then((forumsResponse) => {
 					const forumPost = forumsResponse.data.data;
-					console.log(forumsResponse.data.data);
-					getProfile(forumPost.userId, { cityId, cityUser: true }).then((userResponse) => {
-						const user = userResponse.data.data;
-						setPostOwner(user);
-					});
+
+					const loggedInUserIdResponse = getUserId();
+					const loggedInUserId = parseInt(loggedInUserIdResponse);
+
+					const isUser =
+						forumPost.cityUserId === loggedInUserId && forumPost.isAdmin === 1;
+
+					setIsUser(isUser);
+					setForumPost(forumPost);
+
+					getProfile(forumPost.userId, { cityId, cityUser: true }).then(
+						(userResponse) => {
+							const user = userResponse.data.data;
+							setPostOwner(user);
+						}
+					);
 					getProfile(userId).then((userResponse) => {
 						const user = userResponse.data.data;
 						setCurrentUser(user);
@@ -213,6 +233,19 @@ const ViewPost = () => {
 		}
 	}, [pageNo]);
 
+	function goToAllForums() {
+		navigateTo(`/CitizenService`);
+	}
+
+	const handleDelete = async () => {
+		try {
+			await deletePostDetails(cityId, forumId, postId);
+			goToAllForums();
+		} catch (error) {
+			console.error("Error deleting post:", error);
+		}
+	};
+
 	return (
 		<section className="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
@@ -220,7 +253,7 @@ const ViewPost = () => {
 			<div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
 				<div className="grid grid-cols-1 gap-4 col-span-2">
 					<div className="overflow-hidden mb-10">
-						<div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+						<div className="flex flex-col lg:flex-row sm:items-start text-start justify-between">
 							<h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
 								<span
 									className="inline-block max-w-full break-words"
@@ -231,19 +264,47 @@ const ViewPost = () => {
 									{forumPost.title}
 								</span>
 							</h1>
-							<div className="flex my-4 items-center text-2xl md:text-3xl lg:text-3xl text-blue-400">
-								<button
-									type="button"
-									className="rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+							<div className="flex my-4 items-center space-x-8 text-2xl md:text-3xl lg:text-3xl text-blue-400">
+								{isUser ? (
+									<div>
+										<a className="text-gray-600 font-semibold text-base cursor-pointer">
+											<span
+												className="ml-0"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+												onClick={() => handleDelete()}
+											>
+												{t("Delete")}
+											</span>
+										</a>
+
+										<a className="text-blue-400 font-semibold text-base cursor-pointer">
+											<span
+												className="ml-0"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+												onClick={() =>
+													navigateTo(
+														`/UploadPosts?forumId=${forumId}&cityId=${cityId}&postId=${postId}`
+													)
+												}
+											>
+												{t("Edit")}
+											</span>
+										</a>
+									</div>
+								) : null}
+
+								<a
+									className="text-blue-800 font-semibold text-base cursor-pointer"
 									onClick={openPopup}
 								>
 									<span
-										className="ml-1"
+										className="ml-0"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										Report
+										{t("Report")}
 									</span>
-								</button>
+								</a>
+
 								{isPopupOpen && (
 									<div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
 										<div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
@@ -258,13 +319,13 @@ const ViewPost = () => {
 											/>
 											<div className="flex justify-center mt-4">
 												<button
-													className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+													className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
 													onClick={closePopup}
 												>
 													Cancel
 												</button>
 												<button
-													className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+													className="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 													onClick={handleReportPost}
 												>
 													Send
@@ -319,14 +380,14 @@ const ViewPost = () => {
 						</div>
 						<div className="space-x-2">
 							<div
-								className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								className={`mt-2 px-4 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 								onClick={() => postComment()}
 							>
 								{t("comment")}
 							</div>
 							<a
-								className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								className={`mt-2 px-4 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 								onClick={toggleComments}
 							>
@@ -349,7 +410,7 @@ const ViewPost = () => {
 															src={
 																comment.image
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	comment.image
+																	  comment.image
 																	: PROFILEIMAGE
 															}
 														/>
@@ -399,7 +460,10 @@ const ViewPost = () => {
 														onClick={() => {
 															comment.showReplies = !comment.showReplies;
 															setComments([...comments]);
-															if (comment.showReplies && !comment.firstRepliesLoaded) {
+															if (
+																comment.showReplies &&
+																!comment.firstRepliesLoaded
+															) {
 																fetchComments(comment.id);
 																comment.firstRepliesLoaded = true;
 																setComments([...comments]);
@@ -423,8 +487,8 @@ const ViewPost = () => {
 														</svg>
 														{!comment.showReplies
 															? t("showReplyCount", {
-																count: comment.childrenCount,
-															})
+																	count: comment.childrenCount,
+															  })
 															: t("hideReplies")}
 													</button>
 												)}
@@ -467,7 +531,7 @@ const ViewPost = () => {
 																		src={
 																			comment.image
 																				? process.env.REACT_APP_BUCKET_HOST +
-																				comment.image
+																				  comment.image
 																				: PROFILEIMAGE
 																		}
 																	/>
@@ -506,7 +570,7 @@ const ViewPost = () => {
 								{showMoreComments && (
 									<button
 										type="button"
-										className={`mt-2 px-4 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+										className={`mt-2 px-2 py-2 w-60 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 										onClick={() => setPageNo(pageNo + 1)}
 									>
 										{t("showMoreComments")}

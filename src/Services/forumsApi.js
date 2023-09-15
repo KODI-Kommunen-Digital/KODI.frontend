@@ -64,10 +64,35 @@ export async function forumPosts(cityId, forumsId, postData) {
 	return axios.post(`/cities/${cityId}/forums/${forumsId}/posts`, postData);
 }
 
-export async function updateForumPosts(cityId, forumsId, postId, postData) {
+export async function getPostDetails(cityId, forumsId, postId) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`);
+}
+
+export async function deletePostDetails(cityId, forumsId, postId) {
+	return axios.delete(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`);
+}
+
+export async function updateForumPosts(cityId, postData, forumsId, postId) {
 	return axios.patch(
 		`/cities/${cityId}/forums/${forumsId}/posts/${postId}`,
 		postData
+	);
+}
+
+export async function uploadPostImage(cityId, forumsId, postId) {
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+}
+
+export async function deletePostImage(cityId, forumsId, postId) {
+	return axios.delete(
+		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageDelete`
 	);
 }
 
