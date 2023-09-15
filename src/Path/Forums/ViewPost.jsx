@@ -161,12 +161,13 @@ const ViewPost = () => {
 			getForumPost(cityId, forumId, postId)
 				.then((forumsResponse) => {
 					const forumPost = forumsResponse.data.data;
+					console.log(forumPost);
 
 					const loggedInUserIdResponse = getUserId();
+					console.log(loggedInUserIdResponse);
 					const loggedInUserId = parseInt(loggedInUserIdResponse);
 
-					const isUser =
-						forumPost.cityUserId === loggedInUserId && forumPost.isAdmin === 1;
+					const isUser = forumPost.userId === loggedInUserId;
 
 					setIsUser(isUser);
 					setForumPost(forumPost);
@@ -266,7 +267,7 @@ const ViewPost = () => {
 							</h1>
 							<div className="flex my-4 items-center space-x-8 text-2xl md:text-3xl lg:text-3xl text-blue-400">
 								{isUser ? (
-									<div>
+									<>
 										<a className="text-gray-600 font-semibold text-base cursor-pointer">
 											<span
 												className="ml-0"
@@ -290,7 +291,7 @@ const ViewPost = () => {
 												{t("Edit")}
 											</span>
 										</a>
-									</div>
+									</>
 								) : null}
 
 								<a
