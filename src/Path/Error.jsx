@@ -13,7 +13,7 @@ const Error = () => {
 	};
 
 	return (
-		<div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200">
+		<div className="fixed inset-0 flex items-center justify-center bg-white">
 			<div className="bg-black text-white p-10 rounded-lg shadow-lg w-full max-w-xl md:max-w-2xl lg:max-w-4xl h-full md:h-auto transform hover:-translate-y-2 transition-all duration-300">
 				<img
 					className="h-20 md:h-40 mx-auto"
@@ -27,7 +27,7 @@ const Error = () => {
 					<p className="text-3xl py-10 md:text-4xl">Page not found!</p>
 					<a
 						onClick={() => navigateTo("/")}
-						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 px-8 py-2 text-base font-semibold text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-white px-8 py-2 text-base font-semibold text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
 						{t("goBack")}

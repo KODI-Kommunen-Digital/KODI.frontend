@@ -29,6 +29,7 @@ const GroupMembers = () => {
 			try {
 				const response = await getForumMembers(cityIdParam, forumIdParam);
 				const membersData = response.data.data;
+				console.log(membersData);
 				setMembers(membersData);
 
 				const loggedInUserIdResponse = getUserId();
