@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
-import Modal from "../../Components/DialogueBox";
+import DialogueBox from "../../Components/DialogueBox";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import {
@@ -16,7 +16,6 @@ const MemberRequests = () => {
 	const [memberRequests, setRequests] = useState([]);
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
-	const [memberRequestId, setMemberRequestId] = useState(0);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -28,27 +27,25 @@ const MemberRequests = () => {
 				setRequests(response.data.data);
 				setCityId(cityIdParam);
 				setForumId(forumIdParam);
-				const firstRequestId =
-					response.data.data.find((m) => m.requestId)?.requestId || null;
-				setMemberRequestId(firstRequestId);
 			})
 			.catch(() => navigateTo("/Error"));
 	}, []);
 
 	const [isLoading, setIsLoading] = useState(false);
 
-	const handleAccept = async () => {
+	const handleAccept = async (member) => {
 		setIsLoading(true);
 
 		try {
-			// Assuming you want to accept the request (change `true` to `false` if rejecting)
 			const payload = { accept: true };
-
 			await acceptForumMemberRequests(
 				cityId,
 				forumId,
-				memberRequestId,
+				member.requestId,
 				payload
+			);
+			setRequests((prevRequests) =>
+				prevRequests.filter((request) => request.requestId !== member.requestId)
 			);
 		} catch (error) {
 			console.error("Error accepting member request:", error);
@@ -163,13 +160,16 @@ const MemberRequests = () => {
 																: "text-blue-600 hover:underline cursor-pointer"
 														} px-2 dark:text-blue-500`}
 														style={{ fontFamily: "Poppins, sans-serif" }}
-														onClick={handleAccept}
+														onClick={() => handleAccept(member)}
 													>
 														{t("accept")}
 													</a>
 												</td>
 												<td className="px-6 py-4 text-center">
-													<Modal />
+													<DialogueBox
+														member={member}
+														setRequests={setRequests}
+													/>
 												</td>
 											</tr>
 										);

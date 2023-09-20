@@ -102,9 +102,15 @@ export async function getForumMemberRequests(cityId, forumsId, params) {
 	});
 }
 
-export async function cancelMemberRequests(cityId, forumsId, memberRequestsId) {
+export async function cancelMemberRequests(
+	cityId,
+	forumsId,
+	memberRequestsId,
+	payload
+) {
 	return axios.delete(
-		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`,
+		payload
 	);
 }
 
