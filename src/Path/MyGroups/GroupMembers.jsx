@@ -34,7 +34,7 @@ const GroupMembers = () => {
 				const loggedInUserIdResponse = getUserId();
 				const loggedInUserIsAdmin = membersData.filter(
 					(m) =>
-						m.cityUserId === parseInt(loggedInUserIdResponse) && m.isAdmin === 1
+						m.userId === parseInt(loggedInUserIdResponse) && m.isAdmin === 1
 				);
 
 				setIsAdmin(loggedInUserIsAdmin.length > 0);

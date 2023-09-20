@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import {
 	getForumMemberRequests,
-	cancelMemberRequests,
+	getForumMemberRequestStatus,
 } from "../Services/forumsApi";
 import { useNavigate } from "react-router-dom";
 
@@ -88,7 +88,12 @@ const DialogueBox = ({ member, setRequests }) => {
 				reason: text,
 				accept: false,
 			};
-			await cancelMemberRequests(cityId, forumId, member.requestId, payload);
+			await getForumMemberRequestStatus(
+				cityId,
+				forumId,
+				member.requestId,
+				payload
+			);
 			setRequests((prevRequests) =>
 				prevRequests.filter((request) => request.requestId !== member.requestId)
 			);
