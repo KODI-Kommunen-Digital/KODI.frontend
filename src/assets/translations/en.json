@@ -470,5 +470,7 @@
 
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almoset there",
-    "downloadPdf": "Download PDF"
+    "downloadPdf": "Download PDF",
+    "addFileHere" : "Add your File here",
+    "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF"
 }

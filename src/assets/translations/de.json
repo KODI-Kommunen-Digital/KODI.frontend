@@ -472,5 +472,7 @@
 
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Du bist fast da",
-    "downloadPdf": "PDF Herunterladen"
+    "downloadPdf": "PDF Herunterladen",
+    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu",
+    "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop"
 }

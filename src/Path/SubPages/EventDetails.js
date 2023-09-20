@@ -71,9 +71,10 @@ const EventDetails = () => {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		const pdfLoadingTimeout = setTimeout(() => {
-			setIsLoading(false);
-		}, 2000);
+		// const pdfLoadingTimeout = setTimeout(() => {
+		// 	setIsLoading(false);
+		// }, 2000);
+		setIsLoading(true);
 		const params = { statusId: 1 };
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
@@ -131,7 +132,42 @@ const EventDetails = () => {
 					navigateTo("/Error");
 				});
 		}
-		return () => clearTimeout(pdfLoadingTimeout);
+		// return () => clearTimeout(pdfLoadingTimeout);
+		const fetchData = async () => {
+			try {
+				const response = await getListings(params);
+				const data = response.data.data;
+				console.log(response.data.data);
+				setListings(data);
+			} catch (error) {
+				console.error("Error fetching listings:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		const fetchDataWithDelay = () => {
+			setTimeout(() => {
+				if (searchParams.has("categoryId")) {
+					const categoryId = searchParams.get("categoryId");
+					if (searchParams.has("sortByStartDate")) {
+						const params = { categoryId, sortByStartDate: true };
+						fetchData(params);
+					} else {
+						const params = { categoryId };
+						fetchData(params);
+					}
+				} else if (searchParams.has("cityId")) {
+					const cityId = searchParams.get("cityId");
+					const params = { cityId };
+					fetchData(params);
+				} else {
+					fetchData();
+				}
+			}, 2000);
+		};
+
+		fetchDataWithDelay();
+		return () => setIsLoading(false);
 	}, [t, cityId, window.location.href, isLoggedIn]);
 
 	const navigate = useNavigate();
@@ -157,7 +193,7 @@ const EventDetails = () => {
 	}, [selectedCategoryId, listingId]);
 
 	const [handleClassName, setHandleClassName] = useState(
-		"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+		"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 	);
 	const handleFavorite = async (event) => {
 		try {
