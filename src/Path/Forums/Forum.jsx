@@ -12,6 +12,7 @@ import {
 	getForumMembers,
 	forumMemberRequests,
 } from "../../Services/forumsApi";
+import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 
 const Forum = () => {
 	window.scrollTo(0, 0);
@@ -31,31 +32,6 @@ const Forum = () => {
 			navigate(path);
 		}
 	};
-
-	// useEffect(() => {
-	// 	const urlParams = new URLSearchParams(window.location.search);
-	// 	const cityIdParam = parseInt(urlParams.get("cityId"));
-	// 	const forumIdParam = parseInt(urlParams.get("forumId"));
-	// 	const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
-	// 	document.title = "Heidi - Forums";
-	// 	setPageNo(pageNoParam);
-	// 	if (cityIdParam && forumIdParam) {
-	// 		getForum(cityIdParam, forumIdParam).then((response) => {
-	// 			if (response.data.data) {
-	// 				setForums(response.data.data);
-	// 				getForumPosts(cityIdParam, forumIdParam, {
-	// 					pageNo: pageNoParam,
-	// 					pageSize,
-	// 				}).then((response2) => {
-	// 					setForumPosts(response2.data.data);
-	// 				});
-	// 				setCityId(cityIdParam);
-	// 				setForumId(forumIdParam);
-	// 				setIsValidForum(true);
-	// 			}
-	// 		});
-	// 	}
-	// }, []);
 
 	useEffect(() => {
 		if (cityId && forumId) {
@@ -453,12 +429,12 @@ const Forum = () => {
 					) : (
 						<div>
 							{memberStatus && forumPosts && forumPosts.length > 0 ? (
-								<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
+								<div className="max-w-full lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-full">
 									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 										{t("groupPosts")}
 									</h1>
 									<div className="bg-white lg:px-0 md:px-0 sm:px-0 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-										<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+										<div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-10 relative mb-4 justify-center place-items-center">
 											{forumPosts &&
 												forumPosts.map((forumPost, index) => (
 													<div
@@ -478,8 +454,7 @@ const Forum = () => {
 																	forumPost.image
 																		? process.env.REACT_APP_BUCKET_HOST +
 																		  forumPost.image
-																		: process.env.REACT_APP_BUCKET_HOST +
-																		  "admin/Homepage.jpg"
+																		: POSTSLOGO
 																}
 															/>
 														</a>

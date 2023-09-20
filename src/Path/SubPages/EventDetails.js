@@ -172,7 +172,7 @@ const EventDetails = () => {
 	}, [user]);
 
 	const [handleClassName, setHandleClassName] = useState(
-		"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+		"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 	);
 	const [, setFavButton] = useState("Favorite");
 	const handleFavorite = async (event) => {
@@ -188,7 +188,7 @@ const EventDetails = () => {
 					setFavoriteId(0);
 					setSuccessMessage(t("list removed from the favorites"));
 					setHandleClassName(
-						"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+						"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 					);
 					setFavButton(t("Unfavorite"));
 				} else {
@@ -198,7 +198,7 @@ const EventDetails = () => {
 									setFavoriteId(response.data.id);
 									setSuccessMessage(t("List added to the favorites"));
 									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+										"rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
 									);
 									setFavButton(t("Favorite"));
 								})
@@ -460,7 +460,11 @@ const EventDetails = () => {
 												<img
 													alt="listing"
 													className="object-cover object-center h-full w-full"
-													src={process.env.REACT_APP_BUCKET_HOST + input.logo}
+													src={
+														input.logo
+															? process.env.REACT_APP_BUCKET_HOST + input.logo
+															: LISTINGSIMAGE
+													}
 												/>
 											) : input.pdf ? (
 												<div>

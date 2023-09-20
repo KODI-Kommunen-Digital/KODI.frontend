@@ -132,13 +132,11 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
 		removePdf: false,
 	});
-	
 
 	const [error, setError] = useState({
 		categoryId: "",
