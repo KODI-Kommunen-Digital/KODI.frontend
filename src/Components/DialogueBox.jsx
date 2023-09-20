@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import {
 	getForumMemberRequests,
-	getForumMemberRequestStatus,
+	cancelMemberRequests,
 } from "../Services/forumsApi";
 import { useNavigate } from "react-router-dom";
 
@@ -48,12 +48,11 @@ Modal.propTypes = {
 	handleTextChange: PropTypes.func.isRequired,
 };
 
-const DialogueBox = () => {
+const DialogueBox = ({ member, setRequests }) => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
-	const [memberRequests, setRequests] = useState([]);
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -67,7 +66,7 @@ const DialogueBox = () => {
 		document.title = "Heidi - Member Requests";
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
-		getForumMemberRequests(cityIdParam, forumIdParam)
+		getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })
 			.then((response) => {
 				setRequests(response.data.data);
 				setCityId(cityIdParam);
@@ -83,22 +82,19 @@ const DialogueBox = () => {
 		setShowPopup(true);
 	};
 
-	const handleSendClick = () => {
-		const data = {
-			reason: text,
-			accept: false,
-		};
-
-		const memberId = memberRequests[0].requestId;
-		sendForumMemberRequestStatus(memberId, data);
-	};
-
-	const sendForumMemberRequestStatus = async (memberId, data) => {
+	const handleSendClick = async () => {
 		try {
-			await getForumMemberRequestStatus(cityId, forumId, memberId, data);
+			const payload = {
+				reason: text,
+				accept: false,
+			};
+			await cancelMemberRequests(cityId, forumId, member.requestId, payload);
+			setRequests((prevRequests) =>
+				prevRequests.filter((request) => request.requestId !== member.requestId)
+			);
 			setShowPopup(false);
 		} catch (error) {
-			console.error("Error sending data:", error);
+			console.error("Error removing member request:", error);
 		}
 	};
 
@@ -130,6 +126,11 @@ const DialogueBox = () => {
 			)}
 		</div>
 	);
+};
+
+DialogueBox.propTypes = {
+	member: PropTypes.object.isRequired,
+	setRequests: PropTypes.func.isRequired,
 };
 
 export default DialogueBox;
