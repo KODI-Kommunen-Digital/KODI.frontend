@@ -516,5 +516,6 @@
     "onlyAdmins": "Nur für Admins",
     "downloadPdf": "PDF Herunterladen",
     "to_upload_new_forum": "To upload a new forum, ",
-    "currently_no_forums": "Currently there is no forum to display !"
+    "currently_no_forums": "Currently there is no forum to display !",
+    "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop"
 }

@@ -63,54 +63,38 @@ function UploadListings() {
 		e.stopPropagation();
 	}
 
-	function handleDrop1(e) {
+	function handleDrop(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		const file = e.dataTransfer.files[0];
-		if (file && file.type.startsWith("image/")) {
-			setImage1(file);
+		if (file) {
+			if (file.type.startsWith("image/")) {
+				setImage1(file);
+			} else if (file.type === "application/pdf") {
+				setPdf(file);
+			}
 		}
-		setDragging(false);
-	}
-
-	function handleDropPDF(event) {
-		event.preventDefault();
-		const file = event.dataTransfer.files[0];
-		setPdf(file);
 		setDragging(false);
 	}
 
 	function handleInputChange(e) {
 		e.preventDefault();
 		const file = e.target.files[0];
-		if (file && file.type.startsWith("image/")) {
-			setImage1(file);
+		if (file) {
+			if (file.type.startsWith("image/")) {
+				setImage1(file);
+			} else if (file.type === "application/pdf") {
+				setPdf(file);
+			}
 		}
 	}
 
 	function handleRemoveImage1() {
 		setImage1(null);
-		setInput((prevInput) => ({
-			...prevInput,
-			logo: null,
-			removeImage: true,
-		}));
-	}
-
-	function handlePDFInputChange(e) {
-		e.preventDefault();
-		const file = e.target.files[0];
-		if (file && file.type.startsWith("application/pdf")) {
-			setPdf(file);
-		}
 	}
 
 	function handleRemovePDF() {
 		setPdf(null);
-		setInput((prevInput) => ({
-			...prevInput,
-			removePdf: null, // Set the PDF in the input to null
-		}));
 	}
 
 	//Drag and Drop ends
@@ -984,13 +968,11 @@ function UploadListings() {
 
 						<div>
 							<label className="block text-sm font-medium text-gray-700">
-								{t("addLogoHere")}
+								{t("addFileHere")}
 							</label>
 							<div
-								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200 ${
-									pdf ? "opacity-60 pointer-events-none" : ""
-								}`} // Disable if pdf is uploaded
-								onDrop={handleDrop1}
+								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+								onDrop={handleDrop}
 								onDragOver={handleDragOver}
 								onDragEnter={handleDragEnter}
 								onDragLeave={handleDragLeave}
@@ -1009,57 +991,7 @@ function UploadListings() {
 											{t("remove")}
 										</button>
 									</div>
-								) : (
-									<div className="text-center">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="mx-auto h-12 w-12"
-											viewBox="0 0 20 20"
-											fill="currentColor"
-										>
-											<path
-												fillRule="evenodd"
-												d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-												clipRule="evenodd"
-											/>
-										</svg>
-										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropImage")}
-										</p>
-										<div className="relative mb-4 mt-8">
-											<label
-												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded ${
-													pdf ? "disabled:opacity-60" : ""
-												}`} // Disable if pdf is uploaded
-											>
-												<span className="button-label">{t("upload")}</span>
-												<input
-													id="image1-upload"
-													type="file"
-													className="sr-only"
-													onChange={handleInputChange}
-												/>
-											</label>
-										</div>
-									</div>
-								)}
-							</div>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								{t("addPDFHere")}
-							</label>
-							<div
-								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200 ${
-									image1 ? "opacity-60 pointer-events-none" : ""
-								}`} // Disable if image1 is uploaded
-								onDrop={handleDropPDF}
-								onDragOver={handleDragOver}
-								onDragEnter={handleDragEnter}
-								onDragLeave={handleDragLeave}
-							>
-								{pdf ? (
+								) : pdf ? (
 									<div className="flex flex-col items-center">
 										<p>{pdf.name}</p>
 										<button
@@ -1084,21 +1016,19 @@ function UploadListings() {
 											/>
 										</svg>
 										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropPDF")}
+											{t("dragAndDropImageOrPDF")}
 										</p>
 										<div className="relative mb-4 mt-8">
 											<label
-												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded ${
-													image1 ? "disabled:opacity-60" : ""
-												}`} // Disable if image1 is uploaded
+												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
 											>
 												<span className="button-label">{t("upload")}</span>
 												<input
-													id="pdf-upload"
+													id="file-upload"
 													type="file"
-													accept="application/pdf"
+													accept="image/*,.pdf"
 													className="sr-only"
-													onChange={handlePDFInputChange}
+													onChange={handleInputChange}
 												/>
 											</label>
 										</div>
