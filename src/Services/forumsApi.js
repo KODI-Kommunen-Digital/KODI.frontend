@@ -79,9 +79,10 @@ export async function updateForumPosts(cityId, postData, forumsId, postId) {
 	);
 }
 
-export async function uploadPostImage(cityId, forumsId, postId) {
+export async function uploadPostImage(cityId, forumsId, postId, form) {
 	return axios.post(
 		`/cities/${cityId}/forums/${forumsId}/posts/${postId}/imageUpload`,
+		form,
 		{
 			headers: {
 				"Content-Type": "multipart/form-data",

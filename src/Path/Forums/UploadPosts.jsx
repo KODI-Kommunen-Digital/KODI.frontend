@@ -82,7 +82,6 @@ function UploadPosts() {
 		removeImage: false,
 		cityId: "",
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		title: "",
@@ -173,12 +172,12 @@ function UploadPosts() {
 					if (image1) {
 						const form = new FormData();
 						form.append("image", image1);
-						await uploadPostImage(cityId, forumId, response.data.id);
+						await uploadPostImage(cityId, forumId, response.data.id, form);
 					}
 				} else if (image1) {
 					const form = new FormData();
 					form.append("image", image1);
-					await uploadPostImage(cityId, forumId, input.id);
+					await uploadPostImage(cityId, forumId, input.id, form);
 				} else if (input.removeImage) {
 					await deletePostImage(cityId, forumId, input.id);
 				}
