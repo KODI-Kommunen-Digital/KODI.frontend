@@ -55,3 +55,4 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
   };
   module.exports = { categoryByName, categoryById };
 }
+

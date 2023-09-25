@@ -93,6 +93,10 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -103,6 +107,10 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.sessionStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			}
 			setUser("");
 			setPwd("");

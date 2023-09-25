@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
+import { instance } from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
+const axios = instance;
 
 export async function getAllListings() {
 	return axios.get(`/listings`);
@@ -24,6 +25,18 @@ export async function postListingsData(cityId, newListingsDataObj) {
 export async function uploadListingImage(formData, cityId, listingsId) {
 	return axios.post(
 		`/cities/${cityId}/listings/${listingsId}/imageUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+}
+
+export async function uploadListingPDF(formData, cityId, listingsId) {
+	return axios.post(
+		`/cities/${cityId}/listings/${listingsId}/pdfUpload`,
 		formData,
 		{
 			headers: {
