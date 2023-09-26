@@ -182,12 +182,20 @@ const HomePage = () => {
 										))}
 									</select>
 								</div>
-
-								<div className="flex flex-row mt-4 md:gap-8 gap-2">
+								<div className="flex flex-row mt-4 md:gap-8 gap-2 cursor-pointer">
 									<img
 										alt="ecommerce"
 										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
 										src={APPLESTORE}
+										onClick={() => {
+											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+												window.location.href =
+													"https://apps.apple.com/de/app/waldi/id6463143260";
+											} else {
+												window.location.href =
+													"https://apps.apple.com/de/app/auf-app/id6463142195?l=en-GB";
+											}
+										}}
 									/>
 									<img
 										alt="ecommerce"
