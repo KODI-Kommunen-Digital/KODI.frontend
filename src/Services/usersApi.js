@@ -1,4 +1,5 @@
 import { instance } from "../api/axiosInstance";
+// import axios from "axios";
 import UAParser from "ua-parser-js";
 const axiosInstance = instance;
 

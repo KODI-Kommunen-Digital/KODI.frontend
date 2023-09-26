@@ -14,7 +14,7 @@ const Error = () => {
 
 	return (
 		<div
-			className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200"
+			className="fixed inset-0 flex items-center justify-center bg-white"
 			style={{ animation: "gradientFlow 10s linear infinite alternate" }}
 		>
 			<div className="bg-black text-white p-10 rounded-lg shadow-lg w-full max-w-xl md:max-w-2xl lg:max-w-4xl h-full md:h-auto transform hover:-translate-y-2 transition-all duration-300">
