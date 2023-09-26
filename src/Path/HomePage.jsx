@@ -13,6 +13,7 @@ import CITYIMAGE from "../assets/City.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
+import PdfToImage from "../Components/PdfToImage";
 
 const HomePage = () => {
 	const { t } = useTranslation();
@@ -74,6 +75,7 @@ const HomePage = () => {
 		getListings(params).then((response) => {
 			const data = response.data.data;
 			setListings(data);
+			console.log(data);
 		});
 	}, [cities, cityId]);
 
