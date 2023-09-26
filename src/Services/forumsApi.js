@@ -6,6 +6,10 @@ export async function getUserForums() {
 	return axios.get(`/users/${getUserId()}/forums`);
 }
 
+export async function getUserForumRequests(params) {
+	return axios.get(`/users/${getUserId()}/memberRequests`, { params });
+}
+
 export async function getForumPost(cityId, forumsId, postId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`);
 }
@@ -97,11 +101,6 @@ export async function deletePostImage(cityId, forumsId, postId) {
 	);
 }
 
-export async function getForumMemberRequests(cityId, forumsId, params) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`, {
-		params,
-	});
-}
 
 export async function cancelMemberRequests(
 	cityId,
@@ -157,8 +156,12 @@ export async function deleteForumPostImage(cityId, forumsId, postId) {
 	);
 }
 
-export async function forumMemberRequests(cityId, forumsId) {
+export async function getForumMemberRequests(cityId, forumsId) {
 	return axios.post(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
+}
+
+export async function cancelForumMemberRequest(cityId, forumsId, requestId) {
+	return axios.delete(`/cities/${cityId}/forums/${forumsId}/memberRequests/${requestId}`);
 }
 
 export async function createComment(cityId, forumsId, postId, commentData) {
