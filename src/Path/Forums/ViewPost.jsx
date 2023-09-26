@@ -146,7 +146,7 @@ const ViewPost = () => {
 	};
 
 	useEffect(() => {
-		document.title = "HEIDI - View Post";
+		document.title = "View Post";
 		const searchParams = new URLSearchParams(window.location.search);
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);

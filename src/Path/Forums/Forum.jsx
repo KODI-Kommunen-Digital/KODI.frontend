@@ -55,7 +55,7 @@ const Forum = () => {
 			const cityIdParam = parseInt(urlParams.get("cityId"));
 			const forumIdParam = parseInt(urlParams.get("forumId"));
 			const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
-			document.title = "Heidi - Forums";
+			document.title = "Forums";
 			setPageNo(pageNoParam);
 			// const storedFollowRequested = localStorage.getItem("followRequested");
 			// if (storedFollowRequested) {
@@ -198,7 +198,7 @@ const Forum = () => {
 								{followRequested ? t("requestSent") : t("request")}
 							</a>
 						) : (
-							<div className="flex flex-row md:flex-row items-center md:justify-center justify-between">
+							<div className="flex flex-row md:flex-row items-center justify-center">
 								{!memberStatus ? (
 									<div>
 										<a
@@ -336,14 +336,14 @@ const Forum = () => {
 												strokeLinecap="round"
 												strokeLinejoin="round"
 												strokeWidth={2}
-												d="M3 6h18M5 6l1 13h12l1-13M10 10v6M14 10v6"
+												d="M6 18L18 6M6 6l12 12"
 											/>
 										</svg>
 									</div>
 								)}
 
 								{memberStatus && (
-									<div className="flex flex-row md:flex-row items-center md:justify-center justify-between">
+									<div className="flex flex-row md:flex-row items-center justify-center">
 										<a
 											onClick={() =>
 												navigateTo(

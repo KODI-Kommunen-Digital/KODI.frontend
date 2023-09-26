@@ -36,15 +36,18 @@ const MyGroups = () => {
 		onCancel: () => {},
 	});
 
-	function handleDelete(forums) {
-		deleteForums(forums.cityId, forums.forumId)
+	function handleDelete(forum) {
+		deleteForums(forum.cityId, forum.forumId)
 			.then((res) => {
 				getUserForums(
 					forums.filter(
-						(f) => f.cityId !== forums.cityId || f.forumId !== forums.forumId
+						(f) => f.cityId !== forum.cityId || f.forumId !== forum.forumId
 					)
 				);
+				console.log("Deleted successfully");
+
 				setShowConfirmationModal({ visible: false });
+				window.location.reload();
 			})
 			.catch((error) => console.log(error));
 	}
