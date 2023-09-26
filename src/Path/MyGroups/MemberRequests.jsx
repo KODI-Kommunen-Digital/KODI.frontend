@@ -126,7 +126,7 @@ const MemberRequests = () => {
 														src={
 															member.image
 																? process.env.REACT_APP_BUCKET_HOST +
-																  member.image
+																member.image
 																: PROFILEPICTURE
 														}
 														alt="avatar"
@@ -154,11 +154,10 @@ const MemberRequests = () => {
 
 												<td className="px-6 py-4 text-center">
 													<a
-														className={`font-medium ${
-															isLoading
+														className={`font-medium ${isLoading
 																? "text-gray-400 cursor-not-allowed"
 																: "text-blue-600 hover:underline cursor-pointer"
-														} px-2 dark:text-blue-500`}
+															} px-2 dark:text-blue-500`}
 														style={{ fontFamily: "Poppins, sans-serif" }}
 														onClick={() => handleAccept(member)}
 													>
