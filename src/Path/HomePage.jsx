@@ -13,6 +13,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
+import PdfToImage from "../Components/PdfToImage";
 
 const HomePage = () => {
 	const { t } = useTranslation();
@@ -74,6 +75,7 @@ const HomePage = () => {
 		getListings(params).then((response) => {
 			const data = response.data.data;
 			setListings(data);
+			console.log(data);
 		});
 	}, [cities, cityId]);
 
@@ -444,7 +446,8 @@ const HomePage = () => {
 							listings.map((listing, index) => (
 								<div
 									key={index}
-									onClick={() => {
+									onClick={(e) => {
+										e.stopPropagation();
 										localStorage.setItem(
 											"selectedCategoryId",
 											listing.categoryId
@@ -456,15 +459,27 @@ const HomePage = () => {
 									className="w-full h-full shadow-lg rounded-xl cursor-pointer"
 								>
 									<a className="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-											src={
-												listing.logo
-													? process.env.REACT_APP_BUCKET_HOST + listing.logo
-													: LISTINGSIMAGE
-											}
-										/>
+										{listing.logo ? (
+											<img
+												alt="Listing"
+												className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+												src={
+													listing.logo
+														? process.env.REACT_APP_BUCKET_HOST + listing.logo
+														: LISTINGSIMAGE
+												}
+											/>
+										) : listing.pdf ? (
+											<PdfToImage
+												pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+											/>
+										) : (
+											<img
+												alt="Listing"
+												className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+												src={LISTINGSIMAGE}
+											/>
+										)}
 									</a>
 									<div className="mt-5 px-2">
 										<h2
