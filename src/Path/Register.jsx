@@ -12,7 +12,7 @@ const Register = () => {
 	const [alertType, setAlertType] = useState("");
 
 	useEffect(() => {
-		document.title = "Heidi - Register";
+		document.title = "Register";
 	}, []);
 
 	const navigate = useNavigate();

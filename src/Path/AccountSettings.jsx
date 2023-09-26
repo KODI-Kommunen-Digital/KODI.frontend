@@ -26,7 +26,7 @@ const AccountSettings = () => {
 	};
 
 	useEffect(() => {
-		document.title = "Heidi - Account Settings";
+		document.title = "Account Settings";
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");
@@ -74,8 +74,8 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => { },
-		onCancel: () => { },
+		onConfirm: () => {},
+		onCancel: () => {},
 	});
 
 	const handleDeleteAccount = () => {

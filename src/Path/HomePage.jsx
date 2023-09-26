@@ -14,6 +14,8 @@ import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 import PdfToImage from "../Components/PdfToImage";
+import APPLESTORE from "../assets/apple-store-logo.png";
+import GOOGLEPLAYSTORE from "../assets/google-play-store-logo.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
@@ -143,7 +145,7 @@ const HomePage = () => {
 								className="object-cover object-center h-full w-full"
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
 							/>
-							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+							<div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1
 									className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl text-center font-bold tracking-wide"
 									style={{
@@ -179,6 +181,19 @@ const HomePage = () => {
 											</option>
 										))}
 									</select>
+								</div>
+
+								<div className="flex flex-row mt-4 md:gap-8 gap-2">
+									<img
+										alt="ecommerce"
+										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
+										src={APPLESTORE}
+									/>
+									<img
+										alt="ecommerce"
+										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
+										src={GOOGLEPLAYSTORE}
+									/>
 								</div>
 							</div>
 						</div>

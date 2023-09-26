@@ -21,7 +21,7 @@ const GroupMembers = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Heidi - Forum Members";
+		document.title = "Forum Members";
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 
@@ -65,9 +65,7 @@ const GroupMembers = () => {
 			);
 			setMembers((prevMembers) =>
 				prevMembers.map((m) =>
-					m.cityUserId === member.cityUserId
-						? { ...m, isAdmin: newIsAdminValue }
-						: m
+					m.userId === member.userId ? { ...m, isAdmin: newIsAdminValue } : m
 				)
 			);
 		} catch (error) {

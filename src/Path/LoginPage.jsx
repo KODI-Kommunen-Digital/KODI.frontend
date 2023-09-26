@@ -33,7 +33,7 @@ const LoginPage = () => {
 	const location = useLocation();
 	const [timeOutAlertMessage, settimeOutAlertMessage] = useState("");
 	useEffect(() => {
-		document.title = "Heidi - Login";
+		document.title = "Login";
 		const searchParams = new URLSearchParams(location.search);
 
 		userRef.current.focus();

@@ -19,7 +19,7 @@ const MemberRequests = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Heidi - Forum Requests";
+		document.title = "Forum Requests";
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })

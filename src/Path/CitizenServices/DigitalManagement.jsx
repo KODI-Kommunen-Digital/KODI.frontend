@@ -24,7 +24,7 @@ const DigitalManagement = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Heidi - Digital Rathouse";
+		document.title = "Digital Rathouse";
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
