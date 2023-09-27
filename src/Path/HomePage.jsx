@@ -13,7 +13,6 @@ import CITYIMAGE from "../assets/City.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
-import PdfToImage from "../Components/PdfToImage";
 import APPLESTORE from "../assets/apple-store-logo.png";
 import GOOGLEPLAYSTORE from "../assets/google-play-store-logo.png";
 
@@ -51,7 +50,7 @@ const HomePage = () => {
 			setListingsCount(sortedData);
 		});
 
-		document.title = "Heidi Home";
+		document.title = process.env.REACT_APP_REGION_NAME + "   Home";
 	}, []);
 
 	useEffect(() => {
@@ -77,7 +76,6 @@ const HomePage = () => {
 		getListings(params).then((response) => {
 			const data = response.data.data;
 			setListings(data);
-			console.log(data);
 		});
 	}, [cities, cityId]);
 
@@ -192,6 +190,15 @@ const HomePage = () => {
 										alt="ecommerce"
 										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
 										src={GOOGLEPLAYSTORE}
+										onClick={() => {
+											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+												window.location.href =
+													"https://apps.apple.com/de/app/waldi/id6463143260";
+											} else {
+												window.location.href =
+													"https://play.google.com/store/apps/details?id=com.smartregionauf&pcampaignid=web_share";
+											}
+										}}
 									/>
 								</div>
 							</div>

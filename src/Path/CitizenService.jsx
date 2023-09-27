@@ -26,7 +26,6 @@ const CitizenService = () => {
 			link: `https://ilztal.de/`,
 			image: "admin/Forums.jpg",
 			newWindow: true,
-
 		},
 		{
 			title: "VirtualTours",
@@ -50,7 +49,7 @@ const CitizenService = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Heidi - Citizen Services";
+		document.title = process.env.REACT_APP_REGION_NAME + " Citizen Services";
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
@@ -69,7 +68,7 @@ const CitizenService = () => {
 
 	const handleLinkClick = (data) => {
 		if (data.newWindow) {
-			window.open(data.link, '_blank');
+			window.open(data.link, "_blank");
 		} else {
 			navigateTo(data.link + `?cityId=${cityId}`);
 		}
@@ -114,7 +113,9 @@ const CitizenService = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{citiesArray.map((city) => (
 											<option

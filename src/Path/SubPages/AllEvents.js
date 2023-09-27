@@ -90,7 +90,6 @@ const Events = () => {
 			try {
 				const response = await getListings(params);
 				const data = response.data.data;
-				console.log(response.data.data);
 				setListings(data);
 			} catch (error) {
 				console.error("Error fetching listings:", error);
