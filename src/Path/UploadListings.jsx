@@ -270,37 +270,32 @@ function UploadListings() {
 	const [description, setDescription] = useState("");
 
 	const onDescriptionChange = (newContent) => {
-		const hasNumberedList = newContent.includes("<ol>");
-		const hasBulletList = newContent.includes("<ul>");
-		let descriptions = [];
-		let listType = "";
-		if (hasNumberedList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map(
-				(description, index) => `${index + 1}. ${description}`
-			);
-			listType = "ol";
-		} else if (hasBulletList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map((description) => `- ${description}`);
-			listType = "ul";
-		} else {
-			// No list tags found, treat the input as plain text
-			setInput((prev) => ({
-				...prev,
-				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
-			}));
-			setDescription(newContent);
-			return;
+		let descriptionHTML = newContent;
+
+		// If there are <ol> or <ul> tags, replace them with plain text representation
+		const hasNumberedList = /<ol>(.*?)<\/ol>/gis.test(newContent);
+		const hasBulletList = /<ul>(.*?)<\/ul>/gis.test(newContent);
+
+		if (hasNumberedList || hasBulletList) {
+			const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
+			descriptionHTML = newContent.replace(regex, (match) => {
+				// Replace <li> tags with the appropriate marker (either numbers or bullets)
+				const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
+				const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
+				const plainTextListItems = listItems.map((item, index) => {
+					const listItemContent = item.replace(/<\/?li>/gi, "");
+					return isNumberedList
+						? `${index + 1}. ${listItemContent}`
+						: `- ${listItemContent}`;
+				});
+				return plainTextListItems.join("\n");
+			});
 		}
 		setInput((prev) => ({
 			...prev,
 			description: descriptionHTML,
 		}));
+
 		setDescription(newContent);
 	};
 
