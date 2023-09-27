@@ -11,8 +11,9 @@ import {
 	sortOldestFirst,
 } from "../Services/helper";
 import { getCities } from "../Services/cities";
-import { categoryById } from "../Constants/categories";
+import { categoryById, categoryByName } from "../Constants/categories";
 import Footer from "../Components/Footer";
+import LoadingPage from "../Components/LoadingPage";
 
 const Favorites = () => {
 	window.scrollTo(0, 0);
@@ -25,19 +26,8 @@ const Favorites = () => {
 	const [, setCityName] = useState("");
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
-
-	useEffect(() => {
-		document.title = "Favourites";
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
-	}, []);
+	const [favListings, setFavListings] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -61,31 +51,77 @@ const Favorites = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageNo, pageSize: 12, statusId: 1 };
+		const params = { pageSize: 12, statusId: 1 };
+		setIsLoading(true);
 		if (parseInt(cityId)) {
 			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			setCityName(t("allCities"));
+			setCityName(
+				t("allCities", {
+					regionName: process.env.REACT_APP_REGION_NAME,
+				})
+			);
 			urlParams.delete("cityId");
 		}
 		if (parseInt(categoryId)) {
 			setCategoryName(t(categoryById[categoryId]));
-			params.categoryId = categoryId;
-			urlParams.set("categoryId", categoryId);
+			params.categoryId = parseInt(categoryId);
+			urlParams.set("categoryId", parseInt(categoryId));
 		} else {
 			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
 		}
 
-
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		getFavoriteListings(params).then((response) => {
-			const data = response.data.data;
-			setFavListings(data);
-		});
+		if (parseInt(categoryId) === categoryByName.events) {
+			params.sortByStartDate = true;
+		}
+		// getFavoriteListings(params).then((response) => {
+		// 	const data = response.data.data;
+		// 	setFavListings(data);
+		// });
+
+		const fetchData = async () => {
+			try {
+				const response = await getFavoriteListings(params);
+				const data = response.data.data;
+				setFavListings(data);
+			} catch (error) {
+				console.error("Error fetching favourite listings:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		const fetchDataWithDelay = () => {
+			setTimeout(() => {
+				if (urlParams.has("categoryId")) {
+					const categoryId = urlParams.get("categoryId");
+
+					// Check if sortByStartDate is also present in the URL
+					if (urlParams.has("sortByStartDate")) {
+						const params = { categoryId, sortByStartDate: true };
+						fetchData(params);
+					} else {
+						// Only categoryId is present in the URL
+						const params = { categoryId };
+						fetchData(params);
+					}
+				} else if (urlParams.has("cityId")) {
+					// Only cityId is present in the URL
+					const cityId = urlParams.get("cityId");
+					const params = { cityId };
+					fetchData(params);
+				} else {
+					fetchData();
+				}
+			}, 1000);
+		};
+
+		fetchDataWithDelay();
+		return () => setIsLoading(false);
 	}, [categoryId, cities, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -99,12 +135,12 @@ const Favorites = () => {
 		}
 	};
 
-	const [favListings, setFavListings] = useState([]);
-	useEffect(() => {
-		getFavoriteListings().then((response) => {
-			setFavListings(response.data.data);
-		});
-	}, []);
+	// useEffect(() => {
+	// 	getFavoriteListings().then((response) => {
+	// 		setFavListings(response.data.data);
+	// 		console.log(response.data.data);
+	// 	});
+	// }, []);
 
 	// Selected Items Deletion Ends
 
@@ -161,7 +197,9 @@ const Favorites = () => {
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+													{t("allCities", {
+														regionName: process.env.REACT_APP_REGION_NAME,
+													})}
 												</option>
 												{cities.map((city) => (
 													<option
@@ -222,98 +260,104 @@ const Favorites = () => {
 			</div>
 
 			<div className="mt-5 mb-20 p-6">
-				<div>
-					{favListings && favListings.length > 0 ? (
-						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-								{favListings &&
-									favListings.filter(f => f.categoryId === parseInt(categoryId)).map((favListing) => (
-										<div
-											key={favListing.id}
-											onClick={() =>
-												navigateTo(
-													`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
-												)
-											}
-											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-													src={
-														favListing.logo
-															? process.env.REACT_APP_BUCKET_HOST +
-															favListing.logo
-															: LISTINGSIMAGE
+				{isLoading ? (
+					<LoadingPage />
+				) : (
+					<div>
+						{favListings && favListings.length > 0 ? (
+							<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+								<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+									{favListings &&
+										favListings
+											// .filter((f) => f.categoryId === parseInt(categoryId))
+											.map((favListing, index) => (
+												<div
+													key={index}
+													onClick={() =>
+														navigateTo(
+															`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
+														)
 													}
-												/>
-											</a>
-											<div className="mt-5 px-2">
-												<h2
-													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
+													className="w-full h-full shadow-lg rounded-lg cursor-pointer"
 												>
-													{favListing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{favListing.id && favListing.categoryId === 3 ? (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{new Date(
-														favListing.startDate.slice(0, 10)
-													).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-															favListing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-												</p>
-											) : (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-													dangerouslySetInnerHTML={{
-														__html: favListing.description,
-													}}
-												/>
-											)}
-										</div>
-									))}
+													<a className="block relative h-64 rounded overflow-hidden">
+														<img
+															alt="ecommerce"
+															className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+															src={
+																favListing.logo
+																	? process.env.REACT_APP_BUCKET_HOST +
+																	  favListing.logo
+																	: LISTINGSIMAGE
+															}
+														/>
+													</a>
+													<div className="mt-5 px-2">
+														<h2
+															className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{favListing.title}
+														</h2>
+													</div>
+													<div className="my-4 bg-gray-200 h-[1px]"></div>
+													{favListing.id && favListing.categoryId === 3 ? (
+														<p
+															className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{new Date(
+																favListing.startDate.slice(0, 10)
+															).toLocaleDateString("de-DE") +
+																" To " +
+																new Date(
+																	favListing.endDate.slice(0, 10)
+																).toLocaleDateString("de-DE")}
+														</p>
+													) : (
+														<p
+															className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+															dangerouslySetInnerHTML={{
+																__html: favListing.description,
+															}}
+														/>
+													)}
+												</div>
+											))}
+								</div>
 							</div>
-						</div>
-					) : (
-						<div>
-							<div className="flex items-center justify-center">
-								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-									{t("currently_no_fav_listings")}
-								</h1>
-							</div>
+						) : (
+							<div>
+								<div className="flex items-center justify-center">
+									<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+										{t("currently_no_fav_listings")}
+									</h1>
+								</div>
 
-							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-								<span className="font-sans text-black">
-									{t("to_upload_new_listing")}
-								</span>
-								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-									onClick={() => {
-										localStorage.setItem(
-											"selectedItem",
-											t("chooseOneCategory")
-										);
-										isLoggedIn
-											? navigateTo("/UploadListings")
-											: navigateTo("/login");
-									}}
-								>
-									{t("click_here")}
-								</a>
+								<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+									<span className="font-sans text-black">
+										{t("to_upload_new_listing")}
+									</span>
+									<a
+										className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+										onClick={() => {
+											localStorage.setItem(
+												"selectedItem",
+												t("chooseOneCategory")
+											);
+											isLoggedIn
+												? navigateTo("/UploadListings")
+												: navigateTo("/login");
+										}}
+									>
+										{t("click_here")}
+									</a>
+								</div>
 							</div>
-						</div>
-					)}
-				</div>
+						)}
+					</div>
+				)}
 				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 					{pageNo !== 1 ? (
 						<span

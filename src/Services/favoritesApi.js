@@ -5,8 +5,8 @@ const axios = instance;
 export async function getFavorites() {
 	return axios.get(`/users/${getUserId()}/favorites`);
 }
-export async function getFavoriteListings() {
-	return axios.get(`/users/${getUserId()}/favorites/listings`);
+export async function getFavoriteListings(params) {
+	return axios.get(`/users/${getUserId()}/favorites/listings`, { params });
 }
 export async function deleteListingsById(favoriteId) {
 	// eslint-disable-next-line no-undef

@@ -90,7 +90,6 @@ const Events = () => {
 			try {
 				const response = await getListings(params);
 				const data = response.data.data;
-				console.log(response.data.data);
 				setListings(data);
 			} catch (error) {
 				console.error("Error fetching listings:", error);
@@ -120,7 +119,7 @@ const Events = () => {
 				} else {
 					fetchData();
 				}
-			}, 2000);
+			}, 1000);
 		};
 
 		fetchDataWithDelay();
@@ -292,7 +291,11 @@ const Events = () => {
 								<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 									{listings &&
 										listings.map((listing, index) => (
-											<ListingsCard listing={listing} terminalView={terminalViewParam} key={index} />
+											<ListingsCard
+												listing={listing}
+												terminalView={terminalViewParam}
+												key={index}
+											/>
 										))}
 								</div>
 							</div>

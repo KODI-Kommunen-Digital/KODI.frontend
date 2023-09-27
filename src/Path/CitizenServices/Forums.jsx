@@ -14,7 +14,7 @@ const Forums = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		document.title = "Heidi - Forums";
+		document.title = process.env.REACT_APP_REGION_NAME + " Forums";
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
@@ -88,7 +88,9 @@ const Forums = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{citiesArray.map((city) => (
 											<option

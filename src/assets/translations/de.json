@@ -491,6 +491,11 @@
     "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten",
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
     "pageNotFound": "Seite nicht gefunden!",
+    "downloadOnThe": "Laden im",
+    "appStore": "App Store",
+    "getItOn": "JETZT BEI",
+    "googlePlay": "Google Play",
+
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Du bist fast da",
     "viewReports": "Berichte anzeigen",
