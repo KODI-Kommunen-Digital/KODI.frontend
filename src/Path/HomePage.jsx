@@ -7,9 +7,9 @@ import { getListings, getListingsCount } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
+import ListingsCard from "../Components/ListingsCard";
 
 import CITYIMAGE from "../assets/City.png";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -467,81 +467,7 @@ const HomePage = () => {
 					<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 						{listings &&
 							listings.map((listing, index) => (
-								<div
-									key={index}
-									onClick={(e) => {
-										e.stopPropagation();
-										localStorage.setItem(
-											"selectedCategoryId",
-											listing.categoryId
-										);
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-										);
-									}}
-									className="w-full h-full shadow-lg rounded-xl cursor-pointer"
-								>
-									<a className="block relative h-64 rounded overflow-hidden">
-										{listing.logo ? (
-											<img
-												alt="Listing"
-												className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-												src={
-													listing.logo
-														? process.env.REACT_APP_BUCKET_HOST + listing.logo
-														: LISTINGSIMAGE
-												}
-											/>
-										) : listing.pdf ? (
-											<PdfToImage
-												pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
-											/>
-										) : (
-											<img
-												alt="Listing"
-												className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-												src={LISTINGSIMAGE}
-											/>
-										)}
-									</a>
-									<div className="mt-5 px-2">
-										<h2
-											className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											{listing.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
-									{listing.id && parseInt(listing.categoryId) === 3 ? (
-										<p
-											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											{new Date(
-												listing.startDate.slice(0, 10)
-											).toLocaleDateString("de-DE") +
-												" To " +
-												new Date(
-													listing.endDate.slice(0, 10)
-												).toLocaleDateString("de-DE")}
-										</p>
-									) : (
-										<p
-											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-											dangerouslySetInnerHTML={{
-												__html: listing.description,
-											}}
-										/>
-									)}
-								</div>
+								<ListingsCard listing={listing} key={index} />
 							))}
 					</div>
 					<button
