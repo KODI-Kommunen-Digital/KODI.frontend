@@ -467,10 +467,9 @@
     "passwordContainsUsername": "Password should not contains username",
     "sessionExpired": "Your session has expired. Please login again.",
     "pageNotFound": "Page not found!",
-
     "loading": "Loading...",
-    "youAreAlmosetThere": "You are almoset there",
+    "youAreAlmosetThere": "You are almost there",
     "downloadPdf": "Download PDF",
-    "addFileHere" : "Add your File here",
+    "addFileHere": "Add your File here",
     "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF"
 }

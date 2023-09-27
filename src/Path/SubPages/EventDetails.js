@@ -12,7 +12,6 @@ import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
 import ListingsCard from "../../Components/ListingsCard";
-import LoadingPage from "../../Components/LoadingPage";
 import {
 	getFavorites,
 	postFavoriteListingsData,
