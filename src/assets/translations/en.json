@@ -467,6 +467,10 @@
     "passwordContainsUsername": "Password should not contains username",
     "sessionExpired": "Your session has expired. Please login again.",
     "pageNotFound": "Page not found!",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "getItOn": "GET IT ON",
+    "googlePlay": "Google Play",
 
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almoset there",
