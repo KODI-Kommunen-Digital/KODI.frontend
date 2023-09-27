@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
-import { useNavigate } from "react-router-dom";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getFavoriteListings } from "../Services/favoritesApi";
 import {
@@ -13,43 +11,22 @@ import {
 import { getCities } from "../Services/cities";
 import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
+import ListingsCard from "../Components/ListingsCard";
+
 
 const Favorites = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
-	const [, setCategoryName] = useState("");
-	const [, setCityName] = useState("");
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
+	const [favListings, setFavListings] = useState([]);
 
 	useEffect(() => {
 		document.title = "Favourites";
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
-	}, []);
-
-	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 			const cityIdParam = urlParams.get("cityId");
@@ -63,22 +40,17 @@ const Favorites = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const params = { pageNo, pageSize: 12, statusId: 1 };
 		if (parseInt(cityId)) {
-			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
 		} else {
-			setCityName(t("allCities"));
 			urlParams.delete("cityId");
 		}
 		if (parseInt(categoryId)) {
-			setCategoryName(t(categoryById[categoryId]));
 			params.categoryId = categoryId;
 			urlParams.set("categoryId", categoryId);
 		} else {
-			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
 		}
-
 
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
@@ -86,27 +58,13 @@ const Favorites = () => {
 			const data = response.data.data;
 			setFavListings(data);
 		});
-	}, [categoryId, cities, cityId, pageNo, t]);
+	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
 	}
 
-	const navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
 
-	const [favListings, setFavListings] = useState([]);
-	useEffect(() => {
-		getFavoriteListings().then((response) => {
-			setFavListings(response.data.data);
-		});
-	}, []);
-
-	// Selected Items Deletion Ends
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -125,7 +83,7 @@ const Favorites = () => {
 			default:
 				break;
 		}
-	}, [selectedSortOption, favListings]);
+	}, [selectedSortOption]);
 
 	return (
 		<section className="text-gray-600 body-font relative">
@@ -227,60 +185,8 @@ const Favorites = () => {
 						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 								{favListings &&
-									favListings.filter(f => f.categoryId === parseInt(categoryId)).map((favListing) => (
-										<div
-											key={favListing.id}
-											onClick={() =>
-												navigateTo(
-													`/HomePage/EventDetails?listingId=${favListing.id}&cityId=${favListing.cityId}`
-												)
-											}
-											className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-													src={
-														favListing.logo
-															? process.env.REACT_APP_BUCKET_HOST +
-															favListing.logo
-															: LISTINGSIMAGE
-													}
-												/>
-											</a>
-											<div className="mt-5 px-2">
-												<h2
-													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{favListing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{favListing.id && favListing.categoryId === 3 ? (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{new Date(
-														favListing.startDate.slice(0, 10)
-													).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-															favListing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-												</p>
-											) : (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-													dangerouslySetInnerHTML={{
-														__html: favListing.description,
-													}}
-												/>
-											)}
-										</div>
+									favListings.map((favListing, index) => (
+										<ListingsCard listing={favListing} key={index} />
 									))}
 							</div>
 						</div>
@@ -290,26 +196,6 @@ const Favorites = () => {
 								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 									{t("currently_no_fav_listings")}
 								</h1>
-							</div>
-
-							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-								<span className="font-sans text-black">
-									{t("to_upload_new_listing")}
-								</span>
-								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-									onClick={() => {
-										localStorage.setItem(
-											"selectedItem",
-											t("chooseOneCategory")
-										);
-										isLoggedIn
-											? navigateTo("/UploadListings")
-											: navigateTo("/login");
-									}}
-								>
-									{t("click_here")}
-								</a>
 							</div>
 						</div>
 					)}

@@ -61,7 +61,7 @@ function ListingsCard({ listing, terminalView = false }) {
 
 ListingsCard.propTypes = {
     listing: PropTypes.object.isRequired,
-    terminalView: PropTypes.bool.isRequired
+    terminalView: PropTypes.bool
 };
 
 export default ListingsCard;
