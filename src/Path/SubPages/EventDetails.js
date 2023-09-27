@@ -93,26 +93,29 @@ const EventDetails = () => {
 					} else {
 						setInput(listingsResponse.data.data);
 						const cityUserId = listingsResponse.data.data.userId;
-						getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-							setUser(res.data.data);
-							if (isLoggedIn) {
-								getFavorites().then((response) => {
-									const favorite = response.data.data.find(
-										(f) =>
-											f.listingId === parseInt(listingId) &&
-											f.cityId === parseInt(cityId)
-									);
-									if (favorite) {
-										setFavoriteId(favorite.id);
-									} else {
-										setFavoriteId(0);
-									}
+						setTimeout(() => {
+							getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+								setUser(res.data.data);
+								if (isLoggedIn) {
+									getFavorites().then((response) => {
+										const favorite = response.data.data.find(
+											(f) =>
+												f.listingId === parseInt(listingId) &&
+												f.cityId === parseInt(cityId)
+										);
+										if (favorite) {
+											setFavoriteId(favorite.id);
+										} else {
+											setFavoriteId(0);
+										}
+										setIsLoading(false);
+									});
+								} else {
 									setIsLoading(false);
-								});
-							} else {
-								setIsLoading(false);
-							}
-						});
+								}
+							});
+						}, 1000);
+
 						setSelectedCategoryId(listingsResponse.data.data.categoryId);
 						setListingId(listingsResponse.data.data.id);
 						setDescription(listingsResponse.data.data.description);
@@ -159,7 +162,7 @@ const EventDetails = () => {
 				} else {
 					fetchData();
 				}
-			}, 2000);
+			}, 1000);
 		};
 
 		fetchDataWithDelay();
