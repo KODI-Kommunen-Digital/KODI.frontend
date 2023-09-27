@@ -86,7 +86,7 @@
     "entries": "Beiträge",
     "eventEndDate": "Veranstaltungsende",
     "eventEndTime": "Endzeit des Ereignisses",
-    "events": "Events",
+    "events": "Veranstaltungen",
     "eventStartDate": "Veranstaltungsstart",
     "eventStartTime": "Event Start Time",
     "favourites": "Favoriten",
@@ -137,7 +137,7 @@
     "need_to_delete_account": "Möchtest du deinen Account wirklich löschen?",
     "newCitizenInfo": "Neubürgerinfos",
     "newPassword": "Neues Password",
-    "news": "News",
+    "news": "Nachricht",
     "newsflash": "Eilmeldungen",
     "notMember": "Noch kein Account?",
     "offers": "Angebote",
@@ -471,5 +471,8 @@
     "pageNotFound": "Seite nicht gefunden!",
 
     "loading": "Wird geladen...",
-    "youAreAlmosetThere": "Du bist fast da"
+    "youAreAlmosetThere": "Du bist fast da",
+    "downloadPdf": "PDF Herunterladen",
+    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu",
+    "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop"
 }

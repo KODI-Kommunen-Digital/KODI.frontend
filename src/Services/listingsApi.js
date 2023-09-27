@@ -33,6 +33,18 @@ export async function uploadListingImage(formData, cityId, listingsId) {
 	);
 }
 
+export async function uploadListingPDF(formData, cityId, listingsId) {
+	return axios.post(
+		`/cities/${cityId}/listings/${listingsId}/pdfUpload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+}
+
 export async function deleteListingImage(cityId, listingsId) {
 	return axios.delete(`/cities/${cityId}/listings/${listingsId}/imageDelete`);
 }
