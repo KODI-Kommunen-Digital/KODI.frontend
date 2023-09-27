@@ -17,7 +17,7 @@ import {
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
 	useEffect(() => {
-		document.title = "Profile | Smart Regions";
+		document.title = process.env.REACT_APP_REGION_NAME + " Profile";
 	}, []);
 	const { t } = useTranslation();
 
