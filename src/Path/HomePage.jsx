@@ -77,7 +77,6 @@ const HomePage = () => {
 		getListings(params).then((response) => {
 			const data = response.data.data;
 			setListings(data);
-			console.log(data);
 		});
 	}, [cities, cityId]);
 
@@ -192,6 +191,15 @@ const HomePage = () => {
 										alt="ecommerce"
 										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
 										src={GOOGLEPLAYSTORE}
+										onClick={() => {
+											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+												window.location.href =
+													"https://apps.apple.com/de/app/waldi/id6463143260";
+											} else {
+												window.location.href =
+													"https://play.google.com/store/apps/details?id=com.smartregionauf&pcampaignid=web_share";
+											}
+										}}
 									/>
 								</div>
 							</div>

@@ -84,7 +84,6 @@ const Dashboard = () => {
 				pageNo,
 			}).then((response) => {
 				setListings(response.data.data);
-				console.log(response.data.data);
 			});
 		}
 	}, [selectedStatus, viewAllListings, pageNo]);
@@ -380,7 +379,7 @@ const Dashboard = () => {
 												className="px-6 py-4 hidden lg:table-cell text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{categoryById[listing.categoryId]}
+												{t(categoryById[listing.categoryId])}
 											</td>
 											<td
 												className="px-6 py-4 hidden lg:table-cell text-center"
