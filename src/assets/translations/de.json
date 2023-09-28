@@ -509,5 +509,8 @@
     "role": "Rolle",
     "onlyAdmins": "Nur für Admins",
     "to_upload_new_forum": "Um ein neues Forum hochzuladen,",
-    "currently_no_forums": "Derzeit gibt es kein Forum, das angezeigt werden kann!"
+    "currently_no_forums": "Derzeit gibt es kein Forum, das angezeigt werden kann!",
+    "private": "Privat",
+    "public": "Öffentlich",
+    "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen"
 }

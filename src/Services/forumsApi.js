@@ -60,8 +60,8 @@ export async function deleteForumImage(cityId, forumsId) {
 	return axios.delete(`/cities/${cityId}/forums/${forumsId}/imageDelete`);
 }
 
-export async function getAllForums(cityId) {
-	return axios.get(`/cities/${cityId}/forums`);
+export async function getAllForums(cityId, params) {
+	return axios.get(`/cities/${cityId}/forums`, { params });
 }
 
 export async function forumPosts(cityId, forumsId, postData) {
