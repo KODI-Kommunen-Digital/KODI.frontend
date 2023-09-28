@@ -12,6 +12,7 @@ import { getCities } from "../Services/cities";
 import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
 import ListingsCard from "../Components/ListingsCard";
+import LoadingPage from "../Components/LoadingPage"
 
 
 const Favorites = () => {
@@ -23,6 +24,7 @@ const Favorites = () => {
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [favListings, setFavListings] = useState([]);
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		document.title = "Favourites";
@@ -38,7 +40,8 @@ const Favorites = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageNo, pageSize: 12, statusId: 1 };
+		const params = { pageSize: 12, statusId: 1 };
+		setIsLoading(true);
 		if (parseInt(cityId)) {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
@@ -58,6 +61,7 @@ const Favorites = () => {
 			const data = response.data.data;
 			setFavListings(data);
 		});
+
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -87,98 +91,102 @@ const Favorites = () => {
 
 	return (
 		<section className="text-gray-600 body-font relative">
-			<HomePageNavBar />
-			<div
-				className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col mt-20`}
-			>
-				<div className="w-full mr-0 ml-0">
-					<div className={`lg:h-64 md:h-64 h-72 overflow-hidden py-1`}>
-						<div className="relative lg:h-64 md:h-64 h-72">
-							<img
-								alt="ecommerce"
-								className="object-cover object-center h-full w-full"
-								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
-							/>
-							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-								<h1
-									className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("favorites")}
-								</h1>
-								<div>
-									<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
-										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-											<select
-												id="city"
-												name="city"
-												autoComplete="city-name"
-												onChange={(e) => setCityId(e.target.value)}
-												value={cityId}
-												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+			<HomePageNavBar />	{
+				isLoading ?
+					<LoadingPage />
+					: (<div>
+						<div
+							className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col mt-20`}
+						>
+							<div className="w-full mr-0 ml-0">
+								<div className={`lg:h-64 md:h-64 h-72 overflow-hidden py-1`}>
+									<div className="relative lg:h-64 md:h-64 h-72">
+										<img
+											alt="ecommerce"
+											className="object-cover object-center h-full w-full"
+											src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+										/>
+										<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+											<h1
+												className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												<option className="font-sans" value={0} key={0}>
-													{t("allCities", { regionName: process.env.REACT_APP_REGION_NAME })}
-												</option>
-												{cities.map((city) => (
-													<option
-														className="font-sans"
-														value={city.id}
-														key={city.id}
-													>
-														{city.name}
-													</option>
-												))}
-											</select>
-										</div>
-										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-											<select
-												id="category"
-												name="category"
-												autoComplete="category-name"
-												onChange={(e) => setCategoryId(e.target.value)}
-												value={categoryId}
-												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-												style={{ fontFamily: "Poppins, sans-serif" }}
-											>
-												<option className="font-sans" value={0} key={0}>
-													{t("allCategories")}
-												</option>
-												{Object.keys(categoryById).map((key) => {
-													return (
-														<option className="font-sans" value={key} key={key}>
-															{t(categoryById[key])}
-														</option>
-													);
-												})}
-											</select>
-										</div>
-										<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
-											<select
-												id="country"
-												name="country"
-												value={selectedSortOption}
-												onChange={handleSortOptionChange}
-												autoComplete="country-name"
-												className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-												style={{ fontFamily: "Poppins, sans-serif" }}
-											>
-												<option value="">{t("sort")}</option>
-												<option value="titleAZ">{t("atoztitle")}</option>
-												<option value="titleZA">{t("ztoatitle")}</option>
-												<option value="recent">{t("recent")}</option>
-												<option value="oldest">{t("oldest")}</option>
-											</select>
+												{t("favorites")}
+											</h1>
+											<div>
+												<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+													<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+														<select
+															id="city"
+															name="city"
+															autoComplete="city-name"
+															onChange={(e) => setCityId(e.target.value)}
+															value={cityId}
+															className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															<option className="font-sans" value={0} key={0}>
+																{t("allCities", {
+																	regionName: process.env.REACT_APP_REGION_NAME,
+																})}
+															</option>
+															{cities.map((city) => (
+																<option
+																	className="font-sans"
+																	value={city.id}
+																	key={city.id}
+																>
+																	{city.name}
+																</option>
+															))}
+														</select>
+													</div>
+													<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+														<select
+															id="category"
+															name="category"
+															autoComplete="category-name"
+															onChange={(e) => setCategoryId(e.target.value)}
+															value={categoryId}
+															className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															<option className="font-sans" value={0} key={0}>
+																{t("allCategories")}
+															</option>
+															{Object.keys(categoryById).map((key) => {
+																return (
+																	<option className="font-sans" value={key} key={key}>
+																		{t(categoryById[key])}
+																	</option>
+																);
+															})}
+														</select>
+													</div>
+													<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+														<select
+															id="country"
+															name="country"
+															value={selectedSortOption}
+															onChange={handleSortOptionChange}
+															autoComplete="country-name"
+															className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															<option value="">{t("sort")}</option>
+															<option value="titleAZ">{t("atoztitle")}</option>
+															<option value="titleZA">{t("ztoatitle")}</option>
+															<option value="recent">{t("recent")}</option>
+															<option value="oldest">{t("oldest")}</option>
+														</select>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-
 			<div className="mt-5 mb-20 p-6">
 				<div>
 					{favListings && favListings.length > 0 ? (
@@ -230,10 +238,10 @@ const Favorites = () => {
 				</div>
 			</div>
 
-			<div className="bottom-0 w-full">
-				<Footer />
-			</div>
-		</section>
+						<div className="bottom-0 w-full">
+							<Footer />
+						</div></div>)}
+		</section >
 	);
 };
 
