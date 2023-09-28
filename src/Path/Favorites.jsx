@@ -60,6 +60,7 @@ const Favorites = () => {
 		getFavoriteListings(params).then((response) => {
 			const data = response.data.data;
 			setFavListings(data);
+			setIsLoading(false)
 		});
 
 	}, [categoryId, cityId, pageNo, t]);
