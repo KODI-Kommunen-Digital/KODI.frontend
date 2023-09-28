@@ -24,7 +24,7 @@ const Favorites = () => {
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [favListings, setFavListings] = useState([]);
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		document.title = "Favourites";
