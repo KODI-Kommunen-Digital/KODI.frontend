@@ -17,7 +17,7 @@ import {
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
 	useEffect(() => {
-		document.title = "Profile | Smart Regions";
+		document.title = process.env.REACT_APP_REGION_NAME + " Profile";
 	}, []);
 	const { t } = useTranslation();
 
@@ -66,7 +66,6 @@ const ViewProfile = () => {
 			const formattedUsername = username.replace(/%20/g, " ");
 			fetchUsers({ username: formattedUsername }).then((response) => {
 				const userData = response.data.data ? response.data.data[0] : null;
-				console.log(userData);
 				if (userData) {
 					setUser(userData);
 					const parsedSocialMedia = userData.socialMedia

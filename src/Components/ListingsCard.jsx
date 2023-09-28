@@ -1,29 +1,56 @@
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import React from "react";
+import PdfToImage from "../Components/PdfToImage";
+import { useNavigate } from "react-router-dom";
 
 function ListingsCard({ listing, terminalView = false }) {
+    const navigate = useNavigate();
+    const navigateTo = (path) => {
+        if (path) {
+            navigate(path);
+        }
+    };
 
     return (
-        <a
-            href={
-                listing.sourceId === 1 ? (`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""}`) : listing.website
-            }
+        <div
+            onClick={(e) => {
+                e.stopPropagation();
+                if (listing.sourceId === 1) {
+                    navigateTo(
+                        `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId
+                        }${terminalView ? "&terminalView=true" : ""}`
+                    );
+                } else {
+                    window.location.href = listing.website;
+                }
+            }}
             className="w-full h-full shadow-lg rounded-lg cursor-pointer"
         >
             <div className="block relative h-64 rounded overflow-hidden">
-                <img
-                    alt="ecommerce"
-                    className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-                    src={
-                        listing.sourceId === 1 ?
-                            (listing.logo
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                listing.logo
-                                : LISTINGSIMAGE)
-                            : listing.logo
-                    }
-                />
+                {listing.logo ? (
+                    <img
+                        alt="Listing"
+                        className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+                        src={
+                            listing.sourceId === 1
+                                ? listing.logo
+                                    ? process.env.REACT_APP_BUCKET_HOST + listing.logo
+                                    : LISTINGSIMAGE
+                                : listing.logo
+                        }
+                    />
+                ) : listing.pdf ? (
+                    <PdfToImage
+                        pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+                    />
+                ) : (
+                    <img
+                        alt="Listing"
+                        className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+                        src={LISTINGSIMAGE}
+                    />
+                )}
             </div>
             <div className="mt-5 px-2">
                 <h2
@@ -39,13 +66,11 @@ function ListingsCard({ listing, terminalView = false }) {
                     className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                 >
-                    {new Date(
-                        listing.startDate.slice(0, 10)
-                    ).toLocaleDateString("de-DE") +
+                    {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
+                        "de-DE"
+                    ) +
                         " To " +
-                        new Date(
-                            listing.endDate.slice(0, 10)
-                        ).toLocaleDateString("de-DE")}
+                        new Date(listing.endDate.slice(0, 10)).toLocaleDateString("de-DE")}
                 </p>
             ) : (
                 <p
@@ -56,7 +81,8 @@ function ListingsCard({ listing, terminalView = false }) {
                     }}
                 />
             )}
-        </a>)
+        </div>
+    );
 }
 
 ListingsCard.propTypes = {
