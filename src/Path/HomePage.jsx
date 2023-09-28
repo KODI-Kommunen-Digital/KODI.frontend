@@ -13,9 +13,6 @@ import CITYIMAGE from "../assets/City.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
-import APPLESTORE from "../assets/apple-store-logo.png";
-import GOOGLEPLAYSTORE from "../assets/google-play-store-logo.png";
-
 
 const HomePage = () => {
 	const { t } = useTranslation();
