@@ -21,7 +21,7 @@ const ForumsError = () => {
 				Oops !
 			</h1>
 			<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-20 font-sans">
-				Please select another city before selecting Forums
+				{t("forumError")}
 			</h1>
 			<a
 				onClick={() => goToAllForums()}

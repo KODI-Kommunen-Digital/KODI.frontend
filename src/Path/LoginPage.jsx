@@ -116,7 +116,10 @@ const LoginPage = () => {
 			setPwd("");
 			setRememberMe(false);
 
-			if (window.sessionStorage.getItem("redirectTo")) {
+			if (window.sessionStorage.getItem("path")) {
+				navigate(window.sessionStorage.getItem("path"));
+				sessionStorage.removeItem("path");
+			} else if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));

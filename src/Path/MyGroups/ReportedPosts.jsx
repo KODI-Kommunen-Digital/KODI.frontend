@@ -16,7 +16,7 @@ const ReportedPosts = () => {
 	const [reports, setReports] = useState([]);
 	const [cityId, setCityId] = useState(0);
 	const [forumId, setForumId] = useState(0);
-	const [reportedCommentsData, setReportedCommentsData] = useState([]);
+	const [postReportedComments, setReportedComments] = useState([]);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -32,24 +32,17 @@ const ReportedPosts = () => {
 			.catch((e) => navigateTo("/Error"));
 	}, []);
 
-	useEffect(() => {
-		if (cityId !== null && forumId !== null) {
-			fetchReportedComments();
-		}
-	}, [cityId, forumId]);
+	// useEffect(() => {
+	// 	if (cityId !== null && forumId !== null) {
+	// 		fetchReportedComments();
+	// 	}
+	// }, [cityId, forumId]);
 
-	const fetchReportedComments = async () => {
+	const fetchReportedComments = async (cityId, forumId, postId) => {
 		try {
-			const reportedCommentsPromises = reports.map((report) => {
-				return reportedComments(cityId, forumId, report.id);
-			});
-			const reportedCommentsResponses = await Promise.all(
-				reportedCommentsPromises
-			);
-			const allReportedComments = reportedCommentsResponses.flatMap(
-				(response) => response.data.data
-			);
-			setReportedCommentsData(allReportedComments);
+			const response = await reportedComments(cityId, forumId, postId);
+			console.log(response.data.data);
+			setReportedComments(response.data.data);
 		} catch (error) {
 			console.error("Error fetching reported comments:", error);
 		}
@@ -71,7 +64,8 @@ const ReportedPosts = () => {
 		},
 	});
 
-	const handleViewReports = () => {
+	const handleViewReports = (postId) => {
+		fetchReportedComments(cityId, forumId, postId);
 		setShowReportsModal({ ...showReportsModal, visible: true });
 	};
 
@@ -203,7 +197,7 @@ const ReportedPosts = () => {
 													<a
 														className="font-medium text-blue-600 px-2 dark:text-blue-500 hover:underline cursor-pointer text-center"
 														style={{ fontFamily: "Poppins, sans-serif" }}
-														onClick={handleViewReports}
+														onClick={() => handleViewReports(report.id)}
 													>
 														{t("viewReports")}
 													</a>
@@ -247,12 +241,10 @@ const ReportedPosts = () => {
 																					{t("reasonforReport")}
 																				</h3>
 																				<div className="mt-2">
-																					{reportedCommentsData.map(
+																					{postReportedComments.map(
 																						(comment, index) => (
-																							<div key={comment.id}>
-																								{`${index + 1}. ${
-																									comment.Reason
-																								}`}{" "}
+																							<div key={index}>
+																								{comment.Reason}
 																							</div>
 																						)
 																					)}

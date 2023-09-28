@@ -13,7 +13,6 @@ const AllForums = () => {
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState(1);
 	const [cities, setCities] = useState([]);
-	const [cityName, setCityName] = useState("");
 	const [forums, setForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,6 +32,8 @@ const AllForums = () => {
 		}
 		getCities({ hasForum: true }).then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
+			const pageNoParam = parseInt(urlParams.get("pageNo"));
+			if (pageNoParam) setPageNo(pageNoParam);
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 		});
@@ -40,20 +41,26 @@ const AllForums = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageNo, pageSize: 12, statusId: 1 };
+		const params = { pageNo, pageSize: 12 };
 		setIsLoading(true);
 
 		if (parseInt(cityId)) {
-			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
 			params.cityId = cityId;
 		} else {
-			setCityName(t("allCities"));
+			urlParams.delete("cityId");
 		}
+		if (pageNo > 1) {
+			params.pageNo = pageNo;
+			urlParams.set("pageNo", pageNo);
+		} else {
+			urlParams.delete("pageNo");
+		}
+
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 		const fetchData = async () => {
 			try {
-				const response = await getAllForums(cityId);
+				const response = await getAllForums(cityId, params);
 				const data = response.data.data;
 				setForums(data);
 			} catch (error) {
@@ -66,11 +73,11 @@ const AllForums = () => {
 		const fetchDataWithDelay = () => {
 			setTimeout(() => {
 				fetchData();
-			}, 2000);
+			}, 1000);
 		};
 
 		fetchDataWithDelay();
-	}, [cityId]);
+	}, [cityId, pageNo]);
 
 	const navigateTo = (path) => {
 		navigate(path);
@@ -78,7 +85,12 @@ const AllForums = () => {
 
 	const handleClick = async (cityId, forum) => {
 		const path = `/Forum?cityId=${cityId}&forumId=${forum.id}`;
-		navigateTo(path);
+		if (isLoggedIn) {
+			navigateTo(path);
+		} else {
+			sessionStorage.setItem("path", path);
+			navigateTo("/login");
+		}
 	};
 	const handleChange = (e) => {
 		const selectedCityId = e.target.value;
@@ -213,15 +225,18 @@ const AllForums = () => {
 															style={{ fontFamily: "Poppins, sans-serif" }}
 														>
 															<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
-																{forum.forumName}
+																{forum.forumName.length > 18
+																	? forum.forumName.substring(0, 18) + "..."
+																	: forum.forumName}
 															</h2>
+
 															{forum.isPrivate === 0 ? (
 																<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
-																	Public
+																	{t("public")}
 																</h2>
 															) : (
 																<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
-																	Private
+																	{t("private")}
 																</h2>
 															)}
 														</div>
@@ -230,7 +245,7 @@ const AllForums = () => {
 															style={{ fontFamily: "Poppins, sans-serif" }}
 															className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 														>
-															{cityName}
+															{forum.description}
 														</h2>
 													</div>
 												</div>
