@@ -9,6 +9,7 @@ import GROUPIMAGE from "../assets/GroupImage.avif";
 const MyGroups = () => {
 	const { t } = useTranslation();
 	const [forums, setForums] = useState([]);
+	const [pageNo, setPageNo] = useState(1);
 
 	useEffect(() => {
 		getUserForums().then((response) => {
@@ -297,6 +298,36 @@ const MyGroups = () => {
 								})}
 							</tbody>
 						</table>
+					</div>
+
+					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
+						{pageNo !== 1 ? (
+							<span
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+								onClick={() => setPageNo(pageNo - 1)}
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{"<"}{" "}
+							</span>
+						) : (
+							<span />
+						)}
+						<span
+							className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+						>
+							{t("page")} {pageNo}
+						</span>
+
+						{forums.length >= 9 && (
+							<span
+								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+								onClick={() => setPageNo(pageNo + 1)}
+								style={{ fontFamily: "Poppins, sans-serif" }}
+							>
+								{">"}
+							</span>
+						)}
 					</div>
 				</div>
 			</div>

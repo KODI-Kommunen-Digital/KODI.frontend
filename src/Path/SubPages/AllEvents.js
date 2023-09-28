@@ -100,7 +100,7 @@ const Events = () => {
 		const fetchDataWithDelay = () => {
 			setTimeout(() => {
 				fetchData();
-			}, 2000);
+			}, 1000);
 		};
 
 		fetchDataWithDelay();

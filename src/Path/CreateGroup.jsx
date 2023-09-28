@@ -31,14 +31,21 @@ function CreateGroup() {
 	const [forumId, setForumId] = useState(0);
 	const navigate = useNavigate();
 
-	const handleGroupTypeChange = (event) => {
-		const isPrivate = event.target.checked;
+	// const handleGroupTypeChange = (event) => {
+	// 	const isPrivate = event.target.checked;
+	// 	setInput((prevInput) => ({
+	// 		...prevInput,
+	// 		isPrivate,
+	// 		visibility: isPrivate ? "private" : "public",
+	// 	}));
+	// };
+	const handleToggle = () => {
 		setInput((prevInput) => ({
 			...prevInput,
-			isPrivate,
-			visibility: isPrivate ? "private" : "public",
+			visibility: prevInput.visibility === "public" ? "private" : "public", // Toggle between "public" and "private"
 		}));
 	};
+
 	function handleDragEnter(e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -82,8 +89,9 @@ function CreateGroup() {
 		description: "",
 		image: null,
 		removeImage: false,
-		visibility: "",
+		visibility: "public",
 	});
+	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -362,7 +370,10 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div className="relative mb-4 flex items-center">
+					<div
+						className="relative mb-4 flex items-center"
+						onClick={handleToggle}
+					>
 						<div className="flex items-center">
 							<label
 								htmlFor="groupType"
@@ -372,24 +383,20 @@ function CreateGroup() {
 							</label>
 							<div className="relative">
 								<div
-									className={`w-10 h-6 rounded-full shadow-inner ${
-										input.isPrivate ? "bg-blue-500" : "bg-gray-300"
+									className={`w-14 h-7 rounded-full shadow-inner ${
+										input.visibility === "private"
+											? "bg-blue-500"
+											: "bg-gray-300"
 									}`}
 								></div>
 								<div
-									className={`absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
-										input.isPrivate ? "translate-x-full" : "translate-x-0"
+									className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
+										input.visibility === "private"
+											? "translate-x-full"
+											: "translate-x-0"
 									}`}
 								></div>
-								<input
-									type="checkbox"
-									id="groupType"
-									name="groupType"
-									value={input.visibility}
-									checked={input.isPrivate}
-									onChange={handleGroupTypeChange}
-									className="sr-only"
-								/>
+								{/* No need for an input element here */}
 							</div>
 							<label
 								htmlFor="groupType"

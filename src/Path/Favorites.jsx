@@ -18,7 +18,7 @@ import Footer from "../Components/Footer";
 const Favorites = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	// const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
@@ -28,30 +28,31 @@ const Favorites = () => {
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [listings, setListings] = useState([]);
 
-	useEffect(() => {
-		document.title = "Favourites";
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	document.title = "Favourites";
+	// 	const accessToken =
+	// 		window.localStorage.getItem("accessToken") ||
+	// 		window.sessionStorage.getItem("accessToken");
+	// 	const refreshToken =
+	// 		window.localStorage.getItem("refreshToken") ||
+	// 		window.sessionStorage.getItem("refreshToken");
+	// 	if (accessToken || refreshToken) {
+	// 		setIsLoggedIn(true);
+	// 	}
+	// }, []);
 
 	useEffect(() => {
+		document.title = "Favourites";
 		const urlParams = new URLSearchParams(window.location.search);
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
-			setIsLoggedIn(true);
-		}
+		// const accessToken =
+		// 	window.localStorage.getItem("accessToken") ||
+		// 	window.sessionStorage.getItem("accessToken");
+		// const refreshToken =
+		// 	window.localStorage.getItem("refreshToken") ||
+		// 	window.sessionStorage.getItem("refreshToken");
+		// if (accessToken || refreshToken) {
+		// 	setIsLoggedIn(true);
+		// }
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 			const cityIdParam = urlParams.get("cityId");
@@ -290,26 +291,6 @@ const Favorites = () => {
 								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 									{t("currently_no_listings")}
 								</h1>
-							</div>
-
-							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-								<span className="font-sans text-black">
-									{t("to_upload_new_listing")}
-								</span>
-								<a
-									className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-									onClick={() => {
-										localStorage.setItem(
-											"selectedItem",
-											t("chooseOneCategory")
-										);
-										isLoggedIn
-											? navigateTo("/UploadListings")
-											: navigateTo("/login");
-									}}
-								>
-									{t("click_here")}
-								</a>
 							</div>
 						</div>
 					)}
