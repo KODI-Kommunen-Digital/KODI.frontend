@@ -11,8 +11,8 @@ import {
 import { getCities } from "../Services/cities";
 import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
-import LoadingPage from "../Components/LoadingPage";
 import ListingsCard from "../Components/ListingsCard";
+import LoadingPage from "../Components/LoadingPage"
 
 
 const Favorites = () => {
@@ -60,8 +60,9 @@ const Favorites = () => {
 		getFavoriteListings(params).then((response) => {
 			const data = response.data.data;
 			setFavListings(data);
-			setIsLoading(false);
-		})
+			setIsLoading(false)
+		});
+
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -187,57 +188,56 @@ const Favorites = () => {
 								</div>
 							</div>
 						</div>
-
-						<div className="mt-5 mb-20 p-6">
-							<div>
-								{favListings && favListings.length > 0 ? (
-									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-										<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-											{favListings &&
-												favListings.map((favListing, index) => (
-													<ListingsCard listing={favListing} key={index} />
-												))}
-										</div>
-									</div>
-								) : (
-									<div>
-										<div className="flex items-center justify-center">
-											<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-												{t("currently_no_fav_listings")}
-											</h1>
-										</div>
-									</div>
-								)}
+			<div className="mt-5 mb-20 p-6">
+				<div>
+					{favListings && favListings.length > 0 ? (
+						<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+							<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+								{favListings &&
+									favListings.map((favListing, index) => (
+										<ListingsCard listing={favListing} key={index} />
+									))}
 							</div>
-							<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-								{pageNo !== 1 ? (
-									<span
-										className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-										style={{ fontFamily: "Poppins, sans-serif" }}
-										onClick={() => setPageNo(pageNo - 1)}
-									>
-										{"<"}{" "}
-									</span>
-								) : (
-									<span />
-								)}
-								<span
-									className="text-lg px-3"
-									style={{ fontFamily: "Poppins, sans-serif" }}
-								>
-									{t("page")} {pageNo}
-								</span>
-								{favListings.length >= 9 && (
-									<span
-										className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-										style={{ fontFamily: "Poppins, sans-serif" }}
-										onClick={() => setPageNo(pageNo + 1)}
-									>
-										{">"}
-									</span>
-								)}
+						</div>
+					) : (
+						<div>
+							<div className="flex items-center justify-center">
+								<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+									{t("currently_no_fav_listings")}
+								</h1>
 							</div>
-						</div >
+						</div>
+					)}
+				</div>
+				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+					{pageNo !== 1 ? (
+						<span
+							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+							onClick={() => setPageNo(pageNo - 1)}
+						>
+							{"<"}{" "}
+						</span>
+					) : (
+						<span />
+					)}
+					<span
+						className="text-lg px-3"
+						style={{ fontFamily: "Poppins, sans-serif" }}
+					>
+						{t("page")} {pageNo}
+					</span>
+					{favListings.length >= 9 && (
+						<span
+							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+							onClick={() => setPageNo(pageNo + 1)}
+						>
+							{">"}
+						</span>
+					)}
+				</div>
+			</div>
 
 						<div className="bottom-0 w-full">
 							<Footer />
