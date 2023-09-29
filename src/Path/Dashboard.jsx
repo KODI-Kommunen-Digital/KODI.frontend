@@ -7,10 +7,10 @@ import {
 	deleteListing,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
-import { categoryById } from "../Constants/categories";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
+import { getCategory } from "../Services/CategoryApi";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -22,6 +22,7 @@ const Dashboard = () => {
 	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
+	const [categories, setCategories] = useState([])
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -40,6 +41,13 @@ const Dashboard = () => {
 		if (!accessToken && !refreshToken) {
 			window.location.href = "/login";
 		}
+		getCategory().then((response) => {
+			const catList = {}
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name
+			})
+			setCategories(catList);
+		})
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
@@ -379,7 +387,7 @@ const Dashboard = () => {
 												className="px-6 py-4 hidden lg:table-cell text-center"
 												style={{ fontFamily: "Poppins, sans-serif" }}
 											>
-												{t(categoryById[listing.categoryId])}
+												{t(categories[listing.categoryId])}
 											</td>
 											<td
 												className="px-6 py-4 hidden lg:table-cell text-center"
