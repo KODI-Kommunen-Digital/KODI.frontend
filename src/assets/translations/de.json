@@ -484,5 +484,6 @@
     "public": "Öffentlich",
     "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen",
     "newsletter" : "Mitteilungsblatt",
-    "rathaus": "Rathaus"
+    "rathaus": "Rathaus",
+    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu"
 }
