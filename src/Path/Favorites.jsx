@@ -69,16 +69,13 @@ const Favorites = () => {
 		getFavoriteListings(params).then((response) => {
 			const data = response.data.data;
 			setFavListings(data);
-			setIsLoading(false)
+			setIsLoading(false);
 		});
-
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
 	}
-
-
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -248,10 +245,12 @@ const Favorites = () => {
 				</div>
 			</div>
 
-						<div className="bottom-0 w-full">
-							<Footer />
-						</div></div>)}
-		</section >
+					<div className="bottom-0 w-full">
+						<Footer />
+					</div>
+				</div>
+			)}
+		</section>
 	);
 };
 

@@ -115,7 +115,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -448,8 +447,7 @@ function UploadListings() {
 		list.splice(index, 1);
 		setVal(list);
 	};
-
-	const [date, setDate] = useState();
+	//Social Media ends
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
@@ -503,10 +501,6 @@ function UploadListings() {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 	};
-
-	function formatDateTime(dateTimeString) {
-		return dateTimeString.replace("T", " ");
-	}
 
 	return (
 		<section className="bg-slate-600 body-font relative">

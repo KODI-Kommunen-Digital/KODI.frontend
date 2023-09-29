@@ -39,7 +39,6 @@ const HomePage = () => {
 		if (cityId) {
 			setCityId(cityId);
 		}
-
 		getListingsCount().then((response) => {
 			const data = response.data.data;
 			const sortedData = data.sort(
@@ -114,6 +113,16 @@ const HomePage = () => {
 	}
 
 	const [showPopup, setShowPopup] = useState(false);
+
+	useEffect(() => {
+		const hasAcceptedPrivacyPolicy = localStorage.getItem(
+			"privacyPolicyAccepted"
+		);
+
+		if (!hasAcceptedPrivacyPolicy) {
+			setShowPopup(true);
+		}
+	}, []);
 
 	const handlePrivacyPolicyAccept = () => {
 		localStorage.setItem("privacyPolicyAccepted", "true");
@@ -464,8 +473,12 @@ const HomePage = () => {
 								<div
 									key={city.id}
 									onClick={() => {
+										const scrollPosition = window.scrollY;
 										localStorage.setItem("selectedCity", city.name);
 										navigateTo(`/AllEvents?cityId=${city.id}`);
+										window.addEventListener("popstate", function () {
+											window.scrollTo(0, scrollPosition);
+										});
 									}}
 									className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 								>

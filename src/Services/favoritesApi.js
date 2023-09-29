@@ -1,5 +1,6 @@
-import axios from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
+import { instance } from "../api/axiosInstance";
+const axios = instance;
 
 export async function getFavorites() {
     return axios.get(`/users/${getUserId()}/favorites`);

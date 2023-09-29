@@ -1,6 +1,7 @@
-import axiosInstance from "../api/axiosInstance";
+import { instance } from "../api/axiosInstance";
 // import axios from "axios";
 import UAParser from "ua-parser-js";
+const axiosInstance = instance;
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
@@ -27,13 +28,13 @@ export function getUserId() {
 	);
 }
 
+export async function fetchUsers(params = {}) {
+	return axiosInstance.get("/users", { params });
+}
+
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();
 	return axiosInstance.get(`/users/${userId}`, { params });
-}
-
-export async function fetchUsers(params = {}) {
-	return axiosInstance.get("/users", { params });
 }
 
 export async function updateProfile(newProfileObj) {
