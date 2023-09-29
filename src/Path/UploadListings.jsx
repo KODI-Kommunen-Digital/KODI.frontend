@@ -19,8 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { categoryByName, categoryById } from "../Constants/categories";
-import { subcategoryById } from "../Constants/subcategories";
+import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -42,8 +41,8 @@ function UploadListings() {
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-	const [categories, setCategories] = useState(categoryById);
-	const [subCategories, setSubCategories] = useState(subcategoryById);
+	const [categories, setCategories] = useState([]);
+	const [subCategories, setSubCategories] = useState([]);
 	const navigate = useNavigate();
 
 	function handleDragEnter(e) {
@@ -224,6 +223,13 @@ function UploadListings() {
 			navigateTo("/login");
 		}
 		var cityId = searchParams.get("cityId");
+		getCategory().then((response) => {
+			const catList = {}
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name
+			})
+			setCategories(catList);
+		})
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
@@ -324,7 +330,7 @@ function UploadListings() {
 				}
 
 			case "subCategoryId":
-				if (!value && parseInt(input.categoryId) == categoryByName.news) {
+				if (!value && parseInt(input.categoryId) == 1) {
 					return t("pleaseSelectSubcategory");
 				} else {
 					return "";
@@ -338,14 +344,14 @@ function UploadListings() {
 				}
 
 			case "startDate":
-				if (!value && parseInt(input.categoryId) == categoryByName.events) {
+				if (!value && parseInt(input.categoryId) == 3) {
 					return t("pleaseEnterStartDate");
 				} else {
 					return "";
 				}
 
 			case "endDate":
-				if (parseInt(input.categoryId) == categoryByName.events) {
+				if (parseInt(input.categoryId) == 3) {
 					if (!value) {
 						return t("pleaseEnterEndDate");
 					} else {
@@ -462,9 +468,17 @@ function UploadListings() {
 	const [categoryId, setCategoryId] = useState(0);
 	const [subcategoryId, setSubcategoryId] = useState(0);
 
-	const handleCategoryChange = (event) => {
+	const handleCategoryChange = async (event) => {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
+		if(categoryId == 1) {
+			const subCats = await getNewsSubCategory()
+			const subcatList = {}
+			subCats?.data.data.forEach((subCat) => {
+				subcatList[subCat.id] = subCat.name
+			})
+			setSubCategories(subcatList);
+		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
 		validateInput(event);
@@ -633,7 +647,7 @@ function UploadListings() {
 						</div>
 					</div>
 
-					{categoryId == categoryByName.news && (
+					{categoryId == 1 && (
 						<div className="relative mb-4">
 							<label
 								for="subcategoryId"
@@ -761,7 +775,7 @@ function UploadListings() {
 						</div>
 					</div>
 
-					{categoryId == categoryByName.events && (
+					{categoryId == 3 && (
 						<div className="relative mb-4">
 							<div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div className="relative">
@@ -839,8 +853,8 @@ function UploadListings() {
 						</div>
 					)}
 
-					{(categoryId == categoryByName.offers ||
-						categoryId == categoryByName.regionalProducts) && (
+					{(categoryId == 12 ||
+						categoryId == 5) && (
 						<div className="relative mb-4 grid grid-cols-2 gap-4">
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
@@ -959,7 +973,7 @@ function UploadListings() {
 				</div>
 			</div>
 
-			{categoryId != categoryByName.roadTraffic && (
+			
 				<div className="container w-auto px-5 py-2 bg-slate-600">
 					<div className="bg-white mt-4 p-6 space-y-10">
 						<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -1039,7 +1053,7 @@ function UploadListings() {
 						</div>
 					</div>
 				</div>
-			)}
+			
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6">

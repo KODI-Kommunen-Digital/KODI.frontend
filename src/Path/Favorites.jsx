@@ -9,10 +9,10 @@ import {
 	sortOldestFirst,
 } from "../Services/helper";
 import { getCities } from "../Services/cities";
-import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
 import ListingsCard from "../Components/ListingsCard";
 import LoadingPage from "../Components/LoadingPage"
+import { getCategory } from "../Services/CategoryApi";
 
 
 const Favorites = () => {
@@ -25,10 +25,19 @@ const Favorites = () => {
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [favListings, setFavListings] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [categories, setCategories] = useState([])
+
 
 	useEffect(() => {
 		document.title = "Favourites";
 		const urlParams = new URLSearchParams(window.location.search);
+		getCategory().then((response) => {
+			const catList = {}
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name
+			})
+			setCategories(catList);
+		})
 		getCities().then((citiesResponse) => {
 			setCities(citiesResponse.data.data);
 			const cityIdParam = urlParams.get("cityId");
@@ -155,10 +164,10 @@ const Favorites = () => {
 															<option className="font-sans" value={0} key={0}>
 																{t("allCategories")}
 															</option>
-															{Object.keys(categoryById).map((key) => {
+															{Object.keys(categories).map((key) => {
 																return (
 																	<option className="font-sans" value={key} key={key}>
-																		{t(categoryById[key])}
+																		{t(categories[key])}
 																	</option>
 																);
 															})}
