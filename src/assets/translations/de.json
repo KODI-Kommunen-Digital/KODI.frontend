@@ -477,6 +477,12 @@
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Du bist fast da",
     "downloadPdf": "PDF Herunterladen",
-    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu",
-    "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop"
+    "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop",
+    "to_upload_new_forum": "Um ein neues Forum hochzuladen,",
+    "currently_no_forums": "Derzeit gibt es kein Forum, das angezeigt werden kann!",
+    "private": "Privat",
+    "public": "Öffentlich",
+    "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen",
+    "newsletter" : "Mitteilungsblatt",
+    "rathaus": "Rathaus"
 }

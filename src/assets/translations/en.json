@@ -476,5 +476,11 @@
     "youAreAlmosetThere": "You are almoset there",
     "downloadPdf": "Download PDF",
     "addFileHere" : "Add your File here",
-    "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF"
+    "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF",
+    "private": "Private",
+    "public": "Public",
+    "forumError": "Please select another city before selecting Forums",
+    "newsletter" : "News Letter",
+    "rathaus": "City Hall"
+
 }
