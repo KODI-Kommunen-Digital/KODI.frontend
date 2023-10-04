@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -240,6 +241,29 @@ const EventDetails = () => {
 		setTerminalView(terminalViewParam === "true");
 	}, []);
 
+	const [, setUserName] = useState("");
+	const [firstname, setFirstname] = useState("");
+	const [lastname, setLastname] = useState("");
+	const [, setProfilePic] = useState("");
+	const [userSocial, setUserSocial] = useState([]);
+
+	useEffect(() => {
+		if (user) {
+			try {
+				const socialMedia = user.socialMedia
+					? JSON.parse(user.socialMedia)
+					: {};
+				setUserSocial(socialMedia);
+				setUserName(user.userName);
+				setFirstname(user.firstname);
+				setLastname(user.lastname);
+				setProfilePic(user.image);
+			} catch (error) {
+				console.error("Error parsing user.socialMedia:", error);
+			}
+		}
+	}, [user]);
+
 	return (
 		<section className="text-gray-600 bg-white body-font">
 			{isLoading ? (
@@ -405,7 +429,65 @@ const EventDetails = () => {
 								<Description content={description} />
 							</div>
 						</div>
-						<UserProfile user={user} />
+						{/* <UserProfile user={user} /> */}
+						{userSocial && userSocial.length > 0 ? (
+							<UserProfile user={user} />
+						) : (
+							<div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+								<div>
+									<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
+										<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
+											<img
+												className="rounded-full h-20 w-20"
+												src={
+													user?.image
+														? process.env.REACT_APP_BUCKET_HOST + user?.image
+														: PROFILEIMAGE
+												}
+												alt={user?.lastname}
+											/>
+											<div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+												<button
+													onClick={() =>
+														navigateTo(
+															user
+																? `/ViewProfile/${user.username}`
+																: "/ViewProfile"
+														)
+													}
+													type="submit"
+													className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+													style={{
+														fontFamily: "Poppins, sans-serif",
+													}}
+												>
+													<span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+													{t("viewProfile")}
+												</button>
+											</div>
+										</div>
+										<div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
+											<h2
+												className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
+												style={{
+													fontFamily: "Poppins, sans-serif",
+												}}
+											>
+												{firstname + " " + lastname}
+											</h2>
+											<p
+												className="leading-relaxed text-base font-bold dark:text-gray-900"
+												style={{
+													fontFamily: "Poppins, sans-serif",
+												}}
+											>
+												{user?.username}
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						)}
 					</div>
 
 					<div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
