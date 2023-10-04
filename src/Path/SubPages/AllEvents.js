@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import ListingsCard from "../../Components/ListingsCard";
-import LoadingPage from "../../Components/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   sortByTitleAZ,
@@ -14,6 +13,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 // import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
+import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
 const Events = () => {
