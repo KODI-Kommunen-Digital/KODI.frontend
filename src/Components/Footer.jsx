@@ -152,17 +152,17 @@ function Footer(props) {
 								{t("data_protection")}
 							</a>
 						</p>
-						<p className={`${footerClass}`}>
+						{/* <p className={`${footerClass}`}>
 							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
 								{t("right_withdrawal")}
 							</a>
-						</p>
+						</p> */}
 					</div>
-					<div className="">
+					{/* <div className="">
 						<h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
 							{t("secure_app_now")}
 						</h6>
-					</div>
+					</div> */}
 				</div>
 			</div>
 			<div className="text-center p-6 bg-black">

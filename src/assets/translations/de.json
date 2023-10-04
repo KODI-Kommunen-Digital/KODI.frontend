@@ -73,7 +73,7 @@
     "email": "E-Mail",
     "email_being_verified": "Deine E-Mail wurde erfolgreich verifiziert.",
     "email_verification_not_succesfull": "Die E-Mail Verifizierung war nicht erfolgreich. Bitte probiere es später.",
-    "email_verified": "Deine E-Mail wurde verifiziert.",
+    "email_verified": "Deine E-Mail wurde verifiziert! ",
     "emailId": "E-Mail Adresse",
     "endDateBeforeStartDate": "Das Enddatum kann nicht vor dem Startdatum sein",
     "enter_description": "Schreibe etwas über dich.",
@@ -470,7 +470,7 @@
     "writeReply": "Eine Antwort schreiben...",
     "postCreated": "Ihr Beitrag ist erstellt",
     "forumName": "Forum Name",
-    "comingSoon": "Hey! Wir kochen es. Demnächst...",
+    "comingSoon": "Hey! diese Funktion wird in Kürze verfügbar sein...",
     "show": "anzeigen",
     "hide": "verbergen",
     "reason": "Grund",
@@ -486,7 +486,7 @@
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
     "pageNotFound": "Seite nicht gefunden!",
     "loading": "Wird geladen...",
-    "youAreAlmosetThere": "Du bist fast da",
+    "youAreAlmosetThere": "Einen Moment Geduld",
     "viewReports": "Berichte anzeigen",
     "hidePost": "Ausblenden",
     "unHidePost": "Einblenden",
@@ -512,5 +512,7 @@
     "currently_no_forums": "Derzeit gibt es kein Forum, das angezeigt werden kann!",
     "private": "Privat",
     "public": "Öffentlich",
-    "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen"
+    "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen",
+    "success": "Erfolg",
+    "passwordUpdated": "Dein Passwort wurde aktualisiert. Weiterleitung zum Login in…"
 }

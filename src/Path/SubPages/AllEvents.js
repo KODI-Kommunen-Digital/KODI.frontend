@@ -296,7 +296,7 @@ const Events = () => {
 												</a>
 												<div className="mt-5 px-2">
 													<h2
-														className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+														className="text-blue-800 title-font text-lg font-bold text-center font-sans truncate"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														{listing.title}
@@ -304,18 +304,44 @@ const Events = () => {
 												</div>
 												<div className="my-4 bg-gray-200 h-[1px]"></div>
 												{listing.id && listing.categoryId === 3 ? (
-													<p
-														className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+													<div
+														className="flex justify-between items-center"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
-														{new Date(
-															listing.startDate.slice(0, 10)
-														).toLocaleDateString("de-DE") +
-															" To " +
-															new Date(
-																listing.endDate.slice(0, 10)
-															).toLocaleDateString("de-DE")}
-													</p>
+														<p
+															className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{new Date(
+																listing.startDate.slice(0, 10)
+															).toLocaleDateString("de-DE") +
+																" To " +
+																new Date(
+																	listing.endDate.slice(0, 10)
+																).toLocaleDateString("de-DE")}
+														</p>
+
+														<p
+															className="text-blue-400 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+															style={{ fontFamily: "Poppins, sans-serif" }}
+														>
+															{new Date(listing.startDate).toLocaleTimeString(
+																"de-DE",
+																{
+																	hour: "2-digit",
+																	minute: "2-digit",
+																}
+															) +
+																" To " +
+																new Date(listing.endDate).toLocaleTimeString(
+																	"de-DE",
+																	{
+																		hour: "2-digit",
+																		minute: "2-digit",
+																	}
+																)}
+														</p>
+													</div>
 												) : (
 													<p
 														className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
