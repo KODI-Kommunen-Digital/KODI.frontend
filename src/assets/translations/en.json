@@ -524,6 +524,8 @@
     "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF",
     "private": "Private",
     "public": "Public",
-    "forumError": "Please select another city before selecting Forums"
+    "forumError": "Please select another city before selecting Forums",
+    "newsletter" : "News Letter",
+    "rathaus": "City Hall"
 
 }
