@@ -48,7 +48,7 @@ const LoginPage = () => {
 			routeChangeToUpload();
 		}
 
-		if (searchParams.get("sessionExpired") === "true" && !accessToken) {
+		if (searchParams.get("sessionExpired") === "true") {
 			settimeOutAlertMessage(t("sessionExpired"));
 			setAlertType("danger");
 			setTimeout(() => {
