@@ -18,7 +18,6 @@ const handleLogout = () => {
 		window.sessionStorage.removeItem("refreshToken");
 		window.sessionStorage.removeItem("userId");
 		window.sessionStorage.removeItem("selectedItem");
-		window.location.href = "/login?sessionExpired=true";
 	} catch (error) {
 		return error;
 	}
@@ -87,10 +86,12 @@ instance.interceptors.response.use(
 						return Promise.reject(error);
 					}
 				} catch (refreshError) {
+					window.location.href = "/login?sessionExpired=true";
 					handleLogout();
 					return Promise.reject(refreshError);
 				}
 			} else {
+				window.location.href = "/login?sessionExpired=true";
 				handleLogout();
 				return Promise.reject(error);
 			}

@@ -5,6 +5,7 @@ import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass, login } from "../Services/usersApi";
 import Alert from "../Components/Alert";
+import errorCodes from "../Constants/errorCodes";
 
 const LoginPage = () => {
 	const { t } = useTranslation();
@@ -118,7 +119,19 @@ const LoginPage = () => {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage(t("checkUsernameOrPassword"));
+			if (err.response.data.errorCode === errorCodes.EMPTY_PAYLOAD) {
+				setAlertMessage(t("usernamePasswordNotPresent"));
+			} else if (err.response.data.errorCode === errorCodes.MISSING_USERNAME) {
+				setAlertMessage(t("usernameNotPresent"));
+			} else if (err.response.data.errorCode === errorCodes.MISSING_PASSWORD) {
+				setAlertMessage(t("passwordNotPresent"));
+			} else if (err.response.data.errorCode === errorCodes.INVALID_USERNAME || err.response.data.errorCode === errorCodes.INVALID_PASSWORD) {
+				setAlertMessage(t("checkUsernameOrPassword"));
+			} else if (err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED) {
+				setAlertMessage(t("emailNotVerified"));
+			} else {
+				setAlertMessage(t("somethingWrong"));
+			}
 		}
 	};
 

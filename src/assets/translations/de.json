@@ -473,7 +473,6 @@
     "appStore": "App Store",
     "getItOn": "JETZT BEI",
     "googlePlay": "Google Play",
-
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Du bist fast da",
     "downloadPdf": "PDF Herunterladen",
@@ -483,7 +482,12 @@
     "private": "Privat",
     "public": "Öffentlich",
     "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen",
-    "newsletter" : "Mitteilungsblatt",
+    "newsletter": "Mitteilungsblatt",
     "rathaus": "Rathaus",
-    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu"
+    "addFileHere": "Fügen Sie hier Ihre Datei hinzu",
+    "usernamePasswordNotPresent": "Benutzername und Passwort nicht vorhanden!",
+    "usernameNotPresent": "Benutzername nicht vorhanden",
+    "passwordNotPresent": "Passwort nicht vorhanden",
+    "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
+    "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal."
 }
