@@ -8,7 +8,7 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import UserProfile from "../../Components/UserProfile";
-import { categoryById } from "../../Constants/categories";
+// import { categoryById } from "../../Constants/categories";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
@@ -19,6 +19,7 @@ import {
 	deleteListingsById,
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
+import { getCategory } from "../../Services/CategoryApi";
 
 const Description = ({ content }) => {
 	return (
@@ -46,6 +47,7 @@ const EventDetails = () => {
 	const [listings, setListings] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [categories, setCategories] = useState([]);
 
 	const [input, setInput] = useState({
 		categoryId: 0,
@@ -68,6 +70,21 @@ const EventDetails = () => {
 
 	const [favoriteId, setFavoriteId] = useState(0);
 	const [cityId, setCityId] = useState(0);
+	const location = useLocation();
+	const [terminalView, setTerminalView] = useState(false);
+	useEffect(() => {
+		document.title = "Event Details";
+		const searchParams = new URLSearchParams(location.search);
+		const terminalViewParam = searchParams.get("terminalView");
+		setTerminalView(terminalViewParam === "true");
+		getCategory().then((response) => {
+			const catList = {};
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name;
+			});
+			setCategories(catList);
+		});
+	}, []);
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
@@ -232,15 +249,6 @@ const EventDetails = () => {
 		}
 	};
 
-	const location = useLocation();
-	const [terminalView, setTerminalView] = useState(false);
-	useEffect(() => {
-		document.title = "Event Details";
-		const searchParams = new URLSearchParams(location.search);
-		const terminalViewParam = searchParams.get("terminalView");
-		setTerminalView(terminalViewParam === "true");
-	}, []);
-
 	const [, setUserName] = useState("");
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
@@ -340,7 +348,7 @@ const EventDetails = () => {
 															fontFamily: "Poppins, sans-serif",
 														}}
 													>
-														{t(categoryById[input.categoryId])}
+														{t(categories[input.categoryId])}
 													</p>
 												</div>
 
