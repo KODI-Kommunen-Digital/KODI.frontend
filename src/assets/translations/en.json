@@ -74,7 +74,7 @@
     "gobacktoalllistings": "Go back to home screen",
     "email_being_verified": "Your Email is being verified!! Please wait!!",
     "email_verification_not_succesfull": "The Email Verification was not succesful! Please try again later",
-    "email_verified": "Your email has been Verified!!",
+    "email_verified": "Your email has been Verified! ",
     "emailId": "Email Id",
     "endDateBeforeStartDate": "End date cannot be before start date",
     "enter_description": "Write a description about yourself",
@@ -480,6 +480,9 @@
     "private": "Private",
     "public": "Public",
     "forumError": "Please select another city before selecting Forums",
+    "success": "Success",
+    "passwordUpdated": "Your password is updated. Redirecting to login in 5s",
+    "youAreOnTheWay": "You are on the way",
     "newsletter" : "News Letter",
     "rathaus": "City Hall"
 
