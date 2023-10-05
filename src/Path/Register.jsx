@@ -139,6 +139,16 @@ const Register = () => {
 		});
 	};
 
+	const [isOpen, setIsOpen] = useState(false);
+
+	const openModal = () => {
+		setIsOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsOpen(false);
+	};
+
 	return (
 		<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 			<div className="w-full max-w-md space-y-8">
@@ -327,14 +337,77 @@ const Register = () => {
 							<Alert type={alertType} message={alertMessage} />
 						</div>
 					)}
-					<div className="text-sm">
-						{t("accountPresent")}
-						<span
-							onClick={routeChangeToLogin}
-							className="font-medium cursor-pointer text-black hover:text-gray-500"
-						>
-							{t("loginHere")}
-						</span>
+					<div className="flex justify-between">
+						<div className="text-sm">
+							{t("accountPresent")}
+							<span
+								onClick={routeChangeToLogin}
+								className="font-medium cursor-pointer text-black hover:text-gray-500"
+							>
+								{t("loginHere")}
+							</span>
+						</div>
+
+						<div className="flex cursor-pointer">
+							<span
+								onClick={openModal}
+								className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
+							>
+								{t("help")}
+							</span>
+
+							{isOpen && (
+								<div className="fixed inset-0 flex items-center justify-center z-50">
+									<div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+									<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+										<div className="modal-content py-4 text-left px-6">
+											<div>
+												<h2 className="font-bold text-xl text-center mb-4">
+													Anleitung
+												</h2>
+												<h3 className="font-bold text-lg text-center mb-4">
+													Registrieren in der App
+												</h3>
+												<p className="mb-6">
+													<strong>Schritt 1:</strong> Nutzername und Passwort
+													festlegen{" "}
+												</p>
+												<p className="mb-6">
+													<strong>Schritt 2:</strong> Es wird Ihnen eine E-Mail
+													gesendet an die Mail, die Sie eingegeben haben
+												</p>
+												<p className="mb-6">
+													<strong>Schritt 3:</strong> Bitte verifizieren Sie die
+													Mail, indem Sie in Ihr Postfach gehen und den
+													Bestätigungslink drücken
+												</p>
+												<p className="mb-6">
+													<strong>Schritt 4:</strong> Ihr Account ist
+													verifiziert und Sie können sich mit Ihren Login-Daten
+													einloggen
+												</p>
+												<p className="mb-6">
+													Wir wünschen Ihnen viel Spaß beim Benutzen der App!
+												</p>
+												<p className="mb-6">
+													<strong>Danke!!</strong>
+												</p>
+											</div>
+
+											<div className="mt-4 text-center">
+												<button
+													onClick={closeModal}
+													className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
+												>
+													{t("cancel")}
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>

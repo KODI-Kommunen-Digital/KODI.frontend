@@ -125,9 +125,14 @@ const LoginPage = () => {
 				setAlertMessage(t("usernameNotPresent"));
 			} else if (err.response.data.errorCode === errorCodes.MISSING_PASSWORD) {
 				setAlertMessage(t("passwordNotPresent"));
-			} else if (err.response.data.errorCode === errorCodes.INVALID_USERNAME || err.response.data.errorCode === errorCodes.INVALID_PASSWORD) {
+			} else if (
+				err.response.data.errorCode === errorCodes.INVALID_USERNAME ||
+				err.response.data.errorCode === errorCodes.INVALID_PASSWORD
+			) {
 				setAlertMessage(t("checkUsernameOrPassword"));
-			} else if (err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED) {
+			} else if (
+				err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED
+			) {
 				setAlertMessage(t("emailNotVerified"));
 			} else {
 				setAlertMessage(t("somethingWrong"));
@@ -150,6 +155,16 @@ const LoginPage = () => {
 			setAlertType("danger");
 			setAlertMessage("Failed: " + err.response.data.message);
 		}
+	};
+
+	const [isOpen, setIsOpen] = useState(false);
+
+	const openModal = () => {
+		setIsOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsOpen(false);
 	};
 
 	return (
@@ -234,7 +249,7 @@ const LoginPage = () => {
 							<div className="text-sm">
 								<span
 									onClick={() => setForgotPassword(true)}
-									className="font-medium text-black cursor-pointer hover:text-sky-400"
+									className="font-medium text-black cursor-pointer hover:text-blue-400"
 								>
 									{t("forgotYourPassword")}
 								</span>
@@ -296,15 +311,79 @@ const LoginPage = () => {
 								<Alert type={alertType} message={timeOutAlertMessage} />
 							</div>
 						)}
-						<div className="text-sm">
-							{t("notMember")}
-							<span
-								onClick={routeChangeToRegister}
-								className="font-medium cursor-pointer text-black hover:text-sky-400"
-							>
-								{" "}
-								{t("clickToRegister")}
-							</span>
+						<div className="flex justify-between">
+							<div className="text-sm">
+								{t("notMember")}
+								<span
+									onClick={routeChangeToRegister}
+									className="font-medium cursor-pointer text-black hover:text-blue-400"
+								>
+									{" "}
+									{t("clickToRegister")}
+								</span>
+							</div>
+
+							<div className="flex cursor-pointer">
+								<span
+									onClick={openModal}
+									className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
+								>
+									{t("help")}
+								</span>
+
+								{isOpen && (
+									<div className="fixed inset-0 flex items-center justify-center z-50">
+										<div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+										<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+											<div className="modal-content py-4 text-left px-6">
+												<div>
+													<h2 className="font-bold text-xl text-center mb-4">
+														Anleitung
+													</h2>
+													<h3 className="font-bold text-lg text-center mb-4">
+														Registrieren in der App
+													</h3>
+													<p className="mb-6">
+														<strong>Schritt 1:</strong> Nutzername und Passwort
+														festlegen{" "}
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 2:</strong> Es wird Ihnen eine
+														E-Mail gesendet an die Mail, die Sie eingegeben
+														haben
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 3:</strong> Bitte verifizieren Sie
+														die Mail, indem Sie in Ihr Postfach gehen und den
+														Bestätigungslink drücken
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 4:</strong> Ihr Account ist
+														verifiziert und Sie können sich mit Ihren
+														Login-Daten einloggen
+													</p>
+													<p className="mb-6">
+														Wir wünschen Ihnen viel Spaß beim Benutzen der App!
+													</p>
+													<p className="mb-6">
+														<strong>Danke!!</strong>
+													</p>
+												</div>
+
+												<div className="mt-4 text-center">
+													<button
+														onClick={closeModal}
+														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
+													>
+														{t("cancel")}
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 					{forgotPassword && (
