@@ -473,7 +473,6 @@
     "appStore": "App Store",
     "getItOn": "JETZT BEI",
     "googlePlay": "Google Play",
-
     "loading": "Wird geladen...",
     "youAreAlmosetThere": "Einen Moment Geduld",
     "downloadPdf": "PDF Herunterladen",
@@ -487,5 +486,10 @@
     "passwordUpdated": "Dein Passwort wurde aktualisiert. Weiterleitung zum Login in…",
     "newsletter" : "Mitteilungsblatt",
     "rathaus": "Rathaus",
-    "addFileHere" : "Fügen Sie hier Ihre Datei hinzu"
+    "addFileHere": "Fügen Sie hier Ihre Datei hinzu",
+    "usernamePasswordNotPresent": "Benutzername und Passwort nicht vorhanden!",
+    "usernameNotPresent": "Benutzername nicht vorhanden",
+    "passwordNotPresent": "Passwort nicht vorhanden",
+    "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
+    "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal."
 }

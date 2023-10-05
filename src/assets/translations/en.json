@@ -471,11 +471,15 @@
     "appStore": "App Store",
     "getItOn": "GET IT ON",
     "googlePlay": "Google Play",
-
+    "usernamePasswordNotPresent": "Username and password not present!",
+    "usernameNotPresent": "username not present",
+    "passwordNotPresent": "password not present",
+    "somethingWrong": "Something went wrong, please try again later.",
+    "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login.",
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almoset there",
     "downloadPdf": "Download PDF",
-    "addFileHere" : "Add your File here",
+    "addFileHere": "Add your File here",
     "dragAndDropImageOrPDF": "Add or Drag and Drop your Image or PDF",
     "private": "Private",
     "public": "Public",
@@ -485,5 +489,4 @@
     "youAreOnTheWay": "You are on the way",
     "newsletter" : "News Letter",
     "rathaus": "City Hall"
-
 }
