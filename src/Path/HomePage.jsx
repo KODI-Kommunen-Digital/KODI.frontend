@@ -7,14 +7,12 @@ import { getListings, getListingsCount } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
+import ListingsCard from "../Components/ListingsCard";
 
 import CITYIMAGE from "../assets/City.png";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
-import APPLESTORE from "../assets/apple-store-logo.png";
-import GOOGLEPLAYSTORE from "../assets/google-play-store-logo.png";
 
 const HomePage = () => {
 	const { t } = useTranslation();
@@ -49,7 +47,7 @@ const HomePage = () => {
 			setListingsCount(sortedData);
 		});
 
-		document.title = process.env.REACT_APP_NAME;
+		document.title = process.env.REACT_APP_REGION_NAME + "   Home";
 	}, []);
 
 	useEffect(() => {
@@ -63,7 +61,7 @@ const HomePage = () => {
 		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
-		const params = { statusId: 1 };
+		const params = { pageSize: 12, statusId: 1, pageNo: 1 };
 		if (parseInt(cityId)) {
 			urlParams.set("cityId", cityId);
 			params.cityId = cityId;
@@ -165,7 +163,9 @@ const HomePage = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{cities.map((city) => (
 											<option
@@ -178,18 +178,74 @@ const HomePage = () => {
 										))}
 									</select>
 								</div>
+								<div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
+									<div
+										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+										onClick={() => {
+											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+												window.location.href =
+													process.env.REACT_APP_APPLESTORE_WALDI;
+											} else {
+												window.location.href =
+													process.env.REACT_APP_APPLESTORE_AUF;
+											}
+										}}
+									>
+										<div className="mr-2">
+											<svg viewBox="0 0 384 512" width="20">
+												<path
+													fill="currentColor"
+													d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
+												/>
+											</svg>
+										</div>
+										<div>
+											<div className="text-xs">{t("downloadOnThe")}</div>
+											<div className="-mt-1 font-sans text-sm font-semibold">
+												{t("appStore")}
+											</div>
+										</div>
+									</div>
 
-								<div className="flex flex-row mt-4 md:gap-8 gap-2">
-									<img
-										alt="ecommerce"
-										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
-										src={APPLESTORE}
-									/>
-									<img
-										alt="ecommerce"
-										className="object-cover object-center md:h-8 h-8 w-50 m-auto"
-										src={GOOGLEPLAYSTORE}
-									/>
+									<div
+										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+										onClick={() => {
+											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+												window.location.href =
+													process.env.REACT_APP_GOOGLEPLAYSTORE_WALDI;
+											} else {
+												window.location.href =
+													process.env.REACT_APP_GOOGLEPLAYSTORE_AUF;
+											}
+										}}
+									>
+										<div className="mr-2">
+											<svg viewBox="30 336.7 120.9 129.2" width="20">
+												<path
+													fill="#FFD400"
+													d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z"
+												/>
+												<path
+													fill="#FF3333"
+													d="M99.1,401.1l-64.2,64.7c1.5,0.2,3.2-0.2,5.2-1.3  c4.2-2.3,48.8-26.7,79.1-43.3L99.1,401.1L99.1,401.1z"
+												/>
+												<path
+													fill="#48FF48"
+													d="M99.1,401.1l20.1-20.2c0,0-74.6-40.7-79.1-43.1  c-1.7-1-3.6-1.3-5.3-1L99.1,401.1z"
+												/>
+												<path
+													fill="#3BCCFF"
+													d="M99.1,401.1l-64.3-64.3c-2.6,0.6-4.8,2.9-4.8,7.6  c0,7.5,0,107.5,0,113.8c0,4.3,1.7,7.4,4.9,7.7L99.1,401.1z"
+												/>
+											</svg>
+										</div>
+										<div>
+											<div className="text-xs">{t("getItOn")}</div>
+											<div className="-mt-1 font-sans text-sm font-semibold">
+												{t("googlePlay")}
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -468,68 +524,7 @@ const HomePage = () => {
 					<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 						{listings &&
 							listings.map((listing, index) => (
-								<div
-									key={index}
-									onClick={() => {
-										localStorage.setItem(
-											"selectedCategoryId",
-											listing.categoryId
-										);
-										navigateTo(
-											`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
-										);
-									}}
-									className="w-full h-full shadow-lg rounded-xl cursor-pointer"
-								>
-									<a className="block relative h-64 rounded overflow-hidden">
-										<img
-											alt="ecommerce"
-											className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-											src={
-												listing.logo
-													? process.env.REACT_APP_BUCKET_HOST + listing.logo
-													: LISTINGSIMAGE
-											}
-										/>
-									</a>
-									<div className="mt-5 px-2">
-										<h2
-											className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											{listing.title}
-										</h2>
-									</div>
-									<div className="my-4 bg-gray-200 h-[1px]"></div>
-									{listing.id && parseInt(listing.categoryId) === 3 ? (
-										<p
-											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-										>
-											{new Date(
-												listing.startDate.slice(0, 10)
-											).toLocaleDateString("de-DE") +
-												" To " +
-												new Date(
-													listing.endDate.slice(0, 10)
-												).toLocaleDateString("de-DE")}
-										</p>
-									) : (
-										<p
-											className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-											}}
-											dangerouslySetInnerHTML={{
-												__html: listing.description,
-											}}
-										/>
-									)}
-								</div>
+								<ListingsCard listing={listing} key={index} />
 							))}
 					</div>
 					<button

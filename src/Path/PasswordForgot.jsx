@@ -18,7 +18,7 @@ const PasswordForgot = () => {
 	const [alertType, setAlertType] = useState("");
 
 	useEffect(() => {
-		document.title = "Update Password";
+		document.title = process.env.REACT_APP_REGION_NAME + " Forgot Password";
 	}, []);
 
 	const navigate = useNavigate();

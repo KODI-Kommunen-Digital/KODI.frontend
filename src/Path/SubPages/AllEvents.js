@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
+import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -7,13 +8,13 @@ import {
 	sortLatestFirst,
 	sortOldestFirst,
 } from "../../Services/helper";
-import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
-import { categoryById } from "../../Constants/categories";
+// import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
+import { getCategory } from "../../Services/CategoryApi";
 
 const Events = () => {
 	window.scrollTo(0, 0);
@@ -28,6 +29,17 @@ const Events = () => {
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [categories, setCategories] = useState([]);
+
+	useEffect(() => {
+		getCategory().then((response) => {
+			const catList = {};
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name;
+			});
+			setCategories(catList);
+		});
+	}, []);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -68,9 +80,9 @@ const Events = () => {
 			urlParams.delete("cityId");
 		}
 		if (parseInt(categoryId)) {
-			setCategoryName(t(categoryById[categoryId]));
-			params.categoryId = categoryId;
-			urlParams.set("categoryId", categoryId);
+			setCategoryName(t(categories[categoryId]));
+			params.categoryId = parseInt(categoryId);
+			urlParams.set("categoryId", parseInt(categoryId));
 		} else {
 			setCategoryName(t("allCategories"));
 			urlParams.delete("categoryId");
@@ -83,7 +95,7 @@ const Events = () => {
 		}
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		if (window.location.pathname === "/AllEvents" && categoryId === "3") {
+		if (parseInt(categoryId) === 3) {
 			params.sortByStartDate = true;
 		}
 		const fetchData = async () => {
@@ -99,7 +111,26 @@ const Events = () => {
 		};
 		const fetchDataWithDelay = () => {
 			setTimeout(() => {
-				fetchData();
+				if (urlParams.has("categoryId")) {
+					const categoryId = urlParams.get("categoryId");
+
+					// Check if sortByStartDate is also present in the URL
+					if (urlParams.has("sortByStartDate")) {
+						const params = { categoryId, sortByStartDate: true };
+						fetchData(params);
+					} else {
+						// Only categoryId is present in the URL
+						const params = { categoryId };
+						fetchData(params);
+					}
+				} else if (urlParams.has("cityId")) {
+					// Only cityId is present in the URL
+					const cityId = urlParams.get("cityId");
+					const params = { cityId };
+					fetchData(params);
+				} else {
+					fetchData();
+				}
 			}, 1000);
 		};
 
@@ -153,7 +184,6 @@ const Events = () => {
 
 	return (
 		<section className="text-gray-600 body-font relative">
-			{/* <HomePageNavBar /> */}
 			{showNavBar && <HomePageNavBar />}
 			<div
 				className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
@@ -197,7 +227,9 @@ const Events = () => {
 												}}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities")}
+													{t("allCities", {
+														regionName: process.env.REACT_APP_REGION_NAME,
+													})}
 												</option>
 												{cities.map((city) => (
 													<option
@@ -225,10 +257,10 @@ const Events = () => {
 												<option className="font-sans" value={0} key={0}>
 													{t("allCategories")}
 												</option>
-												{Object.keys(categoryById).map((key) => {
+												{Object.keys(categories).map((key) => {
 													return (
 														<option className="font-sans" value={key} key={key}>
-															{t(categoryById[key])}
+															{t(categories[key])}
 														</option>
 													);
 												})}
@@ -271,87 +303,11 @@ const Events = () => {
 								<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 									{listings &&
 										listings.map((listing, index) => (
-											<div
+											<ListingsCard
+												listing={listing}
+												terminalView={terminalViewParam}
 												key={index}
-												onClick={() => {
-													let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
-													if (terminalViewParam === "true") {
-														url += "&terminalView=true";
-													}
-													navigateTo(url);
-												}}
-												className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-											>
-												<a className="block relative h-64 rounded overflow-hidden">
-													<img
-														alt="ecommerce"
-														className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-														src={
-															listing.logo
-																? process.env.REACT_APP_BUCKET_HOST +
-																  listing.logo
-																: LISTINGSIMAGE
-														}
-													/>
-												</a>
-												<div className="mt-5 px-2">
-													<h2
-														className="text-blue-800 title-font text-lg font-bold text-center font-sans truncate"
-														style={{ fontFamily: "Poppins, sans-serif" }}
-													>
-														{listing.title}
-													</h2>
-												</div>
-												<div className="my-4 bg-gray-200 h-[1px]"></div>
-												{listing.id && listing.categoryId === 3 ? (
-													<div
-														className="flex justify-between items-center"
-														style={{ fontFamily: "Poppins, sans-serif" }}
-													>
-														<p
-															className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-															style={{ fontFamily: "Poppins, sans-serif" }}
-														>
-															{new Date(
-																listing.startDate.slice(0, 10)
-															).toLocaleDateString("de-DE") +
-																" To " +
-																new Date(
-																	listing.endDate.slice(0, 10)
-																).toLocaleDateString("de-DE")}
-														</p>
-
-														<p
-															className="text-blue-400 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-															style={{ fontFamily: "Poppins, sans-serif" }}
-														>
-															{new Date(listing.startDate).toLocaleTimeString(
-																"de-DE",
-																{
-																	hour: "2-digit",
-																	minute: "2-digit",
-																}
-															) +
-																" To " +
-																new Date(listing.endDate).toLocaleTimeString(
-																	"de-DE",
-																	{
-																		hour: "2-digit",
-																		minute: "2-digit",
-																	}
-																)}
-														</p>
-													</div>
-												) : (
-													<p
-														className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-														style={{ fontFamily: "Poppins, sans-serif" }}
-														dangerouslySetInnerHTML={{
-															__html: listing.description,
-														}}
-													/>
-												)}
-											</div>
+											/>
 										))}
 								</div>
 							</div>
@@ -392,7 +348,7 @@ const Events = () => {
 						)}
 					</div>
 				)}
-				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+				<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
 					{pageNo !== 1 ? (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"

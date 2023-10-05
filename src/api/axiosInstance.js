@@ -6,25 +6,21 @@ const createInstance = (baseURL) => {
 		baseURL,
 	});
 
-	// Function to handle user logout by clearing tokens and redirecting to login page
+	// const refreshInstance = axios.create({
+	// 	baseURL: process.env.REACT_APP_API_BASE_URL,
+	// });
+
 	const handleLogout = () => {
 		try {
-			// Remove access and refresh tokens from local storage
 			window.localStorage.removeItem("accessToken");
 			window.localStorage.removeItem("refreshToken");
-			// Remove user ID and selected item from local storage
 			window.localStorage.removeItem("userId");
 			window.localStorage.removeItem("selectedItem");
-			// Remove access and refresh tokens from session storage
 			window.sessionStorage.removeItem("accessToken");
 			window.sessionStorage.removeItem("refreshToken");
-			// Remove user ID and selected item from session storage
 			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
-			// Redirect to the login page with a query parameter to indicate session expiration
-			window.location.href = "/login?sessionExpired=true";
 		} catch (error) {
-			// If an error occurs during logout, return the error
 			return error;
 		}
 	};
@@ -69,7 +65,9 @@ const createInstance = (baseURL) => {
 							window.sessionStorage.getItem("userId");
 						if (refreshToken && userId) {
 							// Create a new axios instance for the token refresh request
-							const refreshInstance = axios.create({ baseURL: process.env.REACT_APP_API_BASE_URL });
+							const refreshInstance = axios.create({
+								baseURL: process.env.REACT_APP_API_BASE_URL,
+							});
 							// Send a request to the server to refresh the access token using the refresh token
 							const response = await refreshInstance.post(
 								`users/${userId}/refresh`,

@@ -10,7 +10,7 @@ import {
 	getListingsById,
 	postListingsData,
 	updateListingsData,
-	uploadPDF,
+	uploadListingPDF,
 	uploadListingImage,
 	deleteListingImage,
 } from "../Services/listingsApi";
@@ -19,8 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { categoryByName, categoryById } from "../Constants/categories";
-import { subcategoryById } from "../Constants/subcategories";
+import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -37,45 +36,14 @@ function UploadListings() {
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
+	const [pdf, setPdf] = useState(null);
 	const [dragging, setDragging] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-	const [categories, setCategories] = useState(categoryById);
-	const [subCategories, setSubCategories] = useState(subcategoryById);
+	const [categories, setCategories] = useState([]);
+	const [subCategories, setSubCategories] = useState([]);
 	const navigate = useNavigate();
-
-	const [initialLoad, setInitialLoad] = useState(true);
-	const [pdf, setPdf] = useState(null);
-
-	useEffect(() => {
-		if (initialLoad) {
-			window.scrollTo(0, 0);
-			setInitialLoad(false);
-		} else {
-			const updateInputState = async () => {
-				if (pdf !== null) {
-					const form = new FormData();
-					form.append("pdf", pdf);
-					try {
-						const filePath = await uploadPDF(form);
-						if (filePath?.data?.status === "success") {
-							setInput((prevInput) => ({
-								...prevInput,
-								pdf: filePath?.data?.path || null,
-							}));
-						} else {
-							console.error("PDF upload failed:", filePath?.data?.message);
-						}
-					} catch (error) {
-						console.error("PDF upload error:", error);
-					}
-				}
-			};
-
-			updateInputState();
-		}
-	}, [initialLoad, pdf]);
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -94,39 +62,40 @@ function UploadListings() {
 		e.stopPropagation();
 	}
 
-	function handleDrop1(e) {
+	function handleDrop(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		const file = e.dataTransfer.files[0];
-		if (file && file.type.startsWith("image/")) {
-			setImage1(file);
+		if (file) {
+			if (file.type.startsWith("image/")) {
+				setImage1(file);
+			} else if (file.type === "application/pdf") {
+				setPdf(file);
+			}
 		}
-		setDragging(false);
-	}
-
-	function handleDropPDF(event) {
-		event.preventDefault();
-		const file = event.dataTransfer.files[0];
-		setPdf(file);
 		setDragging(false);
 	}
 
 	function handleInputChange(e) {
 		e.preventDefault();
 		const file = e.target.files[0];
-		if (file && file.type.startsWith("image/")) {
-			setImage1(file);
+		if (file) {
+			if (file.type.startsWith("image/")) {
+				setImage1(file);
+			} else if (file.type === "application/pdf") {
+				setPdf(file);
+			}
 		}
 	}
 
 	function handleRemoveImage1() {
 		setImage1(null);
-		setInput((prevInput) => ({
-			...prevInput,
-			logo: null,
-			removeImage: true,
-		}));
 	}
+
+	function handleRemovePDF() {
+		setPdf(null);
+	}
+
 	//Drag and Drop ends
 
 	//Sending data to backend starts
@@ -149,6 +118,7 @@ function UploadListings() {
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
+		removePdf: false,
 	});
 
 	const [error, setError] = useState({
@@ -176,21 +146,46 @@ function UploadListings() {
 			setUpdating(true);
 			event.preventDefault();
 			try {
-				var response = newListing
-					? await postListingsData(cityId, input)
-					: await updateListingsData(cityId, input, listingId);
+				let response;
 				if (newListing) {
+					// Create or update the listing first
+					response = await (newListing
+						? postListingsData(cityId, input)
+						: updateListingsData(cityId, input, listingId));
+				}
+
+				if (response) {
 					if (image1) {
-						const form = new FormData();
-						form.append("image", image1);
-						await uploadListingImage(form, cityId, response.data.id);
+						// Upload image if it exists
+						const imageForm = new FormData();
+						imageForm.append("image", image1);
+						await uploadListingImage(imageForm, cityId, response.data.id);
 					}
-				} else if (image1) {
-					const form = new FormData();
-					form.append("image", image1);
-					await uploadListingImage(form, cityId, input.id);
-				} else if (input.removeImage) {
-					await deleteListingImage(cityId, input.id);
+
+					if (pdf) {
+						// Upload PDF if it exists
+						const pdfForm = new FormData();
+						pdfForm.append("pdf", pdf);
+						await uploadListingPDF(pdfForm, cityId, response.data.id);
+					}
+				} else {
+					if (image1) {
+						// Upload image if it exists
+						const imageForm = new FormData();
+						imageForm.append("image", image1);
+						await uploadListingImage(imageForm, cityId, input.id);
+					}
+
+					if (pdf) {
+						// Upload PDF if it exists
+						const pdfForm = new FormData();
+						pdfForm.append("pdf", pdf);
+						await uploadListingPDF(pdfForm, cityId, input.id);
+					} else if (input.removeImage) {
+						await deleteListingImage(cityId, input.id);
+					} else if (input.removePdf) {
+						await deleteListingImage(cityId, input.id);
+					}
 				}
 				var userProfile = await getProfile();
 				var isAdmin = userProfile.data.data.roleId === 1;
@@ -227,6 +222,13 @@ function UploadListings() {
 			navigateTo("/login");
 		}
 		var cityId = searchParams.get("cityId");
+		getCategory().then((response) => {
+			const catList = {};
+			response?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name;
+			});
+			setCategories(catList);
+		});
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
@@ -274,39 +276,30 @@ function UploadListings() {
 	const [description, setDescription] = useState("");
 
 	const onDescriptionChange = (newContent) => {
-		const hasNumberedList = newContent.includes("<ol>");
-		const hasBulletList = newContent.includes("<ul>");
-		let descriptions = [];
-		let listType = "";
-		if (hasNumberedList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map(
-				(description, index) => `${index + 1}. ${description}`
-			);
-			listType = "ol";
-		} else if (hasBulletList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map((description) => `- ${description}`);
-			listType = "ul";
-		} else {
-			// No list tags found, treat the input as plain text
-			setInput((prev) => ({
-				...prev,
-				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
-			}));
-			setDescription(newContent);
-			return;
+		let descriptionHTML = newContent;
+
+		// If there are <ol> or <ul> tags, replace them with plain text representation
+		const hasNumberedList = /<ol>(.*?)<\/ol>/gis.test(newContent);
+		const hasBulletList = /<ul>(.*?)<\/ul>/gis.test(newContent);
+
+		if (hasNumberedList || hasBulletList) {
+			const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
+			descriptionHTML = newContent.replace(regex, (match) => {
+				// Replace <li> tags with the appropriate marker (either numbers or bullets)
+				const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
+				const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
+				const plainTextListItems = listItems.map((item, index) => {
+					const listItemContent = item.replace(/<\/?li>/gi, "");
+					return isNumberedList
+						? `${index + 1}. ${listItemContent}`
+						: `- ${listItemContent}`;
+				});
+				return plainTextListItems.join("\n");
+			});
 		}
-		const listHTML = `<${listType}>${descriptions
-			.map((description) => `<li>${description}</li>`)
-			.join("")}</${listType}>`;
 		setInput((prev) => ({
 			...prev,
-			description: listHTML,
+			description: descriptionHTML,
 		}));
 		setDescription(newContent);
 	};
@@ -335,7 +328,7 @@ function UploadListings() {
 				}
 
 			case "subCategoryId":
-				if (!value && parseInt(input.categoryId) == categoryByName.news) {
+				if (!value && parseInt(input.categoryId) == 1) {
 					return t("pleaseSelectSubcategory");
 				} else {
 					return "";
@@ -349,14 +342,14 @@ function UploadListings() {
 				}
 
 			case "startDate":
-				if (!value && parseInt(input.categoryId) == categoryByName.events) {
+				if (!value && parseInt(input.categoryId) == 3) {
 					return t("pleaseEnterStartDate");
 				} else {
 					return "";
 				}
 
 			case "endDate":
-				if (parseInt(input.categoryId) == categoryByName.events) {
+				if (parseInt(input.categoryId) == 3) {
 					if (!value) {
 						return t("pleaseEnterEndDate");
 					} else {
@@ -382,9 +375,7 @@ function UploadListings() {
 			return { ...prevState, [name]: errorMessage };
 		});
 	};
-	//Sending data to backend ends
 
-	//Map integration Sending data to backend starts
 	input["address"] = selectedResult.display_name;
 	input["latitude"] = selectedResult.lat;
 	input["longitude"] = selectedResult.lon;
@@ -404,7 +395,6 @@ function UploadListings() {
 		setResults([]);
 
 		if (map) {
-			// Check if the map object is available
 			if (marker) {
 				marker.setLatLng([result.lat, result.lon]);
 			} else {
@@ -456,7 +446,8 @@ function UploadListings() {
 		list.splice(index, 1);
 		setVal(list);
 	};
-	//Social Media ends
+
+	const [date, setDate] = useState();
 	const [cityId, setCityId] = useState(0);
 	const [villages, setVillages] = useState([]);
 	const [cities, setCities] = useState([]);
@@ -475,9 +466,17 @@ function UploadListings() {
 	const [categoryId, setCategoryId] = useState(0);
 	const [subcategoryId, setSubcategoryId] = useState(0);
 
-	const handleCategoryChange = (event) => {
+	const handleCategoryChange = async (event) => {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
+		if (categoryId == 1) {
+			const subCats = await getNewsSubCategory();
+			const subcatList = {};
+			subCats?.data.data.forEach((subCat) => {
+				subcatList[subCat.id] = subCat.name;
+			});
+			setSubCategories(subcatList);
+		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
 		validateInput(event);
@@ -522,9 +521,7 @@ function UploadListings() {
 						<label
 							for="title"
 							className="block text-sm font-medium text-gray-600"
-						>
-							{t("title")} *
-						</label>
+						></label>
 						<input
 							type="text"
 							id="title"
@@ -644,7 +641,7 @@ function UploadListings() {
 						</div>
 					</div>
 
-					{categoryId == categoryByName.news && (
+					{categoryId == 1 && (
 						<div className="relative mb-4">
 							<label
 								for="subcategoryId"
@@ -772,7 +769,7 @@ function UploadListings() {
 						</div>
 					</div>
 
-					{categoryId == categoryByName.events && (
+					{categoryId == 3 && (
 						<div className="relative mb-4">
 							<div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div className="relative">
@@ -850,8 +847,7 @@ function UploadListings() {
 						</div>
 					)}
 
-					{(categoryId == categoryByName.offers ||
-						categoryId == categoryByName.regionalProducts) && (
+					{(categoryId == 12 || categoryId == 5) && (
 						<div className="relative mb-4 grid grid-cols-2 gap-4">
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
@@ -945,7 +941,7 @@ function UploadListings() {
 							id="description"
 							name="description"
 							ref={editor}
-							value={description}
+							value={input.description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
 							onBlur={(range, source, editor) => {
 								validateInput({
@@ -970,138 +966,85 @@ function UploadListings() {
 				</div>
 			</div>
 
-			{categoryId != categoryByName.roadTraffic && (
-				<div className="container w-auto px-5 py-2 bg-slate-600">
-					<div className="bg-white mt-4 p-6 space-y-10">
-						<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
-							{t("uploadLogo")}
-							<div className="my-4 bg-gray-600 h-[1px]"></div>
-						</h2>
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6 space-y-10">
+					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+						{t("uploadLogo")}
+						<div className="my-4 bg-gray-600 h-[1px]"></div>
+					</h2>
 
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								{t("addLogoHere")}
-							</label>
-							<div
-								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
-								onDrop={handleDrop1}
-								onDragOver={handleDragOver}
-								onDragEnter={handleDragEnter}
-								onDragLeave={handleDragLeave}
-							>
-								{image1 || input.logo ? (
-									<div className="flex flex-col items-center">
-										<img
-											className="object-contain h-64 w-full mb-4"
-											src={
-												image1
-													? URL.createObjectURL(image1)
-													: process.env.REACT_APP_BUCKET_HOST + input.logo
-											}
-											alt="uploaded"
-										/>
-										<button
-											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-											onClick={handleRemoveImage1}
-										>
-											{t("remove")}
-										</button>
-									</div>
-								) : (
-									<div className="text-center">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="mx-auto h-12 w-12"
-											viewBox="0 0 20 20"
-											fill="currentColor"
-										>
-											<path
-												fillRule="evenodd"
-												d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-												clipRule="evenodd"
-											/>
-										</svg>
-										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropImage")}
-										</p>
-										<div className="relative mb-4 mt-8">
-											<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
-												<span className="button-label">{t("upload")}</span>
-												<input
-													id="image1-upload"
-													type="file"
-													className="sr-only"
-													onChange={handleInputChange}
-												/>
-											</label>
-										</div>
-									</div>
-								)}
-							</div>
-						</div>
-
-						{/* {(categoryId == categoryByName.officialnotification ||
-							categoryId == categoryByName.regionalProducts ||
-							categoryId == categoryByName.news ||
-							categoryId == categoryByName.offerSearch) && (
-							<div>
-								<label className="block text-sm font-medium text-gray-700">
-									{t("addPDFHere")}
-								</label>
-								<div
-									className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
-									onDrop={handleDropPDF}
-									onDragOver={handleDragOver}
-									onDragEnter={handleDragEnter}
-									onDragLeave={handleDragLeave}
-								>
-									{pdf || input.pdf ? (
-										<div className="flex flex-col items-center">
-											<p>{pdf ? pdf.name : input.pdf}</p>
-											<button
-												className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-												onClick={handleRemovePDF}
-											>
-												{t("remove")}
-											</button>
-										</div>
-									) : (
-										<div className="text-center">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="mx-auto h-12 w-12"
-												viewBox="0 0 20 20"
-												fill="currentColor"
-											>
-												<path
-													fillRule="evenodd"
-													d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-													clipRule="evenodd"
-												/>
-											</svg>
-											<p className="mt-1 text-sm text-gray-600">
-												{t("dragAndDropPDF")}
-											</p>
-											<div className="relative mb-4 mt-8">
-												<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
-													<span className="button-label">{t("upload")}</span>
-													<input
-														id="pdf-upload"
-														type="file"
-														accept="application/pdf"
-														className="sr-only"
-														onChange={handlePDFInputChange}
-													/>
-												</label>
-											</div>
-										</div>
-									)}
+					<div>
+						<label className="block text-sm font-medium text-gray-700">
+							{t("addFileHere")}
+						</label>
+						<div
+							className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+							onDrop={handleDrop}
+							onDragOver={handleDragOver}
+							onDragEnter={handleDragEnter}
+							onDragLeave={handleDragLeave}
+						>
+							{image1 ? (
+								<div className="flex flex-col items-center">
+									<img
+										className="object-contain h-64 w-full mb-4"
+										src={URL.createObjectURL(image1)}
+										alt="uploaded"
+									/>
+									<button
+										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+										onClick={handleRemoveImage1}
+									>
+										{t("remove")}
+									</button>
 								</div>
-							</div>
-						)} */}
+							) : pdf ? (
+								<div className="flex flex-col items-center">
+									<p>{pdf.name}</p>
+									<button
+										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+										onClick={handleRemovePDF}
+									>
+										{t("remove")}
+									</button>
+								</div>
+							) : (
+								<div className="text-center">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="mx-auto h-12 w-12"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
+											clipRule="evenodd"
+										/>
+									</svg>
+									<p className="mt-1 text-sm text-gray-600">
+										{t("dragAndDropImageOrPDF")}
+									</p>
+									<div className="relative mb-4 mt-8">
+										<label
+											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
+										>
+											<span className="button-label">{t("upload")}</span>
+											<input
+												id="file-upload"
+												type="file"
+												accept="image/*,.pdf"
+												className="sr-only"
+												onChange={handleInputChange}
+											/>
+										</label>
+									</div>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
-			)}
+			</div>
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6">

@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
 import { getUserListings, fetchUsers } from "../../Services/usersApi";
-import { getVillages } from "../../Services/villages";
 import ContactInfo from "../../Components/ContactInfo";
+import ListingsCard from "../../Components/ListingsCard";
 import {
 	sortByTitleAZ,
 	sortByTitleZA,
@@ -18,14 +17,8 @@ import {
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
 	useEffect(() => {
-		document.title = "Profile | Smart Regions";
+		document.title = process.env.REACT_APP_REGION_NAME + " Profile";
 	}, []);
-
-	const [, setListingId] = useState(0);
-	const [, setNewListing] = useState(true);
-	const [cityId, setCityId] = useState(0);
-	const [, setVillages] = useState([]);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { t } = useTranslation();
 
 	const [user, setUser] = useState();
@@ -34,27 +27,6 @@ const ViewProfile = () => {
 	const [listings, setListings] = useState([]);
 
 	const [selectedSortOption] = useState("");
-
-	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const cityId = searchParams.get("cityId");
-		setCityId(cityId);
-		const listingId = searchParams.get("listingId");
-		setListingId(listingId);
-		if (listingId && cityId) {
-			const accessToken =
-				window.localStorage.getItem("accessToken") ||
-				window.sessionStorage.getItem("accessToken");
-			const refreshToken =
-				window.localStorage.getItem("refreshToken") ||
-				window.sessionStorage.getItem("refreshToken");
-			if (accessToken || refreshToken) {
-				setIsLoggedIn(true);
-			}
-			setNewListing(false);
-			getVillages(cityId).then((response) => setVillages(response.data.data));
-		}
-	}, [t, cityId]);
 
 	useEffect(() => {
 		switch (selectedSortOption) {
@@ -91,10 +63,9 @@ const ViewProfile = () => {
 		const username = pathSegments[pathSegments.length - 1];
 
 		if (username) {
-			const formattedUsername = username.replace(/%20/g, "");
+			const formattedUsername = username.replace(/%20/g, " ");
 			fetchUsers({ username: formattedUsername }).then((response) => {
 				const userData = response.data.data ? response.data.data[0] : null;
-				console.log(userData);
 				if (userData) {
 					setUser(userData);
 					const parsedSocialMedia = userData.socialMedia
@@ -175,9 +146,6 @@ const ViewProfile = () => {
 											>
 												{user?.firstname + " " + user?.lastname}
 											</h2>
-											{/* <p className="leading-relaxed text-base font-semibold mb-2 dark:text-gray-900">
-												Member for 10 months
-											</p> */}
 											<p
 												className="leading-relaxed text-base dark:text-gray-900"
 												style={{ fontFamily: "Poppins, sans-serif" }}
@@ -268,61 +236,8 @@ const ViewProfile = () => {
 							{listings &&
 								listings
 									.filter((listing) => listing.statusId === 1)
-									.map((listing) => (
-										<div
-											key={listing.id}
-											onClick={() => {
-												let url = `/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`;
-												if (terminalViewParam === "true") {
-													url += "&terminalView=true";
-												}
-												navigateTo(url);
-											}}
-											className="w-full h-full shadow-lg rounded-xl cursor-pointer"
-										>
-											<a className="block relative h-64 rounded overflow-hidden">
-												<img
-													alt="ecommerce"
-													className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-													src={
-														listing.logo
-															? process.env.REACT_APP_BUCKET_HOST + listing.logo
-															: LISTINGSIMAGE
-													}
-												/>
-											</a>
-											<div className="mt-5 px-2">
-												<h2
-													className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{listing.title}
-												</h2>
-											</div>
-											<div className="my-4 bg-gray-200 h-[1px]"></div>
-											{listing.id && listing.categoryId === 3 ? (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-												>
-													{new Date(
-														listing.startDate.slice(0, 10)
-													).toLocaleDateString("de-DE") +
-														" To " +
-														new Date(
-															listing.endDate.slice(0, 10)
-														).toLocaleDateString("de-DE")}
-												</p>
-											) : (
-												<p
-													className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-													style={{ fontFamily: "Poppins, sans-serif" }}
-													dangerouslySetInnerHTML={{
-														__html: listing.description,
-													}}
-												/>
-											)}
-										</div>
+									.map((listing, key) => (
+										<ListingsCard listing={listing} key={key} />
 									))}
 						</div>
 					</div>
@@ -335,26 +250,6 @@ const ViewProfile = () => {
 							>
 								{t("currently_no_listings")}
 							</h1>
-						</div>
-						<div
-							className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-							style={{ fontFamily: "Poppins, sans-serif" }}
-						>
-							<span className="font-sans text-black">
-								{t("to_upload_new_listing")}
-							</span>
-							<a
-								className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-								onClick={() => {
-									localStorage.setItem("selectedItem", "Choose one category");
-									isLoggedIn
-										? navigateTo("/UploadListings")
-										: navigateTo("/login");
-								}}
-								style={{ fontFamily: "Poppins, sans-serif" }}
-							>
-								{t("click_here")}
-							</a>
 						</div>
 					</div>
 				)}

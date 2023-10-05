@@ -15,7 +15,7 @@ const LoadingPage = () => {
 					</div>
 				</div>
 				<p className="text-lg py-20 md:text-xl lg:text-4xl font-bold text-blue-400">
-					{t("youAreOnTheWay")}
+					{t("youAreAlmosetThere")}
 				</p>
 			</div>
 		</div>

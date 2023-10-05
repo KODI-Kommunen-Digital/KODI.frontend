@@ -13,11 +13,25 @@ const CitizenService = () => {
 			title: "forums",
 			link: "AllForums",
 			image: "admin/Forums.jpg",
+			newWindow: false,
 		},
 		{
 			title: "digitalManagement",
 			link: "digitalManagement",
 			image: "admin/DigitalManagement.jpg",
+			newWindow: false,
+		},
+		{
+			title: "FreetimeAndTourisms",
+			link: `https://ilztal.de/`,
+			image: "admin/Forums.jpg",
+			newWindow: true,
+		},
+		{
+			title: "VirtualTours",
+			link: `https://ilzerland.bayern/interaktive-karte/`,
+			image: "admin/Forums.jpg",
+			newWindow: true,
 		},
 	]);
 	const [cities, setCities] = useState({});
@@ -33,7 +47,7 @@ const CitizenService = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Citizen Services";
+		document.title = process.env.REACT_APP_REGION_NAME + " Citizen Services";
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
@@ -56,6 +70,25 @@ const CitizenService = () => {
 			setShowForum(cities ? cities[cityId].hasForum : false);
 		}
 	}, [cityId]);
+	// const navigateTo = (link) => {
+	// 	window.location.href = link;
+	//   };
+
+	// const handleLinkClick = (data) => {
+	// 	if (data.newWindow) {
+	// 		window.open(data.link, "_blank");
+	// 	} else {
+	// 		navigateTo(data.link + `?cityId=${cityId}`);
+	// 	}
+	// };
+
+	// useEffect(() => {
+	//     if (cityId) {
+	//         getCitizenServices({ cityId }).then((response) => {
+	//             setcitizenServices(response.data.data);
+	//         });
+	//     }
+	// }, [cityId]);
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -95,7 +128,9 @@ const CitizenService = () => {
 										}}
 									>
 										<option className="font-sans" value={0} key={0}>
-											{t("allCities")}
+											{t("allCities", {
+												regionName: process.env.REACT_APP_REGION_NAME,
+											})}
 										</option>
 										{citiesArray.map((city) => (
 											<option

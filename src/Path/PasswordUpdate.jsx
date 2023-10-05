@@ -8,7 +8,7 @@ import Alert from "../Components/Alert";
 const PasswordUpdate = () => {
 	const { t } = useTranslation();
 	useEffect(() => {
-		document.title = "Update Password";
+		document.title = process.env.REACT_APP_REGION_NAME + " Update Password";
 	}, []);
 
 	const [alertInfo, setAlertInfo] = useState(false);
