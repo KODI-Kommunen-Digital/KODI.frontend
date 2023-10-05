@@ -43,7 +43,7 @@ import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 
 const App = () => {
-	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM;
+	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
 	useEffect(() => {
 		const link =
 			document.querySelector("link[rel*='icon']") ||
@@ -100,7 +100,7 @@ const App = () => {
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
 					<Route path="ForumsError" element={<ForumsError />} />
-					{isForumEnabled === "True" && (
+					{isForumEnabled && (
 						<React.Fragment>
 							<Route path="/Forum/ViewPost" element={<ViewPost />} />
 							<Route path="/Forum" element={<Forum />} />
