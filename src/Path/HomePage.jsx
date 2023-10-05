@@ -14,7 +14,6 @@ import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
 
-
 const HomePage = () => {
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState();
@@ -149,7 +148,7 @@ const HomePage = () => {
 										autoComplete="city-name"
 										onChange={onCityChange}
 										value={cityId || 0}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										className="flex items-center whitespace-nowrap rounded-xl w-full bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-gray-900 transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -175,11 +174,9 @@ const HomePage = () => {
 										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-												window.location.href =
-													process.env.REACT_APP_APPLESTORE_WALDI;
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											} else {
-												window.location.href =
-													process.env.REACT_APP_APPLESTORE_AUF;
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											}
 										}}
 									>
@@ -204,10 +201,10 @@ const HomePage = () => {
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
 												window.location.href =
-													process.env.REACT_APP_GOOGLEPLAYSTORE_WALDI;
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											} else {
 												window.location.href =
-													process.env.REACT_APP_GOOGLEPLAYSTORE_AUF;
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											}
 										}}
 									>
@@ -434,7 +431,9 @@ const HomePage = () => {
 								onClick={() => {
 									goToAllListingsPage(listing.categoryId);
 								}}
-								className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
+								className={`p-4 justify-center bg-white h-40 ${
+									listingsCount.length <= 3 ? "w-60" : "w-48"
+								} shadow-xl rounded-xl mt-10 cursor-pointer`}
 							>
 								<div>{categoryIcon}</div>
 								<h2

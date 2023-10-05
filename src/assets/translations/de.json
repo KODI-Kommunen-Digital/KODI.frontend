@@ -491,5 +491,7 @@
     "usernameNotPresent": "Benutzername nicht vorhanden",
     "passwordNotPresent": "Passwort nicht vorhanden",
     "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
-    "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal."
+    "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal.",
+    "Help": "? Helfen",
+    "To": " - Zu - "
 }

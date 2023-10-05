@@ -8,7 +8,6 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import UserProfile from "../../Components/UserProfile";
-// import { categoryById } from "../../Constants/categories";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
@@ -108,6 +107,8 @@ const EventDetails = () => {
 				.then((listingsResponse) => {
 					if (listingsResponse.data.data.sourceId !== source.User) {
 						window.location.replace(listingsResponse.data.data.website);
+					} else if (listingsResponse.data.data.statusId !== 1) {
+						navigateTo("/Error");
 					} else {
 						setInput(listingsResponse.data.data);
 						const cityUserId = listingsResponse.data.data.userId;
@@ -359,13 +360,35 @@ const EventDetails = () => {
 															fontFamily: "Poppins, sans-serif",
 														}}
 													>
-														{new Date(
-															input.startDate.slice(0, 10)
-														).toLocaleDateString("de-DE") +
-															" - to - " +
-															new Date(
+														<span>
+															{new Date(
+																input.startDate.slice(0, 10)
+															).toLocaleDateString("de-DE")}{" "}
+															(
+															{new Date(input.startDate).toLocaleTimeString(
+																"de-DE",
+																{
+																	hour: "2-digit",
+																	minute: "2-digit",
+																}
+															)}
+															)
+														</span>
+														<span className="text-blue-400"> {t("To")} </span>
+														<span>
+															{new Date(
 																input.endDate.slice(0, 10)
-															).toLocaleDateString("de-DE")}
+															).toLocaleDateString("de-DE")}{" "}
+															(
+															{new Date(input.endDate).toLocaleTimeString(
+																"de-DE",
+																{
+																	hour: "2-digit",
+																	minute: "2-digit",
+																}
+															)}
+															)
+														</span>
 													</p>
 												) : (
 													<p

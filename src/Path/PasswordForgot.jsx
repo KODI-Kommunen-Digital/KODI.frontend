@@ -92,8 +92,10 @@ const PasswordForgot = () => {
 			});
 			setUpdatingPassword(false);
 			setAlertInfo(true);
-			setAlertType("success");
-			setAlertMessage("Your password is updated. Redirecting to login in 5s");
+			const successMessage = t("success");
+			setAlertType(successMessage);
+			const translatedMessage = t("passwordUpdated");
+			setAlertMessage(translatedMessage);
 			setTimeout(() => {
 				routeChangeToLogin();
 			}, 5000);
