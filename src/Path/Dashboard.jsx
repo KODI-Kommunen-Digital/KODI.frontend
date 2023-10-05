@@ -22,7 +22,7 @@ const Dashboard = () => {
 	const [viewAllListings, setViewAllListings] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
-	const [categories, setCategories] = useState([])
+	const [categories, setCategories] = useState([]);
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -42,12 +42,12 @@ const Dashboard = () => {
 			window.location.href = "/login";
 		}
 		getCategory().then((response) => {
-			const catList = {}
+			const catList = {};
 			response?.data.data.forEach((cat) => {
-				catList[cat.id] = cat.name
-			})
+				catList[cat.id] = cat.name;
+			});
 			setCategories(catList);
-		})
+		});
 		getProfile().then((response) => {
 			setUserRole(response.data.data.roleId);
 		});
