@@ -11,3 +11,7 @@ export async function getCities(params) {
 export async function getCitizenServices(params) {
 	return instance.get("/citizenServices", { params });
 }
+
+export async function getDigitalManagement(params) {
+	return instance.get("/citizenServices/digitalManagement", { params });
+}
