@@ -533,5 +533,7 @@
     "passwordUpdated": "Your password is updated. Redirecting to login in 5s",
     "youAreOnTheWay": "You are on the way",
     "newsletter" : "News Letter",
-    "rathaus": "City Hall"
+    "rathaus": "City Hall",
+    "help": "? Help",
+    "To": " - to - "
 }
