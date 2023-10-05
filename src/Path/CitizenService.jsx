@@ -3,38 +3,13 @@ import HomePageNavBar from "../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../Components/Footer";
-import { getCities } from "../Services/cities";
+import { getCities, getCitizenServices } from "../Services/cities";
 
 const CitizenService = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [citizenServiceData] = useState([
-		{
-			title: "forums",
-			link: "AllForums",
-			image: "admin/Forums.jpg",
-			newWindow: false,
-		},
-		{
-			title: "digitalManagement",
-			link: "digitalManagement",
-			image: "admin/DigitalManagement.jpg",
-			newWindow: false,
-		},
-		{
-			title: "FreetimeAndTourisms",
-			link: `https://ilztal.de/`,
-			image: "admin/Forums.jpg",
-			newWindow: true,
-		},
-		{
-			title: "VirtualTours",
-			link: `https://ilzerland.bayern/interaktive-karte/`,
-			image: "admin/Forums.jpg",
-			newWindow: true,
-		},
-	]);
 	const [cities, setCities] = useState({});
+	const [citizenService, setCitizenServices] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [cityId, setCityId] = useState(0);
 	const [showForum, setShowForum] = useState(false);
@@ -61,7 +36,20 @@ const CitizenService = () => {
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 		});
+
+		getCitizenServices().then((response) => {
+			setCitizenServices(response.data.data);
+			console.log(response.data.data);
+		});
 	}, []);
+
+	const handleLinkClick = (data) => {
+		if (data.isExternalLink) {
+			window.open(data.link, "_blank");
+		} else {
+			navigateTo(data.link + `?cityId=${cityId}`);
+		}
+	};
 
 	useEffect(() => {
 		if (!cityId) {
@@ -70,25 +58,6 @@ const CitizenService = () => {
 			setShowForum(cities ? cities[cityId].hasForum : false);
 		}
 	}, [cityId]);
-	// const navigateTo = (link) => {
-	// 	window.location.href = link;
-	//   };
-
-	// const handleLinkClick = (data) => {
-	// 	if (data.newWindow) {
-	// 		window.open(data.link, "_blank");
-	// 	} else {
-	// 		navigateTo(data.link + `?cityId=${cityId}`);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	//     if (cityId) {
-	//         getCitizenServices({ cityId }).then((response) => {
-	//             setcitizenServices(response.data.data);
-	//         });
-	//     }
-	// }, [cityId]);
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -149,11 +118,11 @@ const CitizenService = () => {
 				</div>
 			</div>
 
-			{citizenServiceData && citizenServiceData.length > 0 ? (
+			{citizenService && citizenService.length > 0 ? (
 				<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-						{citizenServiceData &&
-							citizenServiceData
+						{citizenService &&
+							citizenService
 								.filter((data) => data.title !== "forums" || showForum)
 								.map((data, index) => (
 									<div
@@ -163,9 +132,10 @@ const CitizenService = () => {
 										<div className="relative h-80 rounded overflow-hidden">
 											<a
 												rel="noreferrer noopener"
-												onClick={() => {
-													navigateTo(data.link + `?cityId=${cityId}`);
-												}}
+												// onClick={() => {
+												// 	navigateTo(data.link + `?cityId=${cityId}`);
+												// }}
+												onClick={() => handleLinkClick(data)}
 											>
 												<img
 													alt={data.title}
@@ -188,7 +158,10 @@ const CitizenService = () => {
 				</div>
 			) : (
 				<div>
-					<div className="flex items-center justify-center">
+					<div className="text-center">
+						<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+							Oops !
+						</h1>
 						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 							{t("currently_no_services")}
 						</h1>

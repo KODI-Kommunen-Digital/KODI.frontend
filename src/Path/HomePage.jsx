@@ -183,11 +183,9 @@ const HomePage = () => {
 										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-												window.location.href =
-													process.env.REACT_APP_APPLESTORE_WALDI;
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											} else {
-												window.location.href =
-													process.env.REACT_APP_APPLESTORE_AUF;
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											}
 										}}
 									>
@@ -212,10 +210,10 @@ const HomePage = () => {
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
 												window.location.href =
-													process.env.REACT_APP_GOOGLEPLAYSTORE_WALDI;
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											} else {
 												window.location.href =
-													process.env.REACT_APP_GOOGLEPLAYSTORE_AUF;
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											}
 										}}
 									>

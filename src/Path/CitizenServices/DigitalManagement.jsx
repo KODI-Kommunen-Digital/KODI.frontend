@@ -3,7 +3,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
-import { getCitizenServices, getCities } from "../../Services/cities";
+import { getDigitalManagement, getCities } from "../../Services/cities";
 
 const DigitalManagement = () => {
 	window.scrollTo(0, 0);
@@ -43,7 +43,7 @@ const DigitalManagement = () => {
 		params.cityId = cityId;
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		getCitizenServices(params).then((response) => {
+		getDigitalManagement(params).then((response) => {
 			setcitizenServiceData(response.data.data);
 			if (cityId) {
 				window.location.replace(response.data.data[0].link);

@@ -19,7 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -466,17 +466,9 @@ function UploadListings() {
 	const [categoryId, setCategoryId] = useState(0);
 	const [subcategoryId, setSubcategoryId] = useState(0);
 
-	const handleCategoryChange = async (event) => {
+	const handleCategoryChange = (event) => {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
-		if (categoryId == 1) {
-			const subCats = await getNewsSubCategory();
-			const subcatList = {};
-			subCats?.data.data.forEach((subCat) => {
-				subcatList[subCat.id] = subCat.name;
-			});
-			setSubCategories(subcatList);
-		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
 		validateInput(event);
