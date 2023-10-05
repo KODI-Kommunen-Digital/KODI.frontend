@@ -11,7 +11,7 @@ const CitizenService = () => {
 	const [citizenServiceData] = useState([
 		{
 			title: "forums",
-			link: "Forums",
+			link: "AllForums",
 			image: "admin/Forums.jpg",
 			newWindow: false,
 		},
@@ -36,10 +36,8 @@ const CitizenService = () => {
 	]);
 	const [cities, setCities] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
-	const [isLoggedIn] = useState(false);
-	const [cityId, setCityId] = useState(null);
-	// const [citizenServices, setcitizenServices] = useState([]);
-
+	const [cityId, setCityId] = useState(0);
+	const [showForum, setShowForum] = useState(false);
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -54,7 +52,10 @@ const CitizenService = () => {
 			setCitiesArray(response.data.data);
 			const temp = {};
 			for (const city of response.data.data) {
-				temp[city.id] = city.name;
+				temp[city.id] = {
+					name: city.name,
+					hasForum: city.hasForum,
+				};
 			}
 			setCities(temp);
 			const cityIdParam = urlParams.get("cityId");
@@ -62,17 +63,24 @@ const CitizenService = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		if (!cityId) {
+			setShowForum(false);
+		} else {
+			setShowForum(cities ? cities[cityId].hasForum : false);
+		}
+	}, [cityId]);
 	// const navigateTo = (link) => {
 	// 	window.location.href = link;
 	//   };
 
-	const handleLinkClick = (data) => {
-		if (data.newWindow) {
-			window.open(data.link, "_blank");
-		} else {
-			navigateTo(data.link + `?cityId=${cityId}`);
-		}
-	};
+	// const handleLinkClick = (data) => {
+	// 	if (data.newWindow) {
+	// 		window.open(data.link, "_blank");
+	// 	} else {
+	// 		navigateTo(data.link + `?cityId=${cityId}`);
+	// 	}
+	// };
 
 	// useEffect(() => {
 	//     if (cityId) {
@@ -105,7 +113,14 @@ const CitizenService = () => {
 										id="city"
 										name="city"
 										autoComplete="city-name"
-										onChange={(e) => setCityId(e.target.value)}
+										onChange={(e) => {
+											const selectedCityId = e.target.value;
+											const newUrl = !selectedCityId
+												? `${window.location.pathname}`
+												: `${window.location.pathname}?cityId=${selectedCityId}`;
+											window.history.replaceState({}, "", newUrl);
+											setCityId(parseInt(selectedCityId));
+										}}
 										value={cityId}
 										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										style={{
@@ -138,33 +153,37 @@ const CitizenService = () => {
 				<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
 					<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						{citizenServiceData &&
-							citizenServiceData.map((data, index) => (
-								<div
-									key={index}
-									className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-								>
-									<div className="relative h-80 rounded overflow-hidden">
-										<a
-											rel="noreferrer noopener"
-											onClick={() => handleLinkClick(data)}
-										>
-											<img
-												alt={data.title}
-												className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-												src={process.env.REACT_APP_BUCKET_HOST + data.image}
-											/>
-											<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-												<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-													{t(data.title)}
-												</h1>
-												<p className="mb-4 ml-4 font-sans">
-													{cities[data.cityId]}
-												</p>
-											</div>
-										</a>
+							citizenServiceData
+								.filter((data) => data.title !== "forums" || showForum)
+								.map((data, index) => (
+									<div
+										key={index}
+										className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+									>
+										<div className="relative h-80 rounded overflow-hidden">
+											<a
+												rel="noreferrer noopener"
+												onClick={() => {
+													navigateTo(data.link + `?cityId=${cityId}`);
+												}}
+											>
+												<img
+													alt={data.title}
+													className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+													src={process.env.REACT_APP_BUCKET_HOST + data.image}
+												/>
+												<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+													<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
+														{t(data.title)}
+													</h1>
+													<p className="mb-4 ml-4 font-sans">
+														{cities[data.cityId]}
+													</p>
+												</div>
+											</a>
+										</div>
 									</div>
-								</div>
-							))}
+								))}
 					</div>
 				</div>
 			) : (
@@ -173,22 +192,6 @@ const CitizenService = () => {
 						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 							{t("currently_no_services")}
 						</h1>
-					</div>
-					<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-						<span className="font-sans text-black">
-							{t("to_upload_new_listing")}
-						</span>
-						<a
-							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-							onClick={() => {
-								localStorage.setItem("selectedItem", "Choose one category");
-								isLoggedIn
-									? navigateTo("/UploadListings")
-									: navigateTo("/login");
-							}}
-						>
-							{t("click_here")}
-						</a>
 					</div>
 				</div>
 			)}

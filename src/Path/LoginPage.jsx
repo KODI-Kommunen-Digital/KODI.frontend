@@ -94,6 +94,10 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -104,12 +108,19 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.sessionStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			}
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
 
-			if (window.sessionStorage.getItem("redirectTo")) {
+			if (window.sessionStorage.getItem("path")) {
+				navigate(window.sessionStorage.getItem("path"));
+				sessionStorage.removeItem("path");
+			} else if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
@@ -125,9 +136,14 @@ const LoginPage = () => {
 				setAlertMessage(t("usernameNotPresent"));
 			} else if (err.response.data.errorCode === errorCodes.MISSING_PASSWORD) {
 				setAlertMessage(t("passwordNotPresent"));
-			} else if (err.response.data.errorCode === errorCodes.INVALID_USERNAME || err.response.data.errorCode === errorCodes.INVALID_PASSWORD) {
+			} else if (
+				err.response.data.errorCode === errorCodes.INVALID_USERNAME ||
+				err.response.data.errorCode === errorCodes.INVALID_PASSWORD
+			) {
 				setAlertMessage(t("checkUsernameOrPassword"));
-			} else if (err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED) {
+			} else if (
+				err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED
+			) {
 				setAlertMessage(t("emailNotVerified"));
 			} else {
 				setAlertMessage(t("somethingWrong"));
