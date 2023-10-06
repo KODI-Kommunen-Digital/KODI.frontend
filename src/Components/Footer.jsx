@@ -16,7 +16,6 @@ function Footer(props) {
 		} else {
 			setShowNavBar(true);
 		}
-		console.log(process.env.REACT_APP_NAME);
 	}, [terminalViewParam]);
 
 	return (

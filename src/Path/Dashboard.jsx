@@ -487,6 +487,7 @@ const Dashboard = () => {
 													<a
 														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 														style={{ fontFamily: "Poppins, sans-serif" }}
+														href={"/ViewProfile/" + listing.username}
 													>
 														{listing.username}
 													</a>
