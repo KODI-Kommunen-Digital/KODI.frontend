@@ -484,7 +484,7 @@
     "forumError": "Bitte wählen Sie eine andere Stadt aus, bevor Sie Foren auswählen",
     "success": "Erfolg",
     "passwordUpdated": "Dein Passwort wurde aktualisiert. Weiterleitung zum Login in…",
-    "newsletter" : "Mitteilungsblatt",
+    "newsletter": "Mitteilungsblatt",
     "rathaus": "Rathaus",
     "addFileHere": "Fügen Sie hier Ihre Datei hinzu",
     "usernamePasswordNotPresent": "Benutzername und Passwort nicht vorhanden!",
@@ -492,6 +492,6 @@
     "passwordNotPresent": "Passwort nicht vorhanden",
     "emailNotVerified": "Verifizierungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie diese, bevor Sie sich anmelden.",
     "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal.",
-    "Help": "? Helfen",
-    "To": " - bis - "
+    "Help": "Helfen?",
+    "To": " - Zu - "
 }
