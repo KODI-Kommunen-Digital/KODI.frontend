@@ -132,9 +132,7 @@ const CitizenService = () => {
 										<div className="relative h-80 rounded overflow-hidden">
 											<a
 												rel="noreferrer noopener"
-												onClick={() => {
-													navigateTo(data.link + `?cityId=${cityId}`);
-												}}
+												onClick={() => handleLinkClick(data)}
 											>
 												<img
 													alt={data.title}
