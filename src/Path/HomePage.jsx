@@ -444,9 +444,10 @@ const HomePage = () => {
 								onClick={() => {
 									goToAllListingsPage(listing.categoryId);
 								}}
-								className={`p-4 justify-center bg-white h-40 ${
-									listingsCount.length <= 3 ? "w-60" : "w-48"
-								} shadow-xl rounded-xl mt-10 cursor-pointer`}
+								// className={`p-4 justify-center bg-white h-40 ${
+								// 	listingsCount.length <= 3 ? "md:w-48 xl:w-60" : "md:w-48"
+								// } w-40 shadow-xl rounded-xl mt-10 cursor-pointer`}
+								className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
 							>
 								<div>{categoryIcon}</div>
 								<h2
