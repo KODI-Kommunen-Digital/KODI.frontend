@@ -148,12 +148,9 @@ function UploadListings() {
 			event.preventDefault();
 			try {
 				let response;
-				if (newListing) {
-					// Create or update the listing first
-					response = await (newListing
-						? postListingsData(cityId, input)
-						: updateListingsData(cityId, input, listingId));
-				}
+				response = await (newListing
+					? postListingsData(cityId, input)
+					: updateListingsData(cityId, input, listingId));
 
 				if (response) {
 					if (image1) {
@@ -471,7 +468,7 @@ function UploadListings() {
 	const handleCategoryChange = async (event) => {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
-		if(categoryId == 1) {
+		if (categoryId == 1) {
 			const subCats = await getNewsSubCategory()
 			const subcatList = {}
 			subCats?.data.data.forEach((subCat) => {
@@ -855,47 +852,47 @@ function UploadListings() {
 
 					{(categoryId == 12 ||
 						categoryId == 5) && (
-						<div className="relative mb-4 grid grid-cols-2 gap-4">
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("originalPrice")}
-								</label>
-								<input
-									type="text"
-									id="originalPrice"
-									name="originalPrice"
-									value={input.originalPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
+							<div className="relative mb-4 grid grid-cols-2 gap-4">
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("originalPrice")}
+									</label>
+									<input
+										type="text"
+										id="originalPrice"
+										name="originalPrice"
+										value={input.originalPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("discountedPrice")}
+									</label>
+									<input
+										type="text"
+										id="discountedPrice"
+										name="discountedPrice"
+										value={input.discountedPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
 							</div>
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									for="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("discountedPrice")}
-								</label>
-								<input
-									type="text"
-									id="discountedPrice"
-									name="discountedPrice"
-									value={input.discountedPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
-							</div>
-						</div>
-					)}
+						)}
 
 					<div className="relative mb-4">
 						<label
@@ -973,87 +970,87 @@ function UploadListings() {
 				</div>
 			</div>
 
-			
-				<div className="container w-auto px-5 py-2 bg-slate-600">
-					<div className="bg-white mt-4 p-6 space-y-10">
-						<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
-							{t("uploadLogo")}
-							<div className="my-4 bg-gray-600 h-[1px]"></div>
-						</h2>
 
-						<div>
-							<label className="block text-sm font-medium text-gray-700">
-								{t("addFileHere")}
-							</label>
-							<div
-								className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
-								onDrop={handleDrop}
-								onDragOver={handleDragOver}
-								onDragEnter={handleDragEnter}
-								onDragLeave={handleDragLeave}
-							>
-								{image1 ? (
-									<div className="flex flex-col items-center">
-										<img
-											className="object-contain h-64 w-full mb-4"
-											src={URL.createObjectURL(image1)}
-											alt="uploaded"
+			<div className="container w-auto px-5 py-2 bg-slate-600">
+				<div className="bg-white mt-4 p-6 space-y-10">
+					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+						{t("uploadLogo")}
+						<div className="my-4 bg-gray-600 h-[1px]"></div>
+					</h2>
+
+					<div>
+						<label className="block text-sm font-medium text-gray-700">
+							{t("addFileHere")}
+						</label>
+						<div
+							className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+							onDrop={handleDrop}
+							onDragOver={handleDragOver}
+							onDragEnter={handleDragEnter}
+							onDragLeave={handleDragLeave}
+						>
+							{image1 ? (
+								<div className="flex flex-col items-center">
+									<img
+										className="object-contain h-64 w-full mb-4"
+										src={URL.createObjectURL(image1)}
+										alt="uploaded"
+									/>
+									<button
+										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+										onClick={handleRemoveImage1}
+									>
+										{t("remove")}
+									</button>
+								</div>
+							) : pdf ? (
+								<div className="flex flex-col items-center">
+									<p>{pdf.name}</p>
+									<button
+										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+										onClick={handleRemovePDF}
+									>
+										{t("remove")}
+									</button>
+								</div>
+							) : (
+								<div className="text-center">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="mx-auto h-12 w-12"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
+											clipRule="evenodd"
 										/>
-										<button
-											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-											onClick={handleRemoveImage1}
+									</svg>
+									<p className="mt-1 text-sm text-gray-600">
+										{t("dragAndDropImageOrPDF")}
+									</p>
+									<div className="relative mb-4 mt-8">
+										<label
+											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
 										>
-											{t("remove")}
-										</button>
-									</div>
-								) : pdf ? (
-									<div className="flex flex-col items-center">
-										<p>{pdf.name}</p>
-										<button
-											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-											onClick={handleRemovePDF}
-										>
-											{t("remove")}
-										</button>
-									</div>
-								) : (
-									<div className="text-center">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="mx-auto h-12 w-12"
-											viewBox="0 0 20 20"
-											fill="currentColor"
-										>
-											<path
-												fillRule="evenodd"
-												d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-												clipRule="evenodd"
+											<span className="button-label">{t("upload")}</span>
+											<input
+												id="file-upload"
+												type="file"
+												accept="image/*,.pdf"
+												className="sr-only"
+												onChange={handleInputChange}
 											/>
-										</svg>
-										<p className="mt-1 text-sm text-gray-600">
-											{t("dragAndDropImageOrPDF")}
-										</p>
-										<div className="relative mb-4 mt-8">
-											<label
-												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
-											>
-												<span className="button-label">{t("upload")}</span>
-												<input
-													id="file-upload"
-													type="file"
-													accept="image/*,.pdf"
-													className="sr-only"
-													onChange={handleInputChange}
-												/>
-											</label>
-										</div>
+										</label>
 									</div>
-								)}
-							</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
-			
+			</div>
+
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6">
