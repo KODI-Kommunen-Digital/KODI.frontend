@@ -43,6 +43,8 @@ function UploadListings() {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [categories, setCategories] = useState([]);
 	const [subCategories, setSubCategories] = useState([]);
+	const [startDate, setStartDate] = useState([]);
+	const [endDate, setEndDate] = useState([]);
 	const navigate = useNavigate();
 
 	function handleDragEnter(e) {
@@ -221,12 +223,12 @@ function UploadListings() {
 		}
 		var cityId = searchParams.get("cityId");
 		getCategory().then((response) => {
-			const catList = {}
+			const catList = {};
 			response?.data.data.forEach((cat) => {
-				catList[cat.id] = cat.name
-			})
+				catList[cat.id] = cat.name;
+			});
 			setCategories(catList);
-		})
+		});
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		setListingId(listingId);
@@ -235,12 +237,15 @@ function UploadListings() {
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				let listingData = listingsResponse.data.data;
-				if (listingData.startDate)
-					listingData.startDate = listingData.startDate.slice(0, 10);
-				if (listingData.endDate)
-					listingData.endDate = listingData.endDate.slice(0, 10);
+				// if (listingData.startDate)
+				// 	listingData.startDate = listingData.startDate.slice(0, 10);
+				// if (listingData.endDate)
+				// 	listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
+				console.log(listingData.startDate);
+				setStartDate(listingData.startDate);
+				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
 			});
@@ -469,11 +474,11 @@ function UploadListings() {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
 		if (categoryId == 1) {
-			const subCats = await getNewsSubCategory()
-			const subcatList = {}
+			const subCats = await getNewsSubCategory();
+			const subcatList = {};
 			subCats?.data.data.forEach((subCat) => {
-				subcatList[subCat.id] = subCat.name
-			})
+				subcatList[subCat.id] = subCat.name;
+			});
 			setSubCategories(subcatList);
 		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
@@ -850,49 +855,48 @@ function UploadListings() {
 						</div>
 					)}
 
-					{(categoryId == 12 ||
-						categoryId == 5) && (
-							<div className="relative mb-4 grid grid-cols-2 gap-4">
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("originalPrice")}
-									</label>
-									<input
-										type="text"
-										id="originalPrice"
-										name="originalPrice"
-										value={input.originalPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
-								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-									<label
-										for="place"
-										className="block text-sm font-medium text-gray-600"
-									>
-										{t("discountedPrice")}
-									</label>
-									<input
-										type="text"
-										id="discountedPrice"
-										name="discountedPrice"
-										value={input.discountedPrice}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										required
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Enter the price of the product"
-									/>
-								</div>
+					{(categoryId == 12 || categoryId == 5) && (
+						<div className="relative mb-4 grid grid-cols-2 gap-4">
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("originalPrice")}
+								</label>
+								<input
+									type="text"
+									id="originalPrice"
+									name="originalPrice"
+									value={input.originalPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
 							</div>
-						)}
+							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+								<label
+									for="place"
+									className="block text-sm font-medium text-gray-600"
+								>
+									{t("discountedPrice")}
+								</label>
+								<input
+									type="text"
+									id="discountedPrice"
+									name="discountedPrice"
+									value={input.discountedPrice}
+									onChange={onInputChange}
+									onBlur={validateInput}
+									required
+									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+									placeholder="Enter the price of the product"
+								/>
+							</div>
+						</div>
+					)}
 
 					<div className="relative mb-4">
 						<label
@@ -969,7 +973,6 @@ function UploadListings() {
 					</div>
 				</div>
 			</div>
-
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6 space-y-10">
@@ -1050,7 +1053,6 @@ function UploadListings() {
 					</div>
 				</div>
 			</div>
-
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
 				<div className="bg-white mt-4 p-6">
