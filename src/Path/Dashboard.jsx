@@ -136,8 +136,8 @@ const Dashboard = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		listing: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const fetchUpdatedListings = useCallback(() => {
@@ -169,9 +169,9 @@ const Dashboard = () => {
 		});
 	}
 
-	function goToEventDetailsPage(listing) {
+	function goToListingPage(listing) {
 		navigateTo(
-			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+			`Listing?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
@@ -362,7 +362,7 @@ const Dashboard = () => {
 											<th
 												scope="row"
 												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
-												onClick={() => goToEventDetailsPage(listing)}
+												onClick={() => goToListingPage(listing)}
 											>
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
