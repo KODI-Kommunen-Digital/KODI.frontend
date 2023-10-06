@@ -156,7 +156,7 @@ export default function HomePageNavBar() {
 						<a
 							onClick={() => {
 								if (terminalViewParam === "true") {
-									navigateTo("/AllEvents?terminalView=true");
+									navigateTo("/AllListings?terminalView=true");
 								} else {
 									navigateTo("/");
 								}

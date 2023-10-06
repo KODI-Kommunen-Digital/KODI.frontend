@@ -33,7 +33,7 @@ Description.propTypes = {
 	content: PropTypes.string.isRequired,
 };
 
-const EventDetails = () => {
+const Listing = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
@@ -232,14 +232,14 @@ const EventDetails = () => {
 				} else {
 					postData.cityId
 						? postFavoriteListingsData(postData)
-								.then((response) => {
-									setFavoriteId(response.data.id);
-									setSuccessMessage(t("List added to the favorites"));
-									setHandleClassName(
-										"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-									);
-								})
-								.catch((err) => console.log("Error", err))
+							.then((response) => {
+								setFavoriteId(response.data.id);
+								setSuccessMessage(t("List added to the favorites"));
+								setHandleClassName(
+									"rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+								);
+							})
+							.catch((err) => console.log("Error", err))
 						: console.log("Error");
 				}
 			} else {
@@ -300,9 +300,8 @@ const EventDetails = () => {
 													</span>
 												</h1>
 												<div
-													className={`flex items-center ${
-														terminalView ? "hidden" : "visible"
-													}`}
+													className={`flex items-center ${terminalView ? "hidden" : "visible"
+														}`}
 												>
 													<button
 														type="button"
@@ -596,4 +595,4 @@ const EventDetails = () => {
 	);
 };
 
-export default EventDetails;
+export default Listing;
