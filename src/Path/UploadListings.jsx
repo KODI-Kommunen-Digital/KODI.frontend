@@ -117,7 +117,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -303,7 +302,6 @@ function UploadListings() {
 			...prev,
 			description: descriptionHTML,
 		}));
-
 		setDescription(newContent);
 	};
 

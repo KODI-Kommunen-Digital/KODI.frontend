@@ -93,7 +93,8 @@ const Listing = () => {
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		const listingId = searchParams.get("listingId");
-		document.title = process.env.REACT_APP_REGION_NAME + " Event Details";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
 		if (listingId && cityId) {
 			const accessToken =
 				window.localStorage.getItem("accessToken") ||
