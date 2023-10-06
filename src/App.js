@@ -25,7 +25,6 @@ import UploadListings from "./Path/UploadListings";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
-import PrivacyPolicyPopup from "./Path/PrivacyPolicyPopup";
 
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
@@ -61,11 +60,6 @@ const App = () => {
           <Route path="/DashboardAdmin" element={<Dashboard />} exact />
           <Route path="/AccountSettings" element={<AccountSettings />} exact />
           <Route path="/AllDevices" element={<AllDevices />} exact />
-          <Route
-            path="/PrivacyPolicyPopup"
-            element={<PrivacyPolicyPopup onClose={() => {}} />}
-            exact
-          />
           <Route path="/UploadListings" element={<UploadListings />} exact />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/PasswordForgot" element={<PasswordForgot />} />
