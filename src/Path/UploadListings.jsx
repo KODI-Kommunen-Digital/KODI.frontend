@@ -43,6 +43,8 @@ function UploadListings() {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [categories, setCategories] = useState([]);
 	const [subCategories, setSubCategories] = useState([]);
+	const [startDate, setStartDate] = useState([]);
+	const [endDate, setEndDate] = useState([]);
 	const navigate = useNavigate();
 
 	function handleDragEnter(e) {
@@ -147,12 +149,9 @@ function UploadListings() {
 			event.preventDefault();
 			try {
 				let response;
-				if (newListing) {
-					// Create or update the listing first
-					response = await (newListing
-						? postListingsData(cityId, input)
-						: updateListingsData(cityId, input, listingId));
-				}
+				response = await (newListing
+					? postListingsData(cityId, input)
+					: updateListingsData(cityId, input, listingId));
 
 				if (response) {
 					if (image1) {
@@ -237,12 +236,15 @@ function UploadListings() {
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				let listingData = listingsResponse.data.data;
-				if (listingData.startDate)
-					listingData.startDate = listingData.startDate.slice(0, 10);
-				if (listingData.endDate)
-					listingData.endDate = listingData.endDate.slice(0, 10);
+				// if (listingData.startDate)
+				// 	listingData.startDate = listingData.startDate.slice(0, 10);
+				// if (listingData.endDate)
+				// 	listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
+				console.log(listingData.startDate);
+				setStartDate(listingData.startDate);
+				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
 			});
@@ -501,6 +503,19 @@ function UploadListings() {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 	};
+
+	function formatDateTime(dateTime) {
+		const date = new Date(dateTime);
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		const hours = String(date.getHours()).padStart(2, "0");
+		const minutes = String(date.getMinutes()).padStart(2, "0");
+		const seconds = String(date.getSeconds()).padStart(2, "0");
+		const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+	}
 
 	return (
 		<section className="bg-slate-600 body-font relative">
@@ -788,16 +803,29 @@ function UploadListings() {
 									>
 										{t("eventStartDate")} *
 									</label>
-									<input
-										type="datetime-local"
-										id="startDate"
-										name="startDate"
-										value={input.startDate}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Start Date"
-									/>
+									{input.startDate ? (
+										// Display the start date as plain text if it's present
+										<input
+											type="text"
+											id="startDate"
+											name="startDate"
+											value={formatDateTime(input.startDate)}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											readOnly // Make the text input read-only
+										/>
+									) : (
+										// Display an editable datetime-local input if start date is not present
+										<input
+											type="datetime-local"
+											id="startDate"
+											name="startDate"
+											value={formatDateTime(input.startDate)}
+											onChange={onInputChange}
+											onBlur={validateInput}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											placeholder="Start Date"
+										/>
+									)}
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -824,16 +852,29 @@ function UploadListings() {
 									>
 										{t("eventEndDate")} *
 									</label>
-									<input
-										type="datetime-local"
-										id="endDate"
-										name="endDate"
-										value={input.endDate.replace("T", " ")}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="End Date"
-									/>
+									{input.endDate ? (
+										// Display the end date as plain text if it's present
+										<input
+											type="text"
+											id="endDate"
+											name="endDate"
+											value={formatDateTime(input.endDate)}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											readOnly // Make the text input read-only
+										/>
+									) : (
+										// Display an editable datetime-local input if end date is not present
+										<input
+											type="datetime-local"
+											id="endDate"
+											name="endDate"
+											value={formatDateTime(input.endDate)}
+											onChange={onInputChange}
+											onBlur={validateInput}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											placeholder="End Date"
+										/>
+									)}
 									<div
 										className="h-[24px] text-red-600"
 										style={{

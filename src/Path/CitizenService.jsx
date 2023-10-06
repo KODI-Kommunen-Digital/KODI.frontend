@@ -39,7 +39,6 @@ const CitizenService = () => {
 
 		getCitizenServices().then((response) => {
 			setCitizenServices(response.data.data);
-			console.log(response.data.data);
 		});
 	}, []);
 
@@ -91,7 +90,7 @@ const CitizenService = () => {
 											setCityId(parseInt(selectedCityId));
 										}}
 										value={cityId}
-										className="flex items-center whitespace-nowrap rounded-xl bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-gray-900 transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -156,12 +155,16 @@ const CitizenService = () => {
 			) : (
 				<div>
 					<div className="text-center">
-						<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-							Oops !
-						</h1>
-						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-							{t("currently_no_services")}
-						</h1>
+						<div className="m-auto mt-20 mb-10 text-center font-sans font-bold text-xl">
+							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+								Oops !
+							</h1>
+						</div>
+						<div className="m-auto mt-10 mb-20 text-center font-sans font-bold text-xl">
+							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								{t("currently_no_services")}
+							</h1>
+						</div>
 					</div>
 				</div>
 			)}
