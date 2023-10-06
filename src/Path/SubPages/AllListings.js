@@ -16,7 +16,7 @@ import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 import { getCategory } from "../../Services/CategoryApi";
 
-const Events = () => {
+const AllListings = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState("");
@@ -384,4 +384,4 @@ const Events = () => {
 	);
 };
 
-export default Events;
+export default AllListings;
