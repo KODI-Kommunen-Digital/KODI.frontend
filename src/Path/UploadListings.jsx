@@ -150,12 +150,9 @@ function UploadListings() {
 			event.preventDefault();
 			try {
 				let response;
-				if (newListing) {
-					// Create or update the listing first
-					response = await (newListing
-						? postListingsData(cityId, input)
-						: updateListingsData(cityId, input, listingId));
-				}
+				response = await (newListing
+					? postListingsData(cityId, input)
+					: updateListingsData(cityId, input, listingId));
 
 				if (response) {
 					if (image1) {
