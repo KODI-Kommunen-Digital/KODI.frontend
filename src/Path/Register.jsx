@@ -61,19 +61,27 @@ const Register = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			await register(input);
-			setAlertInfo(true);
-			setAlertType("success");
-			setAlertMessage(
-				"Registration Successfull. A mail has been sent to your email Id. Please verify to continue. \nRedirecting to login page in 10s"
-			);
-			setTimeout(() => {
-				routeChangeToLogin();
-			}, 10000);
+			
+			if(Object.values(error).filter((e) => e !== "").length > 0) {
+				setAlertInfo(true);
+				setAlertType("danger");
+				setAlertMessage("Failed. " + Object.values(error).filter((e) => e !== "")[0]);
+			}
+			else {
+				await register(input);
+				setAlertInfo(true);
+				setAlertType("success");
+				setAlertMessage(
+					"Registration Successfull. A mail has been sent to your email Id. Please verify to continue. \nRedirecting to login page in 10s"
+				);
+				setTimeout(() => {
+					routeChangeToLogin();
+				}, 10000);
+			}
 		} catch (err) {
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage("Failed. " + err.response.data.message);
+			setAlertMessage("Failed. " + err.response?.data?.message ? err.response.data.message : JSON.stringify(err));
 		}
 	};
 
@@ -163,7 +171,7 @@ const Register = () => {
 						{t("createAccount")}
 					</h3>
 				</div>
-				<div className="mt-8 space-y-6" action="#" method="POST">
+				<form className="mt-8 space-y-6" onSubmit={handleSubmit}>
 					<input type="hidden" name="remember" value="true" />
 					<div className="space-y-2 rounded-md shadow-sm">
 						<div>
@@ -277,6 +285,7 @@ const Register = () => {
 								type="checkbox"
 								onChange={() => setIsChecked(!isChecked)}
 								className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+								required
 							/>
 							<label
 								htmlFor="remember-me"
@@ -309,8 +318,6 @@ const Register = () => {
 					<div>
 						<button
 							type="submit"
-							onClick={handleSubmit}
-							disabled={!isChecked}
 							id="finalbutton"
 							className="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white  hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2"
 						>
@@ -409,7 +416,7 @@ const Register = () => {
 							)}
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	);

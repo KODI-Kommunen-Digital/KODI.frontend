@@ -243,7 +243,6 @@ function UploadListings() {
 				// 	listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
-				console.log(listingData.startDate);
 				setStartDate(listingData.startDate);
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
