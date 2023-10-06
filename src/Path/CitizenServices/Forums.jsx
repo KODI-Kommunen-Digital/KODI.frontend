@@ -14,7 +14,7 @@ const Forums = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Forums";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("forums");
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};

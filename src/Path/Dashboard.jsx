@@ -58,7 +58,7 @@ const Dashboard = () => {
 		} else {
 			setViewAllListings(true);
 		}
-		document.title = "Dashboard";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
 
 		if (viewAllListings === true) {
 			getListings({
@@ -489,6 +489,7 @@ const Dashboard = () => {
 													<a
 														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 														style={{ fontFamily: "Poppins, sans-serif" }}
+														href={"/ViewProfile/" + listing.username}
 													>
 														{listing.username}
 													</a>

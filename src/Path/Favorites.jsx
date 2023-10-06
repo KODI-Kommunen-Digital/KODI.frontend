@@ -27,7 +27,7 @@ const Favorites = () => {
 	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
-		document.title = "Favourites";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("favourites");
 		const urlParams = new URLSearchParams(window.location.search);
 		getCategory().then((response) => {
 			const catList = {};

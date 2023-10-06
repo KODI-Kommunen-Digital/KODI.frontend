@@ -22,7 +22,8 @@ const CitizenService = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = process.env.REACT_APP_REGION_NAME + " Citizen Services";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
