@@ -30,7 +30,6 @@ import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
-import PrivacyPolicyPopup from "./Path/PrivacyPolicyPopup";
 
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
@@ -43,88 +42,83 @@ import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 
 const App = () => {
-	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-	useEffect(() => {
-		const link =
-			document.querySelector("link[rel*='icon']") ||
-			document.createElement("link");
-		link.type = "image/x-icon";
-		link.rel = "shortcut icon";
-		link.href = HeidiLogo;
-		document.getElementsByTagName("head")[0].appendChild(link);
-	}, []);
-	return (
-		<BrowserRouter>
-			<div>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="Listing" element={<Listing />} exact />
-					<Route path="/AllListings" element={<AllListings />} />
-					<Route path="/ViewProfile/:username" element={<ViewProfile />} />
-					<Route path="/CitizenService" element={<CitizenService />} />
-					<Route
-						path="/CitizenService/DigitalManagement"
-						element={<DigitalManagement />}
-					/>
+  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  useEffect(() => {
+    const link =
+      document.querySelector("link[rel*='icon']") ||
+      document.createElement("link");
+    link.type = "image/x-icon";
+    link.rel = "shortcut icon";
+    link.href = HeidiLogo;
+    document.getElementsByTagName("head")[0].appendChild(link);
+  }, []);
+  return (
+    <BrowserRouter>
+      <div>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="Listing" element={<Listing />} exact />
+          <Route path="/AllListings" element={<AllListings />} />
+          <Route path="/ViewProfile/:username" element={<ViewProfile />} />
+          <Route path="/CitizenService" element={<CitizenService />} />
+          <Route
+            path="/CitizenService/DigitalManagement"
+            element={<DigitalManagement />}
+          />
 
-					<Route path="/Dashboard" element={<Dashboard />} exact />
-					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
-					<Route path="/AccountSettings" element={<AccountSettings />} exact />
-					<Route path="/AllDevices" element={<AllDevices />} exact />
-					<Route
-						path="/PrivacyPolicyPopup"
-						element={<PrivacyPolicyPopup />}
-						exact
-					/>
-					<Route path="/UploadListings" element={<UploadListings />} exact />
-					<Route path="/ProfilePage" element={<ProfilePage />} />
-					<Route path="/PasswordForgot" element={<PasswordForgot />} />
-					<Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-					<Route path="/login" element={<LoginPage />} />
-					<Route path="/Register" element={<Register />} />
-					<Route path="/ImprintPage" element={<ImprintPage />} />
-					<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/Dashboard" element={<Dashboard />} exact />
+          <Route path="/DashboardAdmin" element={<Dashboard />} exact />
+          <Route path="/AccountSettings" element={<AccountSettings />} exact />
+          <Route path="/AllDevices" element={<AllDevices />} exact />
+          <Route path="/UploadListings" element={<UploadListings />} exact />
+          <Route path="/ProfilePage" element={<ProfilePage />} />
+          <Route path="/PasswordForgot" element={<PasswordForgot />} />
+          <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/ImprintPage" element={<ImprintPage />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
-					<Route path="/Favorite" element={<Favorites />} />
-					<Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
+          <Route path="/Favorite" element={<Favorites />} />
+          <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
-					<Route path="/OverviewPage" element={<OverviewPage />} />
-					<Route
-						path="/OverviewPage/NewsCategories"
-						element={<OverviewPageNewsCategories />}
-					/>
-					<Route path="/VerifyEmail" element={<VerifyEmail />} />
-					<Route path="*" element={<Error />} />
-					<Route path="ForumsError" element={<ForumsError />} />
-					{isForumEnabled && (
-						<React.Fragment>
-							<Route path="/Forum/ViewPost" element={<ViewPost />} />
-							<Route path="/Forum" element={<Forum />} />
-							<Route path="/UploadPosts" element={<UploadPosts />} />
-							<Route path="/CreateGroup" element={<CreateGroup />} exact />
-							<Route path="/MyGroups" element={<MyGroups />} exact />
-							<Route
-								path="/MyGroups/GroupMembers"
-								element={<GroupMembers />}
-								exact
-							/>
-							<Route
-								path="/MyGroups/MemberRequests"
-								element={<MemberRequests />}
-								exact
-							/>
-							<Route
-								path="/MyGroups/ReportedPosts"
-								element={<ReportedPosts />}
-								exact
-							/>
-							<Route path="/CitizenService/AllForums" element={<AllForums />} />
-						</React.Fragment>)}
-
-				</Routes>
-			</div>
-		</BrowserRouter>
-	);
+          <Route path="/OverviewPage" element={<OverviewPage />} />
+          <Route
+            path="/OverviewPage/NewsCategories"
+            element={<OverviewPageNewsCategories />}
+          />
+          <Route path="/VerifyEmail" element={<VerifyEmail />} />
+          <Route path="*" element={<Error />} />
+          <Route path="ForumsError" element={<ForumsError />} />
+          {isForumEnabled && (
+            <React.Fragment>
+              <Route path="/Forum/ViewPost" element={<ViewPost />} />
+              <Route path="/Forum" element={<Forum />} />
+              <Route path="/UploadPosts" element={<UploadPosts />} />
+              <Route path="/CreateGroup" element={<CreateGroup />} exact />
+              <Route path="/MyGroups" element={<MyGroups />} exact />
+              <Route
+                path="/MyGroups/GroupMembers"
+                element={<GroupMembers />}
+                exact
+              />
+              <Route
+                path="/MyGroups/MemberRequests"
+                element={<MemberRequests />}
+                exact
+              />
+              <Route
+                path="/MyGroups/ReportedPosts"
+                element={<ReportedPosts />}
+                exact
+              />
+              <Route path="/CitizenService/AllForums" element={<AllForums />} />
+            </React.Fragment>
+          )}
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 };
 
 export default App;
