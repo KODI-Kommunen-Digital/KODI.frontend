@@ -36,7 +36,6 @@ const CitizenService = () => {
 
 		getCitizenServices().then((response) => {
 			setCitizenServices(response.data.data);
-			console.log(response.data.data);
 		});
 	}, []);
 
