@@ -20,8 +20,7 @@ function ListingsCard({ listing, terminalView = false }) {
 				e.stopPropagation();
 				if (listing.sourceId === 1) {
 					navigateTo(
-						`/HomePage/EventDetails?listingId=${listing.id}&cityId=${
-							listing.cityId
+						`/Listing?listingId=${listing.id}&cityId=${listing.cityId
 						}${terminalView ? "&terminalView=true" : ""}`
 					);
 				} else {

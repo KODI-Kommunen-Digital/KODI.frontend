@@ -100,9 +100,9 @@ const HomePage = () => {
 	};
 
 	function goToAllListingsPage(category) {
-		let navUrl = `/AllEvents?categoryId=${category}`;
+		let navUrl = `/AllListings?categoryId=${category}`;
 		if (cityId)
-			navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`;
+			navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
 		navigateTo(navUrl);
 	}
 
@@ -469,7 +469,7 @@ const HomePage = () => {
 									key={city.id}
 									onClick={() => {
 										localStorage.setItem("selectedCity", city.name);
-										navigateTo(`/AllEvents?cityId=${city.id}`);
+										navigateTo(`/AllListings?cityId=${city.id}`);
 									}}
 									className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 								>
@@ -523,7 +523,7 @@ const HomePage = () => {
 						type="submit"
 						onClick={() => {
 							localStorage.setItem("selectedItem", t("chooseOneCategory"));
-							navigateTo("/AllEvents");
+							navigateTo("/AllListings");
 						}}
 						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 						style={{ fontFamily: "Poppins, sans-serif" }}
