@@ -26,7 +26,8 @@ const AccountSettings = () => {
 	};
 
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Account Settings";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("accountSettings");
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");

@@ -34,7 +34,7 @@ const LoginPage = () => {
 	const location = useLocation();
 	const [timeOutAlertMessage, settimeOutAlertMessage] = useState("");
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Login";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("login");
 		const searchParams = new URLSearchParams(location.search);
 
 		userRef.current.focus();
@@ -149,10 +149,10 @@ const LoginPage = () => {
 				setAlertMessage(t("somethingWrong"));
 			}
 		}
-	}
+	};
 
 	const handleKeyDown = (e) => {
-		if (e.key === 'Enter') {
+		if (e.key === "Enter") {
 			e.preventDefault();
 			handleSubmit(e);
 		}

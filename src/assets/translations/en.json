@@ -123,7 +123,6 @@
     "personalInfoSave": "Your information has been saved",
     "local": "Local",
     "location": "Location",
-    "login": "Log In",
     "loginHere": "Please Login here",
     "logOut": "Logout",
     "lostAndFound": "Lost and Found",
@@ -226,7 +225,6 @@
     "to_upload_new_post": "To upload a new post, ",
     "tod": "Topic of the day",
     "unfavorite": "Unfavorite",
-    "updatePassword": "Update Password",
     "upload": "Upload",
     "uploadArea": "Upload the first post here",
     "uploadAreaDescription": "Whether event, offers or news. Here you can easily upload a contribution",
@@ -535,5 +533,14 @@
     "newsletter": "News Letter",
     "rathaus": "City Hall",
     "help": "Help ?",
-    "To": " - to - "
+    "To": " - to - ",
+
+    "accountSettings": "Account Settings",
+    "home": "HOME",
+    "login": "Login",
+    "forgotPassword": "Forgot Password",
+    "updatePassword": "Update Password",
+    "digitalRathouse": "Digital Rathouse",
+    "allEvents": "Listings",
+    "eventDetails": "Event Details"
 }

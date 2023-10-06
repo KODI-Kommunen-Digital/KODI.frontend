@@ -32,6 +32,10 @@ const Events = () => {
 	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
+	}, []);
+
+	useEffect(() => {
 		getCategory().then((response) => {
 			const catList = {};
 			response?.data.data.forEach((cat) => {

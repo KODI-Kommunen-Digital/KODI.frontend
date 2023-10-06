@@ -15,7 +15,8 @@ const DigitalManagement = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = process.env.REACT_APP_REGION_NAME + " Digital Rathouse";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("digitalRathouse");
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
