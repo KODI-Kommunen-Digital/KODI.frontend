@@ -16,14 +16,19 @@ import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
-const Events = () => {
+const AllListings = () => {
 	window.scrollTo(0, 0);
+	const pageSize = 12;
 	const { t } = useTranslation();
 	const [cityId, setCityId] = useState("");
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
-	const [selectedCategory, setCategoryName] = useState("");
-	const [selectedCity, setCityName] = useState("");
+	const [selectedCategory, setCategoryName] = useState(t("allCategories"));
+	const [selectedCity, setCityName] = useState(
+		t("allCities", {
+			regionName: process.env.REACT_APP_REGION_NAME,
+		})
+	);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
@@ -33,19 +38,6 @@ const Events = () => {
 
 	useEffect(() => {
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
-	}, []);
-
-	useEffect(() => {
-		getCategory().then((response) => {
-			const catList = {};
-			response?.data.data.forEach((cat) => {
-				catList[cat.id] = cat.name;
-			});
-			setCategories(catList);
-		});
-	}, []);
-
-	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
@@ -53,94 +45,109 @@ const Events = () => {
 		const refreshToken =
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
+		if (accessToken && refreshToken) {
 			setIsLoggedIn(true);
 		}
-		getCities().then((citiesResponse) => {
-			setCities(citiesResponse.data.data);
+		setIsLoading(true);
+		Promise.all([getCities(), getCategory()]).then((response) => {
+			setCities(response[0].data.data);
+			const catList = {};
+			response[1]?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name;
+			});
+			setCategories(catList);
+			const params = { pageSize, statusId: 1 };
 			const pageNoParam = parseInt(urlParams.get("pageNo"));
-			if (pageNoParam) setPageNo(pageNoParam);
+			if (pageNoParam > 1) {
+				params.pageNo = pageNoParam;
+				urlParams.set("pageNo", pageNo);
+				setPageNo(pageNoParam);
+			} else {
+				urlParams.delete("pageNo");
+			}
 			const cityIdParam = urlParams.get("cityId");
-			if (cityIdParam) setCityId(cityIdParam);
+			if (cityIdParam) {
+				const cityId = parseInt(cityIdParam);
+				const city = response[0].data.data.find(
+					(c) => c.id === parseInt(cityIdParam)
+				);
+				if (city) {
+					setCityName(city.name);
+					setCityId(parseInt(cityIdParam));
+					params.cityId = cityId;
+				} else urlParams.delete("cityId");
+			}
 			const categoryIdParam = urlParams.get("categoryId");
-			if (categoryIdParam) setCategoryId(categoryIdParam);
+			if (categoryIdParam) {
+				const categoryId = parseInt(categoryIdParam);
+				if (catList[categoryId]) {
+					setCategoryId(categoryId);
+					setCategoryName(t(catList[categoryId]));
+					params.categoryId = categoryId;
+					if (categoryId === 3) {
+						params.sortByStartDate = true;
+					}
+				} else urlParams.delete("categoryId");
+			}
+			setTimeout(() => {
+				fetchData(params);
+			}, 1000);
 		});
 	}, []);
 
 	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const params = { pageSize: 12, statusId: 1 };
-		setIsLoading(true);
-		if (parseInt(cityId)) {
-			setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-			urlParams.set("cityId", cityId);
-			params.cityId = cityId;
-		} else {
-			setCityName(
-				t("allCities", {
-					regionName: process.env.REACT_APP_REGION_NAME,
-				})
-			);
-			urlParams.delete("cityId");
-		}
-		if (parseInt(categoryId)) {
-			setCategoryName(t(categories[categoryId]));
-			params.categoryId = parseInt(categoryId);
-			urlParams.set("categoryId", parseInt(categoryId));
-		} else {
-			setCategoryName(t("allCategories"));
-			urlParams.delete("categoryId");
-		}
-		if (pageNo > 1) {
-			params.pageNo = pageNo;
-			urlParams.set("pageNo", pageNo);
-		} else {
-			urlParams.delete("pageNo");
-		}
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.replaceState({}, "", newUrl);
-		if (parseInt(categoryId) === 3) {
-			params.sortByStartDate = true;
-		}
-		const fetchData = async () => {
-			try {
-				const response = await getListings(params);
-				const data = response.data.data;
-				setListings(data);
-			} catch (error) {
-				console.error("Error fetching listings:", error);
-			} finally {
-				setIsLoading(false);
+		if (!isLoading) {
+			setIsLoading(true);
+			const urlParams = new URLSearchParams(window.location.search);
+			const params = { pageSize, statusId: 1 };
+			if (parseInt(cityId)) {
+				setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
+				urlParams.set("cityId", cityId);
+				params.cityId = cityId;
+			} else {
+				setCityName(
+					t("allCities", {
+						regionName: process.env.REACT_APP_REGION_NAME,
+					})
+				);
+				urlParams.delete("cityId");
 			}
-		};
-		const fetchDataWithDelay = () => {
+			if (parseInt(categoryId)) {
+				setCategoryName(t(categories[categoryId]));
+				params.categoryId = parseInt(categoryId);
+				urlParams.set("categoryId", parseInt(categoryId));
+			} else {
+				setCategoryName(t("allCategories"));
+				urlParams.delete("categoryId");
+			}
+			if (pageNo > 1) {
+				params.pageNo = pageNo;
+				urlParams.set("pageNo", pageNo);
+			} else {
+				urlParams.delete("pageNo");
+			}
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.replaceState({}, "", newUrl);
+			if (parseInt(categoryId) === 3) {
+				params.sortByStartDate = true;
+			}
 			setTimeout(() => {
-				if (urlParams.has("categoryId")) {
-					const categoryId = urlParams.get("categoryId");
-
-					// Check if sortByStartDate is also present in the URL
-					if (urlParams.has("sortByStartDate")) {
-						const params = { categoryId, sortByStartDate: true };
-						fetchData(params);
-					} else {
-						// Only categoryId is present in the URL
-						const params = { categoryId };
-						fetchData(params);
-					}
-				} else if (urlParams.has("cityId")) {
-					// Only cityId is present in the URL
-					const cityId = urlParams.get("cityId");
-					const params = { cityId };
-					fetchData(params);
-				} else {
-					fetchData();
-				}
+				fetchData(params);
 			}, 1000);
-		};
+		}
+	}, [categoryId, cityId, pageNo]);
 
-		fetchDataWithDelay();
-		return () => setIsLoading(false);
-	}, [categoryId, cities, cityId, pageNo, t]);
+	const fetchData = async (params) => {
+		try {
+			const response = await getListings(params);
+			setListings(response.data.data);
+		} catch (error) {
+			setListings([]);
+			console.error("Error fetching listings:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	function handleSortOptionChange(event) {
 		setSelectedSortOption(event.target.value);
@@ -370,7 +377,7 @@ const Events = () => {
 					>
 						{t("page")} {pageNo}
 					</span>
-					{listings.length >= 9 && (
+					{listings.length >= pageSize && (
 						<span
 							className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
 							style={{ fontFamily: "Poppins, sans-serif" }}
@@ -388,4 +395,4 @@ const Events = () => {
 	);
 };
 
-export default Events;
+export default AllListings;
