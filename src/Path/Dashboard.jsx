@@ -33,8 +33,13 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		if (parseInt(searchParams.get('pageNo'))) {
+		const pagenoParam = searchParams.get('pageNo');
+		if (!isNaN(pagenoParam) && parseInt(searchParams.get('pageNo')) > 1) {
 			setPageNo(parseInt(searchParams.get('pageNo')));
+		} else {
+			searchParams.delete('pageNo');
+			const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+			window.history.replaceState({}, "", newUrl);
 		}
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
