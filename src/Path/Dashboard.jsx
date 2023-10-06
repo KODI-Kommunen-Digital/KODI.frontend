@@ -171,7 +171,7 @@ const Dashboard = () => {
 
 	function goToListingPage(listing) {
 		navigateTo(
-			`Listing?listingId=${listing.id}&cityId=${listing.cityId}`
+			`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
