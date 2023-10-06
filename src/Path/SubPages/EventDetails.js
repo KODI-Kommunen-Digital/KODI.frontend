@@ -403,7 +403,8 @@ const EventDetails = () => {
 									</div>
 								</div>
 							</div>
-							<div className="container-fluid lg:w-full md:w-full">
+
+							<div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
 								<div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
 									<style>
 										{`
@@ -414,7 +415,7 @@ const EventDetails = () => {
 								}
 							`}
 									</style>
-									<div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
+									<div className="h-full overflow-hidden px-0 py-0 shadow-xl">
 										<div className="relative h-full">
 											{input.logo ? (
 												<img
@@ -450,7 +451,7 @@ const EventDetails = () => {
 								</div>
 							</div>
 
-							<div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+							<div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
 								<h1
 									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
 									style={{ fontFamily: "Poppins, sans-serif" }}
@@ -466,7 +467,14 @@ const EventDetails = () => {
 						) : (
 							<div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 								<div>
-									<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
+									<div
+										onClick={() =>
+											navigateTo(
+												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+											)
+										}
+										className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
+									>
 										<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
 											<img
 												className="rounded-full h-20 w-20"
