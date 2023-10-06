@@ -32,6 +32,8 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		setPageNo(searchParams.get('pageNo'));
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");
