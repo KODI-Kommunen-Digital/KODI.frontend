@@ -367,9 +367,12 @@ const Dashboard = () => {
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
 													src={
-														listing.logo
-															? process.env.REACT_APP_BUCKET_HOST + listing.logo
-															: LISTINGSIMAGE
+														listing.sourceId === 1
+															? listing.logo
+																? process.env.REACT_APP_BUCKET_HOST +
+																  listing.logo
+																: LISTINGSIMAGE
+															: listing.logo || LISTINGSIMAGE
 													}
 													alt="avatar"
 												/>
