@@ -48,7 +48,7 @@ const HomePage = () => {
 			setListingsCount(sortedData);
 		});
 
-		document.title = process.env.REACT_APP_REGION_NAME + "   Home";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("home");
 	}, []);
 
 	useEffect(() => {

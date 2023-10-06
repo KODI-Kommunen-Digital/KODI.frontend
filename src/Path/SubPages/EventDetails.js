@@ -72,7 +72,8 @@ const EventDetails = () => {
 	const location = useLocation();
 	const [terminalView, setTerminalView] = useState(false);
 	useEffect(() => {
-		document.title = "Event Details";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
 		const searchParams = new URLSearchParams(location.search);
 		const terminalViewParam = searchParams.get("terminalView");
 		setTerminalView(terminalViewParam === "true");

@@ -56,7 +56,7 @@ const Dashboard = () => {
 		} else {
 			setViewAllListings(true);
 		}
-		document.title = "Dashboard";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
 
 		if (viewAllListings === true) {
 			getListings({
