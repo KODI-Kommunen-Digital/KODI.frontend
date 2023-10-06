@@ -12,7 +12,7 @@ const Register = () => {
 	const [alertType, setAlertType] = useState("");
 
 	useEffect(() => {
-		document.title = "Register";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("register");
 	}, []);
 
 	const navigate = useNavigate();

@@ -490,5 +490,13 @@
     "newsletter": "News Letter",
     "rathaus": "City Hall",
     "help": "Help ?",
-    "To": " - to - "
+    "To": " - to - ",
+
+    "accountSettings": "Account Settings",
+    "home": "HOME",
+    "forgotPassword": "Forgot Password",
+    "digitalRathouse": "Digital Rathouse",
+    "allEvents": "Listings",
+    "eventDetails": "Event Details",
+    "overviewPage": "Overview Page"
 }
