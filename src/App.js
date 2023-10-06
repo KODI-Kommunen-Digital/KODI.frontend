@@ -14,8 +14,8 @@ import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 import HomePage from "./Path/HomePage";
 import Favorites from "./Path/Favorites";
 
-import EventDetails from "./Path/SubPages/EventDetails";
-import AllEvents from "./Path/SubPages/AllEvents";
+import Listing from "./Path/SubPages/Listing";
+import AllListings from "./Path/SubPages/AllListings";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
@@ -58,12 +58,8 @@ const App = () => {
 			<div>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route
-						path="/HomePage/EventDetails"
-						exact
-						element={<EventDetails />}
-					/>
-					<Route path="/AllEvents" element={<AllEvents />} />
+					<Route path="Listing" element={<Listing />} exact />
+					<Route path="/AllListings" element={<AllListings />} />
 					<Route path="/ViewProfile/:username" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
 					<Route
