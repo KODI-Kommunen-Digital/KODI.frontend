@@ -536,11 +536,11 @@
     "somethingWrong": "Etwas ist schief gelaufen, bitte versuchen Sie es später noch einmal.",
     "Help": "Helfen ?",
     "To": " - bis - ",
-
     "accountSettings": "Account Einstellungen",
     "home": "HEIM",
     "forgotPassword": "Forgot Password",
     "digitalRathouse": "Digitales Rattenhaus",
     "allEvents": "Beiträge",
-    "eventDetails": "Veranstaltungsdetails"
+    "eventDetails": "Veranstaltungsdetails",
+    "overviewPage": "Übersichtsseite"
 }

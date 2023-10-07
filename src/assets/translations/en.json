@@ -534,7 +534,6 @@
     "rathaus": "City Hall",
     "help": "Help ?",
     "To": " - to - ",
-
     "accountSettings": "Account Settings",
     "home": "HOME",
     "login": "Login",
@@ -542,5 +541,6 @@
     "updatePassword": "Update Password",
     "digitalRathouse": "Digital Rathouse",
     "allEvents": "Listings",
-    "eventDetails": "Event Details"
+    "eventDetails": "Event Details",
+    "overviewPage": "Overview Page"
 }
