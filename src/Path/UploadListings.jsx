@@ -83,7 +83,7 @@ function UploadListings() {
 		const file = e.target.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage1(file);
+				setImage1(e.target.files);
 			} else if (file.type === "application/pdf") {
 				setPdf(file);
 			}
@@ -158,7 +158,9 @@ function UploadListings() {
 					if (image1) {
 						// Upload image if it exists
 						const imageForm = new FormData();
-						imageForm.append("image", image1);
+						for (let i = 0; i < image1.length; i++) {
+							imageForm.append("image", image1[i]);
+						}
 						await uploadListingImage(imageForm, cityId, response.data.id);
 					}
 
@@ -172,7 +174,11 @@ function UploadListings() {
 					if (image1) {
 						// Upload image if it exists
 						const imageForm = new FormData();
-						imageForm.append("image", image1);
+
+						for (let i = 0; i < image1.length; i++) {
+							imageForm.append("image", image1[i]);
+						}
+
 						await uploadListingImage(imageForm, cityId, input.id);
 					}
 
@@ -1030,7 +1036,7 @@ function UploadListings() {
 								<div className="flex flex-col items-center">
 									<img
 										className="object-contain h-64 w-full mb-4"
-										src={URL.createObjectURL(image1)}
+										src={URL.createObjectURL(image1[0])}
 										alt="uploaded"
 									/>
 									<button
@@ -1078,6 +1084,7 @@ function UploadListings() {
 												accept="image/*,.pdf"
 												className="sr-only"
 												onChange={handleInputChange}
+												multiple
 											/>
 										</label>
 									</div>

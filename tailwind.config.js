@@ -1,22 +1,21 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-    content: [
-        "./src/**/*.{js,jsx,ts,tsx}",
-    ],
-    theme: {
-        extend: {
-            scale: {
-                '102':'1.02'
-            },
-            margin: {
-                '5rem':'1rem'
-            }
-        },
+const withMT = require("@material-tailwind/react/utils/withMT");
+module.exports = withMT({
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      scale: {
+        102: "1.02",
+      },
+      margin: {
+        "5rem": "1rem",
+      },
     },
-    variants: {
-        extend: {
-            opacity: ['disabled']
-        }
+  },
+  variants: {
+    extend: {
+      opacity: ["disabled"],
     },
-    plugins: [],
-}
+  },
+  plugins: [require("@tailwindcss/aspect-ratio")],
+});
