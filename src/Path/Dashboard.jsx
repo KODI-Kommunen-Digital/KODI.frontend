@@ -33,7 +33,14 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		setPageNo(searchParams.get('pageNo'));
+		const pagenoParam = searchParams.get('pageNo');
+		if (!isNaN(pagenoParam) && parseInt(searchParams.get('pageNo')) > 1) {
+			setPageNo(parseInt(searchParams.get('pageNo')));
+		} else {
+			searchParams.delete('pageNo');
+			const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+			window.history.replaceState({}, "", newUrl);
+		}
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");
@@ -118,6 +125,14 @@ const Dashboard = () => {
 		}
 	}
 
+	const setPageNoAndUpdateURL = (newPageNo) => {
+		if (newPageNo < 1) {
+			newPageNo = 1;
+		}
+		navigate(`/Dashboard?pageNo=${newPageNo}`);
+		setPageNo(newPageNo);
+	};
+
 	function handleChangeInStatus(newStatusId, listing) {
 		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
 			.then((res) => {
@@ -173,7 +188,7 @@ const Dashboard = () => {
 
 	function goToListingPage(listing) {
 		navigateTo(
-			`Listing?listingId=${listing.id}&cityId=${listing.cityId}`
+			`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
@@ -372,7 +387,7 @@ const Dashboard = () => {
 														listing.sourceId === 1
 															? listing.logo
 																? process.env.REACT_APP_BUCKET_HOST +
-																  listing.logo
+																listing.logo
 																: LISTINGSIMAGE
 															: listing.logo || LISTINGSIMAGE
 													}
@@ -542,7 +557,7 @@ const Dashboard = () => {
 						{pageNo !== 1 ? (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNo(pageNo - 1)}
+								onClick={() => setPageNoAndUpdateURL(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{"<"}{" "}
@@ -560,7 +575,7 @@ const Dashboard = () => {
 						{listings.length >= 9 && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNo(pageNo + 1)}
+								onClick={() => setPageNoAndUpdateURL(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{">"}

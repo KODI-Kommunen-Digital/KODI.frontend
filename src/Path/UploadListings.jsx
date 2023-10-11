@@ -35,9 +35,11 @@ function UploadListings() {
 	const [marker, setMarker] = useState(null);
 
 	//Drag and Drop starts
-	const [image1, setImage1] = useState(null);
+	const [image, setImage] = useState(null);
 	const [pdf, setPdf] = useState(null);
+	const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
 	const [dragging, setDragging] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
@@ -70,7 +72,7 @@ function UploadListings() {
 		const file = e.dataTransfer.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage1(file);
+				setImage(file);
 			} else if (file.type === "application/pdf") {
 				setPdf(file);
 			}
@@ -83,18 +85,34 @@ function UploadListings() {
 		const file = e.target.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage1(file);
+				setLocalImageOrPdf(true);
+				setImage(file);
 			} else if (file.type === "application/pdf") {
+				setLocalImageOrPdf(true);
 				setPdf(file);
 			}
 		}
 	}
 
-	function handleRemoveImage1() {
-		setImage1(null);
+	function handleRemoveImage() {
+		if (listingId) {
+			setInput((prev) => ({
+				...prev,
+				removeImage: true,
+				logo: null
+			}));
+		}
+		setImage(null);
 	}
 
 	function handleRemovePDF() {
+		if (listingId) {
+			setInput((prev) => ({
+				...prev,
+				removePdf: true,
+				pdf: null
+			}));
+		}
 		setPdf(null);
 	}
 
@@ -148,46 +166,35 @@ function UploadListings() {
 			setUpdating(true);
 			event.preventDefault();
 			try {
-				let response;
-				response = await (newListing
+				let response = await (newListing
 					? postListingsData(cityId, input)
 					: updateListingsData(cityId, input, listingId));
+				if (newListing) {
+					setListingId(response.data.id);
+				}
 
-				if (response) {
-					if (image1) {
+				if (input.removeImage) {
+					await deleteListingImage(cityId, listingId);
+				}
+
+				if (input.removePdf) {
+					await deleteListingImage(cityId, listingId);
+				}
+
+				if (localImageOrPdf) {
+					if (image) {
 						// Upload image if it exists
 						const imageForm = new FormData();
-						imageForm.append("image", image1);
-						await uploadListingImage(imageForm, cityId, response.data.id);
-					}
-
-					if (pdf) {
+						imageForm.append("image", image);
+						await uploadListingImage(imageForm, cityId, listingId);
+					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, response.data.id);
-					}
-				} else {
-					if (image1) {
-						// Upload image if it exists
-						const imageForm = new FormData();
-						imageForm.append("image", image1);
-						await uploadListingImage(imageForm, cityId, input.id);
-					}
-
-					if (pdf) {
-						// Upload PDF if it exists
-						const pdfForm = new FormData();
-						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, input.id);
-					} else if (input.removeImage) {
-						await deleteListingImage(cityId, input.id);
-					} else if (input.removePdf) {
-						await deleteListingImage(cityId, input.id);
+						await uploadListingPDF(pdfForm, cityId, listingId);
 					}
 				}
-				var userProfile = await getProfile();
-				var isAdmin = userProfile.data.data.roleId === 1;
+
 				isAdmin
 					? setSuccessMessage(t("listingUpdatedAdmin"))
 					: setSuccessMessage(t("listingUpdated"));
@@ -230,8 +237,11 @@ function UploadListings() {
 		});
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
+		getProfile().then(response => {
+			setIsAdmin(response.data.data.roleId === 1);
+		});
 		if (listingId && cityId) {
+			setListingId(parseInt(listingId));
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
@@ -246,6 +256,14 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
+				if (listingData.logo) {
+					setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo)
+				} else if (listingData.pdf) {
+					setPdf({
+						link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
+						name: listingData.pdf.split('/')[1]
+					})
+				}
 			});
 		}
 	}, []);
@@ -1024,23 +1042,23 @@ function UploadListings() {
 							onDragEnter={handleDragEnter}
 							onDragLeave={handleDragLeave}
 						>
-							{image1 ? (
+							{image ? (
 								<div className="flex flex-col items-center">
 									<img
 										className="object-contain h-64 w-full mb-4"
-										src={URL.createObjectURL(image1)}
+										src={localImageOrPdf ? URL.createObjectURL(image) : image}
 										alt="uploaded"
 									/>
 									<button
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemoveImage1}
+										onClick={handleRemoveImage}
 									>
 										{t("remove")}
 									</button>
 								</div>
 							) : pdf ? (
 								<div className="flex flex-col items-center">
-									<p>{pdf.name}</p>
+									<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
 									<button
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 										onClick={handleRemovePDF}

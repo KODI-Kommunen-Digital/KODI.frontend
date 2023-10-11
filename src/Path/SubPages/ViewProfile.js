@@ -16,10 +16,11 @@ import {
 
 const ViewProfile = () => {
 	window.scrollTo(0, 0);
+
+	const { t } = useTranslation();
 	useEffect(() => {
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("profile");
 	}, []);
-	const { t } = useTranslation();
 
 	const [user, setUser] = useState();
 	const [userSocial, setUserSocial] = useState([]);

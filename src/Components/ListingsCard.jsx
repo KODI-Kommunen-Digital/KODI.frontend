@@ -20,8 +20,9 @@ function ListingsCard({ listing, terminalView = false }) {
 				e.stopPropagation();
 				if (listing.sourceId === 1) {
 					navigateTo(
-						`/Listing?listingId=${listing.id}&cityId=${listing.cityId
-						}${terminalView ? "&terminalView=true" : ""}`
+						`/Listing?listingId=${listing.id}&cityId=${listing.cityId}${
+							terminalView ? "&terminalView=true" : ""
+						}`
 					);
 				} else {
 					window.location.href = listing.website;
@@ -80,6 +81,7 @@ function ListingsCard({ listing, terminalView = false }) {
 							{new Date(listing.startDate).toLocaleTimeString("de-DE", {
 								hour: "2-digit",
 								minute: "2-digit",
+								timeZone: "UTC",
 							})}
 							)
 						</span>
@@ -92,6 +94,7 @@ function ListingsCard({ listing, terminalView = false }) {
 							{new Date(listing.endDate).toLocaleTimeString("de-DE", {
 								hour: "2-digit",
 								minute: "2-digit",
+								timeZone: "UTC",
 							})}
 							)
 						</span>
