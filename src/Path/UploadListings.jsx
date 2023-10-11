@@ -40,6 +40,7 @@ function UploadListings() {
 	const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
 	const [dragging, setDragging] = useState(false);
 	const [isAdmin, setIsAdmin] = useState(false);
+	const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
@@ -140,6 +141,7 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 		removePdf: false,
+		hasImage: false,
 	});
 
 	const [error, setError] = useState({
@@ -259,8 +261,8 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
-				if (listingData.logo) {
-					setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo)
+				if (listingData.logo && !listingData.logo[0].isDefaultImage) {
+					setImage(listingData.logo);
 				} else if (listingData.pdf) {
 					setPdf({
 						link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -269,7 +271,7 @@ function UploadListings() {
 				}
 			});
 		}
-	}, []);
+	}, [listingId]);
 
 	useEffect(() => {
 		let valid = true;
@@ -555,7 +557,7 @@ function UploadListings() {
 					</h2>
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						></label>
 						<input
@@ -581,7 +583,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("city")} *
@@ -592,7 +594,7 @@ function UploadListings() {
 							name="cityId"
 							value={cityId}
 							onChange={onCityChange}
-							autocomplete="country-name"
+							autoComplete="country-name"
 							disabled={!newListing}
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
@@ -614,7 +616,7 @@ function UploadListings() {
 					{villages.length > 0 && parseInt(cityId) ? (
 						<div className="relative mb-4">
 							<label
-								for="title"
+								htmlFor="title"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("village")}
@@ -626,7 +628,7 @@ function UploadListings() {
 								value={input.villageId}
 								onChange={onInputChange}
 								onBlur={validateInput}
-								autocomplete="country-name"
+								autoComplete="country-name"
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 							>
 								<option value={0}>{t("select")}</option>
@@ -641,7 +643,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="dropdown"
+							htmlFor="dropdown"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("category")} *
@@ -680,7 +682,7 @@ function UploadListings() {
 					{categoryId == 1 && (
 						<div className="relative mb-4">
 							<label
-								for="subcategoryId"
+								htmlFor="subcategoryId"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("subCategory")} *
@@ -720,7 +722,7 @@ function UploadListings() {
 					<div className="relative mb-4 grid grid-cols-2 gap-4">
 						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 							<label
-								for="place"
+								htmlFor="place"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("place")}
@@ -738,7 +740,7 @@ function UploadListings() {
 						</div>
 						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 							<label
-								for="zipCode"
+								htmlFor="zipCode"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("zipCode")}
@@ -758,7 +760,7 @@ function UploadListings() {
 
 					<div className="col-span-6">
 						<label
-							for="address"
+							htmlFor="address"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("streetAddress")}
@@ -819,7 +821,7 @@ function UploadListings() {
 										></svg>
 									</div>
 									<label
-										for="startDate"
+										htmlFor="startDate"
 										className="block text-sm font-medium text-gray-600"
 									>
 										{t("eventStartDate")} *
@@ -868,7 +870,7 @@ function UploadListings() {
 										></svg>
 									</div>
 									<label
-										for="endDate"
+										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
 										{t("eventEndDate")} *
@@ -913,7 +915,7 @@ function UploadListings() {
 						<div className="relative mb-4 grid grid-cols-2 gap-4">
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
-									for="place"
+									htmlFor="place"
 									className="block text-sm font-medium text-gray-600"
 								>
 									{t("originalPrice")}
@@ -932,7 +934,7 @@ function UploadListings() {
 							</div>
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
-									for="place"
+									htmlFor="place"
 									className="block text-sm font-medium text-gray-600"
 								>
 									{t("discountedPrice")}
@@ -954,7 +956,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="place"
+							htmlFor="place"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("telephone")}
@@ -973,7 +975,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="place"
+							htmlFor="place"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("email")}
@@ -993,7 +995,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="description"
+							htmlFor="description"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("description")} *
@@ -1050,7 +1052,7 @@ function UploadListings() {
 								<div className="flex flex-col items-center">
 									<img
 										className="object-contain h-64 w-full mb-4"
-										src={localImageOrPdf ? URL.createObjectURL(image[0]) : image[0]}
+										src={localImageOrPdf ? URL.createObjectURL(image[0]) : imgaeBucketURL + image[0].logo}
 										alt="uploaded"
 									/>
 									<button
