@@ -73,9 +73,9 @@ const PasswordForgot = () => {
 
 				case "confirmPassword":
 					if (!value) {
-						stateObj[name] = "Please enter Confirm Password.";
+						stateObj[name] = t("pleaseConfirmPassword");
 					} else if (input.password && value !== input.password) {
-						stateObj[name] = "Password and Confirm Password does not match.";
+						stateObj[name] = t("passwordsDoNotMatch");
 					}
 					break;
 
