@@ -541,5 +541,6 @@
     "allEvents": "Listings",
     "eventDetails": "Event Details",
     "overviewPage": "Overview Page",
-    "login": "Login"
+    "login": "Login",
+    "updatePassword": "Update Password"
 }
