@@ -75,6 +75,12 @@ const PasswordUpdate = () => {
 				case "password":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterNewPassword");
+					} else if (
+						!/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%&]).{8,}/.test(value)
+					) {
+						stateObj[name] = t("passwordValidation");
+					} else if (value.includes(input.username)) {
+						stateObj[name] = t("passwordContainsUsername");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
 					} else {
