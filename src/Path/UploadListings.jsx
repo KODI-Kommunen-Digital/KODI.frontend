@@ -174,11 +174,7 @@ function UploadListings() {
 					setListingId(response.data.id);
 				}
 
-				if (input.removeImage) {
-					await deleteListingImage(cityId, listingId);
-				}
-
-				if (input.removePdf) {
+				if (input.removeImage || input.removePdf) {
 					await deleteListingImage(cityId, listingId);
 				}
 
@@ -187,12 +183,12 @@ function UploadListings() {
 						// Upload image if it exists
 						const imageForm = new FormData();
 						imageForm.append("image", image);
-						await uploadListingImage(imageForm, cityId, listingId);
+						await uploadListingImage(imageForm, cityId, response.data.id || listingId );
 					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, listingId);
+						await uploadListingPDF(pdfForm, cityId, response.data.id || listingId);
 					}
 				}
 
