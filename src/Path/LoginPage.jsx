@@ -348,7 +348,7 @@ const LoginPage = () => {
 									onClick={openModal}
 									className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
 								>
-									{t("help")}
+									{t("Help")}
 								</span>
 
 								{isOpen && (

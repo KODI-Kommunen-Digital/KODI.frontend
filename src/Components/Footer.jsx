@@ -16,25 +16,26 @@ function Footer(props) {
 		} else {
 			setShowNavBar(true);
 		}
+
 	}, [terminalViewParam]);
 
 	return (
 		<footer className="text-center lg:text-left bg-black text-white">
 			<div className="mx-6 py-10 text-center md:text-left">
-				<div className="grid grid-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && (
+				<div className={`flex gap-40 justify-center`}>
+					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && process.env.REACT_APP_NAME !== "WALDI APP" && (
 						<>
-							<div className="">
+							<div >
 								<h6
 									className="
-                    uppercase
-                    font-semibold
-                    mb-4
-                    flex
-                    items-center
-                    justify-center
-                    md:justify-start font-sans
-                    "
+										uppercase
+										font-semibold
+										mb-4
+										flex
+										items-center
+										justify-center
+										md:justify-start font-sans
+										"
 								>
 									<svg
 										aria-hidden="true"
@@ -149,11 +150,11 @@ function Footer(props) {
 								{t("imprint")}
 							</a>
 						</p>
-						<p className={`${footerClass} mb-4`}>
+						{/* <p className={`${footerClass} mb-4`}>
 							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
 								{t("terms_conditions")}
 							</a>
-						</p>
+						</p> */}
 						<p className="mb-4">
 							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
 								{t("data_protection")}
@@ -165,7 +166,7 @@ function Footer(props) {
 							</a>
 						</p> */}
 					</div>
-					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && (
+					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && process.env.REACT_APP_NAME !== "WALDI APP" && (
 						<>
 							<div className="">
 								<h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
