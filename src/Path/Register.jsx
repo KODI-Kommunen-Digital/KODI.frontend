@@ -61,8 +61,8 @@ const Register = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			
-			if(Object.values(error).filter((e) => e !== "").length > 0) {
+
+			if (Object.values(error).filter((e) => e !== "").length > 0) {
 				setAlertInfo(true);
 				setAlertType("danger");
 				setAlertMessage("Failed. " + Object.values(error).filter((e) => e !== "")[0]);
@@ -360,7 +360,7 @@ const Register = () => {
 								onClick={openModal}
 								className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
 							>
-								{t("help")}
+								{t("Help")}
 							</span>
 
 							{isOpen && (
