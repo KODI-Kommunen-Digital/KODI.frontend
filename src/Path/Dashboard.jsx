@@ -129,7 +129,17 @@ const Dashboard = () => {
 		if (newPageNo < 1) {
 			newPageNo = 1;
 		}
-		navigate(`/Dashboard?pageNo=${newPageNo}`);
+		// navigate(`/Dashboard?pageNo=${newPageNo}`);
+		window.location.href = `/Dashboard?pageNo=${newPageNo}`
+		setPageNo(newPageNo);
+	};
+
+	const setAllListingsPageNoAndUpdateURL = (newPageNo) => {
+		if (newPageNo < 1) {
+			newPageNo = 1;
+		}
+		// navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
+		window.location.href = `/DashboardAdmin?pageNo=${newPageNo}`
 		setPageNo(newPageNo);
 	};
 
@@ -557,7 +567,7 @@ const Dashboard = () => {
 						{pageNo !== 1 ? (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNoAndUpdateURL(pageNo - 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo - 1) : () => setPageNoAndUpdateURL(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{"<"}{" "}
@@ -575,13 +585,14 @@ const Dashboard = () => {
 						{listings.length >= 9 && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNoAndUpdateURL(pageNo + 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo + 1) : () => setPageNoAndUpdateURL(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{">"}
 							</span>
 						)}
 					</div>
+
 				</div>
 			</div>
 		</section>

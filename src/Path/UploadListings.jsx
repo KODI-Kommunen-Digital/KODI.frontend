@@ -183,7 +183,7 @@ function UploadListings() {
 						// Upload image if it exists
 						const imageForm = new FormData();
 						imageForm.append("image", image);
-						await uploadListingImage(imageForm, cityId, response.data.id || listingId );
+						await uploadListingImage(imageForm, cityId, response.data.id || listingId);
 					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
@@ -354,7 +354,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else {
+				} else if(value.length > 10){
+					return t("characterLimitReacehd");
+				}
+				 else {
 					return "";
 				}
 

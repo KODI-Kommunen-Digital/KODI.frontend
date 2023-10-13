@@ -57,7 +57,7 @@ const PasswordForgot = () => {
 					if (!value) {
 						stateObj[name] = t("pleaseEnterNewPassword");
 					} else if (
-						!/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%&]).{8,}/.test(value)
+						!/^\S{8,}$/.test(value)
 					) {
 						stateObj[name] = t("passwordValidation");
 					} else if (value.includes(input.username)) {
