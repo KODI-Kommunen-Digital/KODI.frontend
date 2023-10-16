@@ -129,7 +129,8 @@ const Dashboard = () => {
 		if (newPageNo < 1) {
 			newPageNo = 1;
 		}
-		navigate(`/Dashboard?pageNo=${newPageNo}`);
+		// navigate(`/Dashboard?pageNo=${newPageNo}`);
+		window.location.href = `/Dashboard?pageNo=${newPageNo}`
 		setPageNo(newPageNo);
 	};
 
@@ -137,7 +138,8 @@ const Dashboard = () => {
 		if (newPageNo < 1) {
 			newPageNo = 1;
 		}
-		navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
+		// navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
+		window.location.href = `/DashboardAdmin?pageNo=${newPageNo}`
 		setPageNo(newPageNo);
 	};
 

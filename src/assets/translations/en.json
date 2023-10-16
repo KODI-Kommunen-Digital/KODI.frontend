@@ -155,6 +155,7 @@
     "please_wait": "Please wait. It wont take much long",
     "pleaseConfirmPassword": "Please confirm your new password",
     "pleaseEnterDescription": "Please enter a description",
+    "characterLimitReacehd": "Character limit reached!",
     "pleaseEnterEmailAddress": "Please enter email address",
     "emailExample": "youremail@gmail.com",
     "pleaseEnterEndDate": "Please enter the end date",
