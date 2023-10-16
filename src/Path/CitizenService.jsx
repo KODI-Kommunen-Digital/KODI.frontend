@@ -156,11 +156,11 @@ const CitizenService = () => {
 				</div>
 			) : (
 				<div>
-					<div className="text-center">
+					<div className="md:mt-20 mt-10 mb-10 p-6 text-center">
 						<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 							Oops !
 						</h1>
-						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+						<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl text-black">
 							{t("currently_no_services")}
 						</h1>
 					</div>
