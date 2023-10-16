@@ -157,7 +157,7 @@ export async function deleteForumPostImage(cityId, forumsId, postId) {
 }
 
 export async function getForumMemberRequests(cityId, forumsId) {
-	return axios.post(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
 }
 
 export async function cancelForumMemberRequest(cityId, forumsId, requestId) {
