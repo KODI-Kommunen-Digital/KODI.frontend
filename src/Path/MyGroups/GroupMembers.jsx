@@ -76,8 +76,8 @@ const GroupMembers = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		members: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function handleRemove(member) {
@@ -192,8 +192,8 @@ const GroupMembers = () => {
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
 													src={
-														member.logo
-															? process.env.REACT_APP_BUCKET_HOST + member.logo
+														member.image
+															? process.env.REACT_APP_BUCKET_HOST + member.image
 															: GROUPIMAGE
 													}
 													alt="avatar"
@@ -313,11 +313,10 @@ const GroupMembers = () => {
 											{isAdmin && (
 												<td className="px-6 py-4 text-center">
 													<button
-														className={`font-medium hover:underline cursor-pointer text-center ${
-															member.isAdmin === 1
-																? "text-red-500"
-																: "text-green-500"
-														}`}
+														className={`font-medium hover:underline cursor-pointer text-center ${member.isAdmin === 1
+															? "text-red-500"
+															: "text-green-500"
+															}`}
 														style={{
 															fontFamily: "Poppins, sans-serif",
 														}}
