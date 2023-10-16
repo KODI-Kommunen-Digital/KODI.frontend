@@ -21,8 +21,8 @@ function Footer(props) {
 
 	return (
 		<footer className="text-center lg:text-left bg-black text-white">
-			<div className="mx-6 py-10 text-center md:text-left">
-				<div className={`flex gap-40 justify-center`}>
+			<div className="mx-6 py-10 text-left">
+				<div className={`flex gap-20 md:gap-40 justify-center`}>
 					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && process.env.REACT_APP_NAME !== "WALDI APP" && (
 						<>
 							<div >
@@ -33,8 +33,7 @@ function Footer(props) {
 										mb-4
 										flex
 										items-center
-										justify-center
-										md:justify-start font-sans
+										justify-start font-sans
 										"
 								>
 									<svg
@@ -116,7 +115,7 @@ function Footer(props) {
 						</>
 					)}
 					<div className="">
-						<h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
+						<h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
 							{t("learn_more")}
 						</h6>
 						<p className={`${footerClass} mb-4`}>
@@ -142,7 +141,7 @@ function Footer(props) {
 						</p>
 					</div>
 					<div className="">
-						<h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
+						<h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
 							{t("legal")}
 						</h6>
 						<p className="mb-4">
