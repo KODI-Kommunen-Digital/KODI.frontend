@@ -148,8 +148,8 @@ const Forum = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function handleDeleteGroup() {
@@ -176,7 +176,7 @@ const Forum = () => {
 											forums.image
 												? process.env.REACT_APP_BUCKET_HOST + forums.image
 												: process.env.REACT_APP_BUCKET_HOST +
-												  "admin/Homepage.jpg"
+												"admin/DefaultForum.jpeg"
 										}
 									/>
 									<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
@@ -454,7 +454,7 @@ const Forum = () => {
 																src={
 																	forumPost.image
 																		? process.env.REACT_APP_BUCKET_HOST +
-																		  forumPost.image
+																		forumPost.image
 																		: POSTSLOGO
 																}
 															/>
