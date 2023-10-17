@@ -43,6 +43,7 @@ import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 
 const App = () => {
+	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
 	useEffect(() => {
 		const link =
 			document.querySelector("link[rel*='icon']") ||
@@ -69,7 +70,6 @@ const App = () => {
 						path="/CitizenService/DigitalManagement"
 						element={<DigitalManagement />}
 					/>
-					<Route path="/CitizenService/AllForums" element={<AllForums />} />
 
 					<Route path="/Dashboard" element={<Dashboard />} exact />
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
@@ -100,27 +100,31 @@ const App = () => {
 					<Route path="/VerifyEmail" element={<VerifyEmail />} />
 					<Route path="*" element={<Error />} />
 					<Route path="ForumsError" element={<ForumsError />} />
+					{isForumEnabled && (
+						<React.Fragment>
+							<Route path="/Forum/ViewPost" element={<ViewPost />} />
+							<Route path="/Forum" element={<Forum />} />
+							<Route path="/UploadPosts" element={<UploadPosts />} />
+							<Route path="/CreateGroup" element={<CreateGroup />} exact />
+							<Route path="/MyGroups" element={<MyGroups />} exact />
+							<Route
+								path="/MyGroups/GroupMembers"
+								element={<GroupMembers />}
+								exact
+							/>
+							<Route
+								path="/MyGroups/MemberRequests"
+								element={<MemberRequests />}
+								exact
+							/>
+							<Route
+								path="/MyGroups/ReportedPosts"
+								element={<ReportedPosts />}
+								exact
+							/>
+							<Route path="/CitizenService/AllForums" element={<AllForums />} />
+						</React.Fragment>)}
 
-					<Route path="/Forum/ViewPost" element={<ViewPost />} />
-					<Route path="/Forum" element={<Forum />} />
-					<Route path="/UploadPosts" element={<UploadPosts />} />
-					<Route path="/CreateGroup" element={<CreateGroup />} exact />
-					<Route path="/MyGroups" element={<MyGroups />} exact />
-					<Route
-						path="/MyGroups/GroupMembers"
-						element={<GroupMembers />}
-						exact
-					/>
-					<Route
-						path="/MyGroups/MemberRequests"
-						element={<MemberRequests />}
-						exact
-					/>
-					<Route
-						path="/MyGroups/ReportedPosts"
-						element={<ReportedPosts />}
-						exact
-					/>
 				</Routes>
 			</div>
 		</BrowserRouter>
