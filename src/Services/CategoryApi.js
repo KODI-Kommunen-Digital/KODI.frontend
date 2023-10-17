@@ -1,5 +1,5 @@
 import { instance } from "../api/axiosInstance";
-const axios = instance
+const axios = instance;
 
 export async function getCategory() {
 	return axios.get(`/categories`);
