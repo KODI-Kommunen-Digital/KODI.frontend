@@ -229,6 +229,7 @@ function UploadListings() {
 			response?.data.data.forEach((cat) => {
 				catList[cat.id] = cat.name;
 			});
+			console.log(catList)
 			setCategories(catList);
 		});
 		setCityId(cityId);
@@ -263,6 +264,17 @@ function UploadListings() {
 			});
 		}
 	}, []);
+
+	function categoryDescription(categories) {
+		if (categories === "4") {
+			return "clubsDescription";
+		} else if (categories === "10") {
+			return "companyPortraitsDescription";
+		} else {
+			return "";
+		}
+	}
+
 
 	useEffect(() => {
 		let valid = true;
@@ -352,10 +364,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else if(value.length > 1000){
+				} else if (value.length > 1000) {
 					return t("characterLimitReacehd");
 				}
-				 else {
+				else {
 					return "";
 				}
 
@@ -533,6 +545,7 @@ function UploadListings() {
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 	}
 
+
 	return (
 		<section className="bg-slate-600 body-font relative">
 			<SideBar />
@@ -657,7 +670,7 @@ function UploadListings() {
 							{Object.keys(categories).map((key) => {
 								return (
 									<option className="font-sans" value={key} key={key}>
-										{t(categories[key])}
+										{t(categories[key])} {t(categoryDescription(key))}
 									</option>
 								);
 							})}

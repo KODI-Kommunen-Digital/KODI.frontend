@@ -48,7 +48,7 @@ const VerifyEmail = () => {
 			.catch((e) => {
 				setVerifyState("failed");
 			});
-	}, [makeVerifyEmailCall, navigateTo, token, userId]);
+	}, [makeVerifyEmailCall]);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
