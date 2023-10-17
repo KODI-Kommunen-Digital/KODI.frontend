@@ -11,7 +11,7 @@ import Footer from "../../Components/Footer";
 const AllForums = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
-	const [cityId, setCityId] = useState(1);
+	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
 	const [forums, setForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
@@ -56,27 +56,33 @@ const AllForums = () => {
 			urlParams.delete("pageNo");
 		}
 
-		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-		window.history.replaceState({}, "", newUrl);
-		const fetchData = async () => {
-			try {
-				const response = await getAllForums(cityId, params);
-				const data = response.data.data;
-				setForums(data);
-			} catch (error) {
-				console.error("Error fetching forums:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
 
-		const fetchDataWithDelay = () => {
-			setTimeout(() => {
-				fetchData();
-			}, 1000);
-		};
+		if (cityId) {
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.replaceState({}, "", newUrl);
+			const fetchData = async () => {
+				try {
+					const response = await getAllForums(cityId, params);
+					const data = response.data.data;
+					setForums(data);
+				} catch (error) {
+					console.error("Error fetching forums:", error);
+				} finally {
+					setIsLoading(false);
+				}
+			};
 
-		fetchDataWithDelay();
+			const fetchDataWithDelay = () => {
+				setTimeout(() => {
+					fetchData();
+				}, 1000);
+			};
+
+			fetchDataWithDelay();
+		} else {
+			setForums([]);
+			setIsLoading(false);
+		}
 	}, [cityId, pageNo]);
 
 	const navigateTo = (path) => {
@@ -130,12 +136,15 @@ const AllForums = () => {
 												name="city"
 												autoComplete="city-name"
 												onChange={(e) => handleChange(e)}
-												value={cityId || 0}
+												value={cityId}
 												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												style={{
 													fontFamily: "Poppins, sans-serif",
 												}}
 											>
+												<option className="font-sans" value={0} key={0}>
+													{t("allCities")}
+												</option>
 												{cities.map((city) => (
 													<option
 														className="font-sans"
@@ -150,7 +159,7 @@ const AllForums = () => {
 									</div>
 								</div>
 							</div>
-							<div className="relative w-full px-4 mb-4 md:w-80">
+							{/* <div className="relative w-full px-4 mb-4 md:w-80">
 								<select
 									id="city"
 									name="city"
@@ -170,7 +179,7 @@ const AllForums = () => {
 										</option>
 									))}
 								</select>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>
@@ -199,7 +208,7 @@ const AllForums = () => {
 																	src={
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
-																			  forum.image
+																			forum.image
 																			: LISTINGSIMAGE
 																	}
 																/>
@@ -212,7 +221,7 @@ const AllForums = () => {
 																	src={
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
-																			  forum.image
+																			forum.image
 																			: LISTINGSIMAGE
 																	}
 																/>

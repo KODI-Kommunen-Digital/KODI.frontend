@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../index.css";
 import { getUserForums, deleteForums } from "../Services/forumsApi";
-import GROUPIMAGE from "../assets/GroupImage.avif";
 
 const MyGroups = () => {
 	const { t } = useTranslation();
@@ -33,8 +32,8 @@ const MyGroups = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		forums: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function handleDelete(forum) {
@@ -151,7 +150,13 @@ const MyGroups = () => {
 													src={
 														forum.image
 															? process.env.REACT_APP_BUCKET_HOST + forum.image
-															: GROUPIMAGE
+															: process.env.REACT_APP_BUCKET_HOST +
+															"admin/DefaultForum.jpeg"
+													}
+													onClick={() =>
+														navigateTo(
+															`/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+														)
 													}
 													alt="avatar"
 												/>

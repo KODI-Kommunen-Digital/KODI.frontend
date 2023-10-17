@@ -12,7 +12,6 @@ const CitizenService = () => {
 	const [citizenService, setCitizenServices] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [cityId, setCityId] = useState(0);
-	const [showForum, setShowForum] = useState(false);
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -39,7 +38,6 @@ const CitizenService = () => {
 
 		getCitizenServices().then((response) => {
 			setCitizenServices(response.data.data);
-			console.log(response.data.data);
 		});
 	}, []);
 
@@ -47,17 +45,11 @@ const CitizenService = () => {
 		if (data.isExternalLink) {
 			window.open(data.link, "_blank");
 		} else {
-			navigateTo(data.link + `?cityId=${cityId}`);
+			const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
+			navigateTo(urlWithCityId);
 		}
-	};
 
-	useEffect(() => {
-		if (!cityId) {
-			setShowForum(false);
-		} else {
-			setShowForum(cities ? cities[cityId].hasForum : false);
-		}
-	}, [cityId]);
+	};
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -123,7 +115,7 @@ const CitizenService = () => {
 					<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
 						{citizenService &&
 							citizenService
-								.filter((data) => data.title !== "forums" || showForum)
+								// .filter((data) => data.title !== "forums" || showForum)
 								.map((data, index) => (
 									<div
 										key={index}
@@ -132,9 +124,6 @@ const CitizenService = () => {
 										<div className="relative h-80 rounded overflow-hidden">
 											<a
 												rel="noreferrer noopener"
-												// onClick={() => {
-												// 	navigateTo(data.link + `?cityId=${cityId}`);
-												// }}
 												onClick={() => handleLinkClick(data)}
 											>
 												<img
@@ -158,11 +147,11 @@ const CitizenService = () => {
 				</div>
 			) : (
 				<div>
-					<div className="text-center">
+					<div className="md:mt-20 mt-10 mb-10 p-6 text-center">
 						<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 							Oops !
 						</h1>
-						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+						<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl text-black">
 							{t("currently_no_services")}
 						</h1>
 					</div>
