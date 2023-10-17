@@ -229,7 +229,6 @@ function UploadListings() {
 			response?.data.data.forEach((cat) => {
 				catList[cat.id] = cat.name;
 			});
-			console.log(catList)
 			setCategories(catList);
 		});
 		setCityId(cityId);
