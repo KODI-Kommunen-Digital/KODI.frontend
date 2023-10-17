@@ -265,10 +265,10 @@ function UploadListings() {
 		}
 	}, []);
 
-	function categoryDescription(categories) {
-		if (categories === "4") {
+	function categoryDescription(category) {
+		if (category === "4") {
 			return "clubsDescription";
-		} else if (categories === "10") {
+		} else if (category === "10") {
 			return "companyPortraitsDescription";
 		} else {
 			return "";
