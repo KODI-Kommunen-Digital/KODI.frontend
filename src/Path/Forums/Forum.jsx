@@ -10,7 +10,9 @@ import {
 	deleteForumMembers,
 	deleteForums,
 	getForumMembers,
-	forumMemberRequests,
+	createMemberRequest,
+	getUserForumRequests,
+	cancelMemberRequest
 } from "../../Services/forumsApi";
 import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 
@@ -18,12 +20,15 @@ const Forum = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [forumPosts, setForumPosts] = useState([]);
-	const [forums, setForums] = useState({});
+	const [forum, setForum] = useState({});
 	const [isValidForum, setIsValidForum] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const [forumId, setForumId] = useState(null);
 	const [memberId, setMemberId] = useState(null);
 	const [pageNo, setPageNo] = useState(1);
+	const [requestId, setRequestId] = useState(0);
+	const [memberStatus, setMemberStatus] = useState(false);
+	const [isOnlyMember, setIsOnlyMember] = useState(false);
 	const pageSize = 12;
 
 	const navigate = useNavigate();
@@ -46,9 +51,6 @@ const Forum = () => {
 		}
 	}, [pageNo]);
 
-	const [followRequested, setFollowRequested] = useState(false);
-	const [memberStatus, setMemberStatus] = useState(false);
-	const [isOnlyMember, setIsOnlyMember] = useState(false);
 	useEffect(() => {
 		async function checkUserMembership() {
 			const urlParams = new URLSearchParams(window.location.search);
@@ -57,14 +59,10 @@ const Forum = () => {
 			const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
 			document.title = "Forums";
 			setPageNo(pageNoParam);
-			// const storedFollowRequested = localStorage.getItem("followRequested");
-			// if (storedFollowRequested) {
-			// 	setFollowRequested(true);
-			// }
 			if (cityIdParam && forumIdParam) {
 				getForum(cityIdParam, forumIdParam).then((response) => {
 					if (response.data.data) {
-						setForums(response.data.data);
+						setForum(response.data.data);
 						setCityId(cityIdParam);
 						setForumId(forumIdParam);
 						setIsValidForum(true);
@@ -76,38 +74,38 @@ const Forum = () => {
 			try {
 				const response = await getUserForums();
 				const userForums = response.data.data;
-				const isMember = userForums.some(
+				const forum = userForums.find(
 					(userForum) => userForum.forumId === forumId
 				);
-				setMemberStatus(isMember);
-				const forums = userForums.find(
-					(userForum) => userForum.forumId === forumId
-				);
-				if (forums) {
-					setMemberId(forums.memberId);
-				}
-				if (isMember) {
+				if (forum) {
+					setMemberStatus(true);
+					setMemberId(forum.memberId);
 					const membersResponse = await getForumMembers(cityId, forumId);
 					const forumMembers = membersResponse.data.data;
-					setIsOnlyMember(forumMembers.length === 1 && isMember);
+					setIsOnlyMember(forumMembers.length === 1);
 					const response2 = await getForumPosts(cityIdParam, forumIdParam, {
 						pageNo: pageNoParam,
 						pageSize,
 					});
 					setForumPosts(response2.data.data);
+				} else {
+					const forumRequests = await getUserForumRequests({ cityId });
+					const forumRequest = forumRequests.data.data.find(r => r.forumId === forumId)
+					if (forumRequest) {
+						setRequestId(forumRequest.id)
+					}
 				}
 			} catch (error) {
 				console.error("Error fetching user forums:", error);
 			}
 		}
 		checkUserMembership();
-	}, [forumId]);
+	}, [forumId, cityId]);
 
-	const handleFollow = async () => {
+	const handleLeaveRequest = async () => {
 		try {
-			await forumMemberRequests(cityId, forumId);
-			setMemberStatus(true);
-			localStorage.setItem("memberStatus", "true");
+			await cancelMemberRequest(cityId, forumId, requestId);
+			setRequestId(0);
 		} catch (error) {
 			console.error("Error sending follow request:", error);
 		}
@@ -115,9 +113,17 @@ const Forum = () => {
 
 	const handleFollowRequest = async () => {
 		try {
-			await forumMemberRequests(cityId, forumId);
-			setFollowRequested(true);
-			localStorage.setItem("followRequested", "true");
+			const response = await createMemberRequest(cityId, forumId);
+			if (forum.isPrivate) {
+				setRequestId(response.data.data.id);
+			} else {
+				setMemberId(response.data.data.id);
+				setMemberStatus(true);
+				const params = { pageNo, pageSize };
+				getForumPosts(cityId, forumId, params).then((response) => {
+					setForumPosts(response.data.data);
+				});
+			}
 		} catch (error) {
 			console.error("Error sending follow request:", error);
 		}
@@ -127,14 +133,15 @@ const Forum = () => {
 		try {
 			await deleteForumMembers(cityId, forumId, memberId);
 			setMemberStatus(false);
-			setFollowRequested(false);
+			setRequestId(0);
+			setForumPosts([]);
 		} catch (error) {
 			console.error("Error leaving group:", error);
 		}
 	};
 
 	function goToAllForums() {
-		navigateTo(`/CitizenService`);
+		navigateTo(`/CitizenService/AllForums`);
 	}
 
 	const handleDelete = async () => {
@@ -173,15 +180,14 @@ const Forum = () => {
 										alt="forumImage"
 										className="object-cover object-center h-full w-full"
 										src={
-											forums.image
-												? process.env.REACT_APP_BUCKET_HOST + forums.image
-												: process.env.REACT_APP_BUCKET_HOST +
-												"admin/DefaultForum.jpeg"
+											process.env.REACT_APP_BUCKET_HOST + (forum.image
+												? forum.image
+												: "admin/DefaultForum.jpeg")
 										}
 									/>
 									<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 										<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-											{forums.forumName}
+											{forum.forumName}
 										</h1>
 									</div>
 								</div>
@@ -190,25 +196,25 @@ const Forum = () => {
 					</div>
 
 					<div className="text-center justify-between lg:px-10 md:px-5 sm:px-0 px-4 md:py-6 py-4 bg-gray-50">
-						{forums.isPrivate && !memberStatus ? (
+						{forum.isPrivate && !memberStatus ? (
 							<a
-								onClick={followRequested ? undefined : handleFollowRequest}
+								onClick={requestId ? handleLeaveRequest : handleFollowRequest}
 								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 							>
-								{followRequested ? t("requestSent") : t("request")}
+								{requestId ? t("cancelRequest") : t("request")}
 							</a>
 						) : (
 							<div className="flex flex-row md:flex-row items-center justify-center">
 								{!memberStatus ? (
 									<div>
 										<a
-											onClick={handleFollow}
+											onClick={handleFollowRequest}
 											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 										>
 											{t("follow")}
 										</a>
 										<svg
-											onClick={handleFollow}
+											onClick={handleFollowRequest}
 											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-red-700 cursor-pointer transition-transform duration-300 transform hover:scale-110"
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
@@ -409,27 +415,22 @@ const Forum = () => {
 								{t("description")}
 							</h1>
 							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
-								{forums.description}
+								{forum.description}
 							</h1>
 						</div>
 					</div>
 
-					{forums.isPrivate && !memberStatus ? (
+					{!memberStatus ? (
 						<div>
-							<div className="flex items-center justify-center">
-								<h1 className="m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-									This group is private
-								</h1>
-							</div>
 							<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
 								<span className="font-sans text-black">
-									To join the group, click the Follow request button!
+									{t("join_group_message")}
 								</span>
 							</div>
 						</div>
 					) : (
 						<div>
-							{memberStatus && forumPosts && forumPosts.length > 0 ? (
+							{forumPosts && forumPosts.length > 0 ? (
 								<div className="max-w-full lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-full">
 									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 										{t("groupPosts")}
@@ -471,6 +472,34 @@ const Forum = () => {
 												))}
 										</div>
 									</div>
+									<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+										{pageNo !== 1 ? (
+											<span
+												className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+												onClick={() => setPageNo(pageNo - 1)}
+											>
+												{"<"}{" "}
+											</span>
+										) : (
+											<span />
+										)}
+										<span
+											className="text-lg px-3"
+											style={{ fontFamily: "Poppins, sans-serif" }}
+										>
+											{t("page")} {pageNo}
+										</span>
+										{forumPosts.length >= pageSize && (
+											<span
+												className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+												onClick={() => setPageNo(pageNo + 1)}
+											>
+												{">"}
+											</span>
+										)}
+									</div>
 								</div>
 							) : (
 								<div>
@@ -499,34 +528,6 @@ const Forum = () => {
 						</div>
 					)}
 
-					<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
-						{pageNo !== 1 ? (
-							<span
-								className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-								style={{ fontFamily: "Poppins, sans-serif" }}
-								onClick={() => setPageNo(pageNo - 1)}
-							>
-								{"<"}{" "}
-							</span>
-						) : (
-							<span />
-						)}
-						<span
-							className="text-lg px-3"
-							style={{ fontFamily: "Poppins, sans-serif" }}
-						>
-							{t("page")} {pageNo}
-						</span>
-						{forumPosts.length >= pageSize && (
-							<span
-								className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
-								style={{ fontFamily: "Poppins, sans-serif" }}
-								onClick={() => setPageNo(pageNo + 1)}
-							>
-								{">"}
-							</span>
-						)}
-					</div>
 				</div>
 			) : (
 				<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-4 font-sans py-72">
