@@ -40,6 +40,8 @@
     "clubnews": "Vereinsnews",
     "clubs": "Vereine",
     "companyPortaits": "Unternehmen",
+    "clubsDescription": "(Lade hier ein Vereinsprofil hoch)",
+    "companyPortraitsDescription": "(Lade hier ein Unternehmensprofil hoch)",
     "confirmNewPassword": "Neues Passwort bestätigen",
     "confirmPassword": "Passwort bestätigen",
     "contact_us": "Kontaktiere uns",
@@ -501,5 +503,6 @@
     "digitalRathouse": "Digitales Rattenhaus",
     "allEvents": "Beiträge",
     "eventDetails": "Veranstaltungsdetails",
+    "youAreOnTheWay": "Du bist auf dem Weg",
     "overviewPage": "Übersichtsseite"
 }

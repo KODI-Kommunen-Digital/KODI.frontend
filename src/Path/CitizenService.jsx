@@ -134,14 +134,14 @@ const CitizenService = () => {
 					</div>
 				</div>
 			) : (
-				<div>
+				<div className="md:mb-60 mt-20 mb-20 p-6">
 					<div className="text-center">
-						<div className="m-auto mt-20 mb-10 text-center font-sans font-bold text-xl">
+						<div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
 							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 								Oops !
 							</h1>
 						</div>
-						<div className="m-auto mt-10 mb-20 text-center font-sans font-bold text-xl">
+						<div className="m-auto mt-20 mb-20 text-center font-sans font-bold text-xl">
 							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
 								{t("currently_no_services")}
 							</h1>
