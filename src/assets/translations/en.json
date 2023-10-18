@@ -498,5 +498,6 @@
     "digitalRathouse": "Digital Rathouse",
     "allEvents": "Listings",
     "eventDetails": "Event Details",
-    "overviewPage": "Overview Page"
+    "overviewPage": "Overview Page",
+    "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder. \nRedirecting to login page in 10s"
 }
