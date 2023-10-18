@@ -354,10 +354,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else if(value.length > 1000){
+				} else if (value.length > 65535) {
 					return t("characterLimitReacehd");
 				}
-				 else {
+				else {
 					return "";
 				}
 
