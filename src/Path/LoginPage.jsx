@@ -34,7 +34,7 @@ const LoginPage = () => {
 	const location = useLocation();
 	const [timeOutAlertMessage, settimeOutAlertMessage] = useState("");
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Login";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("login");
 		const searchParams = new URLSearchParams(location.search);
 
 		userRef.current.focus();
@@ -151,6 +151,13 @@ const LoginPage = () => {
 		}
 	};
 
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			handleSubmit(e);
+		}
+	};
+
 	const passwordReset = async (event) => {
 		event.preventDefault();
 		setForgotPasswordLoading(true);
@@ -166,6 +173,16 @@ const LoginPage = () => {
 			setAlertType("danger");
 			setAlertMessage("Failed: " + err.response.data.message);
 		}
+	};
+
+	const [isOpen, setIsOpen] = useState(false);
+
+	const openModal = () => {
+		setIsOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsOpen(false);
 	};
 
 	return (
@@ -198,9 +215,10 @@ const LoginPage = () => {
 									value={user}
 									autoComplete="on"
 									onChange={(e) => setUser(e.target.value)}
+									onKeyDown={handleKeyDown}
 									required
 									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username") + "*"}
+									placeholder={t("usernameOrEmail") + "*"}
 								/>
 							</div>
 							<div className="relative">
@@ -213,6 +231,7 @@ const LoginPage = () => {
 									name="password"
 									value={pwd}
 									onChange={handlePasswordChange}
+									onKeyDown={handleKeyDown}
 									required
 									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
@@ -250,7 +269,7 @@ const LoginPage = () => {
 							<div className="text-sm">
 								<span
 									onClick={() => setForgotPassword(true)}
-									className="font-medium text-black cursor-pointer hover:text-sky-400"
+									className="font-medium text-black cursor-pointer hover:text-blue-400"
 								>
 									{t("forgotYourPassword")}
 								</span>
@@ -312,15 +331,79 @@ const LoginPage = () => {
 								<Alert type={alertType} message={timeOutAlertMessage} />
 							</div>
 						)}
-						<div className="text-sm">
-							{t("notMember")}
-							<span
-								onClick={routeChangeToRegister}
-								className="font-medium cursor-pointer text-black hover:text-sky-400"
-							>
-								{" "}
-								{t("clickToRegister")}
-							</span>
+						<div className="flex justify-between">
+							<div className="text-sm">
+								{t("notMember")}
+								<span
+									onClick={routeChangeToRegister}
+									className="font-medium cursor-pointer text-black hover:text-blue-400"
+								>
+									{" "}
+									{t("clickToRegister")}
+								</span>
+							</div>
+
+							<div className="flex cursor-pointer">
+								<span
+									onClick={openModal}
+									className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
+								>
+									{t("Help")}
+								</span>
+
+								{isOpen && (
+									<div className="fixed inset-0 flex items-center justify-center z-50">
+										<div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+										<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+											<div className="modal-content py-4 text-left px-6">
+												<div>
+													<h2 className="font-bold text-xl text-center mb-4">
+														Anleitung
+													</h2>
+													<h3 className="font-bold text-lg text-center mb-4">
+														Registrieren in der App
+													</h3>
+													<p className="mb-6">
+														<strong>Schritt 1:</strong> Nutzername und Passwort
+														festlegen{" "}
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 2:</strong> Es wird Ihnen eine
+														E-Mail gesendet an die Mail, die Sie eingegeben
+														haben
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 3:</strong> Bitte verifizieren Sie
+														die Mail, indem Sie in Ihr Postfach gehen und den
+														Bestätigungslink drücken
+													</p>
+													<p className="mb-6">
+														<strong>Schritt 4:</strong> Ihr Account ist
+														verifiziert und Sie können sich mit Ihren
+														Login-Daten einloggen
+													</p>
+													<p className="mb-6">
+														Wir wünschen Ihnen viel Spaß beim Benutzen der App!
+													</p>
+													<p className="mb-6">
+														<strong>Danke!!</strong>
+													</p>
+												</div>
+
+												<div className="mt-4 text-center">
+													<button
+														onClick={closeModal}
+														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
+													>
+														{t("cancel")}
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 					{forgotPassword && (
@@ -338,7 +421,7 @@ const LoginPage = () => {
 									onChange={(e) => setUserReset(e.target.value)}
 									required
 									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username") + "*"}
+									placeholder={t("usernameOrEmail") + "*"}
 								/>
 								<div className="flex gap-2">
 									<button

@@ -32,6 +32,15 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const pagenoParam = searchParams.get('pageNo');
+		if (!isNaN(pagenoParam) && parseInt(searchParams.get('pageNo')) > 1) {
+			setPageNo(parseInt(searchParams.get('pageNo')));
+		} else {
+			searchParams.delete('pageNo');
+			const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+			window.history.replaceState({}, "", newUrl);
+		}
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
 			window.sessionStorage.getItem("accessToken");
@@ -56,7 +65,7 @@ const Dashboard = () => {
 		} else {
 			setViewAllListings(true);
 		}
-		document.title = "Dashboard";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
 
 		if (viewAllListings === true) {
 			getListings({
@@ -116,6 +125,24 @@ const Dashboard = () => {
 		}
 	}
 
+	const setPageNoAndUpdateURL = (newPageNo) => {
+		if (newPageNo < 1) {
+			newPageNo = 1;
+		}
+		// navigate(`/Dashboard?pageNo=${newPageNo}`);
+		window.location.href = `/Dashboard?pageNo=${newPageNo}`
+		setPageNo(newPageNo);
+	};
+
+	const setAllListingsPageNoAndUpdateURL = (newPageNo) => {
+		if (newPageNo < 1) {
+			newPageNo = 1;
+		}
+		// navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
+		window.location.href = `/DashboardAdmin?pageNo=${newPageNo}`
+		setPageNo(newPageNo);
+	};
+
 	function handleChangeInStatus(newStatusId, listing) {
 		updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
 			.then((res) => {
@@ -136,8 +163,8 @@ const Dashboard = () => {
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
 		listing: null,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const fetchUpdatedListings = useCallback(() => {
@@ -169,9 +196,9 @@ const Dashboard = () => {
 		});
 	}
 
-	function goToEventDetailsPage(listing) {
+	function goToListingPage(listing) {
 		navigateTo(
-			`/HomePage/EventDetails?listingId=${listing.id}&cityId=${listing.cityId}`
+			`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
@@ -362,14 +389,17 @@ const Dashboard = () => {
 											<th
 												scope="row"
 												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
-												onClick={() => goToEventDetailsPage(listing)}
+												onClick={() => goToListingPage(listing)}
 											>
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
 													src={
-														listing.logo
-															? process.env.REACT_APP_BUCKET_HOST + listing.logo
-															: LISTINGSIMAGE
+														listing.sourceId === 1
+															? listing.logo
+																? process.env.REACT_APP_BUCKET_HOST +
+																listing.logo
+																: LISTINGSIMAGE
+															: listing.logo || LISTINGSIMAGE
 													}
 													alt="avatar"
 												/>
@@ -484,6 +514,7 @@ const Dashboard = () => {
 													<a
 														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
 														style={{ fontFamily: "Poppins, sans-serif" }}
+														href={"/ViewProfile/" + listing.username}
 													>
 														{listing.username}
 													</a>
@@ -536,7 +567,7 @@ const Dashboard = () => {
 						{pageNo !== 1 ? (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNo(pageNo - 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo - 1) : () => setPageNoAndUpdateURL(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{"<"}{" "}
@@ -554,13 +585,14 @@ const Dashboard = () => {
 						{listings.length >= 9 && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNo(pageNo + 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo + 1) : () => setPageNoAndUpdateURL(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{">"}
 							</span>
 						)}
 					</div>
+
 				</div>
 			</div>
 		</section>

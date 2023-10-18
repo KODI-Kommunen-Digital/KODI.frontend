@@ -14,8 +14,8 @@ import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 import HomePage from "./Path/HomePage";
 import Favorites from "./Path/Favorites";
 
-import EventDetails from "./Path/SubPages/EventDetails";
-import AllEvents from "./Path/SubPages/AllEvents";
+import Listing from "./Path/SubPages/Listing";
+import AllListings from "./Path/SubPages/AllListings";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
@@ -30,7 +30,6 @@ import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
-import PrivacyPolicyPopup from "./Path/PrivacyPolicyPopup";
 
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
@@ -58,12 +57,8 @@ const App = () => {
 			<div>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route
-						path="/HomePage/EventDetails"
-						exact
-						element={<EventDetails />}
-					/>
-					<Route path="/AllEvents" element={<AllEvents />} />
+					<Route path="Listing" element={<Listing />} exact />
+					<Route path="/AllListings" element={<AllListings />} />
 					<Route path="/ViewProfile/:username" element={<ViewProfile />} />
 					<Route path="/CitizenService" element={<CitizenService />} />
 					<Route
@@ -75,11 +70,6 @@ const App = () => {
 					<Route path="/DashboardAdmin" element={<Dashboard />} exact />
 					<Route path="/AccountSettings" element={<AccountSettings />} exact />
 					<Route path="/AllDevices" element={<AllDevices />} exact />
-					<Route
-						path="/PrivacyPolicyPopup"
-						element={<PrivacyPolicyPopup />}
-						exact
-					/>
 					<Route path="/UploadListings" element={<UploadListings />} exact />
 					<Route path="/ProfilePage" element={<ProfilePage />} />
 					<Route path="/PasswordForgot" element={<PasswordForgot />} />

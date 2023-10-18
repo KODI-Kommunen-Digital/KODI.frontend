@@ -18,7 +18,8 @@ const PasswordForgot = () => {
 	const [alertType, setAlertType] = useState("");
 
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Forgot Password";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("forgotPassword");
 	}, []);
 
 	const navigate = useNavigate();
@@ -54,10 +55,15 @@ const PasswordForgot = () => {
 			switch (name) {
 				case "password":
 					if (!value) {
-						stateObj[name] = "Please enter new Password.";
+						stateObj[name] = t("pleaseEnterNewPassword");
+					} else if (
+						!/^\S{8,}$/.test(value)
+					) {
+						stateObj[name] = t("passwordValidation");
+					} else if (value.includes(input.username)) {
+						stateObj[name] = t("passwordContainsUsername");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
-						stateObj.confirmPassword =
-							"Password and Confirm Password does not match.";
+						stateObj.confirmPassword = t("passwordsDoNotMatch");
 					} else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
@@ -67,9 +73,9 @@ const PasswordForgot = () => {
 
 				case "confirmPassword":
 					if (!value) {
-						stateObj[name] = "Please enter Confirm Password.";
+						stateObj[name] = t("pleaseConfirmPassword");
 					} else if (input.password && value !== input.password) {
-						stateObj[name] = "Password and Confirm Password does not match.";
+						stateObj[name] = t("passwordsDoNotMatch");
 					}
 					break;
 

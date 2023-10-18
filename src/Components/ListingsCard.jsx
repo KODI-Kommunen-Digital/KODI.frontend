@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import PdfToImage from "../Components/PdfToImage";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function ListingsCard({ listing, terminalView = false }) {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -18,9 +20,9 @@ function ListingsCard({ listing, terminalView = false }) {
 				e.stopPropagation();
 				if (listing.sourceId === 1) {
 					navigateTo(
-						`/HomePage/EventDetails?listingId=${listing.id}&cityId=${
-							listing.cityId
-						}${terminalView ? "&terminalView=true" : ""}`
+						`/Listing?listingId=${listing.id}&cityId=${listing.cityId}${
+							terminalView ? "&terminalView=true" : ""
+						}`
 					);
 				} else {
 					window.location.href = listing.website;
@@ -71,24 +73,31 @@ function ListingsCard({ listing, terminalView = false }) {
 						className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
-						{new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-							"de-DE"
-						) +
-							" (" +
-							new Date(listing.startDate).toLocaleTimeString("de-DE", {
-								hour: "2-digit",
-								minute: "2-digit",
-							}) +
-							") To " +
-							new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+						<span>
+							{new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
 								"de-DE"
-							) +
-							" (" +
-							new Date(listing.endDate).toLocaleTimeString("de-DE", {
+							)}{" "}
+							(
+							{new Date(listing.startDate).toLocaleTimeString("de-DE", {
 								hour: "2-digit",
 								minute: "2-digit",
-							}) +
-							")"}
+								timeZone: "UTC",
+							})}
+							)
+						</span>
+						<span className="text-blue-400"> {t("To")} </span>
+						<span>
+							{new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+								"de-DE"
+							)}{" "}
+							(
+							{new Date(listing.endDate).toLocaleTimeString("de-DE", {
+								hour: "2-digit",
+								minute: "2-digit",
+								timeZone: "UTC",
+							})}
+							)
+						</span>
 					</p>
 				</div>
 			) : (

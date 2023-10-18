@@ -8,7 +8,8 @@ import Alert from "../Components/Alert";
 const PasswordUpdate = () => {
 	const { t } = useTranslation();
 	useEffect(() => {
-		document.title = process.env.REACT_APP_REGION_NAME + " Update Password";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("updatePassword");
 	}, []);
 
 	const [alertInfo, setAlertInfo] = useState(false);
@@ -74,6 +75,12 @@ const PasswordUpdate = () => {
 				case "password":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterNewPassword");
+					} else if (
+						!/^\S{8,}$/.test(value)
+					) {
+						stateObj[name] = t("passwordValidation");
+					} else if (value.includes(input.username)) {
+						stateObj[name] = t("passwordContainsUsername");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
 					} else {

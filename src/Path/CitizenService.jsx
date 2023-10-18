@@ -21,7 +21,8 @@ const CitizenService = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = process.env.REACT_APP_REGION_NAME + " Citizen Services";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
@@ -48,7 +49,6 @@ const CitizenService = () => {
 			const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
 			navigateTo(urlWithCityId);
 		}
-
 	};
 
 	return (
@@ -146,14 +146,18 @@ const CitizenService = () => {
 					</div>
 				</div>
 			) : (
-				<div>
-					<div className="md:mt-20 mt-10 mb-10 p-6 text-center">
-						<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-							Oops !
-						</h1>
-						<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl text-black">
-							{t("currently_no_services")}
-						</h1>
+				<div className="md:mb-60 mt-20 mb-20 p-6">
+					<div className="text-center">
+						<div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
+							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+								Oops !
+							</h1>
+						</div>
+						<div className="m-auto mt-20 mb-20 text-center font-sans font-bold text-xl">
+							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								{t("currently_no_services")}
+							</h1>
+						</div>
 					</div>
 				</div>
 			)}

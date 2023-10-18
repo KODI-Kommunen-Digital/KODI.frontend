@@ -12,3 +12,7 @@ export async function getCategoryListings(cityId, categoryId) {
 export async function getCitizenServices() {
 	return axios.get(`/citizenServices`);
 }
+
+export async function getNewsSubCategory(cityId) {
+	return axios.get(`/categories/1/subcategories`);
+}

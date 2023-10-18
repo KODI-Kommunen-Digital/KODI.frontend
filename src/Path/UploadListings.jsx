@@ -35,14 +35,18 @@ function UploadListings() {
 	const [marker, setMarker] = useState(null);
 
 	//Drag and Drop starts
-	const [image1, setImage1] = useState(null);
+	const [image, setImage] = useState(null);
 	const [pdf, setPdf] = useState(null);
+	const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
 	const [dragging, setDragging] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [categories, setCategories] = useState([]);
 	const [subCategories, setSubCategories] = useState([]);
+	const [startDate, setStartDate] = useState([]);
+	const [endDate, setEndDate] = useState([]);
 	const navigate = useNavigate();
 
 	function handleDragEnter(e) {
@@ -68,7 +72,7 @@ function UploadListings() {
 		const file = e.dataTransfer.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage1(file);
+				setImage(file);
 			} else if (file.type === "application/pdf") {
 				setPdf(file);
 			}
@@ -81,18 +85,34 @@ function UploadListings() {
 		const file = e.target.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage1(file);
+				setLocalImageOrPdf(true);
+				setImage(file);
 			} else if (file.type === "application/pdf") {
+				setLocalImageOrPdf(true);
 				setPdf(file);
 			}
 		}
 	}
 
-	function handleRemoveImage1() {
-		setImage1(null);
+	function handleRemoveImage() {
+		if (listingId) {
+			setInput((prev) => ({
+				...prev,
+				removeImage: true,
+				logo: null
+			}));
+		}
+		setImage(null);
 	}
 
 	function handleRemovePDF() {
+		if (listingId) {
+			setInput((prev) => ({
+				...prev,
+				removePdf: true,
+				pdf: null
+			}));
+		}
 		setPdf(null);
 	}
 
@@ -146,49 +166,31 @@ function UploadListings() {
 			setUpdating(true);
 			event.preventDefault();
 			try {
-				let response;
+				let response = await (newListing
+					? postListingsData(cityId, input)
+					: updateListingsData(cityId, input, listingId));
 				if (newListing) {
-					// Create or update the listing first
-					response = await (newListing
-						? postListingsData(cityId, input)
-						: updateListingsData(cityId, input, listingId));
+					setListingId(response.data.id);
 				}
 
-				if (response) {
-					if (image1) {
+				if (input.removeImage || input.removePdf) {
+					await deleteListingImage(cityId, listingId);
+				}
+
+				if (localImageOrPdf) {
+					if (image) {
 						// Upload image if it exists
 						const imageForm = new FormData();
-						imageForm.append("image", image1);
-						await uploadListingImage(imageForm, cityId, response.data.id);
-					}
-
-					if (pdf) {
+						imageForm.append("image", image);
+						await uploadListingImage(imageForm, cityId, response.data.id || listingId);
+					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, response.data.id);
-					}
-				} else {
-					if (image1) {
-						// Upload image if it exists
-						const imageForm = new FormData();
-						imageForm.append("image", image1);
-						await uploadListingImage(imageForm, cityId, input.id);
-					}
-
-					if (pdf) {
-						// Upload PDF if it exists
-						const pdfForm = new FormData();
-						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, input.id);
-					} else if (input.removeImage) {
-						await deleteListingImage(cityId, input.id);
-					} else if (input.removePdf) {
-						await deleteListingImage(cityId, input.id);
+						await uploadListingPDF(pdfForm, cityId, response.data.id || listingId);
 					}
 				}
-				var userProfile = await getProfile();
-				var isAdmin = userProfile.data.data.roleId === 1;
+
 				isAdmin
 					? setSuccessMessage(t("listingUpdatedAdmin"))
 					: setSuccessMessage(t("listingUpdated"));
@@ -231,23 +233,47 @@ function UploadListings() {
 		});
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
-		setListingId(listingId);
+		getProfile().then(response => {
+			setIsAdmin(response.data.data.roleId === 1);
+		});
 		if (listingId && cityId) {
+			setListingId(parseInt(listingId));
 			setNewListing(false);
 			getVillages(cityId).then((response) => setVillages(response.data.data));
 			getListingsById(cityId, listingId).then((listingsResponse) => {
 				let listingData = listingsResponse.data.data;
-				if (listingData.startDate)
-					listingData.startDate = listingData.startDate.slice(0, 10);
-				if (listingData.endDate)
-					listingData.endDate = listingData.endDate.slice(0, 10);
+				// if (listingData.startDate)
+				// 	listingData.startDate = listingData.startDate.slice(0, 10);
+				// if (listingData.endDate)
+				// 	listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
+				setStartDate(listingData.startDate);
+				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
+				if (listingData.logo) {
+					setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo)
+				} else if (listingData.pdf) {
+					setPdf({
+						link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
+						name: listingData.pdf.split('/')[1]
+					})
+				}
 			});
 		}
 	}, []);
+
+	function categoryDescription(category) {
+		if (category === "4") {
+			return "clubsDescription";
+		} else if (category === "10") {
+			return "companyPortraitsDescription";
+		} else {
+			return "";
+		}
+	}
+
 
 	useEffect(() => {
 		let valid = true;
@@ -337,7 +363,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else {
+				} else if (value.length > 1000) {
+					return t("characterLimitReacehd");
+				}
+				else {
 					return "";
 				}
 
@@ -494,6 +523,20 @@ function UploadListings() {
 		window.history.replaceState({}, "", newUrl);
 	};
 
+	function formatDateTime(dateTime) {
+		const date = new Date(dateTime);
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		const hours = String(date.getHours()).padStart(2, "0");
+		const minutes = String(date.getMinutes()).padStart(2, "0");
+		const seconds = String(date.getSeconds()).padStart(2, "0");
+		const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+	}
+
+
 	return (
 		<section className="bg-slate-600 body-font relative">
 			<SideBar />
@@ -618,7 +661,7 @@ function UploadListings() {
 							{Object.keys(categories).map((key) => {
 								return (
 									<option className="font-sans" value={key} key={key}>
-										{t(categories[key])}
+										{t(categories[key])} {t(categoryDescription(key))}
 									</option>
 								);
 							})}
@@ -780,16 +823,29 @@ function UploadListings() {
 									>
 										{t("eventStartDate")} *
 									</label>
-									<input
-										type="datetime-local"
-										id="startDate"
-										name="startDate"
-										value={input.startDate}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="Start Date"
-									/>
+									{input.startDate ? (
+										// Display the start date as plain text if it's present
+										<input
+											type="text"
+											id="startDate"
+											name="startDate"
+											value={formatDateTime(input.startDate)}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											readOnly // Make the text input read-only
+										/>
+									) : (
+										// Display an editable datetime-local input if start date is not present
+										<input
+											type="datetime-local"
+											id="startDate"
+											name="startDate"
+											value={formatDateTime(input.startDate)}
+											onChange={onInputChange}
+											onBlur={validateInput}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											placeholder="Start Date"
+										/>
+									)}
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -816,16 +872,29 @@ function UploadListings() {
 									>
 										{t("eventEndDate")} *
 									</label>
-									<input
-										type="datetime-local"
-										id="endDate"
-										name="endDate"
-										value={input.endDate.replace("T", " ")}
-										onChange={onInputChange}
-										onBlur={validateInput}
-										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-										placeholder="End Date"
-									/>
+									{input.endDate ? (
+										// Display the end date as plain text if it's present
+										<input
+											type="text"
+											id="endDate"
+											name="endDate"
+											value={formatDateTime(input.endDate)}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											readOnly // Make the text input read-only
+										/>
+									) : (
+										// Display an editable datetime-local input if end date is not present
+										<input
+											type="datetime-local"
+											id="endDate"
+											name="endDate"
+											value={formatDateTime(input.endDate)}
+											onChange={onInputChange}
+											onBlur={validateInput}
+											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+											placeholder="End Date"
+										/>
+									)}
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -976,23 +1045,23 @@ function UploadListings() {
 							onDragEnter={handleDragEnter}
 							onDragLeave={handleDragLeave}
 						>
-							{image1 ? (
+							{image ? (
 								<div className="flex flex-col items-center">
 									<img
 										className="object-contain h-64 w-full mb-4"
-										src={URL.createObjectURL(image1)}
+										src={localImageOrPdf ? URL.createObjectURL(image) : image}
 										alt="uploaded"
 									/>
 									<button
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemoveImage1}
+										onClick={handleRemoveImage}
 									>
 										{t("remove")}
 									</button>
 								</div>
 							) : pdf ? (
 								<div className="flex flex-col items-center">
-									<p>{pdf.name}</p>
+									<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
 									<button
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 										onClick={handleRemovePDF}

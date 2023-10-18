@@ -40,6 +40,7 @@ const HomePage = () => {
 		}
 		getListingsCount().then((response) => {
 			const data = response.data.data;
+			console.log(response.data.data)
 			const sortedData = data.sort(
 				(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
 			);
@@ -47,7 +48,7 @@ const HomePage = () => {
 			setListingsCount(sortedData);
 		});
 
-		document.title = process.env.REACT_APP_REGION_NAME + "   Home";
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("home");
 	}, []);
 
 	useEffect(() => {
@@ -99,9 +100,9 @@ const HomePage = () => {
 	};
 
 	function goToAllListingsPage(category) {
-		let navUrl = `/AllEvents?categoryId=${category}`;
+		let navUrl = `/AllListings?categoryId=${category}`;
 		if (cityId)
-			navUrl = `/AllEvents?categoryId=${category}` + `&cityId=${cityId}`;
+			navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
 		navigateTo(navUrl);
 	}
 
@@ -428,6 +429,48 @@ const HomePage = () => {
 									</div>
 								);
 								break;
+							case 14:
+								categoryName = t("rathaus");
+								categoryIcon = (
+									<div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 448 512"
+											className="h-8 w-40 mr-1"
+										>
+											<path d="M243.4 2.6l-224 96c-14 6-21.8 21-18.7 35.8S16.8 160 32 160v8c0 13.3 10.7 24 24 24H456c13.3 0 24-10.7 24-24v-8c15.2 0 28.3-10.7 31.3-25.6s-4.8-29.9-18.7-35.8l-224-96c-8-3.4-17.2-3.4-25.2 0zM128 224H64V420.3c-.6 .3-1.2 .7-1.8 1.1l-48 32c-11.7 7.8-17 22.4-12.9 35.9S17.9 512 32 512H480c14.1 0 26.5-9.2 30.6-22.7s-1.1-28.1-12.9-35.9l-48-32c-.6-.4-1.2-.7-1.8-1.1V224H384V416H344V224H280V416H232V224H168V416H128V224zM256 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
+										</svg>
+									</div>
+								);
+								break;
+							case 15:
+								categoryName = t("newsletter");
+								categoryIcon = (
+									<div className="h-20 w-20 bg-teal-400 flex items-center justify-center rounded-full m-auto shadow-xl">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 448 512"
+											className="h-8 w-40 mr-2"
+										>
+											<path d="M128 0C110.3 0 96 14.3 96 32V224h96V192c0-35.3 28.7-64 64-64H480V32c0-17.7-14.3-32-32-32H128zM256 160c-17.7 0-32 14.3-32 32v32h96c35.3 0 64 28.7 64 64V416H576c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32H256zm240 64h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H496c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zM64 256c-17.7 0-32 14.3-32 32v13L187.1 415.9c1.4 1 3.1 1.6 4.9 1.6s3.5-.6 4.9-1.6L352 301V288c0-17.7-14.3-32-32-32H64zm288 84.8L216 441.6c-6.9 5.1-15.3 7.9-24 7.9s-17-2.8-24-7.9L32 340.8V480c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V340.8z" />
+										</svg>
+									</div>
+								);
+								break;
+							case 16:
+								categoryName = t("officialnotification");
+								categoryIcon = (
+									<div className="h-20 w-20 bg-rose-400 flex items-center justify-center rounded-full m-auto shadow-xl">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 448 512"
+											className="h-8 w-8"
+										>
+											<path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z" />
+										</svg>
+									</div>
+								);
+								break;
 							default:
 								categoryName = t("unknownCategory");
 								categoryIcon = null;
@@ -440,7 +483,8 @@ const HomePage = () => {
 								onClick={() => {
 									goToAllListingsPage(listing.categoryId);
 								}}
-								className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-xl mt-10 cursor-pointer"
+								className={`p-4 justify-center bg-white h-40 ${listingsCount.length <= 3 ? "md:w-48 xl:w-60" : "md:w-48"
+									} w-40 shadow-xl rounded-xl mt-10 cursor-pointer`}
 							>
 								<div>{categoryIcon}</div>
 								<h2
@@ -472,7 +516,7 @@ const HomePage = () => {
 									onClick={() => {
 										const scrollPosition = window.scrollY;
 										localStorage.setItem("selectedCity", city.name);
-										navigateTo(`/AllEvents?cityId=${city.id}`);
+										navigateTo(`/AllListings?cityId=${city.id}`);
 										window.addEventListener("popstate", function () {
 											window.scrollTo(0, scrollPosition);
 										});
@@ -529,7 +573,7 @@ const HomePage = () => {
 						type="submit"
 						onClick={() => {
 							localStorage.setItem("selectedItem", t("chooseOneCategory"));
-							navigateTo("/AllEvents");
+							navigateTo("/AllListings");
 						}}
 						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
 						style={{ fontFamily: "Poppins, sans-serif" }}

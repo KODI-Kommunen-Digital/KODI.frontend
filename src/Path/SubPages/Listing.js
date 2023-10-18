@@ -8,7 +8,6 @@ import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import UserProfile from "../../Components/UserProfile";
-// import { categoryById } from "../../Constants/categories";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
@@ -34,7 +33,7 @@ Description.propTypes = {
 	content: PropTypes.string.isRequired,
 };
 
-const EventDetails = () => {
+const Listing = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [listingId, setListingId] = useState(0);
@@ -73,7 +72,8 @@ const EventDetails = () => {
 	const location = useLocation();
 	const [terminalView, setTerminalView] = useState(false);
 	useEffect(() => {
-		document.title = "Event Details";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
 		const searchParams = new URLSearchParams(location.search);
 		const terminalViewParam = searchParams.get("terminalView");
 		setTerminalView(terminalViewParam === "true");
@@ -93,7 +93,8 @@ const EventDetails = () => {
 		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		const listingId = searchParams.get("listingId");
-		document.title = process.env.REACT_APP_REGION_NAME + " Event Details";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
 		if (listingId && cityId) {
 			const accessToken =
 				window.localStorage.getItem("accessToken") ||
@@ -108,6 +109,8 @@ const EventDetails = () => {
 				.then((listingsResponse) => {
 					if (listingsResponse.data.data.sourceId !== source.User) {
 						window.location.replace(listingsResponse.data.data.website);
+					} else if (listingsResponse.data.data.statusId !== 1) {
+						navigateTo("/Error");
 					} else {
 						setInput(listingsResponse.data.data);
 						const cityUserId = listingsResponse.data.data.userId;
@@ -359,13 +362,37 @@ const EventDetails = () => {
 															fontFamily: "Poppins, sans-serif",
 														}}
 													>
-														{new Date(
-															input.startDate.slice(0, 10)
-														).toLocaleDateString("de-DE") +
-															" - to - " +
-															new Date(
+														<span>
+															{new Date(
+																input.startDate.slice(0, 10)
+															).toLocaleDateString("de-DE")}{" "}
+															(
+															{new Date(input.startDate).toLocaleTimeString(
+																"de-DE",
+																{
+																	hour: "2-digit",
+																	minute: "2-digit",
+																	timeZone: "UTC",
+																}
+															)}
+															)
+														</span>
+														<span className="text-blue-400"> {t("To")} </span>
+														<span>
+															{new Date(
 																input.endDate.slice(0, 10)
-															).toLocaleDateString("de-DE")}
+															).toLocaleDateString("de-DE")}{" "}
+															(
+															{new Date(input.endDate).toLocaleTimeString(
+																"de-DE",
+																{
+																	hour: "2-digit",
+																	minute: "2-digit",
+																	timeZone: "UTC",
+																}
+															)}
+															)
+														</span>
 													</p>
 												) : (
 													<p
@@ -380,7 +407,8 @@ const EventDetails = () => {
 									</div>
 								</div>
 							</div>
-							<div className="container-fluid lg:w-full md:w-full">
+
+							<div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
 								<div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
 									<style>
 										{`
@@ -391,7 +419,7 @@ const EventDetails = () => {
 								}
 							`}
 									</style>
-									<div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
+									<div className="h-full overflow-hidden px-0 py-0 shadow-xl">
 										<div className="relative h-full">
 											{input.logo ? (
 												<img
@@ -427,7 +455,7 @@ const EventDetails = () => {
 								</div>
 							</div>
 
-							<div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+							<div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
 								<h1
 									className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
 									style={{ fontFamily: "Poppins, sans-serif" }}
@@ -443,7 +471,14 @@ const EventDetails = () => {
 						) : (
 							<div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 								<div>
-									<div className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1">
+									<div
+										onClick={() =>
+											navigateTo(
+												user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+											)
+										}
+										className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
+									>
 										<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
 											<img
 												className="rounded-full h-20 w-20"
@@ -564,4 +599,4 @@ const EventDetails = () => {
 	);
 };
 
-export default EventDetails;
+export default Listing;

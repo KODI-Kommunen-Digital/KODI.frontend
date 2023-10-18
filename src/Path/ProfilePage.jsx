@@ -5,343 +5,320 @@ import "./bodyContainer.css";
 import PropTypes from "prop-types";
 import SocialMedia from "../Components/socialMedia";
 import {
-    getProfile,
-    updateProfile,
-    updatePassword,
-    uploadProfilePic,
+	getProfile,
+	updateProfile,
+	updatePassword,
+	uploadProfilePic,
 } from "../Services/usersApi";
 
 import { useTranslation, withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 
 function ChangeImage({ setInput }) {
-    ChangeImage.propTypes = {
-        setInput: PropTypes.func.isRequired,
-    };
-    const { t } = useTranslation();
-    const inputFile = useRef(null);
-    let file = false;
-    function handleChangeImage(e) {
-        file = e.target.files[0];
-        const form = new FormData();
-        form.append("image", file);
-        uploadProfilePic(form).then((res) => {
-            setInput("image", res.data.path);
-        });
-    }
+	ChangeImage.propTypes = {
+		setInput: PropTypes.func.isRequired,
+	};
+	const { t } = useTranslation();
+	const inputFile = useRef(null);
+	let file = false;
+	function handleChangeImage(e) {
+		file = e.target.files[0];
+		const form = new FormData();
+		form.append("image", file);
+		uploadProfilePic(form).then((res) => {
+			setInput("image", res.data.path);
+		});
+	}
 
-    return (
-        <>
-            {file ? (
-                <img src={URL.createObjectURL(file)} alt={"Profile"} />
-            ) : (
-                ""
-            )}
-            <button
-                onClick={() => inputFile.current.click()}
-                className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
-            >
-                {t("change")}
-            </button>
-            <input
-                onChange={handleChangeImage}
-                className="sr-only"
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{ display: "none" }}
-            />
-        </>
-    );
+	return (
+		<>
+			{file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
+			<button
+				onClick={() => inputFile.current.click()}
+				className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+			>
+				{t("change")}
+			</button>
+			<input
+				onChange={handleChangeImage}
+				className="sr-only"
+				type="file"
+				id="file"
+				ref={inputFile}
+				style={{ display: "none" }}
+			/>
+		</>
+	);
 }
 
 class ProfilePage extends React.Component {
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            input: {
-                socialMedia: "",
-            },
-            isLoggedIn: false,
-            profile: {},
-            alertInfo: { show: false, message: "", type: null },
-            showError: {},
-            errorMessage: {},
-            formValid: true,
-            pageLoading: true,
-            updatingProfile: false,
-            val: [{ selected: "", socialMedia: "" }],
-            data: {
-                socialMedia: {},
-            },
-        };
-        this.handleProfileChange = this.handleProfileChange.bind(this);
-        this.updateChanges = this.updateChanges.bind(this);
-        this.setProfile = this.setProfile.bind(this);
-        this.setSocialMedia = this.setSocialMedia.bind(this);
-    }
+		this.state = {
+			input: {
+				socialMedia: "",
+			},
+			isLoggedIn: false,
+			profile: {},
+			alertInfo: { show: false, message: "", type: null },
+			showError: {},
+			errorMessage: {},
+			formValid: true,
+			pageLoading: true,
+			updatingProfile: false,
+			val: [{ selected: "", socialMedia: "" }],
+			data: {
+				socialMedia: {},
+			},
+		};
+		this.handleProfileChange = this.handleProfileChange.bind(this);
+		this.updateChanges = this.updateChanges.bind(this);
+		this.setProfile = this.setProfile.bind(this);
+		this.setSocialMedia = this.setSocialMedia.bind(this);
+	}
 
-    componentDidMount() {
-        const accessToken =
-            window.localStorage.getItem("accessToken") ||
-            window.sessionStorage.getItem("accessToken");
-        const refreshToken =
-            window.localStorage.getItem("refreshToken") ||
-            window.sessionStorage.getItem("refreshToken");
-        if (!accessToken && !refreshToken) {
-            this.navigateTo("/login");
-        }
-        const { t } = this.props;
-        document.title = "Profile";
-        this.setPageLoading(true);
-        getProfile()
-            .then((response) => {
-                const newState = Object.assign({}, this.state);
-                newState.profile = response.data.data;
-                newState.pageLoading = false;
-                this.setState(newState);
-            })
-            .catch((error) => {
-                this.setPageLoading(false);
-                this.setAlertInfo(true, t("failedToFetchData"), "danger");
-                console.error("Error fetching profile:", error);
-            });
-    }
+	componentDidMount() {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			this.navigateTo("/login");
+		}
+		const { t } = this.props;
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("profile");
+		this.setPageLoading(true);
+		getProfile()
+			.then((response) => {
+				const newState = Object.assign({}, this.state);
+				newState.profile = response.data.data;
+				newState.pageLoading = false;
+				this.setState(newState);
+			})
+			.catch((error) => {
+				this.setPageLoading(false);
+				this.setAlertInfo(true, t("failedToFetchData"), "danger");
+				console.error("Error fetching profile:", error);
+			});
+	}
 
-    componentDidUpdate() {
-        let valid = true;
-        for (const property in this.state.showError) {
-            if (this.state.showError[property]) {
-                valid = false;
-                break;
-            }
-        }
-        this.setFormValid(valid);
-    }
+	componentDidUpdate() {
+		let valid = true;
+		for (const property in this.state.showError) {
+			if (this.state.showError[property]) {
+				valid = false;
+				break;
+			}
+		}
+		this.setFormValid(valid);
+	}
 
-    setProfile(property, value) {
-        const newState = Object.assign({}, this.state);
-        newState.profile[property] = value;
-        this.setState(newState);
-    }
+	setProfile(property, value) {
+		const newState = Object.assign({}, this.state);
+		newState.profile[property] = value;
+		this.setState(newState);
+	}
 
-    setShowError(property, value) {
-        const newState = Object.assign({}, this.state);
-        newState.showError[property] = value;
-        this.setState(newState);
-    }
+	setShowError(property, value) {
+		const newState = Object.assign({}, this.state);
+		newState.showError[property] = value;
+		this.setState(newState);
+	}
 
-    setErrorMessage(property, value) {
-        const newState = Object.assign({}, this.state);
-        newState.errorMessage[property] = value;
-        this.setState(newState);
-    }
+	setErrorMessage(property, value) {
+		const newState = Object.assign({}, this.state);
+		newState.errorMessage[property] = value;
+		this.setState(newState);
+	}
 
-    setAlertInfo(show, message, type) {
-        const newState = Object.assign({}, this.state);
-        newState.alertInfo = { show, message, type };
-        this.setState(newState);
-    }
+	setAlertInfo(show, message, type) {
+		const newState = Object.assign({}, this.state);
+		newState.alertInfo = { show, message, type };
+		this.setState(newState);
+	}
 
-    setFormValid(value) {
-        const newState = Object.assign({}, this.state);
-        if (newState.formValid !== value) {
-            newState.formValid = value;
-            this.setState(newState);
-        }
-    }
+	setFormValid(value) {
+		const newState = Object.assign({}, this.state);
+		if (newState.formValid !== value) {
+			newState.formValid = value;
+			this.setState(newState);
+		}
+	}
 
-    setPageLoading(value) {
-        const newState = Object.assign({}, this.state);
-        if (newState.pageLoading !== value) {
-            newState.pageLoading = value;
-            this.setState(newState);
-        }
-    }
+	setPageLoading(value) {
+		const newState = Object.assign({}, this.state);
+		if (newState.pageLoading !== value) {
+			newState.pageLoading = value;
+			this.setState(newState);
+		}
+	}
 
-    setUpdatingProfile(value) {
-        const newState = Object.assign({}, this.state);
-        if (newState.updatingProfile !== value) {
-            newState.updatingProfile = value;
-            this.setState(newState);
-        }
-    }
+	setUpdatingProfile(value) {
+		const newState = Object.assign({}, this.state);
+		if (newState.updatingProfile !== value) {
+			newState.updatingProfile = value;
+			this.setState(newState);
+		}
+	}
 
-    setSocialMedia(socialMediaVal) {
-        const newState = Object.assign({}, this.state);
-        if (newState.data.socialMedia !== socialMediaVal) {
-            newState.data.socialMedia = socialMediaVal;
-            this.setState(newState);
-        }
-    }
+	setSocialMedia(socialMediaVal) {
+		const newState = Object.assign({}, this.state);
+		if (newState.data.socialMedia !== socialMediaVal) {
+			newState.data.socialMedia = socialMediaVal;
+			this.setState(newState);
+		}
+	}
 
-    handleProfileChange(event) {
-        const { t } = this.props;
-        if (event.target.name === "firstname") {
-            if (!event.target.value) {
-                this.setShowError("firstname", true);
-                this.setErrorMessage(
-                    "firstname",
-                    t("this_field_cannot_be_empty")
-                );
-            } else {
-                this.setShowError("firstname", false);
-                this.setErrorMessage("firstname", "");
-            }
-        }
-        if (event.target.name === "lastname") {
-            if (!event.target.value) {
-                this.setShowError("lastname", true);
-                this.setErrorMessage(
-                    "lastname",
-                    t("this_field_cannot_be_empty")
-                );
-            } else {
-                this.setShowError("lastname", false);
-                this.setErrorMessage("lastname", "");
-            }
-        }
-        if (event.target.name === "email") {
-            const re =
-                /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!re.test(event.target.value)) {
-                this.setShowError("email", true);
-                this.setErrorMessage("email", t("entered_email_not_valid"));
-            } else {
-                this.setShowError("email", false);
-                this.setErrorMessage("email", "");
-            }
-        }
-        if (event.target.name === "socialMedia") {
-            if (!event.target.value) {
-                this.setShowError("socialMedia", true);
-                this.setErrorMessage(
-                    "socialMedia",
-                    t("enter_valid_social_media")
-                );
-            } else {
-                this.setShowError("socialMedia", false);
-                this.setErrorMessage("socialMedia", "");
-            }
-        }
-        if (event.target.name === "phoneNumber") {
-            const re = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g;
-            if (!re.test(event.target.value)) {
-                this.setShowError("phoneNumber", true);
-                this.setErrorMessage(
-                    "phoneNumber",
-                    t("enter_valid_phone_number")
-                );
-            } else {
-                this.setShowError("phoneNumber", false);
-                this.setErrorMessage("phoneNumber", "");
-            }
-        }
-        this.setProfile(event.target.name, event.target.value);
-    }
+	handleProfileChange(event) {
+		const { t } = this.props;
+		if (event.target.name === "firstname") {
+			if (!event.target.value) {
+				this.setShowError("firstname", true);
+				this.setErrorMessage("firstname", t("this_field_cannot_be_empty"));
+			} else {
+				this.setShowError("firstname", false);
+				this.setErrorMessage("firstname", "");
+			}
+		}
+		if (event.target.name === "lastname") {
+			if (!event.target.value) {
+				this.setShowError("lastname", true);
+				this.setErrorMessage("lastname", t("this_field_cannot_be_empty"));
+			} else {
+				this.setShowError("lastname", false);
+				this.setErrorMessage("lastname", "");
+			}
+		}
+		if (event.target.name === "email") {
+			const re =
+				/^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (!re.test(event.target.value)) {
+				this.setShowError("email", true);
+				this.setErrorMessage("email", t("entered_email_not_valid"));
+			} else {
+				this.setShowError("email", false);
+				this.setErrorMessage("email", "");
+			}
+		}
+		if (event.target.name === "socialMedia") {
+			if (!event.target.value) {
+				this.setShowError("socialMedia", true);
+				this.setErrorMessage("socialMedia", t("enter_valid_social_media"));
+			} else {
+				this.setShowError("socialMedia", false);
+				this.setErrorMessage("socialMedia", "");
+			}
+		}
+		if (event.target.name === "phoneNumber") {
+			const re = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g;
+			if (!re.test(event.target.value)) {
+				this.setShowError("phoneNumber", true);
+				this.setErrorMessage("phoneNumber", t("enter_valid_phone_number"));
+			} else {
+				this.setShowError("phoneNumber", false);
+				this.setErrorMessage("phoneNumber", "");
+			}
+		}
+		this.setProfile(event.target.name, event.target.value);
+	}
 
-    updateChanges() {
-        const { t } = this.props;
-        let valid = true;
-        for (const property in this.state.showError) {
-            if (this.state.showError[property]) {
-                valid = false;
-            }
-        }
-        if (valid) {
-            const newState = Object.assign({}, this.state);
-            if (newState.updatingProfile !== true) {
-                newState.updatingProfile = true;
-                this.setState(newState, () => {
-                    const tempProfile = this.state.profile;
-                    tempProfile.socialMedia =
-                        this.state.data.socialMedia.socialMedia;
-                    const updatedProfile = Object.assign({}, tempProfile);
+	updateChanges() {
+		const { t } = this.props;
+		let valid = true;
+		for (const property in this.state.showError) {
+			if (this.state.showError[property]) {
+				valid = false;
+			}
+		}
+		if (valid) {
+			const newState = Object.assign({}, this.state);
+			if (newState.updatingProfile !== true) {
+				newState.updatingProfile = true;
+				this.setState(newState, () => {
+					const tempProfile = this.state.profile;
+					tempProfile.socialMedia = this.state.data.socialMedia.socialMedia;
+					const updatedProfile = Object.assign({}, tempProfile);
 
-                    updateProfile(updatedProfile)
-                        .then(() => {
-                            const newState = Object.assign({}, this.state);
-                            if (newState.updatingProfile !== false) {
-                                newState.updatingProfile = false;
-                                this.setState(newState, () => {
-                                    this.setAlertInfo(
-                                        true,
-                                        t(
-                                            "your_changes_were_saved_successfully"
-                                        ),
-                                        "success"
-                                    );
-                                    setInterval(() => {
-                                        this.setAlertInfo(false, "", null);
-                                    }, 5000);
-                                });
-                            }
-                        })
-                        .catch(() => {
-                            const newState = Object.assign({}, this.state);
-                            if (newState.updatingProfile !== false) {
-                                newState.updatingProfile = false;
-                                this.setState(newState, () => {
-                                    this.setAlertInfo(
-                                        true,
-                                        t("changesNotSaved"),
-                                        "danger"
-                                    );
-                                    setInterval(() => {
-                                        this.setAlertInfo(false, "", null);
-                                    }, 5000);
-                                });
-                            }
-                        });
-                });
-            }
-        } else {
-            this.setAlertInfo(true, t("invalidData"), "danger");
-            setInterval(() => {
-                this.setAlertInfo(false, "", null);
-            }, 5000);
-        }
-    }
+					updateProfile(updatedProfile)
+						.then(() => {
+							const newState = Object.assign({}, this.state);
+							if (newState.updatingProfile !== false) {
+								newState.updatingProfile = false;
+								this.setState(newState, () => {
+									this.setAlertInfo(
+										true,
+										t("your_changes_were_saved_successfully"),
+										"success"
+									);
+									setInterval(() => {
+										this.setAlertInfo(false, "", null);
+									}, 5000);
+								});
+							}
+						})
+						.catch(() => {
+							const newState = Object.assign({}, this.state);
+							if (newState.updatingProfile !== false) {
+								newState.updatingProfile = false;
+								this.setState(newState, () => {
+									this.setAlertInfo(true, t("changesNotSaved"), "danger");
+									setInterval(() => {
+										this.setAlertInfo(false, "", null);
+									}, 5000);
+								});
+							}
+						});
+				});
+			}
+		} else {
+			this.setAlertInfo(true, t("invalidData"), "danger");
+			setInterval(() => {
+				this.setAlertInfo(false, "", null);
+			}, 5000);
+		}
+	}
 
-    handleRemoveImage() {
-        this.setProfile("image", null);
-    }
+	handleRemoveImage() {
+		this.setProfile("image", null);
+	}
 
-    handleUpdatePassword = () => {
-        const { t } = this.props;
-        const { currentPassword, newPassword, confirmPassword } = this.state;
-        if (currentPassword === "") {
-            this.setState({
-                showError: true,
-                errorMessage: t("enter_current_password"),
-            });
-            return;
-        }
+	handleUpdatePassword = () => {
+		const { t } = this.props;
+		const { currentPassword, newPassword, confirmPassword } = this.state;
+		if (currentPassword === "") {
+			this.setState({
+				showError: true,
+				errorMessage: t("enter_current_password"),
+			});
+			return;
+		}
 
-        if (newPassword === "") {
-            this.setState({
-                showError: true,
-                errorMessage: t("enter_a_new_password"),
-            });
-            return;
-        }
+		if (newPassword === "") {
+			this.setState({
+				showError: true,
+				errorMessage: t("enter_a_new_password"),
+			});
+			return;
+		}
 
-        if (confirmPassword === "") {
-            this.setState({
-                showError: true,
-                errorMessage: t("confirm_your_password"),
-            });
-            return;
-        }
+		if (confirmPassword === "") {
+			this.setState({
+				showError: true,
+				errorMessage: t("confirm_your_password"),
+			});
+			return;
+		}
 
-        if (newPassword !== confirmPassword) {
-            this.setState({
-                showError: true,
-                errorMessage: t("password_do_not_match"),
-            });
-            return;
-        }
+		if (newPassword !== confirmPassword) {
+			this.setState({
+				showError: true,
+				errorMessage: t("password_do_not_match"),
+			});
+			return;
+		}
 
 		updatePassword({ currentPassword, newPassword })
 			.then((response) => {})
@@ -638,6 +615,6 @@ class ProfilePage extends React.Component {
 }
 
 ProfilePage.propTypes = {
-    t: PropTypes.func.isRequired,
+	t: PropTypes.func.isRequired,
 };
 export default withTranslation()(ProfilePage);

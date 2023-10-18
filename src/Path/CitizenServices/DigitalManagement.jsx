@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import { getDigitalManagement, getCities } from "../../Services/cities";
@@ -11,20 +10,13 @@ const DigitalManagement = () => {
 	const [citizenServiceData, setcitizenServiceData] = useState([]);
 	const [cities, setCities] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
-	const [isLoggedIn] = useState(false);
 	const [cityId, setCityId] = useState(null);
 	const pageNo = 1;
 
-	const navigate = useNavigate();
-	const navigateTo = (path) => {
-		if (path) {
-			navigate(path);
-		}
-	};
-
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = process.env.REACT_APP_REGION_NAME + " Digital Rathouse";
+		document.title =
+			process.env.REACT_APP_REGION_NAME + " " + t("digitalRathouse");
 		getCities().then((response) => {
 			setCitiesArray(response.data.data);
 			const temp = {};
@@ -76,7 +68,7 @@ const DigitalManagement = () => {
 										autoComplete="city-name"
 										onChange={(e) => setCityId(e.target.value)}
 										value={cityId}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 									>
 										<option className="font-sans" value={0} key={0}>
 											{t("allCities", {
@@ -123,11 +115,9 @@ const DigitalManagement = () => {
 											/>
 											<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
 												<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-													{data.title}
-												</h1>
-												<p className="mb-4 ml-4 font-sans">
 													{cities[data.cityId]}
-												</p>
+												</h1>
+												<p className="mb-4 ml-4 font-sans">{data.title}</p>
 											</div>
 										</a>
 									</div>
@@ -136,27 +126,18 @@ const DigitalManagement = () => {
 					</div>
 				</div>
 			) : (
-				<div>
-					<div className="flex items-center justify-center">
-						<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-							{t("currently_no_services")}
-						</h1>
-					</div>
-					<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
-						<span className="font-sans text-black">
-							{t("to_upload_new_listing")}
-						</span>
-						<a
-							className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
-							onClick={() => {
-								localStorage.setItem("selectedItem", "Choose one category");
-								isLoggedIn
-									? navigateTo("/UploadListings")
-									: navigateTo("/login");
-							}}
-						>
-							{t("click_here")}
-						</a>
+				<div className="md:mb-60 mt-20 mb-20 p-6">
+					<div className="text-center">
+						<div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
+							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+								Oops !
+							</h1>
+						</div>
+						<div className="m-auto mt-20 mb-20 text-center font-sans font-bold text-xl">
+							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+								{t("currently_no_services")}
+							</h1>
+						</div>
 					</div>
 				</div>
 			)}
