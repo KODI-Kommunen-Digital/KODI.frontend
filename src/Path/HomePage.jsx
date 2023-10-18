@@ -41,7 +41,6 @@ const HomePage = () => {
 
 		getListingsCount().then((response) => {
 			const data = response.data.data;
-			console.log(response.data.data)
 			const sortedData = data.sort(
 				(a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
 			);
