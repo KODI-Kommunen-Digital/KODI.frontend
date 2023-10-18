@@ -101,16 +101,22 @@ export async function deletePostImage(cityId, forumsId, postId) {
 	);
 }
 
+export async function createMemberRequest(
+	cityId,
+	forumsId
+) {
+	return axios.post(
+		`/cities/${cityId}/forums/${forumsId}/memberRequests`
+	);
+}
 
-export async function cancelMemberRequests(
+export async function cancelMemberRequest(
 	cityId,
 	forumsId,
-	memberRequestsId,
-	payload
+	memberRequestsId
 ) {
 	return axios.delete(
-		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`,
-		payload
+		`/cities/${cityId}/forums/${forumsId}/memberRequests/${memberRequestsId}`
 	);
 }
 

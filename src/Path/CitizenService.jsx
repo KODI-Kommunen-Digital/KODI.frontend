@@ -28,12 +28,12 @@ const CitizenService = () => {
 			for (const city of response.data.data) {
 				temp[city.id] = {
 					name: city.name,
-					hasForum: city.hasForum,
+					hasForum: city.hasForum
 				};
 			}
 			setCities(temp);
 			const cityIdParam = urlParams.get("cityId");
-			if (cityIdParam) setCityId(cityIdParam);
+			if (cityIdParam && temp[cityIdParam]) setCityId(cityIdParam);
 		});
 
 		getCitizenServices().then((response) => {
