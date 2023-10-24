@@ -85,7 +85,7 @@ const Register = () => {
 				setAlertInfo(true);
 				setAlertType("success");
 				setAlertMessage(
-					t("registrationSuccessMessage") +
+					t("registraionSuccessful") +
 					`\n ${t("registrationRedirectMessage")}`
 				);
 				setTimeout(() => {
