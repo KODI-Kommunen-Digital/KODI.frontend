@@ -39,6 +39,8 @@
     "clickToRegister": "Click here to register",
     "clubnews": "Club News",
     "clubs": "Clubs",
+    "clubsDescription": "(Load up your club profile here)",
+    "companyPortraitsDescription": "(Load up your company profile here)",
     "companyPortaits": "Company Portraits",
     "confirmNewPassword": "Confirm New Password",
     "confirmPassword": "Confirm Password",
@@ -237,6 +239,7 @@
     "uploadPost": "Upload Post",
     "url/website": "URL/Website",
     "username": "Username",
+    "usernameOrEmail": "Enter your Username / E-mail",
     "viewMore": "View more......",
     "viewProfile": "View Profiles",
     "village": "Village",
@@ -504,5 +507,7 @@
     "userAlreadyPresent": "Username already present",
     "emailAlreadyRegistered": "This email has been already registered.",
     "firstNameNotPresent": "First name not present",
-    "lastNameNotPresent": "Last name not present"
+    "lastNameNotPresent": "Last name not present",
+    "registrationSuccessMessage": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. ",
+    "registrationRedirectMessage": "Redirecting to login page in 10s"
 }

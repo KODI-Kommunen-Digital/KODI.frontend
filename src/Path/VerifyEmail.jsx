@@ -48,7 +48,7 @@ const VerifyEmail = () => {
 			.catch((e) => {
 				setVerifyState("failed");
 			});
-	}, [makeVerifyEmailCall, navigateTo, token, userId]);
+	}, [makeVerifyEmailCall]);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -65,30 +65,30 @@ const VerifyEmail = () => {
 	return (
 		<section>
 			<HomePageNavBar />
-			<div className="main-content">
+			<div className="md:mt-40 mt-20 mb-20 p-6">
 				{verifyState === "success" ? (
 					<div>
-						<div className="mt-20 py-30 text-center">
+						<div className="mt-20 mb-20 py-30 text-center">
 							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 								{t("success")}
 							</h1>
-							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl">
+							<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl">
 								{t("email_verified")}
 								{t("heidi_full_extend")}
 							</h1>
 						</div>
 
-						<div className="mb-20 py-30 text-center">
+						<div className="mb-20 mt-20 py-30 text-center">
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className="w-96 mt-20 mx-auto rounded-xl bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{t("goback")}
 							</button>
 						</div>
 
-						<div className="mb-20 py-30 text-center">
+						<div className="mb-20 mt-20 py-30 text-center">
 							{redirect ? (
 								<h1 className=" m-auto mt-20 text-center font-sans font-semibold text-lg">
 									{t("please_wait")}
@@ -102,15 +102,15 @@ const VerifyEmail = () => {
 					</div>
 				) : verifyState === "pending" ? (
 					<div>
-						<div className="mt-20 py-30 text-center">
+						<div className="mt-20 mb-20 py-30 text-center">
 							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 								{t("youAreOnTheWay")}
 							</h1>
-							<h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl">
+							<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl">
 								{t("email_being_verified")}
 							</h1>
 						</div>
-						<div className="mt-20 py-30 text-center">
+						<div className="mt-20 mb-20 py-30 text-center">
 							<div className="my-10 flex">
 								<div className="relative mx-auto h-28 w-28 animate-[displace_5s_infinite] border border-blue-200">
 									<div className="h-14 animate-[flip_5s_infinite] bg-blue-100"></div>
@@ -120,20 +120,20 @@ const VerifyEmail = () => {
 					</div>
 				) : (
 					<div>
-						<div className="mt-20 py-30 text-center">
-							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+						<div className="mt-20 mb-20 py-30 text-center">
+							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-20 py-2 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
 								{t("Failed")}
 							</h1>
-							<h1 className=" m-auto mt-20 text-center font-sans font-bold sm:text-2xl text-lg">
+							<h1 className=" mx-auto mt-20 mb-20 text-center font-sans font-bold sm:text-2xl text-lg">
 								{t("email_verification_not_succesfull")}
 							</h1>
 						</div>
 
-						<div className="mb-20 py-30 text-center">
+						<div className="mt-20 mb-20 py-30 text-center">
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className="w-96 mt-20 mx-auto rounded-xl bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{t("goback")}
 							</button>
@@ -141,7 +141,7 @@ const VerifyEmail = () => {
 					</div>
 				)}
 			</div>
-			<div className=" fixed bottom-0 w-full">
+			<div className="bottom-0 w-full">
 				<Footer />
 			</div>
 		</section>

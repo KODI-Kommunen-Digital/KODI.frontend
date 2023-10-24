@@ -72,7 +72,10 @@ const Register = () => {
 				await register(input);
 				setAlertInfo(true);
 				setAlertType("success");
-				setAlertMessage(t("registraionSuccessful"));
+				setAlertMessage(
+					t("registrationSuccessMessage") +
+					`\n ${t("registrationRedirectMessage")}`
+				);
 				setTimeout(() => {
 					routeChangeToLogin();
 				}, 10000);
