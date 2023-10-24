@@ -72,7 +72,8 @@ const Register = () => {
 				setAlertInfo(true);
 				setAlertType("success");
 				setAlertMessage(
-					"Registration Successfull. A mail has been sent to your email Id. Please verify to continue. \nRedirecting to login page in 10s"
+					t("registrationSuccessMessage") +
+					`\n ${t("registrationRedirectMessage")}`
 				);
 				setTimeout(() => {
 					routeChangeToLogin();

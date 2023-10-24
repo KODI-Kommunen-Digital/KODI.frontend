@@ -238,7 +238,8 @@
     "uploadLogo": "Upload Logo",
     "uploadPost": "Upload Post",
     "url/website": "URL/Website",
-    "username": "Username / E-mail",
+    "username": "Username",
+    "usernameOrEmail": "Enter your Username / E-mail",
     "viewMore": "View more......",
     "viewProfile": "View Profiles",
     "village": "Village",
@@ -500,5 +501,7 @@
     "digitalRathouse": "Digital Rathouse",
     "allEvents": "Listings",
     "eventDetails": "Event Details",
-    "overviewPage": "Overview Page"
+    "overviewPage": "Overview Page",
+    "registrationSuccessMessage": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. ",
+    "registrationRedirectMessage": "Redirecting to login page in 10s"
 }
