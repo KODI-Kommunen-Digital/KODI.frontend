@@ -506,11 +506,11 @@
     "eventDetails": "Veranstaltungsdetails",
     "youAreOnTheWay": "Du bist auf dem Weg",
     "overviewPage": "Übersichtsseite",
-    "registraionSuccessful": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner. \nWeiterleitung zur Anmeldeseite in 10s",
     "emptyData": "Bitte die Daten eingeben",
     "userAlreadyPresent": "Benutzername bereits vorhanden",
     "emailAlreadyRegistered": "Diese E-Mail wurde bereits registriert.",
     "firstNameNotPresent": "Vorname nicht vorhanden",
     "lastNameNotPresent": "Nachname nicht vorhanden",
+    "registraionSuccessful": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner",
     "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s."
 }

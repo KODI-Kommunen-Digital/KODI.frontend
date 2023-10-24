@@ -502,11 +502,11 @@
     "allEvents": "Listings",
     "eventDetails": "Event Details",
     "overviewPage": "Overview Page",
-    "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder. \nRedirecting to login page in 10s",
     "emptyData": "Please enter the data",
     "userAlreadyPresent": "Username already present",
     "emailAlreadyRegistered": "This email has been already registered.",
     "firstNameNotPresent": "First name not present",
     "lastNameNotPresent": "Last name not present",
+    "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder",
     "registrationRedirectMessage": "Redirecting to login page in 10s"
 }
