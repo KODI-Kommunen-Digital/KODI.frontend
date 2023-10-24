@@ -533,12 +533,12 @@ const Dashboard = () => {
 															onChange={(e) =>
 																handleChangeInStatus(e.target.value, listing)
 															}
-															value={listing.statusId}
+															value={listing.statusId || 0}
 															style={{ fontFamily: "Poppins, sans-serif" }}
 														>
 															{Object.keys(status).map((state, index) => {
 																return (
-																	<>
+																	
 																		<option
 																			className="p-0"
 																			key={index}
@@ -546,7 +546,7 @@ const Dashboard = () => {
 																		>
 																			{t(status[state].toLowerCase())}
 																		</option>
-																	</>
+																	
 																);
 															})}
 														</select>

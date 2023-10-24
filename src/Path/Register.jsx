@@ -65,7 +65,7 @@ const Register = () => {
 			if (Object.values(error).filter((e) => e !== "").length > 0) {
 				setAlertInfo(true);
 				setAlertType("danger");
-				setAlertMessage("Failed. " + Object.values(error).filter((e) => e !== "")[0]);
+				setAlertMessage(Object.values(error).filter((e) => e !== "")[0]);
 			}
 			else {
 				await register(input);
@@ -82,7 +82,7 @@ const Register = () => {
 		} catch (err) {
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage("Failed. " + err.response?.data?.message ? err.response.data.message : JSON.stringify(err));
+			setAlertMessage(err.response?.data?.message ? err.response.data.message : JSON.stringify(err));
 		}
 	};
 
