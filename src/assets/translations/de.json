@@ -40,6 +40,8 @@
     "clubnews": "Vereinsnews",
     "clubs": "Vereine",
     "companyPortaits": "Unternehmen",
+    "clubsDescription": "(Lade hier ein Vereinsprofil hoch)",
+    "companyPortraitsDescription": "(Lade hier ein Unternehmensprofil hoch)",
     "confirmNewPassword": "Neues Passwort bestätigen",
     "confirmPassword": "Passwort bestätigen",
     "contact_us": "Kontaktiere uns",
@@ -139,7 +141,7 @@
     "newPassword": "Neues Password",
     "news": "News",
     "newsflash": "Eilmeldungen",
-    "notMember": "Noch keinen Account?",
+    "notMember": "Noch keinen Account ?",
     "offers": "Angebote",
     "offerSearch": "Suche / Biete",
     "oldest": "Älteste",
@@ -237,6 +239,7 @@
     "uploadPost": "Beitrag hochladen",
     "url/website": "URL/Webseite",
     "username": "Benutzername",
+    "usernameOrEmail": "Benutzername / E-mail",
     "viewMore": "Weitere Angebote ansehen......",
     "viewProfile": "Profil",
     "village": "Dorf",
@@ -501,6 +504,8 @@
     "digitalRathouse": "Digitales Rattenhaus",
     "allEvents": "Beiträge",
     "eventDetails": "Veranstaltungsdetails",
+    "youAreOnTheWay": "Du bist auf dem Weg",
     "overviewPage": "Übersichtsseite",
-    "registraionSuccessful": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner. \nWeiterleitung zur Anmeldeseite in 10s"
+    "registrationSuccessMessage": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner. ",
+    "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s."
 }

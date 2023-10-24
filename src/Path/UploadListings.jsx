@@ -265,6 +265,17 @@ function UploadListings() {
 		}
 	}, []);
 
+	function categoryDescription(category) {
+		if (category === "4") {
+			return "clubsDescription";
+		} else if (category === "10") {
+			return "companyPortraitsDescription";
+		} else {
+			return "";
+		}
+	}
+
+
 	useEffect(() => {
 		let valid = true;
 		for (let property in error) {
@@ -369,15 +380,11 @@ function UploadListings() {
 				}
 
 			case "endDate":
-				if (parseInt(input.categoryId) == 3) {
-					if (!value) {
-						return t("pleaseEnterEndDate");
+				if (parseInt(input.categoryId) === 3) {
+					if (value && new Date(input.startDate) > new Date(value)) {
+						return t("endDateBeforeStartDate");
 					} else {
-						if (new Date(input.startDate) > new Date(value)) {
-							return t("endDateBeforeStartDate");
-						} else {
-							return "";
-						}
+						return "";
 					}
 				} else {
 					return "";
@@ -496,6 +503,7 @@ function UploadListings() {
 				subcatList[subCat.id] = subCat.name;
 			});
 			setSubCategories(subcatList);
+			console.log(subcatList)
 		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
@@ -534,6 +542,7 @@ function UploadListings() {
 
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 	}
+
 
 	return (
 		<section className="bg-slate-600 body-font relative">
@@ -659,7 +668,7 @@ function UploadListings() {
 							{Object.keys(categories).map((key) => {
 								return (
 									<option className="font-sans" value={key} key={key}>
-										{t(categories[key])}
+										{t(categories[key])} {t(categoryDescription(key))}
 									</option>
 								);
 							})}
@@ -690,6 +699,7 @@ function UploadListings() {
 								onChange={handleSubcategoryChange}
 								onBlur={validateInput}
 								required
+								disabled={!newListing}
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							>
 								<option className="font-sans" value={0} key={0}>
@@ -821,29 +831,16 @@ function UploadListings() {
 									>
 										{t("eventStartDate")} *
 									</label>
-									{input.startDate ? (
-										// Display the start date as plain text if it's present
-										<input
-											type="text"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if start date is not present
-										<input
-											type="datetime-local"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="Start Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="startDate"
+										name="startDate"
+										value={formatDateTime(input.startDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Start Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -853,6 +850,7 @@ function UploadListings() {
 										{error.startDate}
 									</div>
 								</div>
+
 
 								<div className="relative">
 									<div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
@@ -868,31 +866,18 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")} *
+										{t("eventEndDate")}
 									</label>
-									{input.endDate ? (
-										// Display the end date as plain text if it's present
-										<input
-											type="text"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if end date is not present
-										<input
-											type="datetime-local"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="End Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="endDate"
+										name="endDate"
+										value={formatDateTime(input.endDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="End Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -902,6 +887,7 @@ function UploadListings() {
 										{error.endDate}
 									</div>
 								</div>
+
 							</div>
 						</div>
 					)}
