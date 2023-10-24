@@ -11,6 +11,18 @@ const Register = () => {
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
+	const errorMessages = {
+		[errorCodes.EMPTY_PAYLOAD]: t("emptyData"),
+		[errorCodes.MISSING_FIRSTNAME]: t("firstNameNotPresent"),
+		[errorCodes.MISSING_LASTNAME]: t("lastNameNotPresent"),
+		[errorCodes.MISSING_USERNAME]: t("usernameNotPresent"),
+		[errorCodes.MISSING_PASSWORD]: t("passwordNotPresent"),
+		[errorCodes.USER_ALREADY_EXISTS]: t("userAlreadyPresent"),
+		[errorCodes.INVALID_USERNAME]: t("checkUsernameOrPassword"),
+		[errorCodes.INVALID_PASSWORD]: t("checkUsernameOrPassword"),
+		[errorCodes.EMAIL_ALREADY_EXISTS]: t("emailAlreadyRegistered"),
+		[errorCodes.EMAIL_NOT_VERIFIED]: t("emailNotVerified"),
+	};
 
 	useEffect(() => {
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("register");
@@ -83,18 +95,6 @@ const Register = () => {
 		} catch (err) {
 			setAlertInfo(true);
 			setAlertType("danger");
-			const errorMessages = {
-				[errorCodes.EMPTY_PAYLOAD]: t("emptyData"),
-				[errorCodes.MISSING_FIRSTNAME]: t("firstNameNotPresent"),
-				[errorCodes.MISSING_LASTNAME]: t("lastNameNotPresent"),
-				[errorCodes.MISSING_USERNAME]: t("usernameNotPresent"),
-				[errorCodes.MISSING_PASSWORD]: t("passwordNotPresent"),
-				[errorCodes.USER_ALREADY_EXISTS]: t("userAlreadyPresent"),
-				[errorCodes.INVALID_USERNAME]: t("checkUsernameOrPassword"),
-				[errorCodes.INVALID_PASSWORD]: t("checkUsernameOrPassword"),
-				[errorCodes.EMAIL_ALREADY_EXISTS]: t("emailAlreadyRegistered"),
-				[errorCodes.EMAIL_NOT_VERIFIED]: t("emailNotVerified"),
-			};
 			const alertMessage = errorMessages[err.response.data.errorCode] || t("somethingWrong");
 			setAlertMessage(alertMessage);
 		}
