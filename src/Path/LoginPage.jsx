@@ -111,6 +111,10 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -121,12 +125,19 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.sessionStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			}
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
 
-			if (window.sessionStorage.getItem("redirectTo")) {
+			if (window.sessionStorage.getItem("path")) {
+				navigate(window.sessionStorage.getItem("path"));
+				sessionStorage.removeItem("path");
+			} else if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
