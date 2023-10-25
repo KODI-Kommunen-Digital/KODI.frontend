@@ -33,22 +33,23 @@ const VerifyEmail = () => {
 	const [redirect, setRedirect] = useState(false);
 
 	useEffect(() => {
-		verifyEmail({
-			token,
-			userId,
-			language: "de",
-		})
-			.then((response) => {
-				setRedirect(true);
-				setVerifyState("success");
-				setTimeout(() => {
-					navigateTo("/login");
-				}, 5000);
+		if (makeVerifyEmailCall) {
+			verifyEmail({
+				token,
+				userId,
+				language: "de",
 			})
-			.catch((e) => {
-				setVerifyState("failed");
-			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+				.then((response) => {
+					setRedirect(true);
+					setVerifyState("success");
+					setTimeout(() => {
+						navigateTo("/login");
+					}, 5000);
+				})
+				.catch((e) => {
+					setVerifyState("failed");
+				});
+		}
 	}, [makeVerifyEmailCall]);
 
 	useEffect(() => {
@@ -67,7 +68,25 @@ const VerifyEmail = () => {
 		<section>
 			<HomePageNavBar />
 			<div className="md:mt-40 mt-20 mb-20 p-6">
-				{verifyState === "success" ? (
+				{verifyState === "pending" ? (
+					<div>
+						<div className="mt-20 mb-20 py-30 text-center">
+							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+								{t("youAreOnTheWay")}
+							</h1>
+							<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl">
+								{t("email_being_verified")}
+							</h1>
+						</div>
+						<div className="mt-20 mb-20 py-30 text-center">
+							<div className="my-10 flex">
+								<div className="relative mx-auto h-28 w-28 animate-[displace_5s_infinite] border border-blue-200">
+									<div className="h-14 animate-[flip_5s_infinite] bg-blue-100"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				) : verifyState === "success" ? (
 					<div>
 						<div className="mt-20 mb-20 py-30 text-center">
 							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
@@ -99,24 +118,6 @@ const VerifyEmail = () => {
 									{t("redirecting_in")} ( {count} ) {t("seconds")}
 								</h1>
 							)}
-						</div>
-					</div>
-				) : verifyState === "pending" ? (
-					<div>
-						<div className="mt-20 mb-20 py-30 text-center">
-							<h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-								{t("youAreOnTheWay")}
-							</h1>
-							<h1 className=" m-auto mt-20 mb-20 text-center font-sans font-bold text-2xl">
-								{t("email_being_verified")}
-							</h1>
-						</div>
-						<div className="mt-20 mb-20 py-30 text-center">
-							<div className="my-10 flex">
-								<div className="relative mx-auto h-28 w-28 animate-[displace_5s_infinite] border border-blue-200">
-									<div className="h-14 animate-[flip_5s_infinite] bg-blue-100"></div>
-								</div>
-							</div>
 						</div>
 					</div>
 				) : (

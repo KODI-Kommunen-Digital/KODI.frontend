@@ -13,7 +13,7 @@ const Modal = ({ onClose, onSend, text, handleTextChange }) => {
 	return (
 		<div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
 			<div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-				<h2 className="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200">
+				<h2 className="text-xl font-medium leading-normal text-neutral-800">
 					{t("reason")}
 				</h2>
 				<textarea
@@ -114,7 +114,7 @@ const DialogueBox = ({ member, setRequests }) => {
 	return (
 		<div>
 			<button
-				className="font-medium text-blue-600 px-2 dark:text-blue-500 hover:underline cursor-pointer text-center"
+				className="font-medium text-blue-600 px-2 hover:underline cursor-pointer text-center"
 				style={{ fontFamily: "Poppins, sans-serif" }}
 				onClick={handleRemoveClick}
 			>

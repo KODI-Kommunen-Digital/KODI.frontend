@@ -79,7 +79,6 @@ const Favorites = () => {
 			setFavListings(data);
 			setIsLoading(false);
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -142,7 +141,7 @@ const Favorites = () => {
 														autoComplete="city-name"
 														onChange={(e) => setCityId(e.target.value)}
 														value={cityId || 0}
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option className="font-sans" value={0} key={0}>
@@ -168,7 +167,7 @@ const Favorites = () => {
 														autoComplete="category-name"
 														onChange={(e) => setCategoryId(e.target.value)}
 														value={categoryId || 0}
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option className="font-sans" value={0} key={0}>
@@ -194,7 +193,7 @@ const Favorites = () => {
 														value={selectedSortOption}
 														onChange={handleSortOptionChange}
 														autoComplete="country-name"
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option value="">{t("sort")}</option>

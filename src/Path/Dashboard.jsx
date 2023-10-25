@@ -327,8 +327,8 @@ const Dashboard = () => {
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
-							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
+						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
+							<thead className="text-xs text-gray-700 uppercase bg-gray-50">
 								<tr>
 									<th
 										scope="col"
@@ -384,11 +384,11 @@ const Dashboard = () => {
 									return (
 										<tr
 											key={index}
-											className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
+											className="bg-white border-b hover:bg-gray-50"
 										>
 											<th
 												scope="row"
-												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
 												onClick={() => goToListingPage(listing)}
 											>
 												<img
@@ -427,14 +427,14 @@ const Dashboard = () => {
 											</td>
 											<td className="px-6 py-4 text-center">
 												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
+													className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
 													onClick={() => goToEditListingsPage(listing)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("edit")}
 												</a>
 												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+													className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
 													onClick={() => deleteListingOnClick(listing)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
@@ -512,7 +512,7 @@ const Dashboard = () => {
 											{viewAllListings && (
 												<td className="px-6 py-4 text-center">
 													<a
-														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+														className="font-medium text-blue-600 hover:underline cursor-pointer"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 														href={"/ViewProfile/" + listing.username}
 													>

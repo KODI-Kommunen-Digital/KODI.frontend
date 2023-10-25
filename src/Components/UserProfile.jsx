@@ -53,7 +53,7 @@ function UserProfile({ user }) {
 	};
 	return (
 		<div>
-			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-xl">
 				<div>
 					<div
 						onClick={() =>
@@ -93,7 +93,7 @@ function UserProfile({ user }) {
 						</div>
 						<div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
 							<h2
-								className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
+								className="text-blue-700 text-lg title-font mb-2 font-bold"
 								style={{
 									fontFamily: "Poppins, sans-serif",
 								}}
@@ -101,7 +101,7 @@ function UserProfile({ user }) {
 								{user?.firstname + " " + user?.lastname}
 							</h2>
 							<p
-								className="leading-relaxed text-base font-bold dark:text-gray-900"
+								className="leading-relaxed text-base font-bold"
 								style={{
 									fontFamily: "Poppins, sans-serif",
 								}}
