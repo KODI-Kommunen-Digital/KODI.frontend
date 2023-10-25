@@ -2,8 +2,8 @@ import { getUserId } from "./usersApi";
 import { forumInstance } from "../api/axiosInstance";
 const axios = forumInstance;
 
-export async function getUserForums() {
-	return axios.get(`/users/${getUserId()}/forums`);
+export async function getUserForums(params) {
+	return axios.get(`/users/${getUserId()}/forums`, { params });
 }
 
 export async function getForumPost(cityId, forumsId, postId) {

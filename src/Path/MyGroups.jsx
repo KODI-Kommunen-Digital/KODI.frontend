@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,12 +9,29 @@ const MyGroups = () => {
 	const { t } = useTranslation();
 	const [forums, setForums] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
+	const pageSize = 9;
 
-	useEffect(() => {
-		getUserForums().then((response) => {
+	// useEffect(() => {
+	// 	getUserForums().then((response) => {
+	// 		setForums(response.data.data);
+	// 	});
+	// }, []);
+
+	const fetchForums = useCallback(() => {
+		getUserForums({
+			pageNo, pageSize
+		}).then((response) => {
 			setForums(response.data.data);
 		});
-	}, []);
+	}, [pageNo]);
+
+	useEffect(() => {
+		if (pageNo === 1) {
+			fetchForums();
+		} else {
+			fetchForums();
+		}
+	}, [fetchForums, pageNo]);
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
