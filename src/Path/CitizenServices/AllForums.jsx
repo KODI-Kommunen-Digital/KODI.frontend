@@ -200,7 +200,8 @@ const AllForums = () => {
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
 																			forum.image
-																			: LISTINGSIMAGE
+																			: process.env.REACT_APP_BUCKET_HOST +
+																			"admin/DefaultForum.jpeg"
 																	}
 																/>
 															)}

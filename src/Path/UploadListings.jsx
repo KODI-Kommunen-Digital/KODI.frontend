@@ -491,7 +491,7 @@ function UploadListings() {
 	const [categoryId, setCategoryId] = useState(0);
 	const [subcategoryId, setSubcategoryId] = useState(0);
 
-	const handleCategoryChange = (event) => {
+	const handleCategoryChange = async (event) => {
 		let categoryId = event.target.value;
 		setCategoryId(categoryId);
 		if (categoryId == 1) {
