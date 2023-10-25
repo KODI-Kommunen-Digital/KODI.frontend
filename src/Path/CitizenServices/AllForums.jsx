@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
 import { useTranslation } from "react-i18next";
 import LoadingPage from "../../Components/LoadingPage";
 import { getAllForums } from "../../Services/forumsApi";
@@ -189,7 +188,8 @@ const AllForums = () => {
 																		forum.image
 																			? process.env.REACT_APP_BUCKET_HOST +
 																			forum.image
-																			: LISTINGSIMAGE
+																			: process.env.REACT_APP_BUCKET_HOST +
+																			"admin/DefaultForum.jpeg"
 																	}
 																/>
 															) : (
