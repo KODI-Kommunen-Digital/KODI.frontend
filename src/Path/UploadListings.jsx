@@ -19,7 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -135,7 +135,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -328,7 +327,6 @@ function UploadListings() {
 			...prev,
 			description: descriptionHTML,
 		}));
-
 		setDescription(newContent);
 	};
 
