@@ -3,7 +3,6 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import UserProfile from "../../Components/UserProfile";
-import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
@@ -19,7 +18,7 @@ import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 const Description = ({ content }) => {
 	return (
 		<p
-			className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
+			className="leading-relaxed text-md font-medium my-6 text-gray-900"
 			dangerouslySetInnerHTML={{ __html: content }}
 		></p>
 	);
@@ -309,7 +308,7 @@ const ViewPost = () => {
 								{isPopupOpen && (
 									<div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
 										<div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-											<h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800 dark:text-neutral-200">
+											<h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
 												{t("reason")}
 											</h2>
 											<textarea
@@ -358,7 +357,8 @@ const ViewPost = () => {
 										src={
 											forumPost.image
 												? process.env.REACT_APP_BUCKET_HOST + forumPost.image
-												: POSTSLOGO
+												: process.env.REACT_APP_BUCKET_HOST +
+												"admin/DefaultForum.jpeg"
 										}
 									/>
 								</div>
@@ -369,11 +369,11 @@ const ViewPost = () => {
 						<Description content={forumPost.description} />
 					</div>
 					<form className="mb-6">
-						<div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+						<div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200">
 							<textarea
 								id="comment"
 								rows="2"
-								className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+								className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
 								placeholder={t("writeComment")}
 								value={newComment}
 								onChange={(event) => setNewComment(event.target.value)}
@@ -401,24 +401,24 @@ const ViewPost = () => {
 									{comments.map((comment, index) => (
 										<div
 											key={index}
-											className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
+											className="p-6 mb-2 text-base bg-gray-200 rounded-lg"
 										>
 											<div className="flex justify-between items-center mb-2">
 												<div className="flex items-center">
-													<p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+													<p className="inline-flex items-center mr-3 text-sm text-gray-900">
 														<img
 															className="mr-2 w-6 h-6 rounded-full"
 															src={
 																comment.image
 																	? process.env.REACT_APP_BUCKET_HOST +
-																	  comment.image
+																	comment.image
 																	: PROFILEIMAGE
 															}
 														/>
 														{comment.firstname} {comment.lastname} (@
 														{comment.username})
 													</p>
-													<p className="text-sm text-gray-600 dark:text-gray-400">
+													<p className="text-sm text-gray-600">
 														<time
 															dateTime="2022-02-08"
 															title="February 8th, 2022"
@@ -428,13 +428,13 @@ const ViewPost = () => {
 													</p>
 												</div>
 											</div>
-											<p className="text-gray-500 dark:text-gray-400">
+											<p className="text-gray-500">
 												{comment.comment}
 											</p>
 											<div className="flex items-center mt-4 space-x-4">
 												<button
 													type="button"
-													className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+													className="flex items-center text-sm text-gray-500 hover:underline"
 													onClick={() => toggleReply(comment.id)}
 												>
 													<svg
@@ -457,7 +457,7 @@ const ViewPost = () => {
 												{comment.childrenCount !== 0 && (
 													<button
 														type="button"
-														className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+														className="flex items-center text-sm text-gray-500 hover:underline"
 														onClick={() => {
 															comment.showReplies = !comment.showReplies;
 															setComments([...comments]);
@@ -488,8 +488,8 @@ const ViewPost = () => {
 														</svg>
 														{!comment.showReplies
 															? t("showReplyCount", {
-																	count: comment.childrenCount,
-															  })
+																count: comment.childrenCount,
+															})
 															: t("hideReplies")}
 													</button>
 												)}
@@ -497,7 +497,7 @@ const ViewPost = () => {
 											{comment.showReplyBox && (
 												<div className="mt-4">
 													<textarea
-														className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300 dark:text-white dark:bg-gray-800"
+														className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
 														rows="2"
 														placeholder={t("writeReply")}
 														value={comment.newReply}
@@ -522,24 +522,24 @@ const ViewPost = () => {
 												comment.replies.map((reply, index) => (
 													<div
 														key={index}
-														className="p-6 mb-2 text-base bg-gray-200 rounded-lg dark:bg-gray-900"
+														className="p-6 mb-2 text-base bg-gray-200 rounded-lg"
 													>
 														<div className="flex justify-between items-center mb-2">
 															<div className="flex items-center">
-																<p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+																<p className="inline-flex items-center mr-3 text-sm text-gray-900">
 																	<img
 																		className="mr-2 w-6 h-6 rounded-full"
 																		src={
 																			comment.image
 																				? process.env.REACT_APP_BUCKET_HOST +
-																				  comment.image
+																				comment.image
 																				: PROFILEIMAGE
 																		}
 																	/>
 																	{comment.firstname} {comment.lastname} (@
 																	{comment.username})
 																</p>
-																<p className="text-sm text-gray-600 dark:text-gray-400">
+																<p className="text-sm text-gray-600">
 																	<time
 																		dateTime="2022-02-08"
 																		title="February 8th, 2022"
@@ -549,7 +549,7 @@ const ViewPost = () => {
 																</p>
 															</div>
 														</div>
-														<p className="text-gray-500 dark:text-gray-400">
+														<p className="text-gray-500">
 															{reply.comment}
 														</p>
 													</div>
@@ -559,7 +559,7 @@ const ViewPost = () => {
 												comment.childrenCount > comment.replies.length && (
 													<button
 														type="button"
-														className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
+														className="flex items-center text-sm text-gray-500 hover:underline"
 														onClick={() => fetchComments(comment.id)}
 													>
 														{t("showMoreReplies")}

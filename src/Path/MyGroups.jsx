@@ -341,7 +341,7 @@ const MyGroups = () => {
 							{t("page")} {pageNo}
 						</span>
 
-						{forums.length >= 9 && (
+						{forums.length >= pageSize && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
 								onClick={() => setPageNo(pageNo + 1)}
