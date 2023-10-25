@@ -35,7 +35,7 @@ const Favorites = () => {
 			window.sessionStorage.getItem("refreshToken");
 		if (!accessToken && !refreshToken) {
 			window.location.href = "/login";
-		} 
+		}
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("favourites");
 		const urlParams = new URLSearchParams(window.location.search);
 		getCategory().then((response) => {
@@ -52,32 +52,34 @@ const Favorites = () => {
 			const categoryIdParam = urlParams.get("categoryId");
 			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const params = { pageSize: 12, statusId: 1 };
-			setIsLoading(true);
-			if (parseInt(cityId)) {
-				urlParams.set("cityId", cityId);
-				params.cityId = cityId;
-			} else {
-				urlParams.delete("cityId");
-			}
-			if (parseInt(categoryId)) {
-				params.categoryId = categoryId;
-				urlParams.set("categoryId", categoryId);
-			} else {
-				urlParams.delete("categoryId");
-			}
+		const urlParams = new URLSearchParams(window.location.search);
+		const params = { pageSize: 12, statusId: 1 };
+		setIsLoading(true);
+		if (parseInt(cityId)) {
+			urlParams.set("cityId", cityId);
+			params.cityId = cityId;
+		} else {
+			urlParams.delete("cityId");
+		}
+		if (parseInt(categoryId)) {
+			params.categoryId = categoryId;
+			urlParams.set("categoryId", categoryId);
+		} else {
+			urlParams.delete("categoryId");
+		}
 
-			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-			window.history.replaceState({}, "", newUrl);
-			getFavoriteListings(params).then((response) => {
-				const data = response.data.data;
-				setFavListings(data);
-				setIsLoading(false);
-			});
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.replaceState({}, "", newUrl);
+		getFavoriteListings(params).then((response) => {
+			const data = response.data.data;
+			setFavListings(data);
+			setIsLoading(false);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -101,6 +103,7 @@ const Favorites = () => {
 			default:
 				break;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSortOption]);
 
 	return (

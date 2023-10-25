@@ -48,6 +48,7 @@ const VerifyEmail = () => {
 			.catch((e) => {
 				setVerifyState("failed");
 			});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [makeVerifyEmailCall]);
 
 	useEffect(() => {

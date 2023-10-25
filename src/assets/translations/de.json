@@ -511,6 +511,8 @@
     "emailAlreadyRegistered": "Diese E-Mail wurde bereits registriert.",
     "firstNameNotPresent": "Vorname nicht vorhanden",
     "lastNameNotPresent": "Nachname nicht vorhanden",
-    "registraionSuccessful": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner",
-    "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s."
+    "registraionSuccessful": "Registrierung erfolgreich. Eine Mail wurde an deine E-Mail Adresse geschickt. Bitte verifiziere dich in der Mail um fortzufahren. Prüfe auch den Spamordner. ",
+    "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s.",
+    "resendEmailVerification": "Resend email verification?",
+    "checkYourmail": "Es wurde eine E-Mail an Ihr E-Mail-Konto gesendet, bitte überprüfen Sie"
 }

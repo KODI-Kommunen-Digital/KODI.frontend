@@ -479,7 +479,7 @@
     "usernameNotPresent": "username not present",
     "passwordNotPresent": "password not present",
     "somethingWrong": "Something went wrong, please try again later.",
-    "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login.",
+    "emailNotVerified": "Verification email sent to your email id. Please verify first before trying to login. ",
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almoset there",
     "downloadPdf": "Download PDF",
@@ -507,6 +507,8 @@
     "emailAlreadyRegistered": "This email has been already registered.",
     "firstNameNotPresent": "First name not present",
     "lastNameNotPresent": "Last name not present",
-    "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder",
-    "registrationRedirectMessage": "Redirecting to login page in 10s"
+    "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder. ",
+    "registrationRedirectMessage": "Redirecting to login page in 10s",
+    "resendEmailVerification": "Resend email verification? ",
+    "checkYourmail": "A mail has been send to your email account, Please Check"
 }
