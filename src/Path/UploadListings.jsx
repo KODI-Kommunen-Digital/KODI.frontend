@@ -19,7 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory } from "../Services/CategoryApi";
+import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
