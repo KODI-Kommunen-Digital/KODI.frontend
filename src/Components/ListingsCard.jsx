@@ -20,8 +20,7 @@ function ListingsCard({ listing, terminalView = false }) {
 				e.stopPropagation();
 				if (listing.sourceId === 1) {
 					navigateTo(
-						`/Listing?listingId=${listing.id}&cityId=${listing.cityId}${
-							terminalView ? "&terminalView=true" : ""
+						`/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""
 						}`
 					);
 				} else {
@@ -73,32 +72,27 @@ function ListingsCard({ listing, terminalView = false }) {
 						className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
-						<span>
-							{new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-								"de-DE"
-							)}{" "}
-							(
-							{new Date(listing.startDate).toLocaleTimeString("de-DE", {
-								hour: "2-digit",
-								minute: "2-digit",
-								timeZone: "UTC",
-							})}
-							)
-						</span>
-						<span className="text-blue-400"> {t("To")} </span>
-						<span>
-							{new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-								"de-DE"
-							)}{" "}
-							(
-							{new Date(listing.endDate).toLocaleTimeString("de-DE", {
-								hour: "2-digit",
-								minute: "2-digit",
-								timeZone: "UTC",
-							})}
-							)
-						</span>
+						{new Date(listing.startDate.slice(0, 10)).toLocaleDateString("de-DE")} (
+						{new Date(listing.startDate).toLocaleTimeString("de-DE", {
+							hour: "2-digit",
+							minute: "2-digit",
+							timeZone: "UTC",
+						})}
+						)
+						{listing.endDate && (
+							<>
+								<span className="text-blue-400"> {t("To")} </span>
+								{new Date(listing.endDate.slice(0, 10)).toLocaleDateString("de-DE")} (
+								{new Date(listing.endDate).toLocaleTimeString("de-DE", {
+									hour: "2-digit",
+									minute: "2-digit",
+									timeZone: "UTC",
+								})}
+								)
+							</>
+						)}
 					</p>
+
 				</div>
 			) : (
 				<p

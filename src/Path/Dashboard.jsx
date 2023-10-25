@@ -156,7 +156,7 @@ const Dashboard = () => {
 	// Navigate to Edit Listings page Starts
 	function goToEditListingsPage(listing) {
 		navigateTo(
-			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
+			`/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
@@ -533,20 +533,20 @@ const Dashboard = () => {
 															onChange={(e) =>
 																handleChangeInStatus(e.target.value, listing)
 															}
-															value={listing.statusId}
+															value={listing.statusId || 0}
 															style={{ fontFamily: "Poppins, sans-serif" }}
 														>
 															{Object.keys(status).map((state, index) => {
 																return (
-																	<>
-																		<option
-																			className="p-0"
-																			key={index}
-																			value={state}
-																		>
-																			{t(status[state].toLowerCase())}
-																		</option>
-																	</>
+
+																	<option
+																		className="p-0"
+																		key={index}
+																		value={state}
+																	>
+																		{t(status[state].toLowerCase())}
+																	</option>
+
 																);
 															})}
 														</select>
