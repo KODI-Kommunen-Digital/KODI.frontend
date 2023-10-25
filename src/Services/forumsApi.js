@@ -10,6 +10,10 @@ export async function getUserForumRequests(params) {
 	return axios.get(`/users/${getUserId()}/memberRequests`, { params });
 }
 
+export async function getUserForumsMembership(cityId, forumsId) {
+	return axios.get(`/users/${getUserId()}/cities/${cityId}/forums/${forumsId}/checkMembership`);
+}
+
 export async function getForumPost(cityId, forumsId, postId) {
 	return axios.get(`/cities/${cityId}/forums/${forumsId}/posts/${postId}`);
 }
