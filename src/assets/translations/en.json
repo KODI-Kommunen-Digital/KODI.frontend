@@ -507,6 +507,7 @@
     "emailAlreadyRegistered": "This email has been already registered.",
     "firstNameNotPresent": "First name not present",
     "lastNameNotPresent": "Last name not present",
+    "processing": "Processing...",
     "registraionSuccessful": "Registration Successfull. A mail has been sent to your email Id. Please verify to continue. Also check your spam folder",
     "registrationRedirectMessage": "Redirecting to login page in 10s"
 }

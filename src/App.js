@@ -61,6 +61,7 @@ const App = () => {
           <Route path="/AccountSettings" element={<AccountSettings />} exact />
           <Route path="/AllDevices" element={<AllDevices />} exact />
           <Route path="/UploadListings" element={<UploadListings />} exact />
+          <Route path="/EditListings" element={<UploadListings />} exact />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/PasswordForgot" element={<PasswordForgot />} />
           <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
