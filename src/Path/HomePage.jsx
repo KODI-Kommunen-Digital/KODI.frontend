@@ -39,7 +39,6 @@ const HomePage = () => {
 		if (cityId) {
 			setCityId(cityId);
 		}
-
 		getListingsCount().then((response) => {
 			const data = response.data.data;
 			const sortedData = data.sort(
@@ -115,6 +114,16 @@ const HomePage = () => {
 
 	const [showPopup, setShowPopup] = useState(false);
 
+	useEffect(() => {
+		const hasAcceptedPrivacyPolicy = localStorage.getItem(
+			"privacyPolicyAccepted"
+		);
+
+		if (!hasAcceptedPrivacyPolicy) {
+			setShowPopup(true);
+		}
+	}, []);
+
 	const handlePrivacyPolicyAccept = () => {
 		localStorage.setItem("privacyPolicyAccepted", "true");
 		setShowPopup(false);
@@ -175,9 +184,9 @@ const HomePage = () => {
 										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-												window.open(process.env.REACT_APP_APPLESTORE, "_blank");
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											} else {
-												window.open(process.env.REACT_APP_APPLESTORE, "_blank");
+												window.location.href = process.env.REACT_APP_APPLESTORE;
 											}
 										}}
 									>
@@ -201,15 +210,11 @@ const HomePage = () => {
 										className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
 										onClick={() => {
 											if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-												window.open(
-													process.env.REACT_APP_GOOGLEPLAYSTORE,
-													"_blank"
-												);
+												window.location.href =
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											} else {
-												window.open(
-													process.env.REACT_APP_GOOGLEPLAYSTORE,
-													"_blank"
-												);
+												window.location.href =
+													process.env.REACT_APP_GOOGLEPLAYSTORE;
 											}
 										}}
 									>
@@ -271,8 +276,12 @@ const HomePage = () => {
 								<div
 									key={city.id}
 									onClick={() => {
+										const scrollPosition = window.scrollY;
 										localStorage.setItem("selectedCity", city.name);
 										navigateTo(`/AllListings?cityId=${city.id}`);
+										window.addEventListener("popstate", function () {
+											window.scrollTo(0, scrollPosition);
+										});
 									}}
 									className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
 								>

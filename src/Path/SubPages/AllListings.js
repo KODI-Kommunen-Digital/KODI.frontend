@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import ListingsCard from "../../Components/ListingsCard";
-import LoadingPage from "../../Components/LoadingPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
 	sortByTitleAZ,
@@ -14,6 +13,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 // import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
+import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
 const AllListings = () => {
@@ -24,9 +24,11 @@ const AllListings = () => {
 	const [cities, setCities] = useState([]);
 	const [categoryId, setCategoryId] = useState(0);
 	const [selectedCategory, setCategoryName] = useState(t("allCategories"));
-	const [selectedCity, setCityName] = useState(t("allCities", {
-		regionName: process.env.REACT_APP_REGION_NAME,
-	}));
+	const [selectedCity, setCityName] = useState(
+		t("allCities", {
+			regionName: process.env.REACT_APP_REGION_NAME,
+		})
+	);
 	const [selectedSortOption, setSelectedSortOption] = useState("");
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
@@ -35,6 +37,7 @@ const AllListings = () => {
 	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
 		const urlParams = new URLSearchParams(window.location.search);
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
@@ -46,53 +49,50 @@ const AllListings = () => {
 			setIsLoggedIn(true);
 		}
 		setIsLoading(true);
-		Promise.all([getCities(), getCategory()])
-			.then((response) => {
-				setCities(response[0].data.data);
-				const catList = {};
-				response[1]?.data.data.forEach((cat) => {
-					catList[cat.id] = cat.name;
-				});
-				setCategories(catList);
-				const params = { pageSize, statusId: 1 };
-				const pageNoParam = parseInt(urlParams.get("pageNo"));
-				if (pageNoParam > 1) {
-					params.pageNo = pageNoParam;
-					urlParams.set("pageNo", pageNo);
-					setPageNo(pageNoParam);
-				} else {
-					urlParams.delete("pageNo");
-				}
-				const cityIdParam = urlParams.get("cityId");
-				if (cityIdParam) {
-					const cityId = parseInt(cityIdParam)
-					const city = response[0].data.data.find(c => c.id === parseInt(cityIdParam))
-					if (city) {
-						setCityName(city.name);
-						setCityId(parseInt(cityIdParam));
-						params.cityId = cityId;
-					}
-					else
-						urlParams.delete("cityId");
-				}
-				const categoryIdParam = urlParams.get("categoryId");
-				if (categoryIdParam) {
-					const categoryId = parseInt(categoryIdParam)
-					if (catList[categoryId]) {
-						setCategoryId(categoryId);
-						setCategoryName(t(catList[categoryId]));
-						params.categoryId = categoryId;
-						if (categoryId === 3) {
-							params.sortByStartDate = true;
-						}
-					}
-					else
-						urlParams.delete("categoryId");
-				}
-				setTimeout(() => {
-					fetchData(params)
-				}, 1000);
+		Promise.all([getCities(), getCategory()]).then((response) => {
+			setCities(response[0].data.data);
+			const catList = {};
+			response[1]?.data.data.forEach((cat) => {
+				catList[cat.id] = cat.name;
 			});
+			setCategories(catList);
+			const params = { pageSize, statusId: 1 };
+			const pageNoParam = parseInt(urlParams.get("pageNo"));
+			if (pageNoParam > 1) {
+				params.pageNo = pageNoParam;
+				urlParams.set("pageNo", pageNo);
+				setPageNo(pageNoParam);
+			} else {
+				urlParams.delete("pageNo");
+			}
+			const cityIdParam = urlParams.get("cityId");
+			if (cityIdParam) {
+				const cityId = parseInt(cityIdParam);
+				const city = response[0].data.data.find(
+					(c) => c.id === parseInt(cityIdParam)
+				);
+				if (city) {
+					setCityName(city.name);
+					setCityId(parseInt(cityIdParam));
+					params.cityId = cityId;
+				} else urlParams.delete("cityId");
+			}
+			const categoryIdParam = urlParams.get("categoryId");
+			if (categoryIdParam) {
+				const categoryId = parseInt(categoryIdParam);
+				if (catList[categoryId]) {
+					setCategoryId(categoryId);
+					setCategoryName(t(catList[categoryId]));
+					params.categoryId = categoryId;
+					if (categoryId === 3) {
+						params.sortByStartDate = true;
+					}
+				} else urlParams.delete("categoryId");
+			}
+			setTimeout(() => {
+				fetchData(params);
+			}, 1000);
+		});
 	}, []);
 
 	useEffect(() => {
@@ -133,7 +133,7 @@ const AllListings = () => {
 				params.sortByStartDate = true;
 			}
 			setTimeout(() => {
-				fetchData(params)
+				fetchData(params);
 			}, 1000);
 		}
 	}, [categoryId, cityId, pageNo]);

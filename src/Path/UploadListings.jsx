@@ -19,7 +19,7 @@ import { getCities } from "../Services/cities";
 import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCategory } from "../Services/CategoryApi";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -135,7 +135,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -328,7 +327,6 @@ function UploadListings() {
 			...prev,
 			description: descriptionHTML,
 		}));
-
 		setDescription(newContent);
 	};
 
@@ -892,48 +890,49 @@ function UploadListings() {
 						</div>
 					)}
 
-					{(categoryId == 12 || categoryId == 5) && (
-						<div className="relative mb-4 grid grid-cols-2 gap-4">
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									htmlFor="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("originalPrice")}
-								</label>
-								<input
-									type="text"
-									id="originalPrice"
-									name="originalPrice"
-									value={input.originalPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
+					{(categoryId == categoryByName.offers ||
+						categoryId == categoryByName.regionalProducts) && (
+							<div className="relative mb-4 grid grid-cols-2 gap-4">
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("originalPrice")}
+									</label>
+									<input
+										type="text"
+										id="originalPrice"
+										name="originalPrice"
+										value={input.originalPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
+								<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
+									<label
+										for="place"
+										className="block text-sm font-medium text-gray-600"
+									>
+										{t("discountedPrice")}
+									</label>
+									<input
+										type="text"
+										id="discountedPrice"
+										name="discountedPrice"
+										value={input.discountedPrice}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										required
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Enter the price of the product"
+									/>
+								</div>
 							</div>
-							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-								<label
-									htmlFor="place"
-									className="block text-sm font-medium text-gray-600"
-								>
-									{t("discountedPrice")}
-								</label>
-								<input
-									type="text"
-									id="discountedPrice"
-									name="discountedPrice"
-									value={input.discountedPrice}
-									onChange={onInputChange}
-									onBlur={validateInput}
-									required
-									className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-									placeholder="Enter the price of the product"
-								/>
-							</div>
-						</div>
-					)}
+						)}
 
 					<div className="relative mb-4">
 						<label
