@@ -52,6 +52,7 @@ const Favorites = () => {
 			const categoryIdParam = urlParams.get("categoryId");
 			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -101,6 +102,7 @@ const Favorites = () => {
 			default:
 				break;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSortOption]);
 
 	return (
