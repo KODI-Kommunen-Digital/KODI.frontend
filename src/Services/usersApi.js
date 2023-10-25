@@ -65,6 +65,10 @@ export async function verifyEmail(credentials) {
 	return axiosInstance.post(`/users/VerifyEmail`, credentials);
 }
 
+export async function sendVerificationEmail(credentials) {
+	return axiosInstance.post(`/users/sendVerificationEmail`, credentials);
+}
+
 export async function login(credentials) {
 	return axiosInstance.post(`/users/login`, credentials, { headers });
 }
