@@ -464,7 +464,7 @@
     "writeComment": "Write a comment...",
     "showComments": "Show comments",
     "hideComments": "Hide comments",
-    "showMoreComments": "Show more comments",
+    "showMoreComments": "More...",
     "showMoreReplies": "Show more replies",
     "hideReplies": "Hide replies",
     "showReplyCount": "View {{count}} reply(s)",
@@ -484,7 +484,6 @@
     "passwordContainsUsername": "Password should not contains username",
     "sessionExpired": "Your session has expired. Please login again.",
     "pageNotFound": "Page not found!",
-
     "loading": "Loading...",
     "youAreAlmosetThere": "You are almost there",
     "viewReports": "View Reports",
@@ -508,13 +507,12 @@
     "member": "Member",
     "role": "Role",
     "onlyAdmins": "Only for admins",
-    "to_upload_new_forum": "To upload a new forum, ",
-    "currently_no_forums": "Currently there is no forum to display !",
+    "to_upload_new_forum": "To create a new forum, ",
+    "currently_no_forums": "Please select a city !",
     "private": "Private",
     "public": "Public",
     "forumError": "Please select another city before selecting Forums",
     "success": "Success",
     "passwordUpdated": "Your password is updated. Redirecting to login in 5s",
     "youAreOnTheWay": "You are on the way"
-
 }

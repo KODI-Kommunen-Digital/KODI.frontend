@@ -53,7 +53,7 @@ function UserProfile({ user }) {
 	};
 	return (
 		<div>
-			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-64 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+			<div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
 				<div>
 					<div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
 						<div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
@@ -109,10 +109,10 @@ function UserProfile({ user }) {
 						</div>
 					</div>
 
-					<div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-4 lg:mt-2 mb-2 flex flex-wrap gap-1">
+					<div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-4 mb-2 flex flex-wrap gap-1">
 						{userSocial &&
 							Object.entries(userSocial).map(([key, value]) => (
-								<div key={key} className="flex py-2 px-2 mx-0 my-0 gap-1">
+								<div key={key} className="flex py-1 px-1 mx-0 my-0 gap-1">
 									<button
 										type="button"
 										data-te-ripple-init
