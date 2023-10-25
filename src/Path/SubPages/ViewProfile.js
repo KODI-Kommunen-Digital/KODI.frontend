@@ -161,13 +161,13 @@ const ViewProfile = () => {
 					</div>
 					<div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
 						<h1
-							className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+							className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("aboutMe")}
 						</h1>
 						<p
-							className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
+							className="leading-relaxed text-md font-medium my-6 text-gray-900"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{user?.description}
