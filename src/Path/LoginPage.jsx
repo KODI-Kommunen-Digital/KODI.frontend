@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import HeidiLogo from "../assets/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
-import { resetPass, login } from "../Services/usersApi";
+import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
 
@@ -13,6 +13,8 @@ const LoginPage = () => {
 	const userRef = useRef();
 	const [rememberMe, setRememberMe] = useState(false);
 	const [forgotPassword, setForgotPassword] = useState(false);
+	const [mailNotRecieved, setMailNotRecieved] = useState(false);
+	const [sendEmail, setSendEmail] = useState(false);
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
@@ -69,11 +71,26 @@ const LoginPage = () => {
 
 	const onCancel = () => {
 		setForgotPassword(false);
+		setSendEmail(false);
+		setMailNotRecieved(false);
 		setAlertInfo(false);
 		setUserReset("");
 		setAlertMessage("");
 		setRememberMe(false);
 	};
+
+	const emailNotVerified = async () => {
+		try {
+			await sendVerificationEmail({ email: userReset });
+			setAlertInfo(true);
+			setAlertType("success");
+			setAlertMessage(t("checkYourmail"))
+		} catch (err) {
+			setAlertInfo(true);
+			setAlertType("danger");
+			setAlertMessage(t("somethingWrong"));
+		};
+	}
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -94,6 +111,10 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.localStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			} else {
 				window.sessionStorage.setItem(
 					"accessToken",
@@ -104,12 +125,19 @@ const LoginPage = () => {
 					response.data.data.refreshToken
 				);
 				window.sessionStorage.setItem("userId", response.data.data.userId);
+				window.localStorage.setItem(
+					"cityUsers",
+					JSON.stringify(response.data.data.cityUsers)
+				);
 			}
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
 
-			if (window.sessionStorage.getItem("redirectTo")) {
+			if (window.sessionStorage.getItem("path")) {
+				navigate(window.sessionStorage.getItem("path"));
+				sessionStorage.removeItem("path");
+			} else if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
@@ -133,6 +161,7 @@ const LoginPage = () => {
 			} else if (
 				err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED
 			) {
+				setMailNotRecieved(true);
 				setAlertMessage(t("emailNotVerified"));
 			} else {
 				setAlertMessage(t("somethingWrong"));
@@ -155,12 +184,12 @@ const LoginPage = () => {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);
 			setAlertType("success");
-			setAlertMessage("Please check your mail");
+			setAlertMessage("checkYourmail");
 		} catch (err) {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage("Failed: " + err.response.data.message);
+			setAlertMessage(t("somethingWrong"));
 		}
 	};
 
@@ -207,7 +236,7 @@ const LoginPage = () => {
 									onKeyDown={handleKeyDown}
 									required
 									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username") + "*"}
+									placeholder={t("usernameOrEmail") + "*"}
 								/>
 							</div>
 							<div className="relative">
@@ -320,6 +349,20 @@ const LoginPage = () => {
 								<Alert type={alertType} message={timeOutAlertMessage} />
 							</div>
 						)}
+						{mailNotRecieved && (<div className="flex justify-between">
+							<div className="text-sm">
+								{t("resendEmailVerification")}
+								<span
+									onClick={() => {
+										setSendEmail(true);
+										setForgotPassword(false);
+									}}
+									className="font-medium cursor-pointer text-black hover:text-blue-400"
+								>
+									{t("click_here")}
+								</span>
+							</div>
+						</div>)}
 						<div className="flex justify-between">
 							<div className="text-sm">
 								{t("notMember")}
@@ -337,7 +380,7 @@ const LoginPage = () => {
 									onClick={openModal}
 									className="hover:text-blue-400 text-black font-bold px-4 rounded-xl"
 								>
-									{t("help")}
+									{t("Help")}
 								</span>
 
 								{isOpen && (
@@ -395,10 +438,10 @@ const LoginPage = () => {
 							</div>
 						</div>
 					</div>
-					{forgotPassword && (
+					{(forgotPassword || sendEmail) && (
 						<>
 							<div id="myDIV" className="text-sm space-y-4">
-								{t("forgotPasswordMessage")}
+								{forgotPassword ? t("forgotPasswordMessage") : sendEmail ? t("enter_email") : null}
 								<label htmlFor="username" className="sr-only">
 									{t("username")}
 								</label>
@@ -410,13 +453,13 @@ const LoginPage = () => {
 									onChange={(e) => setUserReset(e.target.value)}
 									required
 									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
-									placeholder={t("username") + "*"}
+									placeholder={forgotPassword ? t("usernameOrEmail") : t("pleaseEnterEmailAddress") + "*"}
 								/>
 								<div className="flex gap-2">
 									<button
 										type="button"
 										id="finalbutton"
-										onClick={passwordReset}
+										onClick={forgotPassword ? passwordReset : sendEmail ? emailNotVerified : null}
 										disabled={forgotPasswordLoading}
 										className="group relative flex w-full justify-center rounded-md border border-transparent bg-black py-2 px-4 text-sm font-medium text-white hover:text-slate-400 focus:outline-none focus:ring-2 focus:text-gray-400 focus:ring-offset-2 disabled:opacity-60"
 									>
@@ -455,7 +498,7 @@ const LoginPage = () => {
 					)}
 				</div>
 			</div>
-		</div>
+		</div >
 	);
 };
 export default LoginPage;

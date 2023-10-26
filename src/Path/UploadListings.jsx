@@ -135,7 +135,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -174,11 +173,7 @@ function UploadListings() {
 					setListingId(response.data.id);
 				}
 
-				if (input.removeImage) {
-					await deleteListingImage(cityId, listingId);
-				}
-
-				if (input.removePdf) {
+				if (input.removeImage || input.removePdf) {
 					await deleteListingImage(cityId, listingId);
 				}
 
@@ -189,12 +184,12 @@ function UploadListings() {
 						for (let i = 0; i < image.length; i++) {
 							imageForm.append("image", image[i]);
 						}
-						await uploadListingImage(imageForm, cityId, listingId);
+						await uploadListingImage(imageForm, cityId, response.data.id || listingId);
 					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, listingId);
+						await uploadListingPDF(pdfForm, cityId, response.data.id || listingId);
 					}
 				}
 
@@ -271,6 +266,17 @@ function UploadListings() {
 		}
 	}, []);
 
+	function categoryDescription(category) {
+		if (category === "4") {
+			return "clubsDescription";
+		} else if (category === "10") {
+			return "companyPortraitsDescription";
+		} else {
+			return "";
+		}
+	}
+
+
 	useEffect(() => {
 		let valid = true;
 		for (let property in error) {
@@ -323,7 +329,6 @@ function UploadListings() {
 			...prev,
 			description: descriptionHTML,
 		}));
-
 		setDescription(newContent);
 	};
 
@@ -360,7 +365,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else {
+				} else if (value.length > 65535) {
+					return t("characterLimitReacehd");
+				}
+				else {
 					return "";
 				}
 
@@ -372,15 +380,11 @@ function UploadListings() {
 				}
 
 			case "endDate":
-				if (parseInt(input.categoryId) == 3) {
-					if (!value) {
-						return t("pleaseEnterEndDate");
+				if (parseInt(input.categoryId) === 3) {
+					if (value && new Date(input.startDate) > new Date(value)) {
+						return t("endDateBeforeStartDate");
 					} else {
-						if (new Date(input.startDate) > new Date(value)) {
-							return t("endDateBeforeStartDate");
-						} else {
-							return "";
-						}
+						return "";
 					}
 				} else {
 					return "";
@@ -499,6 +503,7 @@ function UploadListings() {
 				subcatList[subCat.id] = subCat.name;
 			});
 			setSubCategories(subcatList);
+			console.log(subcatList)
 		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
@@ -538,6 +543,7 @@ function UploadListings() {
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 	}
 
+
 	return (
 		<section className="bg-slate-600 body-font relative">
 			<SideBar />
@@ -555,7 +561,7 @@ function UploadListings() {
 					</h2>
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						></label>
 						<input
@@ -581,7 +587,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="title"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("city")} *
@@ -590,15 +596,15 @@ function UploadListings() {
 							type="text"
 							id="cityId"
 							name="cityId"
-							value={cityId}
+							value={cityId || 0}
 							onChange={onCityChange}
-							autocomplete="country-name"
+							autoComplete="country-name"
 							disabled={!newListing}
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
+								<option key={Number(city.id)} value={Number(city.id)}>{city.name}</option>
 							))}
 						</select>
 						<div
@@ -614,7 +620,7 @@ function UploadListings() {
 					{villages.length > 0 && parseInt(cityId) ? (
 						<div className="relative mb-4">
 							<label
-								for="title"
+								htmlFor="title"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("village")}
@@ -623,15 +629,15 @@ function UploadListings() {
 								type="villageId"
 								id="villageId"
 								name="villageId"
-								value={input.villageId}
+								value={input.villageId || 0}
 								onChange={onInputChange}
 								onBlur={validateInput}
-								autocomplete="country-name"
+								autoComplete="country-name"
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 							>
 								<option value={0}>{t("select")}</option>
 								{villages.map((village) => (
-									<option value={Number(village.id)}>{village.name}</option>
+									<option key={Number(village.id)} value={Number(village.id)}>{village.name}</option>
 								))}
 							</select>
 						</div>
@@ -641,7 +647,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="dropdown"
+							htmlFor="dropdown"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("category")} *
@@ -650,7 +656,7 @@ function UploadListings() {
 							type="categoryId"
 							id="categoryId"
 							name="categoryId"
-							value={categoryId}
+							value={categoryId || 0}
 							onChange={handleCategoryChange}
 							required
 							disabled={!newListing}
@@ -662,7 +668,7 @@ function UploadListings() {
 							{Object.keys(categories).map((key) => {
 								return (
 									<option className="font-sans" value={key} key={key}>
-										{t(categories[key])}
+										{t(categories[key])} {t(categoryDescription(key))}
 									</option>
 								);
 							})}
@@ -680,7 +686,7 @@ function UploadListings() {
 					{categoryId == 1 && (
 						<div className="relative mb-4">
 							<label
-								for="subcategoryId"
+								htmlFor="subcategoryId"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("subCategory")} *
@@ -689,10 +695,11 @@ function UploadListings() {
 								type="subcategoryId"
 								id="subcategoryId"
 								name="subcategoryId"
-								value={subcategoryId}
+								value={subcategoryId || 0}
 								onChange={handleSubcategoryChange}
 								onBlur={validateInput}
 								required
+								disabled={!newListing}
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							>
 								<option className="font-sans" value={0} key={0}>
@@ -720,7 +727,7 @@ function UploadListings() {
 					<div className="relative mb-4 grid grid-cols-2 gap-4">
 						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 							<label
-								for="place"
+								htmlFor="place"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("place")}
@@ -738,7 +745,7 @@ function UploadListings() {
 						</div>
 						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 							<label
-								for="zipCode"
+								htmlFor="zipCode"
 								className="block text-sm font-medium text-gray-600"
 							>
 								{t("zipCode")}
@@ -758,7 +765,7 @@ function UploadListings() {
 
 					<div className="col-span-6">
 						<label
-							for="address"
+							htmlFor="address"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("streetAddress")}
@@ -819,34 +826,21 @@ function UploadListings() {
 										></svg>
 									</div>
 									<label
-										for="startDate"
+										htmlFor="startDate"
 										className="block text-sm font-medium text-gray-600"
 									>
 										{t("eventStartDate")} *
 									</label>
-									{input.startDate ? (
-										// Display the start date as plain text if it's present
-										<input
-											type="text"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if start date is not present
-										<input
-											type="datetime-local"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="Start Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="startDate"
+										name="startDate"
+										value={formatDateTime(input.startDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Start Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -856,6 +850,7 @@ function UploadListings() {
 										{error.startDate}
 									</div>
 								</div>
+
 
 								<div className="relative">
 									<div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
@@ -868,34 +863,21 @@ function UploadListings() {
 										></svg>
 									</div>
 									<label
-										for="endDate"
+										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")} *
+										{t("eventEndDate")}
 									</label>
-									{input.endDate ? (
-										// Display the end date as plain text if it's present
-										<input
-											type="text"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if end date is not present
-										<input
-											type="datetime-local"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="End Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="endDate"
+										name="endDate"
+										value={formatDateTime(input.endDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="End Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -905,6 +887,7 @@ function UploadListings() {
 										{error.endDate}
 									</div>
 								</div>
+
 							</div>
 						</div>
 					)}
@@ -954,7 +937,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="place"
+							htmlFor="place"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("telephone")}
@@ -973,7 +956,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="place"
+							htmlFor="place"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("email")}
@@ -993,7 +976,7 @@ function UploadListings() {
 
 					<div className="relative mb-4">
 						<label
-							for="description"
+							htmlFor="description"
 							className="block text-sm font-medium text-gray-600"
 						>
 							{t("description")} *

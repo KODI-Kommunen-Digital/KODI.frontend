@@ -1,6 +1,6 @@
-import axiosInstance from "../api/axiosInstance";
-// import axios from "axios";
+import { instance } from "../api/axiosInstance";
 import UAParser from "ua-parser-js";
+const axiosInstance = instance;
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
@@ -63,6 +63,10 @@ export async function register(credentials) {
 
 export async function verifyEmail(credentials) {
 	return axiosInstance.post(`/users/VerifyEmail`, credentials);
+}
+
+export async function sendVerificationEmail(credentials) {
+	return axiosInstance.post(`/users/sendVerificationEmail`, credentials);
 }
 
 export async function login(credentials) {

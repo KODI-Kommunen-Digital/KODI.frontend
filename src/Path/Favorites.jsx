@@ -35,7 +35,7 @@ const Favorites = () => {
 			window.sessionStorage.getItem("refreshToken");
 		if (!accessToken && !refreshToken) {
 			window.location.href = "/login";
-		} 
+		}
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("favourites");
 		const urlParams = new URLSearchParams(window.location.search);
 		getCategory().then((response) => {
@@ -52,32 +52,33 @@ const Favorites = () => {
 			const categoryIdParam = urlParams.get("categoryId");
 			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const params = { pageSize: 12, statusId: 1 };
-			setIsLoading(true);
-			if (parseInt(cityId)) {
-				urlParams.set("cityId", cityId);
-				params.cityId = cityId;
-			} else {
-				urlParams.delete("cityId");
-			}
-			if (parseInt(categoryId)) {
-				params.categoryId = categoryId;
-				urlParams.set("categoryId", categoryId);
-			} else {
-				urlParams.delete("categoryId");
-			}
+		const urlParams = new URLSearchParams(window.location.search);
+		const params = { pageSize: 12, statusId: 1 };
+		setIsLoading(true);
+		if (parseInt(cityId)) {
+			urlParams.set("cityId", cityId);
+			params.cityId = cityId;
+		} else {
+			urlParams.delete("cityId");
+		}
+		if (parseInt(categoryId)) {
+			params.categoryId = categoryId;
+			urlParams.set("categoryId", categoryId);
+		} else {
+			urlParams.delete("categoryId");
+		}
 
-			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-			window.history.replaceState({}, "", newUrl);
-			getFavoriteListings(params).then((response) => {
-				const data = response.data.data;
-				setFavListings(data);
-				setIsLoading(false);
-			});
+		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+		window.history.replaceState({}, "", newUrl);
+		getFavoriteListings(params).then((response) => {
+			const data = response.data.data;
+			setFavListings(data);
+			setIsLoading(false);
+		});
 	}, [categoryId, cityId, pageNo, t]);
 
 	function handleSortOptionChange(event) {
@@ -101,6 +102,7 @@ const Favorites = () => {
 			default:
 				break;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedSortOption]);
 
 	return (
@@ -138,8 +140,8 @@ const Favorites = () => {
 														name="city"
 														autoComplete="city-name"
 														onChange={(e) => setCityId(e.target.value)}
-														value={cityId}
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														value={cityId || 0}
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option className="font-sans" value={0} key={0}>
@@ -164,8 +166,8 @@ const Favorites = () => {
 														name="category"
 														autoComplete="category-name"
 														onChange={(e) => setCategoryId(e.target.value)}
-														value={categoryId}
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														value={categoryId || 0}
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option className="font-sans" value={0} key={0}>
@@ -191,7 +193,7 @@ const Favorites = () => {
 														value={selectedSortOption}
 														onChange={handleSortOptionChange}
 														autoComplete="country-name"
-														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
 														<option value="">{t("sort")}</option>

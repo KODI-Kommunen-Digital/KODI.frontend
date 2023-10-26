@@ -129,7 +129,17 @@ const Dashboard = () => {
 		if (newPageNo < 1) {
 			newPageNo = 1;
 		}
-		navigate(`/Dashboard?pageNo=${newPageNo}`);
+		// navigate(`/Dashboard?pageNo=${newPageNo}`);
+		window.location.href = `/Dashboard?pageNo=${newPageNo}`
+		setPageNo(newPageNo);
+	};
+
+	const setAllListingsPageNoAndUpdateURL = (newPageNo) => {
+		if (newPageNo < 1) {
+			newPageNo = 1;
+		}
+		// navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
+		window.location.href = `/DashboardAdmin?pageNo=${newPageNo}`
 		setPageNo(newPageNo);
 	};
 
@@ -146,7 +156,7 @@ const Dashboard = () => {
 	// Navigate to Edit Listings page Starts
 	function goToEditListingsPage(listing) {
 		navigateTo(
-			`/UploadListings?listingId=${listing.id}&cityId=${listing.cityId}`
+			`/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
 		);
 	}
 
@@ -317,8 +327,8 @@ const Dashboard = () => {
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
-							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
+						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
+							<thead className="text-xs text-gray-700 uppercase bg-gray-50">
 								<tr>
 									<th
 										scope="col"
@@ -374,11 +384,11 @@ const Dashboard = () => {
 									return (
 										<tr
 											key={index}
-											className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
+											className="bg-white border-b hover:bg-gray-50"
 										>
 											<th
 												scope="row"
-												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
 												onClick={() => goToListingPage(listing)}
 											>
 												<img
@@ -417,14 +427,14 @@ const Dashboard = () => {
 											</td>
 											<td className="px-6 py-4 text-center">
 												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer pr-2"
+													className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
 													onClick={() => goToEditListingsPage(listing)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
 													{t("edit")}
 												</a>
 												<a
-													className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center"
+													className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
 													onClick={() => deleteListingOnClick(listing)}
 													style={{ fontFamily: "Poppins, sans-serif" }}
 												>
@@ -450,7 +460,7 @@ const Dashboard = () => {
 																	<div className="sm:flex sm:items-start">
 																		<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
 																			<svg
-																				className="h-6 w-6 text-red-600"
+																				className="h-6 w-6 text-red-700"
 																				xmlns="http://www.w3.org/2000/svg"
 																				fill="none"
 																				viewBox="0 0 24 24"
@@ -481,7 +491,7 @@ const Dashboard = () => {
 																	<button
 																		onClick={showConfirmationModal.onConfirm}
 																		type="button"
-																		className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+																		className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 																	>
 																		{t("delete")}
 																	</button>
@@ -489,7 +499,7 @@ const Dashboard = () => {
 																	<button
 																		onClick={showConfirmationModal.onCancel}
 																		type="button"
-																		className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+																		className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
 																	>
 																		{t("cancel")}
 																	</button>
@@ -502,7 +512,7 @@ const Dashboard = () => {
 											{viewAllListings && (
 												<td className="px-6 py-4 text-center">
 													<a
-														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+														className="font-medium text-blue-600 hover:underline cursor-pointer"
 														style={{ fontFamily: "Poppins, sans-serif" }}
 														href={"/ViewProfile/" + listing.username}
 													>
@@ -523,20 +533,20 @@ const Dashboard = () => {
 															onChange={(e) =>
 																handleChangeInStatus(e.target.value, listing)
 															}
-															value={listing.statusId}
+															value={listing.statusId || 0}
 															style={{ fontFamily: "Poppins, sans-serif" }}
 														>
 															{Object.keys(status).map((state, index) => {
 																return (
-																	<>
-																		<option
-																			className="p-0"
-																			key={index}
-																			value={state}
-																		>
-																			{t(status[state].toLowerCase())}
-																		</option>
-																	</>
+
+																	<option
+																		className="p-0"
+																		key={index}
+																		value={state}
+																	>
+																		{t(status[state].toLowerCase())}
+																	</option>
+
 																);
 															})}
 														</select>
@@ -557,7 +567,7 @@ const Dashboard = () => {
 						{pageNo !== 1 ? (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNoAndUpdateURL(pageNo - 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo - 1) : () => setPageNoAndUpdateURL(pageNo - 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{"<"}{" "}
@@ -575,13 +585,14 @@ const Dashboard = () => {
 						{listings.length >= 9 && (
 							<span
 								className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-								onClick={() => setPageNoAndUpdateURL(pageNo + 1)}
+								onClick={viewAllListings ? () => setAllListingsPageNoAndUpdateURL(pageNo + 1) : () => setPageNoAndUpdateURL(pageNo + 1)}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{">"}
 							</span>
 						)}
 					</div>
+
 				</div>
 			</div>
 		</section>

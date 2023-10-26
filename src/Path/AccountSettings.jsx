@@ -156,7 +156,7 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="email"
-										value={input.email}
+										value={input.email || ""}
 										id="email"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_email")}
@@ -174,7 +174,7 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="phoneNumber"
-										value={input.phoneNumber}
+										value={input.phoneNumber ||""}
 										id="phoneNumber"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
