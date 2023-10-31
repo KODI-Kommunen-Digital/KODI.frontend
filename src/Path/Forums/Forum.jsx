@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import {
 	getForum,
-	getUserForums,
+	getUserForumsMembership,
 	getForumPosts,
 	deleteForumMembers,
 	deleteForums,
@@ -69,18 +69,15 @@ const Forum = () => {
 					}
 				});
 			}
-			const cityId = parseInt(urlParams.get("cityId"));
-			const forumId = parseInt(urlParams.get("forumId"));
 			try {
-				const response = await getUserForums();
-				const userForums = response.data.data;
-				const forum = userForums.find(
-					(userForum) => userForum.forumId === forumId
-				);
-				if (forum) {
-					setMemberStatus(true);
-					setMemberId(forum.memberId);
-					const membersResponse = await getForumMembers(cityId, forumId);
+				const response = await getUserForumsMembership(cityIdParam, forumIdParam);
+				const isMember = response.data.isMember;
+				setMemberStatus(isMember);
+				if (isMember) {
+					setMemberId(response.data.memberId);
+				}
+				if (isMember) {
+					const membersResponse = await getForumMembers(cityIdParam, forumIdParam);
 					const forumMembers = membersResponse.data.data;
 					setIsOnlyMember(forumMembers.length === 1);
 					const response2 = await getForumPosts(cityIdParam, forumIdParam, {
