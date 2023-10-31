@@ -389,9 +389,14 @@ function UploadListings() {
 
 			case "endDate":
 				if (parseInt(input.categoryId) === 3) {
-					if (value && new Date(input.startDate) > new Date(value)) {
-						return t("endDateBeforeStartDate");
+					if (!value) {
+						return t("pleaseEnterEndDate");
 					} else {
+						if (new Date(input.startDate) > new Date(value)) {
+							return t("endDateBeforeStartDate");
+						} else {
+							return "";
+						}
 						return "";
 					}
 				} else {
@@ -874,7 +879,7 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")}
+										{t("eventEndDate")} *
 									</label>
 									<input
 										type="datetime-local"
