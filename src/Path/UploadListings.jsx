@@ -231,6 +231,15 @@ function UploadListings() {
 			});
 			setCategories(catList);
 		});
+		getNewsSubCategory().then((response) => {
+			const subcatList = {};
+			response?.data.data.forEach((subCat) => {
+				subcatList[subCat.id] = subCat.name;
+			});
+			setSubCategories(subcatList);
+		});
+		setInput((prevInput) => ({ ...prevInput, categoryId }));
+		setSubcategoryId(null);
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		getProfile().then(response => {
@@ -252,6 +261,7 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
+				setSubcategoryId(listingData.subcategoryId);
 				if (listingData.logo) {
 					setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo)
 				} else if (listingData.pdf) {
@@ -516,8 +526,8 @@ function UploadListings() {
 
 	const handleSubcategoryChange = (event) => {
 		let subcategoryId = event.target.value;
-		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		setSubcategoryId(subcategoryId);
+		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		validateInput(event);
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("subcategoryId", subcategoryId);
