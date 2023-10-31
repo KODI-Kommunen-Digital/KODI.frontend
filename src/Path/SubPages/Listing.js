@@ -66,7 +66,6 @@ const Listing = () => {
     zipCode: "",
     discountedPrice: "",
   });
-  console.log(input.endDate);
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
