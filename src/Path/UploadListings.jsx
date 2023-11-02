@@ -255,8 +255,8 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
-				if (listingData.logo) {
-					const temp = listingData.logo.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => process.env.REACT_APP_BUCKET_HOST + img.logo);
+				if (listingData.logo && listingData.otherlogos) {
+					const temp = listingData.otherlogos.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => process.env.REACT_APP_BUCKET_HOST + img.logo);
 					setImage(temp)
 				} else if (listingData.pdf) {
 					setPdf({

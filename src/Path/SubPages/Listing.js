@@ -253,10 +253,12 @@ const Listing = () => {
     }
   };
 
-  const [, setUserName] = useState("");
+  // eslint-disable-next-line
+  const [userName, setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [, setProfilePic] = useState("");
+  // eslint-disable-next-line
+  const [profilePic, setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
