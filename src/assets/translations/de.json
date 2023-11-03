@@ -560,5 +560,9 @@
     "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s.",
     "resendEmailVerification": "Resend email verification?",
     "checkYourmail": "Es wurde eine E-Mail an Ihr E-Mail-Konto gesendet, bitte überprüfen Sie",
-    "processing": "wird bearbeitet..."
+    "processing": "wird bearbeitet...",
+    "onlyAdminWarning": "Du bist der einzige Admin der Gruppe!",
+    "onlyAdminWarningInfo": "Bitte machen Sie eine andere Person zum Administrator, bevor Sie die Gruppe verlassen.",
+    "areyousureinfo": "Möchten Sie dieses Mitglied wirklich entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "exit": "Gruppe verlassen"
 }

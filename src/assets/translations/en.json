@@ -558,5 +558,9 @@
     "resendEmailVerification": "Resend email verification? ",
     "checkYourmail": "A mail has been send to your email account, Please Check",
     "processing": "Processing...",
-    "youAreOnTheWay": "You are on the way"
+    "youAreOnTheWay": "You are on the way",
+    "onlyAdminWarning": "You are the only admin of the group!",
+    "onlyAdminWarningInfo": "Please make any one else admin before exiting the group.",
+    "areyousureinfo": "Do you really want to remove this member? This action cannot be reverted.",
+    "exit": "Exit Group"
 }
