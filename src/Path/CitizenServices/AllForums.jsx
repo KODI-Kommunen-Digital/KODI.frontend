@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import LoadingPage from "../../Components/LoadingPage";
-import { getAllForums } from "../../Services/forumsApi";
+import {
+	getAllForums, getUserForumsMembershipForAllForums, getUserForumsMembership, createMemberRequest, cancelMemberRequest
+} from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 
@@ -13,10 +15,13 @@ const AllForums = () => {
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
 	const [forums, setForums] = useState([]);
+	const [, setMembershipStatus] = useState({}); // Not required because we take status from getUserForumsMembership
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
+	const [requestId, setRequestId] = useState(0);
+	const [memberStatus, setMemberStatus] = useState(false);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -61,11 +66,30 @@ const AllForums = () => {
 			window.history.replaceState({}, "", newUrl);
 			const fetchData = async () => {
 				try {
-					const response = await getAllForums(cityId, params);
-					const data = response.data.data;
-					setForums(data);
+					const response = await getAllForums(cityId, { hasForum: true });
+					const forums = response.data.data;
+					setForums(forums);
+
+					const forumIds = forums.map((forum) => forum.id).join(",");
+
+					const responseisMember = await getUserForumsMembership(cityId, forumIds);
+					const isMember = responseisMember.data.isMember;
+					setMemberStatus(isMember);
+
+					if (forumIds) {
+						const membershipResponse = await getUserForumsMembershipForAllForums(cityId, { forumIds });
+						const membershipResponseData = membershipResponse.data.data;
+						const membershipStatus = {};
+						membershipResponseData.forEach((memberresponse) => {
+							membershipStatus[memberresponse.forumId] = memberresponse.statuId;
+						});
+						setMembershipStatus(membershipStatus);
+					}
+
+
 				} catch (error) {
 					console.error("Error fetching forums:", error);
+
 				} finally {
 					setIsLoading(false);
 				}
@@ -107,8 +131,34 @@ const AllForums = () => {
 			localStorage.setItem("selectedCity", selectedCity.name);
 			setCityId(parseInt(selectedCityId));
 			urlParams.set("cityId", selectedCityId);
+		} else {
+			localStorage.setItem("selectedCity", t("allCities"));
+			urlParams.delete("cityId");
+			setCityId(0);
 		}
 		window.history.replaceState({}, "", `?${urlParams.toString()}`);
+	};
+
+	const handleLeaveRequest = async (forumId) => {
+		try {
+			await cancelMemberRequest(cityId, forumId, requestId);
+			setRequestId(0);
+		} catch (error) {
+			console.error("Error sending follow request:", error);
+		}
+	};
+
+	const handleFollowRequest = async (forumsId) => {
+		try {
+			const forumToFollow = forums.find(forum => forum.id === forumsId);
+			const response = await createMemberRequest(parseInt(cityId), forumsId);
+			console.log(response)
+			if (forumToFollow.isPrivate === 1) {
+				setRequestId(response.data.data.id);
+			}
+		} catch (error) {
+			console.error("Error sending follow request:", error);
+		}
 	};
 
 	return (
@@ -135,14 +185,14 @@ const AllForums = () => {
 												name="city"
 												autoComplete="city-name"
 												onChange={(e) => handleChange(e)}
-												value={cityId}
+												value={cityId || 0}
 												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												style={{
 													fontFamily: "Poppins, sans-serif",
 												}}
 											>
 												<option className="font-sans" value={0} key={0}>
-													{t("allCities")}
+													{t("select")}
 												</option>
 												{cities.map((city) => (
 													<option
@@ -158,118 +208,176 @@ const AllForums = () => {
 									</div>
 								</div>
 							</div>
-							{/* <div className="relative w-full px-4 mb-4 md:w-80">
-								<select
-									id="city"
-									name="city"
-									autoComplete="city-name"
-									value={cityId || 0}
-									className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-									style={{
-										fontFamily: "Poppins, sans-serif",
-									}}
-								>
-									<option className="font-sans" value={0} key={0}>
-										{t("allCities")}
-									</option>
-									{cities.map((city) => (
-										<option className="font-sans" value={city.id} key={city.id}>
-											{city.name}
-										</option>
-									))}
-								</select>
-							</div> */}
 						</div>
 					</div>
 				</div>
 
-				<div className="mt-5 mb-20 p-6">
+				<div className="mt-5 mb-20 customproview py-6">
+					<style>
+						{`
+							@media (min-height: 1293px) {
+							.customproview {
+								margin-bottom: 10rem;
+							}
+							}
+						`}
+					</style>
 					{isLoading ? (
 						<LoadingPage />
 					) : (
-						<div>
-							{forums && forums.length > 0 ? (
-								<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-									<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-										{forums &&
-											forums.map((forum) => (
-												<div
-													key={forum.id}
-													onClick={() => handleClick(cityId, forum)}
-													className="w-full h-full shadow-lg rounded-lg cursor-pointer"
-												>
-													<a className="block relative h-64 rounded overflow-hidden">
-														{forum.isPrivate ? (
-															<>
-																<img
-																	alt="forumImage"
-																	className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-																	src={
-																		forum.image
-																			? process.env.REACT_APP_BUCKET_HOST +
-																			forum.image
-																			: process.env.REACT_APP_BUCKET_HOST +
-																			"admin/DefaultForum.jpeg"
-																	}
-																/>
-															</>
-														) : (
-															<>
-																<img
-																	alt="forumImage"
-																	className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
-																	src={
-																		forum.image
-																			? process.env.REACT_APP_BUCKET_HOST +
-																			forum.image
-																			: process.env.REACT_APP_BUCKET_HOST +
-																			"admin/DefaultForum.jpeg"
-																	}
-																/>
-															</>
-														)}
-													</a>
-													<div className="mt-5 px-2">
-														<div
-															className="flex justify-between items-center"
-															style={{ fontFamily: "Poppins, sans-serif" }}
-														>
-															<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
-																{forum.forumName.length > 18
-																	? forum.forumName.substring(0, 18) + "..."
-																	: forum.forumName}
-															</h2>
-
-															{forum.isPrivate === 0 ? (
-																<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
-																	{t("public")}
-																</h2>
-															) : (
-																<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
-																	{t("private")}
-																</h2>
-															)}
-														</div>
-														<div className="my-4 bg-gray-200 h-[1px]"></div>
-														<h2
-															style={{ fontFamily: "Poppins, sans-serif" }}
-															className="text-gray-600 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-														>
-															{forum.description}
-														</h2>
-													</div>
-												</div>
-											))}
+						<>
+							{cityId !== 0 ?
+								<div>
+									<div className="text-center justify-between lg:px-4 md:px-5 sm:px-0 px-4 md:py-6 py-4 bg-white">
+										<a
+											onClick={() => {
+												localStorage.setItem(
+													"selectedItem",
+													"Choose one category"
+												);
+												isLoggedIn
+													? navigateTo("/CreateGroup")
+													: navigateTo("/login");
+											}}
+											className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+										>
+											{t("createGroup")}
+										</a>
 									</div>
+									{forums && forums.length > 0 ? (
+										<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+											<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+												{forums &&
+													forums.map((forum) => (
+														<div
+															key={forum.id}
+															className="w-full h-96 shadow-lg rounded-lg cursor-pointer"
+														>
+															<a className="block relative h-64 rounded overflow-hidden"
+																onClick={() => handleClick(cityId, forum)}>
+																{forum.isPrivate ? (
+																	<>
+																		<img
+																			alt="forumImage"
+																			className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+																			src={
+																				forum.image
+																					? process.env.REACT_APP_BUCKET_HOST +
+																					forum.image
+																					: process.env.REACT_APP_BUCKET_HOST +
+																					"admin/DefaultForum.jpeg"
+																			}
+																		/>
+																	</>
+																) : (
+																	<>
+																		<img
+																			alt="forumImage"
+																			className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+																			src={
+																				forum.image
+																					? process.env.REACT_APP_BUCKET_HOST +
+																					forum.image
+																					: process.env.REACT_APP_BUCKET_HOST +
+																					"admin/DefaultForum.jpeg"
+																			}
+																		/>
+																	</>
+																)}
+															</a>
+															<div className="mt-5 px-2">
+																<div
+																	className="flex justify-between items-center"
+																	style={{ fontFamily: "Poppins, sans-serif" }}
+																>
+																	<h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
+																		{forum.forumName.length > 18
+																			? forum.forumName.substring(0, 18) + "..."
+																			: forum.forumName}
+																	</h2>
+
+																	{forum.isPrivate === 0 ? (
+																		<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
+																			{t("public")}
+																		</h2>
+																	) : (
+																		<h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
+																			{t("private")}
+																		</h2>
+																	)}
+																</div>
+																<div className="my-4 bg-gray-200 h-[1px]"></div>
+
+																{forum.isPrivate && !memberStatus ? (
+																	<h2
+																		onClick={() => {
+																			if (requestId) {
+																				handleLeaveRequest(forum.id);
+																			} else {
+																				handleFollowRequest(forum.id);
+																			}
+																		}}
+																		style={{ fontFamily: "Poppins, sans-serif" }}
+																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
+																	>
+																		{requestId ? t("cancelRequest") : t("follow")}
+																	</h2>
+																) : (
+																	<h2
+																		onClick={() => handleClick(cityId, forum)}
+																		style={{ fontFamily: "Poppins, sans-serif" }}
+																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
+																	>{t("viewGroup")}</h2>
+																)}
+															</div>
+														</div>
+													))}
+											</div>
+										</div>
+									) : (
+										<div>
+											<div className="flex items-center justify-center">
+												<h1
+													className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("currently_no_forums")}
+												</h1>
+											</div>
+											<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
+												<span
+													className="font-sans text-black"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+												>
+													{t("to_upload_new_forum")}
+												</span>
+												<a
+													className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+													style={{ fontFamily: "Poppins, sans-serif" }}
+													onClick={() => {
+														localStorage.setItem(
+															"selectedItem",
+															"Choose one category"
+														);
+														isLoggedIn
+															? navigateTo("/CreateGroup")
+															: navigateTo("/login");
+													}}
+												>
+													{t("click_here")}
+												</a>
+											</div>
+										</div>
+									)}
 								</div>
-							) : (
+								:
 								<div>
 									<div className="flex items-center justify-center">
 										<h1
 											className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
-											{t("currently_no_forums")}
+											{t("pleaseSelectCity")}
 										</h1>
 									</div>
 									<div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
@@ -277,7 +385,7 @@ const AllForums = () => {
 											className="font-sans text-black"
 											style={{ fontFamily: "Poppins, sans-serif" }}
 										>
-											{t("to_upload_new_forum")}
+											{t("to_create_new_forum")}
 										</span>
 										<a
 											className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
@@ -296,8 +404,8 @@ const AllForums = () => {
 										</a>
 									</div>
 								</div>
-							)}
-						</div>
+							}
+						</>
 					)}
 
 					<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
