@@ -77,7 +77,7 @@ const AllForums = () => {
 						const membershipResponseData = membershipResponse.data.data;
 						const membershipStatus = {};
 						membershipResponseData.forEach((memberresponse) => {
-							membershipStatus[memberresponse.forumId] = memberresponse.statuId;
+							membershipStatus[memberresponse.forumId] = memberresponse.statusId;
 						});
 						setMembershipStatus(membershipStatus);
 					}
