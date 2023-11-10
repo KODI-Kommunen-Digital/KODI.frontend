@@ -4,10 +4,11 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import LoadingPage from "../../Components/LoadingPage";
 import {
-	getAllForums, getUserForumsMembershipForAllForums, getUserForumsMembership, createMemberRequest, cancelMemberRequest
+	getAllForums, getUserForumsMembershipForAllForums, createMemberRequest, cancelMemberRequest
 } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
+import { statusByName } from '../../Constants/forumStatus';
 
 const AllForums = () => {
 	window.scrollTo(0, 0);
@@ -15,13 +16,12 @@ const AllForums = () => {
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
 	const [forums, setForums] = useState([]);
-	const [, setMembershipStatus] = useState({}); // Not required because we take status from getUserForumsMembership
+	const [memberStatus, setMembershipStatus] = useState({});
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
 	const [requestId, setRequestId] = useState(0);
-	const [memberStatus, setMemberStatus] = useState(false);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -71,10 +71,6 @@ const AllForums = () => {
 					setForums(forums);
 
 					const forumIds = forums.map((forum) => forum.id).join(",");
-
-					const responseisMember = await getUserForumsMembership(cityId, forumIds);
-					const isMember = responseisMember.data.isMember;
-					setMemberStatus(isMember);
 
 					if (forumIds) {
 						const membershipResponse = await getUserForumsMembershipForAllForums(cityId, { forumIds });
@@ -308,7 +304,7 @@ const AllForums = () => {
 																</div>
 																<div className="my-4 bg-gray-200 h-[1px]"></div>
 
-																{forum.isPrivate && !memberStatus ? (
+																{forum.isPrivate && memberStatus[forum.id] === statusByName.Pending ? (
 																	<h2
 																		onClick={() => {
 																			if (requestId) {
@@ -320,14 +316,26 @@ const AllForums = () => {
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
 																	>
-																		{requestId ? t("cancelRequest") : t("follow")}
+																		{t("cancelRequest")}
 																	</h2>
-																) : (
+																) : memberStatus[forum.id] === statusByName.Accepted ? (
 																	<h2
 																		onClick={() => handleClick(cityId, forum)}
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
 																	>{t("viewGroup")}</h2>
+																) : (
+																	<h2
+																		onClick={() => {
+																			if (requestId) {
+																				handleLeaveRequest(forum.id);
+																			} else {
+																				handleFollowRequest(forum.id);
+																			}
+																		}}
+																		style={{ fontFamily: "Poppins, sans-serif" }}
+																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
+																	>{t("follow")}</h2>
 																)}
 															</div>
 														</div>
