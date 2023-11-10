@@ -198,7 +198,7 @@ const Forum = () => {
 								onClick={requestId ? handleLeaveRequest : handleFollowRequest}
 								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 							>
-								{requestId ? t("cancelRequest") : t("request")}
+								{requestId ? t("cancelRequest") : t("follow")}
 							</a>
 						) : (
 							<div className="flex flex-row md:flex-row items-center justify-center">
@@ -432,8 +432,8 @@ const Forum = () => {
 									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
 										{t("groupPosts")}
 									</h1>
-									<div className="bg-white lg:px-0 md:px-0 sm:px-0 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-										<div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-10 relative mb-4 justify-center place-items-center">
+									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+										<div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
 											{forumPosts &&
 												forumPosts.map((forumPost, index) => (
 													<div
@@ -443,7 +443,7 @@ const Forum = () => {
 																`/Forum/ViewPost?postId=${forumPost.id}&forumId=${forumId}&cityId=${cityId}`
 															);
 														}}
-														className="w-full h-full shadow-lg rounded-lg cursor-pointer"
+														className="w-full h-80 shadow-lg rounded-lg cursor-pointer"
 													>
 														<a className="block relative h-64 rounded overflow-hidden">
 															<img

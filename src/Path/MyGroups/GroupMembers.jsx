@@ -42,7 +42,6 @@ const GroupMembers = () => {
 				const adminLength = membersData.filter((m) => m.isAdmin === 1).length;
 				setCityId(cityIdParam);
 				setIsOnlyAdmin(adminLength === 1);
-				console.log(isOnlyAdmin)
 				setIsAdmin(isAdmin);
 				setForumId(forumIdParam);
 			} catch (error) {
