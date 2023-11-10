@@ -128,7 +128,6 @@ const AllForums = () => {
 			setCityId(parseInt(selectedCityId));
 			urlParams.set("cityId", selectedCityId);
 		} else {
-			localStorage.setItem("selectedCity", t("allCities"));
 			urlParams.delete("cityId");
 			setCityId(0);
 		}
