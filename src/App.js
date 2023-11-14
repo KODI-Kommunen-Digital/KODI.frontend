@@ -10,6 +10,7 @@ import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
+import { AuthProvider } from "./AuthContext";
 
 import HomePage from "./Path/HomePage";
 import Favorites from "./Path/Favorites";
@@ -54,70 +55,72 @@ const App = () => {
   }, []);
   return (
     <BrowserRouter>
-      <div>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="Listing" element={<Listing />} exact />
-          <Route path="/AllListings" element={<AllListings />} />
-          <Route path="/ViewProfile/:username" element={<ViewProfile />} />
-          <Route path="/CitizenService" element={<CitizenService />} />
-          <Route
-            path="/CitizenService/DigitalManagement"
-            element={<DigitalManagement />}
-          />
+      <AuthProvider>
+        <div>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="Listing" element={<Listing />} exact />
+            <Route path="/AllListings" element={<AllListings />} />
+            <Route path="/ViewProfile/:username" element={<ViewProfile />} />
+            <Route path="/CitizenService" element={<CitizenService />} />
+            <Route
+              path="/CitizenService/DigitalManagement"
+              element={<DigitalManagement />}
+            />
 
-          <Route path="/Dashboard" element={<Dashboard />} exact />
-          <Route path="/DashboardAdmin" element={<Dashboard />} exact />
-          <Route path="/AccountSettings" element={<AccountSettings />} exact />
-          <Route path="/AllDevices" element={<AllDevices />} exact />
-          <Route path="/UploadListings" element={<UploadListings />} exact />
-          <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/PasswordForgot" element={<PasswordForgot />} />
-          <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/ImprintPage" element={<ImprintPage />} />
-          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-          <Route path="/EditListings" element={<UploadListings />} exact />
+            <Route path="/Dashboard" element={<Dashboard />} exact />
+            <Route path="/DashboardAdmin" element={<Dashboard />} exact />
+            <Route path="/AccountSettings" element={<AccountSettings />} exact />
+            <Route path="/AllDevices" element={<AllDevices />} exact />
+            <Route path="/UploadListings" element={<UploadListings />} exact />
+            <Route path="/ProfilePage" element={<ProfilePage />} />
+            <Route path="/PasswordForgot" element={<PasswordForgot />} />
+            <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/ImprintPage" element={<ImprintPage />} />
+            <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+            <Route path="/EditListings" element={<UploadListings />} exact />
 
-          <Route path="/Favorite" element={<Favorites />} />
-          <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
+            <Route path="/Favorite" element={<Favorites />} />
+            <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
 
-          <Route path="/OverviewPage" element={<OverviewPage />} />
-          <Route
-            path="/OverviewPage/NewsCategories"
-            element={<OverviewPageNewsCategories />}
-          />
-          <Route path="/VerifyEmail" element={<VerifyEmail />} />
-          <Route path="*" element={<Error />} />
-          <Route path="ForumsError" element={<ForumsError />} />
-          {isForumEnabled && (
-            <React.Fragment>
-              <Route path="/Forum/ViewPost" element={<ViewPost />} />
-              <Route path="/Forum" element={<Forum />} />
-              <Route path="/UploadPosts" element={<UploadPosts />} />
-              <Route path="/CreateGroup" element={<CreateGroup />} exact />
-              <Route path="/MyGroups" element={<MyGroups />} exact />
-              <Route
-                path="/MyGroups/GroupMembers"
-                element={<GroupMembers />}
-                exact
-              />
-              <Route
-                path="/MyGroups/MemberRequests"
-                element={<MemberRequests />}
-                exact
-              />
-              <Route
-                path="/MyGroups/ReportedPosts"
-                element={<ReportedPosts />}
-                exact
-              />
-              <Route path="/CitizenService/AllForums" element={<AllForums />} />
-            </React.Fragment>)}
+            <Route path="/OverviewPage" element={<OverviewPage />} />
+            <Route
+              path="/OverviewPage/NewsCategories"
+              element={<OverviewPageNewsCategories />}
+            />
+            <Route path="/VerifyEmail" element={<VerifyEmail />} />
+            <Route path="*" element={<Error />} />
+            <Route path="ForumsError" element={<ForumsError />} />
+            {isForumEnabled && (
+              <React.Fragment>
+                <Route path="/Forum/ViewPost" element={<ViewPost />} />
+                <Route path="/Forum" element={<Forum />} />
+                <Route path="/UploadPosts" element={<UploadPosts />} />
+                <Route path="/CreateGroup" element={<CreateGroup />} exact />
+                <Route path="/MyGroups" element={<MyGroups />} exact />
+                <Route
+                  path="/MyGroups/GroupMembers"
+                  element={<GroupMembers />}
+                  exact
+                />
+                <Route
+                  path="/MyGroups/MemberRequests"
+                  element={<MemberRequests />}
+                  exact
+                />
+                <Route
+                  path="/MyGroups/ReportedPosts"
+                  element={<ReportedPosts />}
+                  exact
+                />
+                <Route path="/CitizenService/AllForums" element={<AllForums />} />
+              </React.Fragment>)}
 
-        </Routes>
-      </div>
+          </Routes>
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

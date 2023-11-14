@@ -20,6 +20,7 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCookie } from '../cookies/cookieServices';
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -215,11 +216,9 @@ function UploadListings() {
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
+			window.localStorage.getItem("accessToken") || getCookie("accessToken");
 		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
+			window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
 		if (!accessToken && !refreshToken) {
 			navigateTo("/login");
 		}
