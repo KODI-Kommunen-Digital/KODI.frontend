@@ -418,17 +418,7 @@ const Listing = () => {
                   </style>
                   <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
                     <div className="relative h-full">
-                      {input.logo ? (
-                        <img
-                          alt="listing"
-                          className="object-cover object-center h-full w-full"
-                          src={
-                            input.sourceId === source.User
-                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
-                              : input.logo
-                          }
-                        />
-                      ) : input.pdf ? (
+                      {input.pdf ? (
                         <div>
                           <div className="pdf-container">
                             <object
@@ -440,6 +430,16 @@ const Listing = () => {
                             ></object>
                           </div>
                         </div>
+                      ) : input.logo ? (
+                        <img
+                          alt="listing"
+                          className="object-cover object-center h-full w-full"
+                          src={
+                            input.sourceId === source.User
+                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
+                              : input.logo
+                          }
+                        />
                       ) : (
                         <img
                           alt="default"
