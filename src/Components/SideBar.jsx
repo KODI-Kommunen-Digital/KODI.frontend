@@ -5,7 +5,7 @@ import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
 import { useAuth } from '../AuthContext';
-import { getCookie, removeCookie } from '../cookies/cookieServices';
+import { getCookie } from '../cookies/cookieServices';
 
 function SideBar() {
 	const { t } = useTranslation();
@@ -32,19 +32,11 @@ function SideBar() {
 			const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
 			try {
 				logout({ accessToken, refreshToken }).then(() => {
-					window.localStorage.removeItem("accessToken");
-					window.localStorage.removeItem("refreshToken");
-					window.localStorage.removeItem("userId");
 					window.localStorage.removeItem("selectedItem");
-					window.localStorage.removeItem("cityUsers");
-					removeCookie("accessToken");
-					removeCookie("refreshToken");
-					removeCookie("userId");
-					removeCookie("cityUsers");
 					window.sessionStorage.removeItem("selectedItem");
+					setLogout();
 					setLoggedIn(false);
 					navigateTo("/");
-					setLogout();
 				});
 			} catch (error) {
 				console.log(error);

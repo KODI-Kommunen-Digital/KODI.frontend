@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../Services/usersApi";
+import { useAuth } from '../AuthContext';
+import { getCookie } from '../cookies/cookieServices';
 
 export default function HomePageNavBar() {
 	const navigate = useNavigate();
@@ -15,34 +17,21 @@ export default function HomePageNavBar() {
 	};
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { isAuthenticated, setLogout } = useAuth();
+
 	useEffect(() => {
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
+		if (isAuthenticated()) {
 			setIsLoggedIn(true);
 		}
-	}, []);
+	}, [isAuthenticated]);
 
 	const handleLoginLogout = () => {
 		if (isLoggedIn) {
-			const accessToken =
-				window.localStorage.getItem("accessToken") ||
-				window.sessionStorage.getItem("accessToken");
-			const refreshToken =
-				window.localStorage.getItem("refreshToken") ||
-				window.sessionStorage.getItem("refreshToken");
+			const accessToken = window.localStorage.getItem("accessToken") || getCookie("accessToken");
+			const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
 			logout({ accesToken: accessToken, refreshToken }).then(() => {
-				window.localStorage.removeItem("accessToken");
-				window.localStorage.removeItem("refreshToken");
-				window.localStorage.removeItem("userId");
+				setLogout();
 				window.localStorage.removeItem("selectedItem");
-				window.sessionStorage.removeItem("accessToken");
-				window.sessionStorage.removeItem("refreshToken");
-				window.sessionStorage.removeItem("userId");
 				window.sessionStorage.removeItem("selectedItem");
 				setIsLoggedIn(false);
 				navigateTo("/");

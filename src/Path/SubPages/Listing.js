@@ -19,6 +19,7 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import { useAuth } from '../../AuthContext';
 
 const Description = ({ content }) => {
   return (
@@ -47,6 +48,7 @@ const Listing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const { isAuthenticated } = useAuth();
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -96,13 +98,7 @@ const Listing = () => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     if (listingId && cityId) {
-      const accessToken =
-        window.localStorage.getItem("accessToken") ||
-        window.sessionStorage.getItem("accessToken");
-      const refreshToken =
-        window.localStorage.getItem("refreshToken") ||
-        window.sessionStorage.getItem("refreshToken");
-      if (accessToken || refreshToken) {
+      if (isAuthenticated()) {
         setIsLoggedIn(true);
       }
       getListingsById(cityId, listingId, params)
@@ -233,14 +229,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  setHandleClassName(
-                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                setHandleClassName(
+                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -301,9 +297,8 @@ const Listing = () => {
                           </span>
                         </h1>
                         <div
-                          className={`flex items-center ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
+                          className={`flex items-center ${terminalView ? "hidden" : "visible"
+                            }`}
                         >
                           <button
                             type="button"

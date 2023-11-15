@@ -3,19 +3,8 @@ import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function HomePageNavBar() {
-    // const navigate = useNavigate();
-    // const navigateTo = (path) => {
-    // 	if (path) {
-    // 		navigate(path);
-    // 	}
-    // };
 
     const [, setIsLoggedIn] = useState(false);
-
-    // const login = () => {
-    //   setIsLoggedIn(true);
-    // }
-
     useEffect(() => {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
         setIsLoggedIn(!!isLoggedIn); // Convert string to boolean
@@ -29,7 +18,7 @@ export default function HomePageNavBar() {
                         <div className="flex items-center justify-between border-gray-100 py-5 md:justify-between md:space-x-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
                             <div>
                                 <a className="font-sans font-bold text-white mb-20 text-3xl md:text-4xl mt-20 lg:text-3xl title-font text-center">
-									HEIDI
+                                    HEIDI
                                 </a>
                             </div>
 
@@ -39,23 +28,23 @@ export default function HomePageNavBar() {
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium cursor-pointer"
                                         aria-current="page"
                                     >
-										Home
+                                        Home
                                     </a>
 
                                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-										Functions
+                                        Functions
                                     </a>
 
                                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-										Blog
+                                        Blog
                                     </a>
 
                                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-										Personal Advice
+                                        Personal Advice
                                     </a>
 
                                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-										Arrange a Demo
+                                        Arrange a Demo
                                     </a>
                                 </div>
                             </div>
@@ -97,23 +86,23 @@ export default function HomePageNavBar() {
                                     >
                                         <div className="space-y-1 pt-2 pb-3 sm:px-3">
                                             <a className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-												Home
+                                                Home
                                             </a>
 
                                             <a className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-												Functions
+                                                Functions
                                             </a>
 
                                             <a className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-												Blog
+                                                Blog
                                             </a>
 
                                             <a className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-												Personal Advice
+                                                Personal Advice
                                             </a>
 
                                             <a className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-lg font-medium cursor-pointer">
-												Arrange a Demo
+                                                Arrange a Demo
                                             </a>
                                         </div>
                                     </div>
@@ -126,189 +115,189 @@ export default function HomePageNavBar() {
 
             <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
                 <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
-					Imprint
+                    Imprint
                 </p>
 
                 <p className="font-sans font-bold text-black  mb-1 text-2xl title-font">
-					According to § 5 TMG:
+                    According to § 5 TMG:
                 </p>
                 <br />
 
                 <p className="font-sans font-semibold text-black  mb-1 text-sm title-font">
-					HEIDI - Heimat Digital
+                    HEIDI - Heimat Digital
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					c/o Rising Eagle GmbH
+                    c/o Rising Eagle GmbH
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Altensteinstrasse 40
+                    Altensteinstrasse 40
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					14195 Berlin
+                    14195 Berlin
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Long street 25
+                    Long street 25
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					33154 Salzkottenl
+                    33154 Salzkottenl
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Represented by the CEO: Niklas Hansjuergens & Justus Pole
+                    Represented by the CEO: Niklas Hansjuergens & Justus Pole
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black  mb-0 lg:text-sm title-font">
-					Register court: Amtsgericht Berlin (Charlottenburg)
+                    Register court: Amtsgericht Berlin (Charlottenburg)
                 </p>
                 <p className="font-sans font-semibold text-black mb-0 text-sm title-font">
-					Register entry: Rising Eagle GmbH
+                    Register entry: Rising Eagle GmbH
                 </p>
                 <p className="font-sans font-semibold text-black mb-0 text-sm title-font">
-					Register number: HRB 223234
+                    Register number: HRB 223234
                 </p>
                 <p className="font-sans font-semibold text-black mb-0 text-sm title-font">
-					VAT ID number: DE338845758
+                    VAT ID number: DE338845758
                 </p>
                 <br />
 
                 <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Contact:
+                    Contact:
                 </p>
                 <br />
 
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Telephone: 015124025798
+                    Telephone: 015124025798
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Email: info@heimat-digital.com
-                </p>
-                <br />
-
-                <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Information on professional liability insurance:
-                </p>
-                <br />
-
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Name and registered office of the insurer:
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					LVM - Insurance Agency Franz Westermann
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Oberdorfstrasse 4
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					59590 Geseke - Langeneicke
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Area of validity of the insurance:
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Germany
+                    Email: info@heimat-digital.com
                 </p>
                 <br />
 
                 <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Dispute resolution:
+                    Information on professional liability insurance:
                 </p>
                 <br />
 
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					The European Commission provides a platform for online dispute
-					resolution (OS):
+                    Name and registered office of the insurer:
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    LVM - Insurance Agency Franz Westermann
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Oberdorfstrasse 4
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    59590 Geseke - Langeneicke
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Area of validity of the insurance:
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Germany
+                </p>
+                <br />
+
+                <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
+                    Dispute resolution:
+                </p>
+                <br />
+
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    The European Commission provides a platform for online dispute
+                    resolution (OS):
                     <a href="https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE">
-						https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE
+                        https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE
                     </a>
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Our e-mail address can be found above in the imprint.
+                    Our e-mail address can be found above in the imprint.
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					We are not willing or obliged to participate in dispute settlement
-					procedures before a consumer arbitration board.
+                    We are not willing or obliged to participate in dispute settlement
+                    procedures before a consumer arbitration board.
                 </p>
                 <br />
 
                 <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Liability for content:
+                    Liability for content:
                 </p>
                 <br />
 
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					As a service provider, we are responsible for our own content on these
-					pages according to Section 7, Paragraph 1 of the German Telemedia Act
-					(TMG). According to §§ 8 to 10 TMG, however, we as a service provider
-					are not obliged to monitor transmitted or stored third-party
-					information or to investigate circumstances that indicate illegal
-					activity.
+                    As a service provider, we are responsible for our own content on these
+                    pages according to Section 7, Paragraph 1 of the German Telemedia Act
+                    (TMG). According to §§ 8 to 10 TMG, however, we as a service provider
+                    are not obliged to monitor transmitted or stored third-party
+                    information or to investigate circumstances that indicate illegal
+                    activity.
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Obligations to remove or block the use of information according to
-					general laws remain unaffected. However, liability in this regard is
-					only possible from the point in time at which knowledge of a specific
-					infringement of the law is known. As soon as we become aware of any
-					violations of the law, we will remove this content immediately.
-                </p>
-                <br />
-
-                <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Liability for links:
-                </p>
-                <br />
-
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Our offer contains links to external websites over which we have no
-					influence. Therefore we cannot assume any liability for this external
-					content. The respective provider or operator of the pages is always
-					responsible for the content of the linked pages. The linked pages were
-					checked for possible legal violations at the time of linking. Illegal
-					content was not recognizable at the time of linking.
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					However, a permanent control of the content of the linked pages is not
-					reasonable without concrete evidence of an infringement. As soon as we
-					become aware of legal violations, we will remove such links
-					immediately.
+                    Obligations to remove or block the use of information according to
+                    general laws remain unaffected. However, liability in this regard is
+                    only possible from the point in time at which knowledge of a specific
+                    infringement of the law is known. As soon as we become aware of any
+                    violations of the law, we will remove this content immediately.
                 </p>
                 <br />
 
                 <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					Copyright:
+                    Liability for links:
                 </p>
                 <br />
 
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					The content and works on these pages created by the site operators are
-					subject to German copyright law. The duplication, editing,
-					distribution and any kind of exploitation outside the limits of
-					copyright require the written consent of the respective author or
-					creator. Downloads and copies of this site are only permitted for
-					private, non-commercial use.
+                    Our offer contains links to external websites over which we have no
+                    influence. Therefore we cannot assume any liability for this external
+                    content. The respective provider or operator of the pages is always
+                    responsible for the content of the linked pages. The linked pages were
+                    checked for possible legal violations at the time of linking. Illegal
+                    content was not recognizable at the time of linking.
                 </p>
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Insofar as the content on this site was not created by the operator,
-					the copyrights of third parties are observed. In particular contents
-					of third parties are marked as such. Should you nevertheless become
-					aware of a copyright infringement, we ask that you inform us
-					accordingly. As soon as we become aware of legal violations, we will
-					remove such content immediately.
+                    However, a permanent control of the content of the linked pages is not
+                    reasonable without concrete evidence of an infringement. As soon as we
+                    become aware of legal violations, we will remove such links
+                    immediately.
+                </p>
+                <br />
+
+                <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
+                    Copyright:
+                </p>
+                <br />
+
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    The content and works on these pages created by the site operators are
+                    subject to German copyright law. The duplication, editing,
+                    distribution and any kind of exploitation outside the limits of
+                    copyright require the written consent of the respective author or
+                    creator. Downloads and copies of this site are only permitted for
+                    private, non-commercial use.
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Insofar as the content on this site was not created by the operator,
+                    the copyrights of third parties are observed. In particular contents
+                    of third parties are marked as such. Should you nevertheless become
+                    aware of a copyright infringement, we ask that you inform us
+                    accordingly. As soon as we become aware of legal violations, we will
+                    remove such content immediately.
                 </p>
                 <br />
             </div>
@@ -343,7 +332,7 @@ export default function HomePageNavBar() {
                                         d="M488.6 250.2L392 214V105.5c0-15-9.3-28.4-23.4-33.7l-100-37.5c-8.1-3.1-17.1-3.1-25.3 0l-100 37.5c-14.1 5.3-23.4 18.7-23.4 33.7V214l-96.6 36.2C9.3 255.5 0 268.9 0 283.9V394c0 13.6 7.7 26.1 19.9 32.2l100 50c10.1 5.1 22.1 5.1 32.2 0l103.9-52 103.9 52c10.1 5.1 22.1 5.1 32.2 0l100-50c12.2-6.1 19.9-18.6 19.9-32.2V283.9c0-15-9.3-28.4-23.4-33.7zM358 214.8l-85 31.9v-68.2l85-37v73.3zM154 104.1l102-38.2 102 38.2v.6l-102 41.4-102-41.4v-.6zm84 291.1l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6zm240 112l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6z"
                                     ></path>
                                 </svg>
-								Smart Regions
+                                Smart Regions
                             </h6>
                             <div className="uppercase font-semibold mb-4 flex justify-center md:justify-start gap-4">
                                 <a
@@ -402,14 +391,14 @@ export default function HomePageNavBar() {
                         </div>
                         <div className="">
                             <h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
-								Learn More
+                                Learn More
                             </h6>
                             <p className="mb-4">
                                 <a
                                     href="https://heidi-app.de/"
                                     className="text-gray-600 font-sans"
                                 >
-									developer community
+                                    developer community
                                 </a>
                             </p>
                             <p className="mb-4">
@@ -417,43 +406,43 @@ export default function HomePageNavBar() {
                                     href="https://heidi-app.de/"
                                     className="text-gray-600 font-sans"
                                 >
-									Contact us
+                                    Contact us
                                 </a>
                             </p>
                             <p className="mb-4">
                                 <a href="/login" className="text-gray-600 font-sans">
-									Log in
+                                    Log in
                                 </a>
                             </p>
                         </div>
                         <div className="">
                             <h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
-								Leagal
+                                Leagal
                             </h6>
                             <p className="mb-4">
                                 <a href="/ImprintPage" className="text-gray-600 font-sans">
-									imprint
+                                    imprint
                                 </a>
                             </p>
                             <p className="mb-4">
                                 <a href="/PrivacyPolicy" className="text-gray-600 font-sans">
-									terms and conditions
+                                    terms and conditions
                                 </a>
                             </p>
                             <p className="mb-4">
                                 <a href="#!" className="text-gray-600 font-sans">
-									Data protection
+                                    Data protection
                                 </a>
                             </p>
                             <p>
                                 <a href="#!" className="text-gray-600 font-sans">
-									Right of withdrawal
+                                    Right of withdrawal
                                 </a>
                             </p>
                         </div>
                         <div className="">
                             <h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
-								Secure the APP now!
+                                Secure the APP now!
                             </h6>
                         </div>
                     </div>
@@ -461,13 +450,13 @@ export default function HomePageNavBar() {
                 <div className="text-center p-6 bg-black">
                     <div className="my-4 text-gray-600 h-[1px]"></div>
                     <span className="font-sans">
-						© HeidiTheme 2023. All rights reserved. Created by{" "}
+                        © HeidiTheme 2023. All rights reserved. Created by{" "}
                     </span>
                     <a
                         className="text-white font-semibold underline font-sans"
                         href="https://heidi-app.de/"
                     >
-						HeimatDigital
+                        HeimatDigital
                     </a>
                 </div>
             </footer>

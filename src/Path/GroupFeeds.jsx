@@ -13,6 +13,7 @@ import { getListings } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import { categoryById } from "../Constants/categories";
 import Footer from "../Components/Footer";
+import { useAuth } from '../AuthContext';
 
 const GroupFeeds = () => {
 	// window.scrollTo(0, 0);
@@ -26,16 +27,11 @@ const GroupFeeds = () => {
 	const [listings, setListings] = useState([]);
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { isAuthenticated } = useAuth();
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
+		if (isAuthenticated()) {
 			setIsLoggedIn(true);
 		}
 		getCities().then((citiesResponse) => {
@@ -45,7 +41,7 @@ const GroupFeeds = () => {
 			const categoryIdParam = urlParams.get("categoryId");
 			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
-	}, []);
+	}, [isAuthenticated]);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { setCookie, removeCookie } from './cookies/cookieServices';
+import { setCookie, removeCookie, getCookie } from './cookies/cookieServices';
 
 
 const AuthContext = createContext();
@@ -43,26 +43,54 @@ export const AuthProvider = ({ children }) => {
         window.localStorage.removeItem("userId");
         window.localStorage.removeItem("selectedItem");
         window.localStorage.removeItem("cityUsers");
+        window.sessionStorage.removeItem("selectedItem");
         removeCookie("accessToken");
         removeCookie("refreshToken");
         removeCookie("userId");
         removeCookie("cityUsers");
     };
 
+    const getAccessToken = () => {
+        const accessToken = window.localStorage.getItem("accessToken") || getCookie("accessToken");
+        if (accessToken) {
+            return accessToken;
+        } else {
+            return null;
+        }
+    }
+
+    const getRefreshToken = () => {
+        const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
+        if (refreshToken) {
+            return refreshToken;
+        } else {
+            return null;
+        }
+    }
+
+    const getUserId = () => {
+        const userId = window.localStorage.getItem("userId") || getCookie("userId");
+        if (userId) {
+            return userId;
+        } else {
+            return null;
+        }
+    }
+
     const isAuthenticated = () => {
-        return accessToken !== null && refreshToken !== null && userId !== null;
+        return accessToken !== getAccessToken() && refreshToken !== getRefreshToken() && userId !== getUserId();
     };
 
     return (
         <AuthContext.Provider
             value={{
-                accessToken,
-                refreshToken,
-                userId,
                 cityUsers,
                 setLogin,
                 setLogout,
-                isAuthenticated
+                isAuthenticated,
+                getAccessToken,
+                getRefreshToken,
+                getUserId
             }}
         >
             {children}

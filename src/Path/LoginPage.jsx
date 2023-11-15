@@ -53,7 +53,7 @@ const LoginPage = () => {
 				settimeOutAlertMessage("");
 			}, TIMEOUT_DURATION);
 		}
-	}, [routeChangeToUpload, location]);
+	}, [isAuthenticated, routeChangeToUpload, location]);
 
 	const [showPassword, setShowPassword] = useState(false);
 
