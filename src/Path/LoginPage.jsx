@@ -155,7 +155,8 @@ const LoginPage = () => {
 				setAlertMessage(t("passwordNotPresent"));
 			} else if (
 				err.response.data.errorCode === errorCodes.INVALID_USERNAME ||
-				err.response.data.errorCode === errorCodes.INVALID_PASSWORD
+				err.response.data.errorCode === errorCodes.INVALID_PASSWORD ||
+				err.response.data.errorCode === errorCodes.INVALID_CREDENTIALS
 			) {
 				setAlertMessage(t("checkUsernameOrPassword"));
 			} else if (

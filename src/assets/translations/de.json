@@ -177,7 +177,7 @@
     "pleaseEnterVillage": "Bitte gib einen Ort ein",
     "pleaseEnterZipCode": "Bitte gib eine Postleitzahl ein",
     "pleaseSelectCategory": "Bitte wähle eine Kategorie",
-    "pleaseSelectCity": "Bitte wählen Sie eine Stadt aus",
+    "pleaseSelectCity": "Bitte wählen Sie eine Stadt aus!",
     "pleaseSelectSubcategory": "Bitte wähle eine Unterkategorie",
     "politics": "Politik",
     "privacy_policy": "Datenschutzbestimmungen* ",
@@ -525,6 +525,7 @@
     "downloadPdf": "PDF Herunterladen",
     "dragAndDropImageOrPDF": "Fügen Sie Ihr Bild oder PDF hinzu oder ziehen Sie es per Drag & Drop",
     "to_upload_new_forum": "Um ein neues Forum zu erstellen, ",
+    "to_create_new_forum": "Um ein neues Forum zu erstellen, ",
     "currently_no_forums": "Bitte wählen Sie eine Stadt aus !",
     "private": "Privat",
     "public": "Öffentlich",
@@ -560,5 +561,9 @@
     "registrationRedirectMessage": "Weiterleitung zur Anmeldeseite in 10s.",
     "resendEmailVerification": "Resend email verification?",
     "checkYourmail": "Es wurde eine E-Mail an Ihr E-Mail-Konto gesendet, bitte überprüfen Sie",
-    "processing": "wird bearbeitet..."
+    "processing": "wird bearbeitet...",
+    "onlyAdminWarning": "Du bist der einzige Admin der Gruppe!",
+    "onlyAdminWarningInfo": "Bitte machen Sie eine andere Person zum Administrator, bevor Sie die Gruppe verlassen.",
+    "areyousureinfo": "Möchten Sie dieses Mitglied wirklich entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "exit": "Gruppe verlassen"
 }

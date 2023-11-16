@@ -27,7 +27,7 @@ function ListingsCard({ listing, terminalView = false }) {
 					window.location.href = listing.website;
 				}
 			}}
-			className="w-full h-full shadow-lg rounded-lg cursor-pointer"
+			className="w-full h-96 shadow-lg rounded-lg cursor-pointer"
 		>
 			<div className="block relative h-64 rounded overflow-hidden">
 				{listing.logo ? (

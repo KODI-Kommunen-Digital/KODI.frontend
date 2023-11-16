@@ -424,12 +424,7 @@ const Listing = () => {
                   </style>
                   <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
                     <div className="relative h-full">
-                      {input.logo ? (
-                        <CustomCarousel
-                          imageList={input.logo}
-                          sourceId={input.sourceId}
-                        />
-                      ) : input.pdf ? (
+                      {input.pdf ? (
                         <div>
                           <div className="pdf-container">
                             <object
@@ -441,6 +436,11 @@ const Listing = () => {
                             ></object>
                           </div>
                         </div>
+                      ) : input.logo ? (
+                        <CustomCarousel
+                          imageList={input.logo}
+                          sourceId={input.sourceId}
+                        />
                       ) : (
                         <img
                           alt="default"

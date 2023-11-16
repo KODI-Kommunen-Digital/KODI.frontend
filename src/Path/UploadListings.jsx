@@ -234,6 +234,15 @@ function UploadListings() {
 			});
 			setCategories(catList);
 		});
+		getNewsSubCategory().then((response) => {
+			const subcatList = {};
+			response?.data.data.forEach((subCat) => {
+				subcatList[subCat.id] = subCat.name;
+			});
+			setSubCategories(subcatList);
+		});
+		setInput((prevInput) => ({ ...prevInput, categoryId }));
+		setSubcategoryId(null);
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		getProfile().then(response => {
@@ -255,6 +264,7 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
+				setSubcategoryId(listingData.subcategoryId);
 				if (listingData.logo && listingData.otherlogos) {
 					const temp = listingData.otherlogos.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => process.env.REACT_APP_BUCKET_HOST + img.logo);
 					setImage(temp)
@@ -383,9 +393,14 @@ function UploadListings() {
 
 			case "endDate":
 				if (parseInt(input.categoryId) === 3) {
-					if (value && new Date(input.startDate) > new Date(value)) {
-						return t("endDateBeforeStartDate");
+					if (!value) {
+						return t("pleaseEnterEndDate");
 					} else {
+						if (new Date(input.startDate) > new Date(value)) {
+							return t("endDateBeforeStartDate");
+						} else {
+							return "";
+						}
 						return "";
 					}
 				} else {
@@ -519,8 +534,8 @@ function UploadListings() {
 
 	const handleSubcategoryChange = (event) => {
 		let subcategoryId = event.target.value;
-		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		setSubcategoryId(subcategoryId);
+		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		validateInput(event);
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("subcategoryId", subcategoryId);
@@ -867,7 +882,7 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")}
+										{t("eventEndDate")} *
 									</label>
 									<input
 										type="datetime-local"

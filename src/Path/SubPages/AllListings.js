@@ -312,7 +312,16 @@ const AllListings = () => {
 				</div>
 			</div>
 
-			<div className="mt-5 mb-20 p-6">
+			<div className="mt-5 mb-20 customproview py-6">
+				<style>
+					{`
+							@media (min-height: 1293px) {
+							.customproview {
+								margin-bottom: 10rem;
+							}
+							}
+						`}
+				</style>
 				{isLoading ? (
 					<LoadingPage />
 				) : (
