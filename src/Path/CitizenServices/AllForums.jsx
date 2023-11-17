@@ -4,7 +4,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import LoadingPage from "../../Components/LoadingPage";
 import {
-	getAllForums, getUserForumsMembershipForAllForums, createMemberRequest, cancelMemberRequest
+	getAllForums, getUserForumsMembershipForAllForums, createMemberRequest,
 } from "../../Services/forumsApi";
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
@@ -21,7 +21,6 @@ const AllForums = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
-	const [requestId, setRequestId] = useState(0);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -134,23 +133,18 @@ const AllForums = () => {
 		window.history.replaceState({}, "", `?${urlParams.toString()}`);
 	};
 
-	const handleLeaveRequest = async (forumId) => {
-		try {
-			await cancelMemberRequest(cityId, forumId, requestId);
-			setRequestId(0);
-		} catch (error) {
-			console.error("Error sending follow request:", error);
-		}
-	};
+	// const handleLeaveRequest = async (forumId, requestId) => { // This might be needed so please dont remove it
+	// 	try {
+	// 		await cancelMemberRequest(cityId, forumId, requestId);
+	// 	} catch (error) {
+	// 		console.error("Error sending follow request:", error);
+	// 	}
+	// };
 
 	const handleFollowRequest = async (forumsId) => {
 		try {
-			const forumToFollow = forums.find(forum => forum.id === forumsId);
 			const response = await createMemberRequest(parseInt(cityId), forumsId);
 			console.log(response)
-			if (forumToFollow.isPrivate === 1) {
-				setRequestId(response.data.data.id);
-			}
 		} catch (error) {
 			console.error("Error sending follow request:", error);
 		}
@@ -181,7 +175,7 @@ const AllForums = () => {
 												autoComplete="city-name"
 												onChange={(e) => handleChange(e)}
 												value={cityId || 0}
-												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 												style={{
 													fontFamily: "Poppins, sans-serif",
 												}}
@@ -305,37 +299,35 @@ const AllForums = () => {
 
 																{forum.isPrivate && memberStatus[forum.id] === statusByName.Pending ? (
 																	<h2
-																		onClick={() => {
-																			if (requestId) {
-																				handleLeaveRequest(forum.id);
-																			} else {
-																				handleFollowRequest(forum.id);
-																			}
-																		}}
+																		// onClick={async () => {
+																		// 	await handleLeaveRequest(forum.id, 2);
+																		// }}
+																		onClick={() => handleClick(cityId, forum)}
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
 																	>
-																		{t("cancelRequest")}
+																		{t("request")}
 																	</h2>
 																) : memberStatus[forum.id] === statusByName.Accepted ? (
 																	<h2
 																		onClick={() => handleClick(cityId, forum)}
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
-																	>{t("viewGroup")}</h2>
+																	>
+																		{t("viewGroup")}
+																	</h2>
 																) : (
 																	<h2
-																		onClick={() => {
-																			if (requestId) {
-																				handleLeaveRequest(forum.id);
-																			} else {
-																				handleFollowRequest(forum.id);
-																			}
+																		onClick={async () => {
+																			await handleFollowRequest(forum.id);
 																		}}
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
-																	>{t("follow")}</h2>
+																	>
+																		{t("follow")}
+																	</h2>
 																)}
+
 															</div>
 														</div>
 													))}

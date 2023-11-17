@@ -60,6 +60,7 @@
     "date_of_creation": "Date of Creation",
     "defectReport": "Defect Report",
     "delete": "Delete",
+    "report": "Report",
     "deleteAccount": "Delete Account",
     "description": "Description",
     "developer_community": "Developer community",
@@ -457,8 +458,8 @@
     "digitalManagement": "Digital Management",
     "FreetimeAndTourisms": "Freetime and Tourism",
     "VirtualTours": "Virtual Tours",
-    "forums": "Forums",
-    "forumName": "Forum Name",
+    "forums": "Groups",
+    "forumName": "Group Name",
     "postCreated": "Your post is created",
     "groupPosts": "Group Posts",
     "memberRequest": "Member Requests",
@@ -498,7 +499,7 @@
     "hiddenPost": "Hidden Post",
     "yes": "Yes",
     "no": "No",
-    "request": "Follow Request",
+    "request": "Request Send",
     "follow": "Follow",
     "reportedComments": "Reported Comments",
     "cancelRequest": "Cancel Request",
@@ -564,5 +565,8 @@
     "onlyAdminWarning": "You are the only admin of the group!",
     "onlyAdminWarningInfo": "Please make any one else admin before exiting the group.",
     "areyousureinfo": "Do you really want to remove this member? This action cannot be reverted.",
-    "exit": "Exit Group"
+    "exit": "Exit Group",
+    "privacy": "Privacy",
+    "removeAdmin": "Remove Admin",
+    "makeAdmin": "Make Admin"
 }
