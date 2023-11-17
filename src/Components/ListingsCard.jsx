@@ -1,4 +1,4 @@
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React from "react";
 import PdfToImage from "../Components/PdfToImage";

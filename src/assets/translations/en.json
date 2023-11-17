@@ -512,6 +512,7 @@
     "publicGroup": "Public Group",
     "admin": "Admin",
     "member": "Member",
+    "enterAddress": "Enter address",
     "role": "Role",
     "onlyAdmins": "Only for admins",
     "to_upload_new_forum": "To upload a new forum, ",
