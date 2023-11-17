@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 function FormImage(props) {
     const { t } = useTranslation();
-
     const updateListing = (imgIndex) => {
         const files = Array.from(props.image);
         const filteredFiles = files.filter((_, index) => index !== imgIndex);
@@ -17,7 +16,7 @@ function FormImage(props) {
             <div className="flex flex-col items-center px-1" key={index}>
                 <img
                     className="object-contain h-64 w-full mb-4"
-                    src={props.localImageOrPdf ? URL.createObjectURL(img) : img}
+                    src={props.localImageOrPdf ? URL.createObjectURL(img) : process.env.REACT_APP_BUCKET_HOST + img}
                     alt="uploaded"
                 />
                 <button
@@ -31,7 +30,10 @@ function FormImage(props) {
 }
 
 FormImage.propTypes = {
-    image: PropTypes.object.isRequired,
+    image: PropTypes.oneOfType([
+        PropTypes.array.isRequired,
+        PropTypes.object.isRequired,
+    ]).isRequired,
     localImageOrPdf: PropTypes.bool,
     updateImageList: PropTypes.func.isRequired,
     handleRemoveImage: PropTypes.func.isRequired,

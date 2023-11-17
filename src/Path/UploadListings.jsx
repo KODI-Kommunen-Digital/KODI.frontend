@@ -267,7 +267,7 @@ function UploadListings() {
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
 				setSubcategoryId(listingData.subcategoryId);
-				if (listingData.logo && listingData.otherlogos && !listingData.logo[0].isDefaultImage) {
+				if (listingData.logo && listingData.otherlogos) {
 					const temp = listingData.otherlogos.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => img.logo);
 					setImage(temp);
 				} else if (listingData.pdf) {
