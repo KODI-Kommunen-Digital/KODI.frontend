@@ -20,6 +20,8 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import FormImage from "./FormImage";
+import { UploadSVG } from "../assets/icons/upload";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -103,7 +105,6 @@ function UploadListings() {
 				logo: null
 			}));
 		}
-		setImage(null);
 	}
 
 	function handleRemovePDF() {
@@ -136,7 +137,6 @@ function UploadListings() {
 		startDate: "",
 		endDate: "",
 		originalPrice: "",
-		villagedropdown: "",
 		zipCode: "",
 		discountedPrice: "",
 		removeImage: false,
@@ -176,11 +176,7 @@ function UploadListings() {
 					setListingId(response.data.id);
 				}
 
-				if (input.removeImage) {
-					await deleteListingImage(cityId, listingId);
-				}
-
-				if (input.removePdf) {
+				if (input.removeImage || input.removePdf) {
 					await deleteListingImage(cityId, listingId);
 				}
 
@@ -191,12 +187,12 @@ function UploadListings() {
 						for (let i = 0; i < image.length; i++) {
 							imageForm.append("image", image[i]);
 						}
-						await uploadListingImage(imageForm, cityId, listingId);
+						await uploadListingImage(imageForm, cityId, response.data.id || listingId);
 					} else if (pdf) {
 						// Upload PDF if it exists
 						const pdfForm = new FormData();
 						pdfForm.append("pdf", pdf);
-						await uploadListingPDF(pdfForm, cityId, listingId);
+						await uploadListingPDF(pdfForm, cityId, response.data.id || listingId);
 					}
 				}
 
@@ -240,6 +236,15 @@ function UploadListings() {
 			});
 			setCategories(catList);
 		});
+		getNewsSubCategory().then((response) => {
+			const subcatList = {};
+			response?.data.data.forEach((subCat) => {
+				subcatList[subCat.id] = subCat.name;
+			});
+			setSubCategories(subcatList);
+		});
+		setInput((prevInput) => ({ ...prevInput, categoryId }));
+		setSubcategoryId(null);
 		setCityId(cityId);
 		var listingId = searchParams.get("listingId");
 		getProfile().then(response => {
@@ -261,8 +266,10 @@ function UploadListings() {
 				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
-				if (listingData.logo && !listingData.logo[0].isDefaultImage) {
-					setImage(listingData.logo);
+				setSubcategoryId(listingData.subcategoryId);
+				if (listingData.logo && listingData.otherlogos && !listingData.logo[0].isDefaultImage) {
+					const temp = listingData.otherlogos.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => img.logo);
+					setImage(temp);
 				} else if (listingData.pdf) {
 					setPdf({
 						link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -272,6 +279,17 @@ function UploadListings() {
 			});
 		}
 	}, [listingId]);
+
+	function categoryDescription(category) {
+		if (category === "4") {
+			return "clubsDescription";
+		} else if (category === "10") {
+			return "companyPortraitsDescription";
+		} else {
+			return "";
+		}
+	}
+
 
 	useEffect(() => {
 		let valid = true;
@@ -325,7 +343,6 @@ function UploadListings() {
 			...prev,
 			description: descriptionHTML,
 		}));
-
 		setDescription(newContent);
 	};
 
@@ -362,7 +379,10 @@ function UploadListings() {
 			case "description":
 				if (!value) {
 					return t("pleaseEnterDescription");
-				} else {
+				} else if (value.length > 65535) {
+					return t("characterLimitReacehd");
+				}
+				else {
 					return "";
 				}
 
@@ -374,7 +394,7 @@ function UploadListings() {
 				}
 
 			case "endDate":
-				if (parseInt(input.categoryId) == 3) {
+				if (parseInt(input.categoryId) === 3) {
 					if (!value) {
 						return t("pleaseEnterEndDate");
 					} else {
@@ -383,6 +403,7 @@ function UploadListings() {
 						} else {
 							return "";
 						}
+						return "";
 					}
 				} else {
 					return "";
@@ -446,7 +467,7 @@ function UploadListings() {
 				"leaflet-control-attribution"
 			)[0].style.display = "none";
 		}
-	}, [map, selectedResult]);
+	}, [map, selectedResult, image]);
 	const handleSelection = (index, value) => {
 		const updatedVal = [...val];
 		updatedVal[index].selected = value;
@@ -515,8 +536,8 @@ function UploadListings() {
 
 	const handleSubcategoryChange = (event) => {
 		let subcategoryId = event.target.value;
-		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		setSubcategoryId(subcategoryId);
+		setInput((prevInput) => ({ ...prevInput, subcategoryId }));
 		validateInput(event);
 		const urlParams = new URLSearchParams(window.location.search);
 		urlParams.set("subcategoryId", subcategoryId);
@@ -539,6 +560,7 @@ function UploadListings() {
 
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 	}
+
 
 	return (
 		<section className="bg-slate-600 body-font relative">
@@ -592,7 +614,7 @@ function UploadListings() {
 							type="text"
 							id="cityId"
 							name="cityId"
-							value={cityId}
+							value={cityId || 0}
 							onChange={onCityChange}
 							autoComplete="country-name"
 							disabled={!newListing}
@@ -600,7 +622,7 @@ function UploadListings() {
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
+								<option key={Number(city.id)} value={Number(city.id)}>{city.name}</option>
 							))}
 						</select>
 						<div
@@ -625,7 +647,7 @@ function UploadListings() {
 								type="villageId"
 								id="villageId"
 								name="villageId"
-								value={input.villageId}
+								value={input.villageId || 0}
 								onChange={onInputChange}
 								onBlur={validateInput}
 								autoComplete="country-name"
@@ -633,7 +655,7 @@ function UploadListings() {
 							>
 								<option value={0}>{t("select")}</option>
 								{villages.map((village) => (
-									<option value={Number(village.id)}>{village.name}</option>
+									<option key={Number(village.id)} value={Number(village.id)}>{village.name}</option>
 								))}
 							</select>
 						</div>
@@ -652,7 +674,7 @@ function UploadListings() {
 							type="categoryId"
 							id="categoryId"
 							name="categoryId"
-							value={categoryId}
+							value={categoryId || 0}
 							onChange={handleCategoryChange}
 							required
 							disabled={!newListing}
@@ -664,7 +686,7 @@ function UploadListings() {
 							{Object.keys(categories).map((key) => {
 								return (
 									<option className="font-sans" value={key} key={key}>
-										{t(categories[key])}
+										{t(categories[key])} {t(categoryDescription(key))}
 									</option>
 								);
 							})}
@@ -691,10 +713,11 @@ function UploadListings() {
 								type="subcategoryId"
 								id="subcategoryId"
 								name="subcategoryId"
-								value={subcategoryId}
+								value={subcategoryId || 0}
 								onChange={handleSubcategoryChange}
 								onBlur={validateInput}
 								required
+								disabled={!newListing}
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							>
 								<option className="font-sans" value={0} key={0}>
@@ -826,29 +849,16 @@ function UploadListings() {
 									>
 										{t("eventStartDate")} *
 									</label>
-									{input.startDate ? (
-										// Display the start date as plain text if it's present
-										<input
-											type="text"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if start date is not present
-										<input
-											type="datetime-local"
-											id="startDate"
-											name="startDate"
-											value={formatDateTime(input.startDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="Start Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="startDate"
+										name="startDate"
+										value={formatDateTime(input.startDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="Start Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -858,6 +868,7 @@ function UploadListings() {
 										{error.startDate}
 									</div>
 								</div>
+
 
 								<div className="relative">
 									<div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
@@ -875,29 +886,16 @@ function UploadListings() {
 									>
 										{t("eventEndDate")} *
 									</label>
-									{input.endDate ? (
-										// Display the end date as plain text if it's present
-										<input
-											type="text"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											readOnly // Make the text input read-only
-										/>
-									) : (
-										// Display an editable datetime-local input if end date is not present
-										<input
-											type="datetime-local"
-											id="endDate"
-											name="endDate"
-											value={formatDateTime(input.endDate)}
-											onChange={onInputChange}
-											onBlur={validateInput}
-											className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-											placeholder="End Date"
-										/>
-									)}
+									<input
+										type="datetime-local"
+										id="endDate"
+										name="endDate"
+										value={formatDateTime(input.endDate)}
+										onChange={onInputChange}
+										onBlur={validateInput}
+										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+										placeholder="End Date"
+									/>
 									<div
 										className="h-[24px] text-red-600"
 										style={{
@@ -907,6 +905,7 @@ function UploadListings() {
 										{error.endDate}
 									</div>
 								</div>
+
 							</div>
 						</div>
 					)}
@@ -1048,64 +1047,42 @@ function UploadListings() {
 							onDragEnter={handleDragEnter}
 							onDragLeave={handleDragLeave}
 						>
-							{image ? (
-								<div className="flex flex-col items-center">
-									<img
-										className="object-contain h-64 w-full mb-4"
-										src={localImageOrPdf ? URL.createObjectURL(image[0]) : imgaeBucketURL + image[0].logo}
-										alt="uploaded"
-									/>
-									<button
-										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemoveImage}
-									>
-										{t("remove")}
-									</button>
-								</div>
-							) : pdf ? (
-								<div className="flex flex-col items-center">
-									<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
-									<button
-										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemovePDF}
-									>
-										{t("remove")}
-									</button>
-								</div>
-							) : (
-								<div className="text-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="mx-auto h-12 w-12"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-											clipRule="evenodd"
-										/>
-									</svg>
-									<p className="mt-1 text-sm text-gray-600">
-										{t("dragAndDropImageOrPDF")}
-									</p>
-									<div className="relative mb-4 mt-8">
-										<label
-											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
+							{image && image.length > 0 ?
+								<><FormImage updateImageList={setImage} handleRemoveImage={handleRemoveImage} image={image} localImageOrPdf={localImageOrPdf} />
+								</>
+								: pdf ? (
+									<div className="flex flex-col items-center">
+										<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
+										<button
+											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+											onClick={handleRemovePDF}
 										>
-											<span className="button-label">{t("upload")}</span>
-											<input
-												id="file-upload"
-												type="file"
-												accept="image/*,.pdf"
-												className="sr-only"
-												onChange={handleInputChange}
-												multiple
-											/>
-										</label>
+											{t("remove")}
+										</button>
 									</div>
-								</div>
-							)}
+								) : (
+									<div className="text-center">
+										<UploadSVG />
+										<p className="mt-1 text-sm text-gray-600">
+											{t("dragAndDropImageOrPDF")}
+										</p>
+										<div className="relative mb-4 mt-8">
+											<label
+												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
+											>
+												<span className="button-label">{t("upload")}</span>
+												<input
+													id="file-upload"
+													type="file"
+													accept="image/*,.pdf"
+													className="sr-only"
+													onChange={handleInputChange}
+													multiple
+												/>
+											</label>
+										</div>
+									</div>
+								)}
 						</div>
 					</div>
 				</div>

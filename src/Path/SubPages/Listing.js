@@ -94,7 +94,8 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    document.title = process.env.REACT_APP_REGION_NAME + " Event Details";
+    document.title =
+      process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -252,10 +253,12 @@ const Listing = () => {
     }
   };
 
-  const [, setUserName] = useState("");
+  // eslint-disable-next-line
+  const [userName, setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [, setProfilePic] = useState("");
+  // eslint-disable-next-line
+  const [profilePic, setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
@@ -421,12 +424,7 @@ const Listing = () => {
                   </style>
                   <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
                     <div className="relative h-full">
-                      {input.logo ? (
-                        <CustomCarousel
-                          imageList={input.logo}
-                          sourceId={input.sourceId}
-                        />
-                      ) : input.pdf ? (
+                      {input.pdf ? (
                         <div>
                           <div className="pdf-container">
                             <object
@@ -438,6 +436,11 @@ const Listing = () => {
                             ></object>
                           </div>
                         </div>
+                      ) : input.logo ? (
+                        <CustomCarousel
+                          imageList={input.logo}
+                          sourceId={input.sourceId}
+                        />
                       ) : (
                         <img
                           alt="default"
