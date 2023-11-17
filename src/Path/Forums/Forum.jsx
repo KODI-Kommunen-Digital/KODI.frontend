@@ -86,7 +86,7 @@ const Forum = () => {
 					});
 					setForumPosts(response2.data.data);
 				} else {
-					const forumRequests = await getUserForumRequests({ cityId });
+					const forumRequests = await getUserForumRequests({ cityId, forumId });
 					const forumRequest = forumRequests.data.data.find(r => r.forumId === forumId)
 					if (forumRequest) {
 						setRequestId(forumRequest.id)
