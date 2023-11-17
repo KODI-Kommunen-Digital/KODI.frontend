@@ -361,39 +361,35 @@ const Listing = () => {
                               fontFamily: "Poppins, sans-serif",
                             }}
                           >
-                            <span>
-                              {input.startDate &&
-                                new Date(
-                                  input.startDate.slice(0, 10)
-                                ).toLocaleDateString("de-DE")}{" "}
-                              (
-                              {new Date(input.startDate).toLocaleTimeString(
-                                "de-DE",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  timeZone: "UTC",
-                                }
-                              )}
-                              )
-                            </span>
-                            <span className="text-blue-400"> {t("To")} </span>
-                            <span>
-                              {input.endDate &&
-                                new Date(
-                                  input.endDate.slice(0, 10)
-                                ).toLocaleDateString("de-DE")}{" "}
-                              (
-                              {new Date(input.endDate).toLocaleTimeString(
-                                "de-DE",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  timeZone: "UTC",
-                                }
-                              )}
-                              )
-                            </span>
+                            {input.startDate && (
+                              <>
+                                <span>
+                                  {new Date(input.startDate.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
+                                  (
+                                  {new Date(input.startDate).toLocaleTimeString("de-DE", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    timeZone: "UTC",
+                                  })}
+                                  )
+                                </span>
+                                {input.endDate && (
+                                  <>
+                                    <span className="text-blue-400"> {t("To")} </span>
+                                    <span>
+                                      {new Date(input.endDate.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
+                                      (
+                                      {new Date(input.endDate).toLocaleTimeString("de-DE", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        timeZone: "UTC",
+                                      })}
+                                      )
+                                    </span>
+                                  </>
+                                )}
+                              </>
+                            )}
                           </p>
                         ) : (
                           <p
@@ -403,6 +399,7 @@ const Listing = () => {
                             }}
                           ></p>
                         )}
+
                       </div>
                     </form>
                   </div>

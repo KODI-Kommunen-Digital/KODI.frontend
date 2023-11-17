@@ -21,6 +21,7 @@ const AllForums = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	const [requestId, setRequestId] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
 
 
 	useEffect(() => {
