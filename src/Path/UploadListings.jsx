@@ -803,7 +803,7 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")}
+										{t("eventEndDate")} *
 									</label>
 									<input
 										type="datetime-local"
