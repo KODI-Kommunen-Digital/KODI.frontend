@@ -231,6 +231,7 @@ function UploadListings() {
 				subcatList[subCat.id] = subCat.name;
 			});
 			setSubCategories(subcatList);
+			console.log(response.data.data)
 		});
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
@@ -468,7 +469,6 @@ function UploadListings() {
 				subcatList[subCat.id] = subCat.name;
 			});
 			setSubCategories(subcatList);
-			console.log(subcatList)
 		}
 		setInput((prevInput) => ({ ...prevInput, categoryId }));
 		setSubcategoryId(null);
@@ -668,7 +668,7 @@ function UploadListings() {
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							>
 								<option className="font-sans" value={0} key={0}>
-									{t("chooseOneCategory")}
+									{t("chooseOneSubCategory")}
 								</option>
 								{Object.keys(subCategories).map((key) => {
 									return (

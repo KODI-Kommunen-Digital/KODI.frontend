@@ -440,6 +440,9 @@ const Listing = () => {
                               ? process.env.REACT_APP_BUCKET_HOST + input.logo
                               : input.logo
                           }
+                          onError={(e) => {
+                            e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+                          }}
                         />
                       ) : (
                         <img

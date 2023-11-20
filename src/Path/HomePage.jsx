@@ -11,6 +11,7 @@ import ListingsCard from "../Components/ListingsCard";
 import MostPopulatCategories from "../Components//MostPopulatCategories";
 
 import CITYIMAGE from "../assets/City.png";
+import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
@@ -294,6 +295,9 @@ const HomePage = () => {
 													? process.env.REACT_APP_BUCKET_HOST + city.image
 													: CITYIMAGE
 											}
+											onError={(e) => {
+												e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+											}}
 										/>
 										<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
 											<h1
