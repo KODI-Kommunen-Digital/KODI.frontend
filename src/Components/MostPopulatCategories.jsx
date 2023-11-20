@@ -85,7 +85,7 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                         case 6:
                             categoryName = t("offerSearch");
                             categoryIcon = (
-                                <div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
+                                <div className="h-20 w-20 bg-fuchsia-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
@@ -113,7 +113,7 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                         case 9:
                             categoryName = t("lostAndFound");
                             categoryIcon = (
-                                <div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-xl">
+                                <div className="h-20 w-20 bg-gray-500 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
