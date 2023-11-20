@@ -20,8 +20,9 @@ const AllForums = () => {
 	const [pageNo, setPageNo] = useState(1);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(true);
 	const [requestId, setRequestId] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
+
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -78,8 +79,10 @@ const AllForums = () => {
 						const membershipStatus = {};
 						membershipResponseData.forEach((memberresponse) => {
 							membershipStatus[memberresponse.forumId] = memberresponse.statusId;
+							setRequestId(memberresponse.requestId);
 						});
 						setMembershipStatus(membershipStatus);
+						console.log(membershipResponseData)
 					}
 
 
@@ -145,12 +148,8 @@ const AllForums = () => {
 
 	const handleFollowRequest = async (forumsId) => {
 		try {
-			const forumToFollow = forums.find(forum => forum.id === forumsId);
 			const response = await createMemberRequest(parseInt(cityId), forumsId);
 			console.log(response)
-			if (forumToFollow.isPrivate === 1) {
-				setRequestId(response.data.data.id);
-			}
 		} catch (error) {
 			console.error("Error sending follow request:", error);
 		}
@@ -181,7 +180,7 @@ const AllForums = () => {
 												autoComplete="city-name"
 												onChange={(e) => handleChange(e)}
 												value={cityId || 0}
-												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+												className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 												style={{
 													fontFamily: "Poppins, sans-serif",
 												}}
@@ -304,38 +303,41 @@ const AllForums = () => {
 																<div className="my-4 bg-gray-200 h-[1px]"></div>
 
 																{forum.isPrivate && memberStatus[forum.id] === statusByName.Pending ? (
-																	<h2
-																		onClick={() => {
-																			if (requestId) {
-																				handleLeaveRequest(forum.id);
-																			} else {
-																				handleFollowRequest(forum.id);
-																			}
-																		}}
-																		style={{ fontFamily: "Poppins, sans-serif" }}
-																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
-																	>
-																		{t("cancelRequest")}
-																	</h2>
+																	<div className="text-center">
+																		<a
+																			onClick={async () => {
+																				await handleLeaveRequest(forum.id);
+																				window.location.reload();
+																			}}
+																			style={{ fontFamily: "Poppins, sans-serif" }}
+																			className="mx-4 my-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+																		>
+																			{t("cancelRequest")}
+																		</a>
+																	</div>
 																) : memberStatus[forum.id] === statusByName.Accepted ? (
 																	<h2
 																		onClick={() => handleClick(cityId, forum)}
 																		style={{ fontFamily: "Poppins, sans-serif" }}
 																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
-																	>{t("viewGroup")}</h2>
+																	>
+																		{t("viewGroup")}
+																	</h2>
 																) : (
-																	<h2
-																		onClick={() => {
-																			if (requestId) {
-																				handleLeaveRequest(forum.id);
-																			} else {
-																				handleFollowRequest(forum.id);
-																			}
-																		}}
-																		style={{ fontFamily: "Poppins, sans-serif" }}
-																		className="text-red-700 my-4 p-2 title-font text-lg font-semibold text-center font-sans truncate"
-																	>{t("follow")}</h2>
+																	<div className="text-center my-4 p-2">
+																		<a
+																			onClick={async () => {
+																				await handleFollowRequest(forum.id);
+																				window.location.reload();
+																			}}
+																			style={{ fontFamily: "Poppins, sans-serif" }}
+																			className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+																		>
+																			{t("follow")}
+																		</a>
+																	</div>
 																)}
+
 															</div>
 														</div>
 													))}

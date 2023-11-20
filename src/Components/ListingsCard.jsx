@@ -1,4 +1,4 @@
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React from "react";
 import PdfToImage from "../Components/PdfToImage";
@@ -36,16 +36,15 @@ function ListingsCard({ listing, terminalView = false }) {
 						className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
 						src={
 							listing.sourceId === 1
-								? listing.logo
-									? process.env.REACT_APP_BUCKET_HOST + listing.logo
-									: LISTINGSIMAGE
+								? process.env.REACT_APP_BUCKET_HOST + listing.logo
 								: listing.logo
 						}
+						onError={(e) => {
+							e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+						}}
 					/>
 				) : listing.pdf ? (
-					<PdfToImage
-						pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
-					/>
+					<PdfToImage pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf} />
 				) : (
 					<img
 						alt="Listing"
@@ -53,6 +52,7 @@ function ListingsCard({ listing, terminalView = false }) {
 						src={LISTINGSIMAGE}
 					/>
 				)}
+
 			</div>
 			<div className="mt-5 px-2">
 				<h2
