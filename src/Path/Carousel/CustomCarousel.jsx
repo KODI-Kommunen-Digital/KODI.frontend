@@ -8,7 +8,6 @@ import PrevIconButton from './PrevIconButton';
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const sortedImageList = [...props.imageList].sort((a, b) => a.imageOrder - b.imageOrder);
-
   const onClickNext = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % sortedImageList.length);
   };

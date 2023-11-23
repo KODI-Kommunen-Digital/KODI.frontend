@@ -438,7 +438,7 @@ const Listing = () => {
                         </div>
                       ) : input.logo ? (
                         <CustomCarousel
-                          imageList={input.logo}
+                          imageList={input.otherlogos}
                           sourceId={input.sourceId}
                         />
                       ) : (
