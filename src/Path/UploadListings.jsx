@@ -78,6 +78,10 @@ function UploadListings() {
 				setImage(e.target.files);
 			} else if (file.type === "application/pdf") {
 				setPdf(file);
+				setInput((prev) => ({
+					...prev,
+					hasAttachment: true,
+				}));
 			}
 		}
 		setDragging(false);
@@ -93,6 +97,10 @@ function UploadListings() {
 			} else if (file.type === "application/pdf") {
 				setLocalImageOrPdf(true);
 				setPdf(file);
+				setInput((prev) => ({
+					...prev,
+					hasAttachment: true,
+				}));
 			}
 		}
 	}
@@ -116,6 +124,10 @@ function UploadListings() {
 			}));
 		}
 		setPdf(null);
+		setInput((prev) => ({
+			...prev,
+			hasAttachment: false,
+		}));
 	}
 
 	//Drag and Drop ends
@@ -142,6 +154,7 @@ function UploadListings() {
 		removeImage: false,
 		removePdf: false,
 		hasImage: false,
+		hasAttachment: false,
 	});
 
 	const [error, setError] = useState({
