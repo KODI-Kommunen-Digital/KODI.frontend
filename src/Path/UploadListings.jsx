@@ -382,32 +382,32 @@ function UploadListings() {
 					return "";
 				}
 
-			// case "endDate":
-			// 	if (parseInt(input.categoryId) === 3) {
-			// 		if (value && new Date(input.startDate) > new Date(value)) {
-			// 			return t("endDateBeforeStartDate");
-			// 		} else {
-			// 			return "";
-			// 		}
-			// 	} else {
-			// 		return "";
-			// 	}
-
 			case "endDate":
 				if (parseInt(input.categoryId) === 3) {
-					if (!value) {
-						return t("pleaseEnterEndDate");
+					if (value && new Date(input.startDate) > new Date(value)) {
+						return t("endDateBeforeStartDate");
 					} else {
-						if (new Date(input.startDate) > new Date(value)) {
-							return t("endDateBeforeStartDate");
-						} else {
-							return "";
-						}
 						return "";
 					}
 				} else {
 					return "";
 				}
+
+			// case "endDate":
+			// 	if (parseInt(input.categoryId) === 3) {
+			// 		if (!value) {
+			// 			return t("pleaseEnterEndDate");
+			// 		} else {
+			// 			if (new Date(input.startDate) > new Date(value)) {
+			// 				return t("endDateBeforeStartDate");
+			// 			} else {
+			// 				return "";
+			// 			}
+			// 			return "";
+			// 		}
+			// 	} else {
+			// 		return "";
+			// 	}
 			default:
 				return "";
 		}
@@ -803,7 +803,7 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")} *
+										{t("eventEndDate")}
 									</label>
 									<input
 										type="datetime-local"
