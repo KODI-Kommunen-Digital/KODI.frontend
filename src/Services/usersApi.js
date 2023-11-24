@@ -5,6 +5,9 @@ import { getCookie } from '../cookies/cookieServices';
 const axiosInstance = instance;
 const parser = new UAParser();
 const userAgent = parser.getResult();
+const accessToken = window.localStorage.getItem("accessToken") || getCookie("accessToken");
+const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
+
 if (userAgent.device.vendor === undefined) {
 	userAgent.device.vendor = "";
 }
@@ -74,8 +77,8 @@ export async function login(credentials) {
 	return axiosInstance.post(`/users/login`, credentials, { headers });
 }
 
-export async function logout(credentials) {
-	return axiosInstance.post(`users/${getUserId()}/logout`, credentials);
+export async function logout() {
+	return axiosInstance.post(`users/${getUserId()}/logout`, { accessToken, refreshToken });
 }
 
 export async function uploadProfilePic(formData) {

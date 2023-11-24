@@ -5,7 +5,6 @@ import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
 import { useAuth } from '../AuthContext';
-import { getCookie } from '../cookies/cookieServices';
 
 function SideBar() {
 	const { t } = useTranslation();
@@ -28,10 +27,8 @@ function SideBar() {
 
 	const handleLogout = () => {
 		if (isLoggedIn) {
-			const accessToken = window.localStorage.getItem("accessToken") || getCookie("accessToken");
-			const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
 			try {
-				logout({ accessToken, refreshToken }).then(() => {
+				logout().then(() => {
 					window.localStorage.removeItem("selectedItem");
 					window.sessionStorage.removeItem("selectedItem");
 					setLogout();
