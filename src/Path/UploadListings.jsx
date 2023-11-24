@@ -392,22 +392,6 @@ function UploadListings() {
 				} else {
 					return "";
 				}
-
-			// case "endDate":
-			// 	if (parseInt(input.categoryId) === 3) {
-			// 		if (!value) {
-			// 			return t("pleaseEnterEndDate");
-			// 		} else {
-			// 			if (new Date(input.startDate) > new Date(value)) {
-			// 				return t("endDateBeforeStartDate");
-			// 			} else {
-			// 				return "";
-			// 			}
-			// 			return "";
-			// 		}
-			// 	} else {
-			// 		return "";
-			// 	}
 			default:
 				return "";
 		}
