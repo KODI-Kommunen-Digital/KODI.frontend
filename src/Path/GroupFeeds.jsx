@@ -7,7 +7,7 @@ import {
 	sortLatestFirst,
 	sortOldestFirst,
 } from "../Services/helper";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";

@@ -477,8 +477,8 @@ class ProfilePage extends React.Component {
 											>
 												{t("photo")}
 											</label>
-											<div className="py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 space-y-2 sm:space-y-0">
-												<div className="flex flex-col justify-center items-start">
+											<div className="py-2 md:flex md:space-x-4 flex-raw space-y-2">
+												<div className="flex md:flex-col justify-center items-start">
 													<img
 														className="rounded-full h-20 w-20"
 														src={
@@ -491,7 +491,7 @@ class ProfilePage extends React.Component {
 													/>
 												</div>
 												<div
-													className="flex flex-col justify-center items-start"
+													className="flex md:flex-col justify-center items-start"
 													style={{
 														fontFamily: "Poppins, sans-serif",
 													}}
@@ -501,7 +501,7 @@ class ProfilePage extends React.Component {
 														setInput={this.setProfile.bind(this)}
 													/>
 												</div>
-												<div className="flex flex-col justify-center items-start">
+												<div className="flex md:flex-col justify-center md:items-center item-center">
 													<button
 														onClick={() => this.setProfile("image", "")}
 														className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center w-full sm:w-auto"

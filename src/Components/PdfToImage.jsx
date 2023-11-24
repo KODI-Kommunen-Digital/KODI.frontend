@@ -1,7 +1,7 @@
 import React from "react";
 import { pdfjs } from "react-pdf";
 import PropTypes from "prop-types";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpeg";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 
 function PdfThumbnail({ pdfUrl }) {
 	const openPdf = (e) => {
