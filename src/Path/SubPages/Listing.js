@@ -12,6 +12,7 @@ import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
 import ListingsCard from "../../Components/ListingsCard";
+import CustomCarousel from "../Carousel/CustomCarousel";
 import {
   getFavorites,
   postFavoriteListingsData,
@@ -58,7 +59,7 @@ const Listing = () => {
     phone: "",
     email: "",
     description: "",
-    logo: null,
+    logo: [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -66,7 +67,7 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
-  console.log(input.endDate);
+
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
@@ -233,14 +234,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-              .then((response) => {
-                setFavoriteId(response.data.id);
-                setSuccessMessage(t("List added to the favorites"));
-                setHandleClassName(
-                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                );
-              })
-              .catch((err) => console.log("Error", err))
+                .then((response) => {
+                  setFavoriteId(response.data.id);
+                  setSuccessMessage(t("List added to the favorites"));
+                  setHandleClassName(
+                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                  );
+                })
+                .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -252,10 +253,12 @@ const Listing = () => {
     }
   };
 
-  const [, setUserName] = useState("");
+  // eslint-disable-next-line
+  const [userName, setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [, setProfilePic] = useState("");
+  // eslint-disable-next-line
+  const [profilePic, setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
@@ -301,8 +304,9 @@ const Listing = () => {
                           </span>
                         </h1>
                         <div
-                          className={`flex items-center ${terminalView ? "hidden" : "visible"
-                            }`}
+                          className={`flex items-center ${
+                            terminalView ? "hidden" : "visible"
+                          }`}
                         >
                           <button
                             type="button"
@@ -364,22 +368,34 @@ const Listing = () => {
                             {input.startDate && (
                               <>
                                 <span>
-                                  {new Date(input.startDate.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
+                                  {new Date(
+                                    input.startDate.slice(0, 10)
+                                  ).toLocaleDateString("de-DE")}{" "}
                                   (
-                                  {new Date(input.startDate).toLocaleTimeString("de-DE", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    timeZone: "UTC",
-                                  })}
+                                  {new Date(input.startDate).toLocaleTimeString(
+                                    "de-DE",
+                                    {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      timeZone: "UTC",
+                                    }
+                                  )}
                                   )
                                 </span>
                                 {input.endDate && (
                                   <>
-                                    <span className="text-blue-400"> {t("To")} </span>
+                                    <span className="text-blue-400">
+                                      {" "}
+                                      {t("To")}{" "}
+                                    </span>
                                     <span>
-                                      {new Date(input.endDate.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
+                                      {new Date(
+                                        input.endDate.slice(0, 10)
+                                      ).toLocaleDateString("de-DE")}{" "}
                                       (
-                                      {new Date(input.endDate).toLocaleTimeString("de-DE", {
+                                      {new Date(
+                                        input.endDate
+                                      ).toLocaleTimeString("de-DE", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                         timeZone: "UTC",
@@ -399,7 +415,6 @@ const Listing = () => {
                             }}
                           ></p>
                         )}
-
                       </div>
                     </form>
                   </div>
@@ -432,17 +447,9 @@ const Listing = () => {
                           </div>
                         </div>
                       ) : input.logo ? (
-                        <img
-                          alt="listing"
-                          className="object-cover object-center h-full w-full"
-                          src={
-                            input.sourceId === source.User
-                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
-                              : input.logo
-                          }
-                          onError={(e) => {
-                            e.target.src = LISTINGSIMAGE; // Set default image if loading fails
-                          }}
+                        <CustomCarousel
+                          imageList={input.otherlogos}
+                          sourceId={input.sourceId}
                         />
                       ) : (
                         <img
@@ -544,14 +551,9 @@ const Listing = () => {
               </h1>
               <p>{input.address}</p>
 
-              {input.place ? (
-                <p>{input.place}</p>
-              ) : null}
+              {input.place ? <p>{input.place}</p> : null}
 
-              {input.zipcode ? (
-                <p>{input.zipcode}</p>
-              ) : null}
-
+              {input.zipcode ? <p>{input.zipcode}</p> : null}
             </div>
           ) : null}
 

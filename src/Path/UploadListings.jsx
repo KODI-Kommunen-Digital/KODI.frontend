@@ -19,6 +19,8 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import FormImage from "./FormImage";
+import { UploadSVG } from "../assets/icons/upload";
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -33,6 +35,7 @@ function UploadListings() {
 	const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
 	const [dragging, setDragging] = useState(false);
 	const [isAdmin, setIsAdmin] = useState(false);
+	const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
@@ -65,9 +68,13 @@ function UploadListings() {
 		const file = e.dataTransfer.files[0];
 		if (file) {
 			if (file.type.startsWith("image/")) {
-				setImage(file);
+				setImage(e.target.files);
 			} else if (file.type === "application/pdf") {
 				setPdf(file);
+				setInput((prev) => ({
+					...prev,
+					hasAttachment: true,
+				}));
 			}
 		}
 		setDragging(false);
@@ -79,10 +86,14 @@ function UploadListings() {
 		if (file) {
 			if (file.type.startsWith("image/")) {
 				setLocalImageOrPdf(true);
-				setImage(file);
+				setImage(e.target.files);
 			} else if (file.type === "application/pdf") {
 				setLocalImageOrPdf(true);
 				setPdf(file);
+				setInput((prev) => ({
+					...prev,
+					hasAttachment: true,
+				}));
 			}
 		}
 	}
@@ -95,7 +106,6 @@ function UploadListings() {
 				logo: null
 			}));
 		}
-		setImage(null);
 	}
 
 	function handleRemovePDF() {
@@ -107,6 +117,10 @@ function UploadListings() {
 			}));
 		}
 		setPdf(null);
+		setInput((prev) => ({
+			...prev,
+			hasAttachment: false,
+		}));
 	}
 
 	//Drag and Drop ends
@@ -133,6 +147,8 @@ function UploadListings() {
 		discountedPrice: "",
 		removeImage: false,
 		removePdf: false,
+		hasImage: false,
+		hasAttachment: false,
 	});
 
 	const [error, setError] = useState({
@@ -175,7 +191,9 @@ function UploadListings() {
 					if (image) {
 						// Upload image if it exists
 						const imageForm = new FormData();
-						imageForm.append("image", image);
+						for (let i = 0; i < image.length; i++) {
+							imageForm.append("image", image[i]);
+						}
 						await uploadListingImage(imageForm, cityId, response.data.id || listingId);
 					} else if (pdf) {
 						// Upload PDF if it exists
@@ -257,8 +275,9 @@ function UploadListings() {
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
 				setSubcategoryId(listingData.subcategoryId);
-				if (listingData.logo) {
-					setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo)
+				if (listingData.logo && listingData.otherlogos) {
+					const temp = listingData.otherlogos.sort(({ imageOrder: a }, { imageOrder: b }) => b - a).map((img) => img.logo);
+					setImage(temp);
 				} else if (listingData.pdf) {
 					setPdf({
 						link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -267,7 +286,7 @@ function UploadListings() {
 				}
 			});
 		}
-	}, []);
+	}, [listingId]);
 
 	function categoryDescription(category) {
 		if (category === "4") {
@@ -833,7 +852,7 @@ function UploadListings() {
 						<div className="relative mb-4 grid grid-cols-2 gap-4">
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
-									for="place"
+									htmlFor="place"
 									className="block text-sm font-medium text-gray-600"
 								>
 									{t("originalPrice")}
@@ -852,7 +871,7 @@ function UploadListings() {
 							</div>
 							<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
 								<label
-									for="place"
+									htmlFor="place"
 									className="block text-sm font-medium text-gray-600"
 								>
 									{t("discountedPrice")}
@@ -966,63 +985,42 @@ function UploadListings() {
 							onDragEnter={handleDragEnter}
 							onDragLeave={handleDragLeave}
 						>
-							{image ? (
-								<div className="flex flex-col items-center">
-									<img
-										className="object-contain h-64 w-full mb-4"
-										src={localImageOrPdf ? URL.createObjectURL(image) : image}
-										alt="uploaded"
-									/>
-									<button
-										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemoveImage}
-									>
-										{t("remove")}
-									</button>
-								</div>
-							) : pdf ? (
-								<div className="flex flex-col items-center">
-									<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
-									<button
-										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-										onClick={handleRemovePDF}
-									>
-										{t("remove")}
-									</button>
-								</div>
-							) : (
-								<div className="text-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="mx-auto h-12 w-12"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-											clipRule="evenodd"
-										/>
-									</svg>
-									<p className="mt-1 text-sm text-gray-600">
-										{t("dragAndDropImageOrPDF")}
-									</p>
-									<div className="relative mb-4 mt-8">
-										<label
-											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
+							{image && image.length > 0 ?
+								<><FormImage updateImageList={setImage} handleRemoveImage={handleRemoveImage} image={image} localImageOrPdf={localImageOrPdf} />
+								</>
+								: pdf ? (
+									<div className="flex flex-col items-center">
+										<p><a target="_blank" href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}>{pdf.name}</a></p>
+										<button
+											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+											onClick={handleRemovePDF}
 										>
-											<span className="button-label">{t("upload")}</span>
-											<input
-												id="file-upload"
-												type="file"
-												accept="image/*,.pdf"
-												className="sr-only"
-												onChange={handleInputChange}
-											/>
-										</label>
+											{t("remove")}
+										</button>
 									</div>
-								</div>
-							)}
+								) : (
+									<div className="text-center">
+										<UploadSVG />
+										<p className="mt-1 text-sm text-gray-600">
+											{t("dragAndDropImageOrPDF")}
+										</p>
+										<div className="relative mb-4 mt-8">
+											<label
+												className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
+											>
+												<span className="button-label">{t("upload")}</span>
+												<input
+													id="file-upload"
+													type="file"
+													accept="image/*,.pdf"
+													className="sr-only"
+													onChange={handleInputChange}
+													multiple
+												/>
+											</label>
+										</div>
+									</div>
+								)}
 						</div>
 					</div>
 				</div>
