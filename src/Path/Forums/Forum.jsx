@@ -86,7 +86,7 @@ const Forum = () => {
 					});
 					setForumPosts(response2.data.data);
 				} else {
-					const forumRequests = await getUserForumRequests({ cityId });
+					const forumRequests = await getUserForumRequests({ cityId, forumId });
 					const forumRequest = forumRequests.data.data.find(r => r.forumId === forumId)
 					if (forumRequest) {
 						setRequestId(forumRequest.id)
@@ -406,12 +406,12 @@ const Forum = () => {
 					<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
 						<div className="overflow-hidden sm:p-0 mt-[0rem] px-0 py-0">
 							<h1
-								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{t("description")}
 							</h1>
-							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900">
+							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900">
 								{forum.description}
 							</h1>
 						</div>
@@ -429,7 +429,7 @@ const Forum = () => {
 						<div>
 							{forumPosts && forumPosts.length > 0 ? (
 								<div className="max-w-full lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-full">
-									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-gray-900">
 										{t("groupPosts")}
 									</h1>
 									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
