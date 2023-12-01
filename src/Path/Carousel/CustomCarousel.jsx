@@ -4,6 +4,8 @@ import { source } from '../../Constants/source';
 import { Carousel } from "@material-tailwind/react";
 import NextIconButton from './NextIconButton';
 import PrevIconButton from './PrevIconButton';
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
+
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,6 +27,9 @@ const CustomCarousel = (props) => {
             ? process.env.REACT_APP_BUCKET_HOST + sortedImageList[activeIndex]?.logo
             : sortedImageList[activeIndex]?.logo
         }
+        onError={(e) => {
+          e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+        }}
         alt={`image ${activeIndex}`}
         className="w-full h-full object-cover"
       />
