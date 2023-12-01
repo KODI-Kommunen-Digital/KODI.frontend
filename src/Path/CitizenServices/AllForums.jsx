@@ -9,7 +9,6 @@ import {
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 import { statusByName } from '../../Constants/forumStatus';
-import { useAuth } from '../../AuthContext';
 
 const AllForums = () => {
 	window.scrollTo(0, 0);
@@ -22,13 +21,18 @@ const AllForums = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const navigate = useNavigate();
 	const [requestId, setRequestId] = useState(0);
-	const { isAuthenticated } = useAuth();
 	const [isLoading, setIsLoading] = useState(true);
 
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		if (isAuthenticated()) {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
 		getCities({ hasForum: true }).then((citiesResponse) => {
@@ -38,7 +42,7 @@ const AllForums = () => {
 			const cityIdParam = urlParams.get("cityId");
 			if (cityIdParam) setCityId(cityIdParam);
 		});
-	}, [isAuthenticated]);
+	}, []);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);

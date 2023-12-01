@@ -19,7 +19,6 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
-import { useAuth } from '../../AuthContext';
 
 const Description = ({ content }) => {
   return (
@@ -48,7 +47,6 @@ const Listing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-  const { isAuthenticated } = useAuth();
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -98,7 +96,13 @@ const Listing = () => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     if (listingId && cityId) {
-      if (isAuthenticated()) {
+      const accessToken =
+        window.localStorage.getItem("accessToken") ||
+        window.sessionStorage.getItem("accessToken");
+      const refreshToken =
+        window.localStorage.getItem("refreshToken") ||
+        window.sessionStorage.getItem("refreshToken");
+      if (accessToken || refreshToken) {
         setIsLoggedIn(true);
       }
       getListingsById(cityId, listingId, params)
