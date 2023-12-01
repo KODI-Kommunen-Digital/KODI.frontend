@@ -379,22 +379,20 @@ function CreateGroup() {
 								htmlFor="groupType"
 								className="block text-sm font-medium text-gray-600 mr-2"
 							>
-								Public
+								{t("public")}
 							</label>
 							<div className="relative">
 								<div
-									className={`w-14 h-7 rounded-full shadow-inner ${
-										input.visibility === "private"
+									className={`w-14 h-7 rounded-full shadow-inner ${input.visibility === "private"
 											? "bg-blue-500"
 											: "bg-gray-300"
-									}`}
+										}`}
 								></div>
 								<div
-									className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${
-										input.visibility === "private"
+									className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${input.visibility === "private"
 											? "translate-x-full"
 											: "translate-x-0"
-									}`}
+										}`}
 								></div>
 								{/* No need for an input element here */}
 							</div>
@@ -402,7 +400,7 @@ function CreateGroup() {
 								htmlFor="groupType"
 								className="block text-sm font-medium text-gray-600 ml-2"
 							>
-								Private
+								{t("private")}
 							</label>
 						</div>
 					</div>

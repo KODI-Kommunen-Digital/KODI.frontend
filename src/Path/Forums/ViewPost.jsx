@@ -303,7 +303,7 @@ const ViewPost = () => {
 										className="ml-0"
 										style={{ fontFamily: "Poppins, sans-serif" }}
 									>
-										{t("Report")}
+										{t("report")}
 									</span>
 								</a>
 

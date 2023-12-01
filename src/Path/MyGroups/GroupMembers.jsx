@@ -118,8 +118,8 @@ const GroupMembers = () => {
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">
-							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-50 dark:text-gray-700">
+						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
+							<thead className="text-xs text-gray-700 uppercase bg-gray-50">
 								<tr>
 									<th
 										scope="col"
@@ -154,18 +154,16 @@ const GroupMembers = () => {
 										{t("admin")}
 									</th>
 
-									{isAdmin && (
-										<th
-											scope="col"
-											className="px-6 sm:px-6 py-3 text-center"
-											style={{
-												fontFamily: "Poppins, sans-serif",
-												width: "20%",
-											}}
-										>
-											{t("remove")}
-										</th>
-									)}
+									<th
+										scope="col"
+										className="px-6 sm:px-6 py-3 text-center"
+										style={{
+											fontFamily: "Poppins, sans-serif",
+											width: "20%",
+										}}
+									>
+										{t("remove")}
+									</th>
 
 									{isAdmin && (
 										<th
@@ -186,11 +184,11 @@ const GroupMembers = () => {
 									return (
 										<tr
 											key={index}
-											className="bg-white border-b dark:bg-white dark:border-white hover:bg-gray-50 dark:hover:bg-gray-50"
+											className="bg-white border-b hover:bg-gray-50"
 										>
 											<th
 												scope="row"
-												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+												className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
 											>
 												<img
 													className="w-10 h-10 rounded-full hidden sm:table-cell"
@@ -229,20 +227,32 @@ const GroupMembers = () => {
 													color: member.isAdmin === 1 ? "green" : "red",
 												}}
 											>
-												{member.isAdmin === 1 ? "Admin" : "Member"}
+												{member.isAdmin === 1 ? t("admin") : t("member")}
 											</td>
 
-											{isAdmin && (
+											{isAdmin ? (
 												<td className="px-6 py-4 text-center">
 													<a
-														className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer text-center pr-0"
+														className="font-medium text-blue-600 hover:underline cursor-pointer text-center pr-0"
 														onClick={() => removeMemberOnClick(member)}
 														style={{ fontFamily: "Poppins, sans-serif" }}
 													>
-														{member.userId === currentUserId ? "exit" : "remove"}
+														{member.userId === currentUserId ? t("exit") : t("remove")}
 													</a>
 												</td>
+											) : (
+												<td className="px-6 py-4 text-center">
+													<a
+														className={`font-medium text-blue-600 ${member.userId === currentUserId ? 'hover:underline' : ''} cursor-pointer text-center pr-0`}
+														onClick={() => { member.userId === currentUserId && removeMemberOnClick(member) }}
+														style={{ fontFamily: "Poppins, sans-serif" }}
+													>
+														{member.userId === currentUserId ? t("exit") : <div className="text-gray-500">{t("onlyAdmins")}</div>}
+													</a>
+												</td>
+
 											)}
+
 											{isAdmin && (
 												<td className="px-6 py-4 text-center">
 													<button
@@ -256,8 +266,8 @@ const GroupMembers = () => {
 														onClick={() => handleAdminToggle(member)}
 													>
 														{member.isAdmin === 1
-															? "Remove admin"
-															: "Make admin"}
+															? t("removeAdmin")
+															: t("makeAdmin")}
 													</button>
 												</td>
 											)}
@@ -271,7 +281,7 @@ const GroupMembers = () => {
 					<div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-left cursor-pointer">
 						<button
 							type="button"
-							className="inline-block rounded-xl bg-black px-3 pb-2 pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] transition duration-150 ease-in-out hover:bg-neutral-800 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
+							className="inline-block rounded-xl bg-black px-3 pb-2 pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] transition duration-150 ease-in-out hover:bg-neutral-800 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)]"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 							onClick={() => navigateTo("/MyGroups")}
 						>
@@ -298,7 +308,7 @@ const GroupMembers = () => {
 										<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 											<div className="sm:flex sm:items-start">
 												<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-													{isOnlyAdmin && currentUserId === memberToBeRemoved ?
+													{isOnlyAdmin && isAdmin && currentUserId === memberToBeRemoved ?
 														<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
 															<h3 className="text-lg leading-6 font-medium text-gray-900">
 																{t("onlyAdminWarning")}
@@ -326,7 +336,7 @@ const GroupMembers = () => {
 
 											<div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 
-												{currentUserId !== memberToBeRemoved && (
+												{isAdmin && currentUserId !== memberToBeRemoved && (
 													<button
 														onClick={showConfirmationModal.onConfirm}
 														type="button"
@@ -336,7 +346,7 @@ const GroupMembers = () => {
 													</button>
 												)}
 
-												{!isOnlyAdmin && currentUserId === memberToBeRemoved && (
+												{!isOnlyAdmin && isAdmin && currentUserId === memberToBeRemoved && (
 													<button
 														onClick={showConfirmationModal.onConfirm}
 														type="button"
@@ -346,6 +356,15 @@ const GroupMembers = () => {
 													</button>
 												)}
 
+												{!isAdmin && currentUserId === memberToBeRemoved && (
+													<button
+														onClick={showConfirmationModal.onConfirm}
+														type="button"
+														className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+													>
+														{t("exit")}
+													</button>
+												)}
 
 												<button
 													onClick={showConfirmationModal.onCancel}

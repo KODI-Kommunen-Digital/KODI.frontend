@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
-import LISTINGSIMAGE from "../../assets/ListingsImage.jpeg";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
@@ -64,7 +64,7 @@ const Listing = () => {
     endDate: "",
     originalPrice: "",
     villagedropdown: "",
-    zipCode: "",
+    zipcode: "",
     discountedPrice: "",
   });
 
@@ -365,37 +365,47 @@ const Listing = () => {
                               fontFamily: "Poppins, sans-serif",
                             }}
                           >
-                            <span>
-                              {new Date(
-                                input.startDate.slice(0, 10)
-                              ).toLocaleDateString("de-DE")}{" "}
-                              (
-                              {new Date(input.startDate).toLocaleTimeString(
-                                "de-DE",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  timeZone: "UTC",
-                                }
-                              )}
-                              )
-                            </span>
-                            <span className="text-blue-400"> {t("To")} </span>
-                            <span>
-                              {new Date(
-                                input.endDate.slice(0, 10)
-                              ).toLocaleDateString("de-DE")}{" "}
-                              (
-                              {new Date(input.endDate).toLocaleTimeString(
-                                "de-DE",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  timeZone: "UTC",
-                                }
-                              )}
-                              )
-                            </span>
+                            {input.startDate && (
+                              <>
+                                <span>
+                                  {new Date(
+                                    input.startDate.slice(0, 10)
+                                  ).toLocaleDateString("de-DE")}{" "}
+                                  (
+                                  {new Date(input.startDate).toLocaleTimeString(
+                                    "de-DE",
+                                    {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      timeZone: "UTC",
+                                    }
+                                  )}
+                                  )
+                                </span>
+                                {input.endDate && (
+                                  <>
+                                    <span className="text-blue-400">
+                                      {" "}
+                                      {t("To")}{" "}
+                                    </span>
+                                    <span>
+                                      {new Date(
+                                        input.endDate.slice(0, 10)
+                                      ).toLocaleDateString("de-DE")}{" "}
+                                      (
+                                      {new Date(
+                                        input.endDate
+                                      ).toLocaleTimeString("de-DE", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        timeZone: "UTC",
+                                      })}
+                                      )
+                                    </span>
+                                  </>
+                                )}
+                              </>
+                            )}
                           </p>
                         ) : (
                           <p
@@ -463,7 +473,7 @@ const Listing = () => {
                 <Description content={description} />
               </div>
             </div>
-            {/* <UserProfile user={user} /> */}
+
             {userSocial && userSocial.length > 0 ? (
               <UserProfile user={user} />
             ) : (
@@ -530,6 +540,22 @@ const Listing = () => {
               </div>
             )}
           </div>
+
+          {input.address ? (
+            <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
+              <h1
+                className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("streetAddress")}
+              </h1>
+              <p>{input.address}</p>
+
+              {input.place ? <p>{input.place}</p> : null}
+
+              {input.zipcode ? <p>{input.zipcode}</p> : null}
+            </div>
+          ) : null}
 
           <div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
             <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
