@@ -73,7 +73,7 @@ function ListingsCard({ listing, terminalView = false }) {
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
 						{new Date(listing.startDate.slice(0, 10)).toLocaleDateString("de-DE")} (
-						{new Date(listing.startDate).toLocaleTimeString("de-DE", {
+						{new Date(listing.startDate.slice(0,-1)).toLocaleTimeString("de-DE", {
 							hour: "2-digit",
 							minute: "2-digit",
 							timeZone: "UTC",
@@ -83,7 +83,7 @@ function ListingsCard({ listing, terminalView = false }) {
 							<>
 								<span className="text-blue-400"> {t("To")} </span>
 								{new Date(listing.endDate.slice(0, 10)).toLocaleDateString("de-DE")} (
-								{new Date(listing.endDate).toLocaleTimeString("de-DE", {
+								{new Date(listing.endDate.slice(0,-1)).toLocaleTimeString("de-DE", {
 									hour: "2-digit",
 									minute: "2-digit",
 									timeZone: "UTC",
