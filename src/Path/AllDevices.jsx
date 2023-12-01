@@ -9,38 +9,31 @@ import {
 	logoutOfOneDevice,
 } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../AuthContext';
+import { getCookie } from '../cookies/cookieServices';
 
 const AllDevices = () => {
 	const { t } = useTranslation();
 	const [devices, setDevices] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { isAuthenticated, setLogout } = useAuth();
 
 	useEffect(() => {
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
+		const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
+		if (isAuthenticated()) {
 			setIsLoggedIn(true);
 		}
 		fetchDeviceList(refreshToken).then((response) => {
 			setDevices(response.data.data);
 		});
-	}, []);
+	}, [isAuthenticated]);
 
 	const handleLogout = async () => {
 		if (isLoggedIn) {
 			try {
 				await logoutOfAllDevices();
-				window.localStorage.removeItem("accessToken");
-				window.localStorage.removeItem("refreshToken");
-				window.localStorage.removeItem("userId");
+				setLogout();
 				window.localStorage.removeItem("selectedItem");
-				window.sessionStorage.removeItem("accessToken");
-				window.sessionStorage.removeItem("refreshToken");
-				window.sessionStorage.removeItem("userId");
 				window.sessionStorage.removeItem("selectedItem");
 				setIsLoggedIn(false);
 				navigateTo("/");
@@ -72,8 +65,8 @@ const AllDevices = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	function logoutAccountOnClick() {
