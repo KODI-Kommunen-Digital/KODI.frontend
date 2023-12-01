@@ -4,14 +4,12 @@ import logo from "../assets/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
-import { useAuth } from '../AuthContext';
 
 function SideBar() {
 	const { t } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === 'True';
-	const { isAuthenticated, setLogout } = useAuth();
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -20,18 +18,35 @@ function SideBar() {
 		}
 	};
 	useEffect(() => {
-		if (isAuthenticated()) {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (accessToken || refreshToken) {
 			setIsLoggedIn(true);
 		}
-	}, [isAuthenticated]);
+	}, []);
 
 	const handleLogout = () => {
 		if (isLoggedIn) {
+			const accessToken =
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
+			const refreshToken =
+				window.localStorage.getItem("refreshToken") ||
+				window.sessionStorage.getItem("refreshToken");
 			try {
-				logout().then(() => {
+				logout({ accesToken: accessToken, refreshToken }).then(() => {
+					window.localStorage.removeItem("accessToken");
+					window.localStorage.removeItem("refreshToken");
+					window.localStorage.removeItem("userId");
 					window.localStorage.removeItem("selectedItem");
+					window.sessionStorage.removeItem("accessToken");
+					window.sessionStorage.removeItem("refreshToken");
+					window.sessionStorage.removeItem("userId");
 					window.sessionStorage.removeItem("selectedItem");
-					setLogout();
 					setLoggedIn(false);
 					navigateTo("/");
 				});

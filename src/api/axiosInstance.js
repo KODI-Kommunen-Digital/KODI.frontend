@@ -1,5 +1,4 @@
 import axios from "axios";
-import { setCookie, getCookie } from '../cookies/cookieServices';
 
 // Function to create a new axios instance with a specified baseURL
 const createInstance = (baseURL) => {
@@ -17,6 +16,9 @@ const createInstance = (baseURL) => {
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
 			window.localStorage.removeItem("selectedItem");
+			window.sessionStorage.removeItem("accessToken");
+			window.sessionStorage.removeItem("refreshToken");
+			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
 		} catch (error) {
 			return error;
@@ -28,7 +30,8 @@ const createInstance = (baseURL) => {
 		async (config) => {
 			// Retrieve access token from local storage or session storage
 			const token =
-				window.localStorage.getItem("accessToken") || getCookie("accessToken");
+				window.localStorage.getItem("accessToken") ||
+				window.sessionStorage.getItem("accessToken");
 			if (token) {
 				// If token exists, add it to the request headers as a Bearer token
 				config.headers.authorization = "Bearer " + token;
@@ -55,9 +58,11 @@ const createInstance = (baseURL) => {
 					originalRequest._retry = true;
 					try {
 						const refreshToken =
-							window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
+							window.localStorage.getItem("refreshToken") ||
+							window.sessionStorage.getItem("refreshToken");
 						const userId =
-							window.localStorage.getItem("userId") || getCookie("userId");
+							window.localStorage.getItem("userId") ||
+							window.sessionStorage.getItem("userId");
 						if (refreshToken && userId) {
 							// Create a new axios instance for the token refresh request
 							const refreshInstance = axios.create({
@@ -80,10 +85,16 @@ const createInstance = (baseURL) => {
 									"refreshToken",
 									response.data.data.refreshToken
 								);
-							} else if (getCookie("refreshToken")) {
+							} else if (window.sessionStorage.getItem("refreshToken")) {
 								// If using session storage for refresh token, update access and refresh tokens in session storage
-								setCookie("accessToken", response.data.data.accessToken);
-								setCookie("refreshToken", response.data.data.refreshToken);
+								window.sessionStorage.setItem(
+									"accessToken",
+									response.data.data.accessToken
+								);
+								window.sessionStorage.setItem(
+									"refreshToken",
+									response.data.data.refreshToken
+								);
 							}
 							// Retry the original request with the updated access token
 							return instance(originalRequest);

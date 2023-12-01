@@ -13,7 +13,6 @@ import Footer from "../Components/Footer";
 import ListingsCard from "../Components/ListingsCard";
 import LoadingPage from "../Components/LoadingPage";
 import { getCategory } from "../Services/CategoryApi";
-import { useAuth } from '../AuthContext';
 
 const Favorites = () => {
 	window.scrollTo(0, 0);
@@ -26,10 +25,15 @@ const Favorites = () => {
 	const [favListings, setFavListings] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [categories, setCategories] = useState([]);
-	const { isAuthenticated } = useAuth();
 
 	useEffect(() => {
-		if (!isAuthenticated()) {
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
 			window.location.href = "/login";
 		}
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("favourites");
@@ -49,7 +53,7 @@ const Favorites = () => {
 			if (categoryIdParam) setCategoryId(categoryIdParam);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isAuthenticated]);
+	}, []);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);

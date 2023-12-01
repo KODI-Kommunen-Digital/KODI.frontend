@@ -19,7 +19,6 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
-import { useAuth } from '../AuthContext';
 
 function UploadListings() {
 	const { t } = useTranslation();
@@ -42,7 +41,6 @@ function UploadListings() {
 	const [startDate, setStartDate] = useState([]);
 	const [endDate, setEndDate] = useState([]);
 	const navigate = useNavigate();
-	const { isAuthenticated } = useAuth();
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -210,8 +208,14 @@ function UploadListings() {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		if (!isAuthenticated()) {
-			window.location.href = "/login";
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigateTo("/login");
 		}
 		var cityId = searchParams.get("cityId");
 		getCategory().then((response) => {
@@ -263,7 +267,7 @@ function UploadListings() {
 				}
 			});
 		}
-	}, [isAuthenticated]);
+	}, []);
 
 	function categoryDescription(category) {
 		if (category === "4") {
