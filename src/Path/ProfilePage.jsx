@@ -10,6 +10,7 @@ import {
 	updatePassword,
 	uploadProfilePic,
 } from "../Services/usersApi";
+import { getCookie } from '../cookies/cookieServices';
 
 import { useTranslation, withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
@@ -81,12 +82,12 @@ class ProfilePage extends React.Component {
 	componentDidMount() {
 		const accessToken =
 			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
+			getCookie("accessToken");
 		const refreshToken =
 			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
+			getCookie("refreshToken");
 		if (!accessToken && !refreshToken) {
-			this.navigateTo("/login");
+			window.location.href = '/login';
 		}
 		const { t } = this.props;
 		document.title = process.env.REACT_APP_REGION_NAME + " " + t("profile");

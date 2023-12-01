@@ -13,6 +13,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useAuth } from '../AuthContext';
 
 const Dashboard = () => {
 	window.scrollTo(0, 0);
@@ -23,6 +24,7 @@ const Dashboard = () => {
 	const [pageNo, setPageNo] = useState(1);
 	const [selectedStatus, setSelectedStatus] = useState(null);
 	const [categories, setCategories] = useState([]);
+	const { isAuthenticated } = useAuth();
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
@@ -41,13 +43,7 @@ const Dashboard = () => {
 			const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
 			window.history.replaceState({}, "", newUrl);
 		}
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (!accessToken && !refreshToken) {
+		if (!isAuthenticated()) {
 			window.location.href = "/login";
 		}
 		getCategory().then((response) => {
@@ -84,7 +80,7 @@ const Dashboard = () => {
 				setListings(response.data.data);
 			});
 		}
-	}, [window.location.pathname]);
+	}, [isAuthenticated, window.location.pathname]);
 
 	const fetchListings = useCallback(() => {
 		if (viewAllListings === true) {

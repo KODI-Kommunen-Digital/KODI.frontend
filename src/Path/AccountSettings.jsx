@@ -5,12 +5,14 @@ import { useTranslation } from "react-i18next";
 import "../index.css";
 import Alert from "../Components/Alert";
 import { getProfile, updateProfile, deleteAccount } from "../Services/usersApi";
+import { useAuth } from '../AuthContext';
 
 const AccountSettings = () => {
 	const { t } = useTranslation();
 	const [alertInfo, setAlertInfo] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState("");
+	const { isAuthenticated, setLogout } = useAuth();
 
 	const [input, setInput] = useState({
 		username: "",
@@ -26,16 +28,9 @@ const AccountSettings = () => {
 	};
 
 	useEffect(() => {
-		document.title =
-			process.env.REACT_APP_REGION_NAME + " " + t("accountSettings");
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (!accessToken && !refreshToken) {
-			navigateTo("/login");
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("accountSettings");
+		if (!isAuthenticated()) {
+			window.location.href = "/login";
 		}
 		getProfile().then((response) => {
 			const { username, email, phoneNumber } = response.data.data;
@@ -46,7 +41,7 @@ const AccountSettings = () => {
 				phoneNumber,
 			}));
 		});
-	}, []);
+	}, [isAuthenticated]);
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
@@ -75,19 +70,14 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const handleDeleteAccount = () => {
 		deleteAccount()
 			.then(() => {
-				window.localStorage.removeItem("accessToken");
-				window.localStorage.removeItem("refreshToken");
-				window.localStorage.removeItem("userId");
-				window.sessionStorage.removeItem("accessToken");
-				window.sessionStorage.removeItem("refreshToken");
-				window.sessionStorage.removeItem("userId");
+				setLogout();
 				window.location.href = "/";
 				setShowConfirmationModal({ visible: false });
 			})
@@ -174,7 +164,7 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="phoneNumber"
-										value={input.phoneNumber ||""}
+										value={input.phoneNumber || ""}
 										id="phoneNumber"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
