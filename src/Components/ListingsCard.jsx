@@ -73,7 +73,7 @@ function ListingsCard({ listing, terminalView = false }) {
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
 						{new Date(listing.startDate.slice(0, 10)).toLocaleDateString("de-DE")} (
-						{new Date(listing.startDate.replace("Z", "").toLocaleTimeString("de-DE", {
+						{new Date(listing.startDate.replace("Z", "")).toLocaleTimeString("de-DE", {
 							hour: "2-digit",
 							minute: "2-digit",
 							timeZone: "UTC",
