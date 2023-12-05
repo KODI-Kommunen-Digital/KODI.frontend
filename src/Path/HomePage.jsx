@@ -8,7 +8,7 @@ import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
-import MostPopulatCategories from "../Components//MostPopulatCategories";
+import MostPopularCategories from "../Components//MostPopularCategories";
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
@@ -257,10 +257,10 @@ const HomePage = () => {
 				className="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center"
 				style={{ fontFamily: "Poppins, sans-serif" }}
 			>
-				{t("mostPopulatCategories")}
+				{t("mostPopularCategories")}
 			</h2>
 
-			<MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} />
+			<MostPopularCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} />
 
 			<h2
 				className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
