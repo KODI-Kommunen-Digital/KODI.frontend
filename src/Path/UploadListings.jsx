@@ -961,7 +961,7 @@ function UploadListings() {
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 										onClick={handleRemoveImage}
 									>
-										{t("remove")}
+										{t("removeFile")}
 									</button>
 								</div>
 							) : pdf ? (
@@ -971,7 +971,7 @@ function UploadListings() {
 										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 										onClick={handleRemovePDF}
 									>
-										{t("remove")}
+										{t("removeFile")}
 									</button>
 								</div>
 							) : (
@@ -995,7 +995,7 @@ function UploadListings() {
 										<label
 											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
 										>
-											<span className="button-label">{t("upload")}</span>
+											<span className="button-label">{t("uploadFile")}</span>
 											<input
 												id="file-upload"
 												type="file"
