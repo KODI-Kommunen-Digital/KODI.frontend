@@ -793,7 +793,7 @@ function UploadListings() {
 										type="datetime-local"
 										id="endDate"
 										name="endDate"
-										value={formatDateTime(input.endDate)}
+										value={input.endDate ? formatDateTime(input.endDate) : null}
 										onChange={onInputChange}
 										onBlur={validateInput}
 										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
