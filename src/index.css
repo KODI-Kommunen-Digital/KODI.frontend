@@ -27,20 +27,55 @@
 }
 
 @keyframes displace {
-    0% { transform: rotate(0deg); }
-    20% { transform: rotate(-90deg); }
-    40% { transform: rotate(0deg); }
-    60% { transform: rotate(0deg); }
-    80% { transform: rotate(90deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-90deg);
+    }
+
+    40% {
+        transform: rotate(0deg);
+    }
+
+    60% {
+        transform: rotate(0deg);
+    }
+
+    80% {
+        transform: rotate(90deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
+
 @keyframes flip {
-    0% { transform: rotate(0deg); }
-    20% { transform: rotate(-90deg); }
-    40% { transform: rotate(0deg); }
-    60% { transform: rotate(0deg); }
-    80% { transform: rotate(90deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-90deg);
+    }
+
+    40% {
+        transform: rotate(0deg);
+    }
+
+    60% {
+        transform: rotate(0deg);
+    }
+
+    80% {
+        transform: rotate(90deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 #finalbutton:hover {
@@ -51,4 +86,11 @@
     color: rgb(255, 0, 0);
     font-family: sans-serif;
     font-size: small;
+}
+
+
+@media (max-width: 280px) {
+    .most-popular-category .grid-cols-2 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
 }
