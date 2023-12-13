@@ -21,10 +21,15 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
 const Description = ({ content }) => {
+  const linkify = (text) => {
+    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+    return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+  };
+  const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: linkedContent }}
     ></p>
   );
 };
@@ -233,14 +238,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  setHandleClassName(
-                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                setHandleClassName(
+                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -301,9 +306,8 @@ const Listing = () => {
                           </span>
                         </h1>
                         <div
-                          className={`flex items-center ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
+                          className={`flex items-center ${terminalView ? "hidden" : "visible"
+                            }`}
                         >
                           <button
                             type="button"
