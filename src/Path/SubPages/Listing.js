@@ -22,10 +22,20 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
 const Description = ({ content }) => {
+  const linkify = (text) => {
+    const urlRegex =
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+    return text.replace(
+      urlRegex,
+      (url) =>
+        `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+    );
+  };
+  const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: linkedContent }}
     ></p>
   );
 };
@@ -372,14 +382,13 @@ const Listing = () => {
                                     input.startDate.slice(0, 10)
                                   ).toLocaleDateString("de-DE")}{" "}
                                   (
-                                  {new Date(input.startDate).toLocaleTimeString(
-                                    "de-DE",
-                                    {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      timeZone: "UTC",
-                                    }
-                                  )}
+                                  {new Date(
+                                    input.startDate.replace("Z", "")
+                                  ).toLocaleTimeString("de-DE", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    timeZone: "UTC",
+                                  })}
                                   )
                                 </span>
                                 {input.endDate && (
@@ -394,7 +403,7 @@ const Listing = () => {
                                       ).toLocaleDateString("de-DE")}{" "}
                                       (
                                       {new Date(
-                                        input.endDate
+                                        input.endDate.replace("Z", "")
                                       ).toLocaleTimeString("de-DE", {
                                         hour: "2-digit",
                                         minute: "2-digit",
