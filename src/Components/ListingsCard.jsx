@@ -76,7 +76,7 @@ function ListingsCard({ listing, terminalView = false }) {
 						{new Date(listing.startDate.replace("Z", "")).toLocaleTimeString("de-DE", {
 							hour: "2-digit",
 							minute: "2-digit",
-							timeZone: "UTC",
+							timeZone: "Europe/Berlin",
 						})}
 						)
 						{listing.endDate && (
@@ -86,7 +86,7 @@ function ListingsCard({ listing, terminalView = false }) {
 								{new Date(listing.endDate.replace("Z", "")).toLocaleTimeString("de-DE", {
 									hour: "2-digit",
 									minute: "2-digit",
-									timeZone: "UTC",
+									timeZone: "Europe/Berlin",
 								})}
 								)
 							</>
