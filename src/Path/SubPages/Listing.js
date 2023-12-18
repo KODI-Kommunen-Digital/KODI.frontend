@@ -23,12 +23,30 @@ import { getCategory } from "../../Services/CategoryApi";
 const Description = ({ content }) => {
   const linkify = (text) => {
     const urlRegex =
-      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
-    return text.replace(
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+    text = text.replace(
       urlRegex,
       (url) =>
-        `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+        `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
     );
+
+    // Regex for existing anchor tags
+    const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
+
+    return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
+      if (!/class="[^"]*underline[^"]*"/.test(attributes)) {
+        // If 'class' attribute exists, append 'underline', otherwise add 'class="underline"'
+        if (/class="/.test(attributes)) {
+          return `<a href="${url}" ${attributes.replace(
+            /class="/,
+            'class="underline '
+          )}>${linkText}</a>`;
+        } else {
+          return `<a href="${url}" class="underline" ${attributes}>${linkText}</a>`;
+        }
+      }
+      return match;
+    });
   };
   const linkedContent = linkify(content);
   return (
@@ -76,7 +94,6 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
-  console.log(input.endDate);
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
