@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
-import STYLEIMAGE from "../assets/styleimage.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsCount } from "../Services/listingsApi";
@@ -494,7 +493,7 @@ const HomePage = () => {
 
 					<div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
 						<img
-							src={STYLEIMAGE}
+							src={process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"}
 							alt="Image 1"
 							className="w-full md:w-98 mb-2"
 						/>

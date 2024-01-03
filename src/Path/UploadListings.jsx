@@ -401,27 +401,11 @@ function UploadListings() {
 					return "";
 				}
 
-			// case "endDate":
-			// 	if (parseInt(input.categoryId) === 3) {
-			// 		if (value && new Date(input.startDate) > new Date(value)) {
-			// 			return t("endDateBeforeStartDate");
-			// 		} else {
-			// 			return "";
-			// 		}
-			// 	} else {
-			// 		return "";
-			// 	}
-
 			case "endDate":
 				if (parseInt(input.categoryId) === 3) {
-					if (!value) {
-						return t("pleaseEnterEndDate");
+					if (value && new Date(input.startDate) > new Date(value)) {
+						return t("endDateBeforeStartDate");
 					} else {
-						if (new Date(input.startDate) > new Date(value)) {
-							return t("endDateBeforeStartDate");
-						} else {
-							return "";
-						}
 						return "";
 					}
 				} else {
@@ -515,7 +499,7 @@ function UploadListings() {
 	};
 
 	function formatDateTime(dateTime) {
-		const date = new Date(dateTime);
+		const date = new Date(dateTime.replace("Z", ""));
 		const year = date.getFullYear();
 		const month = String(date.getMonth() + 1).padStart(2, "0");
 		const day = String(date.getDate()).padStart(2, "0");
@@ -643,7 +627,6 @@ function UploadListings() {
 							value={categoryId || 0}
 							onChange={handleCategoryChange}
 							required
-							disabled={!newListing}
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option className="font-sans" value={0} key={0}>
@@ -683,7 +666,6 @@ function UploadListings() {
 								onChange={handleSubcategoryChange}
 								onBlur={validateInput}
 								required
-								disabled={!newListing}
 								className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							>
 								<option className="font-sans" value={0} key={0}>
@@ -707,45 +689,6 @@ function UploadListings() {
 							</div>
 						</div>
 					)}
-
-					<div className="relative mb-4 grid grid-cols-2 gap-4">
-						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-							<label
-								htmlFor="place"
-								className="block text-sm font-medium text-gray-600"
-							>
-								{t("place")}
-							</label>
-							<input
-								type="text"
-								id="place"
-								name="place"
-								value={input.place}
-								onChange={onInputChange}
-								onBlur={validateInput}
-								className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder={t("enterPlace")}
-							/>
-						</div>
-						<div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-							<label
-								htmlFor="zipCode"
-								className="block text-sm font-medium text-gray-600"
-							>
-								{t("zipCode")}
-							</label>
-							<input
-								type="text"
-								id="zipCode"
-								name="zipCode"
-								value={input.zipCode}
-								onChange={onInputChange}
-								onBlur={validateInput}
-								className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-								placeholder={t("enterPostal")}
-							/>
-						</div>
-					</div>
 
 					<div className="col-span-6">
 						<label
@@ -791,7 +734,7 @@ function UploadListings() {
 										type="datetime-local"
 										id="startDate"
 										name="startDate"
-										value={formatDateTime(input.startDate)}
+										value={input.startDate ? formatDateTime(input.startDate) : null}
 										onChange={onInputChange}
 										onBlur={validateInput}
 										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -822,13 +765,13 @@ function UploadListings() {
 										htmlFor="endDate"
 										className="block text-sm font-medium text-gray-600"
 									>
-										{t("eventEndDate")} *
+										{t("eventEndDate")}
 									</label>
 									<input
 										type="datetime-local"
 										id="endDate"
 										name="endDate"
-										value={formatDateTime(input.endDate)}
+										value={input.endDate ? formatDateTime(input.endDate) : null}
 										onChange={onInputChange}
 										onBlur={validateInput}
 										className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -995,7 +938,7 @@ function UploadListings() {
 											className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
 											onClick={handleRemovePDF}
 										>
-											{t("remove")}
+											{t("removeFile")}
 										</button>
 									</div>
 								) : (

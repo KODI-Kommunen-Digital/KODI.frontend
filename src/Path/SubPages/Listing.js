@@ -22,10 +22,38 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 
 const Description = ({ content }) => {
+  const linkify = (text) => {
+    const urlRegex =
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+    text = text.replace(
+      urlRegex,
+      (url) =>
+        `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+    );
+
+    // Regex for existing anchor tags
+    const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
+
+    return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
+      if (!/class="[^"]*underline[^"]*"/.test(attributes)) {
+        // If 'class' attribute exists, append 'underline', otherwise add 'class="underline"'
+        if (/class="/.test(attributes)) {
+          return `<a href="${url}" ${attributes.replace(
+            /class="/,
+            'class="underline '
+          )}>${linkText}</a>`;
+        } else {
+          return `<a href="${url}" class="underline" ${attributes}>${linkText}</a>`;
+        }
+      }
+      return match;
+    });
+  };
+  const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: linkedContent }}
     ></p>
   );
 };
@@ -67,7 +95,6 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
-
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
@@ -372,14 +399,13 @@ const Listing = () => {
                                     input.startDate.slice(0, 10)
                                   ).toLocaleDateString("de-DE")}{" "}
                                   (
-                                  {new Date(input.startDate).toLocaleTimeString(
-                                    "de-DE",
-                                    {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      timeZone: "UTC",
-                                    }
-                                  )}
+                                  {new Date(
+                                    input.startDate.replace("Z", "")
+                                  ).toLocaleTimeString("de-DE", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    timeZone: "Europe/Berlin",
+                                  })}
                                   )
                                 </span>
                                 {input.endDate && (
@@ -394,11 +420,11 @@ const Listing = () => {
                                       ).toLocaleDateString("de-DE")}{" "}
                                       (
                                       {new Date(
-                                        input.endDate
+                                        input.endDate.replace("Z", "")
                                       ).toLocaleTimeString("de-DE", {
                                         hour: "2-digit",
                                         minute: "2-digit",
-                                        timeZone: "UTC",
+                                        timeZone: "Europe/Berlin",
                                       })}
                                       )
                                     </span>
