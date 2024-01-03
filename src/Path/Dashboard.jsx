@@ -205,7 +205,7 @@ const Dashboard = () => {
 	// Navigate to Edit Listings page Starts
 
 	return (
-		<section className="bg-slate-600 body-font relative">
+		<section className="bg-slate-600 body-font relative h-screen">
 			<SideBar />
 
 			<div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">

@@ -574,5 +574,18 @@
     "exit": "Verlassen",
     "privacy": "Gruppenart",
     "removeAdmin": "Admin entfernen",
-    "makeAdmin": "Machen Admin"
+    "makeAdmin": "Machen Admin",
+
+    "createAppoinment": "Create Appoinment",
+    "uploadListings": "Upload listing",
+    "serviceName": "Service Name",
+    "duration": "Duration",
+    "addServiceName": "Add Service Name",
+    "adAnotherAppoinment": "Add another appoinment",
+    "next": "Next",
+    "timeSlots": "Time Slots",
+    "addService": "Add Service",
+    "addEmployeeName": "Add Employee",
+    "selectService": "Select Service",
+    "addAnotherEmployee": "Add another employee"
 }

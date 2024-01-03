@@ -76,16 +76,24 @@ function UploadListings() {
 	function handleInputChange(e) {
 		e.preventDefault();
 		const file = e.target.files[0];
+	  
 		if (file) {
-			if (file.type.startsWith("image/")) {
-				setLocalImageOrPdf(true);
-				setImage(file);
-			} else if (file.type === "application/pdf") {
-				setLocalImageOrPdf(true);
-				setPdf(file);
-			}
+		  const MAX_IMAGE_SIZE_MB = 10;
+		  if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+			alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
+			return;
+		  }
+	  
+		  if (file.type.startsWith("image/")) {
+			setLocalImageOrPdf(true);
+			setImage(file);
+		  } else if (file.type === "application/pdf") {
+			setLocalImageOrPdf(true);
+			setPdf(file);
+		  }
 		}
-	}
+	  }
+	  
 
 	function handleRemoveImage() {
 		if (listingId) {
@@ -267,6 +275,7 @@ function UploadListings() {
 				}
 			});
 		}
+		document.title = process.env.REACT_APP_REGION_NAME + " " + t("uploadListings");
 	}, []);
 
 	function categoryDescription(category) {
@@ -494,7 +503,7 @@ function UploadListings() {
 
 
 	return (
-		<section className="bg-slate-600 body-font relative">
+		<section className="bg-slate-600 body-font relative h-screen">
 			<SideBar />
 
 			<div className="container w-auto px-5 py-2 bg-slate-600">
@@ -512,7 +521,8 @@ function UploadListings() {
 						<label
 							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
-						></label>
+						>{t("title")} *
+						</label>
 						<input
 							type="text"
 							id="title"

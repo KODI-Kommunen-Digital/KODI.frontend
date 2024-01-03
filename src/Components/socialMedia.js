@@ -134,12 +134,12 @@ export default function SocialMedia({ setSocialMedia }) {
 														))}
 													</Select>
 												</div>
-												<div className="mt-2 px-0 ml-2">
+												<div className="mt-1 px-0 ml-2">
 													<label
 														htmlFor="lastName"
 														className="block text-md font-medium text-gray-600"
 													>
-														Link
+														{t("link")}
 													</label>
 													<input
 														type="text"

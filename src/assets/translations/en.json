@@ -570,5 +570,20 @@
     "exit": "Exit Group",
     "privacy": "Privacy",
     "removeAdmin": "Remove Admin",
-    "makeAdmin": "Make Admin"
+    "makeAdmin": "Make Admin",
+    "uploadFile": "Upload file",
+    "removeFile": "Remove file",
+
+    "createAppoinment": "Create Appoinment",
+    "uploadListings": "Upload listing",
+    "serviceName": "Service Name",
+    "duration": "Duration",
+    "addServiceName": "Add Service Name",
+    "adAnotherAppoinment": "Add another appoinment",
+    "next": "Next",
+    "timeSlots": "Time Slots",
+    "addService": "Add Service",
+    "addEmployeeName": "Add Employee",
+    "selectService": "Select Service",
+    "addAnotherEmployee": "Add another employee"
 }
