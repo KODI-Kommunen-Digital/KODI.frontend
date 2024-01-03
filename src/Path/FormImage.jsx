@@ -23,7 +23,7 @@ function FormImage(props) {
                     className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
                     onClick={() => updateListing(index)}
                 >
-                    {t("remove")}
+                    {t("removeFile")}
                 </button>
             </div>)
     );
