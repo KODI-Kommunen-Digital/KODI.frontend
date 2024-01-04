@@ -80,25 +80,28 @@ function FormImage(props) {
       props.handleRemoveImage();
   };
 
-  return Array.from(props.image).map((img, index) => (
-    <div className="flex flex-col items-center px-1" key={index}>
-      <img
-        className="object-contain h-64 w-full mb-4"
-        src={
-          props.localImageOrPdf
-            ? URL.createObjectURL(img)
-            : process.env.REACT_APP_BUCKET_HOST + img
-        }
-        alt="uploaded"
-      />
-      <button
-        className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-        onClick={() => updateListing(index)}
-      >
-        {t("removeFile")}
-      </button>
-    </div>
-  ));
+  return Array.from(props.image).map((img, index) => {
+    const imageUrl =
+      props.localImageOrPdf && img instanceof Blob
+        ? URL.createObjectURL(img)
+        : process.env.REACT_APP_BUCKET_HOST + img;
+  
+    return (
+      <div className="flex flex-col items-center px-1" key={index}>
+        <img
+          className="object-contain h-64 w-full mb-4"
+          src={imageUrl}
+          alt="uploaded"
+        />
+        <button
+          className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => updateListing(index)}
+        >
+          {t("removeFile")}
+        </button>
+      </div>
+    );
+  });
 }
   
 

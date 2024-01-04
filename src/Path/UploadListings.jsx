@@ -89,64 +89,62 @@ function UploadListings() {
         setImage(e.target.files);
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
-		  setPdf(file);
-		  console.log(file)
+        setPdf(file);
+        console.log(file);
         setInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
       }
     }
-	  }
+  }
+
+  const [localImages, setLocalImages] = useState([]);
+  const handleMultipleInputChange = (event) => {
+    const newImages = Array.from(event.target.files);
+    setLocalImages((prevImages) => [...prevImages, ...newImages]);
+    setImage([...image, ...newImages]);
+  };
 	
-// 	function handleInputChange(e) {
-//   e.preventDefault();
-//   const files = e.target.files;
-
-//   if (files.length > 0) {
-//     const newImages = Array.from(files);
-
-//     // Check if adding the new images exceeds the maximum allowed (8)
-//     if (image.length + newImages.length > 8) {
-//       // You can provide a user-friendly message or handle the case in any way you prefer
-//       alert("You can upload a maximum of 8 images.");
-//     } else {
-//       const file = newImages[0];
-
-//       if (file.type.startsWith("image/")) {
-//         setLocalImageOrPdf(true);
-//         setImage((prevImages) => [...prevImages, ...newImages]);
-//       } else if (file.type === "application/pdf") {
-//         setLocalImageOrPdf(true);
-//         setPdf(file);
-//         console.log(file);
-
-//         setInput((prev) => ({
-//           ...prev,
-//           hasAttachment: true,
-//         }));
-//       }
-//     }
-//   }
-// }
-
+  const handleUpdateMultipleInputChange = (e) => {
+	const newFile = e.target.files[0];
+	if (newFile) {
+	  if (newFile.type.startsWith("image/")) {
+		setLocalImageOrPdf(true);
+		setImage((prevImages) => {
+		  // Using the functional form of setState to ensure the latest state
+		  return [...prevImages, newFile];
+		});
+		console.log(image);
+	  } else if (newFile.type === "application/pdf") {
+		setLocalImageOrPdf(true);
+		setPdf(newFile);
+		console.log(newFile);
+		setInput((prev) => ({
+		  ...prev,
+		  hasAttachment: true,
+		}));
+	  }
+	}
+  };
+  
 
   function handleRemoveImage() {
-	if (listingId) {
-	  setInput((prev) => ({
-		...prev,
-		removeImage: true,
-		logo: null,
-	  }));
-	}
-	setImage((prevImages) => {
-		const updatedImages = [...prevImages];
-		console.log(updatedImages)
-	  // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
-	  return updatedImages;
-	});
+    if (listingId) {
+      setInput((prev) => ({
+        ...prev,
+        removeImage: true,
+        logo: null,
+      }));
+    }
+    setImage((prevImages) => {
+      const updatedImages = [...prevImages];
+      console.log(updatedImages);
+      // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
+      return updatedImages;
+    });
   }
-	
+
   function handleRemovePDF() {
     if (listingId) {
       setInput((prev) => ({
@@ -232,7 +230,9 @@ function UploadListings() {
             const imageForm = new FormData();
             for (let i = 0; i < image.length; i++) {
               imageForm.append("image", image[i]);
-            }
+			}
+			console.log("Current state before submission:", image);
+
             await uploadListingImage(
               imageForm,
               cityId,
@@ -980,15 +980,66 @@ function UploadListings() {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              {image && image.length > 0 ? (
-                <>
+              {image && image.length > 0 && newListing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
                     handleRemoveImage={handleRemoveImage}
                     image={image}
                     localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
                   />
-                </>
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-contain h-64 w-full m-auto rounded-xl ${
+                        image.length < 8 ? "bg-gray-300" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-3xl text-gray-600">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : image && image.length > 0 && !newListing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
+                  />
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-contain h-64 w-full m-auto rounded-xl ${
+                        image.length < 8 ? "bg-gray-300" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-3xl text-gray-600">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleUpdateMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
               ) : pdf ? (
                 <div className="flex flex-col items-center">
                   <p>
