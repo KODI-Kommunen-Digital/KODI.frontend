@@ -573,6 +573,8 @@
     "areyousureinfo": "Möchten Sie dieses Mitglied wirklich entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "exit": "Verlassen",
     "privacy": "Gruppenart",
+    "next": "Weiter",
+    "previous": "Vorherige",
     "removeAdmin": "Admin entfernen",
     "makeAdmin": "Machen Admin"
 }

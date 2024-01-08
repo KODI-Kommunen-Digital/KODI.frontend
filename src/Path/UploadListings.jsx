@@ -107,26 +107,20 @@ function UploadListings() {
   };
 	
   const handleUpdateMultipleInputChange = (e) => {
-	const newFile = e.target.files[0];
-	if (newFile) {
-	  if (newFile.type.startsWith("image/")) {
-		setLocalImageOrPdf(true);
-		setImage((prevImages) => {
-		  // Using the functional form of setState to ensure the latest state
-		  return [...prevImages, newFile];
-		});
-		console.log(image);
-	  } else if (newFile.type === "application/pdf") {
-		setLocalImageOrPdf(true);
-		setPdf(newFile);
-		console.log(newFile);
-		setInput((prev) => ({
-		  ...prev,
-		  hasAttachment: true,
-		}));
-	  }
-	}
-  };
+	const newFiles = e.target.files;
+
+  if (newFiles.length > 0) {
+    const validImages = Array.from(newFiles).filter(
+      (file) => file.type.startsWith("image/")
+    );
+
+    if (validImages.length > 0) {
+      setLocalImageOrPdf(true);
+      setImage((prevImages) => [...prevImages, ...validImages]);
+      console.log(image);
+    }
+  }
+};
   
 
   function handleRemoveImage() {
@@ -993,7 +987,7 @@ function UploadListings() {
                     <label
                       htmlFor="file-upload"
                       className={`object-contain h-64 w-full m-auto rounded-xl ${
-                        image.length < 8 ? "bg-gray-300" : ""
+                        image.length < 8 ? "bg-gray-300 border-dashed border-black" : ""
                       }`}
                     >
                       <div className="h-full flex items-center justify-center">

@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { source } from '../../Constants/source';
-import { Carousel } from "@material-tailwind/react";
-import NextIconButton from './NextIconButton';
-import PrevIconButton from './PrevIconButton';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { source } from "../../Constants/source";
+// import { Carousel } from "@material-tailwind/react";
+import NextIconButton from "./NextIconButton";
+import PrevIconButton from "./PrevIconButton";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
-
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const sortedImageList = [...props.imageList].sort((a, b) => a.imageOrder - b.imageOrder);
+  const sortedImageList = [...props.imageList].sort(
+    (a, b) => a.imageOrder - b.imageOrder
+  );
   const onClickNext = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % sortedImageList.length);
   };
 
   const onClickPrev = () => {
-    setActiveIndex((prevIndex) => (prevIndex - 1 + sortedImageList.length) % sortedImageList.length);
+    setActiveIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + sortedImageList.length) % sortedImageList.length
+    );
   };
 
   const mainImageComponent = (
@@ -23,7 +27,8 @@ const CustomCarousel = (props) => {
       <img
         src={
           props.sourceId === source.User
-            ? process.env.REACT_APP_BUCKET_HOST + sortedImageList[activeIndex]?.logo // uploaded image
+            ? process.env.REACT_APP_BUCKET_HOST +
+              sortedImageList[activeIndex]?.logo // uploaded image
             : sortedImageList[activeIndex]?.logon // from drive
         }
         onError={(e) => {
@@ -50,23 +55,21 @@ const CustomCarousel = (props) => {
   ));
 
   return (
-    <div>
-      <Carousel
-        className="rounded-xl mb-4"
-        nextArrow={() => (
+    <div className="relative">
+      <div className="rounded-xl mb-4 relative">
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
           <NextIconButton onClick={onClickNext} />
-        )}
+        </div>
 
-        prevArrow={() => (
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
           <PrevIconButton onClick={onClickPrev} />
-        )}
-      >
+        </div>
+
         {mainImageComponent}
-      </Carousel>
-      <div className="flex overflow-x-auto">
-        {thumbnailComponent}
       </div>
-    </div >
+
+      <div className="flex overflow-x-auto">{thumbnailComponent}</div>
+    </div>
   );
 };
 
