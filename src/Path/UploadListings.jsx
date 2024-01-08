@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./bodyContainer.css";
 import SideBar from "../Components/SideBar";
+import ServiceAndTime from "../Components/ServiceAndTime";
 import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -38,8 +39,6 @@ function UploadListings() {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [categories, setCategories] = useState([]);
 	const [subCategories, setSubCategories] = useState([]);
-	const [startDate, setStartDate] = useState([]);
-	const [endDate, setEndDate] = useState([]);
 	const navigate = useNavigate();
 
 	function handleDragEnter(e) {
@@ -252,8 +251,6 @@ function UploadListings() {
 				// 	listingData.endDate = listingData.endDate.slice(0, 10);
 				listingData.cityId = cityId;
 				setInput(listingData);
-				setStartDate(listingData.startDate);
-				setEndDate(listingData.endDate);
 				setDescription(listingData.description);
 				setCategoryId(listingData.categoryId);
 				setSubcategoryId(listingData.subcategoryId);
@@ -512,7 +509,8 @@ function UploadListings() {
 						<label
 							htmlFor="title"
 							className="block text-sm font-medium text-gray-600"
-						></label>
+						>{t("title")} *
+						</label>
 						<input
 							type="text"
 							id="title"
@@ -632,6 +630,10 @@ function UploadListings() {
 						</div>
 					</div>
 
+					{categoryId == 17 && (
+						<ServiceAndTime/>
+					)}
+
 					{categoryId == 1 && (
 						<div className="relative mb-4">
 							<label
@@ -678,7 +680,7 @@ function UploadListings() {
 							htmlFor="address"
 							className="block text-sm font-medium text-gray-600"
 						>
-							{t("streetAddress")}
+							{t("streetAddress")} *
 						</label>
 						<div>
 							<input
@@ -688,6 +690,7 @@ function UploadListings() {
 								value={input.address}
 								onChange={onInputChange}
 								onBlur={validateInput}
+								required
 								className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 								placeholder={t("enterAddress")}
 							/>
