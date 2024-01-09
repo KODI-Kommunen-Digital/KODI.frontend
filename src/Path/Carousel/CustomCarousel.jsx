@@ -35,7 +35,7 @@ const CustomCarousel = (props) => {
           e.target.src = LISTINGSIMAGE; // Set default image if loading fails
         }}
         alt={`image ${activeIndex}`}
-        className="w-full h-full object-cover"
+        className="w-full h-[32rem] object-cover"
       />
     </div>
   );
