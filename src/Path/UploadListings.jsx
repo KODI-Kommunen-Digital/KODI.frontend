@@ -959,7 +959,7 @@ function UploadListings() {
 										<label
 											className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
 										>
-											<span className="button-label">{t("uploadFile")}</span>
+											<span className="button-label">{t("upload")}</span>
 											<input
 												id="file-upload"
 												type="file"

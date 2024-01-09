@@ -21,7 +21,6 @@
     "below": "Below",
     "cancel": "Cancel",
     "carpoolingPublicTransport": "Carpooling / Public Transport",
-    "appointmentBooking": "Appoinment Booking",
     "category": "Category",
     "change": "Change",
     "changesNotSaved": "Your changes were not saved, please try after sometime!",
@@ -232,6 +231,7 @@
     "tod": "Topic of the day",
     "unfavorite": "Unfavorite",
     "upload": "Upload",
+    "add": "Add",
     "uploadArea": "Upload the first post here",
     "uploadAreaDescription": "Whether event, offers or news. Here you can easily upload a contribution",
     "uploaded_at": "Uploaded at ",
@@ -573,5 +573,12 @@
     "removeAdmin": "Remove Admin",
     "makeAdmin": "Make Admin",
 
-    "createAppoinment": "Create Appoinment"
+
+
+    "appointmentBooking":"Appointment Booking",
+    "addtimeslot": "Add time slot",
+    "serviceName": "Service name",
+    "from": "From",
+    "to": "TO",
+    "myAppoinment": "My Appoinments"
 }

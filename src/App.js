@@ -40,6 +40,7 @@ import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
+import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
@@ -114,6 +115,12 @@ const App = () => {
                 exact
               />
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
+
+              <Route
+                path="/AppointmentBooking/MyAppointments"
+                element={<MyAppointments />}
+                exact
+              />
             </React.Fragment>)}
 
         </Routes>
