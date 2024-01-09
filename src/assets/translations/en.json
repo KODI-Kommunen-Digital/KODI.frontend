@@ -218,7 +218,7 @@
     "start": "Start",
     "startDescription": "Immediately afterwards you can get started and actively participate in what is happening in the city.",
     "status": "Status",
-    "streetAddress": "Street Address",
+    "streetAddress": "Address",
     "subCategory": "Sub-Category",
     "submit": "Submit entry",
     "telephone": "Telephone",
@@ -569,6 +569,8 @@
     "areyousureinfo": "Do you really want to remove this member? This action cannot be reverted.",
     "exit": "Exit Group",
     "privacy": "Privacy",
+    "next": "Next",
+    "previous": "Previous",
     "removeAdmin": "Remove Admin",
     "makeAdmin": "Make Admin"
 }
