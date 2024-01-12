@@ -105,23 +105,22 @@ function UploadListings() {
     setLocalImages((prevImages) => [...prevImages, ...newImages]);
     setImage([...image, ...newImages]);
   };
-	
+
   const handleUpdateMultipleInputChange = (e) => {
-	const newFiles = e.target.files;
+    const newFiles = e.target.files;
 
-  if (newFiles.length > 0) {
-    const validImages = Array.from(newFiles).filter(
-      (file) => file.type.startsWith("image/")
-    );
+    if (newFiles.length > 0) {
+      const validImages = Array.from(newFiles).filter((file) =>
+        file.type.startsWith("image/")
+      );
 
-    if (validImages.length > 0) {
-      setLocalImageOrPdf(true);
-      setImage((prevImages) => [...prevImages, ...validImages]);
-      console.log(image);
+      if (validImages.length > 0) {
+        setLocalImageOrPdf(true);
+        setImage((prevImages) => [...prevImages, ...validImages]);
+        console.log(image);
+      }
     }
-  }
-};
-  
+  };
 
   function handleRemoveImage() {
     if (listingId) {
@@ -214,24 +213,24 @@ function UploadListings() {
           setListingId(response.data.id);
         }
 
-		  if (input.removeImage) {
-			if (image.length === 0 ) {
-				await deleteListingImage(cityId, listingId);
-			} else {
-				if (!localImageOrPdf) {
-					const imageForm = new FormData();
-				for (let i = 0; i < image.length; i++) {
-					imageForm.append("image", image[i]);
-				  }
-				  console.log("Current state before submission:", image);
-	  
-				  await uploadListingImage(
-					imageForm,
-					cityId,
-					response.data.id || listingId
-				  );
-				} 
-			} 
+        if (input.removeImage) {
+          if (image.length === 0) {
+            await deleteListingImage(cityId, listingId);
+          } else {
+            if (!localImageOrPdf) {
+              const imageForm = new FormData();
+              for (let i = 0; i < image.length; i++) {
+                imageForm.append("image", image[i]);
+              }
+              console.log("Current state before submission:", image);
+
+              await uploadListingImage(
+                imageForm,
+                cityId,
+                response.data.id || listingId
+              );
+            }
+          }
         }
 
         if (localImageOrPdf) {
@@ -240,8 +239,8 @@ function UploadListings() {
             const imageForm = new FormData();
             for (let i = 0; i < image.length; i++) {
               imageForm.append("image", image[i]);
-			}
-			console.log("Current state before submission:", image);
+            }
+            console.log("Current state before submission:", image);
 
             await uploadListingImage(
               imageForm,
@@ -336,7 +335,7 @@ function UploadListings() {
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
-          setImage(temp);
+			setImage(temp);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -990,41 +989,12 @@ function UploadListings() {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              {image && image.length > 0 && newListing ? (
+              {image && image.length > 0 && !newListing && !image.some(img => img.includes("Defaultimage1")) ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
                     handleRemoveImage={handleRemoveImage}
-                    image={image}
-                    localImageOrPdf={localImageOrPdf}
-                    localImages={localImages}
-                  />
-                  {image.length < 8 && (
-                    <label
-                      htmlFor="file-upload"
-                      className={`object-contain h-64 w-full m-auto rounded-xl ${
-                        image.length < 8 ? "bg-gray-300 border-dashed border-black" : ""
-                      }`}
-                    >
-                      <div className="h-full flex items-center justify-center">
-                        <div className="text-3xl text-gray-600">+</div>
-                      </div>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*,.pdf"
-                        className="sr-only"
-                        onChange={handleMultipleInputChange}
-                        multiple
-                      />
-                    </label>
-                  )}
-                </div>
-              ) : image && image.length > 0 && !newListing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FormImage
-                    updateImageList={setImage}
-                    handleRemoveImage={handleRemoveImage}
+                    handleInputChange={handleInputChange}
                     image={image}
                     localImageOrPdf={localImageOrPdf}
                     localImages={localImages}

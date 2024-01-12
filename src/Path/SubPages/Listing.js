@@ -478,7 +478,7 @@ const Listing = () => {
                       ) : (
                         <img
                           alt="default"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={LISTINGSIMAGE}
                         />
                       )}

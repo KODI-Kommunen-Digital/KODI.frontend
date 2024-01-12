@@ -57,13 +57,17 @@ const CustomCarousel = (props) => {
   return (
     <div className="relative">
       <div className="rounded-xl mb-4 relative">
-        <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
-          <NextIconButton onClick={onClickNext} />
-        </div>
+        {sortedImageList.length <= 1 ? null : (
+          <>
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
+              <NextIconButton onClick={onClickNext} />
+            </div>
 
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
-          <PrevIconButton onClick={onClickPrev} />
-        </div>
+            <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
+              <PrevIconButton onClick={onClickPrev} />
+            </div>
+          </>
+        )}
 
         {mainImageComponent}
       </div>
