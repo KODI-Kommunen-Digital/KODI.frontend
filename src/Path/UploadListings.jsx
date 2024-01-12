@@ -214,8 +214,24 @@ function UploadListings() {
           setListingId(response.data.id);
         }
 
-        if (input.removeImage || input.removePdf) {
-          await deleteListingImage(cityId, listingId);
+		  if (input.removeImage) {
+			if (image.length === 0 ) {
+				await deleteListingImage(cityId, listingId);
+			} else {
+				if (!localImageOrPdf) {
+					const imageForm = new FormData();
+				for (let i = 0; i < image.length; i++) {
+					imageForm.append("image", image[i]);
+				  }
+				  console.log("Current state before submission:", image);
+	  
+				  await uploadListingImage(
+					imageForm,
+					cityId,
+					response.data.id || listingId
+				  );
+				} 
+			} 
         }
 
         if (localImageOrPdf) {
