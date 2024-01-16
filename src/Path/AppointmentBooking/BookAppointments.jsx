@@ -52,7 +52,7 @@ const Description = ({ content }) => {
   const linkedContent = linkify(content);
   return (
     <p
-      className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
+      className="leading-relaxed text-md font-medium my-0 text-gray-900 dark:text-gray-900"
       dangerouslySetInnerHTML={{ __html: linkedContent }}
     ></p>
   );
@@ -451,17 +451,9 @@ const BookAppointments = () => {
                 </div>
               </div>
 
-              <div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                  <style>
-                    {`
-								@media (max-width: 280px) {
-									.galaxy-fold {
-										margin-top: 6rem; /* Adjust the margin value as needed */
-									}
-								}
-							`}
-                  </style>
+              <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+                  
                   <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
                     <div className="relative h-full">
                       {input.pdf ? (
@@ -503,7 +495,7 @@ const BookAppointments = () => {
 
               <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
                 <h1
-                  className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                  className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {t("description")}
@@ -525,17 +517,14 @@ const BookAppointments = () => {
                 Wohnungsgeberbescheinigung vor Ort ausfüllen.
               </div>
 
-              <div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-[2rem] md:grid md:grid-cols-1">
-                  <style>
-                    {`
-								@media (max-width: 280px) {
-									.galaxy-fold {
-										margin-top: 6rem; /* Adjust the margin value as needed */
-									}
-								}
-							`}
-                  </style>
+              <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+                    <h1
+                  className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  Please select your period
+                </h1>
                   <DateTimePicker />
                 </div>
               </div>
