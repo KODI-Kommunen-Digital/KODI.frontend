@@ -989,7 +989,37 @@ function UploadListings() {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              {image && image.length > 0 && !newListing && !image.some(img => img.includes("Defaultimage1")) ? (
+              {image && image.length > 0 && newListing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
+                  />
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-contain h-64 w-full m-auto rounded-xl ${
+                        image.length < 8 ? "bg-gray-300 border-dashed border-black" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-3xl text-gray-600">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : image && image.length > 0 && !newListing && !image.some(img => typeof img === 'string' && img.includes("Defaultimage1")) ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
