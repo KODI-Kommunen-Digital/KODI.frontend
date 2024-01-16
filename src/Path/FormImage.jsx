@@ -48,7 +48,7 @@ function FormImage(props) {
           ) : (
             <div className="flex flex-col items-center px-1" key={index}>
               <img
-                className="object-contain h-64 w-full mb-4"
+                className="object-cover h-64 w-full mb-4"
                 src={imageUrl}
                 alt="uploaded"
               />
