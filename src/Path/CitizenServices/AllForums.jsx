@@ -83,7 +83,6 @@ const AllForums = () => {
 							setRequestId(memberresponse.requestId);
 						});
 						setMembershipStatus(membershipStatus);
-						console.log(membershipResponseData)
 					}
 
 
