@@ -330,7 +330,7 @@ function UploadListings() {
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
           setImage(temp);
-          console.log(image);
+          console.log(temp);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1001,7 +1001,7 @@ function UploadListings() {
                       }`}
                     >
                       <div className="h-full flex items-center justify-center">
-                        <div className="text-3xl text-gray-600">+</div>
+                        <div className="text-8xl text-black">+</div>
                       </div>
                       <input
                         id="file-upload"
@@ -1009,6 +1009,37 @@ function UploadListings() {
                         accept="image/*,.pdf"
                         className="sr-only"
                         onChange={handleMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : image && Array.isArray(image) && image.length === 1 && typeof image[0] === 'string' && image[0].includes("admin/") ? (
+                <div>
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    handleInputChange={handleInputChange}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
+                  />
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-8xl text-black">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleUpdateMultipleInputChange}
                         multiple
                       />
                     </label>
@@ -1032,7 +1063,7 @@ function UploadListings() {
                       }`}
                     >
                       <div className="h-full flex items-center justify-center">
-                        <div className="text-3xl text-gray-600">+</div>
+                        <div className="text-8xl text-black">+</div>
                       </div>
                       <input
                         id="file-upload"
