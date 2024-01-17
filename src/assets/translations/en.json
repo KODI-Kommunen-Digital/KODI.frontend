@@ -572,5 +572,6 @@
     "next": "Next",
     "previous": "Previous",
     "removeAdmin": "Remove Admin",
+    "removeFile": "Remove file",
     "makeAdmin": "Make Admin"
 }

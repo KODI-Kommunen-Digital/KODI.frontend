@@ -90,7 +90,6 @@ function UploadListings() {
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
         setPdf(file);
-        console.log(file);
         setInput((prev) => ({
           ...prev,
           hasAttachment: true,
@@ -117,7 +116,6 @@ function UploadListings() {
       if (validImages.length > 0) {
         setLocalImageOrPdf(true);
         setImage((prevImages) => [...prevImages, ...validImages]);
-        console.log(image);
       }
     }
   };
@@ -132,7 +130,6 @@ function UploadListings() {
     }
     setImage((prevImages) => {
       const updatedImages = [...prevImages];
-      console.log(updatedImages);
       // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
       return updatedImages;
     });
@@ -222,7 +219,6 @@ function UploadListings() {
               for (let i = 0; i < image.length; i++) {
                 imageForm.append("image", image[i]);
               }
-              console.log("Current state before submission:", image);
 
               await uploadListingImage(
                 imageForm,
@@ -240,7 +236,6 @@ function UploadListings() {
             for (let i = 0; i < image.length; i++) {
               imageForm.append("image", image[i]);
             }
-            console.log("Current state before submission:", image);
 
             await uploadListingImage(
               imageForm,
@@ -305,7 +300,6 @@ function UploadListings() {
         subcatList[subCat.id] = subCat.name;
       });
       setSubCategories(subcatList);
-      console.log(response.data.data);
     });
     setInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
@@ -335,7 +329,8 @@ function UploadListings() {
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
-			setImage(temp);
+          setImage(temp);
+          console.log(image);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1001,8 +996,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-contain h-64 w-full m-auto rounded-xl ${
-                        image.length < 8 ? "bg-gray-300 border-dashed border-black" : ""
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
                       }`}
                     >
                       <div className="h-full flex items-center justify-center">
@@ -1019,7 +1014,7 @@ function UploadListings() {
                     </label>
                   )}
                 </div>
-              ) : image && image.length > 0 && !newListing && !image.some(img => typeof img === 'string' && img.includes("Defaultimage1")) ? (
+              ) : image && Array.isArray(image) && image.length > 0 && !newListing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
@@ -1032,8 +1027,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-contain h-64 w-full m-auto rounded-xl ${
-                        image.length < 8 ? "bg-gray-300" : ""
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
                       }`}
                     >
                       <div className="h-full flex items-center justify-center">
