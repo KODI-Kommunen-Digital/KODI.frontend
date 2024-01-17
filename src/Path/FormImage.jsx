@@ -20,7 +20,7 @@ function FormImage(props) {
 
     // Check if the image is the default image
     const isDefaultImage =
-      typeof img === "string" && img.includes("Defaultimage1.png");
+      typeof img === "string" && img.includes("admin/");
 
     // Render the image only if it's not the default image
     if (!isDefaultImage) {
