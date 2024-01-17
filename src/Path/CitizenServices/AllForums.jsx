@@ -69,7 +69,8 @@ const AllForums = () => {
 				try {
 					const response = await getAllForums(cityId, { hasForum: true });
 					const forums = response.data.data;
-					setForums(forums);
+					forums.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        			setForums(forums);
 
 					const forumIds = forums.map((forum) => forum.id).join(",");
 

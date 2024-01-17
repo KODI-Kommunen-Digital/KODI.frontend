@@ -38,13 +38,10 @@ const ViewPost = () => {
 	const [forumId, setForumId] = useState(null);
 	const [postId, setPostId] = useState(null);
 	const [createdAt, setCreatedAt] = useState("");
-	const [showComments, setShowComments] = useState(false);
-	const [showMoreComments, setShowMoreComments] = useState(true);
+	const [showComments, setShowComments] = useState(true);
 	const [newComment, setNewComment] = useState("");
 	const [comments, setComments] = useState([]);
-	const [pageNo, setPageNo] = useState(1);
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
-	const [firstCommentsLoaded, setFirstCommentsLoaded] = useState(false);
 	const [text, setText] = useState("");
 	const [user, setUser] = useState();
 	const [userSocial, setUserSocial] = useState([]);
@@ -57,11 +54,16 @@ const ViewPost = () => {
 	};
 	const [isUser, setIsUser] = useState(false);
 
+	useEffect(() => {
+		fetchComments();
+			console.log(fetchComments())
+	}, []);
+
 	const toggleComments = () => {
-		if (!showComments && !firstCommentsLoaded) {
-			fetchComments();
-			setFirstCommentsLoaded(true);
-		}
+		// if (!showComments && !firstCommentsLoaded) {
+		// 	fetchComments();
+		// 	setFirstCommentsLoaded(true);
+		// }
 		setShowComments(!showComments);
 	};
 
@@ -117,7 +119,11 @@ const ViewPost = () => {
 	};
 
 	const fetchComments = (parentId = null) => {
-		const params = { pageNo, pageSize };
+		const params = { pageSize };
+		const urlParams = new URLSearchParams(window.location.search);
+		const cityId = parseInt(urlParams.get("cityId"));
+		const forumId = parseInt(urlParams.get("forumId"));
+		const postId = parseInt(urlParams.get("postId"));
 		let comment = {};
 		if (parentId) {
 			params.parentId = parentId;
@@ -136,12 +142,7 @@ const ViewPost = () => {
 					: [...response.data.data];
 				setComments([...comments]);
 			} else {
-				if (response.data.data.length > 0) {
-					setShowMoreComments(true);
-					setComments([...comments.concat(response.data.data)]);
-				} else {
-					setShowMoreComments(false);
-				}
+				setComments([...comments.concat(response.data.data)]);
 			}
 		});
 	};
@@ -229,11 +230,11 @@ const ViewPost = () => {
 		setText("");
 	};
 
-	useEffect(() => {
-		if (pageNo !== 1) {
-			fetchComments();
-		}
-	}, [pageNo]);
+	// useEffect(() => {
+	// 	if (pageNo !== 1) {
+	// 		fetchComments();
+	// 	}
+	// }, [pageNo]);
 
 	function goToAllForums() {
 		navigateTo(`/CitizenService`);
@@ -383,7 +384,8 @@ const ViewPost = () => {
 						</div>
 						<div className="space-x-2 gap-4 md:gap-2 flex">
 							<div
-								className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm text-center font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm text-center font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent 
+								bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 								onClick={() => postComment()}
 							>
@@ -395,7 +397,8 @@ const ViewPost = () => {
 							</svg>
 
 							<a
-								className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent  
+								bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 								style={{ fontFamily: "Poppins, sans-serif" }}
 								onClick={toggleComments}
 							>
@@ -580,15 +583,6 @@ const ViewPost = () => {
 										</div>
 									))}
 								</div>
-								{showMoreComments && (
-									<button
-										type="button"
-										className={`mt-2 px-2 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
-										onClick={() => setPageNo(pageNo + 1)}
-									>
-										{t("showMoreComments")}
-									</button>
-								)}
 							</div>
 						)}
 					</form>

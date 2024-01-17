@@ -25,7 +25,6 @@ import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
-import CreateAppoinment from "./Path/CreateAppoinment";
 import CreateGroup from "./Path/CreateGroup";
 import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
@@ -75,7 +74,6 @@ const App = () => {
           <Route path="/AccountSettings" element={<AccountSettings />} exact />
           <Route path="/AllDevices" element={<AllDevices />} exact />
           <Route path="/UploadListings" element={<UploadListings />} exact />
-          <Route path="/CreateAppoinment" element={<CreateAppoinment />} exact />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/PasswordForgot" element={<PasswordForgot />} />
           <Route path="/PasswordUpdate" element={<PasswordUpdate />} />

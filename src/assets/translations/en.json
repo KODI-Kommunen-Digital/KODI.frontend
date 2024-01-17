@@ -191,6 +191,7 @@
     "register": "Register",
     "rememberMe": "Remember Me",
     "remove": "Remove",
+    "requests": "Requests",
     "accept": "Accept",
     "removeFilter": "Remove Filter",
     "right_withdrawal": "Right of withdrawal",
@@ -573,6 +574,10 @@
     "makeAdmin": "Make Admin",
     "uploadFile": "Upload file",
     "removeFile": "Remove file",
+    "forumMembers": "Forum Members",
+    "memberReq": "Member Requests",
+    "forumReq": "Forum Requests",
+    "viewPosts": "View Posts",
 
     "createAppoinment": "Create Appoinment",
     "uploadListings": "Upload listing",
@@ -585,5 +590,15 @@
     "addService": "Add Service",
     "addEmployeeName": "Add Employee",
     "selectService": "Select Service",
-    "addAnotherEmployee": "Add another employee"
+    "addAnotherEmployee": "Add another employee",
+   
+    "anleitung": "Instructions",
+    "resgistrationInTheApp": "Register in the app",
+    "schritt": "Step",
+    "nameOrPass": "Set username and password",
+    "addEmail": "An email will be sent to the email address you entered",
+    "verifyEmail": "Please verify the email by going to your inbox and pressing the verification link",
+    "verified": "Your account is verified and you can log in with your login details",
+    "enjoyApp": "We hope you enjoy using the app!",
+    "danke": "Thanks!!"
 }
