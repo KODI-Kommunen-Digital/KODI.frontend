@@ -465,7 +465,7 @@ const Listing = () => {
                               data={
                                 process.env.REACT_APP_BUCKET_HOST + input.pdf
                               }
-                              type="application/pdf"
+                              type="text/html"
                               className="object-cover object-center h-[600px] w-full"
                             ></object>
                           </div>
