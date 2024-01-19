@@ -23,7 +23,7 @@ function Footer(props) {
 		<footer className="text-center lg:text-left bg-black text-white">
 			<div className="mx-6 py-10 text-left">
 				<div className={`flex gap-10 md:gap-40 justify-center`}>
-					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && process.env.REACT_APP_NAME !== "WALDI APP" && (
+					{process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
 						<>
 							<div >
 								<h6
@@ -165,7 +165,7 @@ function Footer(props) {
 							</a>
 						</p> */}
 					</div>
-					{process.env.REACT_APP_NAME !== "SMARTREGION AUF" && process.env.REACT_APP_NAME !== "WALDI APP" && (
+					{process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
 						<>
 							<div className="">
 								<h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
