@@ -18,7 +18,7 @@ function ListingsCard({ listing, terminalView = false }) {
 		<div
 			onClick={(e) => {
 				e.stopPropagation();
-				if (listing.sourceId === 1 || !listing.showExternal) {
+				if (listing.sourceId === 1 || listing.showExternal === 0) {
 					navigateTo(
 						`/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""
 						}`

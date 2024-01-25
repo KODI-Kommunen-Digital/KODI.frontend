@@ -134,7 +134,10 @@ const Listing = () => {
       }
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
-          if (listingsResponse.data.data.sourceId !== source.User) {
+          if (
+            listingsResponse.data.data.sourceId !== source.User &&
+            listingsResponse.data.data.showExternal !== 0
+          ) {
             window.location.replace(listingsResponse.data.data.website);
           } else if (listingsResponse.data.data.statusId !== 1) {
             navigateTo("/Error");
