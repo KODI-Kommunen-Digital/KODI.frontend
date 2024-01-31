@@ -596,6 +596,10 @@
     "selectService": "Select Service",
     "addAnotherEmployee": "Add another employee",
     "anleitung": "Anleitung",
+    "disableDates": "Termine deaktivieren",
+    "noExpiryMessage": "Für diese Nachricht gibt es kein Ablaufdatum oder Ablaufdatum",
+    "expiryMessage": "Die Ablauffrist für diese Nachricht beträgt :",
+    "expiryDate": "Expiry date",
 
     "resgistrationInTheApp": "Registrieren in der App",
     "schritt": "Schritt",
