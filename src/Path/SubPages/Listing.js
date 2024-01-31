@@ -135,7 +135,10 @@ const Listing = () => {
       }
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
-          if (listingsResponse.data.data.sourceId !== source.User) {
+          if (
+            listingsResponse.data.data.sourceId !== source.User &&
+            listingsResponse.data.data.showExternal !== 0
+          ) {
             window.location.replace(listingsResponse.data.data.website);
           } else if (listingsResponse.data.data.statusId !== 1) {
             navigateTo("/Error");
@@ -461,13 +464,13 @@ const Listing = () => {
                       {input.pdf ? (
                         <div>
                           <div className="pdf-container">
-                            <object
-                              data={
+                            <iframe
+                              src={
                                 process.env.REACT_APP_BUCKET_HOST + input.pdf
                               }
-                              type="application/pdf"
+                              type="text/html"
                               className="object-cover object-center h-[600px] w-full"
-                            ></object>
+                            ></iframe>
                           </div>
                         </div>
                       ) : input.logo ? (
