@@ -135,6 +135,7 @@ function UploadListings() {
     pdf: null,
     startDate: "",
     endDate: "",
+    expiryDate: "",
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
@@ -150,6 +151,7 @@ function UploadListings() {
     cityId: "",
     startDate: "",
     endDate: "",
+    expiryDate: "",
   });
 
   const handleSubmit = async (event) => {
@@ -421,6 +423,14 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "expiryDate":
+        if (!value && parseInt(input.categoryId) == 1) {
+          return t("pleaseEnterExpiryDate");
+        } else {
+          return "";
+        }
+
       default:
         return "";
     }
@@ -656,7 +666,7 @@ function UploadListings() {
               value={categoryId || 0}
               onChange={handleCategoryChange}
               required
-              disabled={!newListing}
+              // disabled={!newListing}
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
@@ -696,7 +706,7 @@ function UploadListings() {
                 onChange={handleSubcategoryChange}
                 onBlur={validateInput}
                 required
-                disabled={!newListing}
+                // disabled={!newListing}
                 className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>
@@ -744,18 +754,18 @@ function UploadListings() {
                         ></svg>
                       </div>
                       <label
-                        htmlFor="endDate"
+                        htmlFor="expiryDate"
                         className="block text-sm font-medium text-gray-600"
                       >
                         {t("expiryDate")} *
                       </label>
                       <input
                         type="datetime-local"
-                        id="endDate"
-                        name="endDate"
+                        id="expiryDate"
+                        name="expiryDate"
                         value={
-                          input.endDate
-                            ? formatDateTime(input.endDate)
+                          input.expiryDate
+                            ? formatDateTime(input.expiryDate)
                             : getDefaultEndDate()
                         }
                         onChange={onInputChange}
@@ -767,10 +777,10 @@ function UploadListings() {
                       <div
                         className="h-[24px] text-red-600"
                         style={{
-                          visibility: error.endDate ? "visible" : "hidden",
+                          visibility: error.expiryDate ? "visible" : "hidden",
                         }}
                       >
-                        {error.endDate}
+                        {error.expiryDate}
                       </div>
                     </div>
                   </>
