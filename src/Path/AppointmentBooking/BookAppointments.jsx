@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import DateTimePicker from "../../Components/DatePicker";
+// import DateTimePicker from "../../Components/DatePicker";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
@@ -20,6 +20,10 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import dayjs from "dayjs";
+import { generateDate, months } from "../../Components/util/calendar";
+import cn from "../../Components/util/cn";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -303,6 +307,11 @@ const BookAppointments = () => {
     }
   }, [user]);
 
+  const days = ["S", "M", "T", "W", "T", "F", "S"];
+  const currentDate = dayjs();
+  const [today, setToday] = useState(currentDate);
+  const [selectDate, setSelectDate] = useState(currentDate);
+
   return (
     <section className="text-gray-600 bg-white body-font">
       {isLoading ? (
@@ -313,7 +322,7 @@ const BookAppointments = () => {
 
           <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-64">
+              <div className="lg:w-full md:w-full h-full">
                 <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <form method="POST">
@@ -326,7 +335,8 @@ const BookAppointments = () => {
                             }}
                           >
                             {title}
-                            Appointment Booking
+                            Appointment Booking Du möchtest dein Haus
+                            energetisch sanieren ?
                           </span>
                         </h1>
                         <div
@@ -453,7 +463,6 @@ const BookAppointments = () => {
 
               <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
                 <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                  
                   <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
                     <div className="relative h-full">
                       {input.pdf ? (
@@ -517,84 +526,196 @@ const BookAppointments = () => {
                 Wohnungsgeberbescheinigung vor Ort ausfüllen.
               </div>
 
-              <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
+              {/* <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
                 <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                    <h1
-                  className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  Please select your period
-                </h1>
+                  <h1
+                    className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    Please select your period
+                  </h1>
                   <DateTimePicker />
                 </div>
-              </div>
+              </div> */}
             </div>
 
-            {userSocial && userSocial.length > 0 ? (
-              <UserProfile user={user} />
-            ) : (
-              <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
-                <div>
-                  <div
-                    onClick={() =>
-                      navigateTo(
-                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                      )
-                    }
-                    className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
-                  >
-                    <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
-                      <img
-                        className="rounded-full h-20 w-20"
-                        src={
-                          user?.image
-                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                            : PROFILEIMAGE
-                        }
-                        alt={user?.lastname}
-                      />
-                      <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                        <button
-                          onClick={() =>
-                            navigateTo(
-                              user
-                                ? `/ViewProfile/${user.username}`
-                                : "/ViewProfile"
-                            )
+            <div className="grid grid-cols-1 gap-4">
+              {userSocial && userSocial.length > 0 ? (
+                <UserProfile user={user} />
+              ) : (
+                <div className="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+                  <div>
+                    <div
+                      onClick={() =>
+                        navigateTo(
+                          user
+                            ? `/ViewProfile/${user.username}`
+                            : "/ViewProfile"
+                        )
+                      }
+                      className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
+                    >
+                      <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
+                        <img
+                          className="rounded-full h-20 w-20"
+                          src={
+                            user?.image
+                              ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                              : PROFILEIMAGE
                           }
-                          type="submit"
-                          className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                          alt={user?.lastname}
+                        />
+                        <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+                          <button
+                            onClick={() =>
+                              navigateTo(
+                                user
+                                  ? `/ViewProfile/${user.username}`
+                                  : "/ViewProfile"
+                              )
+                            }
+                            type="submit"
+                            className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                            {t("viewProfile")}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
+                        <h2
+                          className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
                           style={{
                             fontFamily: "Poppins, sans-serif",
                           }}
                         >
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                          {t("viewProfile")}
-                        </button>
+                          {firstname + " " + lastname}
+                        </h2>
+                        <p
+                          className="leading-relaxed text-base font-bold dark:text-gray-900"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {user?.username}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
-                      <h2
-                        className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        {firstname + " " + lastname}
-                      </h2>
-                      <p
-                        className="leading-relaxed text-base font-bold dark:text-gray-900"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        {user?.username}
-                      </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
+                <div className="relative h-full mx-2 py-2 px-2 my-2">
+                  <div className="flex justify-center items-center">
+                    <div className="relative h-full">
+                      <div className="flex justify-center items-center">
+                        <div className="flex gap-10 items-center">
+                          <GrFormPrevious
+                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
+                            onClick={() => {
+                              setToday(today.month(today.month() - 1));
+                            }}
+                          />
+                          <h1
+                            className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
+                            onClick={() => {
+                              setToday(currentDate);
+                            }}
+                          >
+                            {months[today.month()]}, {today.year()}
+                          </h1>
+                          <GrFormNext
+                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
+                            onClick={() => {
+                              setToday(today.month(today.month() + 1));
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-7 bg-black text-white">
+                        {days.map((day, index) => {
+                          return (
+                            <h1
+                              key={index}
+                              className="p-2 text-center h-14 grid place-content-center text-sm"
+                            >
+                              {day}
+                            </h1>
+                          );
+                        })}
+                      </div>
+
+                      <div className="grid grid-cols-7 ">
+                        {generateDate(today.month(), today.year()).map(
+                          ({ date, currentMonth, today }, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className="p-2 text-center h-14 grid place-content-center text-sm border-t"
+                              >
+                                <h1
+                                  className={cn(
+                                    currentMonth ? "" : "text-gray-400",
+                                    today ? "bg-red-600 text-white" : "",
+                                    selectDate.toDate().toDateString() ===
+                                      date.toDate().toDateString()
+                                      ? "bg-black text-white"
+                                      : "",
+                                    "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
+                                  )}
+                                  onClick={() => {
+                                    setSelectDate(date);
+                                  }}
+                                >
+                                  {date.date()}
+                                </h1>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
+
+              <div className="bg-white md:ml-[6rem] lg:ml-[0rem] ml-[1rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
+                <h1 className="text-lg text-center font-semibold mb-4">
+                  Select a time for {selectDate.toDate().toDateString()}
+                </h1>
+                <div className="time-selection-container overflow-y-auto max-h-[100px]">
+                  <div className="flex flex-wrap gap-2">
+                    {Array.from({ length: 24 * 2 }).map((_, index) => {
+                      const time = dayjs()
+                        .hour(8)
+                        .minute(0)
+                        .add(index * 60, "minutes");
+                      return (
+                        <div
+                          key={index}
+                          className={cn(
+                            "p-2 rounded-full border cursor-pointer transition-all",
+                            "hover:bg-gray-200",
+                            "select-none"
+                          )}
+                          onClick={() => {
+                            // Handle time selection as needed
+                            console.log("Selected time:", time.format("HH:mm"));
+                          }}
+                        >
+                          {time.format("HH:mm")}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {input.address ? (
