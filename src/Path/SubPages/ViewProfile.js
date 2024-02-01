@@ -107,7 +107,7 @@ const ViewProfile = () => {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalview");
+  const terminalViewParam = searchParams.get("terminalView");
   const [, setShowNavBar] = useState(true);
   useEffect(() => {
     if (terminalViewParam === "true") {
