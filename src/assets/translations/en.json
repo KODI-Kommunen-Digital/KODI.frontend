@@ -569,6 +569,9 @@
     "areyousureinfo": "Do you really want to remove this member? This action cannot be reverted.",
     "exit": "Exit Group",
     "privacy": "Privacy",
+    "next": "Next",
+    "previous": "Previous",
     "removeAdmin": "Remove Admin",
+    "removeFile": "Remove file",
     "makeAdmin": "Make Admin"
 }

@@ -573,6 +573,22 @@
     "areyousureinfo": "Möchten Sie dieses Mitglied wirklich entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "exit": "Verlassen",
     "privacy": "Gruppenart",
+    "next": "Weiter",
+    "previous": "Vorherige",
     "removeAdmin": "Admin entfernen",
-    "makeAdmin": "Machen Admin"
+    "makeAdmin": "Machen Admin",
+    "Regional Products": "Regionale Produkte",
+    "Offer / Search": "Suche / Biete",
+    "New citizen info": "Neubürgerinfos",
+    "Company portraits": "Unternehmen",
+    "Carpooling / Public transport": "Mitfahrbank / ÖPNV",
+    "Eat or Drink": "Essen",
+    "FlashNews": "Eilmeldungen",
+    "Politics": "Politik",
+    "Economy": "Wirtschaft",
+    "Sport": "Sport",
+    "Local": "Lokales",
+    "Club News": "Vereinsnews",
+    "Road works / Traffic": "Verkehrsmeldungen",
+    "Official notification": "Amtliche Mitteilung"
 }
