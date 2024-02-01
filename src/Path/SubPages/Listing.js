@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -464,13 +466,33 @@ const Listing = () => {
                       {input.pdf ? (
                         <div>
                           <div className="pdf-container">
-                            <iframe
+                            {terminalView ? (
+                              <Viewer
+                                fileUrl={
+                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                }
+                              />
+                            ) : (
+                              <iframe
+                                src={
+                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                }
+                                type="text/html"
+                                className="object-cover object-center h-[600px] w-full"
+                              ></iframe>
+                            )}
+                            {/* <iframe
                               src={
                                 process.env.REACT_APP_BUCKET_HOST + input.pdf
                               }
                               type="text/html"
                               className="object-cover object-center h-[600px] w-full"
                             ></iframe>
+                            <Viewer
+                              fileUrl={
+                                process.env.REACT_APP_BUCKET_HOST + input.pdf
+                              }
+                            /> */}
                           </div>
                         </div>
                       ) : input.logo ? (
