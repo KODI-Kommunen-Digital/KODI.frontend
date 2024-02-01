@@ -103,7 +103,7 @@ const Listing = () => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalview");
+    const terminalViewParam = searchParams.get("terminalView");
     setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};

@@ -57,7 +57,7 @@ export default function HomePageNavBar() {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalview");
+  const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
   const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
   const [, setShowNavBar] = useState(true);

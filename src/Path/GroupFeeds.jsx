@@ -107,7 +107,7 @@ const GroupFeeds = () => {
 
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
-	const terminalViewParam = searchParams.get("terminalview");
+	const terminalViewParam = searchParams.get("terminalView");
 	const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
 	const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
 	const [showNavBar, setShowNavBar] = useState(true);
