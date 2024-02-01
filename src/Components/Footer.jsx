@@ -7,7 +7,7 @@ function Footer(props) {
 
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
-	const terminalViewParam = searchParams.get("terminalView");
+	const terminalViewParam = searchParams.get("terminalview");
 	const footerClass = terminalViewParam === "true" ? "hidden" : "visible";
 	const [, setShowNavBar] = useState(true);
 	useEffect(() => {
