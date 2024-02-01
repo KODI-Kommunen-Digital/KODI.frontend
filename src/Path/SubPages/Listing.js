@@ -22,6 +22,7 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import PDFDisplay from "../../Components/PdfViewer";
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -465,8 +466,8 @@ const Listing = () => {
                         <div>
                           <div className="pdf-container">
                             {terminalView ? (
-                              <Viewer
-                                fileUrl={
+                              <PDFDisplay
+                                url={
                                   process.env.REACT_APP_BUCKET_HOST + input.pdf
                                 }
                               />
@@ -479,18 +480,6 @@ const Listing = () => {
                                 className="object-cover object-center h-[600px] w-full"
                               ></iframe>
                             )}
-                            {/* <iframe
-                              src={
-                                process.env.REACT_APP_BUCKET_HOST + input.pdf
-                              }
-                              type="text/html"
-                              className="object-cover object-center h-[600px] w-full"
-                            ></iframe>
-                            <Viewer
-                              fileUrl={
-                                process.env.REACT_APP_BUCKET_HOST + input.pdf
-                              }
-                            /> */}
                           </div>
                         </div>
                       ) : input.logo ? (
