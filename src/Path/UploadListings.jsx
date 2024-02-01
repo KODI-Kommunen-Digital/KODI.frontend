@@ -42,6 +42,33 @@ function UploadListings() {
   const [endDate, setEndDate] = useState([]);
   const navigate = useNavigate();
 
+  function formatDateTime(dateTime) {
+    const date = new Date(dateTime.replace("Z", ""));
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
+
+    const year = twoWeeksLater.getFullYear();
+    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
+    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
+    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
+
+    // Format: yyyy-MM-ddThh:mm
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   function handleDragEnter(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -128,7 +155,7 @@ function UploadListings() {
     pdf: null,
     startDate: "",
     endDate: "",
-    expiryDate: "",
+    expiryDate: getDefaultEndDate(),
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
@@ -315,7 +342,11 @@ function UploadListings() {
         ...prev,
         [name]: checked,
         startDate: checked ? prev.startDate : null,
-        endDate: checked ? prev.endDate || getDefaultEndDate() : null,
+        endDate: checked
+          ? prev.endDate && prev.endDate !== getDefaultEndDate()
+            ? prev.endDate
+            : getDefaultEndDate()
+          : null,
       }));
     } else {
       setInput((prev) => ({
@@ -513,33 +544,6 @@ function UploadListings() {
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
-  };
-
-  function formatDateTime(dateTime) {
-    const date = new Date(dateTime.replace("Z", ""));
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-  }
-
-  const getDefaultEndDate = () => {
-    const now = new Date();
-    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
-
-    const year = twoWeeksLater.getFullYear();
-    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
-    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
-    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
-    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
-
-    // Format: yyyy-MM-ddThh:mm
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   return (
