@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Viewer } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
@@ -117,7 +115,7 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
-    const terminalViewParam = searchParams.get("terminalview");
+    const terminalViewParam = searchParams.get("terminalView");
     setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
