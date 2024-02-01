@@ -661,7 +661,6 @@ function UploadListings() {
               value={categoryId || 0}
               onChange={handleCategoryChange}
               required
-              disabled={!newListing}
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
@@ -701,7 +700,6 @@ function UploadListings() {
                 onChange={handleSubcategoryChange}
                 onBlur={validateInput}
                 required
-                disabled={!newListing}
                 className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>
