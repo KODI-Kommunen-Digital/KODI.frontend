@@ -3,7 +3,7 @@ import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
@@ -99,14 +99,10 @@ const Listing = () => {
   });
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
-  const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
-    const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
-    setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
       response?.data.data.forEach((cat) => {
@@ -120,6 +116,8 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
+    const terminalViewParam = searchParams.get("terminalview");
+    setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
