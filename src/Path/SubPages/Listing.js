@@ -19,6 +19,7 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import PDFDisplay from "../../Components/PdfViewer";
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -102,7 +103,7 @@ const Listing = () => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
+    const terminalViewParam = searchParams.get("terminalview");
     setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
@@ -463,13 +464,21 @@ const Listing = () => {
                       {input.pdf ? (
                         <div>
                           <div className="pdf-container">
-                            <iframe
-                              src={
-                                process.env.REACT_APP_BUCKET_HOST + input.pdf
-                              }
-                              type="text/html"
-                              className="object-cover object-center h-[600px] w-full"
-                            ></iframe>
+                            {terminalView ? (
+                              <PDFDisplay
+                                url={
+                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                }
+                              />
+                            ) : (
+                              <iframe
+                                src={
+                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                }
+                                type="text/html"
+                                className="object-cover object-center h-[600px] w-full"
+                              ></iframe>
+                            )}
                           </div>
                         </div>
                       ) : input.logo ? (
