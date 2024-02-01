@@ -1,33 +1,64 @@
 import React, { useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
 const PDFDisplay = (url) => {
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
 
-    const [ numPages, setNumPages ] = useState(null);
-    const [ pageNumber, setPageNumber ] = useState(1);
-    
-    const onDocumentLoadSuccess = ({ numPages }) => {
-        setNumPages(numPages); 
+    function onDocumentLoadSuccess({ numPages }) {
+        setNumPages(numPages);
+        setPageNumber(1);
     }
-    
+
+    function changePage(offset) {
+        setPageNumber(prevPageNumber => prevPageNumber + offset);
+    }
+
+    function previousPage() {
+        changePage(-1);
+    }
+
+    function nextPage() {
+        changePage(1);
+    }
+
     return (
         <>
-            <div>
-                <Document className={""}
-                    file={url}
-                    onLoadSuccess={onDocumentLoadSuccess}
-                >
-                    <Page className={"items-center flex"} height={825} pageNumber={pageNumber} />
-                </Document>
-                
-            </div>
-            <p className='items-center'>
-                {pageNumber > 1 && <span onClick={() => setPageNumber(pageNumber - 1)}> {"< "} </span>}Page {pageNumber} of {numPages}{pageNumber < numPages && <span onClick={() => setPageNumber(pageNumber + 1)}> {" >"} </span>}
+        <Document className="items-center"
+            file={url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onItemClick={(args) => setPageNumber(args.pageNumber)}
+        >
+            <Page pageNumber={pageNumber} />
+        </Document>
+        <div className='items-center flex-col justify-center flex'>
+            <p>
+                Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
             </p>
+            <div>
+                <button
+                    type="button"
+                    className='text-white bg-sky-500 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  sm:mt-0 sm:w-auto sm:text-sm'
+                    disabled={pageNumber <= 1}
+                    onClick={previousPage}
+                    >
+                    Previous
+                </button>
+                <span>{"    "}</span>
+                <button
+                    type="button"
+                    className='text-white bg-sky-500 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  sm:mt-0 sm:w-auto sm:text-sm'
+                    disabled={pageNumber >= numPages}
+                    onClick={nextPage}
+                    >
+                    Next
+                </button>
+            </div>
+        </div>
         </>
-        
-    )
+    );
 }
 
 export default PDFDisplay;
