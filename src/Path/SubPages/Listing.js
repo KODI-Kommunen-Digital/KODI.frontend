@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
@@ -12,6 +14,7 @@ import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
 import ListingsCard from "../../Components/ListingsCard";
+import CustomCarousel from "../Carousel/CustomCarousel";
 import {
   getFavorites,
   postFavoriteListingsData,
@@ -87,7 +90,7 @@ const Listing = () => {
     phone: "",
     email: "",
     description: "",
-    logo: null,
+    logo: [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -97,14 +100,10 @@ const Listing = () => {
   });
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
-  const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
-    const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
-    setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
       response?.data.data.forEach((cat) => {
@@ -118,6 +117,8 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
+    const terminalViewParam = searchParams.get("terminalview");
+    setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
@@ -283,10 +284,10 @@ const Listing = () => {
     }
   };
 
-  const [, setUserName] = useState("");
+  const [setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [, setProfilePic] = useState("");
+  const [setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
@@ -316,7 +317,7 @@ const Listing = () => {
 
           <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-64">
+              <div className="lg:w-full md:w-full h-full">
                 <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <form method="POST">
@@ -448,8 +449,8 @@ const Listing = () => {
                 </div>
               </div>
 
-              <div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+              <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
                   <style>
                     {`
 								@media (max-width: 280px) {
@@ -482,22 +483,14 @@ const Listing = () => {
                           </div>
                         </div>
                       ) : input.logo ? (
-                        <img
-                          alt="listing"
-                          className="object-cover object-center h-full w-full"
-                          src={
-                            input.sourceId === source.User
-                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
-                              : input.logo
-                          }
-                          onError={(e) => {
-                            e.target.src = LISTINGSIMAGE; // Set default image if loading fails
-                          }}
+                        <CustomCarousel
+                          imageList={input.otherlogos}
+                          sourceId={input.sourceId}
                         />
                       ) : (
                         <img
                           alt="default"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={LISTINGSIMAGE}
                         />
                       )}

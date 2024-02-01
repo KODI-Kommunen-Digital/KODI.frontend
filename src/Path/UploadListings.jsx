@@ -19,6 +19,8 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import FormImage from "./FormImage";
+import { UploadSVG } from "../assets/icons/upload";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -33,6 +35,7 @@ function UploadListings() {
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -65,9 +68,13 @@ function UploadListings() {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
-        setImage(file);
+        setImage(e.target.files);
       } else if (file.type === "application/pdf") {
         setPdf(file);
+        setInput((prev) => ({
+          ...prev,
+          hasAttachment: true,
+        }));
       }
     }
     setDragging(false);
@@ -79,10 +86,14 @@ function UploadListings() {
     if (file) {
       if (file.type.startsWith("image/")) {
         setLocalImageOrPdf(true);
-        setImage(file);
+        setImage(e.target.files);
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
         setPdf(file);
+        setInput((prev) => ({
+          ...prev,
+          hasAttachment: true,
+        }));
       }
     }
   }
