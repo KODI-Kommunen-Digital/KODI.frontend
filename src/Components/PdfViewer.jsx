@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import { useTranslation } from "react-i18next";
 
 const PDFDisplay = (url) => {
+    const { t } = useTranslation();
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
 
@@ -35,7 +37,7 @@ const PDFDisplay = (url) => {
         </Document>
         <div className='items-center flex-col justify-center flex'>
             <p>
-                Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
+                {t("page")} {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
             </p>
             <div>
                 <button
@@ -44,7 +46,7 @@ const PDFDisplay = (url) => {
                     disabled={pageNumber <= 1}
                     onClick={previousPage}
                     >
-                    Previous
+                    {t("previous")}
                 </button>
                 <span>{"    "}</span>
                 <button
@@ -53,7 +55,7 @@ const PDFDisplay = (url) => {
                     disabled={pageNumber >= numPages}
                     onClick={nextPage}
                     >
-                    Next
+                    {t("next")}
                 </button>
             </div>
         </div>
