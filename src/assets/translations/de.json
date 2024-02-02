@@ -600,5 +600,6 @@
     "expiryDate": "Expiry date",
     "youAreAlmostThere": "Du bist fast am Ziel",
     "next": "weiter",
-    "previous": "zurück"
+    "previous": "zurück",
+    "for": "von"
 }
