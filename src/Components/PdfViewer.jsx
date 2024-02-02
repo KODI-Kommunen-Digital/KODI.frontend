@@ -37,7 +37,7 @@ const PDFDisplay = (url) => {
         </Document>
         <div className='items-center flex-col justify-center flex'>
             <p>
-                {t("page")} {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
+                {t("page")} {pageNumber || (numPages ? 1 : '--')} {t("of")} {numPages || '--'}
             </p>
             <div>
                 <button
