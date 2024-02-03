@@ -233,9 +233,7 @@ const Listing = () => {
     if (selectedCategoryId) {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
-          const filteredListings = response.data.data.filter(
-            (listing) => listing.id !== listingId
-          );
+          const filteredListings = response.data.data.filter((listing) => listing.id !== listingId);
           setListings(filteredListings);
         }
       );
@@ -601,7 +599,7 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active
+                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard

@@ -131,7 +131,7 @@ const ViewProfile = () => {
 									<div className="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center md:justify-Start">
 										<div className="flex flex-col justify-center items-start">
 											<img
-												className="rounded-full h-20 w-20"
+												className="rounded-full h-20 w-20 object-cover"
 												src={
 													user?.image
 														? process.env.REACT_APP_BUCKET_HOST + user?.image
