@@ -600,5 +600,8 @@
     "noExpiryMessage": "Für diese Nachricht gibt es kein Ablaufdatum oder Ablaufdatum",
     "expiryMessage": "Die Ablauffrist für diese Nachricht beträgt :",
     "expiryDate": "Expiry date",
-    "youAreAlmostThere": "Du bist fast am Ziel"
+    "youAreAlmostThere": "Du bist fast am Ziel",
+    "next": "weiter",
+    "previous": "zurück",
+    "of": "von"
 }

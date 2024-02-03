@@ -43,7 +43,22 @@ function UploadListings() {
   const [subCategories, setSubCategories] = useState([]);
   const [startDate, setStartDate] = useState([]);
   const [endDate, setEndDate] = useState([]);
+  const [expiryDate, setExpiryDate] = useState([]);
   const navigate = useNavigate();
+
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
+
+    const year = twoWeeksLater.getFullYear();
+    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
+    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
+    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
+
+    // Format: yyyy-MM-ddThh:mm
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
 
   function handleDragEnter(e) {
     e.preventDefault();
@@ -139,13 +154,14 @@ function UploadListings() {
     pdf: null,
     startDate: "",
     endDate: "",
-    expiryDate: "",
+    expiryDate: getDefaultEndDate(),
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
     removeImage: false,
     removePdf: false,
   });
+  console.log(input);
 
   const [error, setError] = useState({
     categoryId: "",
@@ -275,6 +291,13 @@ function UploadListings() {
         setInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
+
+        const hasExpiryDate = listingData.hasOwnProperty("expiryDate");
+        if (!hasExpiryDate || !listingData.expiryDate) {
+          // If no expiryDate or expiryDate is null, set getDefaultEndDate()
+          listingData.expiryDate = getDefaultEndDate();
+        }
+        setExpiryDate(listingData.expiryDate);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
@@ -326,7 +349,11 @@ function UploadListings() {
         ...prev,
         [name]: checked,
         startDate: checked ? prev.startDate : null,
-        endDate: checked ? prev.endDate || getDefaultEndDate() : null,
+        endDate: checked
+          ? prev.endDate && prev.endDate !== getDefaultEndDate()
+            ? prev.endDate
+            : getDefaultEndDate()
+          : null,
       }));
     } else {
       setInput((prev) => ({
@@ -538,20 +565,6 @@ function UploadListings() {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
-
-  const getDefaultEndDate = () => {
-    const now = new Date();
-    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
-
-    const year = twoWeeksLater.getFullYear();
-    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
-    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
-    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
-    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
-
-    // Format: yyyy-MM-ddThh:mm
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
 
   return (
     <section className="bg-slate-600 body-font relative">
@@ -775,7 +788,7 @@ function UploadListings() {
                         onChange={onInputChange}
                         onBlur={validateInput}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder="End Date"
+                        placeholder="Expiry Date"
                         disabled={input.disableDates}
                       />
                       <div

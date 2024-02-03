@@ -1,59 +1,68 @@
-import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import React, { useState } from "react";
+import { Document, Page } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+import { useTranslation } from "react-i18next";
 
 const PDFDisplay = (url) => {
-    const [numPages, setNumPages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+  const { t } = useTranslation();
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
-    function onDocumentLoadSuccess({ numPages }) {
-        setNumPages(numPages);
-        setPageNumber(1);
-    }
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+    setPageNumber(1);
+  }
 
-    function changePage(offset) {
-        setPageNumber(prevPageNumber => prevPageNumber + offset);
-    }
+  function changePage(offset) {
+    setPageNumber((prevPageNumber) => prevPageNumber + offset);
+  }
 
-    function previousPage() {
-        changePage(-1);
-    }
+  function previousPage() {
+    changePage(-1);
+  }
 
-    function nextPage() {
-        changePage(1);
-    }
+  function nextPage() {
+    changePage(1);
+  }
 
-    return (
-        <>
-        <Document className="items-center"
-            file={url}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onItemClick={(args) => setPageNumber(args.pageNumber)}
-        >
-            <Page pageNumber={pageNumber} />
-        </Document>
+  return (
+    <>
+      <Document
+        className="items-center"
+        file={url}
+        onLoadSuccess={onDocumentLoadSuccess}
+        onItemClick={(args) => setPageNumber(args.pageNumber)}
+      >
+        <Page pageNumber={pageNumber} />
+      </Document>
+      <div className="items-center flex-col justify-center flex">
+        <p>
+          {t("page")} {pageNumber || (numPages ? 1 : "--")} {t("of")}{" "}
+          {numPages || "--"}
+        </p>
         <div>
-            <p>
-                Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
-            </p>
-            <button
-                type="button"
-                disabled={pageNumber <= 1}
-                onClick={previousPage}
-                >
-                Previous
-            </button>
-            <button
-                type="button"
-                disabled={pageNumber >= numPages}
-                onClick={nextPage}
-                >
-                Next
-            </button>
+          <button
+            type="button"
+            className="text-white bg-sky-500 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  sm:mt-0 sm:w-auto sm:text-sm"
+            disabled={pageNumber <= 1}
+            onClick={previousPage}
+          >
+            {t("previous")}
+          </button>
+          <span>{"    "}</span>
+          <button
+            type="button"
+            className="text-white bg-sky-500 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium  sm:mt-0 sm:w-auto sm:text-sm"
+            disabled={pageNumber >= numPages}
+            onClick={nextPage}
+          >
+            {t("next")}
+          </button>
         </div>
-        </>
-    );
-}
+      </div>
+    </>
+  );
+};
 
 export default PDFDisplay;
