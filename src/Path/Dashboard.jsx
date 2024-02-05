@@ -256,83 +256,8 @@ const Dashboard = () => {
                   <option value={statusByName.Inactive}>{t("inactive")}</option>
                 </select>
               </div>
-
-              {/* <div className="-my-2 -mr-2 lg:hidden">
-                <Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <span className="sr-only">Open menu</span>
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </Popover.Button>
-              </div> */}
             </div>
           </div>
-
-          {/* <Transition
-            as={Fragment}
-            enter="duration-200 ease-out"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="duration-100 ease-in"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <Popover.Panel
-              focus
-              className="absolute inset-x-0 top-0 origin-top-right transform p-0 transition lg:hidden"
-            >
-              <div className="divide-y-2 divide-gray-50 bg-black shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="space-y-6 py-6 px-5">
-                  <div className="-my-2 -mr-2 lg:hidden flex justify-end">
-                    <Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="sr-only">Close menu</span>
-                      <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                    </Popover.Button>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div
-                      className="lg:hidden flex justify-center text-center"
-                      id="mobile-menu"
-                    >
-                      <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                        <div
-                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                          onClick={() => setSelectedStatus(null)}
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("allListings")}
-                        </div>
-                        <div
-                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                          onClick={() => setSelectedStatus(statusByName.Active)}
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("active")}
-                        </div>
-                        <div
-                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                          onClick={() =>
-                            setSelectedStatus(statusByName.Pending)
-                          }
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("pending")}
-                        </div>
-                        <div
-                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                          onClick={() =>
-                            setSelectedStatus(statusByName.Inactive)
-                          }
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("inactive")}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Popover.Panel>
-          </Transition> */}
         </div>
       </div>
 
