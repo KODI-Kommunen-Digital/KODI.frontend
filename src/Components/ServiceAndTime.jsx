@@ -33,7 +33,7 @@ const ServiceAndTime = () => {
         htmlFor="address"
         className="block text-sm font-medium text-gray-600"
       >
-        Add service *
+        {t("addService")} *
       </label>
       {services.map((service, index) => (
         <div
@@ -107,7 +107,7 @@ const ServiceAndTime = () => {
 
           <button
             onClick={() => handleDeleteService(index)}
-            className="w-full hidden md:inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+            className="w-full hidden md:inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-bold text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
           >
             {t("delete")}
           </button>
@@ -141,7 +141,7 @@ const ServiceAndTime = () => {
                       onClick={handleDoneButtonClick}
                       className="w-full bg-black hover:bg-slate-600 text-white py-2 px-4 mt-4 rounded-md"
                     >
-                      Done
+                      {t("done")}
                     </button>
                   </div>
                 </div>
@@ -154,7 +154,7 @@ const ServiceAndTime = () => {
         onClick={handleAddService}
         className="w-full bg-black mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
       >
-        Add Service
+        {t("add")}
       </button>
     </div>
   );

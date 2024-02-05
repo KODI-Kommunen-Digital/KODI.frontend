@@ -573,12 +573,12 @@
     "removeAdmin": "Remove Admin",
     "makeAdmin": "Make Admin",
 
-
-
+    "addService": "Add service",
     "appointmentBooking":"Appointment Booking",
     "addtimeslot": "Add time slot",
     "serviceName": "Service name",
     "from": "From",
     "to": "TO",
+    "done": "Done",
     "myAppoinment": "My Appoinments"
 }
