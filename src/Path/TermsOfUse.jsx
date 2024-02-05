@@ -149,7 +149,7 @@ export default function ImprintPage() {
         </div>
       )}
 
-      {process.env.REACT_APP_REGION_NAME === "GESEKE" && (
+      {process.env.REACT_APP_REGION_NAME === "HEIDI" && (
         <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
             {t("termsofuse")}
@@ -157,15 +157,15 @@ export default function ImprintPage() {
           <br />
 
           <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-            {t("tersmOfUseGlance1")}
+            {t("geseketersmOfUseGlance1")}
           </p>
           <br />
           <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-            {t("tersmOfUseGlance2")}
+            {t("geseketersmOfUseGlance2")}
           </p>
           <br />
           <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-            {t("tersmOfUseGlance3")}
+            {t("geseketersmOfUseGlance3")}
           </p>
           <br />
 
@@ -288,6 +288,7 @@ export default function ImprintPage() {
           <br />
         </div>
       )}
+
       <div className="bottom-0 w-full">
         <Footer />
       </div>

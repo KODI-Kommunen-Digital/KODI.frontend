@@ -148,21 +148,35 @@ function Footer(props) {
                 {t("imprint")}
               </a>
             </p>
-            {/* <p className={`${footerClass} mb-4`}>
-							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
-								{t("terms_conditions")}
-							</a>
-						</p> */}
+            {(process.env.REACT_APP_REGION_NAME === "AUF" ||
+              process.env.REACT_APP_REGION_NAME === "GESEKE" ||
+              process.env.REACT_APP_REGION_NAME === "HEIDI") && (
+              <p className={`${footerClass} mb-4`}>
+                <a href="/TermsOfUse" className="text-gray-600 font-sans">
+                  {t("termsofuse")}
+                </a>
+              </p>
+            )}
+            {process.env.REACT_APP_REGION_NAME === "WALDI" && (
+              <p className={`${footerClass} mb-4`}>
+                <a
+                  href="https://ilzerland.bayern/nutzungsbedingungen-waldi/"
+                  className="text-gray-600 font-sans"
+                >
+                  {t("termsofuse")}
+                </a>
+              </p>
+            )}
             <p className="mb-4">
               <a href="/PrivacyPolicy" className="text-gray-600 font-sans">
                 {t("data_protection")}
               </a>
             </p>
-            <p className="mb-4">
-              <a href="/TermsOfUse" className="text-gray-600 font-sans">
-                {t("termsofuse")}
-              </a>
-            </p>
+            {/* <p className={`${footerClass}`}>
+							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
+								{t("right_withdrawal")}
+							</a>
+						</p> */}
           </div>
           {process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
             <>

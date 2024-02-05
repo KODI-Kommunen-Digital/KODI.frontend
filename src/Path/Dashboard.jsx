@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
@@ -11,8 +11,8 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+// import { Popover, Transition } from "@headlessui/react";
+// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -207,7 +207,7 @@ const Dashboard = () => {
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
-        <Popover className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+        <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
           <div className="w-full">
             <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
               <div className="hidden lg:block">
@@ -244,15 +244,29 @@ const Dashboard = () => {
               </div>
 
               <div className="-my-2 -mr-2 lg:hidden">
+                <select
+                  className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  value={selectedStatus || ""}
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  <option value="">{t("allListings")}</option>
+                  <option value={statusByName.Active}>{t("active")}</option>
+                  <option value={statusByName.Pending}>{t("pending")}</option>
+                  <option value={statusByName.Inactive}>{t("inactive")}</option>
+                </select>
+              </div>
+
+              {/* <div className="-my-2 -mr-2 lg:hidden">
                 <Popover.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="sr-only">Open menu</span>
                   <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                 </Popover.Button>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          <Transition
+          {/* <Transition
             as={Fragment}
             enter="duration-200 ease-out"
             enterFrom="opacity-0 scale-95"
@@ -318,8 +332,8 @@ const Dashboard = () => {
                 </div>
               </div>
             </Popover.Panel>
-          </Transition>
-        </Popover>
+          </Transition> */}
+        </div>
       </div>
 
       <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
