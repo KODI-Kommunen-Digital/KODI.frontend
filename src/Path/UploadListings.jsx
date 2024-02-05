@@ -280,13 +280,14 @@ function UploadListings() {
         setInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
+        setExpiryDate(listingData.expiryDate);
 
         const hasExpiryDate = listingData.hasOwnProperty("expiryDate");
         if (!hasExpiryDate || !listingData.expiryDate) {
           // If no expiryDate or expiryDate is null, set getDefaultEndDate()
           listingData.expiryDate = getDefaultEndDate();
         }
-        setExpiryDate(listingData.expiryDate);
+
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
