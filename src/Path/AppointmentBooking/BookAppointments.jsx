@@ -285,8 +285,8 @@ const BookAppointments = () => {
   };
 
   const [, setUserName] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [, setFirstname] = useState("");
+  const [, setLastname] = useState("");
   const [, setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
@@ -320,213 +320,215 @@ const BookAppointments = () => {
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
-            <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-full">
-                <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
-                  <div className="mt-5 md:col-span-2 md:mt-0">
-                    <form method="POST">
-                      <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                        <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-                          <span
-                            className="inline-block max-w-full break-words"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {title}
-                            Appointment Booking Du möchtest dein Haus
-                            energetisch sanieren ?
-                          </span>
-                        </h1>
-                        <div
-                          className={`flex items-center ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
-                        >
-                          <button
-                            type="button"
-                            className={handleClassName}
-                            onClick={() => handleFavorite()}
-                          >
+          <div className="mx-auto w-full flex flex-col lg:flex-row  max-w-2xl gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+            <div className="lg:w-2/3">
+              <div className="grid grid-cols-1 gap-4 col-span-2">
+                <div className="lg:w-full md:w-full h-full">
+                  <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+                    <div className="mt-5 md:col-span-2 md:mt-0">
+                      <form method="POST">
+                        <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                          <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                             <span
+                              className="inline-block max-w-full break-words"
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             >
-                              {favoriteId !== 0
-                                ? t("unfavorite")
-                                : t("favourites")}
+                              {title}
+                              Appointment Booking Du möchtest dein Haus
+                              energetisch sanieren ?
                             </span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-1 justify-between mt-6">
-                        <div className="flex items-center gap-2 mt-0">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5"
-                            viewBox="0 0 512 512"
-                            fill="#4299e1"
+                          </h1>
+                          <div
+                            className={`flex items-center ${
+                              terminalView ? "hidden" : "visible"
+                            }`}
                           >
-                            <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                          </svg>
-                          <p
-                            className="leading-relaxed text-base text-blue-400"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            Available time 30 min
-                            {createdAt}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-1 justify-between mt-6">
-                        <div>
-                          <p
-                            className="text-start font-bold"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {t(categories[input.categoryId])}
-                            Appointment Booking
-                          </p>
-                        </div>
-
-                        {input.id && input.categoryId === 3 ? (
-                          <p
-                            className="leading-relaxed text-base dark:text-gray-900 font-bold"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {input.startDate && (
-                              <>
-                                <span>
-                                  {new Date(
-                                    input.startDate.slice(0, 10)
-                                  ).toLocaleDateString("de-DE")}{" "}
-                                  (
-                                  {new Date(
-                                    input.startDate.replace("Z", "")
-                                  ).toLocaleTimeString("de-DE", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    timeZone: "Europe/Berlin",
-                                  })}
-                                  )
-                                </span>
-                                {input.endDate && (
-                                  <>
-                                    <span className="text-blue-400">
-                                      {" "}
-                                      {t("To")}{" "}
-                                    </span>
-                                    <span>
-                                      {new Date(
-                                        input.endDate.slice(0, 10)
-                                      ).toLocaleDateString("de-DE")}{" "}
-                                      (
-                                      {new Date(
-                                        input.endDate.replace("Z", "")
-                                      ).toLocaleTimeString("de-DE", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        timeZone: "Europe/Berlin",
-                                      })}
-                                      )
-                                    </span>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </p>
-                        ) : (
-                          <p
-                            className="leading-relaxed text-base font-bold"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            Cost € 10.00
-                          </p>
-                        )}
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                  <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
-                    <div className="relative h-full">
-                      {input.pdf ? (
-                        <div>
-                          <div className="pdf-container">
-                            <object
-                              data={
-                                process.env.REACT_APP_BUCKET_HOST + input.pdf
-                              }
-                              type="application/pdf"
-                              className="object-cover object-center h-[600px] w-full"
-                            ></object>
+                            <button
+                              type="button"
+                              className={handleClassName}
+                              onClick={() => handleFavorite()}
+                            >
+                              <span
+                                style={{
+                                  fontFamily: "Poppins, sans-serif",
+                                }}
+                              >
+                                {favoriteId !== 0
+                                  ? t("unfavorite")
+                                  : t("favourites")}
+                              </span>
+                            </button>
                           </div>
                         </div>
-                      ) : input.logo ? (
-                        <img
-                          alt="listing"
-                          className="object-cover object-center h-full w-full"
-                          src={
-                            input.sourceId === source.User
-                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
-                              : input.logo
-                          }
-                          onError={(e) => {
-                            e.target.src = LISTINGSIMAGE; // Set default image if loading fails
-                          }}
-                        />
-                      ) : (
-                        <img
-                          alt="default"
-                          className="object-cover object-center h-full w-full"
-                          src={LISTINGSIMAGE}
-                        />
-                      )}
+
+                        <div className="flex flex-wrap gap-1 justify-between mt-6">
+                          <div className="flex items-center gap-2 mt-0">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-5 h-5"
+                              viewBox="0 0 512 512"
+                              fill="#4299e1"
+                            >
+                              <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                            </svg>
+                            <p
+                              className="leading-relaxed text-base text-blue-400"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              Available time 30 min
+                              {createdAt}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1 justify-between mt-6">
+                          <div>
+                            <p
+                              className="text-start font-bold"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {t(categories[input.categoryId])}
+                              Appointment Booking
+                            </p>
+                          </div>
+
+                          {input.id && input.categoryId === 3 ? (
+                            <p
+                              className="leading-relaxed text-base dark:text-gray-900 font-bold"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {input.startDate && (
+                                <>
+                                  <span>
+                                    {new Date(
+                                      input.startDate.slice(0, 10)
+                                    ).toLocaleDateString("de-DE")}{" "}
+                                    (
+                                    {new Date(
+                                      input.startDate.replace("Z", "")
+                                    ).toLocaleTimeString("de-DE", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      timeZone: "Europe/Berlin",
+                                    })}
+                                    )
+                                  </span>
+                                  {input.endDate && (
+                                    <>
+                                      <span className="text-blue-400">
+                                        {" "}
+                                        {t("To")}{" "}
+                                      </span>
+                                      <span>
+                                        {new Date(
+                                          input.endDate.slice(0, 10)
+                                        ).toLocaleDateString("de-DE")}{" "}
+                                        (
+                                        {new Date(
+                                          input.endDate.replace("Z", "")
+                                        ).toLocaleTimeString("de-DE", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                          timeZone: "Europe/Berlin",
+                                        })}
+                                        )
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </p>
+                          ) : (
+                            <p
+                              className="leading-relaxed text-base font-bold"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              Cost € 10.00
+                            </p>
+                          )}
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
-                <h1
-                  className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("description")}
-                </h1>
-                <Description content={description} />
-                Bitte beachten Sie, dass jeder Termin nur für eine Person
-                reserviert werden kann. Bei Buchungen für mehrere Personen
-                bitten wir Sie, den Termin telefonisch zu vereinbaren. Wer eine
-                neue Wohnung bezieht, muss sich innerhalb 14 Tagen nach Einzug
-                bei der Meldebehörde melden. Für eine An- oder Ummeldung
-                benötigen wir: sämtliche Ausweisdokumente (Personalausweis
-                und/oder Reisepass, Nationalpass und Aufenthaltstitel) und eine
-                vom Vermieter ausgestellte Wohnungsgeberbescheinigung. Der
-                Wohnungsgeber kann auch ein Freund oder eine Freundin, die
-                Eltern oder Großeltern sein. Das Formular finden Sie auf
-                https://www.kelheim.de/e-formulare/. Der Eigentümer der Wohnung
-                / des Hauses ist anzugeben Sollten Sie selbst Eigentümer der
-                Wohnung/des Hauses sein, können Sie die
-                Wohnungsgeberbescheinigung vor Ort ausfüllen.
-              </div>
+                <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
+                  <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+                    <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
+                      <div className="relative h-full">
+                        {input.pdf ? (
+                          <div>
+                            <div className="pdf-container">
+                              <object
+                                data={
+                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                }
+                                type="application/pdf"
+                                className="object-cover object-center h-[600px] w-full"
+                              ></object>
+                            </div>
+                          </div>
+                        ) : input.logo ? (
+                          <img
+                            alt="listing"
+                            className="object-cover object-center h-full w-full"
+                            src={
+                              input.sourceId === source.User
+                                ? process.env.REACT_APP_BUCKET_HOST + input.logo
+                                : input.logo
+                            }
+                            onError={(e) => {
+                              e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+                            }}
+                          />
+                        ) : (
+                          <img
+                            alt="default"
+                            className="object-cover object-center h-full w-full"
+                            src={LISTINGSIMAGE}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              {/* <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
+                  <h1
+                    className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("description")}
+                  </h1>
+                  <Description content={description} />
+                  Bitte beachten Sie, dass jeder Termin nur für eine Person
+                  reserviert werden kann. Bei Buchungen für mehrere Personen
+                  bitten wir Sie, den Termin telefonisch zu vereinbaren. Wer
+                  eine neue Wohnung bezieht, muss sich innerhalb 14 Tagen nach
+                  Einzug bei der Meldebehörde melden. Für eine An- oder
+                  Ummeldung benötigen wir: sämtliche Ausweisdokumente
+                  (Personalausweis und/oder Reisepass, Nationalpass und
+                  Aufenthaltstitel) und eine vom Vermieter ausgestellte
+                  Wohnungsgeberbescheinigung. Der Wohnungsgeber kann auch ein
+                  Freund oder eine Freundin, die Eltern oder Großeltern sein.
+                  Das Formular finden Sie auf
+                  https://www.kelheim.de/e-formulare/. Der Eigentümer der
+                  Wohnung / des Hauses ist anzugeben Sollten Sie selbst
+                  Eigentümer der Wohnung/des Hauses sein, können Sie die
+                  Wohnungsgeberbescheinigung vor Ort ausfüllen.
+                </div>
+
+                {/* <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
                 <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
                   <h1
                     className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
@@ -537,181 +539,188 @@ const BookAppointments = () => {
                   <DateTimePicker />
                 </div>
               </div> */}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
-              {userSocial && userSocial.length > 0 ? (
-                <UserProfile user={user} />
-              ) : (
-                <div className="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
-                  <div>
-                    <div
-                      onClick={() =>
-                        navigateTo(
-                          user
-                            ? `/ViewProfile/${user.username}`
-                            : "/ViewProfile"
-                        )
-                      }
-                      className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
-                    >
-                      <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
-                        <img
-                          className="rounded-full h-20 w-20"
-                          src={
-                            user?.image
-                              ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                              : PROFILEIMAGE
-                          }
-                          alt={user?.lastname}
-                        />
-                        <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                          <button
-                            onClick={() =>
-                              navigateTo(
-                                user
-                                  ? `/ViewProfile/${user.username}`
-                                  : "/ViewProfile"
-                              )
+            <div className="lg:w-1/3">
+              <div className="grid grid-cols-1 gap-4">
+                {userSocial && userSocial.length > 0 ? (
+                  <UserProfile user={user} />
+                ) : (
+                  <div className="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+                    <div>
+                      <div
+                        onClick={() =>
+                          navigateTo(
+                            user
+                              ? `/ViewProfile/${user.username}`
+                              : "/ViewProfile"
+                          )
+                        }
+                        className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
+                      >
+                        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
+                          <img
+                            className="rounded-full h-20 w-20"
+                            src={
+                              user?.image
+                                ? process.env.REACT_APP_BUCKET_HOST +
+                                  user?.image
+                                : PROFILEIMAGE
                             }
-                            type="submit"
-                            className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                            alt={user?.lastname}
+                          />
+                          <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+                            <button
+                              onClick={() =>
+                                navigateTo(
+                                  user
+                                    ? `/ViewProfile/${user.username}`
+                                    : "/ViewProfile"
+                                )
+                              }
+                              type="submit"
+                              className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                              {t("viewProfile")}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
+                          <h2
+                            className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
                           >
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                            {t("viewProfile")}
-                          </button>
-                        </div>
-                      </div>
-                      <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
-                        <h2
-                          className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {firstname + " " + lastname}
-                        </h2>
-                        <p
-                          className="leading-relaxed text-base font-bold dark:text-gray-900"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {user?.username}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
-                <div className="relative h-full mx-2 py-2 px-2 my-2">
-                  <div className="flex justify-center items-center">
-                    <div className="relative h-full">
-                      <div className="flex justify-center items-center">
-                        <div className="flex gap-10 items-center">
-                          <GrFormPrevious
-                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-                            onClick={() => {
-                              setToday(today.month(today.month() - 1));
-                            }}
-                          />
-                          <h1
-                            className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
-                            onClick={() => {
-                              setToday(currentDate);
+                            Akshay Sunilkumar
+                          </h2>
+                          <p
+                            className="leading-relaxed text-base font-bold dark:text-gray-900"
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
                             }}
                           >
-                            {months[today.month()]}, {today.year()}
-                          </h1>
-                          <GrFormNext
-                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-                            onClick={() => {
-                              setToday(today.month(today.month() + 1));
-                            }}
-                          />
+                            Akshay
+                          </p>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
 
-                      <div className="grid grid-cols-7 bg-black text-white">
-                        {days.map((day, index) => {
-                          return (
+                <div className="h-full overflow-hidden px-0 py-0 shadow-xl bg-white">
+                  <div className="relative h-full mx-2 py-2 px-2 my-2">
+                    <div className="flex justify-center items-center">
+                      <div className="relative h-full">
+                        <div className="flex justify-center items-center">
+                          <div className="flex gap-10 items-center">
+                            <GrFormPrevious
+                              className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
+                              onClick={() => {
+                                setToday(today.month(today.month() - 1));
+                              }}
+                            />
                             <h1
-                              key={index}
-                              className="p-2 text-center h-14 grid place-content-center text-sm"
+                              className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
+                              onClick={() => {
+                                setToday(currentDate);
+                              }}
                             >
-                              {day}
+                              {months[today.month()]}, {today.year()}
                             </h1>
-                          );
-                        })}
-                      </div>
+                            <GrFormNext
+                              className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
+                              onClick={() => {
+                                setToday(today.month(today.month() + 1));
+                              }}
+                            />
+                          </div>
+                        </div>
 
-                      <div className="grid grid-cols-7 ">
-                        {generateDate(today.month(), today.year()).map(
-                          ({ date, currentMonth, today }, index) => {
+                        <div className="grid grid-cols-7 bg-black text-white">
+                          {days.map((day, index) => {
                             return (
-                              <div
+                              <h1
                                 key={index}
-                                className="p-2 text-center h-14 grid place-content-center text-sm border-t"
+                                className="p-2 text-center h-14 grid place-content-center text-sm"
                               >
-                                <h1
-                                  className={cn(
-                                    currentMonth ? "" : "text-gray-400",
-                                    today ? "bg-red-600 text-white" : "",
-                                    selectDate.toDate().toDateString() ===
-                                      date.toDate().toDateString()
-                                      ? "bg-black text-white"
-                                      : "",
-                                    "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
-                                  )}
-                                  onClick={() => {
-                                    setSelectDate(date);
-                                  }}
-                                >
-                                  {date.date()}
-                                </h1>
-                              </div>
+                                {day}
+                              </h1>
                             );
-                          }
-                        )}
+                          })}
+                        </div>
+
+                        <div className="grid grid-cols-7 ">
+                          {generateDate(today.month(), today.year()).map(
+                            ({ date, currentMonth, today }, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="p-2 text-center h-14 grid place-content-center text-sm border-t"
+                                >
+                                  <h1
+                                    className={cn(
+                                      currentMonth ? "" : "text-gray-400",
+                                      today ? "bg-red-600 text-white" : "",
+                                      selectDate.toDate().toDateString() ===
+                                        date.toDate().toDateString()
+                                        ? "bg-black text-white"
+                                        : "",
+                                      "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
+                                    )}
+                                    onClick={() => {
+                                      setSelectDate(date);
+                                    }}
+                                  >
+                                    {date.date()}
+                                  </h1>
+                                </div>
+                              );
+                            }
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="bg-white md:ml-[6rem] lg:ml-[0rem] ml-[1rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
-                <h1 className="text-lg text-center font-semibold mb-4">
-                  Select a time for {selectDate.toDate().toDateString()}
-                </h1>
-                <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                  <div className="flex flex-wrap gap-2">
-                    {Array.from({ length: 24 * 2 }).map((_, index) => {
-                      const time = dayjs()
-                        .hour(8)
-                        .minute(0)
-                        .add(index * 60, "minutes");
-                      return (
-                        <div
-                          key={index}
-                          className={cn(
-                            "p-2 rounded-full border cursor-pointer transition-all",
-                            "hover:bg-gray-200",
-                            "select-none"
-                          )}
-                          onClick={() => {
-                            // Handle time selection as needed
-                            console.log("Selected time:", time.format("HH:mm"));
-                          }}
-                        >
-                          {time.format("HH:mm")}
-                        </div>
-                      );
-                    })}
+                <div className="bg-white md:ml-[6rem] lg:ml-[0rem] ml-[1rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
+                  <h1 className="text-lg text-center font-semibold mb-4">
+                    Select a time for {selectDate.toDate().toDateString()}
+                  </h1>
+                  <div className="time-selection-container overflow-y-auto max-h-[100px]">
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from({ length: 24 * 2 }).map((_, index) => {
+                        const time = dayjs()
+                          .hour(8)
+                          .minute(0)
+                          .add(index * 60, "minutes");
+                        return (
+                          <div
+                            key={index}
+                            className={cn(
+                              "p-2 rounded-full border cursor-pointer transition-all",
+                              "hover:bg-gray-200",
+                              "select-none"
+                            )}
+                            onClick={() => {
+                              // Handle time selection as needed
+                              console.log(
+                                "Selected time:",
+                                time.format("HH:mm")
+                              );
+                            }}
+                          >
+                            {time.format("HH:mm")}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
