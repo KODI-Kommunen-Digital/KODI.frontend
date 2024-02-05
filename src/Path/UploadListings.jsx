@@ -113,6 +113,28 @@ function UploadListings() {
     }
   }
 
+  const [localImages, setLocalImages] = useState([]);
+  const handleMultipleInputChange = (event) => {
+    const newImages = Array.from(event.target.files);
+    setLocalImages((prevImages) => [...prevImages, ...newImages]);
+    setImage([...image, ...newImages]);
+  };
+
+  const handleUpdateMultipleInputChange = (e) => {
+    const newFiles = e.target.files;
+
+    if (newFiles.length > 0) {
+      const validImages = Array.from(newFiles).filter((file) =>
+        file.type.startsWith("image/")
+      );
+
+      if (validImages.length > 0) {
+        setLocalImageOrPdf(true);
+        setImage((prevImages) => [...prevImages, ...validImages]);
+      }
+    }
+  };
+
   function handleRemoveImage() {
     if (listingId) {
       setInput((prev) => ({
@@ -121,7 +143,11 @@ function UploadListings() {
         logo: null,
       }));
     }
-    setImage(null);
+    setImage((prevImages) => {
+      const updatedImages = [...prevImages];
+      // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
+      return updatedImages;
+    });
   }
 
   function handleRemovePDF() {
@@ -133,6 +159,10 @@ function UploadListings() {
       }));
     }
     setPdf(null);
+    setInput((prev) => ({
+      ...prev,
+      hasAttachment: false,
+    }));
   }
 
   //Drag and Drop ends
@@ -160,8 +190,9 @@ function UploadListings() {
     discountedPrice: "",
     removeImage: false,
     removePdf: false,
+    hasImage: false,
+    hasAttachment: false,
   });
-  console.log(input);
 
   const [error, setError] = useState({
     categoryId: "",
@@ -196,15 +227,33 @@ function UploadListings() {
           setListingId(response.data.id);
         }
 
-        if (input.removeImage || input.removePdf) {
-          await deleteListingImage(cityId, listingId);
+        if (input.removeImage) {
+          if (image.length === 0) {
+            await deleteListingImage(cityId, listingId);
+          } else {
+            if (!localImageOrPdf) {
+              const imageForm = new FormData();
+              for (let i = 0; i < image.length; i++) {
+                imageForm.append("image", image[i]);
+              }
+
+              await uploadListingImage(
+                imageForm,
+                cityId,
+                response.data.id || listingId
+              );
+            }
+          }
         }
 
         if (localImageOrPdf) {
           if (image) {
             // Upload image if it exists
             const imageForm = new FormData();
-            imageForm.append("image", image);
+            for (let i = 0; i < image.length; i++) {
+              imageForm.append("image", image[i]);
+            }
+
             await uploadListingImage(
               imageForm,
               cityId,
@@ -1043,7 +1092,7 @@ function UploadListings() {
         </div>
       </div>
 
-      <div className="container w-auto px-5 py-2 bg-slate-600">
+      <div className="container w-auto px-5 py-2 base-bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
             {t("uploadLogo")}
@@ -1061,19 +1110,104 @@ function UploadListings() {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              {image ? (
-                <div className="flex flex-col items-center">
-                  <img
-                    className="object-contain h-64 w-full mb-4"
-                    src={localImageOrPdf ? URL.createObjectURL(image) : image}
-                    alt="uploaded"
+              {image && image.length > 0 && newListing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
                   />
-                  <button
-                    className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-                    onClick={handleRemoveImage}
-                  >
-                    {t("removeFile")}
-                  </button>
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-8xl text-black">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : image &&
+                Array.isArray(image) &&
+                image.length === 1 &&
+                typeof image[0] === "string" &&
+                image[0].includes("admin/") ? (
+                <div>
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    handleInputChange={handleInputChange}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
+                  />
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-8xl text-black">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleUpdateMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : image &&
+                Array.isArray(image) &&
+                image.length > 0 &&
+                !newListing ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FormImage
+                    updateImageList={setImage}
+                    handleRemoveImage={handleRemoveImage}
+                    handleInputChange={handleInputChange}
+                    image={image}
+                    localImageOrPdf={localImageOrPdf}
+                    localImages={localImages}
+                  />
+                  {image.length < 8 && (
+                    <label
+                      htmlFor="file-upload"
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
+                    >
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-8xl text-black">+</div>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*,.pdf"
+                        className="sr-only"
+                        onChange={handleUpdateMultipleInputChange}
+                        multiple
+                      />
+                    </label>
+                  )}
                 </div>
               ) : pdf ? (
                 <div className="flex flex-col items-center">
@@ -1096,18 +1230,7 @@ function UploadListings() {
                 </div>
               ) : (
                 <div className="text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="mx-auto h-12 w-12"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <UploadSVG />
                   <p className="mt-1 text-sm text-gray-600">
                     {t("dragAndDropImageOrPDF")}
                   </p>
@@ -1115,13 +1238,14 @@ function UploadListings() {
                     <label
                       className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
                     >
-                      <span className="button-label">{t("uploadFile")}</span>
+                      <span className="button-label">{t("upload")}</span>
                       <input
                         id="file-upload"
                         type="file"
                         accept="image/*,.pdf"
                         className="sr-only"
                         onChange={handleInputChange}
+                        multiple
                       />
                     </label>
                   </div>

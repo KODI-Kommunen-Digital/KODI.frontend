@@ -29,7 +29,7 @@ const CustomCarousel = (props) => {
           props.sourceId === source.User
             ? process.env.REACT_APP_BUCKET_HOST +
               sortedImageList[activeIndex]?.logo // uploaded image
-            : sortedImageList[activeIndex]?.logon // from drive
+            : sortedImageList[activeIndex]?.logo // from drive
         }
         onError={(e) => {
           e.target.src = LISTINGSIMAGE; // Set default image if loading fails
@@ -56,7 +56,11 @@ const CustomCarousel = (props) => {
 
   return (
     <div className="relative">
-      <div className="rounded-xl mb-4 relative">
+      <div
+        className={`rounded-xl mb-${
+          sortedImageList.length <= 1 ? 0 : 4
+        } relative`}
+      >
         {sortedImageList.length <= 1 ? null : (
           <>
             <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
@@ -72,7 +76,9 @@ const CustomCarousel = (props) => {
         {mainImageComponent}
       </div>
 
-      <div className="flex overflow-x-auto">{thumbnailComponent}</div>
+      {sortedImageList.length <= 1 ? null : (
+        <div className="flex overflow-x-auto">{thumbnailComponent}</div>
+      )}
     </div>
   );
 };

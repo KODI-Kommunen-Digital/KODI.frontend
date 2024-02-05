@@ -1,5 +1,5 @@
 {
-    "+add_social_media": "+ Füge Social Media hinzu.",
+    "+add_social_media": "+Füge Social Media hinzu.",
     "aboutMe": "Über mich",
     "acceptConditionMessage": "Ich akzeptiere die Datenschutzerkläung* und die allgemeinen Geschäftsbedingungen*",
     "account": "Account",
@@ -581,6 +581,7 @@
     "Offer / Search": "Suche / Biete",
     "New citizen info": "Neubürgerinfos",
     "Company portraits": "Unternehmen",
+    "companyPortraits": "Unternehmen",
     "Carpooling / Public transport": "Mitfahrbank / ÖPNV",
     "Eat or Drink": "Essen",
     "FlashNews": "Eilmeldungen",
