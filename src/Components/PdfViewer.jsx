@@ -8,6 +8,7 @@ const PDFDisplay = (url) => {
     const { t } = useTranslation();
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
+    const [scale, setScale] = useState(1)
 
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
@@ -25,6 +26,10 @@ const PDFDisplay = (url) => {
     function nextPage() {
         changePage(1);
     }
+    function handleRenderSuccess(pageData) {
+        setScale(Number(document.getElementsByClassName("pdf-container")[0].offsetWidth / Number(pageData.originalWidth) ))
+
+      }
 
     return (
         <>
@@ -33,7 +38,8 @@ const PDFDisplay = (url) => {
             onLoadSuccess={onDocumentLoadSuccess}
             onItemClick={(args) => setPageNumber(args.pageNumber)}
         >
-            <Page pageNumber={pageNumber} />
+            {JSON.stringify(scale)}
+            <Page pageNumber={pageNumber} onRenderSuccess={handleRenderSuccess} scale={scale} />
         </Document>
         <div className='items-center flex-col justify-center flex'>
             <p>
