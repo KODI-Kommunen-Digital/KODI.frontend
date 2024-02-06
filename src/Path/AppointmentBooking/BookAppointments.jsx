@@ -542,12 +542,12 @@ const BookAppointments = () => {
               </div>
             </div>
 
-            <div className="lg:w-1/3">
+            <div className="lg:w-1/3 mx-auto">
               <div className="grid grid-cols-1 gap-4">
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
-                  <div className="w-full h-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+                  <div className="w-full h-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
                     <div>
                       <div
                         onClick={() =>
@@ -613,11 +613,11 @@ const BookAppointments = () => {
                   </div>
                 )}
 
-                <div className="h-full overflow-hidden px-0 py-0 shadow-xl bg-white">
+                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-0 rounded-md max-w-md w-full h-full shadow-xl">
                   <div className="relative h-full mx-2 py-2 px-2 my-2">
                     <div className="flex justify-center items-center">
                       <div className="relative h-full">
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center items-center mb-2">
                           <div className="flex gap-10 items-center">
                             <GrFormPrevious
                               className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
@@ -689,7 +689,7 @@ const BookAppointments = () => {
                   </div>
                 </div>
 
-                <div className="bg-white md:ml-[6rem] lg:ml-[0rem] ml-[1rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
+                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
                   <h1 className="text-lg text-center font-semibold mb-4">
                     Select a time for {selectDate.toDate().toDateString()}
                   </h1>
