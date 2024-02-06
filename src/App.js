@@ -114,8 +114,8 @@ const App = () => {
                 exact
               />
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
-            </React.Fragment>)}
-
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>
