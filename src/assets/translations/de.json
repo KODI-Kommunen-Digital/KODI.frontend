@@ -590,5 +590,18 @@
     "Local": "Lokales",
     "Club News": "Vereinsnews",
     "Road works / Traffic": "Verkehrsmeldungen",
-    "Official notification": "Amtliche Mitteilung"
+    "Official notification": "Amtliche Mitteilung",
+    "pleaseEnterExpiryDate": "Bitte geben Sie das Ablaufdatum ein",
+    "freetimeAndTourisms": "Freizeit und Tourismus",
+    "unknownCategory": "Unbekannte Kategorie",
+    "requests": "Anfragen",
+    "anleitung": "Anleitung",
+    "disableDates": "Termine deaktivieren",
+    "noExpiryMessage": "Für diese Nachricht gibt es kein Ablaufdatum oder Ablaufdatum",
+    "expiryMessage": "Die Ablauffrist für diese Nachricht beträgt :",
+    "expiryDate": "Expiry date",
+    "youAreAlmostThere": "Du bist fast am Ziel",
+    "next": "weiter",
+    "previous": "zurück",
+    "of": "von"
 }

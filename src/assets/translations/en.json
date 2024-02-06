@@ -573,5 +573,15 @@
     "previous": "Previous",
     "removeAdmin": "Remove Admin",
     "removeFile": "Remove file",
-    "makeAdmin": "Make Admin"
+    "makeAdmin": "Make Admin",
+    "pleaseEnterExpiryDate": "Please enter the expiry date",
+    "freetimeAndTourisms": "Freetime and Tourism",
+    "unknownCategory": "Unknown Category",
+    "requests": "Requests",
+    "disableDates": "Disable dates",
+    "noExpiryMessage": "There will not be any expiry time or date to this news",
+    "expiryMessage": "The expiry period for this news will be :",
+    "expiryDate": "Expiry date",
+    "youAreAlmostThere": "You are almost there",
+    "of": "of"
 }
