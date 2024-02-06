@@ -607,5 +607,7 @@
     "verifyEmail": "Please verify the email by going to your inbox and pressing the verification link",
     "verified": "Your account is verified and you can log in with your login details",
     "enjoyApp": "We hope you enjoy using the app!",
-    "danke": "Thanks!!"
+    "danke": "Thanks!!",
+    "previous": "Previous",
+    "of": "of"
 }
