@@ -5,6 +5,8 @@ import Footer from "../Components/Footer";
 
 export default function TermsOfUse() {
   const { t } = useTranslation();
+  const appName = t(`${process.env.REACT_APP_REGION_NAME}`);
+  const operator = t(`${process.env.REACT_APP_REGION_NAME}`);
 
   return (
     <section className="bg-white body-font relative">
@@ -16,38 +18,18 @@ export default function TermsOfUse() {
         </p>
         <br />
 
-        {process.env.REACT_APP_REGION_NAME === "AUF" ? (
-          <>
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("tersmOfUseGlance1")}
-            </p>
-            <br />
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("tersmOfUseGlance2")}
-            </p>
-            <br />
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("tersmOfUseGlance3")}
-            </p>
-            <br />
-          </>
-        ) : process.env.REACT_APP_REGION_NAME === "GESEKE" ||
-          process.env.REACT_APP_REGION_NAME === "HEIDI" ? (
-          <>
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("geseketersmOfUseGlance1")}
-            </p>
-            <br />
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("geseketersmOfUseGlance2")}
-            </p>
-            <br />
-            <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-              {t("geseketersmOfUseGlance3")}
-            </p>
-            <br />
-          </>
-        ) : null}
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          {t("tersmOfUseGlance1", { appName, operator })}
+        </p>
+        <br />
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          {t("tersmOfUseGlance2")}
+        </p>
+        <br />
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          {t("tersmOfUseGlance3")}
+        </p>
+        <br />
 
         <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
           {t("registration")}
