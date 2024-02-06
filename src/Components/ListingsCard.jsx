@@ -1,7 +1,7 @@
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React from "react";
-import PdfToImage from "../Components/PdfToImage";
+import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -30,7 +30,9 @@ function ListingsCard({ listing, terminalView = false }) {
 			className="w-full h-96 shadow-lg rounded-lg cursor-pointer"
 		>
 			<div className="block relative h-64 rounded overflow-hidden">
-				{listing.logo ? (
+				{listing.pdf ? (
+					<PdfThumbnail pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf} />
+					) : listing.logo ? (
 					<img
 						alt="Listing"
 						className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
@@ -43,8 +45,6 @@ function ListingsCard({ listing, terminalView = false }) {
 							e.target.src = LISTINGSIMAGE; // Set default image if loading fails
 						}}
 					/>
-				) : listing.pdf ? (
-					<PdfToImage pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf} />
 				) : (
 					<img
 						alt="Listing"

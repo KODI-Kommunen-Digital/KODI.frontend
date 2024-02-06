@@ -40,7 +40,7 @@ const PDFDisplay = (url) => {
         >
             <Page pageNumber={pageNumber} onRenderSuccess={handleRenderSuccess} scale={scale} />
         </Document>
-        <div className='items-center flex-col justify-center flex'>
+        <div className='items-center flex-col justify-center flex p-2'>
             <p>
                 {t("page")} {pageNumber || (numPages ? 1 : '--')} {t("of")} {numPages || '--'}
             </p>
