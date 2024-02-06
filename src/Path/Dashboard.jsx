@@ -149,6 +149,7 @@ const Dashboard = () => {
         const tempListings = listings;
         tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
         setListings([...tempListings]);
+        window.location.reload();
       })
       .catch((error) => console.log(error));
   }
