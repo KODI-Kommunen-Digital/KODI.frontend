@@ -65,7 +65,6 @@ const PDFDisplay = (url) => {
                 </button>
             </div>
         </div>
-      </div>
     </>
   );
 };
