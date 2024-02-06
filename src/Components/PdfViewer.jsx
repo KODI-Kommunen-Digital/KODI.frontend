@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import React, { useState } from "react";
+import { Document, Page } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 import { useTranslation } from "react-i18next";
 
 const PDFDisplay = (url) => {
@@ -10,18 +10,18 @@ const PDFDisplay = (url) => {
     const [pageNumber, setPageNumber] = useState(1);
     const [scale, setScale] = useState(1)
 
-    function onDocumentLoadSuccess({ numPages }) {
-        setNumPages(numPages);
-        setPageNumber(1);
-    }
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+    setPageNumber(1);
+  }
 
-    function changePage(offset) {
-        setPageNumber(prevPageNumber => prevPageNumber + offset);
-    }
+  function changePage(offset) {
+    setPageNumber((prevPageNumber) => prevPageNumber + offset);
+  }
 
-    function previousPage() {
-        changePage(-1);
-    }
+  function previousPage() {
+    changePage(-1);
+  }
 
     function nextPage() {
         changePage(1);
@@ -65,8 +65,9 @@ const PDFDisplay = (url) => {
                 </button>
             </div>
         </div>
-        </>
-    );
-}
+      </div>
+    </>
+  );
+};
 
 export default PDFDisplay;
