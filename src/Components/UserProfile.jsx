@@ -65,7 +65,7 @@ function UserProfile({ user }) {
           >
             <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
               <img
-                className="rounded-full h-20 w-20"
+                className="rounded-full h-20 w-20 object-cover"
                 src={
                   user?.image
                     ? process.env.REACT_APP_BUCKET_HOST + user?.image

@@ -314,7 +314,7 @@ const Listing = () => {
 
           <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-64">
+              <div className="lg:w-full md:w-full h-full">
                 <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <form method="POST">
@@ -446,8 +446,8 @@ const Listing = () => {
                 </div>
               </div>
 
-              <div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+              <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
                   <style>
                     {`
 								@media (max-width: 280px) {
@@ -482,7 +482,7 @@ const Listing = () => {
                       ) : input.logo ? (
                         <img
                           alt="listing"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={
                             input.sourceId === source.User
                               ? process.env.REACT_APP_BUCKET_HOST + input.logo
@@ -495,7 +495,7 @@ const Listing = () => {
                       ) : (
                         <img
                           alt="default"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={LISTINGSIMAGE}
                         />
                       )}
@@ -608,7 +608,7 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active
+                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard

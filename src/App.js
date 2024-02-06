@@ -9,6 +9,7 @@ import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
+import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePage from "./Path/HomePage";
@@ -81,6 +82,7 @@ const App = () => {
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
 
           <Route path="/Favorite" element={<Favorites />} />
