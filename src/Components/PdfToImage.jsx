@@ -1,46 +1,25 @@
-import React from "react";
-import { pdfjs } from "react-pdf";
-import PropTypes from "prop-types";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
+import React, {useState} from "react";
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
-function PdfThumbnail({ pdfUrl }) {
-	const openPdf = (e) => {
-		e.stopPropagation();
-		window.open(pdfUrl, "_blank");
-	};
+
+function PdfThumbnail(pdfUrl) {
+	const [scale, setScale] = useState(1)
+
+	function handleRenderSuccess(pageData) {
+        setScale(Number(document.getElementsByClassName("pdf-listing-card")[0].offsetWidth / Number(pageData.originalWidth) ))
+
+      }
 
 	return (
-		<>
-			<img
-				src={LISTINGSIMAGE}
-				alt="PDF Thumbnail"
-				className="object-cover object-center w-full h-full block"
-				width={100}
-				height={150}
-			/>
-			<div className="absolute inset-0 flex flex-col justify-center bg-gray-800 bg-opacity-50 text-white">
-				<h1
-					className="text-center md:text-lg font-sans font-bold"
-					style={{
-						fontFamily: "Poppins, sans-serif",
-					}}
-				>
-					<button
-						onClick={openPdf}
-						className="cursor-pointer bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-full"
-					>
-						Click to Open PDF
-					</button>
-				</h1>
-			</div>
-		</>
+		<div className="pdf-listing-card">
+			<Document file={pdfUrl.pdfUrl}>
+            <Page pageNumber={1} onRenderSuccess={handleRenderSuccess} scale={scale}  />
+        </Document>
+		</div>
 	);
 }
-
-PdfThumbnail.propTypes = {
-	pdfUrl: PropTypes.string.isRequired,
-	LISTINGSIMAGE: PropTypes.string.isRequired,
-};
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
