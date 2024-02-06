@@ -41,6 +41,8 @@ const ViewPost = () => {
   const [showComments, setShowComments] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [showMoreComments, setShowMoreComments] = useState(true);
+  const [pageNo, setPageNo] = useState(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [text, setText] = useState("");
   const [user, setUser] = useState();
@@ -56,8 +58,7 @@ const ViewPost = () => {
 
   useEffect(() => {
     fetchComments();
-    console.log(fetchComments());
-  }, []);
+  }, [pageNo]);
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -73,6 +74,7 @@ const ViewPost = () => {
     const comment = comments.find((c) => c.id === parentId);
     comment.newReply = newReply;
     setComments([...comments]);
+    console.log(comments);
   };
 
   const postComment = (parentId = null) => {
@@ -115,7 +117,7 @@ const ViewPost = () => {
   };
 
   const fetchComments = (parentId = null) => {
-    const params = { pageSize };
+    const params = { pageSize, pageNo };
     const urlParams = new URLSearchParams(window.location.search);
     const cityId = parseInt(urlParams.get("cityId"));
     const forumId = parseInt(urlParams.get("forumId"));
@@ -131,16 +133,39 @@ const ViewPost = () => {
       else comment.pageNo = 1;
       params.pageNo = comment.pageNo;
     }
-    getComments(cityId, forumId, postId, params).then((response) => {
-      if (parentId) {
-        comment.replies = comment.replies
-          ? [...comment.replies.concat(response.data.data)]
-          : [...response.data.data];
-        setComments([...comments]);
-      } else {
-        setComments([...comments.concat(response.data.data)]);
-      }
-    });
+    getComments(cityId, forumId, postId, params)
+      .then((response) => {
+        if (parentId) {
+          // Update existing replies without duplicates
+          comment.replies = comment.replies
+            ? [
+                ...comment.replies,
+                ...response.data.data.filter(
+                  (reply) =>
+                    !comment.replies.find(
+                      (existingReply) => existingReply.id === reply.id
+                    )
+                ),
+              ]
+            : [...response.data.data];
+          setComments([...comments]);
+        } else {
+          if (response.data.data.length > 0) {
+            setShowMoreComments(true);
+            // Update the logic to concatenate new comments to existing ones
+            setComments([...comments, ...response.data.data]);
+          } else {
+            setShowMoreComments(false);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching comments:", error);
+      });
+  };
+
+  const handleShowMoreComments = () => {
+    setPageNo(pageNo + 1);
   };
 
   useEffect(() => {
@@ -225,12 +250,6 @@ const ViewPost = () => {
     setIsPopupOpen(false);
     setText("");
   };
-
-  // useEffect(() => {
-  // 	if (pageNo !== 1) {
-  // 		fetchComments();
-  // 	}
-  // }, [pageNo]);
 
   function goToAllForums() {
     navigateTo(`/CitizenService`);
@@ -367,6 +386,7 @@ const ViewPost = () => {
           <div className="overflow-hidden mb-10">
             <Description content={forumPost.description} />
           </div>
+
           <form className="mb-6">
             <div className="py-2 px-4 mb-4 bg-white rounded-xl rounded-t-xl border border-gray-200">
               <textarea
@@ -458,7 +478,7 @@ const ViewPost = () => {
                         </div>
                       </div>
                       <p className="text-gray-500">{comment.comment}</p>
-                      <div className="flex items-center mt-4 space-x-4">
+                      <div className="flex items-center mt-4 space-x-4 mb-2">
                         <button
                           type="button"
                           className="flex items-center text-sm text-gray-500 hover:underline"
@@ -522,7 +542,7 @@ const ViewPost = () => {
                         )}
                       </div>
                       {comment.showReplyBox && (
-                        <div className="mt-4">
+                        <div className="mt-4 mb-2">
                           <textarea
                             className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
                             rows="2"
@@ -593,6 +613,16 @@ const ViewPost = () => {
                     </div>
                   ))}
                 </div>
+
+                {showMoreComments && (
+                  <button
+                    type="button"
+                    className={`mt-2 px-2 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                    onClick={handleShowMoreComments}
+                  >
+                    {t("showMoreComments")}
+                  </button>
+                )}
               </div>
             )}
           </form>
