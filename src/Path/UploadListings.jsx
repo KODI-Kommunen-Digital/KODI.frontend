@@ -338,12 +338,7 @@ function UploadListings() {
       setInput((prev) => ({
         ...prev,
         [name]: checked,
-        startDate: checked ? prev.startDate : null,
-        endDate: checked
-          ? prev.endDate && prev.endDate !== getDefaultEndDate()
-            ? prev.endDate
-            : getDefaultEndDate()
-          : null,
+        expiryDate: checked ? null : prev.expiryDate,
       }));
     } else {
       setInput((prev) => ({
