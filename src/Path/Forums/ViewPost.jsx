@@ -410,7 +410,7 @@ const ViewPost = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 onClick={() => postComment()}
-                className="block md:hidden  mr-1 w-6 h-6"
+                className="block md:hidden  mr-1 w-8 h-6"
                 viewBox="0 0 640 512"
               >
                 <svg
@@ -433,7 +433,7 @@ const ViewPost = () => {
               </a>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="block md:hidden  mr-1 w-6 h-6"
+                className="block md:hidden  mr-1 w-8 h-6"
                 viewBox="0 0 576 512"
                 onClick={toggleComments}
               >
@@ -453,10 +453,19 @@ const ViewPost = () => {
                       className="p-6 mb-2 text-base border border-gray-200 bg-white rounded-lg"
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center">
-                          <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+                        <div className="flex items-start md:items-center flex-col md:flex-row">
+                          <div
+                            className="mr-3 mb-2 text-sm text-gray-500 flex items-center"
+                            onClick={() =>
+                              navigateTo(
+                                user
+                                  ? `/ViewProfile/${comment.username}`
+                                  : "/ViewProfile"
+                              )
+                            }
+                          >
                             <img
-                              className="mr-2 w-6 h-6 rounded-full"
+                              className="mr-2 w-6 h-6 object-cover rounded-full"
                               src={
                                 comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
@@ -464,20 +473,26 @@ const ViewPost = () => {
                                   : PROFILEIMAGE
                               }
                             />
-                            {comment.firstname} {comment.lastname} (@
-                            {comment.username})
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            <time
-                              dateTime="2022-02-08"
-                              title="February 8th, 2022"
-                            >
-                              {new Date(comment.createdAt).toLocaleString("de")}
-                            </time>
-                          </p>
+                            <p className="text-sm text-gray-500">
+                              {/* {comment.firstname} {comment.lastname} (@ */}
+                              {comment.username}
+                            </p>
+                          </div>
+                          <div className="mr-3 mb-2 text-sm text-gray-500 flex items-center">
+                            <p className="text-sm text-gray-500">
+                              <time
+                                dateTime="2022-02-08"
+                                title="February 8th, 2022"
+                              >
+                                {new Date(comment.createdAt).toLocaleString(
+                                  "de"
+                                )}
+                              </time>
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <p className="text-gray-500">{comment.comment}</p>
+                      <p className="text-gray-600">{comment.comment}</p>
                       <div className="flex items-center mt-4 space-x-4 mb-2">
                         <button
                           type="button"
