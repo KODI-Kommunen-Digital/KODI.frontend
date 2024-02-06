@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,13 +7,14 @@ import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
-import MostPopulatCategories from "../Components//MostPopulatCategories";
+// import MostPopulatCategories from "../Components//MostPopulatCategories";
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
+const LazyMostPopulatCategories = lazy(() => import('../Components//MostPopulatCategories'));
 
 const HomePage = () => {
 	const { t } = useTranslation();
@@ -141,6 +142,7 @@ const HomePage = () => {
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+								loading="lazy"
 							/>
 							<div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1
@@ -259,7 +261,14 @@ const HomePage = () => {
 				{t("mostPopulatCategories")}
 			</h2>
 
-			<MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} />
+			{/* <MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} /> */}
+			<Suspense fallback={<div>Loading...</div>}>
+				<LazyMostPopulatCategories
+				listingsCount={listingsCount}
+				t={t}
+				goToAllListingsPage={goToAllListingsPage}
+				/>
+			</Suspense>
 
 			<h2
 				className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"

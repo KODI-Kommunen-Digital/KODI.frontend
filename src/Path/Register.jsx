@@ -402,34 +402,28 @@ const Register = () => {
 										<div className="modal-content py-4 text-left px-6">
 											<div>
 												<h2 className="font-bold text-xl text-center mb-4">
-													Anleitung
+													{t("anleitung")}
 												</h2>
 												<h3 className="font-bold text-lg text-center mb-4">
-													Registrieren in der App
+													{t("resgistrationInTheApp")}
 												</h3>
 												<p className="mb-6">
-													<strong>Schritt 1:</strong> Nutzername und Passwort
-													festlegen{" "}
+													<strong>{t("schritt")} 1:</strong> {t("nameOrPass")}{" "}
 												</p>
 												<p className="mb-6">
-													<strong>Schritt 2:</strong> Es wird Ihnen eine E-Mail
-													gesendet an die Mail, die Sie eingegeben haben
+													<strong>{t("schritt")} 2:</strong> {t("addEmail")}
 												</p>
 												<p className="mb-6">
-													<strong>Schritt 3:</strong> Bitte verifizieren Sie die
-													Mail, indem Sie in Ihr Postfach gehen und den
-													Bestätigungslink drücken
+													<strong>{t("schritt")} 3:</strong> {t("verifyEmail")}
 												</p>
 												<p className="mb-6">
-													<strong>Schritt 4:</strong> Ihr Account ist
-													verifiziert und Sie können sich mit Ihren Login-Daten
-													einloggen
+													<strong>{t("schritt")} 4:</strong> {t("verified")}
 												</p>
 												<p className="mb-6">
-													Wir wünschen Ihnen viel Spaß beim Benutzen der App!
+													{t("enjoyApp")}
 												</p>
 												<p className="mb-6">
-													<strong>Danke!!</strong>
+													<strong>{t("danke")}</strong>
 												</p>
 											</div>
 

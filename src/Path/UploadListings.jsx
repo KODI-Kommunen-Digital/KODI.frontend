@@ -43,7 +43,22 @@ function UploadListings() {
   const [subCategories, setSubCategories] = useState([]);
   const [startDate, setStartDate] = useState([]);
   const [endDate, setEndDate] = useState([]);
+  const [expiryDate, setExpiryDate] = useState([]);
   const navigate = useNavigate();
+
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
+
+    const year = twoWeeksLater.getFullYear();
+    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
+    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
+    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
+
+    // Format: yyyy-MM-ddThh:mm
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
 
   function handleDragEnter(e) {
     e.preventDefault();
@@ -169,6 +184,7 @@ function UploadListings() {
     pdf: null,
     startDate: "",
     endDate: "",
+    expiryDate: getDefaultEndDate(),
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
@@ -186,6 +202,7 @@ function UploadListings() {
     cityId: "",
     startDate: "",
     endDate: "",
+    expiryDate: "",
   });
 
   const handleSubmit = async (event) => {
@@ -300,6 +317,7 @@ function UploadListings() {
         subcatList[subCat.id] = subCat.name;
       });
       setSubCategories(subcatList);
+      console.log(response.data.data);
     });
     setInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
@@ -322,15 +340,19 @@ function UploadListings() {
         setInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
+        setExpiryDate(listingData.expiryDate);
+
+        const hasExpiryDate = listingData.hasOwnProperty("expiryDate");
+        if (!hasExpiryDate || !listingData.expiryDate) {
+          // If no expiryDate or expiryDate is null, set getDefaultEndDate()
+          listingData.expiryDate = getDefaultEndDate();
+        }
+
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
-        if (listingData.logo && listingData.otherlogos) {
-          const temp = listingData.otherlogos
-            .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
-            .map((img) => img.logo);
-          setImage(temp);
-          console.log(temp);
+        if (listingData.logo) {
+          setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -339,7 +361,7 @@ function UploadListings() {
         }
       });
     }
-  }, [listingId]);
+  }, []);
 
   function categoryDescription(category) {
     if (category === "4") {
@@ -360,12 +382,36 @@ function UploadListings() {
     }
   }, [error]);
 
+  // const onInputChange = (e) => {
+  // 	const { name, value } = e.target;
+  // 	setInput((prev) => ({
+  // 		...prev,
+  // 		[name]: value,
+  // 	}));
+  // 	validateInput(e);
+  // };
+
   const onInputChange = (e) => {
-    const { name, value } = e.target;
-    setInput((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox") {
+      setInput((prev) => ({
+        ...prev,
+        [name]: checked,
+        startDate: checked ? prev.startDate : null,
+        endDate: checked
+          ? prev.endDate && prev.endDate !== getDefaultEndDate()
+            ? prev.endDate
+            : getDefaultEndDate()
+          : null,
+      }));
+    } else {
+      setInput((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+
     validateInput(e);
   };
 
@@ -462,6 +508,14 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "expiryDate":
+        if (!value && parseInt(input.categoryId) == 1) {
+          return t("pleaseEnterExpiryDate");
+        } else {
+          return "";
+        }
+
       default:
         return "";
     }
@@ -563,10 +617,10 @@ function UploadListings() {
   }
 
   return (
-    <section className="base-bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
@@ -681,7 +735,6 @@ function UploadListings() {
               value={categoryId || 0}
               onChange={handleCategoryChange}
               required
-              disabled={!newListing}
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
@@ -721,7 +774,6 @@ function UploadListings() {
                 onChange={handleSubcategoryChange}
                 onBlur={validateInput}
                 required
-                disabled={!newListing}
                 className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>
@@ -746,26 +798,80 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="col-span-6">
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {t("streetAddress")}
-            </label>
-            <div>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={input.address}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                placeholder={t("enterAddress")}
-              />
+          {categoryId == 1 && (
+            <div className="relative mb-4">
+              <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
+                {input.disableDates ? (
+                  <label
+                    htmlFor="dropdown"
+                    className="text-gray-600 text-md mb-4 font-medium title-font"
+                  >
+                    * {t("noExpiryMessage")}
+                  </label>
+                ) : (
+                  <>
+                    <div className="relative">
+                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                        <svg
+                          aria-hidden="true"
+                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        ></svg>
+                      </div>
+                      <label
+                        htmlFor="expiryDate"
+                        className="block text-sm font-medium text-gray-600"
+                      >
+                        {t("expiryDate")} *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        id="expiryDate"
+                        name="expiryDate"
+                        value={
+                          input.expiryDate
+                            ? formatDateTime(input.expiryDate)
+                            : getDefaultEndDate()
+                        }
+                        onChange={onInputChange}
+                        onBlur={validateInput}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder="Expiry Date"
+                        disabled={input.disableDates}
+                      />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: error.expiryDate ? "visible" : "hidden",
+                        }}
+                      >
+                        {error.expiryDate}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="disableDates"
+                  name="disableDates"
+                  checked={input.disableDates}
+                  onChange={onInputChange}
+                  className="mt-0"
+                />
+                <label
+                  htmlFor="disableDates"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {t("disableDates")}
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           {categoryId == 3 && (
             <div className="relative mb-4">
@@ -847,11 +953,32 @@ function UploadListings() {
             </div>
           )}
 
+          <div className="col-span-6">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-600"
+            >
+              {t("streetAddress")}
+            </label>
+            <div>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={input.address}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                placeholder={t("enterAddress")}
+              />
+            </div>
+          </div>
+
           {(categoryId == 12 || categoryId == 5) && (
             <div className="relative mb-4 grid grid-cols-2 gap-4">
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  htmlFor="place"
+                  for="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("originalPrice")}
@@ -870,7 +997,7 @@ function UploadListings() {
               </div>
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  htmlFor="place"
+                  for="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("discountedPrice")}
@@ -1014,7 +1141,11 @@ function UploadListings() {
                     </label>
                   )}
                 </div>
-              ) : image && Array.isArray(image) && image.length === 1 && typeof image[0] === 'string' && image[0].includes("admin/") ? (
+              ) : image &&
+                Array.isArray(image) &&
+                image.length === 1 &&
+                typeof image[0] === "string" &&
+                image[0].includes("admin/") ? (
                 <div>
                   <FormImage
                     updateImageList={setImage}
@@ -1045,7 +1176,10 @@ function UploadListings() {
                     </label>
                   )}
                 </div>
-              ) : image && Array.isArray(image) && image.length > 0 && !newListing ? (
+              ) : image &&
+                Array.isArray(image) &&
+                image.length > 0 &&
+                !newListing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
@@ -98,14 +98,10 @@ const Listing = () => {
   });
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
-  const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
-    const searchParams = new URLSearchParams(location.search);
-    const terminalViewParam = searchParams.get("terminalView");
-    setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
       response?.data.data.forEach((cat) => {
@@ -119,11 +115,11 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
+    const terminalViewParam = searchParams.get("terminalView");
+    setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    document.title =
-      process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -235,9 +231,7 @@ const Listing = () => {
     if (selectedCategoryId) {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
-          const filteredListings = response.data.data.filter(
-            (listing) => listing.id !== listingId
-          );
+          const filteredListings = response.data.data.filter((listing) => listing.id !== listingId);
           setListings(filteredListings);
         }
       );
@@ -603,7 +597,7 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active
+                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard

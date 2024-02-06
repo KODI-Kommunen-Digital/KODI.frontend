@@ -57,7 +57,7 @@ const Forum = () => {
 			const cityIdParam = parseInt(urlParams.get("cityId"));
 			const forumIdParam = parseInt(urlParams.get("forumId"));
 			const pageNoParam = parseInt(urlParams.get("pageNo")) || 1;
-			document.title = "Forums";
+			document.title = t("forums");
 			setPageNo(pageNoParam);
 			if (cityIdParam && forumIdParam) {
 				getForum(cityIdParam, forumIdParam).then((response) => {

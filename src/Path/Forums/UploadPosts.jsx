@@ -99,7 +99,7 @@ function UploadPosts() {
 		const forumIdFromURL = searchParams.get("forumId");
 		const postId = searchParams.get("postId");
 		if (forumIdFromURL && cityIdFromURL && postId) {
-			setNewPost(false);
+			// setNewPost(false);
 			getPostDetails(cityIdFromURL, forumIdFromURL, postId).then(
 				(postResponse) => {
 					const postData = postResponse.data.data;
@@ -108,6 +108,9 @@ function UploadPosts() {
 					setDescription(postData.description);
 				}
 			);
+		}
+		if (forumIdFromURL && cityIdFromURL) {
+			setNewPost(false);
 		}
 	}, []);
 
