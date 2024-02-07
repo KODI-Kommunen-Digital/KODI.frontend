@@ -35,6 +35,7 @@ function UploadListings() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -204,6 +205,7 @@ function UploadListings() {
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : setSuccessMessage(t("listingUpdated"));
         setErrorMessage(false);
+        setIsSuccess(true);
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
@@ -1017,7 +1019,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating}
+              disabled={updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}
