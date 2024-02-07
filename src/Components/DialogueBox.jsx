@@ -63,7 +63,7 @@ const DialogueBox = ({ member, setRequests }) => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Member Requests";
+		document.title = t("memberReq");
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })

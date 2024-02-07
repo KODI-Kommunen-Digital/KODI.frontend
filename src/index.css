@@ -26,7 +26,7 @@
     padding: 50px;
 }
 
-@keyframes displace {
+/* @keyframes displace {
     0% { transform: rotate(0deg); }
     20% { transform: rotate(-90deg); }
     40% { transform: rotate(0deg); }
@@ -41,6 +41,20 @@
     60% { transform: rotate(0deg); }
     80% { transform: rotate(90deg); }
     100% { transform: rotate(0deg); }
+} */
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-wheel {
+    border: 8px solid #60a5fa; /* You can customize the color */
+    border-top: 8px solid #fff; /* You can customize the color */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: rotate 1s linear infinite;
 }
 
 #finalbutton:hover {

@@ -24,7 +24,7 @@ const GroupMembers = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Forum Members";
+		document.title = t("forumMembers");
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		const currentUserId = parseInt(getUserId())

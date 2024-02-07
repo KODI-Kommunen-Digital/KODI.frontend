@@ -121,8 +121,6 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    document.title =
-      process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -316,7 +314,7 @@ const Listing = () => {
 
           <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-64">
+              <div className="lg:w-full md:w-full h-full">
                 <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <form method="POST">
@@ -331,6 +329,30 @@ const Listing = () => {
                             {title}
                           </span>
                         </h1>
+                        
+                      </div>
+
+                      <div className="flex flex-wrap gap-1 justify-between mt-6">
+                        <div className="flex items-center gap-2 mt-0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 448 512"
+                          fill="#4299e1"
+                        >
+                          <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
+                        </svg>
+                        <p
+                          className="leading-relaxed text-base text-blue-400"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("uploaded_on")}
+                          {createdAt}
+                        </p>
+                        </div>
+                        
                         <div
                           className={`flex items-center ${
                             terminalView ? "hidden" : "visible"
@@ -352,26 +374,6 @@ const Listing = () => {
                             </span>
                           </button>
                         </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 mt-6">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="1em"
-                          viewBox="0 0 448 512"
-                          fill="#4299e1"
-                        >
-                          <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
-                        </svg>
-                        <p
-                          className="leading-relaxed text-base text-blue-400"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("uploaded_on")}
-                          {createdAt}
-                        </p>
                       </div>
 
                       <div className="flex flex-wrap gap-1 justify-between mt-6">
@@ -448,8 +450,8 @@ const Listing = () => {
                 </div>
               </div>
 
-              <div className="galaxy-fold mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-20 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+              <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
+                <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
                   <style>
                     {`
 								@media (max-width: 280px) {
@@ -484,7 +486,7 @@ const Listing = () => {
                       ) : input.logo ? (
                         <img
                           alt="listing"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={
                             input.sourceId === source.User
                               ? process.env.REACT_APP_BUCKET_HOST + input.logo
@@ -497,7 +499,7 @@ const Listing = () => {
                       ) : (
                         <img
                           alt="default"
-                          className="object-cover object-center h-full w-full"
+                          className="object-cover object-center h-[600px] w-full"
                           src={LISTINGSIMAGE}
                         />
                       )}
@@ -610,7 +612,7 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active
+                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard

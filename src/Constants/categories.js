@@ -39,6 +39,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     rathaus: 14,
     newsletter: 15,
     officialnotification: 16,
+    freetimeAndTourisms: 17,
   };
   const categoryById = {
     1: "news", // Nachricht
@@ -55,6 +56,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     14: "rathaus",
     15: "newsletter",
     16: "officialnotification",
+    17: "freetimeAndTourisms", // Freizeit und Tourismus
   };
   module.exports = { categoryByName, categoryById };
 }

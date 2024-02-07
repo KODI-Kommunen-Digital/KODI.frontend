@@ -20,7 +20,7 @@ const ReportedPosts = () => {
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		document.title = "Reported Posts";
+		document.title = t("reportedPosts");
 		const cityIdParam = parseInt(urlParams.get("cityId"));
 		const forumIdParam = parseInt(urlParams.get("forumId"));
 		getReportedPosts(cityIdParam, forumIdParam, { minReports: 1 })

@@ -21,7 +21,11 @@ const MyGroups = () => {
 		getUserForums({
 			pageNo, pageSize
 		}).then((response) => {
-			setForums(response.data.data);
+			const sortedForums = response.data.data.sort((a, b) => {
+				return new Date(b.JoinedAt) - new Date(a.JoinedAt);
+			});
+			console.log(sortedForums)
+			  setForums(sortedForums);
 		});
 	}, [pageNo]);
 
