@@ -613,7 +613,7 @@ const BookAppointments = () => {
                   </div>
                 )}
 
-                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-0 rounded-md max-w-md w-full h-full shadow-xl">
+                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-0 rounded-lg max-w-md w-full h-full shadow-xl">
                   <div className="relative h-full mx-2 py-2 px-2 my-2">
                     <div className="flex justify-center items-center">
                       <div className="relative h-full">
@@ -642,7 +642,7 @@ const BookAppointments = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-7 bg-black text-white">
+                        <div className="grid grid-cols-7 bg-black text-white rounded-lg">
                           {days.map((day, index) => {
                             return (
                               <h1
@@ -689,12 +689,12 @@ const BookAppointments = () => {
                   </div>
                 </div>
 
-                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-4 rounded-md max-w-md w-full h-full shadow-xl">
+                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
                   <h1 className="text-lg text-center font-semibold mb-4">
                     Select a time for {selectDate.toDate().toDateString()}
                   </h1>
                   <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 justify-center">
                       {Array.from({ length: 24 * 2 }).map((_, index) => {
                         const time = dayjs()
                           .hour(8)
