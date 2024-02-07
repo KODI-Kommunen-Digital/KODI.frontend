@@ -185,6 +185,7 @@ function UploadListings() {
     startDate: "",
     endDate: "",
     expiryDate: getDefaultEndDate(),
+    timeless: false,
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
@@ -398,12 +399,8 @@ function UploadListings() {
       setInput((prev) => ({
         ...prev,
         [name]: checked,
-        startDate: checked ? prev.startDate : null,
-        endDate: checked
-          ? prev.endDate && prev.endDate !== getDefaultEndDate()
-            ? prev.endDate
-            : getDefaultEndDate()
-          : null,
+        timeless: checked,
+        expiryDate: checked ? null : getDefaultEndDate(),
       }));
     } else {
       setInput((prev) => ({
