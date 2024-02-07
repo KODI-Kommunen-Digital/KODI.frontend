@@ -79,7 +79,7 @@ function UploadListings() {
     const file = e.target.files[0];
 
     if (file) {
-      const MAX_IMAGE_SIZE_MB = 10;
+      const MAX_IMAGE_SIZE_MB = 20;
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
         return;
