@@ -38,6 +38,7 @@ function UploadListings() {
   const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -99,6 +100,12 @@ function UploadListings() {
     e.preventDefault();
     const file = e.target.files[0];
     if (file) {
+      const MAX_IMAGE_SIZE_MB = 20;
+      if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+        alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
+        return;
+      }
+
       if (file.type.startsWith("image/")) {
         setLocalImageOrPdf(true);
         setImage(e.target.files);
@@ -276,6 +283,7 @@ function UploadListings() {
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : setSuccessMessage(t("listingUpdated"));
         setErrorMessage(false);
+        setIsSuccess(true);
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
@@ -1260,7 +1268,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating}
+              disabled={updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}

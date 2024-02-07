@@ -14,9 +14,10 @@ import {
 import { useTranslation, withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
 
-function ChangeImage({ setInput }) {
+function ChangeImage({ setInput, reloadPage }) {
   ChangeImage.propTypes = {
     setInput: PropTypes.func.isRequired,
+    reloadPage: PropTypes.func.isRequired,
   };
   const { t } = useTranslation();
   const inputFile = useRef(null);
@@ -27,6 +28,7 @@ function ChangeImage({ setInput }) {
     form.append("image", file);
     uploadProfilePic(form).then((res) => {
       setInput("image", res.data.path);
+      reloadPage(); // Reload the page after updating the image
     });
   }
 
@@ -496,8 +498,10 @@ class ProfilePage extends React.Component {
                           }}
                         >
                           <ChangeImage
-                            input={this.state}
-                            setInput={this.setProfile.bind(this)}
+                            setInput={(key, value) =>
+                              this.setProfile(key, value)
+                            }
+                            reloadPage={() => window.location.reload()}
                           />
                         </div>
                         <div className="flex md:flex-col justify-center md:items-center item-center">

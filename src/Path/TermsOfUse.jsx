@@ -5,8 +5,8 @@ import Footer from "../Components/Footer";
 
 export default function TermsOfUse() {
   const { t } = useTranslation();
-  const appName = t(`${process.env.REACT_APP_REGION_NAME}`);
-  const operator = t(`${process.env.REACT_APP_REGION_NAME}`);
+  const appName = process.env.REACT_APP_REGION_NAME;
+  const operator = process.env.REACT_APP_RESPONSIBLE_ENTITY;
 
   return (
     <section className="bg-white body-font relative">
