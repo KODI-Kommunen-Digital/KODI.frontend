@@ -467,9 +467,9 @@ const ViewPost = () => {
                             <img
                               className="mr-2 w-6 h-6 object-cover rounded-full"
                               src={
-                                comment.image
+                                postOwner.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    comment.image
+                                    postOwner.image
                                   : PROFILEIMAGE
                               }
                             />
