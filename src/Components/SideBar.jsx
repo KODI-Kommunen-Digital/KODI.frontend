@@ -9,8 +9,9 @@ function SideBar() {
   const { t } = useTranslation();
   const [loggedIn, setLoggedIn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-	const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const isBookingEnabled =
+    process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -185,29 +186,55 @@ function SideBar() {
           )}
 
           {isBookingEnabled && (
-            <div>
-              <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                onClick={() => {
-                  localStorage.setItem("selectedItem", t("createAppoinment"));
-                  navigateTo("/AppointmentBooking/MyAppointments");
-                }}
-              >
-                <svg
-                  className="h-6 w-10 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 496 512"
+            <>
+              <div>
+                <div
+                  className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                  onClick={() => {
+                    localStorage.setItem("selectedItem", t("myAppoinment"));
+                    navigateTo("/AppointmentBooking/MyAppointments");
+                  }}
                 >
-                  <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z"/>
-                </svg>
-                <span
-                  className="text-[15px] ml-4 text-gray-200 font-bold"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("myAppoinment")}
-                </span>
+                  <svg
+                    className="h-6 w-10 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 496 512"
+                  >
+                    <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                  </svg>
+                  <span
+                    className="text-[15px] ml-4 text-gray-200 font-bold"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("myAppoinment")}
+                  </span>
+                </div>
               </div>
-            </div>
+
+              <div>
+                <div
+                  className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                  onClick={() => {
+                    localStorage.setItem("selectedItem", t("myBooking"));
+                    navigateTo("/AppointmentBooking/MyBookings");
+                  }}
+                >
+                  <svg
+                    className="h-6 w-10 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 496 512"
+                  >
+                    <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                  </svg>
+                  <span
+                    className="text-[15px] ml-4 text-gray-200 font-bold"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("myBooking")}
+                  </span>
+                </div>
+              </div>
+            </>
           )}
 
           {isForumEnabled && (

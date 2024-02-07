@@ -42,6 +42,7 @@ import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
 import BookAppointments from "./Path/AppointmentBooking/BookAppointments";
+import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
@@ -120,6 +121,11 @@ const App = () => {
               <Route
                 path="/AppointmentBooking/MyAppointments"
                 element={<MyAppointments />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/MyBookings"
+                element={<MyBookings />}
                 exact
               />
               <Route

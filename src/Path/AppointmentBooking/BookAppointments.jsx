@@ -723,6 +723,15 @@ const BookAppointments = () => {
                     </div>
                   </div>
                 </div>
+
+                <button
+                  onClick={() =>
+                    navigateTo(`/AppointmentBooking/MyAppointments`)
+                  }
+                  className="w-full bg-black hover:bg-slate-600 font-semibold text-white py-2 px-4 mt-4 rounded-xl"
+                >
+                  {t("done")}
+                </button>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getUserForums, deleteForums } from "../../Services/forumsApi";
 
-const MyAppointments = () => {
+const MyBookings = () => {
   const { t } = useTranslation();
   const [forums, setForums] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -85,16 +85,6 @@ const MyAppointments = () => {
                     }}
                   >
                     {t("serviceName")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("client")}
                   </th>
                   <th
                     scope="col"
@@ -184,27 +174,19 @@ const MyAppointments = () => {
                       <td
                         className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() => navigateTo("/ViewProfile")}
-                      >
-                        Akshay Sunilkumar
-                      </td>
-
-                      <td
-                        className="px-6 py-4 text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         2 hrs
                       </td>
 
                       <td
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         11:00
                       </td>
 
                       <td
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         12:30
@@ -213,14 +195,22 @@ const MyAppointments = () => {
                         {forum.isAdmin ? (
                           <div>
                             <a
-                              className="font-medium hover:underline cursor-pointer text-center"
-                              onClick={() => deleteForumOnClick(forum)}
-                              style={{
-                                fontFamily: "Poppins, sans-serif",
-                                color: "red",
-                              }}
+                              className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
+                              onClick={() =>
+                                navigateTo(
+                                  `/AppointmentBooking/BookAppointments`
+                                )
+                              }
+                              style={{ fontFamily: "Poppins, sans-serif" }}
                             >
-                              {t("reject")}
+                              {t("edit")}
+                            </a>
+                            <a
+                              className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                              onClick={() => deleteForumOnClick(forum)}
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {t("delete")}
                             </a>
                           </div>
                         ) : (
@@ -337,4 +327,4 @@ const MyAppointments = () => {
   );
 };
 
-export default MyAppointments;
+export default MyBookings;
