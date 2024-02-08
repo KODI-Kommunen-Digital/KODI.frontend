@@ -86,6 +86,7 @@ const ViewPost = () => {
           commentResonse.firstname = currentUser.firstname;
           commentResonse.lastname = currentUser.lastname;
           commentResonse.username = currentUser.username;
+          commentResonse.image = currentUser.image;
           comment.childrenCount += 1;
           comment.showReplies = true;
           if (comment.replies) {
@@ -106,6 +107,7 @@ const ViewPost = () => {
           commentResonse.firstname = currentUser.firstname;
           commentResonse.lastname = currentUser.lastname;
           commentResonse.username = currentUser.username;
+          commentResonse.image = currentUser.image;
           commentResonse.childrenCount = 0;
           comments.unshift(commentResonse);
           setComments([...comments]);
@@ -147,12 +149,14 @@ const ViewPost = () => {
                 ),
               ]
             : [...response.data.data];
+          console.log("parentId:", parentId);
           setComments([...comments]);
         } else {
           if (response.data.data.length > 0) {
             setShowMoreComments(true);
             // Update the logic to concatenate new comments to existing ones
-            setComments([...comments, ...response.data.data]);
+            setComments([...response.data.data]);
+            console.log("Comments:", ...response.data.data);
           } else {
             setShowMoreComments(false);
           }
@@ -270,7 +274,7 @@ const ViewPost = () => {
       <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
         <div className="grid grid-cols-1 gap-4 col-span-2">
           <div className="overflow-hidden mb-10">
-            <div className="flex flex-col lg:flex-row sm:items-start text-start justify-between">
+            <div className="flex flex-col lg:flex-col sm:items-start text-start justify-between">
               <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                 <span
                   className="inline-block max-w-full break-words"
@@ -591,14 +595,14 @@ const ViewPost = () => {
                                   <img
                                     className="mr-2 w-6 h-6 rounded-full"
                                     src={
-                                      comment.image
+                                      reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
-                                          comment.image
+                                          reply.image
                                         : PROFILEIMAGE
                                     }
                                   />
                                   {/* {comment.firstname} {comment.lastname} (@ */}
-                                  {comment.username}
+                                  {reply.username}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   <time
