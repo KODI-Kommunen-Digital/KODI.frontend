@@ -74,7 +74,6 @@ const ViewPost = () => {
     const comment = comments.find((c) => c.id === parentId);
     comment.newReply = newReply;
     setComments([...comments]);
-    console.log(comments);
   };
 
   const postComment = (parentId = null) => {
@@ -312,7 +311,7 @@ const ViewPost = () => {
                 ) : null}
 
                 <a
-                  className="text-blue-800 font-semibold text-base cursor-pointer"
+                  className="text-blue-700 font-semibold text-base cursor-pointer"
                   onClick={openPopup}
                 >
                   <span
@@ -340,13 +339,13 @@ const ViewPost = () => {
                           className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                           onClick={closePopup}
                         >
-                          Cancel
+                          {t("cancel")}
                         </button>
                         <button
                           className="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                           onClick={handleReportPost}
                         >
-                          Send
+                          {t("send")}
                         </button>
                       </div>
                     </div>
@@ -360,12 +359,12 @@ const ViewPost = () => {
             <div className=" mr-0 ml-0 mt-0">
               <style>
                 {`
-									@media (max-width: 280px) {
-										.galaxy-fold {
-											margin-top: 1rem; /* Adjust the margin value as needed */
-										}
-									}
-								`}
+                  @media (max-width: 280px) {
+                    .galaxy-fold {
+                      margin-top: 1rem; /* Adjust the margin value as needed */
+                    }
+                  }
+                `}
               </style>
               <div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
                 <div className="relative h-full">
@@ -401,7 +400,7 @@ const ViewPost = () => {
             <div className="space-x-2 gap-4 md:gap-2 flex">
               <div
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm text-center font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent 
-								bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => postComment()}
               >
@@ -425,7 +424,7 @@ const ViewPost = () => {
 
               <a
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent  
-								bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={toggleComments}
               >
@@ -455,7 +454,7 @@ const ViewPost = () => {
                       <div className="flex justify-between items-center mb-2">
                         <div className="flex items-start md:items-center flex-col md:flex-row">
                           <div
-                            className="mr-3 mb-2 text-sm text-gray-500 flex items-center"
+                            className="mr-3 mb-2 text-sm text-gray-500 flex items-center cursor-pointer"
                             onClick={() =>
                               navigateTo(
                                 user
@@ -467,9 +466,9 @@ const ViewPost = () => {
                             <img
                               className="mr-2 w-6 h-6 object-cover rounded-full"
                               src={
-                                postOwner.image
+                                comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    postOwner.image
+                                    comment.image
                                   : PROFILEIMAGE
                               }
                             />
@@ -598,8 +597,8 @@ const ViewPost = () => {
                                         : PROFILEIMAGE
                                     }
                                   />
-                                  {comment.firstname} {comment.lastname} (@
-                                  {comment.username})
+                                  {/* {comment.firstname} {comment.lastname} (@ */}
+                                  {comment.username}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   <time
