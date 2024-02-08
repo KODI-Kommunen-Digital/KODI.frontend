@@ -329,8 +329,8 @@ const Listing = () => {
                         
                       </div>
 
-                      <div className="flex flex-wrap gap-1 justify-between mt-6">
-                        <div className="flex items-center gap-2 mt-0">
+                      <div className="flex flex-wrap gap-1 justify-between mt-0">
+                        <div className="flex items-center gap-2 mt-6">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           height="1em"
@@ -351,7 +351,7 @@ const Listing = () => {
                         </div>
                         
                         <div
-                          className={`hidden md:block flex items-center ${
+                          className={`hidden md:block flex items-center mt-6 ${
                             terminalView ? "hidden" : "visible"
                           }`}
                         >
@@ -372,7 +372,7 @@ const Listing = () => {
                           </button>
                         </div>
                         <div
-                          className={`md:hidden block flex items-center ${
+                          className={`md:hidden block flex items-center mt-6 ${
                             terminalView ? "hidden" : "visible"
                           }`}
                         >

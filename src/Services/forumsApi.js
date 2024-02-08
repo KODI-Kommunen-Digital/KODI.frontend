@@ -170,8 +170,8 @@ export async function deleteForumPostImage(cityId, forumsId, postId) {
 	);
 }
 
-export async function getForumMemberRequests(cityId, forumsId) {
-	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`);
+export async function getForumMemberRequests(cityId, forumsId, params) {
+	return axios.get(`/cities/${cityId}/forums/${forumsId}/memberRequests`, { params });
 }
 
 export async function cancelForumMemberRequest(cityId, forumsId, requestId) {

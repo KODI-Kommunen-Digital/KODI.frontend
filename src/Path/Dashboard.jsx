@@ -11,8 +11,6 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
-// import { Popover, Transition } from "@headlessui/react";
-// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
