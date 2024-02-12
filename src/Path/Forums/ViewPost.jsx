@@ -641,7 +641,7 @@ const ViewPost = () => {
                               <div className="flex items-center">
                                 <p className="inline-flex items-center mr-3 text-sm text-gray-900">
                                   <img
-                                    className="mr-2 w-6 h-6 rounded-full"
+                                    className="mr-2 w-6 h-6 object-cover rounded-full"
                                     src={
                                       reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
