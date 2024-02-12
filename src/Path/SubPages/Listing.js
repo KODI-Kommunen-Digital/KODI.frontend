@@ -69,6 +69,8 @@ const Listing = () => {
   const [description, setDescription] = useState("");
   const [createdAt, setCreatedAt] = useState("");
   const [title, setTitle] = useState("");
+  const [sourceId, setSourceId] = useState("");
+  const [website, setWebsite] = useState("");
   const [user, setUser] = useState();
   const [, setSuccessMessage] = useState("");
   const [, setErrorMessage] = useState("");
@@ -170,6 +172,8 @@ const Listing = () => {
             setListingId(listingsResponse.data.data.id);
             setDescription(listingsResponse.data.data.description);
             setTitle(listingsResponse.data.data.title);
+            setSourceId(listingsResponse.data.data.sourceId);
+            setWebsite(listingsResponse.data.data.website);
             setCreatedAt(
               new Intl.DateTimeFormat("de-DE").format(
                 Date.parse(listingsResponse.data.data.createdAt)
@@ -534,6 +538,15 @@ const Listing = () => {
                   {t("description")}
                 </h1>
                 <Description content={description} />
+                
+                {sourceId === 3 && (
+                  <p className="text-gray-900 font-medium">
+                    {t("visitWebsite")}{" "}
+                    <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
+                      {website}
+                    </a>
+                  </p>
+                )}
               </div>
             </div>
 
