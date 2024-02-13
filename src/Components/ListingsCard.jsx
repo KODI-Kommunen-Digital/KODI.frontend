@@ -20,7 +20,7 @@ function ListingsCard({ listing, terminalView = false }) {
       onClick={(e) => {
         e.stopPropagation();
         if (
-          listing.sourceId === listingSource.LISTING_SOURCE_USER_ENTRY ||
+          listing.sourceId === listingSource.USER_ENTRY ||
           listing.showExternal === 0
         ) {
           navigateTo(
@@ -29,9 +29,9 @@ function ListingsCard({ listing, terminalView = false }) {
             }`
           );
         } else if (
-          (listing.sourceId === listingSource.LISTING_SOURCE_SCRAPER ||
-            listing.sourceId === listingSource.LISTING_SOURCE_INSTAGRAM) &&
-          listing.showExternal === 1
+          (listing.sourceId === listingSource.SCRAPER &&
+            listing.showExternal === 1) ||
+          listing.sourceId === listingSource.INSTAGRAM
         ) {
           window.location.href = listing.website; // web scraper and Instagram
         } else {
