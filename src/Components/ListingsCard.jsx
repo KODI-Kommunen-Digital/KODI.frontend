@@ -4,6 +4,7 @@ import React from "react";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { listingSource } from "../Constants/listingSource";
 
 function ListingsCard({ listing, terminalView = false }) {
   const { t } = useTranslation();
@@ -18,16 +19,21 @@ function ListingsCard({ listing, terminalView = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (listing.sourceId === 1 || listing.showExternal === 0) {
+        if (
+          listing.sourceId === listingSource.LISTING_SOURCE_USER_ENTRY ||
+          listing.showExternal === 0
+        ) {
           navigateTo(
             `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${
               terminalView ? "&terminalView=true" : ""
             }`
           );
-        } else if (listing.sourceId === 3 || listing.showExternal === 1) {
-          window.location.href = listing.website; // web scraper
-        } else if (listing.sourceId === 2) {
-          window.location.href = listing.website; // Instagram
+        } else if (
+          (listing.sourceId === listingSource.LISTING_SOURCE_SCRAPER ||
+            listing.sourceId === listingSource.LISTING_SOURCE_INSTAGRAM) &&
+          listing.showExternal === 1
+        ) {
+          window.location.href = listing.website; // web scraper and Instagram
         } else {
           window.location.href = listing.website;
         }

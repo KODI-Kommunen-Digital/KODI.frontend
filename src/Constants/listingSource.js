@@ -1,0 +1,5 @@
+export const listingSource = {
+    LISTING_SOURCE_USER_ENTRY: 1,
+    LISTING_SOURCE_SCRAPER: 2,
+    LISTING_SOURCE_INSTAGRAM: 3,
+  };
