@@ -583,5 +583,7 @@
     "client": "client",
     "reject": "Reject",
     "myBooking": "My Booking",
-    "myAppoinment": "My Appoinments"
+    "myAppoinment": "My Appoinments",
+    "clickHereToBook": "Click here to book appointments",
+    "name": "Name"
 }

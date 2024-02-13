@@ -576,5 +576,7 @@
     "exit": "Verlassen",
     "privacy": "Gruppenart",
     "removeAdmin": "Admin entfernen",
-    "makeAdmin": "Machen Admin"
+    "makeAdmin": "Machen Admin",
+    "clickHereToBook": "Klicken Sie hier, um Termine zu buchen",
+    "name": "Name"
 }

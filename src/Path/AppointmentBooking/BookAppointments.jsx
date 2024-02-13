@@ -527,18 +527,6 @@ const BookAppointments = () => {
                   Eigentümer der Wohnung/des Hauses sein, können Sie die
                   Wohnungsgeberbescheinigung vor Ort ausfüllen.
                 </div>
-
-                {/* <div className="mt-[2rem] md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-[2rem] md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                  <h1
-                    className="text-lg mb-6 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    Please select your period
-                  </h1>
-                  <DateTimePicker />
-                </div>
-              </div> */}
               </div>
             </div>
 
@@ -726,11 +714,11 @@ const BookAppointments = () => {
 
                 <button
                   onClick={() =>
-                    navigateTo(`/AppointmentBooking/MyAppointments`)
+                    navigateTo(`/AppointmentBooking/BookAppointments/Select`)
                   }
                   className="w-full bg-black hover:bg-slate-600 font-semibold text-white py-2 px-4 mt-4 rounded-xl"
                 >
-                  {t("done")}
+                  {t("clickHereToBook")}
                 </button>
               </div>
             </div>
