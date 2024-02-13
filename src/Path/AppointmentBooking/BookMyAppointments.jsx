@@ -420,6 +420,54 @@ function BookMyAppointments() {
             </div>
           </div>
         </div>
+        <div className="grid grid-cols-2 text-center gap-2">
+          {Array.from(
+            { length: parseInt(input.numberOfPeople) },
+            (_, index) => (
+              <div key={index} className="mt-4">
+                <h2 className="text-lg font-medium mb-2">
+                  {t("user")} {index + 1}
+                </h2>
+                <input
+                  type="text"
+                  id={`firstName${index}`}
+                  name={`firstName${index}`}
+                  value={input[`firstName${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  placeholder="First Name"
+                />
+                <input
+                  type="text"
+                  id={`lastName${index}`}
+                  name={`lastName${index}`}
+                  value={input[`lastName${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Last Name"
+                />
+                <input
+                  type="email"
+                  id={`email${index}`}
+                  name={`email${index}`}
+                  value={input[`email${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Email"
+                />
+                <input
+                  type="text"
+                  id={`remarks${index}`}
+                  name={`remarks${index}`}
+                  value={input[`remarks${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Remarks"
+                />
+              </div>
+            )
+          )}
+        </div>
 
         <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
           <div className="lg:w-2/3">
@@ -578,55 +626,6 @@ function BookMyAppointments() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 text-center gap-2">
-          {Array.from(
-            { length: parseInt(input.numberOfTimeSlots) },
-            (_, index) => (
-              <div key={index} className="mt-4">
-                <h2 className="text-lg font-medium mb-2">
-                  {t("user")} {index + 1}
-                </h2>
-                <input
-                  type="text"
-                  id={`firstName${index}`}
-                  name={`firstName${index}`}
-                  value={input[`firstName${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                  placeholder="First Name"
-                />
-                <input
-                  type="text"
-                  id={`lastName${index}`}
-                  name={`lastName${index}`}
-                  value={input[`lastName${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Last Name"
-                />
-                <input
-                  type="email"
-                  id={`email${index}`}
-                  name={`email${index}`}
-                  value={input[`email${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Email"
-                />
-                <input
-                  type="text"
-                  id={`remarks${index}`}
-                  name={`remarks${index}`}
-                  value={input[`remarks${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Remarks"
-                />
-              </div>
-            )
-          )}
         </div>
       </div>
 
