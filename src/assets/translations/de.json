@@ -578,5 +578,9 @@
     "removeAdmin": "Admin entfernen",
     "makeAdmin": "Machen Admin",
     "clickHereToBook": "Klicken Sie hier, um Termine zu buchen",
-    "name": "Name"
+    "name": "Name",
+    "numberofPeople": "Anzahl der Personen",
+    "selectedSlots": "Ausgewählte Slots ",
+    "timeSlotValidation": "Es können maximal 8 Zeitfenster gebucht werden.",
+    "user": "Benutzer"
 }

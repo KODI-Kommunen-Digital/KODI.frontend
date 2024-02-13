@@ -80,9 +80,11 @@ function BookMyAppointments() {
     bookingId: 0,
     cityId: 0,
     statusId: 1,
+    serviceId: 0,
     title: "",
     name: "",
     description: "",
+    service: "",
     logo: null,
   });
 
@@ -92,6 +94,7 @@ function BookMyAppointments() {
     title: "",
     description: "",
     name: "",
+    service: "",
   });
 
   const handleSubmit = async (event) => {
@@ -263,33 +266,30 @@ function BookMyAppointments() {
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
-  const [showInputs, setShowInputs] = useState(false);
-  const [inputSections, setInputSections] = useState([{ name: "", email: "" }]);
 
-  const toggleInputs = () => {
-    setShowInputs(!showInputs);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+  const [numberError, setNumberError] = useState(false);
+
+  const handleTimeSelection = (time) => {
+    if (selectedTimes.length < 8) {
+      setSelectedTimes([...selectedTimes, time]);
+      setNumberError(false);
+    } else {
+      setNumberError(true);
+    }
   };
 
-  const handleInputChange = (index, event) => {
-    const { name, value } = event.target;
-    const list = [...inputSections];
-    list[index][name] = value;
-    setInputSections(list);
-  };
-
-  const handleAddSection = () => {
-    setInputSections([...inputSections, { name: "", email: "" }]);
-  };
-
-  const handleDeleteSection = (index) => {
-    const list = [...inputSections];
-    list.splice(index, 1);
-    setInputSections(list);
+  const handleDeleteSlot = (index) => {
+    const updatedTimes = [...selectedTimes];
+    updatedTimes.splice(index, 1);
+    setSelectedTimes(updatedTimes);
+    setNumberError(false);
   };
 
   return (
     <section className="text-gray-600 bg-white body-font">
       <HomePageNavBar />
+
       <div className="max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto flex flex-col items-center">
         <div className="lg:w-full md:w-full h-full">
           <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
@@ -359,7 +359,69 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-x-8">
+        <div className="items-stretch py-2 px-0 w-full">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
+              <label
+                htmlFor="country"
+                className="block text-md font-medium text-gray-600"
+                style={{
+                  fontFamily: "Poppins, sans-serif",
+                }}
+              >
+                {t("select")}
+              </label>
+              <select
+                id="service"
+                name="service"
+                value={input.service}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                required
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              >
+                <option value="" disabled>
+                  {t("select")}
+                </option>
+                <option value="service1">Service 1</option>
+                <option value="service2">Service 2</option>
+                <option value="service3">Service 3</option>
+                <option value="service4">Service 4</option>
+              </select>
+            </div>
+            <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
+              <label
+                htmlFor="numberOfPeople"
+                className="block text-md font-medium text-gray-600"
+              >
+                {t("numberofPeople")}
+              </label>
+              <select
+                id="numberOfPeople"
+                name="numberOfPeople"
+                value={input.numberOfPeople}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                required
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              >
+                <option value="" disabled>
+                  {t("select")}
+                </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
           <div className="lg:w-2/3">
             <div className="grid grid-cols-1 gap-4 col-span-2">
               <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-xl">
@@ -444,7 +506,7 @@ function BookMyAppointments() {
             <div className="grid grid-cols-1 gap-4">
               <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
                 <h1 className="text-lg text-center font-semibold mb-4">
-                  Select a time for {selectDate.toDate().toDateString()}
+                  {selectDate.toDate().toDateString()}
                 </h1>
                 <div className="time-selection-container overflow-y-auto max-h-[100px]">
                   <div className="flex flex-wrap gap-2 justify-center">
@@ -459,12 +521,13 @@ function BookMyAppointments() {
                           className={cn(
                             "p-2 rounded-full border cursor-pointer transition-all",
                             "hover:bg-gray-200",
-                            "select-none"
+                            "select-none",
+                            selectedTimes.includes(time.format("HH:mm")) &&
+                              "border-blue-400 text-blue-400"
                           )}
-                          onClick={() => {
-                            // Handle time selection as needed
-                            console.log("Selected time:", time.format("HH:mm"));
-                          }}
+                          onClick={() =>
+                            handleTimeSelection(time.format("HH:mm"))
+                          }
                         >
                           {time.format("HH:mm")}
                         </div>
@@ -472,88 +535,103 @@ function BookMyAppointments() {
                     })}
                   </div>
                 </div>
+                {numberError && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("timeSlotValidation")}
+                  </div>
+                )}
+                <div className="mt-4">
+                  <h2 className="text-lg text-center font-semibold mb-4">
+                    {t("selectedSlots")}
+                  </h2>
+                  <ul className="mb-2 grid grid-cols-2 text-center gap-2">
+                    {selectedTimes.map((time, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-center gap-2"
+                      >
+                        <span style={{ fontWeight: "bold" }}>{` ${
+                          index + 1
+                        }:`}</span>{" "}
+                        {time}
+                        <button
+                          className="ml-0 text-red-500"
+                          onClick={() => handleDeleteSlot(index)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto">
-        <div className="mb-4">
-          <label
-            htmlFor="addUsers"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Add Multiple Users
-          </label>
-          <input
-            type="checkbox"
-            id="addUsers"
-            name="addUsers"
-            checked={showInputs}
-            onChange={toggleInputs}
-            className="ml-2"
-          />
-        </div>
-        {showInputs && (
-          <div className="mb-4">
-            {inputSections.map((input, index) => (
-              <div
-                key={index}
-                className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:gap-8"
-              >
+        <div className="grid grid-cols-2 text-center gap-2">
+          {Array.from(
+            { length: parseInt(input.numberOfTimeSlots) },
+            (_, index) => (
+              <div key={index} className="mt-4">
+                <h2 className="text-lg font-medium mb-2">
+                  {t("user")} {index + 1}
+                </h2>
                 <input
                   type="text"
-                  id={`name${index}`}
-                  name={`name${index}`}
-                  value={input.name}
-                  onChange={(event) => {
-                    onInputChange();
-                    handleInputChange(index, event);
-                  }}
+                  id={`firstName${index}`}
+                  name={`firstName${index}`}
+                  value={input[`firstName${index}`]}
+                  onChange={onInputChange}
                   className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                  placeholder="Enter Name"
+                  placeholder="First Name"
+                />
+                <input
+                  type="text"
+                  id={`lastName${index}`}
+                  name={`lastName${index}`}
+                  value={input[`lastName${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Last Name"
                 />
                 <input
                   type="email"
                   id={`email${index}`}
                   name={`email${index}`}
-                  value={input.email}
-                  onChange={(event) => {
-                    onInputChange();
-                    handleInputChange(index, event);
-                  }}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                  placeholder="Enter Email"
+                  value={input[`email${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Email"
                 />
-                {showInputs && (
-                  <div className="mt-4 sm:mt-0">
-                    <button
-                      type="button"
-                      onClick={handleAddSection}
-                      className="w-full sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-slate-600 sm:ml-3 sm:text-sm"
-                    >
-                      {t("add")}
-                    </button>
-                  </div>
-                )}
-                {index !== 0 && (
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteSection(index)}
-                    className="w-full sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:text-sm"
-                  >
-                    {t("delete")}
-                  </button>
-                )}
+                <input
+                  type="text"
+                  id={`remarks${index}`}
+                  name={`remarks${index}`}
+                  value={input[`remarks${index}`]}
+                  onChange={onInputChange}
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                  placeholder="Remarks"
+                />
               </div>
-            ))}
-          </div>
-        )}
+            )
+          )}
+        </div>
       </div>
 
       <div className="relative max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto">
-        <div className="py-2 mt-1 px-2">
+        <div className="py-2 mt-1 px-o">
           <button
             type="button"
             onClick={handleSubmit}

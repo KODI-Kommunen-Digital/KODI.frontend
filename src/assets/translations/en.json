@@ -585,5 +585,9 @@
     "myBooking": "My Booking",
     "myAppoinment": "My Appoinments",
     "clickHereToBook": "Click here to book appointments",
-    "name": "Name"
+    "name": "Name",
+    "numberofPeople": "Number of people",
+    "selectedSlots": "Selected Slots ",
+    "timeSlotValidation": "You can only book a maximum of 8 time slots.",
+    "user": "User"
 }

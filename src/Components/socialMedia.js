@@ -139,7 +139,7 @@ export default function SocialMedia({ setSocialMedia }) {
 														htmlFor="lastName"
 														className="block text-md font-medium text-gray-600"
 													>
-														Link
+														{t("link")}
 													</label>
 													<input
 														type="text"
