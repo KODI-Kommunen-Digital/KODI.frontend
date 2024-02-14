@@ -20,6 +20,8 @@ import {
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
+import { listingSource } from "../../Constants/listingSource";
+
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -266,14 +268,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  setHandleClassName(
-                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                setHandleClassName(
+                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -333,34 +335,33 @@ const Listing = () => {
                             {title}
                           </span>
                         </h1>
-                        
+
                       </div>
 
                       <div className="flex flex-wrap gap-1 justify-between mt-6">
                         <div className="flex items-center gap-2 mt-0">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="1em"
-                          viewBox="0 0 448 512"
-                          fill="#4299e1"
-                        >
-                          <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
-                        </svg>
-                        <p
-                          className="leading-relaxed text-base text-blue-400"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("uploaded_on")}
-                          {createdAt}
-                        </p>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="1em"
+                            viewBox="0 0 448 512"
+                            fill="#4299e1"
+                          >
+                            <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
+                          </svg>
+                          <p
+                            className="leading-relaxed text-base text-blue-400"
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            {t("uploaded_on")}
+                            {createdAt}
+                          </p>
                         </div>
-                        
+
                         <div
-                          className={`flex items-center ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
+                          className={`flex items-center ${terminalView ? "hidden" : "visible"
+                            }`}
                         >
                           <button
                             type="button"
@@ -520,7 +521,7 @@ const Listing = () => {
                   {t("description")}
                 </h1>
                 <Description content={description} />
-                {sourceId === 3 && (
+                {sourceId === listingSource.INSTAGRAM && (
                   <p className="text-gray-900 font-medium">
                     {t("visitWebsite")}{" "}
                     <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
