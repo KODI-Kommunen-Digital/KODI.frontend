@@ -521,7 +521,7 @@ const Listing = () => {
                   {t("description")}
                 </h1>
                 <Description content={description} />
-                {sourceId === listingSource.INSTAGRAM && (
+                {sourceId === listingSource.SCRAPER && (
                   <p className="text-gray-900 font-medium">
                     {t("visitWebsite")}{" "}
                     <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
