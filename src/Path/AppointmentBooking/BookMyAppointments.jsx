@@ -297,6 +297,7 @@ function BookMyAppointments() {
     const updatedTimes = [...selectedTimes];
     updatedTimes.splice(index, 1);
     setSelectedTimes(updatedTimes);
+    setSelectedCount(selectedCount - 1);
     setNumberError(false);
   };
 

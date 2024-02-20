@@ -9,6 +9,7 @@ import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
+import BookingConfirmation from "./Path/AppointmentBooking/BookingConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
@@ -83,6 +84,7 @@ const App = () => {
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
           <Route path="/AppointmentBooking/BookAppointments/Summary" element={<Summary />} />
+          <Route path="/AppointmentBooking/BookAppointments/BookingConfirmation" element={<BookingConfirmation />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
 

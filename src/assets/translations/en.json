@@ -593,5 +593,9 @@
     "remarks": "Remarks",
     "phone": "Phone Number",
     "user": "User",
+    "summaryBooking": "Booking summary",
+    "bookingSuccess": "Booking Successful",
+    "thanks": "Your booking is successful. Thanks for booking with us!",
+    "lookForeward": "We look forward to seeing you soon! If you have any questions or concerns, please do not hesitate to contact us.",
     "confirm": "Confirm"
 }

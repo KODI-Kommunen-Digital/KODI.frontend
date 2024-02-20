@@ -19,12 +19,12 @@ export default function Summary() {
 
       <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
-          Summary of booking
+          {t("summaryBooking")}
         </p>
         <br />
 
         <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-          Service Name : Football coaching
+        {t("serviceName")} : Football coaching
         </p>
         <br />
 
@@ -154,7 +154,7 @@ export default function Summary() {
           <button
             type="button"
             onClick={() => {
-              navigateTo(`/AppointmentBooking/BookAppointments/BookingDone`);
+              navigateTo(`/AppointmentBooking/BookAppointments/BookingConfirmation`);
             }}
             className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
           >

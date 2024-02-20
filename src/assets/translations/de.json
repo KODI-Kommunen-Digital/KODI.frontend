@@ -586,5 +586,9 @@
     "remarks": "Bemerkungen",
     "phone": "Telefonnummer",
     "user": "Benutzer",
+    "summaryBooking": "Buchungsübersicht",
+    "bookingSuccess": "Buchung erfolgreich",
+    "thanks": "Ihre Buchung ist erfolgreich. Vielen Dank, dass Sie bei uns gebucht haben!",
+    "lookForeward": "Wir freuen uns darauf, Sie bald zu sehen! Wenn Sie Fragen oder Bedenken haben, zögern Sie bitte nicht, uns zu kontaktieren.",
     "confirm": "Bestätigen"
 }
