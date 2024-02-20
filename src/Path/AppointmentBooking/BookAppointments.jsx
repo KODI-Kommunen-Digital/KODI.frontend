@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-// import DateTimePicker from "../../Components/DatePicker";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
@@ -20,10 +19,6 @@ import {
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
-import dayjs from "dayjs";
-import { generateDate, months } from "../../Components/util/calendar";
-import cn from "../../Components/util/cn";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -306,11 +301,6 @@ const BookAppointments = () => {
       }
     }
   }, [user]);
-
-  const days = ["S", "M", "T", "W", "T", "F", "S"];
-  const currentDate = dayjs();
-  const [today, setToday] = useState(currentDate);
-  const [selectDate, setSelectDate] = useState(currentDate);
 
   return (
     <section className="text-gray-600 bg-white body-font">
@@ -600,117 +590,6 @@ const BookAppointments = () => {
                     </div>
                   </div>
                 )}
-
-                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-0 rounded-lg max-w-md w-full h-full shadow-xl">
-                  <div className="relative h-full mx-2 py-2 px-2 my-2">
-                    <div className="flex justify-center items-center">
-                      <div className="relative h-full">
-                        <div className="flex justify-center items-center mb-2">
-                          <div className="flex gap-10 items-center">
-                            <GrFormPrevious
-                              className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-                              onClick={() => {
-                                setToday(today.month(today.month() - 1));
-                              }}
-                            />
-                            <h1
-                              className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
-                              onClick={() => {
-                                setToday(currentDate);
-                              }}
-                            >
-                              {months[today.month()]}, {today.year()}
-                            </h1>
-                            <GrFormNext
-                              className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-                              onClick={() => {
-                                setToday(today.month(today.month() + 1));
-                              }}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-7 bg-black text-white rounded-lg">
-                          {days.map((day, index) => {
-                            return (
-                              <h1
-                                key={index}
-                                className="p-2 text-center h-14 grid place-content-center text-sm"
-                              >
-                                {day}
-                              </h1>
-                            );
-                          })}
-                        </div>
-
-                        <div className="grid grid-cols-7 ">
-                          {generateDate(today.month(), today.year()).map(
-                            ({ date, currentMonth, today }, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="p-2 text-center h-14 grid place-content-center text-sm border-t"
-                                >
-                                  <h1
-                                    className={cn(
-                                      currentMonth ? "" : "text-gray-400",
-                                      today ? "bg-red-600 text-white" : "",
-                                      selectDate.toDate().toDateString() ===
-                                        date.toDate().toDateString()
-                                        ? "bg-black text-white"
-                                        : "",
-                                      "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
-                                    )}
-                                    onClick={() => {
-                                      setSelectDate(date);
-                                    }}
-                                  >
-                                    {date.date()}
-                                  </h1>
-                                </div>
-                              );
-                            }
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white md:ml-[0rem] lg:ml-[0rem] ml-[0rem] p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
-                  <h1 className="text-lg text-center font-semibold mb-4">
-                    Select a time for {selectDate.toDate().toDateString()}
-                  </h1>
-                  <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {Array.from({ length: 24 * 2 }).map((_, index) => {
-                        const time = dayjs()
-                          .hour(8)
-                          .minute(0)
-                          .add(index * 60, "minutes");
-                        return (
-                          <div
-                            key={index}
-                            className={cn(
-                              "p-2 rounded-full border cursor-pointer transition-all",
-                              "hover:bg-gray-200",
-                              "select-none"
-                            )}
-                            onClick={() => {
-                              // Handle time selection as needed
-                              console.log(
-                                "Selected time:",
-                                time.format("HH:mm")
-                              );
-                            }}
-                          >
-                            {time.format("HH:mm")}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
 
                 <button
                   onClick={() =>

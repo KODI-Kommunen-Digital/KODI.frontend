@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
+import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
 import {
   getListingsById,
@@ -82,8 +83,11 @@ function BookMyAppointments() {
     statusId: 1,
     serviceId: 0,
     title: "",
-    name: "",
-    description: "",
+    firstName: "",
+    lastName: "",
+    remarks: "",
+    email: "",
+    phone: "",
     service: "",
     logo: null,
   });
@@ -92,8 +96,11 @@ function BookMyAppointments() {
     categoryId: "",
     bokingId: "",
     title: "",
-    description: "",
-    name: "",
+    firstName: "",
+    lastName: "",
+    remarks: "",
+    email: "",
+    phone: "",
     service: "",
   });
 
@@ -184,7 +191,7 @@ function BookMyAppointments() {
       ...prev,
       [name]: value,
     }));
-    validateInput(e);
+    validateInput(name, value);
   };
 
   const navigateTo = (path) => {
@@ -269,10 +276,17 @@ function BookMyAppointments() {
 
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
+
+  const toggleUserDropdown = (index) => {
+    setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index)); // Toggle expanded user
+  };
 
   const handleTimeSelection = (time) => {
     if (selectedTimes.length < 8) {
       setSelectedTimes([...selectedTimes, time]);
+      setSelectedCount(selectedCount + 1);
       setNumberError(false);
     } else {
       setNumberError(true);
@@ -419,54 +433,6 @@ function BookMyAppointments() {
               </select>
             </div>
           </div>
-        </div>
-        <div className="grid grid-cols-2 text-center gap-2">
-          {Array.from(
-            { length: parseInt(input.numberOfPeople) },
-            (_, index) => (
-              <div key={index} className="mt-4">
-                <h2 className="text-lg font-medium mb-2">
-                  {t("user")} {index + 1}
-                </h2>
-                <input
-                  type="text"
-                  id={`firstName${index}`}
-                  name={`firstName${index}`}
-                  value={input[`firstName${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                  placeholder="First Name"
-                />
-                <input
-                  type="text"
-                  id={`lastName${index}`}
-                  name={`lastName${index}`}
-                  value={input[`lastName${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Last Name"
-                />
-                <input
-                  type="email"
-                  id={`email${index}`}
-                  name={`email${index}`}
-                  value={input[`email${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Email"
-                />
-                <input
-                  type="text"
-                  id={`remarks${index}`}
-                  name={`remarks${index}`}
-                  value={input[`remarks${index}`]}
-                  onChange={onInputChange}
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                  placeholder="Remarks"
-                />
-              </div>
-            )
-          )}
         </div>
 
         <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
@@ -627,13 +593,100 @@ function BookMyAppointments() {
             </div>
           </div>
         </div>
+
+        {/* User details box */}
+        <div className={`text-center gap-4 w-full`}>
+          {Array.from({ length: selectedCount }, (_, index) => (
+            <div key={index} className="mt-4">
+              <div className="items-center justify-between border border-gray-300 rounded p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <img
+                      src={PROFILEIMAGE}
+                      alt={`Profile Picture ${index}`}
+                      className="mr-2 w-6 h-6 rounded-full object-cover"
+                    />
+                    <h2 className="text-lg font-medium mb-0">
+                      User {index + 1}
+                    </h2>
+                  </div>
+
+                  <button
+                    onClick={() => toggleUserDropdown(index)}
+                    className="ml-2 text-blue-500 focus:outline-none text-2xl"
+                  >
+                    {expandedUser === index ? "▼" : "►"}
+                  </button>
+                </div>
+
+                <div
+                  className={`${
+                    expandedUser === index ? "block" : "hidden"
+                  } mt-4 p-4`}
+                >
+                  <input
+                    type="text"
+                    id={`firstName${index}`}
+                    name={`firstName${index}`}
+                    value={input.firstName}
+                    onChange={onInputChange}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                    placeholder={t("firstname")}
+                    required
+                  />
+                  <input
+                    type="text"
+                    id={`lastName${index}`}
+                    name={`lastName${index}`}
+                    value={input.lastName}
+                    onChange={onInputChange}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                    placeholder={t("lastname")}
+                    required
+                  />
+                  <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    value={input.phone}
+                    onChange={onInputChange}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                    placeholder={t("phonenumber")}
+                  />
+                  <input
+                    type="email"
+                    id={`email${index}`}
+                    name={`email${index}`}
+                    value={input.email}
+                    onChange={onInputChange}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                    placeholder={t("email")}
+                    required
+                  />
+                  <input
+                    type="text"
+                    id={`remarks${index}`}
+                    name={`remarks${index}`}
+                    value={input.remarks}
+                    onChange={onInputChange}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                    placeholder={t("remarks")}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="relative max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto">
+      <div className="relative max-w-2xl gap-y-16 px-5 py-2 lg:max-w-7xl mx-auto">
         <div className="py-2 mt-1 px-o">
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={() => {
+              handleSubmit();
+              navigateTo(`/AppointmentBooking/BookAppointments/Summary`);
+            }}
             disabled={updating}
             className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
           >

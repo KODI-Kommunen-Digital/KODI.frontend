@@ -8,6 +8,7 @@ import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
+import Summary from "./Path/AppointmentBooking/Summary";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
@@ -81,6 +82,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
+          <Route path="/AppointmentBooking/BookAppointments/Summary" element={<Summary />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
 

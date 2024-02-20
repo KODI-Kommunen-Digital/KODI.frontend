@@ -582,5 +582,9 @@
     "numberofPeople": "Anzahl der Personen",
     "selectedSlots": "Ausgewählte Slots ",
     "timeSlotValidation": "Es können maximal 8 Zeitfenster gebucht werden.",
-    "user": "Benutzer"
+    "firstname":"Vorname",
+    "remarks": "Bemerkungen",
+    "phone": "Telefonnummer",
+    "user": "Benutzer",
+    "confirm": "Bestätigen"
 }

@@ -589,5 +589,9 @@
     "numberofPeople": "Number of people",
     "selectedSlots": "Selected Slots ",
     "timeSlotValidation": "You can only book a maximum of 8 time slots.",
-    "user": "User"
+    "firstname":"First Name",
+    "remarks": "Remarks",
+    "phone": "Phone Number",
+    "user": "User",
+    "confirm": "Confirm"
 }
