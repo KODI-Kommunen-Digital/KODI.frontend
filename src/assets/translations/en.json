@@ -7,7 +7,7 @@
     "accountPresent": "Already have an account? ",
     "action": "Action",
     "active": "Active",
-    "add_social_media": "+Add your social media accounts here",
+    "add_social_media": "+ Add your social media accounts here",
     "addLogoHere": "Add your Logo here",
     "alerts": "Alerts",
     "allCategories": "All Categories",
@@ -480,7 +480,7 @@
     "writeReply": "Write a reply...",
     "comingSoon": "Hey! We are cooking it up. Coming soon...",
     "goBack": "Go back",
-    "goToHomePage": "Go to homepage",
+    "goToHomePage": "Go to home page",
     "show": "Show",
     "hide": "Hide",
     "reason": "Reason",
@@ -574,8 +574,9 @@
     "makeAdmin": "Make Admin",
 
     "addService": "Add service",
+    "addAnotherService": "+ Add another service",
     "appointmentBooking":"Appointment Booking",
-    "addtimeslot": "Add time slot",
+    "addtimeslot": "+ Add time slot",
     "serviceName": "Service name",
     "from": "From",
     "to": "TO",
@@ -597,5 +598,8 @@
     "bookingSuccess": "Booking Successful",
     "thanks": "Your booking is successful. Thanks for booking with us!",
     "lookForeward": "We look forward to seeing you soon! If you have any questions or concerns, please do not hesitate to contact us.",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "goToMyBookings": "Go to my bookings",
+    "useProvidedTimeSlots": "Use provided time slots",
+    "timeSlotsSetFromPrevious": "Added time slots"
 }

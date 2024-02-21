@@ -47,13 +47,19 @@ const AddTimeSlots = () => {
     <div className="container mx-auto mt-8">
       {daysOfWeek.map((day) => (
         <div key={day} className="mb-4">
-          <h2 className="text-xl font-semibold mb-2">{day}</h2>
+          {/* <h2 className="text-xl font-semibold mb-2">{day}</h2> */}
           {schedule[day]?.map((timeSlot, index) => (
             <div
               key={index}
-              className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center"
+              className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center mt-2"
             >
-              <div className="flex space-x-4 items-center">
+              <div
+                className="flex space-x-2 items-center mt-0"
+                style={{ width: "100px" }}
+              >
+                <h2 className="text-base font-medium mt-1 mr-3">{day}</h2>
+              </div>
+              <div className="flex space-x-2 mt-0 items-center">
                 <input
                   type="text"
                   value={timeSlot.from || ""}
@@ -63,7 +69,7 @@ const AddTimeSlots = () => {
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="HH:mm"
                 />
-                <span className="text-gray-500">to</span>
+                <span className="text-gray-500"> - </span>
                 <input
                   type="text"
                   value={timeSlot.to || ""}
@@ -74,17 +80,17 @@ const AddTimeSlots = () => {
                   placeholder="HH:mm"
                 />
               </div>
-              <div className="flex space-x-4 items-center mt-2">
+              <div className="flex space-x-2 items-center mt-0">
                 <button
                   onClick={() => handleAddTimeSlot(day)}
-                  className="w-full sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-slate-600 sm:ml-3 sm:text-sm"
+                  className="w-full mt-1 sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-800 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:text-sm"
                 >
                   {t("add")}
                 </button>
                 {index > 0 && (
                   <button
                     onClick={() => handleDeleteTimeSlot(day, index)}
-                    className="w-full sm:w-auto sm:mt-0 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:text-sm"
+                    className="w-full mt-1 sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:text-sm"
                   >
                     {t("delete")}
                   </button>

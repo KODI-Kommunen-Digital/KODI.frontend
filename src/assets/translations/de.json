@@ -1,5 +1,5 @@
 {
-    "+add_social_media": "+Füge Social Media hinzu.",
+    "+add_social_media": "+ Füge Social Media hinzu.",
     "aboutMe": "Über mich",
     "acceptConditionMessage": "Ich akzeptiere die Datenschutzerkläung* und die allgemeinen Geschäftsbedingungen*",
     "account": "Account",
@@ -590,5 +590,19 @@
     "bookingSuccess": "Buchung erfolgreich",
     "thanks": "Ihre Buchung ist erfolgreich. Vielen Dank, dass Sie bei uns gebucht haben!",
     "lookForeward": "Wir freuen uns darauf, Sie bald zu sehen! Wenn Sie Fragen oder Bedenken haben, zögern Sie bitte nicht, uns zu kontaktieren.",
-    "confirm": "Bestätigen"
+    "confirm": "Bestätigen",
+    "goToMyBookings": "Gehen Sie zu meinen Buchungen",
+    "useProvidedTimeSlots": "Nutzen Sie bereitgestellte Zeitfenster",
+    "timeSlotsSetFromPrevious": "Zeitfenster hinzugefügt",
+    "addAnotherService": "+ Fügen Sie einen weiteren Dienst hinzu",
+    "addService": "Dienst hinzufügen",
+    "addtimeslot": "+ Zeitfenster hinzufügen",
+    "serviceName": "Dienstname",
+    "from": "Aus",
+    "to": "ZU",
+    "done": "Erledigt",
+    "client": "Klient",
+    "reject": "Ablehnen",
+    "myBooking": "Meine Buchung",
+    "myAppoinment": "Meine Termine"
 }

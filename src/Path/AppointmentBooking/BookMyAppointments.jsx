@@ -437,7 +437,7 @@ function BookMyAppointments() {
         </div>
 
         <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
-          <div className="lg:w-2/3">
+          <div className="lg:w-2/3 border-2 border-black rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
               <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-xl">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
@@ -518,7 +518,7 @@ function BookMyAppointments() {
           </div>
 
           <div className="lg:w-1/3 mx-auto">
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 border-2 border-black rounded-lg">
               <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
                 <h1 className="text-lg text-center font-semibold mb-4">
                   {selectDate.toDate().toDateString()}
@@ -555,6 +555,9 @@ function BookMyAppointments() {
                     {t("timeSlotValidation")}
                   </div>
                 )}
+
+                <div className="my-4 bg-gray-200 h-[1px]"></div>
+
                 <div className="mt-4">
                   <h2 className="text-lg text-center font-semibold mb-4">
                     {t("selectedSlots")}
@@ -568,7 +571,9 @@ function BookMyAppointments() {
                         <span style={{ fontWeight: "bold" }}>{` ${
                           index + 1
                         }:`}</span>{" "}
-                        {time}
+                        <span className="p-2 rounded-full border cursor-pointer border-emerald-500 text-emerald-500">
+                          {time}
+                        </span>
                         <button
                           className="ml-0 text-red-500"
                           onClick={() => handleDeleteSlot(index)}
@@ -625,35 +630,28 @@ function BookMyAppointments() {
                     expandedUser === index ? "block" : "hidden"
                   } mt-4 p-4`}
                 >
-                  <input
-                    type="text"
-                    id={`firstName${index}`}
-                    name={`firstName${index}`}
-                    value={input.firstName}
-                    onChange={onInputChange}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder={t("firstname")}
-                    required
-                  />
-                  <input
-                    type="text"
-                    id={`lastName${index}`}
-                    name={`lastName${index}`}
-                    value={input.lastName}
-                    onChange={onInputChange}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                    placeholder={t("lastname")}
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="phone"
-                    name="phone"
-                    value={input.phone}
-                    onChange={onInputChange}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                    placeholder={t("phonenumber")}
-                  />
+                  <div className="relative mb-0 grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      id={`firstName${index}`}
+                      name={`firstName${index}`}
+                      value={input.firstName}
+                      onChange={onInputChange}
+                      className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("firstname")}
+                      required
+                    />
+                    <input
+                      type="text"
+                      id={`lastName${index}`}
+                      name={`lastName${index}`}
+                      value={input.lastName}
+                      onChange={onInputChange}
+                      className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
+                      placeholder={t("lastname")}
+                      required
+                    />
+                  </div>
                   <input
                     type="email"
                     id={`email${index}`}
@@ -664,15 +662,29 @@ function BookMyAppointments() {
                     placeholder={t("email")}
                     required
                   />
-                  <input
-                    type="text"
-                    id={`remarks${index}`}
-                    name={`remarks${index}`}
-                    value={input.remarks}
-                    onChange={onInputChange}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                    placeholder={t("remarks")}
-                  />
+                  {index === 0 && (
+                    <>
+                      <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        value={input.phone}
+                        onChange={onInputChange}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                        placeholder={t("phonenumber")}
+                      />
+
+                      <input
+                        type="text"
+                        id={`remarks${index}`}
+                        name={`remarks${index}`}
+                        value={input.remarks}
+                        onChange={onInputChange}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                        placeholder={t("remarks")}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

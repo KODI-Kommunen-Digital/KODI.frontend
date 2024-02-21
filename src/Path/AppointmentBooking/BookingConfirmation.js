@@ -3,10 +3,18 @@ import { FiCheckCircle } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import Footer from "../../Components/Footer";
+import { useNavigate } from "react-router-dom";
 
 function BookingConfirmation() {
   const { t } = useTranslation();
-
+  window.scrollTo(0, 0);
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
+  
   return (
     <section className="text-gray-600 bg-white body-font relative">
       <HomePageNavBar />
@@ -23,9 +31,20 @@ function BookingConfirmation() {
             {t("thanks")}
           </p>
           <br />
-          <p className="font-sans font-semibold text-black mb-1 text-sm text-center title-font">
+          <p className="font-sans font-semibold text-black mb-4 text-sm text-center title-font">
             {t("lookForeward")}
           </p>
+          <br />
+
+          <div className="mb-1 py-0 mt-1 px-0 text-center">
+            <button
+              type="submit"
+              onClick={() => navigateTo("/AppointmentBooking/MyBookings")}
+              className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+            >
+              {t("goToMyBookings")}
+            </button>
+          </div>
         </div>
       </div>
 
