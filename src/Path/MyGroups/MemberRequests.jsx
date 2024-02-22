@@ -25,6 +25,7 @@ const MemberRequests = () => {
     getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })
       .then((response) => {
         setRequests(response.data.data);
+        console.log(response.data.data);
         setCityId(cityIdParam);
         setForumId(forumIdParam);
       })

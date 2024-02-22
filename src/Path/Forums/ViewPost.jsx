@@ -74,7 +74,6 @@ const ViewPost = () => {
     const comment = comments.find((c) => c.id === parentId);
     comment.newReply = newReply;
     setComments([...comments]);
-    console.log(comments);
   };
 
   const postComment = (parentId = null) => {
@@ -87,6 +86,7 @@ const ViewPost = () => {
           commentResonse.firstname = currentUser.firstname;
           commentResonse.lastname = currentUser.lastname;
           commentResonse.username = currentUser.username;
+          commentResonse.image = currentUser.image;
           comment.childrenCount += 1;
           comment.showReplies = true;
           if (comment.replies) {
@@ -107,6 +107,7 @@ const ViewPost = () => {
           commentResonse.firstname = currentUser.firstname;
           commentResonse.lastname = currentUser.lastname;
           commentResonse.username = currentUser.username;
+          commentResonse.image = currentUser.image;
           commentResonse.childrenCount = 0;
           comments.unshift(commentResonse);
           setComments([...comments]);
@@ -148,12 +149,14 @@ const ViewPost = () => {
                 ),
               ]
             : [...response.data.data];
+          console.log("parentId:", parentId);
           setComments([...comments]);
         } else {
           if (response.data.data.length > 0) {
             setShowMoreComments(true);
             // Update the logic to concatenate new comments to existing ones
-            setComments([...comments, ...response.data.data]);
+            setComments([...response.data.data]);
+            console.log("Comments:", ...response.data.data);
           } else {
             setShowMoreComments(false);
           }
@@ -270,108 +273,150 @@ const ViewPost = () => {
 
       <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
         <div className="grid grid-cols-1 gap-4 col-span-2">
-          <div className="overflow-hidden mb-10">
-            <div className="flex flex-col lg:flex-row sm:items-start text-start justify-between">
-              <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-                <span
-                  className="inline-block max-w-full break-words"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {forumPost.title}
-                </span>
-              </h1>
-              <div className="flex my-4 items-center space-x-8 text-2xl md:text-3xl lg:text-3xl text-blue-400">
-                {isUser ? (
-                  <>
-                    <a className="text-gray-600 font-semibold text-base cursor-pointer">
+          <div className="lg:w-full md:w-full h-full">
+            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+              <div className="mt-5 md:col-span-2 md:mt-0">
+                <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                  <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                    <span
+                      className="inline-block max-w-full break-words"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {forumPost.title}
+                    </span>
+                  </h1>
+                </div>
+
+                <div className="flex flex-wrap gap-1 justify-between mt-0">
+                  {isUser ? (
+                    <>
+                      <a className="text-gray-600 font-semibold text-base cursor-pointer">
+                        <span
+                          className="ml-0"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                          onClick={() => handleDelete()}
+                        >
+                          {t("Delete")}
+                        </span>
+                      </a>
+
+                      <a className="text-blue-400 font-semibold text-base cursor-pointer">
+                        <span
+                          className="ml-0"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                          onClick={() =>
+                            navigateTo(
+                              `/UploadPosts?forumId=${forumId}&cityId=${cityId}&postId=${postId}`
+                            )
+                          }
+                        >
+                          {t("Edit")}
+                        </span>
+                      </a>
+                    </>
+                  ) : null}
+
+                  <div className="flex items-center gap-2 mt-6">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="1em"
+                      viewBox="0 0 448 512"
+                      fill="#4299e1"
+                    >
+                      <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
+                    </svg>
+                    <p
+                      className=" flex leading-relaxed text-base text-blue-400"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("uploaded_on")}
+                      {createdAt}
+                    </p>
+                  </div>
+
+                  <div className={`hidden md:block flex items-center mt-6`}>
+                    <button
+                      type="button"
+                      className="rounded-xl bg-white border border-red-600 text-red-600 py-2 px-4 text-sm cursor-pointer"
+                      onClick={openPopup}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        {t("report")}
+                      </span>
+                    </button>
+                  </div>
+                  <div className={`md:hidden block flex items-center mt-6`}>
+                    <a
+                      className="text-red-600 text-base cursor-pointer"
+                      onClick={openPopup}
+                    >
                       <span
                         className="ml-0"
                         style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() => handleDelete()}
                       >
-                        {t("Delete")}
+                        {t("report")}
                       </span>
                     </a>
+                  </div>
 
-                    <a className="text-blue-400 font-semibold text-base cursor-pointer">
-                      <span
-                        className="ml-0"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() =>
-                          navigateTo(
-                            `/UploadPosts?forumId=${forumId}&cityId=${cityId}&postId=${postId}`
-                          )
-                        }
-                      >
-                        {t("Edit")}
-                      </span>
-                    </a>
-                  </>
-                ) : null}
-
-                <a
-                  className="text-blue-800 font-semibold text-base cursor-pointer"
-                  onClick={openPopup}
-                >
-                  <span
-                    className="ml-0"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("report")}
-                  </span>
-                </a>
-
-                {isPopupOpen && (
-                  <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
-                    <div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-                      <h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
-                        {t("reason")}
-                      </h2>
-                      <textarea
-                        className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
-                        rows="4"
-                        value={text}
-                        onChange={handleTextChange}
-                      />
-                      <div className="flex justify-center mt-4">
-                        <button
-                          className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                          onClick={closePopup}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                          onClick={handleReportPost}
-                        >
-                          Send
-                        </button>
+                  {isPopupOpen && (
+                    <div className="fixed w-full px-4 sm:px-6 inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
+                      <div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
+                        <h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
+                          {t("reason")}
+                        </h2>
+                        <textarea
+                          className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
+                          rows="4"
+                          value={text}
+                          onChange={handleTextChange}
+                        />
+                        <div className="text-center justify-center mt-4">
+                          <button
+                            className="mt-3 mb-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                            onClick={closePopup}
+                          >
+                            {t("cancel")}
+                          </button>
+                          <button
+                            className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            onClick={handleReportPost}
+                          >
+                            {t("send")}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="container-fluid lg:w-full md:w-full mb-10">
-            <div className=" mr-0 ml-0 mt-0">
+          <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
+            <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
               <style>
                 {`
-									@media (max-width: 280px) {
-										.galaxy-fold {
-											margin-top: 1rem; /* Adjust the margin value as needed */
-										}
-									}
-								`}
+                  @media (max-width: 280px) {
+                    .galaxy-fold {
+                      margin-top: 1rem; /* Adjust the margin value as needed */
+                    }
+                  }
+                `}
               </style>
               <div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
                 <div className="relative h-full">
                   <img
                     alt="listing"
-                    className="object-cover object-center h-full w-full"
+                    className="object-cover object-center h-[600px] w-full"
                     src={
                       forumPost.image
                         ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
@@ -383,7 +428,13 @@ const ViewPost = () => {
               </div>
             </div>
           </div>
-          <div className="overflow-hidden mb-10">
+          <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
+            <h1
+              className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("description")}
+            </h1>
             <Description content={forumPost.description} />
           </div>
 
@@ -401,7 +452,7 @@ const ViewPost = () => {
             <div className="space-x-2 gap-4 md:gap-2 flex">
               <div
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm text-center font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent 
-								bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => postComment()}
               >
@@ -425,7 +476,7 @@ const ViewPost = () => {
 
               <a
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent  
-								bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={toggleComments}
               >
@@ -455,7 +506,7 @@ const ViewPost = () => {
                       <div className="flex justify-between items-center mb-2">
                         <div className="flex items-start md:items-center flex-col md:flex-row">
                           <div
-                            className="mr-3 mb-2 text-sm text-gray-500 flex items-center"
+                            className="mr-3 mb-2 text-sm text-gray-500 flex items-center cursor-pointer"
                             onClick={() =>
                               navigateTo(
                                 user
@@ -467,9 +518,9 @@ const ViewPost = () => {
                             <img
                               className="mr-2 w-6 h-6 object-cover rounded-full"
                               src={
-                                postOwner.image
+                                comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    postOwner.image
+                                    comment.image
                                   : PROFILEIMAGE
                               }
                             />
@@ -590,16 +641,16 @@ const ViewPost = () => {
                               <div className="flex items-center">
                                 <p className="inline-flex items-center mr-3 text-sm text-gray-900">
                                   <img
-                                    className="mr-2 w-6 h-6 rounded-full"
+                                    className="mr-2 w-6 h-6 object-cover rounded-full"
                                     src={
-                                      comment.image
+                                      reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
-                                          comment.image
+                                          reply.image
                                         : PROFILEIMAGE
                                     }
                                   />
-                                  {comment.firstname} {comment.lastname} (@
-                                  {comment.username})
+                                  {/* {comment.firstname} {comment.lastname} (@ */}
+                                  {reply.username}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   <time
