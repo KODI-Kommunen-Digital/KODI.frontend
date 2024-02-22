@@ -574,7 +574,6 @@
     "removeAdmin": "Remove Admin",
     "makeAdmin": "Make Admin",
     "uploadFile": "Upload file",
-    "removeFile": "Remove file",
     "forumMembers": "Forum Members",
     "memberReq": "Member Requests",
     "forumReq": "Forum Requests",
@@ -643,5 +642,10 @@
     "FinalProvisions": "Final provisions",
     "FinalProvisions1": "These Terms of Use are governed exclusively by German law.",
     "FinalProvisions2": "The operators reserve the right to amend these Terms of Use at any time and to make further use of the platform dependent on acceptance of the amended Terms of Use. Should one or more provisions of these Terms of Use be or become invalid, this shall not affect the validity of the other provisions.",
+    
+    "geseketersmOfUseGlance1": "The Geseke App is operated by the town of Geseke. (short: operator). It is made available to citizens free of charge. The aim is to collect information about life in the municipalities in an app and make it accessible, thereby promoting social life. The app also offers access to various digital services of the municipalities and information from the municipal administrations.",
+    "geseketersmOfUseGlance2": "The following terms of use apply to the user relationship between the operators and the users. Users accept these terms of use by confirming their registration. The app can be downloaded free of charge from the Google Play Store and the Apple Store.",
+    "geseketersmOfUseGlance3": "The operators endeavor to ensure trouble-free operation of the platform. This is naturally limited to services over which the operators have influence. The operators reserve the right to restrict access to the platform in whole or in part, temporarily or permanently, due to maintenance work, capacity issues or other events beyond their control.",
+    "FinalProvisions3": "",
     "visitWebsite": "Visit the website :"
 }

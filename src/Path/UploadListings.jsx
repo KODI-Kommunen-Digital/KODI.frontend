@@ -984,7 +984,7 @@ function UploadListings() {
             <div className="relative mb-4 grid grid-cols-2 gap-4">
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  for="place"
+                  htmlFor="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("originalPrice")}
@@ -1003,7 +1003,7 @@ function UploadListings() {
               </div>
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  for="place"
+                  htmlFor="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("discountedPrice")}
