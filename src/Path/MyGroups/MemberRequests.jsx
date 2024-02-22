@@ -19,12 +19,13 @@ const MemberRequests = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    document.title = "Forum Requests";
+    document.title = t("forumReq");
     const cityIdParam = parseInt(urlParams.get("cityId"));
     const forumIdParam = parseInt(urlParams.get("forumId"));
     getForumMemberRequests(cityIdParam, forumIdParam, { statusId: 1 })
       .then((response) => {
         setRequests(response.data.data);
+        console.log(response.data.data);
         setCityId(cityIdParam);
         setForumId(forumIdParam);
       })

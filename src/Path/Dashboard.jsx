@@ -11,8 +11,6 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
-// import { Popover, Transition } from "@headlessui/react";
-// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -149,6 +147,7 @@ const Dashboard = () => {
         const tempListings = listings;
         tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
         setListings([...tempListings]);
+        window.location.reload();
       })
       .catch((error) => console.log(error));
   }
@@ -203,7 +202,7 @@ const Dashboard = () => {
   // Navigate to Edit Listings page Starts
 
   return (
-    <section className="bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative h-screen">
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
