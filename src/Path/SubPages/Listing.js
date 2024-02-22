@@ -20,6 +20,8 @@ import {
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
+import { listingSource } from "../../Constants/listingSource";
+
 
 const Description = ({ content }) => {
   const linkify = (text) => {
@@ -266,14 +268,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  setHandleClassName(
-                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                setHandleClassName(
+                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -333,7 +335,7 @@ const Listing = () => {
                             {title}
                           </span>
                         </h1>
-                        
+
                       </div>
 
                       <div className="flex flex-wrap gap-1 justify-between mt-0">
@@ -356,7 +358,7 @@ const Listing = () => {
                           {createdAt}
                         </p>
                         </div>
-                        
+
                         <div
                           className={`hidden md:block flex items-center mt-6 ${
                             terminalView ? "hidden" : "visible"
@@ -538,8 +540,7 @@ const Listing = () => {
                   {t("description")}
                 </h1>
                 <Description content={description} />
-                
-                {sourceId === 3 && (
+                {sourceId === listingSource.SCRAPER && (
                   <p className="text-gray-900 font-medium">
                     {t("visitWebsite")}{" "}
                     <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
