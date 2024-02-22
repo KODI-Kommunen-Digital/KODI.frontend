@@ -35,9 +35,9 @@ function UploadListings() {
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -68,13 +68,9 @@ function UploadListings() {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
-        setImage(e.target.files);
+        setImage(file);
       } else if (file.type === "application/pdf") {
         setPdf(file);
-        setInput((prev) => ({
-          ...prev,
-          hasAttachment: true,
-        }));
       }
     }
     setDragging(false);
@@ -83,42 +79,23 @@ function UploadListings() {
   function handleInputChange(e) {
     e.preventDefault();
     const file = e.target.files[0];
+
     if (file) {
+      const MAX_IMAGE_SIZE_MB = 20;
+      if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+        alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
+        return;
+      }
+
       if (file.type.startsWith("image/")) {
         setLocalImageOrPdf(true);
-        setImage(e.target.files);
+        setImage(file);
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
         setPdf(file);
-        setInput((prev) => ({
-          ...prev,
-          hasAttachment: true,
-        }));
       }
     }
   }
-
-  const [localImages, setLocalImages] = useState([]);
-  const handleMultipleInputChange = (event) => {
-    const newImages = Array.from(event.target.files);
-    setLocalImages((prevImages) => [...prevImages, ...newImages]);
-    setImage([...image, ...newImages]);
-  };
-
-  const handleUpdateMultipleInputChange = (e) => {
-    const newFiles = e.target.files;
-
-    if (newFiles.length > 0) {
-      const validImages = Array.from(newFiles).filter((file) =>
-        file.type.startsWith("image/")
-      );
-
-      if (validImages.length > 0) {
-        setLocalImageOrPdf(true);
-        setImage((prevImages) => [...prevImages, ...validImages]);
-      }
-    }
-  };
 
   function handleRemoveImage() {
     if (listingId) {
@@ -128,11 +105,7 @@ function UploadListings() {
         logo: null,
       }));
     }
-    setImage((prevImages) => {
-      const updatedImages = [...prevImages];
-      // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
-      return updatedImages;
-    });
+    setImage(null);
   }
 
   function handleRemovePDF() {
@@ -144,10 +117,6 @@ function UploadListings() {
       }));
     }
     setPdf(null);
-    setInput((prev) => ({
-      ...prev,
-      hasAttachment: false,
-    }));
   }
 
   //Drag and Drop ends
@@ -174,8 +143,6 @@ function UploadListings() {
     discountedPrice: "",
     removeImage: false,
     removePdf: false,
-    hasImage: false,
-    hasAttachment: false,
   });
 
   const [error, setError] = useState({
@@ -210,33 +177,15 @@ function UploadListings() {
           setListingId(response.data.id);
         }
 
-        if (input.removeImage) {
-          if (image.length === 0) {
-            await deleteListingImage(cityId, listingId);
-          } else {
-            if (!localImageOrPdf) {
-              const imageForm = new FormData();
-              for (let i = 0; i < image.length; i++) {
-                imageForm.append("image", image[i]);
-              }
-
-              await uploadListingImage(
-                imageForm,
-                cityId,
-                response.data.id || listingId
-              );
-            }
-          }
+        if (input.removeImage || input.removePdf) {
+          await deleteListingImage(cityId, listingId);
         }
 
         if (localImageOrPdf) {
           if (image) {
             // Upload image if it exists
             const imageForm = new FormData();
-            for (let i = 0; i < image.length; i++) {
-              imageForm.append("image", image[i]);
-            }
-
+            imageForm.append("image", image);
             await uploadListingImage(
               imageForm,
               cityId,
@@ -258,6 +207,7 @@ function UploadListings() {
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : setSuccessMessage(t("listingUpdated"));
         setErrorMessage(false);
+        setIsSuccess(true);
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
@@ -300,6 +250,7 @@ function UploadListings() {
         subcatList[subCat.id] = subCat.name;
       });
       setSubCategories(subcatList);
+      console.log(response.data.data);
     });
     setInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
@@ -325,12 +276,8 @@ function UploadListings() {
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
-        if (listingData.logo && listingData.otherlogos) {
-          const temp = listingData.otherlogos
-            .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
-            .map((img) => img.logo);
-          setImage(temp);
-          console.log(temp);
+        if (listingData.logo) {
+          setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -339,7 +286,9 @@ function UploadListings() {
         }
       });
     }
-  }, [listingId]);
+    document.title =
+      process.env.REACT_APP_REGION_NAME + " " + t("uploadListings");
+  }, []);
 
   function categoryDescription(category) {
     if (category === "4") {
@@ -367,12 +316,6 @@ function UploadListings() {
       [name]: value,
     }));
     validateInput(e);
-  };
-
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
   };
 
   const [description, setDescription] = useState("");
@@ -462,6 +405,7 @@ function UploadListings() {
         } else {
           return "";
         }
+
       default:
         return "";
     }
@@ -562,11 +506,25 @@ function UploadListings() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
+
+    const year = twoWeeksLater.getFullYear();
+    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
+    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
+    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
+
+    // Format: yyyy-MM-ddThh:mm
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   return (
-    <section className="base-bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative h-screen">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
@@ -581,7 +539,9 @@ function UploadListings() {
             <label
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
-            ></label>
+            >
+              {t("title")} *
+            </label>
             <input
               type="text"
               id="title"
@@ -681,7 +641,7 @@ function UploadListings() {
               value={categoryId || 0}
               onChange={handleCategoryChange}
               required
-              disabled={!newListing}
+              // disabled={!newListing}
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
@@ -721,7 +681,7 @@ function UploadListings() {
                 onChange={handleSubcategoryChange}
                 onBlur={validateInput}
                 required
-                disabled={!newListing}
+                // disabled={!newListing}
                 className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>
@@ -745,27 +705,6 @@ function UploadListings() {
               </div>
             </div>
           )}
-
-          <div className="col-span-6">
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {t("streetAddress")}
-            </label>
-            <div>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={input.address}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                placeholder={t("enterAddress")}
-              />
-            </div>
-          </div>
 
           {categoryId == 3 && (
             <div className="relative mb-4">
@@ -847,11 +786,32 @@ function UploadListings() {
             </div>
           )}
 
+          <div className="relative mb-4">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-600"
+            >
+              {t("streetAddress")}
+            </label>
+            <div>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={input.address}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                placeholder={t("enterAddress")}
+              />
+            </div>
+          </div>
+
           {(categoryId == 12 || categoryId == 5) && (
             <div className="relative mb-4 grid grid-cols-2 gap-4">
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  htmlFor="place"
+                  for="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("originalPrice")}
@@ -870,7 +830,7 @@ function UploadListings() {
               </div>
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
-                  htmlFor="place"
+                  for="place"
                   className="block text-sm font-medium text-gray-600"
                 >
                   {t("discountedPrice")}
@@ -966,7 +926,7 @@ function UploadListings() {
         </div>
       </div>
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
             {t("uploadLogo")}
@@ -984,97 +944,19 @@ function UploadListings() {
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              {image && image.length > 0 && newListing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FormImage
-                    updateImageList={setImage}
-                    handleRemoveImage={handleRemoveImage}
-                    image={image}
-                    localImageOrPdf={localImageOrPdf}
-                    localImages={localImages}
+              {image ? (
+                <div className="flex flex-col items-center">
+                  <img
+                    className="object-contain h-64 w-full mb-4"
+                    src={localImageOrPdf ? URL.createObjectURL(image) : image}
+                    alt="uploaded"
                   />
-                  {image.length < 8 && (
-                    <label
-                      htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
-                    >
-                      <div className="h-full flex items-center justify-center">
-                        <div className="text-8xl text-black">+</div>
-                      </div>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*,.pdf"
-                        className="sr-only"
-                        onChange={handleMultipleInputChange}
-                        multiple
-                      />
-                    </label>
-                  )}
-                </div>
-              ) : image && Array.isArray(image) && image.length === 1 && typeof image[0] === 'string' && image[0].includes("admin/") ? (
-                <div>
-                  <FormImage
-                    updateImageList={setImage}
-                    handleRemoveImage={handleRemoveImage}
-                    handleInputChange={handleInputChange}
-                    image={image}
-                    localImageOrPdf={localImageOrPdf}
-                    localImages={localImages}
-                  />
-                  {image.length < 8 && (
-                    <label
-                      htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
-                    >
-                      <div className="h-full flex items-center justify-center">
-                        <div className="text-8xl text-black">+</div>
-                      </div>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*,.pdf"
-                        className="sr-only"
-                        onChange={handleUpdateMultipleInputChange}
-                        multiple
-                      />
-                    </label>
-                  )}
-                </div>
-              ) : image && Array.isArray(image) && image.length > 0 && !newListing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FormImage
-                    updateImageList={setImage}
-                    handleRemoveImage={handleRemoveImage}
-                    handleInputChange={handleInputChange}
-                    image={image}
-                    localImageOrPdf={localImageOrPdf}
-                    localImages={localImages}
-                  />
-                  {image.length < 8 && (
-                    <label
-                      htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
-                    >
-                      <div className="h-full flex items-center justify-center">
-                        <div className="text-8xl text-black">+</div>
-                      </div>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*,.pdf"
-                        className="sr-only"
-                        onChange={handleUpdateMultipleInputChange}
-                        multiple
-                      />
-                    </label>
-                  )}
+                  <button
+                    className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                    onClick={handleRemoveImage}
+                  >
+                    {t("removeFile")}
+                  </button>
                 </div>
               ) : pdf ? (
                 <div className="flex flex-col items-center">
@@ -1097,7 +979,18 @@ function UploadListings() {
                 </div>
               ) : (
                 <div className="text-center">
-                  <UploadSVG />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mx-auto h-12 w-12"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7.414l-2-2V4a1 1 0 00-1-1H6zm6 5a1 1 0 100-2 1 1 0 000 2z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                   <p className="mt-1 text-sm text-gray-600">
                     {t("dragAndDropImageOrPDF")}
                   </p>
@@ -1105,14 +998,13 @@ function UploadListings() {
                     <label
                       className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
                     >
-                      <span className="button-label">{t("upload")}</span>
+                      <span className="button-label">{t("uploadFile")}</span>
                       <input
                         id="file-upload"
                         type="file"
                         accept="image/*,.pdf"
                         className="sr-only"
                         onChange={handleInputChange}
-                        multiple
                       />
                     </label>
                   </div>
@@ -1129,7 +1021,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating}
+              disabled={updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}

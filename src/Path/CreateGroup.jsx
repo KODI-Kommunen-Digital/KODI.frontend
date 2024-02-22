@@ -296,7 +296,7 @@ function CreateGroup() {
 	}
 
 	return (
-		<section class="bg-slate-600 body-font relative">
+		<section class="bg-slate-600 body-font relative h-screen">
 			<SideBar />
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
