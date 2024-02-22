@@ -360,8 +360,13 @@ function UploadListings() {
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
-        if (listingData.logo) {
+        if (listingData.logo && listingData.otherlogos) {
           setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo);
+          const temp = listingData.otherlogos
+            .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
+            .map((img) => img.logo);
+          setImage(temp);
+          console.log(temp);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -370,7 +375,7 @@ function UploadListings() {
         }
       });
     }
-  }, []);
+  }, [listingId]);
 
   function categoryDescription(category) {
     if (category === "4") {
@@ -546,12 +551,6 @@ function UploadListings() {
       selected: val.map((item) => item.selected),
     }));
   }, [val]);
-
-  const handleDelete = (index) => {
-    const list = [...val];
-    list.splice(index, 1);
-    setVal(list);
-  };
 
   // const [date, setDate] = useState();
   const [cityId, setCityId] = useState(0);
@@ -740,6 +739,7 @@ function UploadListings() {
               value={categoryId || 0}
               onChange={handleCategoryChange}
               required
+              // disabled={!newListing}
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
@@ -779,6 +779,7 @@ function UploadListings() {
                 onChange={handleSubcategoryChange}
                 onBlur={validateInput}
                 required
+                // disabled={!newListing}
                 className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>

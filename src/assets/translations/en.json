@@ -459,6 +459,7 @@
     "backToMyGroups": "Go back to My Groups",
     "numberOfReports": "Number of Reports",
     "digitalManagement": "Digital Management",
+    "FreetimeAndTourisms": "Freetime and Tourism",
     "VirtualTours": "Virtual Tours",
     "forums": "Groups",
     "forumName": "Group Name",
@@ -599,7 +600,6 @@
     "expiryMessage": "The expiry period for this news will be :",
     "expiryDate": "Expiry date",
     "youAreAlmostThere": "You are almost there",
-   
     "anleitung": "Instructions",
     "resgistrationInTheApp": "Register in the app",
     "schritt": "Step",
@@ -612,7 +612,6 @@
     "previous": "Previous",
     "of": "of",
     "termsofuse": "Terms of use",
-
     "tersmOfUseGlance1": "The {{appName}} App is operated by the {{operator}} staff unit. (short: operator). It is made available to citizens free of charge. The aim is to collect information about life in the municipalities in an app and make it accessible, thereby promoting social life. The app also offers access to various digital services of the municipalities and information from the municipal administrations.",
     "tersmOfUseGlance2": "The following terms of use apply to the user relationship between the operators and the users. Users accept these terms of use by confirming their registration. The app can be downloaded free of charge from the Google Play Store and the Apple Store.",
     "tersmOfUseGlance3": "The operators endeavor to ensure trouble-free operation of the platform. This is naturally limited to services over which the operators have influence. The operators reserve the right to restrict access to the platform in whole or in part, temporarily or permanently, due to maintenance work, capacity issues or other events beyond their control.",
