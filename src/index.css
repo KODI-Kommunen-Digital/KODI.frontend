@@ -66,3 +66,9 @@
     font-family: sans-serif;
     font-size: small;
 }
+
+/*Override Material-tailwind style */
+.base-bg-slate-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+}

@@ -12,6 +12,7 @@ import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
 import ListingsCard from "../../Components/ListingsCard";
+import CustomCarousel from "../Carousel/CustomCarousel";
 import {
   getFavorites,
   postFavoriteListingsData,
@@ -91,7 +92,7 @@ const Listing = () => {
     phone: "",
     email: "",
     description: "",
-    logo: null,
+    logo: [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -287,10 +288,8 @@ const Listing = () => {
     }
   };
 
-  const [, setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [, setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
@@ -300,10 +299,8 @@ const Listing = () => {
           ? JSON.parse(user.socialMedia)
           : {};
         setUserSocial(socialMedia);
-        setUserName(user.userName);
         setFirstname(user.firstname);
         setLastname(user.lastname);
-        setProfilePic(user.image);
       } catch (error) {
         console.error("Error parsing user.socialMedia:", error);
       }
@@ -508,17 +505,9 @@ const Listing = () => {
                           </div>
                         </div>
                       ) : input.logo ? (
-                        <img
-                          alt="listing"
-                          className="object-cover object-center h-[600px] w-full"
-                          src={
-                            input.sourceId === source.User
-                              ? process.env.REACT_APP_BUCKET_HOST + input.logo
-                              : input.logo
-                          }
-                          onError={(e) => {
-                            e.target.src = LISTINGSIMAGE; // Set default image if loading fails
-                          }}
+                        <CustomCarousel
+                          imageList={input.otherlogos}
+                          sourceId={input.sourceId}
                         />
                       ) : (
                         <img
