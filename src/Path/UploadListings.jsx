@@ -496,6 +496,13 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "expiryDate":
+        if (!value && parseInt(input.categoryId) == 1) {
+          return t("pleaseEnterExpiryDate");
+        } else {
+          return "";
+        }
       default:
         return "";
     }
