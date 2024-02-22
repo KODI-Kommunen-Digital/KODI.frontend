@@ -11,6 +11,7 @@ import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
 import BookingConfirmation from "./Path/AppointmentBooking/BookingConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
+import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePage from "./Path/HomePage";
@@ -47,6 +48,9 @@ import BookAppointments from "./Path/AppointmentBooking/BookAppointments";
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
+import Modal from 'react-modal';
+Modal.setAppElement('#root');
+
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   useEffect(() => {
@@ -63,7 +67,7 @@ const App = () => {
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="Listing" element={<Listing />} exact />
+          <Route path="/Listing" element={<Listing />} exact />
           <Route path="/AllListings" element={<AllListings />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
@@ -86,6 +90,7 @@ const App = () => {
           <Route path="/AppointmentBooking/BookAppointments/Summary" element={<Summary />} />
           <Route path="/AppointmentBooking/BookAppointments/BookingConfirmation" element={<BookingConfirmation />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
 
           <Route path="/Favorite" element={<Favorites />} />

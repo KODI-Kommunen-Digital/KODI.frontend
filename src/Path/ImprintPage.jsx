@@ -23,19 +23,19 @@ export default function ImprintPage() {
         <br />
 
         <p className="font-sans font-semibold text-black  mb-1 text-sm title-font">
-          {/* Stabsstelle Smart Region AUF */}Ilzer Land e.V.
+          {process.env.REACT_APP_PROJECT_NAME}
         </p>
         <br />
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {/* Gemeinde Fuchstal */}1. Vorsitzender Werner Weny
+          {process.env.REACT_APP_CONTACT_PERSON}
         </p>
         <br />
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {/* Geschäftsstelle im Rathaus Fuchstal in Leeder, */}Marktplatz 11
+          {process.env.REACT_APP_ADDRESS_1}
         </p>
         <br />
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {/* Bahnhofstraße 1 */}94157 Perlesreut
+          {process.env.REACT_APP_ADDRESS_2}
         </p>
         <br />
         {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -49,7 +49,7 @@ export default function ImprintPage() {
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {/* Telefon: 08243 9699-30 */} Telefon : +49 8555 4076115
+          {process.env.REACT_APP_TELEPHONE}
         </p>
         <br />
         {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
@@ -57,8 +57,7 @@ export default function ImprintPage() {
 				</p>
 				<br /> */}
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {/* {t("Email")}: smartregionauf@vgem-fuchstal.de */}
-          {t("Email")} : info@ilzerland.
+          {t("Email")} {process.env.REACT_APP_EMAIL}
         </p>
         <br />
 

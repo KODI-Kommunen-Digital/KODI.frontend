@@ -21,6 +21,8 @@ import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import FormImage from "./FormImage";
+import { UploadSVG } from "../assets/icons/upload";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -1005,7 +1007,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating}
+              disabled={updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}

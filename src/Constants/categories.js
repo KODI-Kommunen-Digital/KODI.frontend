@@ -50,6 +50,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
       ? { appointmentBooking: 17 }
       : {}),
+    freetimeAndTourisms: 17,
   };
   const categoryById = {
     1: "news", // Nachricht
@@ -69,6 +70,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
       ? { 17: "appointmentBooking" }
       : {}),
+    17: "freetimeAndTourisms", // Freizeit und Tourismus
   };
   module.exports = { categoryByName, categoryById };
 }
