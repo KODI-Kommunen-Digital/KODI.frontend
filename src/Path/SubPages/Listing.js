@@ -284,10 +284,8 @@ const Listing = () => {
     }
   };
 
-  const [setUserName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [setProfilePic] = useState("");
   const [userSocial, setUserSocial] = useState([]);
 
   useEffect(() => {
@@ -297,10 +295,8 @@ const Listing = () => {
           ? JSON.parse(user.socialMedia)
           : {};
         setUserSocial(socialMedia);
-        setUserName(user.userName);
         setFirstname(user.firstname);
         setLastname(user.lastname);
-        setProfilePic(user.image);
       } catch (error) {
         console.error("Error parsing user.socialMedia:", error);
       }
