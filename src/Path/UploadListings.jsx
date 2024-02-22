@@ -1007,7 +1007,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating || isSuccess}
+              disabled={updating}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}
