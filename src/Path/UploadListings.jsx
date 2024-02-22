@@ -44,7 +44,22 @@ function UploadListings() {
   const [subCategories, setSubCategories] = useState([]);
   const [startDate, setStartDate] = useState([]);
   const [endDate, setEndDate] = useState([]);
+  const [expiryDate, setExpiryDate] = useState([]);
   const navigate = useNavigate();
+
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
+
+    const year = twoWeeksLater.getFullYear();
+    const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+    const day = String(twoWeeksLater.getDate()).padStart(2, "0");
+    const hours = String(twoWeeksLater.getHours()).padStart(2, "0");
+    const minutes = String(twoWeeksLater.getMinutes()).padStart(2, "0");
+
+    // Format: yyyy-MM-ddThh:mm
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
 
   function handleDragEnter(e) {
     e.preventDefault();
@@ -369,11 +384,22 @@ function UploadListings() {
   }, [error]);
 
   const onInputChange = (e) => {
-    const { name, value } = e.target;
-    setInput((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+
+    if (type === "checkbox") {
+      setInput((prev) => ({
+        ...prev,
+        [name]: checked,
+        timeless: checked,
+        expiryDate: checked ? null : getDefaultEndDate(),
+      }));
+    } else {
+      setInput((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+
     validateInput(e);
   };
 
@@ -467,6 +493,13 @@ function UploadListings() {
           } else {
             return "";
           }
+        } else {
+          return "";
+        }
+
+      case "expiryDate":
+        if (!value && parseInt(input.categoryId) == 1) {
+          return t("pleaseEnterExpiryDate");
         } else {
           return "";
         }
@@ -748,26 +781,80 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="col-span-6">
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {t("streetAddress")}
-            </label>
-            <div>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={input.address}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                placeholder={t("enterAddress")}
-              />
+          {categoryId == 1 && (
+            <div className="relative mb-4">
+              <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
+                {input.disableDates ? (
+                  <label
+                    htmlFor="dropdown"
+                    className="text-gray-600 text-md mb-4 font-medium title-font"
+                  >
+                    * {t("noExpiryMessage")}
+                  </label>
+                ) : (
+                  <>
+                    <div className="relative">
+                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                        <svg
+                          aria-hidden="true"
+                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        ></svg>
+                      </div>
+                      <label
+                        htmlFor="expiryDate"
+                        className="block text-sm font-medium text-gray-600"
+                      >
+                        {t("expiryDate")} *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        id="expiryDate"
+                        name="expiryDate"
+                        value={
+                          input.expiryDate
+                            ? formatDateTime(input.expiryDate)
+                            : getDefaultEndDate()
+                        }
+                        onChange={onInputChange}
+                        onBlur={validateInput}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder="Expiry Date"
+                        disabled={input.disableDates}
+                      />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: error.expiryDate ? "visible" : "hidden",
+                        }}
+                      >
+                        {error.expiryDate}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="disableDates"
+                  name="disableDates"
+                  checked={input.disableDates}
+                  onChange={onInputChange}
+                  className="mt-0"
+                />
+                <label
+                  htmlFor="disableDates"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {t("disableDates")}
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           {categoryId == 3 && (
             <div className="relative mb-4">
@@ -848,6 +935,27 @@ function UploadListings() {
               </div>
             </div>
           )}
+
+          <div className="col-span-6">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-600"
+            >
+              {t("streetAddress")}
+            </label>
+            <div>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={input.address}
+                onChange={onInputChange}
+                onBlur={validateInput}
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                placeholder={t("enterAddress")}
+              />
+            </div>
+          </div>
 
           {(categoryId == 12 || categoryId == 5) && (
             <div className="relative mb-4 grid grid-cols-2 gap-4">

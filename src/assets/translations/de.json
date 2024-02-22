@@ -576,8 +576,6 @@
     "areyousureinfo": "Möchten Sie dieses Mitglied wirklich entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "exit": "Verlassen",
     "privacy": "Gruppenart",
-    "next": "Weiter",
-    "previous": "Vorherige",
     "removeAdmin": "Admin entfernen",
     "makeAdmin": "Zu Admin machen",
     "remove": "Entfernen",
@@ -662,5 +660,10 @@
     "FinalProvisions": "Schlussbestimmungen",
     "FinalProvisions1": "Auf diese Nutzungsbedingungen findet ausschließlich deutsches Recht Anwendung.",
     "FinalProvisions2": "Die Betreibenden behalten sich vor, diese Nutzungsbedingungen jederzeit zu ändern und die weitere Nutzung der Plattform von der Zustimmung zu den geänderten Nutzungsbedingungen abhängig zu machen. Sollten eine oder mehrere Bestimmungen dieser Nutzungsbedingungen unwirksam sein oder unwirksam werden, wird dadurch die Wirksamkeit der anderen Bestimmungen nicht berührt.",
+    
+    "geseketersmOfUseGlance1": "Die Geseke App wird durch die Stadt Geseke betrieben. (kurz: Betreibende). Sie wird den Bürgerinnen und Bürgern unentgeltlich zur Verfügung gestellt. Ziel ist es, Informationen über das Leben in den Kommunen in einer App zu sammeln und abrufbar zu machen und so das gesellschaftliche Leben zu fördern. Daneben bietet die App Zugriff auf verschiedene digitale Dienste der Kommunen und Informationen aus den kommunalen Verwaltungen.",
+    "geseketersmOfUseGlance2": "Für die Nutzungsbeziehung zwischen den Betreibenden und den Nutzer/-innen gelten die nachfolgenden Nutzungsbedingungen. Diese Nutzungsbedingungen werden durch die NutzerInnen durch die Bestätigung der Registrierung anerkannt. Die App steht in im Google Play Store und dem Apple Store zum kostenlosen Download bereit.",
+    "geseketersmOfUseGlance3": "Die Betreibenden sind um einen störungsfreien Betrieb der Plattform bemüht. Dies beschränkt sich naturgemäß auf Leistungen, auf die die Betreibenden Einfluss nehmen können. Die Betreibenden behalten sich vor, den Zugang zur Plattform aufgrund von Wartungsarbeiten, Kapazitätsbelangen oder anderen Ereignissen, die nicht in ihrem Machtbereich stehen, ganz oder teilweise, zeitweise oder auf Dauer einzuschränken.",
+    "FinalProvisions3": "",
     "visitWebsite": "Besuchen Sie die Website :"
 }

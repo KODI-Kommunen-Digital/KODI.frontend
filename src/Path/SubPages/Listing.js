@@ -239,9 +239,7 @@ const Listing = () => {
     if (selectedCategoryId) {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
-          const filteredListings = response.data.data.filter(
-            (listing) => listing.id !== listingId
-          );
+          const filteredListings = response.data.data.filter((listing) => listing.id !== listingId);
           setListings(filteredListings);
         }
       );

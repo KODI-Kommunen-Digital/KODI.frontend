@@ -122,58 +122,58 @@ const ViewProfile = () => {
       <HomePageNavBar />
       {/* {showNavBar && <HomePageNavBar />} */}
 
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pb-4">
-        <div className="grid grid-cols-1 gap-4 col-span-2">
-          <div className="lg:w-full md:w-full h-full">
-            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
-              <div className="mt-5 md:col-span-2 md:mt-0">
-                <form action="#" method="POST">
-                  <div className="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center md:justify-Start">
-                    <div className="flex flex-col justify-center items-start">
-                      <img
-                        className="rounded-full h-20 w-20 object-cover"
-                        src={
-                          user?.image
-                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                            : PROFILEIMAGE
-                        }
-                        alt={user?.lastname}
-                      />
-                    </div>
-                    <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
-                      <h2
-                        className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {user?.firstname + " " + user?.lastname}
-                      </h2>
-                      <p
-                        className="leading-relaxed text-base dark:text-gray-900"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {t("entries")}
-                      </p>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
-            <h1
-              className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {t("aboutMe")}
-            </h1>
-            <p
-              className="leading-relaxed text-md font-medium my-6 text-gray-900"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {user?.description}
-            </p>
-          </div>
-        </div>
+			<div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pb-4">
+				<div className="grid grid-cols-1 gap-4 col-span-2">
+					<div className="lg:w-full md:w-full h-full">
+						<div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+							<div className="mt-5 md:col-span-2 md:mt-0">
+								<form action="#" method="POST">
+									<div className="bg-white py-6 mt-4 mb-4 flex flex-wrap gap-10 justify-center md:justify-Start">
+										<div className="flex flex-col justify-center items-start">
+											<img
+												className="rounded-full h-20 w-20 object-cover"
+												src={
+													user?.image
+														? process.env.REACT_APP_BUCKET_HOST + user?.image
+														: PROFILEIMAGE
+												}
+												alt={user?.lastname}
+											/>
+										</div>
+										<div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
+											<h2
+												className="text-gray-900 text-lg title-font mb-2 font-bold dark:text-gray-900"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
+												{user?.firstname + " " + user?.lastname}
+											</h2>
+											<p
+												className="leading-relaxed text-base dark:text-gray-900"
+												style={{ fontFamily: "Poppins, sans-serif" }}
+											>
+												{t("entries")}
+											</p>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div className="overflow-hidden sm:p-0 mt-[5rem] px-0 py-0">
+						<h1
+							className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+						>
+							{t("aboutMe")}
+						</h1>
+						<p
+							className="leading-relaxed text-md font-medium my-6 text-gray-900"
+							style={{ fontFamily: "Poppins, sans-serif" }}
+						>
+							{user?.description}
+						</p>
+					</div>
+				</div>
 
         {userSocial && userSocial.length > 0 ? (
           <ContactInfo user={user} />
