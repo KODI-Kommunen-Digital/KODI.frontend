@@ -148,7 +148,6 @@ const AllListings = () => {
   const fetchData = async (params) => {
     try {
       const response = await getListings(params);
-      console.log(response.data.data)
       setListings(response.data.data);
     } catch (error) {
       setListings([]);
