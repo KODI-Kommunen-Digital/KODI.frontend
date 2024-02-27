@@ -146,6 +146,7 @@ const AllListings = () => {
   };
 
   const fetchData = async (params) => {
+    params.showExternalListings = "false";
     try {
       const response = await getListings(params);
       setListings(response.data.data);
