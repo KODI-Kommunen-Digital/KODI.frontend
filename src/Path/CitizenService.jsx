@@ -45,16 +45,21 @@ const CitizenService = () => {
 
 	const handleLinkClick = (data) => {
 		if (data.isExternalLink) {
-			if (cityId) {
-				window.open(`${data.link}${cities[cityId].name}`, "_blank");
-			} else {
-				window.open(data.link, "_blank");
-			}
+			navigateTo(cityId ? `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}&cityId=${cityId}` : `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}`);
 		} else {
-			const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
+			const urlWithCityId = cityId ? `${data.link}&cityId=${cityId}` : data.link;
 			navigateTo(urlWithCityId);
 		}
 	};
+
+	// const handleLinkClick = (data) => {
+	// 	if (data.isExternalLink) {
+	// 		window.open(data.link, "_blank");
+	// 	} else {
+	// 		const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
+	// 		navigateTo(urlWithCityId);
+	// 	}
+	// };
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
