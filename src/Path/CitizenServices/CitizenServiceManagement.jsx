@@ -38,7 +38,6 @@ const CitizenServiceManagement = () => {
 		params.citizenServiceId = citizenServiceId;
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		console.log(citizenServiceId);
 		getCitizenServices({ id: citizenServiceId }).then(res => {
 			setCitizenService(res.data.data[0].title)
 		});
