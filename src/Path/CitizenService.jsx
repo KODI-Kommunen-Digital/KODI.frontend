@@ -15,7 +15,8 @@ const CitizenService = () => {
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
-			navigate(path);
+			const absolutePath = path.startsWith('/') ? path : `/${path}`;
+			navigate(absolutePath);
 		}
 	};
 
@@ -44,12 +45,21 @@ const CitizenService = () => {
 
 	const handleLinkClick = (data) => {
 		if (data.isExternalLink) {
-			window.open(data.link, "_blank");
+			navigateTo(cityId ? `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}&cityId=${cityId}` : `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}`);
 		} else {
-			const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
+			const urlWithCityId = cityId ? `${data.link}&cityId=${cityId}` : data.link;
 			navigateTo(urlWithCityId);
 		}
 	};
+
+	// const handleLinkClick = (data) => {
+	// 	if (data.isExternalLink) {
+	// 		window.open(data.link, "_blank");
+	// 	} else {
+	// 		const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
+	// 		navigateTo(urlWithCityId);
+	// 	}
+	// };
 
 	return (
 		<section className="text-gray-600 bg-white body-font">
@@ -128,13 +138,10 @@ const CitizenService = () => {
 											>
 												<img
 													alt={data.title}
-													className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+													className="object-cover object-center h-full w-full"
 													src={process.env.REACT_APP_BUCKET_HOST + data.image}
 												/>
-												<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-													<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
-														{t(data.title)}
-													</h1>
+												<div className="absolute inset-0 flex flex-col justify-end bg-opacity-50 text-white z--1">
 													<p className="mb-4 ml-4 font-sans">
 														{cities[data.cityId]}
 													</p>

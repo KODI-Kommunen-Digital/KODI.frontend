@@ -185,6 +185,7 @@ function UploadListings() {
     place: "",
     address: "",
     phone: "",
+    website: "",
     email: "",
     description: "",
     logo: null,
@@ -1041,6 +1042,25 @@ function UploadListings() {
 
           <div className="relative mb-4">
             <label
+              htmlFor="place"
+              className="block text-sm font-medium text-gray-600"
+            >
+              {t("website")}
+            </label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              value={input.website}
+              onChange={onInputChange}
+              onBlur={validateInput}
+              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              placeholder={t("enter_website")}
+            />
+          </div>
+
+          <div className="relative mb-4">
+            <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-600"
             >
@@ -1106,9 +1126,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1141,9 +1160,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1175,9 +1193,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>

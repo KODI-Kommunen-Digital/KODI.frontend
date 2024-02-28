@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
-import { getDigitalManagement, getCities } from "../../Services/cities";
+import { getcitizenServiceData, getCities, getCitizenServices } from "../../Services/cities";
 
-const DigitalManagement = () => {
+const CitizenServiceManagement = () => {
 	window.scrollTo(0, 0);
 	const { t } = useTranslation();
 	const [citizenServiceData, setcitizenServiceData] = useState([]);
+	const [citizenService, setCitizenService] = useState();
 	const [cities, setCities] = useState({});
 	const [citiesArray, setCitiesArray] = useState([]);
 	const [cityId, setCityId] = useState(null);
@@ -33,9 +34,14 @@ const DigitalManagement = () => {
 		const params = { pageNo, pageSize: 12 };
 		const urlParams = new URLSearchParams(window.location.search);
 		params.cityId = cityId;
+		const citizenServiceId = urlParams.get("citizenServiceId");
+		params.citizenServiceId = citizenServiceId;
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
-		getDigitalManagement(params).then((response) => {
+		getCitizenServices({ id: citizenServiceId }).then(res => {
+			setCitizenService(res.data.data[0].title)
+		});
+		getcitizenServiceData(params).then((response) => {
 			setcitizenServiceData(response.data.data);
 			if (cityId) {
 				window.location.replace(response.data.data[0].link);
@@ -58,7 +64,7 @@ const DigitalManagement = () => {
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-									{t("digitalManagement")}
+									{citizenService}
 								</h1>
 
 								<div className="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
@@ -117,7 +123,6 @@ const DigitalManagement = () => {
 												<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
 													{cities[data.cityId]}
 												</h1>
-												<p className="mb-4 ml-4 font-sans">{data.title}</p>
 											</div>
 										</a>
 									</div>
@@ -149,4 +154,4 @@ const DigitalManagement = () => {
 	);
 };
 
-export default DigitalManagement;
+export default CitizenServiceManagement;
