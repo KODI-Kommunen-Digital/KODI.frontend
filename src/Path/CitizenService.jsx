@@ -47,7 +47,7 @@ const CitizenService = () => {
 		if (data.isExternalLink) {
 			navigateTo(cityId ? `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}&cityId=${cityId}` : `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}`);
 		} else {
-			const urlWithCityId = cityId ? `${data.link}&cityId=${cityId}` : data.link;
+			const urlWithCityId = cityId ? (data.link.includes("?") ? `${data.link}&cityId=${cityId}` : `${data.link}?cityId=${cityId}`) : data.link;
 			navigateTo(urlWithCityId);
 		}
 	};
