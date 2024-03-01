@@ -115,7 +115,7 @@ const ServiceAndTime = () => {
             <div className="flex justify-between md:hidden sm:inline-block">
               <p
                 className={`font-bold text-blue-600 hover:underline cursor-pointer text-center${
-                  isChecked[index] ? " text-green-500" : "text-blue-600"
+                  isChecked[index] ? " text-green-600" : "text-blue-600"
                 }`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={handleTextClick}

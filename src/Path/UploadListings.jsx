@@ -648,7 +648,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 17 && <ServiceAndTime />}
+          {categoryId == 18 && <ServiceAndTime />}
 
           {categoryId == 1 && (
             <div className="relative mb-4">

@@ -47,7 +47,6 @@ const AddTimeSlots = () => {
     <div className="container mx-auto mt-8">
       {daysOfWeek.map((day) => (
         <div key={day} className="mb-4">
-          {/* <h2 className="text-xl font-semibold mb-2">{day}</h2> */}
           {schedule[day]?.map((timeSlot, index) => (
             <div
               key={index}
@@ -80,13 +79,7 @@ const AddTimeSlots = () => {
                   placeholder="HH:mm"
                 />
               </div>
-              <div className="flex space-x-2 items-center mt-0">
-                {/* <button
-                  onClick={() => handleAddTimeSlot(day)}
-                  className="w-full mt-1 sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-800 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:text-sm"
-                >
-                  {t("add")}
-                </button> */}
+              <div className="flex justify-between md:space-x-2 items-center mt-0">
                 <svg
                   onClick={() => handleAddTimeSlot(day)}
                   className="mt-1 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer"
@@ -100,12 +93,6 @@ const AddTimeSlots = () => {
                   <line x1="8" y1="12" x2="16" y2="12" />
                 </svg>
                 {index > 0 && (
-                  // <button
-                  //   onClick={() => handleDeleteTimeSlot(day, index)}
-                  //   className="w-full mt-1 sm:w-auto justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:text-sm"
-                  // >
-                  //   {t("delete")}
-                  // </button>
                   <svg
                     onClick={() => handleDeleteTimeSlot(day, index)}
                     xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +105,7 @@ const AddTimeSlots = () => {
               </div>
             </div>
           ))}
+          <div className="my-4 bg-gray-200 h-[1px]"></div>
         </div>
       ))}
     </div>

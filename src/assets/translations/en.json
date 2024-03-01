@@ -586,6 +586,8 @@
     "reject": "Reject",
     "myBooking": "My Booking",
     "myAppoinment": "My Appoinments",
+    "booking": "Bookings",
+    "cart": "Cart",
     "clickHereToBook": "Click here to book appointments",
     "name": "Name",
     "numberofPeople": "Number of people",
