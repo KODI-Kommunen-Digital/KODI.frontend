@@ -81,7 +81,7 @@ const Listing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-  const isBookingEnabled =
+  const isMyBookingEnabled =
     process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
 
   const [input, setInput] = useState({
@@ -610,7 +610,7 @@ const Listing = () => {
                   </div>
                 )}
 
-                {isBookingEnabled && (
+                {isMyBookingEnabled && (
                   <button
                     onClick={() =>
                       navigateTo(`/AppointmentBooking/BookAppointments/Select`)
