@@ -44,7 +44,6 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
-import BookAppointments from "./Path/AppointmentBooking/BookAppointments";
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
@@ -136,11 +135,6 @@ const App = () => {
               <Route
                 path="/AppointmentBooking/MyBookings"
                 element={<MyBookings />}
-                exact
-              />
-              <Route
-                path="/AppointmentBooking/BookAppointments"
-                element={<BookAppointments />}
                 exact
               />
               <Route
