@@ -12,7 +12,7 @@ function SideBar() {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isBookingEnabled =
     process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
-  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "False";
+  const isContainerEnabled = "False";
   const [isForumExpanded, setIsForumExpanded] = useState(false);
   const [isListingExpanded, setIsListingExpanded] = useState(false);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
@@ -406,7 +406,7 @@ function SideBar() {
           )}
           <div className="my-2 bg-gray-600 h-[1px]"></div>
 
-          {isContainerExpanded && (
+          {isContainerEnabled === "True" && (
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
@@ -433,7 +433,10 @@ function SideBar() {
                   <path d="M7 10l5 5 5-5z" />
                 </svg>
               </div>
-
+            </>
+          )}
+          {isContainerExpanded && (
+            <>
               {isContainerEnabled && (
                 <div className="ml-4">
                   <div
