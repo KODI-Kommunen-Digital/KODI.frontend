@@ -204,8 +204,6 @@ const Dashboard = () => {
   // Navigate to Edit Listings page Starts
 
   const handleSearch = async (searchQuery) => {
-    console.log("Search term:", searchQuery);
-
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const params = { statusId: 1 };
@@ -223,7 +221,6 @@ const Dashboard = () => {
         searchQuery,
         ...params,
       });
-      console.log("API Response:", response.data.data);
       setListings(response.data.data);
     } catch (error) {
       console.error("Error:", error);
