@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
+import SearchBar from "../../Components/SearchBar";
 import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -9,7 +10,7 @@ import {
   sortOldestFirst,
 } from "../../Services/helper";
 import { useTranslation } from "react-i18next";
-import { getListings } from "../../Services/listingsApi";
+import { getListings , getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 // import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
@@ -146,6 +147,7 @@ const AllListings = () => {
   };
 
   const fetchData = async (params) => {
+    params.showExternalListings = "false";
     try {
       const response = await getListings(params);
       setListings(response.data.data);
@@ -166,6 +168,11 @@ const AllListings = () => {
     if (path) {
       navigate(path);
     }
+  };
+
+  const handleOfficialNotificationButton = () => {
+    setCategoryId(16)
+    navigateTo("/AllListings?terminalView=true&categoryId=16")
   };
 
   useEffect(() => {
@@ -201,6 +208,33 @@ const AllListings = () => {
     }
   }, [terminalViewParam]);
 
+  const handleSearch = async (searchQuery) => {
+    console.log("Search term:", searchQuery);
+    
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = { statusId: 1 };
+      
+      const cityId = urlParams.get('cityId');
+      if (cityId && parseInt(cityId)) {
+        params.cityId = parseInt(cityId);
+      } 
+      
+      const categoryId = urlParams.get('categoryId');
+      if (categoryId && parseInt(categoryId)) {
+        params.categoryId = parseInt(categoryId);
+      } 
+      const response = await getListingsBySearch({
+        searchQuery,
+        ...params
+      });
+      console.log("API Response:", response.data.data);
+      setListings(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <section className="text-gray-600 body-font relative">
       {showNavBar && <HomePageNavBar />}
@@ -208,8 +242,8 @@ const AllListings = () => {
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
       >
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-64 md:h-64 h-72 overflow-hidden ${pyClass}`}>
-            <div className="relative lg:h-64 md:h-64 h-72">
+          <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
+            <div className="relative lg:h-64 md:h-64 h-96">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -217,7 +251,7 @@ const AllListings = () => {
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1
-                  className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
+                  className="text-4xl mt-4 md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   <style>
@@ -231,9 +265,9 @@ const AllListings = () => {
                   </style>
                   {selectedCity} : {selectedCategory}
                 </h1>
-                <div>
-                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
-                    <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+
+                <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
+                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
                       <select
                         id="city"
                         name="city"
@@ -242,7 +276,7 @@ const AllListings = () => {
                           handleCityChange(e.target.value);
                         }}
                         value={cityId}
-                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -263,14 +297,14 @@ const AllListings = () => {
                         ))}
                       </select>
                     </div>
-                    <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
                       <select
                         id="category"
                         name="category"
                         autoComplete="category-name"
                         onChange={(e) => setCategoryId(e.target.value)}
                         value={categoryId}
-                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -287,14 +321,14 @@ const AllListings = () => {
                         })}
                       </select>
                     </div>
-                    <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-0 w-full">
+                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
                       <select
                         id="country"
                         name="country"
                         value={selectedSortOption}
                         onChange={handleSortOptionChange}
                         autoComplete="country-name"
-                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -306,8 +340,9 @@ const AllListings = () => {
                         <option value="oldest">{t("oldest")}</option>
                       </select>
                     </div>
+
+                    <SearchBar onSearch={handleSearch} searchBarClassName="w-full"/>
                   </div>
-                </div>
               </div>
             </div>
           </div>
@@ -315,6 +350,15 @@ const AllListings = () => {
       </div>
 
       <div className="mt-5 mb-20 customproview py-6">
+        {terminalViewParam && (<div className="text-center mt-4 mb-4">
+          <button
+            onClick={handleOfficialNotificationButton}
+            className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            {t("officialnotification")}
+          </button>
+        </div>
+        )}
         <style>
           {`
 							@media (min-height: 1293px) {
@@ -331,7 +375,7 @@ const AllListings = () => {
             {listings && listings.length > 0 ? (
               <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
                 <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-                  {listings &&
+                {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard
                         listing={listing}

@@ -22,7 +22,7 @@ import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
 import UploadPosts from "./Path/Forums/UploadPosts";
 import AllForums from "./Path/CitizenServices/AllForums";
-import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
+import CitizenServiceManagement from "./Path/CitizenServices/CitizenServiceManagement";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
@@ -66,8 +66,8 @@ const App = () => {
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
-            path="/CitizenService/DigitalManagement"
-            element={<DigitalManagement />}
+            path="/CitizenService/CitizenServiceManagement"
+            element={<CitizenServiceManagement />}
           />
 
           <Route path="/Dashboard" element={<Dashboard />} exact />

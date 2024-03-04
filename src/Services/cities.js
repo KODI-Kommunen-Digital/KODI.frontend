@@ -8,6 +8,6 @@ export async function getCitizenServices(params) {
 	return instance.get("/citizenServices", { params });
 }
 
-export async function getDigitalManagement(params) {
-	return instance.get("/citizenServices/digitalManagement", { params });
+export async function getcitizenServiceData(params) {
+	return instance.get("/citizenServices/citizenServiceData", { params });
 }
