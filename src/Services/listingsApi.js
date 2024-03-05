@@ -23,6 +23,10 @@ export async function postListingsData(cityId, newListingsDataObj) {
 	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
 }
 
+export async function getListingsBySearch(params) {
+	return axios.get(`/listings/search`, { params });
+}
+
 export async function uploadListingImage(formData, cityId, listingsId) {
 	return axios.post(
 		`/cities/${cityId}/listings/${listingsId}/imageUpload`,

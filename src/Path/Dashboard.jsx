@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
+import SearchBar from "../Components/SearchBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
 import {
   getListings,
   updateListingsData,
   deleteListing,
+  getListingsBySearch,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { status, statusByName } from "../Constants/status";
@@ -201,11 +203,35 @@ const Dashboard = () => {
 
   // Navigate to Edit Listings page Starts
 
+  const handleSearch = async (searchQuery) => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = { statusId: 1 };
+
+      const cityId = urlParams.get("cityId");
+      if (cityId && parseInt(cityId)) {
+        params.cityId = parseInt(cityId);
+      }
+
+      const categoryId = urlParams.get("categoryId");
+      if (categoryId && parseInt(categoryId)) {
+        params.categoryId = parseInt(categoryId);
+      }
+      const response = await getListingsBySearch({
+        searchQuery,
+        ...params,
+      });
+      setListings(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <section className="bg-slate-600 body-font relative h-screen">
       <SideBar />
 
-      <div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto lg:relative">
+      <div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
         <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
           <div className="w-full">
             <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
@@ -260,9 +286,18 @@ const Dashboard = () => {
         </div>
       </div>
 
+      <div className="container px-5 py-2 w-full md:w-[10rem] lg:px-5 lg:w-auto relative">
+        <div className="mt-0 lg:mt-0">
+          <SearchBar
+            onSearch={handleSearch}
+            searchBarClassName="w-full md:w-[10rem]"
+          />
+        </div>
+      </div>
+
       <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
         <div className="h-full">
-          <div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
+          <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
             <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>

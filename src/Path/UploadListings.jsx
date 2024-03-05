@@ -617,7 +617,9 @@ function UploadListings() {
             <label
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
-            ></label>
+            >
+              {t("title")} *
+            </label>
             <input
               type="text"
               id="title"

@@ -117,8 +117,8 @@ const Favorites = () => {
             className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col mt-20`}
           >
             <div className="w-full mr-0 ml-0">
-              <div className={`lg:h-64 md:h-64 h-72 overflow-hidden py-1`}>
-                <div className="relative lg:h-64 md:h-64 h-72">
+              <div className={`lg:h-64 md:h-64 h-96 overflow-hidden py-1`}>
+                <div className="relative lg:h-64 md:h-64 h-96">
                   <img
                     alt="ecommerce"
                     className="object-cover object-center h-full w-full"
