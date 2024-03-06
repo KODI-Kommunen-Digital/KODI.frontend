@@ -237,7 +237,7 @@ const Dashboard = () => {
     <section className="bg-slate-600 body-font relative h-screen">
       <SideBar />
 
-      <div className="container px-0 sm:px-0 py-0 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
+      <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
         <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
           <div className="w-full">
             <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
@@ -292,11 +292,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="container px-5 py-2 w-full md:w-[10rem] lg:px-5 lg:w-auto relative">
-        <div className="mt-0 lg:mt-0">
+      <div className="container px-5 lg:px-5 py-2 w-full md:w-auto fixed lg:w-auto relative">
+        <div className="mt-0 lg:mt-0 flex items-center justify-center">
           <SearchBar
             onSearch={handleSearch}
-            searchBarClassName="w-full md:w-[10rem]"
+            searchBarClassName="w-full md:w-96"
           />
         </div>
       </div>

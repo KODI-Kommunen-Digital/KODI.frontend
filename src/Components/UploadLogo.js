@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
 
 function PhotoUploadArea() {
+    const { t } = useTranslation();
     const [photo, setPhoto] = useState(null);
 
     const handleChange = (e) => {
@@ -20,7 +22,7 @@ function PhotoUploadArea() {
                         className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full mt-4"
                         onClick={handleRemove}
                     >
-            Remove
+                        {t("remove")}
                     </button>
                 </div>
             ) : (
@@ -29,7 +31,7 @@ function PhotoUploadArea() {
                         htmlFor="file-input"
                         className="w-full cursor-pointer bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
                     >
-            Upload
+                        {t("upload")}
                     </label>
                     <input
                         type="file"
