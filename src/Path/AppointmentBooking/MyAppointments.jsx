@@ -38,8 +38,8 @@ const MyAppointments = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     forums: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   function handleDelete(forum) {
@@ -157,7 +157,7 @@ const MyAppointments = () => {
                             forum.image
                               ? process.env.REACT_APP_BUCKET_HOST + forum.image
                               : process.env.REACT_APP_BUCKET_HOST +
-                                "admin/DefaultForum.jpeg"
+                              "admin/DefaultForum.jpeg"
                           }
                           onClick={() =>
                             navigateTo(
@@ -168,7 +168,7 @@ const MyAppointments = () => {
                         />
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
-                            className="font-medium text-gray-500 cursor-pointer text-center truncate"
+                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
                             style={{ fontFamily: "Poppins, sans-serif" }}
                             onClick={() =>
                               navigateTo(
@@ -182,7 +182,7 @@ const MyAppointments = () => {
                       </th>
 
                       <td
-                        className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                        className="font-bold text-blue-600 hover:underline cursor-pointer text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         onClick={() => navigateTo("/ViewProfile")}
                       >
@@ -190,21 +190,21 @@ const MyAppointments = () => {
                       </td>
 
                       <td
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         2 hrs
                       </td>
 
                       <td
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         11:00
                       </td>
 
                       <td
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         12:30
@@ -213,7 +213,7 @@ const MyAppointments = () => {
                         {forum.isAdmin ? (
                           <div>
                             <a
-                              className="font-medium hover:underline cursor-pointer text-center"
+                              className="font-bold hover:underline cursor-pointer text-center"
                               onClick={() => deleteForumOnClick(forum)}
                               style={{
                                 fontFamily: "Poppins, sans-serif",
@@ -224,7 +224,7 @@ const MyAppointments = () => {
                             </a>
                           </div>
                         ) : (
-                          <div className="text-gray-500">{t("onlyAdmins")}</div>
+                          <div className="text-gray-500 font-bold">{t("onlyAdmins")}</div>
                         )}
                         {showConfirmationModal.visible && (
                           <div className="fixed z-50 inset-0 overflow-y-auto">
