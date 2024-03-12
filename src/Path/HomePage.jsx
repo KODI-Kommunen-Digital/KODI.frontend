@@ -272,7 +272,7 @@ const HomePage = () => {
         />
       </Suspense>
 
-      {process.env.REACT_APP_REGION_NAME === "HEIDI" && (
+      {process.env.REACT_APP_REGION_NAME === "WALDI" && (
         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
           <button
             type="submit"
