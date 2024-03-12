@@ -144,6 +144,7 @@
     "notMember": "Not a member?",
     "offers": "Offers",
     "offerSearch": "Offer / Search",
+    "searchOffer": "Search / Offer",
     "oldest": "Oldest",
     "oldPassword": "Old Password",
     "or": "or",
@@ -646,5 +647,6 @@
     "geseketersmOfUseGlance3": "The operators endeavor to ensure trouble-free operation of the platform. This is naturally limited to services over which the operators have influence. The operators reserve the right to restrict access to the platform in whole or in part, temporarily or permanently, due to maintenance work, capacity issues or other events beyond their control.",
     "FinalProvisions3": "",
     "visitWebsite": "Visit the website :",
+    "moreService": "More Service",
     "mehr": "More"
 }
