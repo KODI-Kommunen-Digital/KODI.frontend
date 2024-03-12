@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { source } from "../../Constants/source";
-// import { Carousel } from "@material-tailwind/react";
 import NextIconButton from "./NextIconButton";
 import PrevIconButton from "./PrevIconButton";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
@@ -28,7 +27,7 @@ const CustomCarousel = (props) => {
         src={
           props.sourceId === source.User
             ? process.env.REACT_APP_BUCKET_HOST +
-              sortedImageList[activeIndex]?.logo // uploaded image
+            sortedImageList[activeIndex]?.logo // uploaded image
             : sortedImageList[activeIndex]?.logo // from drive
         }
         onError={(e) => {
@@ -57,9 +56,8 @@ const CustomCarousel = (props) => {
   return (
     <div className="relative">
       <div
-        className={`rounded-xl mb-${
-          sortedImageList.length <= 1 ? 0 : 4
-        } relative`}
+        className={`rounded-xl mb-${sortedImageList.length <= 1 ? 0 : 4
+          } relative`}
       >
         {sortedImageList.length <= 1 ? null : (
           <>

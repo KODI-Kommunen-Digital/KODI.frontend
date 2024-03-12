@@ -136,10 +136,10 @@ const HomePage = () => {
     <section className="text-gray-600 body-font relative">
       <HomePageNavBar />
       {showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
-      <div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+      <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col">
         <div className="w-full mr-0 ml-0">
-          <div className="h-[35rem] lg:h-full overflow-hidden px-0 py-1">
-            <div className="relative h-[35rem]">
+          <div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0">
+            <div className="relative h-[40rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -256,12 +256,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <h2
-        className="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center"
-        style={{ fontFamily: "Poppins, sans-serif" }}
-      >
-        {t("mostPopulatCategories")}
-      </h2>
+
 
       {/* <MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} /> */}
       <Suspense fallback={<div>Loading...</div>}>
@@ -309,13 +304,8 @@ const HomePage = () => {
                         e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
                       }}
                     />
-                    <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
-                      <h1
-                        className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
+                    <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
+                      <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
                         {city.name}
                       </h1>
                     </div>
@@ -339,7 +329,7 @@ const HomePage = () => {
 
       {listings && listings.length > 0 ? (
         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-          <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+          <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
             {listings &&
               listings.map((listing, index) => (
                 <ListingsCard listing={listing} key={index} />

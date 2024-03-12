@@ -24,8 +24,7 @@ function ListingsCard({ listing, terminalView = false }) {
           listing.showExternal === 0
         ) {
           navigateTo(
-            `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${
-              terminalView ? "&terminalView=true" : ""
+            `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""
             }`
           );
         } else if (
@@ -38,7 +37,7 @@ function ListingsCard({ listing, terminalView = false }) {
           window.location.href = listing.website;
         }
       }}
-      className="w-full h-96 shadow-lg rounded-lg cursor-pointer"
+      className="w-full bg-slate-100 h-96 shadow-lg rounded-lg cursor-pointer"
     >
       <div className="block relative h-64 rounded overflow-hidden">
         {listing.pdf ? (
@@ -66,66 +65,69 @@ function ListingsCard({ listing, terminalView = false }) {
           />
         )}
       </div>
-      <div className="mt-5 px-2">
-        <h2
-          className="text-blue-800 title-font text-lg font-bold text-center font-sans truncate"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
-          {listing.title}
-        </h2>
-      </div>
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
-      {listing.id && listing.categoryId === 3 ? (
-        <div
-          className="text-center items-center"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
-          <p
-            className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+
+      <div className="px-2">
+        <div className="mt-5 px-2">
+          <h2
+            className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
-            {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-              "de-DE"
-            )}{" "}
-            (
-            {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
-              "de-DE",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Europe/Berlin",
-              }
-            )}
-            )
-            {listing.endDate && (
-              <>
-                <span className="text-blue-400"> {t("To")} </span>
-                {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                  "de-DE"
-                )}{" "}
-                (
-                {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
-                  "de-DE",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Europe/Berlin",
-                  }
-                )}
-                )
-              </>
-            )}
-          </p>
+            {listing.title}
+          </h2>
         </div>
-      ) : (
-        <p
-          className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-          dangerouslySetInnerHTML={{
-            __html: listing.description,
-          }}
-        />
-      )}
+
+        {listing.id && listing.categoryId === 3 ? (
+          <div
+            className="text-start items-start"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <p
+              className="text-gray-500 my-0 p-2 h-[1.8rem] title-font text-sm text-center font-sans truncate"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
+                "de-DE"
+              )}{" "}
+              (
+              {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                "de-DE",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  timeZone: "Europe/Berlin",
+                }
+              )}
+              )
+              {listing.endDate && (
+                <>
+                  <span className="text-blue-400"> {t("To")} </span>
+                  {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+                    "de-DE"
+                  )}{" "}
+                  (
+                  {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                    "de-DE",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: "Europe/Berlin",
+                    }
+                  )}
+                  )
+                </>
+              )}
+            </p>
+          </div>
+        ) : (
+          <p
+            className="text-gray-500 my-0 p-2 h-[1.8rem] title-font text-sm text-start font-sans truncate"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            dangerouslySetInnerHTML={{
+              __html: listing.description,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

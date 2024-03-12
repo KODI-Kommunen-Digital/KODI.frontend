@@ -44,13 +44,20 @@
 } */
 
 @keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-wheel {
-    border: 8px solid #60a5fa; /* You can customize the color */
-    border-top: 8px solid #fff; /* You can customize the color */
+    border: 8px solid #60a5fa;
+    /* You can customize the color */
+    border-top: 8px solid #fff;
+    /* You can customize the color */
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -71,4 +78,9 @@
 .base-bg-slate-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+}
+
+.category-animation {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
 }

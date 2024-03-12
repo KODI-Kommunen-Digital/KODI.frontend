@@ -71,7 +71,7 @@ export default function HomePageNavBar() {
 
   return (
     <div className="w-full fixed top-0 z-10">
-      <Popover className="relative bg-white mr-0 ml-0 px-5 md:px-10 py-5">
+      <Popover className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5">
         <div className="w-full">
           <div
             className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
@@ -98,7 +98,7 @@ export default function HomePageNavBar() {
 
             <div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
               <a
-                className={`text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
+                className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
                 onClick={() => {
                   if (isLoggedIn) {
                     navigateTo("/Favorite");
@@ -124,14 +124,14 @@ export default function HomePageNavBar() {
               </a>
               <a
                 onClick={handleLoginLogout}
-                className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-bg-slate-300 px-8 py-2 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {isLoggedIn ? t("logOut") : t("login")}
               </a>
               {isLoggedIn && (
                 <a
                   onClick={handleGotoDashboard}
-                  className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
+                  className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
                 >
                   {t("dashboard")}
                 </a>
@@ -143,7 +143,7 @@ export default function HomePageNavBar() {
                     ? navigateTo("/UploadListings")
                     : navigateTo("/login");
                 }}
-                className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {t("submit")}
               </a>
@@ -228,7 +228,7 @@ export default function HomePageNavBar() {
                   {isLoggedIn && (
                     <a
                       onClick={handleGotoDashboard}
-                      className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                      className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent cursor-pointer"
                     >
                       {t("dashboard")}
                     </a>
