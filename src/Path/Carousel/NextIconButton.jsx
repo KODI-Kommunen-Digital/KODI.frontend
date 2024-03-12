@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const NextIconButton = (props) => {
-    return (<button onClick={props.onClick} type="button" className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-xl disabled:opacity-60">
+  return (<button onClick={props.onClick} type="button" className="bg-white hover:bg-slate-600 text-black font-bold py-2 px-4 rounded-xl disabled:opacity-60">
     <div className="flex flex-row align-middle">
       {/* <span className="mr-2 hidden sm:block">{t("next")}</span> */}
       <svg className="w-5 md:ml-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -13,6 +13,6 @@ const NextIconButton = (props) => {
 }
 
 NextIconButton.propTypes = {
-    onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 export default NextIconButton;

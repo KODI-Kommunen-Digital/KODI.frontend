@@ -91,20 +91,16 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             }
 
                             return (
-                                <div
+                                <h2
+                                    className="flex font-bold text-white inline-flex text-2xl items-center justify-center whitespace-nowrap cursor-pointer"
+                                    style={{ fontFamily: "Poppins, sans-serif" }}
                                     key={listing.categoryId}
                                     onClick={() => {
                                         goToAllListingsPage(listing.categoryId);
                                     }}
-                                    className={`justify-center`}
                                 >
-                                    <h2
-                                        className="flex font-bold text-white inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer"
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {categoryName}
-                                    </h2>
-                                </div>
+                                    {categoryName}
+                                </h2>
                             );
                         })}
 

@@ -178,59 +178,6 @@ const HomePage = () => {
         className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
-        {t("discoverMorePlaces")}
-      </h2>
-
-      <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-          {cities.map((city) => {
-            if (city.id !== Number(cityId)) {
-              return (
-                <div
-                  key={city.id}
-                  onClick={() => {
-                    const scrollPosition = window.scrollY;
-                    localStorage.setItem("selectedCity", city.name);
-                    navigateTo(`/AllListings?cityId=${city.id}`);
-                    window.addEventListener("popstate", function () {
-                      window.scrollTo(0, scrollPosition);
-                    });
-                  }}
-                  className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-                >
-                  <div className="relative h-80 rounded overflow-hidden">
-                    <img
-                      alt="ecommerce"
-                      className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                      src={
-                        city.image
-                          ? process.env.REACT_APP_BUCKET_HOST + city.image
-                          : CITYIMAGE
-                      }
-                      onError={(e) => {
-                        e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
-                      }}
-                    />
-                    <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
-                      <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
-                        {city.name}
-                      </h1>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-      </div>
-
-      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
-
-      <h2
-        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
-        style={{ fontFamily: "Poppins, sans-serif" }}
-      >
         {t("recentListings")}
       </h2>
 
@@ -286,6 +233,59 @@ const HomePage = () => {
           </div>
         </div>
       )}
+
+      <h2
+        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
+        style={{ fontFamily: "Poppins, sans-serif" }}
+      >
+        {t("discoverMorePlaces")}
+      </h2>
+
+      <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+          {cities.map((city) => {
+            if (city.id !== Number(cityId)) {
+              return (
+                <div
+                  key={city.id}
+                  onClick={() => {
+                    const scrollPosition = window.scrollY;
+                    localStorage.setItem("selectedCity", city.name);
+                    navigateTo(`/AllListings?cityId=${city.id}`);
+                    window.addEventListener("popstate", function () {
+                      window.scrollTo(0, scrollPosition);
+                    });
+                  }}
+                  className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                >
+                  <div className="relative h-80 rounded overflow-hidden">
+                    <img
+                      alt="ecommerce"
+                      className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+                      src={
+                        city.image
+                          ? process.env.REACT_APP_BUCKET_HOST + city.image
+                          : CITYIMAGE
+                      }
+                      onError={(e) => {
+                        e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+                      }}
+                    />
+                    <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
+                      <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
+                        {city.name}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      </div>
+
+      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
