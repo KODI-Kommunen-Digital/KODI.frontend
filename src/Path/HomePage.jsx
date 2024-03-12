@@ -272,6 +272,19 @@ const HomePage = () => {
         />
       </Suspense>
 
+      {process.env.REACT_APP_REGION_NAME === "HEIDI" && (
+        <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          <button
+            type="submit"
+            onClick={() => goToCitizensPage()}
+            className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            {t("mehr")}
+          </button>
+        </div>
+      )}
+
       <h2
         className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
