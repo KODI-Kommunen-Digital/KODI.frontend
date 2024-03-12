@@ -146,6 +146,7 @@
     "notMember": "Noch keinen Account ?",
     "offers": "Angebote",
     "offerSearch": "Suche / Biete",
+    "searchOffer": "Biete / Suche",
     "oldest": "Älteste",
     "oldPassword": "Altes Password",
     "or": "oder",
@@ -623,7 +624,7 @@
     "disableDates": "Kein Ablaufdatum",
     "noExpiryMessage": "Für diesen Beitrag gibt es kein Ablaufdatum",
     "expiryMessage": "Die Ablauffrist für diese Nachricht beträgt :",
-    "expiryDate": "Verfallsdatum",
+    "expiryDate": "Ablaufdatum",
     "youAreAlmostThere": "Du bist fast am Ziel",
     "next": "weiter",
     "previous": "zurück",
@@ -665,5 +666,6 @@
     "geseketersmOfUseGlance3": "Die Betreibenden sind um einen störungsfreien Betrieb der Plattform bemüht. Dies beschränkt sich naturgemäß auf Leistungen, auf die die Betreibenden Einfluss nehmen können. Die Betreibenden behalten sich vor, den Zugang zur Plattform aufgrund von Wartungsarbeiten, Kapazitätsbelangen oder anderen Ereignissen, die nicht in ihrem Machtbereich stehen, ganz oder teilweise, zeitweise oder auf Dauer einzuschränken.",
     "FinalProvisions3": "",
     "visitWebsite": "Besuchen Sie die Website :",
+    "moreService": "Weitere Kategorien",
     "mehr": "Mehr"
 }
