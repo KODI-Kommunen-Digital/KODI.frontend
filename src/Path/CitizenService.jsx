@@ -13,7 +13,7 @@ const CitizenService = () => {
   const [citizenService, setCitizenServices] = useState({});
   const [citiesArray, setCitiesArray] = useState([]);
   const [cityId, setCityId] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -31,6 +31,7 @@ const CitizenService = () => {
 
   useEffect(() => {
     if (!isLoading) {
+      setIsLoading(true)
       const urlParams = new URLSearchParams(window.location.search);
       document.title =
         process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
@@ -50,9 +51,10 @@ const CitizenService = () => {
 
       getCitizenServices().then((response) => {
         setCitizenServices(response.data.data);
+        setIsLoading(false)
       });
     }
-  }, [isLoading, t]);
+  }, []);
 
 
   const handleLinkClick = (data) => {
