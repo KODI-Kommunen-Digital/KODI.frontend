@@ -134,11 +134,12 @@ const HomePage = () => {
 
   return (
     <section className="text-gray-600 body-font relative">
-      <HomePageNavBar />
+      <HomePageNavBar cities={cities} onCityChange={onCityChange} cityId={cityId} />
       {showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
-      <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col">
+
+      <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
         <div className="w-full mr-0 ml-0">
-          <div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0">
+          <div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0 relative">
             <div className="relative h-[40rem]">
               <img
                 alt="ecommerce"
@@ -146,135 +147,41 @@ const HomePage = () => {
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
                 loading="lazy"
               />
-              <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-                <h1
-                  className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl text-center font-bold tracking-wide"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {t("homePageHeading")}
-                </h1>
-                <div className="relative w-full px-4 mb-4 md:w-80">
-                  <select
-                    id="city"
-                    name="city"
-                    autoComplete="city-name"
-                    onChange={onCityChange}
-                    value={cityId || 0}
-                    className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+              <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+                <div className="flex flex-col items-start max-w-[60%] lg:px-20 md:px-5 sm:px-0 px-2 py-6">
+                  <h1
+                    className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
                   >
-                    <option className="font-sans" value={0} key={0}>
-                      {t("allCities", {
-                        regionName: process.env.REACT_APP_REGION_NAME,
-                      })}
-                    </option>
-                    {cities.map((city) => (
-                      <option
-                        className="font-sans"
-                        value={city.id}
-                        key={city.id}
-                      >
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
-                  <div
-                    className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                    onClick={() => {
-                      if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                        window.location.href = process.env.REACT_APP_APPLESTORE;
-                      } else {
-                        window.location.href = process.env.REACT_APP_APPLESTORE;
-                      }
-                    }}
-                  >
-                    <div className="mr-2">
-                      <svg viewBox="0 0 384 512" width="20">
-                        <path
-                          fill="currentColor"
-                          d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-xs">{t("downloadOnThe")}</div>
-                      <div className="-mt-1 font-sans text-sm font-semibold">
-                        {t("appStore")}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                    onClick={() => {
-                      if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                        window.location.href =
-                          process.env.REACT_APP_GOOGLEPLAYSTORE;
-                      } else {
-                        window.location.href =
-                          process.env.REACT_APP_GOOGLEPLAYSTORE;
-                      }
-                    }}
-                  >
-                    <div className="mr-2">
-                      <svg viewBox="30 336.7 120.9 129.2" width="20">
-                        <path
-                          fill="#FFD400"
-                          d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z"
-                        />
-                        <path
-                          fill="#FF3333"
-                          d="M99.1,401.1l-64.2,64.7c1.5,0.2,3.2-0.2,5.2-1.3  c4.2-2.3,48.8-26.7,79.1-43.3L99.1,401.1L99.1,401.1z"
-                        />
-                        <path
-                          fill="#48FF48"
-                          d="M99.1,401.1l20.1-20.2c0,0-74.6-40.7-79.1-43.1  c-1.7-1-3.6-1.3-5.3-1L99.1,401.1z"
-                        />
-                        <path
-                          fill="#3BCCFF"
-                          d="M99.1,401.1l-64.3-64.3c-2.6,0.6-4.8,2.9-4.8,7.6  c0,7.5,0,107.5,0,113.8c0,4.3,1.7,7.4,4.9,7.7L99.1,401.1z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-xs">{t("getItOn")}</div>
-                      <div className="-mt-1 font-sans text-sm font-semibold">
-                        {t("googlePlay")}
-                      </div>
-                    </div>
-                  </div>
+                    {t("homePageHeading")}
+                  </h1>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0">
+          <Suspense fallback={<div>Loading...</div>}>
+            <LazyMostPopulatCategories
+              listingsCount={listingsCount}
+              t={t}
+              goToAllListingsPage={goToAllListingsPage}
+            />
+          </Suspense>
+        </div>
       </div>
 
-
-
-      {/* <MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} /> */}
-      <Suspense fallback={<div>Loading...</div>}>
-        <LazyMostPopulatCategories
-          listingsCount={listingsCount}
-          t={t}
-          goToAllListingsPage={goToAllListingsPage}
-        />
-      </Suspense>
-
       <h2
-        className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
+        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
         {t("discoverMorePlaces")}
       </h2>
 
-      <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+      <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
           {cities.map((city) => {
             if (city.id !== Number(cityId)) {
@@ -318,17 +225,17 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
+      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
       <h2
-        className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
+        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
         {t("recentListings")}
       </h2>
 
       {listings && listings.length > 0 ? (
-        <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+        <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
           <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
             {listings &&
               listings.map((listing, index) => (
@@ -382,7 +289,7 @@ const HomePage = () => {
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
-      <div className="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+      <div className="bg-white lg:px-20 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
           <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
             <div className="relative h-96 rounded overflow-hidden w-auto">
@@ -468,7 +375,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="bg-blue-400 mx-auto py-10 px-4 flex justify-center lg:h-[28rem] sm:h-[35rem]">
+      <div className="bg-blue-400 mx-auto lg:px-20 md:px-5 sm:px-0 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem]">
         <div className="flex flex-wrap items-center">
           <div className="w-full md:w-1/2 px-4">
             <h2

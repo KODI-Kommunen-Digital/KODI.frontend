@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../Services/usersApi";
+import PropTypes from 'prop-types';
 
-export default function HomePageNavBar() {
+export default function HomePageNavBar({ cities, onCityChange, cityId }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -69,9 +70,27 @@ export default function HomePageNavBar() {
     }
   }, [terminalViewParam]);
 
+  document.addEventListener("scroll", function () {
+    const popover = document.getElementById("scrollablePopover");
+    const scrollPosition = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const SOME_THRESHOLD = viewportHeight * 0.65;
+
+    if (scrollPosition > SOME_THRESHOLD) {
+      popover.classList.add("bg-black", "bg-opacity-25");
+      popover.classList.remove("bg-gradient-to-b", "from-black", "to-transparent");
+    } else {
+      popover.classList.add("bg-gradient-to-b", "from-black", "to-transparent");
+      popover.classList.remove("bg-black", "bg-opacity-25");
+    }
+  });
+
   return (
     <div className="w-full fixed top-0 z-10">
-      <Popover className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5">
+      <Popover
+        className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
+        id="scrollablePopover"
+      >
         <div className="w-full">
           <div
             className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
@@ -88,6 +107,38 @@ export default function HomePageNavBar() {
                 }}
               />
             </div>
+
+            <div className="relative w-full mx-auto px-4 mb-0 md:w-80">
+              <div className="relative">
+                <select
+                  id="city"
+                  name="city"
+                  autoComplete="city-name"
+                  onChange={onCityChange}
+                  value={cityId || 0}
+                  className="bg-white h-12 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600 border-2 border-gray-500 font-bold"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                  }}
+                >
+                  <option className="font-sans" value={0} key={0}>
+                    {t("allCities", {
+                      regionName: process.env.REACT_APP_REGION_NAME,
+                    })}
+                  </option>
+                  {cities.map((city) => (
+                    <option
+                      className="font-sans"
+                      value={city.id}
+                      key={city.id}
+                    >
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
               <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
@@ -252,3 +303,9 @@ export default function HomePageNavBar() {
     </div>
   );
 }
+
+HomePageNavBar.propTypes = {
+  cities: PropTypes.array.isRequired,
+  onCityChange: PropTypes.func.isRequired,
+  cityId: PropTypes.number.isRequired,
+};

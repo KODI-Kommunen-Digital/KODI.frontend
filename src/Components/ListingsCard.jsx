@@ -37,9 +37,9 @@ function ListingsCard({ listing, terminalView = false }) {
           window.location.href = listing.website;
         }
       }}
-      className="w-full bg-slate-100 h-96 shadow-lg rounded-lg cursor-pointer"
+      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer"
     >
-      <div className="block relative h-64 rounded overflow-hidden">
+      <div className="block relative h-64 rounded-t-lg overflow-hidden">
         {listing.pdf ? (
           <PdfThumbnail
             pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
@@ -66,7 +66,7 @@ function ListingsCard({ listing, terminalView = false }) {
         )}
       </div>
 
-      <div className="px-2">
+      <div className="px-2 border-t-8 border-orange-500">
         <div className="mt-5 px-2">
           <h2
             className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
@@ -82,7 +82,7 @@ function ListingsCard({ listing, terminalView = false }) {
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             <p
-              className="text-gray-500 my-0 p-2 h-[1.8rem] title-font text-sm text-center font-sans truncate"
+              className="text-gray-500 p-2 h-[1.8rem] title-font text-sm text-center font-semibold truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
@@ -120,7 +120,7 @@ function ListingsCard({ listing, terminalView = false }) {
           </div>
         ) : (
           <p
-            className="text-gray-500 my-0 p-2 h-[1.8rem] title-font text-sm text-start font-sans truncate"
+            className="text-gray-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
             dangerouslySetInnerHTML={{
               __html: listing.description,
@@ -128,6 +128,32 @@ function ListingsCard({ listing, terminalView = false }) {
           />
         )}
       </div>
+
+      <div className="px-2">
+        <div className="my-2 px-2">
+          <h2
+            className="flex text-orange-500 title-font text-start text-sm font-semibold text-center font-special truncate"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 mr-1 text-yellow-500 fill-yellow-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 2L9.25 8.5H2.5L8.5 12.75L6.5 19.25L12 15.5L17.5 19.25L15.5 12.75L21.5 8.5H14.75L12 2z"
+              />
+            </svg>
+            {new Date(listing.createdAt).toLocaleDateString('en-GB')}
+          </h2>
+        </div>
+      </div>
+
     </div>
   );
 }
