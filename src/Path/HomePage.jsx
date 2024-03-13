@@ -2,12 +2,13 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsCount } from "../Services/listingsApi";
+import { getListings, getListingsCount, getListingsBySearch } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
-// import MostPopulatCategories from "../Components//MostPopulatCategories";
+import SearchBar from "../Components/SearchBar";
+// import { getCategory } from "../Services/CategoryApi";
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
@@ -25,6 +26,7 @@ const HomePage = () => {
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
+  const [selectedSortOption, setSelectedSortOption] = useState("");
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -66,8 +68,7 @@ const HomePage = () => {
       setIsLoggedIn(true);
     }
     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-    if (parseInt(cityId)) {
-      urlParams.set("cityId", cityId);
+    if (cityId) {
       params.cityId = cityId;
     } else {
       urlParams.delete("cityId");
@@ -79,6 +80,13 @@ const HomePage = () => {
       setListings(data);
     });
   }, [cities, cityId]);
+
+  function goToAllListingsPage(category) {
+    let navUrl = `/AllListings?categoryId=${category}`;
+    if (cityId)
+      navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
+    navigateTo(navUrl);
+  }
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -102,12 +110,36 @@ const HomePage = () => {
     }
   };
 
-  function goToAllListingsPage(category) {
-    let navUrl = `/AllListings?categoryId=${category}`;
-    if (cityId)
-      navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
-    navigateTo(navUrl);
+  function handleSortOptionChange(event) {
+    setSelectedSortOption(event.target.value);
   }
+
+  const handleSearch = async (searchQuery) => {
+    console.log("Search term:", searchQuery);
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = { statusId: 1 };
+
+      const cityId = urlParams.get('cityId');
+      if (cityId && parseInt(cityId)) {
+        params.cityId = parseInt(cityId);
+      }
+
+      const categoryId = urlParams.get('categoryId');
+      if (categoryId && parseInt(categoryId)) {
+        params.categoryId = parseInt(categoryId);
+      }
+      const response = await getListingsBySearch({
+        searchQuery,
+        ...params
+      });
+      console.log("API Response:", response.data.data);
+      setListings(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   function goToCitizensPage() {
     let navUrl = `/CitizenService`;
@@ -134,7 +166,7 @@ const HomePage = () => {
 
   return (
     <section className="text-gray-600 body-font relative">
-      <HomePageNavBar cities={cities} onCityChange={onCityChange} cityId={cityId} />
+      <HomePageNavBar />
       {showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
 
       <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
@@ -148,7 +180,7 @@ const HomePage = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-                <div className="flex flex-col items-start max-w-[60%] lg:px-20 md:px-5 sm:px-0 px-2 py-6">
+                <div className="flex flex-col items-start max-w-[80%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 sm:px-0 px-2 py-6">
                   <h1
                     className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
                     style={{
@@ -157,9 +189,40 @@ const HomePage = () => {
                   >
                     {t("homePageHeading")}
                   </h1>
+                  <div className="relative w-full px-0 mb-0 md:w-80">
+                    <div className="relative">
+                      <select
+                        id="city"
+                        name="city"
+                        autoComplete="city-name"
+                        onChange={onCityChange}
+                        value={cityId || 0}
+                        className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        <option className="font-sans" value={0} key={0}>
+                          {t("allCities", {
+                            regionName: process.env.REACT_APP_REGION_NAME,
+                          })}
+                        </option>
+                        {cities.map((city) => (
+                          <option
+                            className="font-sans"
+                            value={city.id}
+                            key={city.id}
+                          >
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -174,12 +237,38 @@ const HomePage = () => {
         </div>
       </div>
 
-      <h2
-        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
-        style={{ fontFamily: "Poppins, sans-serif" }}
-      >
-        {t("recentListings")}
-      </h2>
+      <div className="flex justify-between">
+        <div className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
+          style={{ fontFamily: "Poppins, sans-serif" }}>
+          <h2>
+            {t("recentListings")}
+          </h2>
+        </div>
+
+        <div className="grid mt-10 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 sm:px-0 px-2 py-6">
+          <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
+            <select
+              id="country"
+              name="country"
+              value={selectedSortOption}
+              onChange={handleSortOptionChange}
+              autoComplete="country-name"
+              className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+              }}
+            >
+              <option value="">{t("sort")}</option>
+              <option value="titleAZ">{t("atoztitle")}</option>
+              <option value="titleZA">{t("ztoatitle")}</option>
+              <option value="recent">{t("recent")}</option>
+              <option value="oldest">{t("oldest")}</option>
+            </select>
+          </div>
+
+          <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+        </div>
+      </div>
 
       {listings && listings.length > 0 ? (
         <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
@@ -284,8 +373,6 @@ const HomePage = () => {
           })}
         </div>
       </div>
-
-      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 

@@ -10,7 +10,7 @@ import {
   sortOldestFirst,
 } from "../../Services/helper";
 import { useTranslation } from "react-i18next";
-import { getListings , getListingsBySearch } from "../../Services/listingsApi";
+import { getListings, getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 // import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
@@ -197,8 +197,8 @@ const AllListings = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
-  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
-  const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
+  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-0";
+  const pyClass = terminalViewParam === "true" ? "py-0" : "py-0";
   const [showNavBar, setShowNavBar] = useState(true);
   useEffect(() => {
     if (terminalViewParam === "true") {
@@ -210,20 +210,20 @@ const AllListings = () => {
 
   const handleSearch = async (searchQuery) => {
     console.log("Search term:", searchQuery);
-    
+
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const params = { statusId: 1 };
-      
+
       const cityId = urlParams.get('cityId');
       if (cityId && parseInt(cityId)) {
         params.cityId = parseInt(cityId);
-      } 
-      
+      }
+
       const categoryId = urlParams.get('categoryId');
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
-      } 
+      }
       const response = await getListingsBySearch({
         searchQuery,
         ...params
@@ -242,8 +242,8 @@ const AllListings = () => {
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
       >
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
-            <div className="relative lg:h-64 md:h-64 h-96">
+          <div className={`lg:h-full h-[40rem] overflow-hidden ${pyClass}`}>
+            <div className="relative h-[40rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -267,82 +267,82 @@ const AllListings = () => {
                 </h1>
 
                 <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
-                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
-                      <select
-                        id="city"
-                        name="city"
-                        autoComplete="city-name"
-                        onChange={(e) => {
-                          handleCityChange(e.target.value);
-                        }}
-                        value={cityId}
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        <option className="font-sans" value={0} key={0}>
-                          {t("allCities", {
-                            regionName: process.env.REACT_APP_REGION_NAME,
-                          })}
-                        </option>
-                        {cities.map((city) => (
-                          <option
-                            className="font-sans"
-                            value={city.id}
-                            key={city.id}
-                          >
-                            {city.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
-                      <select
-                        id="category"
-                        name="category"
-                        autoComplete="category-name"
-                        onChange={(e) => setCategoryId(e.target.value)}
-                        value={categoryId}
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        <option className="font-sans" value={0} key={0}>
-                          {t("allCategories")}
-                        </option>
-                        {Object.keys(categories).map((key) => {
-                          return (
-                            <option className="font-sans" value={key} key={key}>
-                              {t(categories[key])}
-                            </option>
-                          );
+                  <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
+                    <select
+                      id="city"
+                      name="city"
+                      autoComplete="city-name"
+                      onChange={(e) => {
+                        handleCityChange(e.target.value);
+                      }}
+                      value={cityId}
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option className="font-sans" value={0} key={0}>
+                        {t("allCities", {
+                          regionName: process.env.REACT_APP_REGION_NAME,
                         })}
-                      </select>
-                    </div>
-                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
-                      <select
-                        id="country"
-                        name="country"
-                        value={selectedSortOption}
-                        onChange={handleSortOptionChange}
-                        autoComplete="country-name"
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        <option value="">{t("sort")}</option>
-                        <option value="titleAZ">{t("atoztitle")}</option>
-                        <option value="titleZA">{t("ztoatitle")}</option>
-                        <option value="recent">{t("recent")}</option>
-                        <option value="oldest">{t("oldest")}</option>
-                      </select>
-                    </div>
-
-                    <SearchBar onSearch={handleSearch} searchBarClassName="w-full"/>
+                      </option>
+                      {cities.map((city) => (
+                        <option
+                          className="font-sans"
+                          value={city.id}
+                          key={city.id}
+                        >
+                          {city.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                  <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
+                    <select
+                      id="category"
+                      name="category"
+                      autoComplete="category-name"
+                      onChange={(e) => setCategoryId(e.target.value)}
+                      value={categoryId}
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option className="font-sans" value={0} key={0}>
+                        {t("allCategories")}
+                      </option>
+                      {Object.keys(categories).map((key) => {
+                        return (
+                          <option className="font-sans" value={key} key={key}>
+                            {t(categories[key])}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
+                    <select
+                      id="country"
+                      name="country"
+                      value={selectedSortOption}
+                      onChange={handleSortOptionChange}
+                      autoComplete="country-name"
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option value="">{t("sort")}</option>
+                      <option value="titleAZ">{t("atoztitle")}</option>
+                      <option value="titleZA">{t("ztoatitle")}</option>
+                      <option value="recent">{t("recent")}</option>
+                      <option value="oldest">{t("oldest")}</option>
+                    </select>
+                  </div>
+
+                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+                </div>
               </div>
             </div>
           </div>
@@ -373,9 +373,9 @@ const AllListings = () => {
         ) : (
           <div>
             {listings && listings.length > 0 ? (
-              <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
-                {listings &&
+              <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
+                  {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard
                         listing={listing}

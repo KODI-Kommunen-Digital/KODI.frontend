@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../Services/usersApi";
 import PropTypes from 'prop-types';
 
-export default function HomePageNavBar({ cities, onCityChange, cityId }) {
+export default function HomePageNavBar() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -108,38 +108,6 @@ export default function HomePageNavBar({ cities, onCityChange, cityId }) {
               />
             </div>
 
-            <div className="relative w-full mx-auto px-4 mb-0 md:w-80">
-              <div className="relative">
-                <select
-                  id="city"
-                  name="city"
-                  autoComplete="city-name"
-                  onChange={onCityChange}
-                  value={cityId || 0}
-                  className="bg-white h-12 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600 border-2 border-gray-500 font-bold"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  <option className="font-sans" value={0} key={0}>
-                    {t("allCities", {
-                      regionName: process.env.REACT_APP_REGION_NAME,
-                    })}
-                  </option>
-                  {cities.map((city) => (
-                    <option
-                      className="font-sans"
-                      value={city.id}
-                      key={city.id}
-                    >
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
               <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
                 <span className="sr-only">Open menu</span>
@@ -232,11 +200,11 @@ export default function HomePageNavBar({ cities, onCityChange, cityId }) {
             focus
             className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition lg:hidden"
           >
-            <div className="divide-y-2 divide-gray-50 rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+            <div className="divide-y-2 divide-gray-50 rounded-xl bg-black shadow-lg ring-1 ring-black ring-opacity-5">
               <div className="space-y-6 py-6 px-5">
                 <div className="mr-2 flex justify-between">
                   <a
-                    className="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
+                    className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
                     onClick={() => {
                       if (isLoggedIn) {
                         navigateTo("/Favorite");
@@ -263,7 +231,7 @@ export default function HomePageNavBar({ cities, onCityChange, cityId }) {
                       ></path>
                     </svg>
                   </a>
-                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-white">
                     <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </Popover.Button>
@@ -272,29 +240,36 @@ export default function HomePageNavBar({ cities, onCityChange, cityId }) {
                 <div>
                   <a
                     onClick={handleLoginLogout}
-                    className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border-transparent border border-bg-slate-300 text-base font-semibold text-gray-600 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                    className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {isLoggedIn ? t("logOut") : t("login")}
                   </a>
-                  {isLoggedIn && (
+                </div>
+
+                {isLoggedIn && (
+                  <div>
                     <a
                       onClick={handleGotoDashboard}
-                      className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent cursor-pointer"
+                      className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                     >
                       {t("dashboard")}
                     </a>
-                  )}
+                  </div>
+                )}
+
+                <div>
                   <a
                     onClick={() =>
                       isLoggedIn
                         ? navigateTo("/UploadListings")
                         : navigateTo("/login")
                     }
-                    className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                    className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {t("submit")}
                   </a>
                 </div>
+
               </div>
             </div>
           </Popover.Panel>

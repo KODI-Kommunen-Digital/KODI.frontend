@@ -115,6 +115,32 @@ function Footer(props) {
           )}
           <div className="">
             <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
+              {t("learn_more")}
+            </h6>
+            <p className={`${footerClass} mb-4`}>
+              <a
+                href="https://heidi-app.de/"
+                className="text-gray-600 font-sans"
+              >
+                {t("developer_community")}
+              </a>
+            </p>
+            <p className={`${footerClass} mb-4`}>
+              <a
+                href="https://heidi-app.de/"
+                className="text-gray-600 font-sans"
+              >
+                {t("contact_us")}
+              </a>
+            </p>
+            <p className={`${footerClass} mb-4`}>
+              <a href="/login" className="text-gray-600 font-sans">
+                {t("login")}
+              </a>
+            </p>
+          </div>
+          <div className="">
+            <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
               {t("mobile")}
             </h6>
             <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
@@ -184,32 +210,6 @@ function Footer(props) {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="">
-            <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
-              {t("learn_more")}
-            </h6>
-            <p className={`${footerClass} mb-4`}>
-              <a
-                href="https://heidi-app.de/"
-                className="text-gray-600 font-sans"
-              >
-                {t("developer_community")}
-              </a>
-            </p>
-            <p className={`${footerClass} mb-4`}>
-              <a
-                href="https://heidi-app.de/"
-                className="text-gray-600 font-sans"
-              >
-                {t("contact_us")}
-              </a>
-            </p>
-            <p className={`${footerClass} mb-4`}>
-              <a href="/login" className="text-gray-600 font-sans">
-                {t("login")}
-              </a>
-            </p>
           </div>
           <div className="">
             <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
