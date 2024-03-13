@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
+import { getCategory } from "../Services/CategoryApi";
 
 const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
 
@@ -8,6 +9,16 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
         t: PropTypes.func.isRequired,
         goToAllListingsPage: PropTypes.func.isRequired,
     };
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        getCategory().then((response) => {
+            const catList = {};
+            response?.data.data.forEach((cat) => {
+                catList[cat.id] = cat.name;
+            });
+            setCategories(catList);
+        });
+    }, []);
 
     return (
         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 flex flex-col">
@@ -25,9 +36,12 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                 {listingsCount.map((listing) => {
                     let categoryName;
                     let categoryIcon;
+                    categoryName = categories[listing.categoryId];
+                    if (!categoryName) {
+                        categoryName = t("unknownCategory");
+                    }
                     switch (listing.categoryId) {
                         case 1:
-                            categoryName = t("news");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
                                     <svg
@@ -41,7 +55,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 3:
-                            categoryName = t("events");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -55,7 +68,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 4:
-                            categoryName = t("clubs");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -69,7 +81,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 5:
-                            categoryName = t("regionalProducts");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -83,7 +94,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 6:
-                            categoryName = process.env.REACT_APP_REGION_NAME === 'WALDI' ? t("searchOffer") : t("offerSearch");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-fuchsia-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -97,7 +107,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 7:
-                            categoryName = t("newCitizenInfo");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -111,7 +120,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 9:
-                            categoryName = t("lostAndFound");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-gray-500 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -125,7 +133,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 10:
-                            categoryName = t("companyPortaits");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -139,7 +146,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 11:
-                            categoryName = t("carpoolingPublicTransport");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -153,7 +159,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 12:
-                            categoryName = t("offers");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -167,7 +172,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 13:
-                            categoryName = t("eatOrDrink");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -181,7 +185,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 14:
-                            categoryName = t("rathaus");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -195,7 +198,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 15:
-                            categoryName = t("newsletter");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-teal-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -209,7 +211,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 16:
-                            categoryName = t("officialnotification");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-rose-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -223,7 +224,6 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             );
                             break;
                         case 17:
-                            categoryName = t("freetimeAndTourisms");
                             categoryIcon = (
                                 <div className="h-20 w-20 bg-purple-400 flex items-center justify-center rounded-full m-auto shadow-xl">
                                     <svg
@@ -256,7 +256,7 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 className="flex items-center justify-center m-auto mt-2 text-center font-sans font-bold"
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
-                                {categoryName}
+                                {t(categoryName)}
                             </h2>
                         </div>
                     );
