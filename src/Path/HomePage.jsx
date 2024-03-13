@@ -8,7 +8,13 @@ import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
 import SearchBar from "../Components/SearchBar";
-// import { getCategory } from "../Services/CategoryApi";
+import { getCategory } from "../Services/CategoryApi";
+import {
+  sortByTitleAZ,
+  sortByTitleZA,
+  sortLatestFirst,
+  sortOldestFirst,
+} from "../Services/helper";
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
@@ -22,11 +28,13 @@ const LazyMostPopulatCategories = lazy(() =>
 const HomePage = () => {
   const { t } = useTranslation();
   const [cityId, setCityId] = useState();
+  const [categoryId, setCategoryId] = useState();
   const [cities, setCities] = useState([]);
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
   const [selectedSortOption, setSelectedSortOption] = useState("");
+  const [, setCategories] = useState([]);
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -43,6 +51,13 @@ const HomePage = () => {
     const cityId = parseInt(urlParams.get("cityId"));
     if (cityId) {
       setCityId(cityId);
+    }
+    getCategory().then((categoryResponse) => {
+      setCategories(categoryResponse.data.data);
+    });
+    const categoryId = parseInt(urlParams.get("categoryId"));
+    if (categoryId) {
+      setCategoryId(categoryId);
     }
     getListingsCount().then((response) => {
       const data = response.data.data;
@@ -68,45 +83,97 @@ const HomePage = () => {
       setIsLoggedIn(true);
     }
     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-    if (cityId) {
+    if (parseInt(cityId)) {
+      urlParams.set("cityId", cityId);
       params.cityId = cityId;
     } else {
       urlParams.delete("cityId");
     }
+    if (parseInt(categoryId)) {
+      urlParams.set("categoryId", categoryId);
+      params.categoryId = categoryId;
+    } else {
+      urlParams.delete("categoryId");
+    }
+
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
     getListings(params).then((response) => {
       const data = response.data.data;
       setListings(data);
     });
-  }, [cities, cityId]);
+  }, [cities, cityId, categoryId]);
 
-  function goToAllListingsPage(category) {
-    let navUrl = `/AllListings?categoryId=${category}`;
-    if (cityId)
-      navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
-    navigateTo(navUrl);
+  function getTheListings(categoryId) {
+    const selectedCategoryId = categoryId;
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCityId = urlParams.get("cityId");
+
+    if (selectedCategoryId && selectedCityId) {
+      localStorage.setItem("selectedCategory", selectedCategoryId.name);
+      window.location.href = `?categoryId=${selectedCategoryId}&cityId=${selectedCityId}`;
+    } else if (selectedCategoryId) {
+      localStorage.setItem("selectedCategory", selectedCategoryId.name);
+      window.location.href = `?categoryId=${selectedCategoryId}`;
+    } else if (selectedCityId) {
+      window.location.href = `?cityId=${selectedCityId}`;
+    } else {
+      localStorage.setItem("selectedCategory", t("allCategories"));
+      localStorage.setItem("selectedCity", t("allCities"));
+      urlParams.delete("cityId");
+      setCityId(0);
+    }
   }
+
+  const onCityChange = (e) => {
+    const selectedCityId = e.target.value;
+    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = cities.find(
+      (city) => city.id.toString() === selectedCityId
+    );
+
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", selectedCity.name);
+      if (selectedCategoryId) {
+        window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
+      } else {
+        window.location.href = `?cityId=${selectedCityId}`;
+      }
+    } else {
+      localStorage.setItem("selectedCity", t("allCities"));
+      if (selectedCategoryId) {
+        window.location.href = `?categoryId=${selectedCategoryId}`;
+      } else {
+        urlParams.delete("cityId");
+        setCityId(0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    switch (selectedSortOption) {
+      case "titleAZ":
+        setListings([...sortByTitleAZ(listings)]);
+        break;
+      case "titleZA":
+        setListings([...sortByTitleZA(listings)]);
+        break;
+      case "recent":
+        setListings([...sortLatestFirst(listings)]);
+        break;
+      case "oldest":
+        setListings([...sortOldestFirst(listings)]);
+        break;
+      default:
+        break;
+    }
+  }, [selectedSortOption, listings]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
       navigate(path);
-    }
-  };
-  const onCityChange = (e) => {
-    const selectedCityId = e.target.value;
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedCity = cities.find(
-      (city) => city.id.toString() === selectedCityId
-    );
-    if (selectedCity) {
-      localStorage.setItem("selectedCity", selectedCity.name);
-      window.location.href = `?cityId=${selectedCityId}`;
-    } else {
-      localStorage.setItem("selectedCity", t("allCities"));
-      urlParams.delete("cityId");
-      setCityId(0);
     }
   };
 
@@ -231,7 +298,7 @@ const HomePage = () => {
             <LazyMostPopulatCategories
               listingsCount={listingsCount}
               t={t}
-              goToAllListingsPage={goToAllListingsPage}
+              getTheListings={getTheListings}
             />
           </Suspense>
         </div>

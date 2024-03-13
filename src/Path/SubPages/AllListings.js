@@ -12,7 +12,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
-// import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";

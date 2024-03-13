@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
+const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
     MostPopulatCategories.propTypes = {
         listingsCount: PropTypes.array.isRequired,
         t: PropTypes.func.isRequired,
-        goToAllListingsPage: PropTypes.func.isRequired,
+        getTheListings: PropTypes.func.isRequired,
     };
 
     function getScreenSize() {
@@ -27,7 +27,7 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                         className="flex overflow-x-scroll hide-scroll-bar"
                     >
                         <div
-                            className="flex flex-nowrap gap-4"
+                            className="flex flex-nowrap md:gap-20 gap-8"
                         >
                             {listingsCount.map((listing) => {
                                 let categoryName;
@@ -225,8 +225,9 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={() => {
-                                            goToAllListingsPage(listing.categoryId);
+                                            getTheListings(listing.categoryId);
                                         }}
+                                        value={listing.categoryId}
                                     >
                                         {categoryIcon}
                                         {screenSize === "large" && categoryName}
