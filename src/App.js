@@ -48,7 +48,7 @@ Modal.setAppElement('#root');
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isWaldi = process.env.REACT_APP_REGION_NAME === "Heidi";
+  const isWaldi = process.env.REACT_APP_REGION_NAME === "WALDI";
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -89,7 +89,7 @@ const App = () => {
           {
             isWaldi && (
               <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={2} />} exact />
+                <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
                 <Route path="/IFrameListing" element={<IFrameListing />} exact />
               </React.Fragment>
             )
