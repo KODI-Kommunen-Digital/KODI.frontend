@@ -1,0 +1,43 @@
+.listing-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.listing-tile {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.listing-tile img {
+    width: 100%;
+    height: auto;
+}
+
+.listing-info {
+    padding: 8px;
+}
+
+.listing-info h3 {
+    margin: 0;
+    color: #333;
+}
+
+.listing-info p {
+    color: #666;
+}
+
+.city-name {
+    position: relative;
+    /* top: 50%;
+    left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    color: rgb(5, 4, 4);
+    font-size: 3rem;
+    /* Adjust the font size as needed */
+    font-weight: bold;
+    text-align: center;
+    /* z-index: 2; */
+}

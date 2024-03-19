@@ -41,7 +41,8 @@ import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
-
+import IFrame from "./Path/Listings/IFrame";
+import IframeListing from "./Path/Listings/IframeListing";
 import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
@@ -84,6 +85,8 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+          <Route path="/IFrame" element={<IFrame cityId={1} />} exact />
+          <Route path="/IframeListing" element={<IframeListing />} exact />
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
