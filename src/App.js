@@ -48,7 +48,7 @@ Modal.setAppElement('#root');
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isWaldi = process.env.REACT_APP_REGION_NAME === "WALDI";
+  const inFrame = process.env.REACT_APP_INFRAME === "True";
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -87,7 +87,7 @@ const App = () => {
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
           {
-            isWaldi && (
+            inFrame && (
               <React.Fragment>
                 <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
                 <Route path="/IFrameListing" element={<IFrameListing />} exact />
