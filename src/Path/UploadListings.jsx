@@ -764,8 +764,8 @@ function UploadListings() {
               {error.categoryId}
             </div>
           </div>
-
-          {categoryId == 1 && (
+          
+          {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-4">
               <label
                 htmlFor="subcategoryId"
