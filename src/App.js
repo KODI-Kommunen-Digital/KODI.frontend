@@ -42,13 +42,13 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IframeListing from "./Path/Listings/IframeListing";
+import IFrameListing from './Path/Listings/IFrameListing.jsx'
 import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isWaldi = process.env.REACT_APP_REGION_NAME === "WALDI";
+  const isWaldi = process.env.REACT_APP_REGION_NAME === "Heidi";
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -89,8 +89,8 @@ const App = () => {
           {
             isWaldi && (
               <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
-                <Route path="/IframeListing" element={<IframeListing />} exact />
+                <Route path="/IFrame" element={<IFrame cityId={2} />} exact />
+                <Route path="/IFrameListing" element={<IFrameListing />} exact />
               </React.Fragment>
             )
           }
