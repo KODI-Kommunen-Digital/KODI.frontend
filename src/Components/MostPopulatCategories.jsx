@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
+import { getCategory } from "../Services/CategoryApi";
 
 const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
@@ -8,6 +9,17 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
         t: PropTypes.func.isRequired,
         getTheListings: PropTypes.func.isRequired,
     };
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        getCategory().then((response) => {
+            const catList = {};
+            response?.data.data.forEach((cat) => {
+                catList[cat.id] = cat.name;
+            });
+            setCategories(catList);
+        });
+    }, []);
 
     function getScreenSize() {
         const width = window.innerWidth;
@@ -32,9 +44,12 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                             {listingsCount.map((listing) => {
                                 let categoryName;
                                 let categoryIcon;
+                                categoryName = categories[listing.categoryId];
+                                if (!categoryName) {
+                                    categoryName = t("unknownCategory");
+                                }
                                 switch (listing.categoryId) {
                                     case 1:
-                                        categoryName = t("news");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -46,7 +61,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 3:
-                                        categoryName = t("events");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -58,7 +72,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 4:
-                                        categoryName = t("clubs");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -70,7 +83,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 5:
-                                        categoryName = t("regionalProducts");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -82,7 +94,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 6:
-                                        categoryName = process.env.REACT_APP_REGION_NAME === 'WALDI' ? t("searchOffer") : t("offerSearch");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -94,7 +105,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 7:
-                                        categoryName = t("newCitizenInfo");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -106,7 +116,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 9:
-                                        categoryName = t("lostAndFound");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -118,7 +127,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 10:
-                                        categoryName = t("companyPortaits");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -130,7 +138,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 11:
-                                        categoryName = t("carpoolingPublicTransport");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -142,7 +149,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 12:
-                                        categoryName = t("offers");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -154,7 +160,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 13:
-                                        categoryName = t("eatOrDrink");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -166,7 +171,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 14:
-                                        categoryName = t("rathaus");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -178,7 +182,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 15:
-                                        categoryName = t("newsletter");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -190,7 +193,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 16:
-                                        categoryName = t("officialnotification");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -202,7 +204,6 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         );
                                         break;
                                     case 17:
-                                        categoryName = t("freetimeAndTourisms");
                                         categoryIcon = (
                                             <svg
                                                 className="h-6 w-10 fill-current"
@@ -224,13 +225,13 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         className="flex font-bold gap-4 p-4 hover:bg-white rounded-t-xl hover:text-orange-500 text-white inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer"
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
-                                        onClick={() => {
-                                            getTheListings(listing.categoryId);
+                                        onClick={(e) => {
+                                            getTheListings(listing.categoryId, e);
                                         }}
                                         value={listing.categoryId}
                                     >
                                         {categoryIcon}
-                                        {screenSize === "large" && categoryName}
+                                        {screenSize === "large" && t(categoryName)}
                                     </h2>
                                 );
                             })}

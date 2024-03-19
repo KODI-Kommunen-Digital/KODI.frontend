@@ -8,7 +8,6 @@ import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
 import SearchBar from "../Components/SearchBar";
-import { getCategory } from "../Services/CategoryApi";
 import {
   sortByTitleAZ,
   sortByTitleZA,
@@ -34,7 +33,6 @@ const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
   const [selectedSortOption, setSelectedSortOption] = useState("");
-  const [, setCategories] = useState([]);
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -52,9 +50,6 @@ const HomePage = () => {
     if (cityId) {
       setCityId(cityId);
     }
-    getCategory().then((categoryResponse) => {
-      setCategories(categoryResponse.data.data);
-    });
     const categoryId = parseInt(urlParams.get("categoryId"));
     if (categoryId) {
       setCategoryId(categoryId);
@@ -104,7 +99,9 @@ const HomePage = () => {
     });
   }, [cities, cityId, categoryId]);
 
-  function getTheListings(categoryId) {
+  function getTheListings(categoryId, event) {
+    event.preventDefault();
+
     const selectedCategoryId = categoryId;
     const urlParams = new URLSearchParams(window.location.search);
     const selectedCityId = urlParams.get("cityId");
@@ -150,6 +147,13 @@ const HomePage = () => {
       }
     }
   };
+
+  window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
+
+  window.addEventListener("beforeunload", () => {
+    sessionStorage.setItem("scrollPosition", window.scrollY);
+  });
+
 
   useEffect(() => {
     switch (selectedSortOption) {
@@ -289,7 +293,6 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
