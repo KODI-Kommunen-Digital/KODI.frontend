@@ -89,7 +89,7 @@ const App = () => {
           {
             isWaldi && (
               <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={1} />} exact />
+                <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
                 <Route path="/IframeListing" element={<IframeListing />} exact />
               </React.Fragment>
             )
