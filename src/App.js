@@ -42,7 +42,7 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IFrameListing from './Path/Listings/IFrameListing.jsx'
+import IFrameListing from './Path/Listings/IframeListing.jsx'
 import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
@@ -89,7 +89,7 @@ const App = () => {
           {
             inFrame && (
               <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
+                <Route path="/IFrame" element={<IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />} exact />
                 <Route path="/IFrameListing" element={<IFrameListing />} exact />
               </React.Fragment>
             )
