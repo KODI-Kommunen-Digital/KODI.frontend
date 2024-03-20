@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
+import { getAds } from "../../Services/AdvertiseApi";
+
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import UserProfile from "../../Components/UserProfile";
@@ -23,8 +25,8 @@ import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
 
-
-const Description = ({ content }) => {
+const Description = (props) => {
+  const [desc, setDesc] = useState();
   const linkify = (text) => {
     const urlRegex =
       /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
@@ -52,17 +54,53 @@ const Description = ({ content }) => {
       return match;
     });
   };
-  const linkedContent = linkify(content);
+  useEffect(() => {
+    const linkedContent = linkify(props.content);
+    setDesc(linkedContent);
+    try {
+      if (linkedContent.length > 200) {
+        getAds(props.cityId).then((value) => {
+          const ad = value.data.data;
+          if (ad && ad.image && ad.link) {
+            const parser = new DOMParser();
+            const parsed = parser.parseFromString(linkedContent, "text/html");
+            const tag = `<img src=${
+              process.env.REACT_APP_BUCKET_HOST + ad.image
+            } alt="Ad" href=${ad.link}/>`;
+            const a = document.createElement("a");
+            const text = document.createElement("p");
+            text.className = "text-right";
+            text.innerHTML = "Anzeige";
+            a.innerHTML = tag;
+            a.href = ad.link;
+            parsed.body.insertBefore(
+              text,
+              parsed.body.childNodes[parsed.body.childNodes.length - 1]
+            );
+            parsed.body.insertBefore(
+              a,
+              parsed.body.childNodes[parsed.body.childNodes.length - 1]
+            );
+            setDesc(parsed.body.innerHTML);
+          }
+        });
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }, [props.cityId, props.content]);
+
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
-      dangerouslySetInnerHTML={{ __html: linkedContent }}
+      dangerouslySetInnerHTML={{ __html: desc }}
     ></p>
   );
 };
 
 Description.propTypes = {
   content: PropTypes.string.isRequired,
+  cityId: PropTypes.string.isRequired,
 };
 
 const Listing = () => {
@@ -237,7 +275,9 @@ const Listing = () => {
     if (selectedCategoryId) {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
-          const filteredListings = response.data.data.filter((listing) => listing.id !== listingId);
+          const filteredListings = response.data.data.filter(
+            (listing) => listing.id !== listingId
+          );
           setListings(filteredListings);
         }
       );
@@ -265,14 +305,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-              .then((response) => {
-                setFavoriteId(response.data.id);
-                setSuccessMessage(t("List added to the favorites"));
-                setHandleClassName(
-                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                );
-              })
-              .catch((err) => console.log("Error", err))
+                .then((response) => {
+                  setFavoriteId(response.data.id);
+                  setSuccessMessage(t("List added to the favorites"));
+                  setHandleClassName(
+                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                  );
+                })
+                .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -328,7 +368,6 @@ const Listing = () => {
                             {title}
                           </span>
                         </h1>
-
                       </div>
 
                       <div className="flex flex-wrap gap-1 justify-between mt-6">
@@ -353,8 +392,9 @@ const Listing = () => {
                         </div>
 
                         <div
-                          className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                            }`}
+                          className={`hidden md:block flex items-center mt-6 ${
+                            terminalView ? "hidden" : "visible"
+                          }`}
                         >
                           <button
                             type="button"
@@ -373,8 +413,9 @@ const Listing = () => {
                           </button>
                         </div>
                         <div
-                          className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                            }`}
+                          className={`md:hidden block flex items-center mt-6 ${
+                            terminalView ? "hidden" : "visible"
+                          }`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -522,11 +563,16 @@ const Listing = () => {
                 >
                   {t("description")}
                 </h1>
-                <Description content={description} />
+                <Description content={description} cityId={cityId} />
                 {sourceId === listingSource.SCRAPER && (
                   <p className="text-gray-900 font-medium">
                     {t("visitWebsite")}{" "}
-                    <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={website}
+                      className="text-blue-600 font-medium"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {website}
                     </a>
                   </p>
@@ -627,7 +673,9 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
+                        (listing) =>
+                          listing.statusId === statusByName.Active &&
+                          listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard
