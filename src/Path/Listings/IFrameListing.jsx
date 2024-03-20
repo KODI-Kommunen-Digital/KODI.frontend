@@ -18,6 +18,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
+import './IFrame.css'
 
 
 const Description = ({ content }) => {
@@ -302,7 +303,7 @@ const IFrameListing = () => {
     // }, [user]);
 
     return (
-        <section className="text-gray-600 bg-white body-font">
+        <section className="text-gray-600 bg-white body-font custom-scroll">
             {isLoading ? (
                 <LoadingPage />
             ) : (
@@ -532,22 +533,6 @@ const IFrameListing = () => {
                             </div>
                         </div>
                     </div>
-
-                    {input.address ? (
-                        <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-                            <h1
-                                className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("streetAddress")}
-                            </h1>
-                            <p>{input.address}</p>
-
-                            {input.place ? <p>{input.place}</p> : null}
-
-                            {input.zipcode ? <p>{input.zipcode}</p> : null}
-                        </div>
-                    ) : null}
                 </div>
             )}
         </section>
