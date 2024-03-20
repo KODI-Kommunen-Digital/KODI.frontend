@@ -86,18 +86,14 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
-          {inFrame && (
-            <React.Fragment>
-              <Route
-                path="/IFrame"
-                element={
-                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />
-                }
-                exact
-              />
-              <Route path="/IFrameListing" element={<IFrameListing />} exact />
-            </React.Fragment>
-          )}
+          {
+            inFrame && (
+              <React.Fragment>
+                <Route path="/IFrame" element={<IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />} exact />
+                <Route path="/IFrameListing" element={<IFrameListing />} exact />
+              </React.Fragment>
+            )
+          }
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
