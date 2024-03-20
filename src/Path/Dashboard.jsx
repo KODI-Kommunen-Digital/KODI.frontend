@@ -198,7 +198,13 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    if (listing.sourceId === 1 || listing.showExternal === 0) {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    } else if (listing.website) {
+      window.location.href = listing.website;
+    } else {
+      navigateTo(`/error`);
+    }
   }
 
   // Navigate to Edit Listings page Starts
