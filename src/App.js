@@ -42,9 +42,9 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IFrameListing from './Path/Listings/IFrameListing.jsx'
-import Modal from 'react-modal';
-Modal.setAppElement('#root');
+import IFrameListing from "./Path/Listings/IframeListing.jsx";
+import Modal from "react-modal";
+Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
@@ -86,14 +86,12 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
-          {
-            inFrame && (
-              <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
-                <Route path="/IFrameListing" element={<IFrameListing />} exact />
-              </React.Fragment>
-            )
-          }
+          {inFrame && (
+            <React.Fragment>
+              <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
+              <Route path="/IFrameListing" element={<IFrameListing />} exact />
+            </React.Fragment>
+          )}
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
@@ -106,33 +104,31 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
-          {
-            isForumEnabled && (
-              <React.Fragment>
-                <Route path="/Forum/ViewPost" element={<ViewPost />} />
-                <Route path="/Forum" element={<Forum />} />
-                <Route path="/UploadPosts" element={<UploadPosts />} />
-                <Route path="/CreateGroup" element={<CreateGroup />} exact />
-                <Route path="/MyGroups" element={<MyGroups />} exact />
-                <Route
-                  path="/MyGroups/GroupMembers"
-                  element={<GroupMembers />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/MemberRequests"
-                  element={<MemberRequests />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/ReportedPosts"
-                  element={<ReportedPosts />}
-                  exact
-                />
-                <Route path="/CitizenService/AllForums" element={<AllForums />} />
-              </React.Fragment>
-            )
-          }
+          {isForumEnabled && (
+            <React.Fragment>
+              <Route path="/Forum/ViewPost" element={<ViewPost />} />
+              <Route path="/Forum" element={<Forum />} />
+              <Route path="/UploadPosts" element={<UploadPosts />} />
+              <Route path="/CreateGroup" element={<CreateGroup />} exact />
+              <Route path="/MyGroups" element={<MyGroups />} exact />
+              <Route
+                path="/MyGroups/GroupMembers"
+                element={<GroupMembers />}
+                exact
+              />
+              <Route
+                path="/MyGroups/MemberRequests"
+                element={<MemberRequests />}
+                exact
+              />
+              <Route
+                path="/MyGroups/ReportedPosts"
+                element={<ReportedPosts />}
+                exact
+              />
+              <Route path="/CitizenService/AllForums" element={<AllForums />} />
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>
