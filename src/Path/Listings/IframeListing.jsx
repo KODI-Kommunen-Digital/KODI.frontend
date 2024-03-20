@@ -307,7 +307,7 @@ const IFrameListing = () => {
                 <LoadingPage />
             ) : (
                 <div>
-                    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-24 pb-8 lg:max-w-7xl lg:px-0 lg:pt-24 w-3/5 lg:pb-4">
+                    <div className="mx-auto max-w-2xl px-4 sm:px-6 pt-24 pb-8 lg:max-w-7xl lg:px-0 lg:pt-24 w-12/15 lg:pb-4">
                         <div className="grid place-items-center">
                             <div className="grid grid-cols-1 gap-4">
                                 <div className="lg:w-full md:w-full h-full">
