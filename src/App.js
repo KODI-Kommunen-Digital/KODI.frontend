@@ -42,7 +42,7 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IFrameListing from "./Path/Listings/IframeListing.jsx";
+import IFrameListing from "./Path/Listings/IframeListings.jsx";
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 
