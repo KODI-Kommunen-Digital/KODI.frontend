@@ -18,7 +18,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
-
+import './Iframe.css'
 
 const Description = ({ content }) => {
     const linkify = (text) => {
@@ -302,7 +302,7 @@ const IFrameListing = () => {
     // }, [user]);
 
     return (
-        <section className="text-gray-600 bg-white body-font">
+        <section className="text-gray-600 bg-white body-font custom-scroll">
             {isLoading ? (
                 <LoadingPage />
             ) : (
