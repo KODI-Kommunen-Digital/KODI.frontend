@@ -13,6 +13,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import './Iframe.css'
 
 const IFrame = ({ cityId }) => {
     const navigate = useNavigate();
@@ -158,7 +159,7 @@ const IFrame = ({ cityId }) => {
     //     }
     // }, [selectedSortOption, listings]);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <div><LoadingPage /></div>;
 
 
     // function handleSortOptionChange(event) {
@@ -213,7 +214,7 @@ const IFrame = ({ cityId }) => {
     // };
 
     return (
-        <section className="text-gray-600 body-font relative">
+        <section className="text-gray-600 body-font relative custom-scroll">
             <div className="mt-2 mb-20 customproview py-6">
                 {terminalViewParam && (<div className="text-center mt-4 mb-4">
                     <button
