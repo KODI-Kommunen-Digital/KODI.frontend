@@ -88,7 +88,13 @@ const App = () => {
           <Route path="/EditListings" element={<UploadListings />} exact />
           {inFrame && (
             <React.Fragment>
-              <Route path="/IFrame" element={<IFrame cityId={6} />} exact />
+              <Route
+                path="/IFrame"
+                element={
+                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />
+                }
+                exact
+              />
               <Route path="/IFrameListing" element={<IFrameListing />} exact />
             </React.Fragment>
           )}

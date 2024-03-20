@@ -19,7 +19,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (iFrame) {
+        if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+          window.open(listing.website, '_blank');
+        } else if (iFrame) {
           navigateTo(
             `/IFrameListing?listingId=${listing.id}&cityId=${listing.cityId}`
           );
