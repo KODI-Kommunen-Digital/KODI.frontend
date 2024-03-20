@@ -19,7 +19,10 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (iFrame) {
+        if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+          window.open(listing.website, '_blank');
+        }
+        else if (iFrame) {
           navigateTo(
             `/IFrameListing?listingId=${listing.id}&cityId=${listing.cityId}`
           );
@@ -78,58 +81,60 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         </h2>
       </div>
       <div className="my-4 bg-gray-200 h-[1px]"></div>
-      {listing.id && listing.categoryId === 3 ? (
-        <div
-          className="text-center items-center"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
+      {
+        listing.id && listing.categoryId === 3 ? (
+          <div
+            className="text-center items-center"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <p
+              className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
+                "de-DE"
+              )}{" "}
+              (
+              {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                "de-DE",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  timeZone: "Europe/Berlin",
+                }
+              )}
+              )
+              {listing.endDate && (
+                <>
+                  <span className="text-blue-400"> {t("To")} </span>
+                  {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+                    "de-DE"
+                  )}{" "}
+                  (
+                  {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                    "de-DE",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: "Europe/Berlin",
+                    }
+                  )}
+                  )
+                </>
+              )}
+            </p>
+          </div>
+        ) : (
           <p
             className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-              "de-DE"
-            )}{" "}
-            (
-            {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
-              "de-DE",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Europe/Berlin",
-              }
-            )}
-            )
-            {listing.endDate && (
-              <>
-                <span className="text-blue-400"> {t("To")} </span>
-                {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                  "de-DE"
-                )}{" "}
-                (
-                {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
-                  "de-DE",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Europe/Berlin",
-                  }
-                )}
-                )
-              </>
-            )}
-          </p>
-        </div>
-      ) : (
-        <p
-          className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-          dangerouslySetInnerHTML={{
-            __html: listing.description,
-          }}
-        />
-      )}
-    </div>
+            dangerouslySetInnerHTML={{
+              __html: listing.description,
+            }}
+          />
+        )
+      }
+    </div >
   );
 }
 
