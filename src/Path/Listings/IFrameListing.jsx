@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-// import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
-// import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import PropTypes from "prop-types";
 import CustomCarousel from "../Carousel/CustomCarousel";
@@ -282,25 +280,6 @@ const IFrameListing = () => {
             setErrorMessage(t("Error", error));
         }
     };
-
-    // const [firstname, setFirstname] = useState("");
-    // const [lastname, setLastname] = useState("");
-    // const [userSocial, setUserSocial] = useState([]);
-
-    // useEffect(() => {
-    //     if (user) {
-    //         try {
-    //             const socialMedia = user.socialMedia
-    //                 ? JSON.parse(user.socialMedia)
-    //                 : {};
-    //             setUserSocial(socialMedia);
-    //             setFirstname(user.firstname);
-    //             setLastname(user.lastname);
-    //         } catch (error) {
-    //             console.error("Error parsing user.socialMedia:", error);
-    //         }
-    //     }
-    // }, [user]);
 
     return (
         <section className="text-gray-600 bg-white body-font custom-scroll">
