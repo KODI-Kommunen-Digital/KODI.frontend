@@ -16,7 +16,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
-import './Iframe.css'
+import './HeidiListings.css'
 
 
 const Description = ({ content }) => {
