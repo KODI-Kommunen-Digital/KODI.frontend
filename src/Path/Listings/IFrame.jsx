@@ -1,38 +1,28 @@
 import React, { useState, useEffect } from "react";
-import SearchBar from "../../Components/SearchBar";
 import PropTypes from 'prop-types';
 import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-    sortByTitleAZ,
-    sortByTitleZA,
-    sortLatestFirst,
-    sortOldestFirst,
-} from "../../Services/helper";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsBySearch } from "../../Services/listingsApi";
+import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import './IFrame.css'
 
 const IFrame = ({ cityId }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
     window.scrollTo(0, 0);
-    const pageSize = 12;
+    const pageSize = 8;
     const iFrame = true;
     const { t } = useTranslation();
     const [categoryId, setCategoryId] = useState(0);
-    const [selectedCategory, setCategoryName] = useState(t("allCategories"));
-    const [selectedCity, setSelectedCity] = useState({})
-    const [selectedSortOption, setSelectedSortOption] = useState("");
     const [listings, setListings] = useState([]);
     const [pageNo, setPageNo] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
+    const [, setCategories] = useState([]);
 
     const fetchData = async (params) => {
         params.showExternalListings = "false";
@@ -47,25 +37,6 @@ const IFrame = ({ cityId }) => {
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        const fetchCity = async () => {
-            try {
-                const cityResp = await getCities({ cityId });
-                const city = cityResp.data.data.find(c => c.id === cityId);
-                if (city) {
-                    setSelectedCity(city);
-                } else {
-                    setError('City not found');
-                }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchCity();
-    }, [cityId]);
 
     useEffect(() => {
         document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
@@ -100,7 +71,6 @@ const IFrame = ({ cityId }) => {
                 const categoryId = parseInt(categoryIdParam);
                 if (catList[categoryId]) {
                     setCategoryId(categoryId);
-                    setCategoryName(t(catList[categoryId]));
                     params.categoryId = categoryId;
                     if (categoryId === 3) {
                         params.sortByStartDate = true;
@@ -119,11 +89,9 @@ const IFrame = ({ cityId }) => {
             const urlParams = new URLSearchParams(window.location.search);
             const params = { pageSize, statusId: 1 };
             if (parseInt(categoryId)) {
-                setCategoryName(t(categories[categoryId]));
                 params.categoryId = parseInt(categoryId);
                 urlParams.set("categoryId", parseInt(categoryId));
             } else {
-                setCategoryName(t("allCategories"));
                 urlParams.delete("categoryId");
             }
             if (pageNo > 1) {
@@ -144,32 +112,7 @@ const IFrame = ({ cityId }) => {
         }
     }, [categoryId, pageNo]);
 
-    useEffect(() => {
-        switch (selectedSortOption) {
-            case "titleAZ":
-                setListings([...sortByTitleAZ(listings)]);
-                break;
-            case "titleZA":
-                setListings([...sortByTitleZA(listings)]);
-                break;
-            case "recent":
-                setListings([...sortLatestFirst(listings)]);
-                break;
-            case "oldest":
-                setListings([...sortOldestFirst(listings)]);
-                break;
-            default:
-                break;
-        }
-    }, [selectedSortOption, listings]);
-
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
-
-    function handleSortOptionChange(event) {
-        setSelectedSortOption(event.target.value);
-    }
+    if (isLoading) return <div><LoadingPage /></div>;
     const navigateTo = (path) => {
         if (path) {
             navigate(path);
@@ -184,124 +127,10 @@ const IFrame = ({ cityId }) => {
 
     const searchParams = new URLSearchParams(location.search);
     const terminalViewParam = searchParams.get("terminalView");
-    const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
-    const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
-    // const [showNavBar, setShowNavBar] = useState(true);
-    // useEffect(() => {
-    //     if (terminalViewParam === "true") {
-    //         setShowNavBar(false);
-    //     } else {
-    //         setShowNavBar(true);
-    //     }
-    // }, [terminalViewParam]);
-
-    const handleSearch = async (searchQuery) => {
-        console.log("Search term:", searchQuery);
-
-        try {
-            const urlParams = new URLSearchParams(window.location.search);
-            const params = { statusId: 1 };
-            params.cityId = cityId;
-
-            const categoryId = urlParams.get('categoryId');
-            if (categoryId && parseInt(categoryId)) {
-                params.categoryId = parseInt(categoryId);
-            }
-            const response = await getListingsBySearch({
-                searchQuery,
-                ...params
-            });
-            console.log("API Response:", response.data.data);
-            setListings(response.data.data);
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
 
     return (
-        <section className="text-gray-600 body-font relative">
-            <div
-                className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
-            >
-                <div className="w-full mr-0 ml-0">
-                    <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
-                        <div className="relative lg:h-64 md:h-64 h-96">
-                            <img
-                                alt="ecommerce"
-                                className="object-cover object-center h-full w-full"
-                                src={process.env.REACT_APP_BUCKET_HOST + selectedCity.image}
-                            />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-                                <h1
-                                    className="text-4xl mt-4 md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
-                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                >
-                                    <style>
-                                        {`
-													@media (max-width: 280px) {
-														.galaxy-fold {
-															font-size: 30px;
-														}
-													}
-												`}
-                                    </style>
-                                    {selectedCity.name} : {selectedCategory}
-                                </h1>
-
-                                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0">
-                                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
-                                        <select
-                                            id="category"
-                                            name="category"
-                                            autoComplete="category-name"
-                                            onChange={(e) => setCategoryId(e.target.value)}
-                                            value={categoryId}
-                                            className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                            }}
-                                        >
-                                            <option className="font-sans" value={0} key={0}>
-                                                {t("allCategories")}
-                                            </option>
-                                            {Object.keys(categories).map((key) => {
-                                                return (
-                                                    <option className="font-sans" value={key} key={key}>
-                                                        {t(categories[key])}
-                                                    </option>
-                                                );
-                                            })}
-                                        </select>
-                                    </div>
-                                    <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
-                                        <select
-                                            id="country"
-                                            name="country"
-                                            value={selectedSortOption}
-                                            onChange={handleSortOptionChange}
-                                            autoComplete="country-name"
-                                            className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                            }}
-                                        >
-                                            <option value="">{t("sort")}</option>
-                                            <option value="titleAZ">{t("atoztitle")}</option>
-                                            <option value="titleZA">{t("ztoatitle")}</option>
-                                            <option value="recent">{t("recent")}</option>
-                                            <option value="oldest">{t("oldest")}</option>
-                                        </select>
-                                    </div>
-
-                                    <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-5 mb-20 customproview py-6">
+        <section className="text-gray-600 body-font relative custom-scroll">
+            <div className="mt-2 mb-2 customproview py-0">
                 {terminalViewParam && (<div className="text-center mt-4 mb-4">
                     <button
                         onClick={handleOfficialNotificationButton}
@@ -325,8 +154,8 @@ const IFrame = ({ cityId }) => {
                 ) : (
                     <div>
                         {listings && listings.length > 0 ? (
-                            <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-                                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+                            <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0 space-y-10 flex flex-col">
+                                <div className="relative place-items-center bg-white mt-0 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 justify-start">
                                     {listings &&
                                         listings.map((listing, index) => (
                                             <ListingsCard
@@ -375,7 +204,7 @@ const IFrame = ({ cityId }) => {
                         )}
                     </div>
                 )}
-                <div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+                <div className="mt-2 mb-2 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
                     {pageNo !== 1 ? (
                         <span
                             className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"

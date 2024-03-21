@@ -19,9 +19,12 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (iFrame) {
+        if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+          window.open(listing.website, '_blank');
+        }
+        else if (iFrame) {
           navigateTo(
-            `/IFrameListing?listingId=${listing.id}&cityId=${listing.cityId}`
+            `/IframeListing?listingId=${listing.id}&cityId=${listing.cityId}`
           );
         } else if (
           listing.sourceId === listingSource.USER_ENTRY ||
@@ -41,9 +44,11 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           window.location.href = listing.website;
         }
       }}
-      className="w-full h-96 shadow-lg rounded-lg cursor-pointer"
+      className={`w-full shadow-lg rounded-lg cursor-pointer ${iFrame ? 'h-80' : 'h-96'
+        }`}
     >
-      <div className="block relative h-64 rounded overflow-hidden">
+      <div className={`block relative rounded overflow-hidden ${iFrame ? 'h-48' : 'h-64'
+        }`}>
         {listing.pdf ? (
           <PdfThumbnail
             pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
@@ -78,13 +83,15 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         </h2>
       </div>
       <div className="my-4 bg-gray-200 h-[1px]"></div>
+
       {listing.id && listing.categoryId === 3 ? (
         <div
           className="text-center items-center"
           style={{ fontFamily: "Poppins, sans-serif" }}
         >
           <p
-            className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+            className={`text-gray-900 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate ${iFrame ? 'my-0' : 'my-4'
+              }`}
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
@@ -122,7 +129,8 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         </div>
       ) : (
         <p
-          className="text-gray-900 my-4 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate"
+          className={`text-gray-900 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate ${iFrame ? 'my-0' : 'my-4'
+            }`}
           style={{ fontFamily: "Poppins, sans-serif" }}
           dangerouslySetInnerHTML={{
             __html: listing.description,
