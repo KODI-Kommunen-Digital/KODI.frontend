@@ -16,7 +16,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
-import './IFrame.css'
+import './Iframe.css'
 
 
 const Description = ({ content }) => {
