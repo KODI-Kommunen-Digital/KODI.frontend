@@ -11,6 +11,9 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
     };
 
     const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("All Categories");
+    console.log(selectedCategory)
+
     useEffect(() => {
         getCategory().then((response) => {
             const catList = {};
@@ -41,9 +44,20 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                         <div
                             className="flex flex-nowrap md:gap-20 gap-8"
                         >
+                            <h2
+                                className={`flex font-bold gap-4 p-4 ${selectedCategory === "allCategories" ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
+                                style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
+                                onClick={(e) => {
+                                    setSelectedCategory("allCategories");
+                                    getTheListings(null, e); // Pass null to indicate all categories
+                                }}
+                            >
+                                {t("allCategories")}
+                            </h2>
                             {listingsCount.map((listing) => {
                                 let categoryName;
                                 let categoryIcon;
+
                                 categoryName = categories[listing.categoryId];
                                 if (!categoryName) {
                                     categoryName = t("unknownCategory");
@@ -222,10 +236,11 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
                                 return (
                                     <h2
-                                        className="flex font-bold gap-4 p-4 hover:bg-white rounded-t-xl hover:text-orange-500 text-white inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer"
+                                        className={`flex font-bold gap-4 p-4 ${selectedCategory === t(categoryName) ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={(e) => {
+                                            // setSelectedCategory(t(categoryName));
                                             getTheListings(listing.categoryId, e);
                                         }}
                                         value={listing.categoryId}

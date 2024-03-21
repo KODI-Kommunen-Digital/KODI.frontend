@@ -118,7 +118,9 @@ const HomePage = () => {
       localStorage.setItem("selectedCategory", t("allCategories"));
       localStorage.setItem("selectedCity", t("allCities"));
       urlParams.delete("cityId");
+      urlParams.delete("categoryId");
       setCityId(0);
+      setCategoryId("all");
     }
   }
 
