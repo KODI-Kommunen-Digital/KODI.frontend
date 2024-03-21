@@ -8,6 +8,8 @@ import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
+import Summary from "./Path/AppointmentBooking/Summary";
+import BookingConfirmation from "./Path/AppointmentBooking/BookingConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
@@ -42,9 +44,13 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IFrameListing from './Path/Listings/IframeListings.jsx'
-import Modal from 'react-modal';
-Modal.setAppElement('#root');
+import IFrameListing from "./Path/Listings/IframeListings.jsx";
+import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
+import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
+import MyBookings from "./Path/AppointmentBooking/MyBookings";
+
+import Modal from "react-modal";
+Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
@@ -83,17 +89,29 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
+          <Route
+            path="/AppointmentBooking/BookAppointments/Summary"
+            element={<Summary />}
+          />
+          <Route
+            path="/AppointmentBooking/BookAppointments/BookingConfirmation"
+            element={<BookingConfirmation />}
+          />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
-          {
-            inFrame && (
-              <React.Fragment>
-                <Route path="/IFrame" element={<IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />} exact />
-                <Route path="/IFrameListing" element={<IFrameListing />} exact />
-              </React.Fragment>
-            )
-          }
+          {inFrame && (
+            <React.Fragment>
+              <Route
+                path="/IFrame"
+                element={
+                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />
+                }
+                exact
+              />
+              <Route path="/IFrameListing" element={<IFrameListing />} exact />
+            </React.Fragment>
+          )}
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
@@ -106,33 +124,47 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
-          {
-            isForumEnabled && (
-              <React.Fragment>
-                <Route path="/Forum/ViewPost" element={<ViewPost />} />
-                <Route path="/Forum" element={<Forum />} />
-                <Route path="/UploadPosts" element={<UploadPosts />} />
-                <Route path="/CreateGroup" element={<CreateGroup />} exact />
-                <Route path="/MyGroups" element={<MyGroups />} exact />
-                <Route
-                  path="/MyGroups/GroupMembers"
-                  element={<GroupMembers />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/MemberRequests"
-                  element={<MemberRequests />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/ReportedPosts"
-                  element={<ReportedPosts />}
-                  exact
-                />
-                <Route path="/CitizenService/AllForums" element={<AllForums />} />
-              </React.Fragment>
-            )
-          }
+          {isForumEnabled && (
+            <React.Fragment>
+              <Route path="/Forum/ViewPost" element={<ViewPost />} />
+              <Route path="/Forum" element={<Forum />} />
+              <Route path="/UploadPosts" element={<UploadPosts />} />
+              <Route path="/CreateGroup" element={<CreateGroup />} exact />
+              <Route path="/MyGroups" element={<MyGroups />} exact />
+              <Route
+                path="/MyGroups/GroupMembers"
+                element={<GroupMembers />}
+                exact
+              />
+              <Route
+                path="/MyGroups/MemberRequests"
+                element={<MemberRequests />}
+                exact
+              />
+              <Route
+                path="/MyGroups/ReportedPosts"
+                element={<ReportedPosts />}
+                exact
+              />
+              <Route path="/CitizenService/AllForums" element={<AllForums />} />
+
+              <Route
+                path="/AppointmentBooking/MyAppointments"
+                element={<MyAppointments />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/MyBookings"
+                element={<MyBookings />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/BookAppointments/Select"
+                element={<BookMyAppointments />}
+                exact
+              />
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>

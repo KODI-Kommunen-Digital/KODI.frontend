@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { getCategory } from "../Services/CategoryApi";
 
 const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
+  MostPopulatCategories.propTypes = {
+    listingsCount: PropTypes.array.isRequired,
+    t: PropTypes.func.isRequired,
+    goToAllListingsPage: PropTypes.func.isRequired,
+  };
 
     MostPopulatCategories.propTypes = {
         listingsCount: PropTypes.array.isRequired,
@@ -25,12 +30,12 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
             <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
                 <style>
                     {`
-							@media (max-width: 280px) {
-							.grid-cols-2 {
-								grid-template-columns: repeat(1, minmax(0, 1fr));
-							}
-							}
-						`}
+                      @media (max-width: 280px) {
+                      .grid-cols-2 {
+                        grid-template-columns: repeat(1, minmax(0, 1fr));
+                      }
+                      }
+                    `}
                 </style>
 
                 {listingsCount.map((listing) => {
@@ -262,8 +267,8 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                     );
                 })}
             </div>
-        </div>
-    );
+      </div>
+  );
 };
 
 export default MostPopulatCategories;
