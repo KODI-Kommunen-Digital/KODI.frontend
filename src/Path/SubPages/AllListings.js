@@ -241,8 +241,8 @@ const AllListings = () => {
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
       >
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-full h-[40rem] overflow-hidden ${pyClass}`}>
-            <div className="relative h-[40rem]">
+          <div className={`lg:h-full h-[30rem] overflow-hidden ${pyClass}`}>
+            <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"

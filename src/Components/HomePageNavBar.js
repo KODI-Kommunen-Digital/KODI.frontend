@@ -109,7 +109,7 @@ export default function HomePageNavBar() {
             </div>
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
-              <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500">
+              <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                 <span className="sr-only">Open menu</span>
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </Popover.Button>
@@ -200,7 +200,7 @@ export default function HomePageNavBar() {
             focus
             className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition lg:hidden"
           >
-            <div className="divide-y-2 divide-gray-50 rounded-xl bg-black shadow-lg ring-1 ring-black ring-opacity-5">
+            <div className="divide-y-2 divide-gray-50 rounded-xl bg-black">
               <div className="space-y-6 py-6 px-5">
                 <div className="mr-2 flex justify-between">
                   <a

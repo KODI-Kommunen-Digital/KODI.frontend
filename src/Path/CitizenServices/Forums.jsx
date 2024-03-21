@@ -63,8 +63,8 @@ const Forums = () => {
 
 			<div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
 				<div className="w-full mr-0 ml-0">
-					<div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0 relative">
-						<div className="relative h-[40rem]">
+					<div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+						<div className="relative h-[30rem]">
 							<img
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"

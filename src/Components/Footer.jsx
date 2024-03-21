@@ -140,7 +140,7 @@ function Footer(props) {
             </p>
           </div>
           <div className="">
-            <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
+            <h6 className="uppercase font-semibold mb-4 flex justify-center font-sans">
               {t("mobile")}
             </h6>
             <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
