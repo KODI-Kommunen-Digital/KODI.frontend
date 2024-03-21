@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { getCategory } from "../Services/CategoryApi";
+import { useLocation } from 'react-router-dom';
 
 const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
@@ -11,8 +12,21 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
     };
 
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("All Categories");
-    console.log(selectedCategory)
+    const [selectedCategory, setSelectedCategory] = useState("allCategories");
+    const location = useLocation();
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const categoryIdParam = searchParams.get('categoryId');
+        if (categoryIdParam) {
+            const selectedCategoryName = categories[categoryIdParam];
+            if (selectedCategoryName) {
+                setSelectedCategory(selectedCategoryName);
+            }
+        } else {
+            setSelectedCategory("allCategories");
+        }
+    }, [location.search, categories]);
 
     useEffect(() => {
         getCategory().then((response) => {
@@ -236,11 +250,11 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
                                 return (
                                     <h2
-                                        className={`flex font-bold gap-4 p-4 ${selectedCategory === t(categoryName) ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
+                                        className={`flex font-bold gap-4 p-4 ${selectedCategory === categoryName ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={(e) => {
-                                            // setSelectedCategory(t(categoryName));
+                                            setSelectedCategory(categoryName);
                                             getTheListings(listing.categoryId, e);
                                         }}
                                         value={listing.categoryId}

@@ -73,14 +73,15 @@ const CitizenService = () => {
     <section className="text-gray-600 bg-white body-font">
       <HomePageNavBar />
 
-      <div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+      <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
         <div className="w-full mr-0 ml-0">
-          <div className="h-64 overflow-hidden px-0 py-1">
-            <div className="relative h-64">
+          <div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0 relative">
+            <div className="relative h-[40rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
