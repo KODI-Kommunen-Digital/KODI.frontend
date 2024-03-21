@@ -73,14 +73,9 @@ const Description = (props) => {
             text.innerHTML = "Anzeige";
             a.innerHTML = tag;
             a.href = ad.link;
-            parsed.body.insertBefore(
-              text,
-              parsed.body.childNodes[parsed.body.childNodes.length - 1]
-            );
-            parsed.body.insertBefore(
-              a,
-              parsed.body.childNodes[parsed.body.childNodes.length - 1]
-            );
+            const idx = Math.floor(parsed.body.childNodes.length / 2);
+            parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
+            parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
             setDesc(parsed.body.innerHTML);
           }
         });
