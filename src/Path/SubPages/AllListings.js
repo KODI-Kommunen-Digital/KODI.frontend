@@ -191,7 +191,7 @@ const AllListings = () => {
       default:
         break;
     }
-  }, [selectedSortOption, listings]);
+  }, [selectedSortOption]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

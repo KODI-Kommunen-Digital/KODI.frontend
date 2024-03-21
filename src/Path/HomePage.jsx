@@ -172,7 +172,7 @@ const HomePage = () => {
       default:
         break;
     }
-  }, [selectedSortOption, listings]);
+  }, [selectedSortOption]); // We removed [selectedSortOption, listings] due to Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -182,7 +182,10 @@ const HomePage = () => {
   };
 
   function handleSortOptionChange(event) {
-    setSelectedSortOption(event.target.value);
+    const newValue = event.target.value;
+    if (newValue !== selectedSortOption) {
+      setSelectedSortOption(newValue);
+    }
   }
 
   const handleSearch = async (searchQuery) => {
