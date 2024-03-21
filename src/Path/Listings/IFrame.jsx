@@ -7,7 +7,7 @@ import { getListings } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
-import './IFrame.css'
+import './HeidiListings.css'
 
 const IFrame = ({ cityId }) => {
     const navigate = useNavigate();
