@@ -13,7 +13,7 @@ const CitizenService = () => {
   const [citizenService, setCitizenServices] = useState({});
   const [citiesArray, setCitiesArray] = useState([]);
   const [cityId, setCityId] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -23,38 +23,47 @@ const CitizenService = () => {
   };
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
+    // if (!isLoading) {
+    setIsLoading(true)
+    const urlParams = new URLSearchParams(window.location.search);
+    document.title =
+      process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
+    getCities().then((response) => {
+      setCitiesArray(response.data.data);
+      const temp = {};
+      for (const city of response.data.data) {
+        temp[city.id] = {
+          name: city.name,
+          hasForum: city.hasForum,
+        };
+      }
+      setCities(temp);
+      const cityIdParam = urlParams.get("cityId");
+      if (cityIdParam && temp[cityIdParam]) setCityId(cityIdParam);
+    });
+
+    // getCitizenServices().then((response) => {
+    //   setCitizenServices(response.data.data);
+    //   setIsLoading(false)
+    // });
+
+    setTimeout(() => {
+      fetchData();
     }, 1000);
-    return () => clearTimeout(timeout);
+    // }
   }, []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      setIsLoading(true)
-      const urlParams = new URLSearchParams(window.location.search);
-      document.title =
-        process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
-      getCities().then((response) => {
-        setCitiesArray(response.data.data);
-        const temp = {};
-        for (const city of response.data.data) {
-          temp[city.id] = {
-            name: city.name,
-            hasForum: city.hasForum,
-          };
-        }
-        setCities(temp);
-        const cityIdParam = urlParams.get("cityId");
-        if (cityIdParam && temp[cityIdParam]) setCityId(cityIdParam);
-      });
-
-      getCitizenServices().then((response) => {
-        setCitizenServices(response.data.data);
-        setIsLoading(false)
-      });
+  const fetchData = async () => {
+    try {
+      const response = await getCitizenServices();
+      setCitizenServices(response.data.data);
+    } catch (error) {
+      setCitizenServices([]);
+      console.error("Error fetching citizenServices:", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  };
 
 
   const handleLinkClick = (data) => {
