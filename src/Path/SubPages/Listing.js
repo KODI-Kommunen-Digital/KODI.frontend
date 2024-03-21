@@ -74,8 +74,8 @@ const Description = (props) => {
             a.innerHTML = tag;
             a.href = ad.link;
             const idx = Math.floor(parsed.body.childNodes.length / 2);
-            parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
             parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
+            parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
             setDesc(parsed.body.innerHTML);
           }
         });
