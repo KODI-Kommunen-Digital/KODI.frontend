@@ -243,11 +243,6 @@ function Footer(props) {
                 {t("data_protection")}
               </a>
             </p>
-            {/* <p className={`${footerClass}`}>
-							<a href="/PrivacyPolicy" className="text-gray-600 font-sans">
-								{t("right_withdrawal")}
-							</a>
-						</p> */}
           </div>
           {process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
             <>

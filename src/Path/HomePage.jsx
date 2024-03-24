@@ -8,7 +8,7 @@ import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
 import SearchBar from "../Components/SearchBar";
-import { categoryById } from "../Constants/categories";
+import { getCategory } from "../Services/CategoryApi";
 import LoadingPage from "../Components/LoadingPage";
 import {
   sortByTitleAZ,
@@ -35,6 +35,7 @@ const HomePage = () => {
   const [selectedSortOption, setSelectedSortOption] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -63,6 +64,14 @@ const HomePage = () => {
       );
 
       setListingsCount(sortedData);
+    });
+
+    getCategory().then((response) => {
+      const catList = {};
+      response?.data.data.forEach((cat) => {
+        catList[cat.id] = cat.name;
+      });
+      setCategories(catList);
     });
 
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("home");
@@ -137,34 +146,9 @@ const HomePage = () => {
       urlParams.delete("categoryId");
       setCityId(0);
       setCategoryId("all");
+      window.location.href = `?`;
     }
   }
-
-  const onCityChange = (e) => {
-    const selectedCityId = e.target.value;
-    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedCity = cities.find(
-      (city) => city.id.toString() === selectedCityId
-    );
-
-    if (selectedCity) {
-      localStorage.setItem("selectedCity", selectedCity.name);
-      if (selectedCategoryId) {
-        window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-      } else {
-        window.location.href = `?cityId=${selectedCityId}`;
-      }
-    } else {
-      localStorage.setItem("selectedCity", t("allCities"));
-      if (selectedCategoryId) {
-        window.location.href = `?categoryId=${selectedCategoryId}`;
-      } else {
-        urlParams.delete("cityId");
-        setCityId(0);
-      }
-    }
-  };
 
   window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
 
@@ -226,7 +210,6 @@ const HomePage = () => {
         searchQuery,
         ...params
       });
-      console.log("API Response:", response.data.data);
       setListings(response.data.data);
     } catch (error) {
       console.error("Error:", error);
@@ -251,8 +234,8 @@ const HomePage = () => {
 
       <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
         <div className="w-full mr-0 ml-0">
-          <div className="h-[40rem] lg:h-full overflow-hidden px-0 py-0 relative">
-            <div className="relative h-[40rem]">
+          <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+            <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -260,7 +243,7 @@ const HomePage = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-50 text-white z--1">
-                <div className="flex flex-col items-start max-w-[80%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 sm:px-0 px-2 py-6">
+                <div className="flex flex-col items-start max-w-[90%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 px-5 py-6">
                   <h1
                     className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
                     style={{
@@ -269,36 +252,6 @@ const HomePage = () => {
                   >
                     {t("homePageHeading")}
                   </h1>
-                  <div className="relative w-full px-0 mb-0 md:w-80">
-                    <div className="relative">
-                      <select
-                        id="city"
-                        name="city"
-                        autoComplete="city-name"
-                        onChange={onCityChange}
-                        value={cityId || 0}
-                        className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        <option className="font-sans" value={0} key={0}>
-                          {t("allCities", {
-                            regionName: process.env.REACT_APP_REGION_NAME,
-                          })}
-                        </option>
-                        {cities.map((city) => (
-                          <option
-                            className="font-sans"
-                            value={city.id}
-                            key={city.id}
-                          >
-                            {city.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -314,47 +267,47 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="flex justify-between">
-        <div className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
-          style={{ fontFamily: "Poppins, sans-serif" }}>
-          {categoryId ? (
-            <h2>{t(categoryById[categoryId])}</h2>
-          ) : (
-            <h2>{t("allCategories")}</h2>
-          )}
-        </div>
-
-        <div className="grid mt-10 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 sm:px-0 px-2 py-6">
-          <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-            <select
-              id="country"
-              name="country"
-              value={selectedSortOption}
-              onChange={handleSortOptionChange}
-              autoComplete="country-name"
-              className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
-              <option value="">{t("sort")}</option>
-              <option value="titleAZ">{t("atoztitle")}</option>
-              <option value="titleZA">{t("ztoatitle")}</option>
-              <option value="recent">{t("recent")}</option>
-              <option value="oldest">{t("oldest")}</option>
-            </select>
-          </div>
-
-          <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
-        </div>
-      </div>
-
       {isLoading ? (
         <LoadingPage />
       ) : (
         <>
+          <div className="grid md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative mt-10 justify-between">
+            <div className="text-red-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
+              style={{ fontFamily: "Poppins, sans-serif" }}>
+              {categoryId ? (
+                <h2>{t(categories[categoryId])}</h2>
+              ) : (
+                <h2>{t("allCategories")}</h2>
+              )}
+            </div>
+
+            <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 px-5 py-6">
+              <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
+                <select
+                  id="country"
+                  name="country"
+                  value={selectedSortOption}
+                  onChange={handleSortOptionChange}
+                  autoComplete="country-name"
+                  className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                  }}
+                >
+                  <option value="">{t("sort")}</option>
+                  <option value="titleAZ">{t("atoztitle")}</option>
+                  <option value="titleZA">{t("ztoatitle")}</option>
+                  <option value="recent">{t("recent")}</option>
+                  <option value="oldest">{t("oldest")}</option>
+                </select>
+              </div>
+
+              <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+            </div>
+          </div>
+
           {listings && listings.length > 0 ? (
-            <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+            <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
               <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
                 {listings &&
                   listings.map((listing, index) => (
@@ -405,183 +358,183 @@ const HomePage = () => {
               </div>
             </div>
           )}
-        </>
-      )}
 
-      <h2
-        className="text-blue-800 lg:px-20 md:px-5 sm:px-0 px-2 py-6 text-2xl md:text-3xl mt-10 lg:text-4xl title-font text-start font-sans font-bold"
-        style={{ fontFamily: "Poppins, sans-serif" }}
-      >
-        {t("discoverMorePlaces")}
-      </h2>
+          <h2
+            className="text-red-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            {t("discoverMorePlaces")}
+          </h2>
 
-      <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-          {cities.map((city) => {
-            if (city.id !== Number(cityId)) {
-              return (
-                <div
-                  key={city.id}
-                  onClick={() => {
-                    const scrollPosition = window.scrollY;
-                    localStorage.setItem("selectedCity", city.name);
-                    navigateTo(`/AllListings?cityId=${city.id}`);
-                    window.addEventListener("popstate", function () {
-                      window.scrollTo(0, scrollPosition);
-                    });
-                  }}
-                  className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-                >
-                  <div className="relative h-80 rounded overflow-hidden">
-                    <img
-                      alt="ecommerce"
-                      className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                      src={
-                        city.image
-                          ? process.env.REACT_APP_BUCKET_HOST + city.image
-                          : CITYIMAGE
-                      }
-                      onError={(e) => {
-                        e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+              {cities.map((city) => {
+                if (city.id !== Number(cityId)) {
+                  return (
+                    <div
+                      key={city.id}
+                      onClick={() => {
+                        const scrollPosition = window.scrollY;
+                        localStorage.setItem("selectedCity", city.name);
+                        navigateTo(`/AllListings?cityId=${city.id}`);
+                        window.addEventListener("popstate", function () {
+                          window.scrollTo(0, scrollPosition);
+                        });
                       }}
-                    />
-                    <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
-                      <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
-                        {city.name}
-                      </h1>
+                      className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                    >
+                      <div className="relative h-80 rounded overflow-hidden">
+                        <img
+                          alt="ecommerce"
+                          className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+                          src={
+                            city.image
+                              ? process.env.REACT_APP_BUCKET_HOST + city.image
+                              : CITYIMAGE
+                          }
+                          onError={(e) => {
+                            e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+                          }}
+                        />
+                        <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
+                          <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
+                            {city.name}
+                          </h1>
+                        </div>
+                      </div>
                     </div>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          </div>
+
+          <div className="my-4 bg-gray-200 h-[1px]"></div>
+
+          <div className="bg-white lg:px-20 md:px-5 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
+              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+                <div className="relative h-96 rounded overflow-hidden w-auto">
+                  <img
+                    alt="ecommerce"
+                    className="object-cover object-center h-48 w-48 m-auto"
+                    src={ONEIMAGE}
+                  />
+                  <div className="p-6">
+                    <h2
+                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("createAnAccount")}
+                    </h2>
+                    <p
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("createAnAccountDescription")}
+                    </p>
                   </div>
                 </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-      </div>
-
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
-
-      <div className="bg-white lg:px-20 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
-            <div className="relative h-96 rounded overflow-hidden w-auto">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center h-48 w-48 m-auto"
-                src={ONEIMAGE}
-              />
-              <div className="p-6">
-                <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {t("createAnAccount")}
-                </h2>
-                <p
-                  className="text-gray-900 title-font text-lg font-bold text-start font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {t("createAnAccountDescription")}
-                </p>
+              </div>
+              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+                <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
+                  <img
+                    alt="ecommerce"
+                    className="object-cover object-center h-48 w-48 m-auto"
+                    src={TWOIMAGE}
+                  />
+                  <div className="p-6">
+                    <h2
+                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("getVerified")}
+                    </h2>
+                    <p
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("getVerifiedDescription")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+                <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
+                  <img
+                    alt="ecommerce"
+                    className="object-cover object-center h-48 w-48 m-auto"
+                    src={THREEIMAGE}
+                  />
+                  <div className="p-6">
+                    <h2
+                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("start")}
+                    </h2>
+                    <p
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {t("startDescription")}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
-            <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center h-48 w-48 m-auto"
-                src={TWOIMAGE}
-              />
-              <div className="p-6">
+
+          <div className="bg-blue-400 mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem]">
+            <div className="flex flex-wrap items-center">
+              <div className="w-full md:w-1/2 px-4">
                 <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
+                  className="text-4xl text-white font-bold mb-4 font-sans"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
                 >
-                  {t("getVerified")}
+                  {t("citizenService")}
                 </h2>
                 <p
-                  className="text-gray-900 title-font text-lg font-bold text-start font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
+                  className="mb-4 text-gray-900 text-lg font-bold font-sans"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
                 >
-                  {t("getVerifiedDescription")}
+                  {t("findBestCitizenServicesInTheCity")}
                 </p>
+                <a
+                  onClick={() => goToCitizensPage()}
+                  className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  {t("clickHereToFind")}
+                </a>
+              </div>
+
+              <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
+                <img
+                  src={
+                    process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
+                  }
+                  alt="Image 1"
+                  className="w-full md:w-98 mb-2"
+                />
               </div>
             </div>
           </div>
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
-            <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center h-48 w-48 m-auto"
-                src={THREEIMAGE}
-              />
-              <div className="p-6">
-                <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {t("start")}
-                </h2>
-                <p
-                  className="text-gray-900 title-font text-lg font-bold text-start font-sans"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {t("startDescription")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-blue-400 mx-auto lg:px-20 md:px-5 sm:px-0 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem]">
-        <div className="flex flex-wrap items-center">
-          <div className="w-full md:w-1/2 px-4">
-            <h2
-              className="text-4xl text-white font-bold mb-4 font-sans"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {t("citizenService")}
-            </h2>
-            <p
-              className="mb-4 text-gray-900 text-lg font-bold font-sans"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {t("findBestCitizenServicesInTheCity")}
-            </p>
-            <a
-              onClick={() => goToCitizensPage()}
-              className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {t("clickHereToFind")}
-            </a>
-          </div>
-
-          <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
-            <img
-              src={
-                process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
-              }
-              alt="Image 1"
-              className="w-full md:w-98 mb-2"
-            />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
 
       <div className="bottom-0 w-full">
         <Footer />

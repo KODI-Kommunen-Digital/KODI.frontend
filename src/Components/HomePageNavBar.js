@@ -5,8 +5,17 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../Services/usersApi";
 import PropTypes from 'prop-types';
+import { getCities } from "../Services/cities";
 
 export default function HomePageNavBar() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const terminalViewParam = searchParams.get("terminalView");
+  const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
+  const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
+  const [cityId, setCityId] = useState();
+  const [cities, setCities] = useState([]);
+  const [categoryId, setCategoryId] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -25,6 +34,18 @@ export default function HomePageNavBar() {
       window.sessionStorage.getItem("refreshToken");
     if (accessToken || refreshToken) {
       setIsLoggedIn(true);
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    getCities().then((citiesResponse) => {
+      setCities(citiesResponse.data.data);
+    });
+    const cityId = parseInt(urlParams.get("cityId"));
+    if (cityId) {
+      setCityId(cityId);
+    }
+    const categoryId = parseInt(urlParams.get("categoryId"));
+    if (categoryId) {
+      setCategoryId(categoryId);
     }
   }, []);
 
@@ -56,40 +77,52 @@ export default function HomePageNavBar() {
     navigateTo("/Dashboard");
   };
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalView");
-  const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
-  const [, setShowNavBar] = useState(true);
-  useEffect(() => {
-    if (terminalViewParam === "true") {
-      setShowNavBar(false);
-    } else {
-      setShowNavBar(true);
-    }
-  }, [terminalViewParam]);
+  // document.addEventListener("scroll", function () {
+  //   const popover = document.getElementById("scrollablePopover");
+  //   const scrollPosition = window.scrollY;
+  //   const viewportHeight = window.innerHeight;
+  //   const SOME_THRESHOLD = viewportHeight * 0.45;
 
-  document.addEventListener("scroll", function () {
-    const popover = document.getElementById("scrollablePopover");
-    const scrollPosition = window.scrollY;
-    const viewportHeight = window.innerHeight;
-    const SOME_THRESHOLD = viewportHeight * 0.65;
+  //   if (scrollPosition > SOME_THRESHOLD) {
+  //     popover.classList.add("bg-black", "bg-opacity-25");
+  //     popover.classList.remove("bg-gradient-to-b", "from-black", "to-transparent");
+  //   } else {
+  //     popover.classList.add("bg-gradient-to-b", "from-black", "to-transparent");
+  //     popover.classList.remove("bg-black", "bg-opacity-25");
+  //   }
+  // });
 
-    if (scrollPosition > SOME_THRESHOLD) {
-      popover.classList.add("bg-black", "bg-opacity-25");
-      popover.classList.remove("bg-gradient-to-b", "from-black", "to-transparent");
+  const onCityChange = (e) => {
+    const selectedCityId = e.target.value;
+    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = cities.find(
+      (city) => city.id.toString() === selectedCityId
+    );
+
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", selectedCity.name);
+      if (selectedCategoryId) {
+        window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
+      } else {
+        window.location.href = `?cityId=${selectedCityId}`;
+      }
     } else {
-      popover.classList.add("bg-gradient-to-b", "from-black", "to-transparent");
-      popover.classList.remove("bg-black", "bg-opacity-25");
+      localStorage.setItem("selectedCity", t("allCities"));
+      if (selectedCategoryId) {
+        window.location.href = `?categoryId=${selectedCategoryId}`;
+      } else {
+        urlParams.delete("cityId");
+        setCityId(0);
+      }
     }
-  });
+  };
 
   return (
     <div className="w-full fixed top-0 z-10">
       <Popover
         className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-        id="scrollablePopover"
+      // id="scrollablePopover"
       >
         <div className="w-full">
           <div
@@ -107,6 +140,39 @@ export default function HomePageNavBar() {
                 }}
               />
             </div>
+
+            {location.pathname === '/' && (
+              <div className="relative w-40 px-0 mb-0 md:w-80">
+                <div className="relative">
+                  <select
+                    id="city"
+                    name="city"
+                    autoComplete="city-name"
+                    onChange={onCityChange}
+                    value={cityId || 0}
+                    className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                    style={{
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    <option className="font-sans" value={0} key={0}>
+                      {t("allCities", {
+                        regionName: process.env.REACT_APP_REGION_NAME,
+                      })}
+                    </option>
+                    {cities.map((city) => (
+                      <option
+                        className="font-sans"
+                        value={city.id}
+                        key={city.id}
+                      >
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
               <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
@@ -283,4 +349,5 @@ HomePageNavBar.propTypes = {
   cities: PropTypes.array.isRequired,
   onCityChange: PropTypes.func.isRequired,
   cityId: PropTypes.number.isRequired,
+  categoryId: PropTypes.number.isRequired,
 };

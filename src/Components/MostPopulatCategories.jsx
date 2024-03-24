@@ -12,7 +12,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
     };
 
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("allCategories");
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const location = useLocation();
 
     useEffect(() => {
@@ -38,42 +38,42 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
         });
     }, []);
 
-    function getScreenSize() {
-        const width = window.innerWidth;
-        if (width >= 1024) {
-            return "large";
-        } else {
-            return "small";
-        }
-    }
-    const screenSize = getScreenSize();
+    // function getScreenSize() {
+    //     const width = window.innerWidth;
+    //     if (width >= 1024) {
+    //         return "large";
+    //     } else {
+    //         return "small";
+    //     }
+    // }
+    // const screenSize = getScreenSize();
 
     return (
-        <div className="lg:px-20 md:px-5 sm:px-0 px-2 py-0 mt-10 mb-0 flex flex-col w-full">
+        <div className="lg:px-20 md:px-5 px-5 py-0 mt-10 mb-0 flex flex-col w-full">
             <div className="flex flex-row relative items-center justify-center">
-                <div className="flex justify-between w-full category-animation">
+                <div className="flex justify-between w-full category-animation bg-red-100 rounded-t-xl">
                     <div
-                        className="flex overflow-x-scroll hide-scroll-bar"
+                        className="flex overflow-x-scroll scrollbar"
                     >
                         <div
                             className="flex flex-nowrap md:gap-20 gap-8"
                         >
                             <h2
-                                className={`flex font-bold gap-4 p-4 ${selectedCategory === "allCategories" ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
+                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-red-500 ${selectedCategory === "allCategories" ? 'bg-white text-red-800' : 'text-red-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                 style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                 onClick={(e) => {
                                     setSelectedCategory("allCategories");
-                                    getTheListings(null, e); // Pass null to indicate all categories
+                                    getTheListings(null, e);
                                 }}
                             >
                                 <svg
-                                    className="h-6 w-10 fill-current"
+                                    className="h-4 w-8 fill-current"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 487.3 487.3"
                                 >
                                     <path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z" />
                                 </svg>
-                                {screenSize === "large" && t("allCategories")}
+                                {t("allCategories")}
                             </h2>
 
                             {listingsCount.map((listing) => {
@@ -88,7 +88,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 1:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -99,7 +99,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 3:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -110,7 +110,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 4:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -121,7 +121,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 5:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -132,7 +132,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 6:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -143,7 +143,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 7:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -154,7 +154,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 9:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -165,7 +165,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 10:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -176,7 +176,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 11:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -187,7 +187,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 12:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -198,7 +198,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 13:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -209,7 +209,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 14:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -220,7 +220,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 15:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -231,7 +231,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 16:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -242,7 +242,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                     case 17:
                                         categoryIcon = (
                                             <svg
-                                                className="h-6 w-10 fill-current"
+                                                className="h-4 w-8 fill-current"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 487.3 487.3"
                                             >
@@ -258,7 +258,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
                                 return (
                                     <h2
-                                        className={`flex font-bold gap-4 p-4 ${selectedCategory === categoryName ? 'bg-white text-orange-500' : 'text-white'} rounded-t-xl inline-flex text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
+                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-red-500 ${selectedCategory === categoryName ? 'bg-white text-red-800' : 'text-red-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={(e) => {
@@ -268,7 +268,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                                         value={listing.categoryId}
                                     >
                                         {categoryIcon}
-                                        {screenSize === "large" && t(categoryName)}
+                                        {t(categoryName)}
                                     </h2>
                                 );
                             })}

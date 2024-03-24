@@ -66,7 +66,7 @@ function ListingsCard({ listing, terminalView = false }) {
         )}
       </div>
 
-      <div className="px-2 border-t-8 border-orange-500">
+      <div className="px-2 border-t-8 border-red-500">
         <div className="mt-5 px-2">
           <h2
             className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
@@ -132,7 +132,7 @@ function ListingsCard({ listing, terminalView = false }) {
       <div className="px-2">
         <div className="my-2 px-2">
           <h2
-            className="flex text-orange-500 title-font text-start text-sm font-semibold text-center font-special truncate"
+            className="flex text-red-500 title-font text-start text-sm font-semibold text-center font-special truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             <svg
