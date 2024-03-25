@@ -183,7 +183,7 @@ export default function HomePageNavBar() {
 
             <div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
               <a
-                className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
+                className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
                 onClick={() => {
                   if (isLoggedIn) {
                     navigateTo("/Favorite");
@@ -209,14 +209,14 @@ export default function HomePageNavBar() {
               </a>
               <a
                 onClick={handleLoginLogout}
-                className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {isLoggedIn ? t("logOut") : t("login")}
               </a>
               {isLoggedIn && (
                 <a
                   onClick={handleGotoDashboard}
-                  className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                  className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
                 >
                   {t("dashboard")}
                 </a>
@@ -228,7 +228,7 @@ export default function HomePageNavBar() {
                     ? navigateTo("/UploadListings")
                     : navigateTo("/login");
                 }}
-                className={`ml-8 font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {t("submit")}
               </a>
@@ -246,7 +246,7 @@ export default function HomePageNavBar() {
                   navigateTo("/");
                 }
               }}
-              className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
+              className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-bold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
             >
               <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
             </a>
@@ -306,7 +306,7 @@ export default function HomePageNavBar() {
                 <div>
                   <a
                     onClick={handleLoginLogout}
-                    className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {isLoggedIn ? t("logOut") : t("login")}
                   </a>
@@ -316,7 +316,7 @@ export default function HomePageNavBar() {
                   <div>
                     <a
                       onClick={handleGotoDashboard}
-                      className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                      className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                     >
                       {t("dashboard")}
                     </a>
@@ -330,7 +330,7 @@ export default function HomePageNavBar() {
                         ? navigateTo("/UploadListings")
                         : navigateTo("/login")
                     }
-                    className="font-medium text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {t("submit")}
                   </a>

@@ -66,7 +66,7 @@ function ListingsCard({ listing, terminalView = false }) {
         )}
       </div>
 
-      <div className="px-2 border-t-8 border-red-500">
+      <div className="px-2 border-t-8 border-slate-500">
         <div className="mt-5 px-2">
           <h2
             className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
@@ -82,7 +82,7 @@ function ListingsCard({ listing, terminalView = false }) {
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             <p
-              className="text-gray-500 p-2 h-[1.8rem] title-font text-sm text-center font-semibold truncate"
+              className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-center font-semibold truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
@@ -120,7 +120,7 @@ function ListingsCard({ listing, terminalView = false }) {
           </div>
         ) : (
           <p
-            className="text-gray-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+            className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
             dangerouslySetInnerHTML={{
               __html: listing.description,
@@ -132,7 +132,7 @@ function ListingsCard({ listing, terminalView = false }) {
       <div className="px-2">
         <div className="my-2 px-2">
           <h2
-            className="flex text-red-500 title-font text-start text-sm font-semibold text-center font-special truncate"
+            className="flex text-slate-500 title-font text-start text-sm font-semibold text-center font-special truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             <svg

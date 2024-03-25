@@ -272,7 +272,7 @@ const HomePage = () => {
       ) : (
         <>
           <div className="grid md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative mt-10 justify-between">
-            <div className="text-red-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
+            <div className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
               style={{ fontFamily: "Poppins, sans-serif" }}>
               {categoryId ? (
                 <h2>{t(categories[categoryId])}</h2>
@@ -360,7 +360,7 @@ const HomePage = () => {
           )}
 
           <h2
-            className="text-red-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+            className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("discoverMorePlaces")}

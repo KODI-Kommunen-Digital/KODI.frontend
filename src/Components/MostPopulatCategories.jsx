@@ -49,9 +49,9 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
     // const screenSize = getScreenSize();
 
     return (
-        <div className="lg:px-20 md:px-5 px-5 py-0 mt-10 mb-0 flex flex-col w-full">
+        <div className="lg:px-20 md:px-0 px-0 py-0 mt-10 mb-0 flex flex-col w-full">
             <div className="flex flex-row relative items-center justify-center">
-                <div className="flex justify-between w-full category-animation bg-red-100 rounded-t-xl">
+                <div className="flex justify-between w-full category-animation bg-white rounded-t-xl">
                     <div
                         className="flex overflow-x-scroll scrollbar"
                     >
@@ -59,7 +59,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
                             className="flex flex-nowrap md:gap-20 gap-8"
                         >
                             <h2
-                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-red-500 ${selectedCategory === "allCategories" ? 'bg-white text-red-800' : 'text-red-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === "allCategories" ? 'bg-slate-100 text-slate-800' : 'text-slate-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                 style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                 onClick={(e) => {
                                     setSelectedCategory("allCategories");
@@ -258,7 +258,7 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
 
                                 return (
                                     <h2
-                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-red-500 ${selectedCategory === categoryName ? 'bg-white text-red-800' : 'text-red-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === categoryName ? 'bg-slate-100 text-slate-800' : 'text-slate-800'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={(e) => {
