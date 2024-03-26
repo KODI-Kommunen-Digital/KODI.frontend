@@ -22,6 +22,7 @@ import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
+import { createAppointments, updateAppointments } from "../Services/appointmentBookingApi";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ function UploadListings() {
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  //Drag and Drop starts
+  // Drag and Drop starts
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
@@ -173,10 +174,23 @@ function UploadListings() {
     }));
   }
 
-  //Drag and Drop ends
+  // Drag and Drop ends
 
-  //Sending data to backend starts
-  const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
+  // Sending data to backend starts
+  const [val] = useState([{ selected: "" }]);
+
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const initialTimeSlot = { startTime: '', endTime: '' }; // Default time slot
+  const initialServices = [{ name: "", duration: "", durationUnit: "minutes", openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }];
+
   const [input, setInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
@@ -200,7 +214,12 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    slotSameAsAppointment: true,
+    // services: [{ name: "", duration: "", durationUnit: "minutes" }],
+    // openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
+    services: initialServices,
   });
+  // console.log(input)
 
   const [error, setError] = useState({
     categoryId: "",
@@ -227,11 +246,31 @@ function UploadListings() {
       setUpdating(true);
       event.preventDefault();
       try {
-        let response = await (newListing
-          ? postListingsData(cityId, input)
-          : updateListingsData(cityId, input, listingId));
-        if (newListing) {
-          setListingId(response.data.id);
+        let response;
+        if (newListing && input.categoryId === 18) {
+          try {
+            setListingId(response.data.id);
+            response = await createAppointments(cityId, input, listingId);
+          } catch (error) {
+            console.error('Error creating listing and appointments:', error);
+          }
+        } else if (!newListing && input.categoryId === 18) {
+          try {
+            await updateAppointments(cityId, listingId, appointmentId);
+          } catch (error) {
+            console.error('Error updating listing and appointments:', error);
+          }
+        } else {
+          try {
+            response = await (newListing
+              ? postListingsData(cityId, input)
+              : updateListingsData(cityId, input, listingId));
+            if (newListing) {
+              setListingId(response.data.id);
+            }
+          } catch (error) {
+            console.error('Error posting or updating listings:', error);
+          }
         }
 
         if (input.removeImage) {
@@ -299,6 +338,136 @@ function UploadListings() {
       setTimeout(() => setErrorMessage(false), 5000);
     }
   };
+  // Sending data to backend ends
+
+  // Appointment starts
+  const onServiceChange = (index, key, value) => {
+    setInput((prevInput) => ({
+      ...prevInput,
+      services: prevInput.services.map((service, i) =>
+        i === index ? { ...service, [key]: value } : service
+      )
+    }));
+  };
+
+  const onDurationUnitChange = (index, value) => {
+    setInput((prevInput) => ({
+      ...prevInput,
+      services: prevInput.services.map((service, i) =>
+        i === index ? { ...service, durationUnit: value } : service
+      )
+    }));
+  };
+
+  const handleAddService = () => {
+    setInput(prevInput => ({
+      ...prevInput,
+      services: [...prevInput.services, { name: "", duration: "", durationUnit: "minutes" }]
+    }));
+  };
+
+  const handleDeleteService = (indexToDelete) => {
+    setInput(prevInput => ({
+      ...prevInput,
+      services: prevInput.services.filter((_, index) => index !== indexToDelete)
+    }));
+  };
+  const [isCheckedList, setIsCheckedList] = useState(
+    new Array(input.services.length).fill(false)
+  );
+  const [isChecked, setIsChecked] = useState(
+    new Array(input.services.length).fill(false)
+  );
+
+  const handleCheckboxChange = (index) => {
+    const updatedCheckedList = [...isCheckedList];
+    updatedCheckedList[index] = !updatedCheckedList[index];
+    setIsCheckedList(updatedCheckedList);
+
+    const updatedButtonDisabledList = [...isChecked];
+    updatedButtonDisabledList[index] = !updatedButtonDisabledList[index];
+    setIsChecked(updatedButtonDisabledList);
+
+    setInput((prevInput) => {
+      const { services } = prevInput;
+      const updatedServices = [...services];
+      const currentService = updatedServices[index];
+
+      if (updatedCheckedList[index]) {
+        updatedServices[index] = {
+          ...currentService,
+          openingDates: prevInput.openingDates,
+        };
+      } else {
+        delete currentService.openingDates;
+        updatedServices[index] = currentService;
+      }
+
+      return {
+        ...prevInput,
+        slotSameAsAppointment: false,
+        services: updatedServices,
+      };
+    });
+  };
+
+  const handleTimeChange = (day, index, key, value) => {
+    setInput((prevInput) => {
+      console.log("Previous input:", prevInput);
+      console.log("Previous openingDates:", prevInput.openingDates);
+      console.log("Day:", day);
+      console.log("Index:", index);
+      console.log("Key:", key);
+      console.log("Value:", value);
+
+      const updatedOpeningDates = {
+        ...prevInput.openingDates,
+        [day]: prevInput.openingDates[day].map((slot, i) =>
+          i === index ? { ...slot, [key]: value } : slot
+        ),
+      };
+
+      console.log("Updated openingDates:", updatedOpeningDates);
+
+      return {
+        ...prevInput,
+        openingDates: updatedOpeningDates,
+      };
+    });
+  };
+
+  const handleAddTimeSlot = (day) => {
+    setInput((prevInput) => {
+      const currentDaySchedule = prevInput.openingDates[day];
+      if (!Array.isArray(currentDaySchedule)) {
+        return prevInput;
+      }
+      return {
+        ...prevInput,
+        openingDates: {
+          ...prevInput.openingDates,
+          [day]: [...currentDaySchedule, initialTimeSlot],
+        },
+      };
+    });
+  };
+
+  const handleDeleteTimeSlot = (day, index) => {
+    setInput((prevInput) => {
+      const currentDaySchedule = prevInput.openingDates[day];
+      if (!Array.isArray(currentDaySchedule)) {
+        return prevInput;
+      }
+      return {
+        ...prevInput,
+        openingDates: {
+          ...prevInput.openingDates,
+          [day]: currentDaySchedule.filter((_, i) => i !== index),
+        },
+      };
+    });
+  };
+  // Appointment ends
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -505,17 +674,34 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "name":
+        if (!parseInt(value)) {
+          return t("pleaseSelectServiceName");
+        } else {
+          return "";
+        }
+
+      case "duration":
+        if (!parseInt(value)) {
+          return t("pleaseSelectDuration");
+        } else {
+          return "";
+        }
       default:
         return "";
     }
   };
 
   const validateInput = (e) => {
-    let { name, value } = e.target;
-    var errorMessage = getErrorMessage(name, value);
-    setError((prevState) => {
-      return { ...prevState, [name]: errorMessage };
-    });
+    if (e && e.target) {
+      const { name, value } = e.target;
+      const errorMessage = getErrorMessage(name, value);
+      setError((prevState) => ({
+        ...prevState,
+        [name]: errorMessage
+      }));
+    }
   };
 
   useEffect(() => {
@@ -531,7 +717,6 @@ function UploadListings() {
     }));
   }, [val]);
 
-  // const [date, setDate] = useState();
   const [cityId, setCityId] = useState(0);
   const [villages, setVillages] = useState([]);
   const [cities, setCities] = useState([]);
@@ -743,10 +928,23 @@ function UploadListings() {
               {error.categoryId}
             </div>
           </div>
-          
-          
 
-          {categoryId == 18 && <ServiceAndTime />}
+          {categoryId == 18 && <ServiceAndTime
+            validateInput={validateInput}
+            onServiceChange={onServiceChange}
+            onDurationUnitChange={onDurationUnitChange}
+            handleDeleteService={handleDeleteService}
+            handleAddService={handleAddService}
+            services={input.services.length ? input.services : initialServices}
+            handleCheckboxChange={handleCheckboxChange}
+            handleTimeChange={handleTimeChange}
+            handleAddTimeSlot={handleAddTimeSlot}
+            handleDeleteTimeSlot={handleDeleteTimeSlot}
+            daysOfWeek={daysOfWeek}
+            openingDates={input.openingDates}
+            isCheckedList={isCheckedList}
+            isChecked={isChecked}
+          />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-4">
@@ -1133,9 +1331,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1168,9 +1365,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1202,9 +1398,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>

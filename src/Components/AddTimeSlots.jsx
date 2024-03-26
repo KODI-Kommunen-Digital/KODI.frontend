@@ -1,53 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "tailwindcss/tailwind.css";
-// import { useTranslation } from "react-i18next";
+import PropTypes from 'prop-types';
 
-const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
+const AddTimeSlots = ({ handleTimeChange, handleAddTimeSlot, handleDeleteTimeSlot, openingDates, daysOfWeek }) => {
 
-const AddTimeSlots = () => {
-  // const { t } = useTranslation();
-  const initialTimeSlot = { from: "From", to: "To" }; // Default time slot
+  const [timeSlots, setTimeSlots] = useState({});
 
-  const [schedule, setSchedule] = useState(
-    daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
-  );
-
-  const handleTimeChange = (day, index, type, value) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [day]: (prevSchedule[day] || []).map((slot, i) =>
-        i === index ? { ...slot, [type]: value } : slot
-      ),
-    }));
-  };
-
-  const handleAddTimeSlot = (day) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [day]: [...(prevSchedule[day] || []), { from: "", to: "" }],
-    }));
-  };
-
-  const handleDeleteTimeSlot = (day, index) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [day]: (prevSchedule[day] || []).filter((_, i) => i !== index),
-    }));
-  };
+  useEffect(() => {
+    // Initialize time slots when the component mounts
+    const initialTimeSlots = daysOfWeek.reduce((acc, day) => ({
+      ...acc,
+      [day]: [{ startTime: '', endTime: '' }] // Initialize with an empty time slot for each day
+    }), {});
+    setTimeSlots(initialTimeSlots);
+  }, [daysOfWeek]);
 
   return (
     <div className="container mx-auto mt-8">
       {daysOfWeek.map((day) => (
         <div key={day} className="mb-4">
-          {schedule[day]?.map((timeSlot, index) => (
+          {timeSlots[day]?.map((timeSlot, index) => (
             <div
               key={index}
               className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
@@ -61,9 +33,11 @@ const AddTimeSlots = () => {
               <div className="flex space-x-2 mt-0 items-center">
                 <input
                   type="text"
-                  value={timeSlot.from || ""}
+                  id="startTime"
+                  name="startTime"
+                  value={timeSlot.startTime}
                   onChange={(e) =>
-                    handleTimeChange(day, index, "from", e.target.value)
+                    handleTimeChange(day, index, "startTime", e.target.value)
                   }
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="HH:mm"
@@ -71,9 +45,11 @@ const AddTimeSlots = () => {
                 <span className="text-gray-500"> - </span>
                 <input
                   type="text"
-                  value={timeSlot.to || ""}
+                  id="endTime"
+                  name="endTime"
+                  value={timeSlot.endTime}
                   onChange={(e) =>
-                    handleTimeChange(day, index, "to", e.target.value)
+                    handleTimeChange(day, index, "endTime", e.target.value)
                   }
                   className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
                   placeholder="HH:mm"
@@ -111,5 +87,15 @@ const AddTimeSlots = () => {
     </div>
   );
 };
+
+AddTimeSlots.propTypes = {
+  handleDeleteTimeSlot: PropTypes.func.isRequired,
+  handleAddTimeSlot: PropTypes.func.isRequired,
+  handleTimeChange: PropTypes.func.isRequired,
+  openingDates: PropTypes.func.isRequired,
+  daysOfWeek: PropTypes.func.isRequired,
+};
+
+
 
 export default AddTimeSlots;
