@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "tailwindcss/tailwind.css";
 import PropTypes from 'prop-types';
 
 const AddTimeSlots = ({ handleTimeChange, handleAddTimeSlot, handleDeleteTimeSlot, openingDates, daysOfWeek }) => {
 
-  const [timeSlots, setTimeSlots] = useState({});
-
-  useEffect(() => {
-    // Initialize time slots when the component mounts
-    const initialTimeSlots = daysOfWeek.reduce((acc, day) => ({
-      ...acc,
-      [day]: [{ startTime: '', endTime: '' }] // Initialize with an empty time slot for each day
-    }), {});
-    setTimeSlots(initialTimeSlots);
-  }, [daysOfWeek]);
-
   return (
     <div className="container mx-auto mt-8">
       {daysOfWeek.map((day) => (
         <div key={day} className="mb-4">
-          {timeSlots[day]?.map((timeSlot, index) => (
+          {openingDates[day]?.map((timeSlot, index) => (
             <div
               key={index}
               className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"

@@ -178,7 +178,6 @@ function UploadListings() {
 
   // Sending data to backend starts
   const [val] = useState([{ selected: "" }]);
-
   const daysOfWeek = [
     "Monday",
     "Tuesday",
@@ -188,9 +187,7 @@ function UploadListings() {
     "Saturday",
     "Sunday",
   ];
-  const initialTimeSlot = { startTime: '', endTime: '' }; // Default time slot
-  const initialServices = [{ name: "", duration: "", durationUnit: "minutes", openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }];
-
+  const initialTimeSlot = { startTime: '', endTime: '' };
   const [input, setInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
@@ -215,11 +212,10 @@ function UploadListings() {
     hasImage: false,
     hasAttachment: false,
     slotSameAsAppointment: true,
-    // services: [{ name: "", duration: "", durationUnit: "minutes" }],
-    // openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
-    services: initialServices,
+    services: [{ name: "", duration: "", durationUnit: "minutes" }],
+    openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
   });
-  // console.log(input)
+  console.log(input)
 
   const [error, setError] = useState({
     categoryId: "",
@@ -413,21 +409,12 @@ function UploadListings() {
 
   const handleTimeChange = (day, index, key, value) => {
     setInput((prevInput) => {
-      console.log("Previous input:", prevInput);
-      console.log("Previous openingDates:", prevInput.openingDates);
-      console.log("Day:", day);
-      console.log("Index:", index);
-      console.log("Key:", key);
-      console.log("Value:", value);
-
       const updatedOpeningDates = {
         ...prevInput.openingDates,
         [day]: prevInput.openingDates[day].map((slot, i) =>
           i === index ? { ...slot, [key]: value } : slot
         ),
       };
-
-      console.log("Updated openingDates:", updatedOpeningDates);
 
       return {
         ...prevInput,
