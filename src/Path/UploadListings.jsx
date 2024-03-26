@@ -212,7 +212,7 @@ function UploadListings() {
     hasImage: false,
     hasAttachment: false,
     slotSameAsAppointment: true,
-    services: [{ name: "", duration: "", durationUnit: "minutes" }],
+    services: [{ name: "", duration: "", durationUnit: "minutes", openingDates: {}, }],
     openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
   });
   console.log(input)
@@ -358,7 +358,12 @@ function UploadListings() {
   const handleAddService = () => {
     setInput(prevInput => ({
       ...prevInput,
-      services: [...prevInput.services, { name: "", duration: "", durationUnit: "minutes" }]
+      services: [...prevInput.services, {
+        name: "",
+        duration: "",
+        durationUnit: "minutes",
+        openingDates: prevInput.openingDates // Include openingDates here
+      }]
     }));
   };
 
@@ -390,13 +395,16 @@ function UploadListings() {
       const currentService = updatedServices[index];
 
       if (updatedCheckedList[index]) {
+        // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
           ...currentService,
           openingDates: prevInput.openingDates,
         };
       } else {
-        delete currentService.openingDates;
-        updatedServices[index] = currentService;
+        // If the checkbox is unchecked, keep openingDates as it is
+        updatedServices[index] = {
+          ...currentService,
+        };
       }
 
       return {
@@ -406,7 +414,6 @@ function UploadListings() {
       };
     });
   };
-
   const handleTimeChange = (day, index, key, value) => {
     setInput((prevInput) => {
       const updatedOpeningDates = {

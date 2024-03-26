@@ -83,6 +83,7 @@ AddTimeSlots.propTypes = {
   handleTimeChange: PropTypes.func.isRequired,
   openingDates: PropTypes.func.isRequired,
   daysOfWeek: PropTypes.func.isRequired,
+  // serviceIndex: PropTypes.func.isRequired,
 };
 
 
