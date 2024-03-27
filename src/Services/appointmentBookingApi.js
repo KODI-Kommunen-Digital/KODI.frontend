@@ -1,8 +1,8 @@
 import { instance } from "../api/axiosInstance";
 const axios = instance;
 
-export async function getUserAppoinments(userId) {
-    return axios.get(`/users/${userId}/appointments`);
+export async function getUserBookings(userId) {
+    return axios.get(`/users/${userId}/bookings`);
 }
 
 export async function createAppointments(cityId, listingId) {
@@ -13,6 +13,6 @@ export async function updateAppointments(cityId, listingId, appointmentId) {
     return axios.patch(`/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}`);
 }
 
-export async function deleteAppointments(cityId, listingId, appointmentId) {
-    return axios.delete(`/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}`);
+export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
+    return axios.delete(`/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
 }

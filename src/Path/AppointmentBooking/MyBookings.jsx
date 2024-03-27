@@ -3,30 +3,30 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getUserForums, deleteForums } from "../../Services/forumsApi";
+import { getUserBookings, deleteUserBooking } from "../../Services/appointmentBookingApi";
 
 const MyBookings = () => {
   const { t } = useTranslation();
-  const [forums, setForums] = useState([]);
+  const [bookings, setUserBookings] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const pageSize = 9;
 
-  const fetchForums = useCallback(() => {
-    getUserForums({
+  const fetchUserBookings = useCallback(() => {
+    getUserBookings({
       pageNo,
       pageSize,
     }).then((response) => {
-      setForums(response.data.data);
+      setUserBookings(response.data.data);
     });
   }, [pageNo]);
 
   useEffect(() => {
     if (pageNo === 1) {
-      fetchForums();
+      fetchUserBookings();
     } else {
-      fetchForums();
+      fetchUserBookings();
     }
-  }, [fetchForums, pageNo]);
+  }, [fetchUserBookings, pageNo]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -38,16 +38,16 @@ const MyBookings = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     forums: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
-  function handleDelete(forum) {
-    deleteForums(forum.cityId, forum.forumId)
+  function handleDelete(bookings) {
+    deleteUserBooking(bookings.cityId, bookings.id)
       .then((res) => {
-        getUserForums(
-          forums.filter(
-            (f) => f.cityId !== forum.cityId || f.forumId !== forum.forumId
+        getUserBookings(
+          bookings.filter(
+            (b) => b.bookingId !== bookings.id
           )
         );
         console.log("Deleted successfully");
@@ -58,11 +58,11 @@ const MyBookings = () => {
       .catch((error) => console.log(error));
   }
 
-  function deleteForumOnClick(forums) {
+  function deleteForumOnClick(bookings) {
     setShowConfirmationModal({
       visible: true,
-      forums,
-      onConfirm: () => handleDelete(forums),
+      bookings,
+      onConfirm: () => handleDelete(bookings),
       onCancel: () => setShowConfirmationModal({ visible: false }),
     });
   }
@@ -131,7 +131,7 @@ const MyBookings = () => {
                 </tr>
               </thead>
               <tbody>
-                {forums.map((forum, index) => {
+                {bookings.map((booking, index) => {
                   return (
                     <tr
                       key={index}
@@ -144,14 +144,14 @@ const MyBookings = () => {
                         <img
                           className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                           src={
-                            forum.image
-                              ? process.env.REACT_APP_BUCKET_HOST + forum.image
+                            booking.image
+                              ? process.env.REACT_APP_BUCKET_HOST + booking.image
                               : process.env.REACT_APP_BUCKET_HOST +
-                                "admin/DefaultForum.jpeg"
+                              "admin/DefaultForum.jpeg"
                           }
                           onClick={() =>
                             navigateTo(
-                              `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                              `/Forum?forumId=${booking.bookingId}`
                             )
                           }
                           alt="avatar"
@@ -162,11 +162,11 @@ const MyBookings = () => {
                             style={{ fontFamily: "Poppins, sans-serif" }}
                             onClick={() =>
                               navigateTo(
-                                `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                                `/Forum?forumId=${booking.bookingId}`
                               )
                             }
                           >
-                            {forum.forumName}
+                            {booking.bookingName}
                           </div>
                         </div>
                       </th>
@@ -175,47 +175,32 @@ const MyBookings = () => {
                         className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        2 hrs
+                        {booking.duration}
                       </td>
 
                       <td
                         className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        11:00
+                        {booking.startTime}
                       </td>
 
                       <td
                         className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        12:30
+                        {booking.endTime}
                       </td>
                       <td className="px-6 py-4  text-center">
-                        {forum.isAdmin ? (
-                          <div>
-                            <a
-                              className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
-                              onClick={() =>
-                                navigateTo(
-                                  `/AppointmentBooking/BookAppointments`
-                                )
-                              }
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {t("edit")}
-                            </a>
-                            <a
-                              className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
-                              onClick={() => deleteForumOnClick(forum)}
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {t("delete")}
-                            </a>
-                          </div>
-                        ) : (
-                          <div className="text-gray-500">{t("onlyAdmins")}</div>
-                        )}
+                        <div>
+                          <a
+                            className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                            onClick={() => deleteForumOnClick(booking)}
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("delete")}
+                          </a>
+                        </div>
                         {showConfirmationModal.visible && (
                           <div className="fixed z-50 inset-0 overflow-y-auto">
                             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -311,7 +296,7 @@ const MyBookings = () => {
               {t("page")} {pageNo}
             </span>
 
-            {forums.length >= pageSize && (
+            {bookings.length >= pageSize && (
               <span
                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                 onClick={() => setPageNo(pageNo + 1)}
