@@ -577,9 +577,8 @@
     "privacy": "Privacy",
     "removeAdmin": "Remove Admin",
     "makeAdmin": "Make Admin",
-
     "addAnotherService": "+ Add another service",
-    "appointmentBooking":"Appointment Booking",
+    "appointmentBooking": "Appointment Booking",
     "addtimeslot": "+ Add time slot",
     "from": "From",
     "to": "TO",
@@ -595,7 +594,7 @@
     "numberofPeople": "Number of people",
     "selectedSlots": "Selected Slots ",
     "timeSlotValidation": "You can only book a maximum of 8 time slots.",
-    "firstname":"First Name",
+    "firstname": "First Name",
     "remarks": "Remarks",
     "phone": "Phone Number",
     "user": "User",
@@ -679,5 +678,7 @@
     "FinalProvisions3": "",
     "visitWebsite": "Visit the website :",
     "moreService": "More Service",
-    "mehr": "More"
+    "mehr": "More",
+    "pleaseEnterValidNumber": "Please enter a valid number",
+    "pleaseEnterValidTime": "Please enter a valid time in HH:mm format only"
 }

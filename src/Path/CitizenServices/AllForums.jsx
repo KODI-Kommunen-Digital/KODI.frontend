@@ -259,9 +259,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -273,9 +273,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -305,7 +305,7 @@ const AllForums = () => {
                                 <div className="my-4 bg-gray-200 h-[1px]"></div>
 
                                 {forum.isPrivate &&
-                                memberStatus[forum.id] ===
+                                  memberStatus[forum.id] ===
                                   statusByName.Pending ? (
                                   <div className="text-center">
                                     <a
@@ -342,7 +342,7 @@ const AllForums = () => {
                                       style={{
                                         fontFamily: "Poppins, sans-serif",
                                       }}
-                                      className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                                      className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                                     >
                                       {t("follow")}
                                     </a>

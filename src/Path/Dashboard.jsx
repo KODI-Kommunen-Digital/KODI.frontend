@@ -154,18 +154,22 @@ const Dashboard = () => {
       .catch((error) => console.log(error));
   }
 
-  // Navigate to Edit Listings page Starts
   function goToEditListingsPage(listing) {
-    navigateTo(
-      `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
-    );
+    if (listing.categoryId === 18) {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`
+      );
+    } else {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+      );
+    }
   }
-
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   const fetchUpdatedListings = useCallback(() => {
@@ -200,8 +204,6 @@ const Dashboard = () => {
   function goToListingPage(listing) {
     navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
   }
-
-  // Navigate to Edit Listings page Starts
 
   const handleSearch = async (searchQuery) => {
     try {
@@ -365,12 +367,7 @@ const Dashboard = () => {
                         <img
                           className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                           src={
-                            listing.sourceId === 1
-                              ? listing.logo
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                  listing.logo
-                                : LISTINGSIMAGE
-                              : listing.logo || LISTINGSIMAGE
+                            listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo || LISTINGSIMAGE
                           }
                           alt="avatar"
                         />
@@ -462,7 +459,7 @@ const Dashboard = () => {
                                   <button
                                     onClick={showConfirmationModal.onConfirm}
                                     type="button"
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                                   >
                                     {t("delete")}
                                   </button>

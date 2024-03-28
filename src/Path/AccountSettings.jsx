@@ -75,8 +75,8 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const handleDeleteAccount = () => {
@@ -174,7 +174,7 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="phoneNumber"
-										value={input.phoneNumber ||""}
+										value={input.phoneNumber || ""}
 										id="phoneNumber"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
@@ -305,7 +305,7 @@ const AccountSettings = () => {
 												<button
 													onClick={showConfirmationModal.onConfirm}
 													type="button"
-													className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+													className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 												>
 													{t("delete")}
 												</button>

@@ -1,12 +1,49 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import AddTimeSlots from "../Components/AddTimeSlots";
-import PropTypes from 'prop-types';
 
-const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, services, handleAddService, handleDeleteService, isChecked, isCheckedList, handleCheckboxChange, handleTimeChange, handleAddTimeSlot, handleDeleteTimeSlot, openingDates, daysOfWeek }) => {
+const ServiceAndTime = () => {
+
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const initialTimeSlot = { startTime: '00:00', endTime: '00:00' };
+
+  const [appointmentInput, setAppointmentInput] = useState({
+    openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+    services: [{ name: "", duration: "", durationUnit: "minutes", slotSameAsAppointment: false, openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }],
+  });
+  // console.log(appointmentInput)
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [editAppointmentTime, setEditAppointmentTime] = useState(false)
+
+  const [isValidInput, setIsValidInput] = useState(true);
+  const [isValidTime, setIsValidTime] = useState(true);
+
+  const handleInputChange = (value) => {
+    const input = value;
+    if (/^\d*$/.test(input)) {
+      setIsValidInput(true); // Input is valid
+    } else {
+      setIsValidInput(false); // Input is not valid
+    }
+  };
+
+  const handleInputTimeChange = (value) => {
+    const input = value;
+    if (/^\d{0,2}(:\d{0,2})?$/.test(input)) {
+      setIsValidTime(true); // Input is valid
+    } else {
+      setIsValidTime(false); // Input is not valid
+    }
+  };
 
   const handleTextClick = () => {
     if (!isChecked.some((checked) => checked)) {
@@ -16,13 +53,201 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
 
   const handleDoneButtonClick = () => {
     setShowModal(false);
+    setEditAppointmentTime(false)
   };
+
+  // Appointment starts
+  const onServiceChange = (index, key, value) => {
+    setAppointmentInput((prevInput) => ({
+      ...prevInput,
+      services: prevInput.services.map((service, i) =>
+        i === index ? { ...service, [key]: value } : service
+      ),
+    }));
+  };
+
+  const onDurationUnitChange = (index, value) => {
+    setAppointmentInput((prevInput) => ({
+      ...prevInput,
+      services: prevInput.services.map((service, i) =>
+        i === index ? { ...service, durationUnit: value } : service
+      ),
+    }));
+  };
+
+  const handleAddService = () => {
+    setAppointmentInput((prevInput) => ({
+      ...prevInput,
+      services: [
+        ...prevInput.services,
+        {
+          name: "",
+          duration: "",
+          durationUnit: "minutes",
+          openingDates: daysOfWeek.reduce(
+            (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+            {}
+          ),
+        },
+      ],
+    }));
+  };
+
+  const handleDeleteService = (indexToDelete) => {
+    setAppointmentInput((prevInput) => ({
+      ...prevInput,
+      services: prevInput.services.filter((_, index) => index !== indexToDelete),
+    }));
+  };
+  const [isCheckedList, setIsCheckedList] = useState(
+    new Array(appointmentInput.services.length).fill(false)
+  );
+  const [isChecked, setIsChecked] = useState(
+    new Array(appointmentInput.services.length).fill(false)
+  );
+
+  const handleCheckboxChange = (index) => {
+    const updatedCheckedList = [...isCheckedList];
+    updatedCheckedList[index] = !updatedCheckedList[index];
+    setIsCheckedList(updatedCheckedList);
+
+    const updatedButtonDisabledList = [...isChecked];
+    updatedButtonDisabledList[index] = !updatedButtonDisabledList[index];
+    setIsChecked(updatedButtonDisabledList);
+
+    setAppointmentInput((prevInput) => {
+      const { services } = prevInput;
+      const updatedServices = [...services];
+      const currentService = updatedServices[index];
+
+      if (updatedCheckedList[index]) {
+        // If the checkbox is checked, populate openingDates
+        updatedServices[index] = {
+          ...currentService,
+          openingDates: prevInput.openingDates,
+        };
+      } else {
+        // If the checkbox is unchecked, keep openingDates as it is
+        updatedServices[index] = {
+          ...currentService,
+        };
+      }
+
+      return {
+        ...prevInput,
+        slotSameAsAppointment: false,
+        services: updatedServices,
+      };
+    });
+  };
+
+  const handleTimeChange = (day, index, key, value) => {
+    setAppointmentInput((prevInput) => {
+      if (editAppointmentTime) {
+        const updatedOpeningDates = {
+          ...prevInput.openingDates,
+          [day]: prevInput.openingDates[day].map((slot, i) =>
+            i === index ? { ...slot, [key]: value } : slot
+          ),
+        };
+
+        return {
+          ...prevInput,
+          openingDates: updatedOpeningDates,
+        };
+      } else {
+        const updatedOpeningDates = {
+          ...prevInput.services[index].openingDates,
+          [day]: prevInput.services[index].openingDates[day].map((slot, i) =>
+            i === index ? { ...slot, [key]: value } : slot
+          ),
+        };
+
+        const updatedServices = prevInput.services
+        updatedServices[index].openingDates = updatedOpeningDates
+
+        return {
+          ...prevInput,
+          services: updatedServices
+        };
+      }
+    });
+  };
+
+  const handleAddTimeSlot = (day) => {
+    setAppointmentInput((prevInput) => {
+      const currentDaySchedule = prevInput.openingDates[day];
+
+      if (!Array.isArray(currentDaySchedule)) {
+        return prevInput;
+      }
+
+      if (editAppointmentTime) {
+        const updatedOpeningDates = {
+          ...prevInput.openingDates,
+          [day]: [...currentDaySchedule, initialTimeSlot],
+        };
+        return {
+          ...prevInput,
+          openingDates: updatedOpeningDates,
+        };
+      } else {
+        const updatedServices = prevInput.services.map((service) => ({
+          ...service,
+          openingDates: {
+            ...service.openingDates,
+            [day]: [...service.openingDates[day], initialTimeSlot],
+          },
+        }));
+
+        return {
+          ...prevInput,
+          services: updatedServices,
+        };
+      }
+    });
+  };
+
+  const handleDeleteTimeSlot = (day, index) => {
+    setAppointmentInput((prevInput) => {
+      const currentDaySchedule = prevInput.openingDates[day];
+      if (!Array.isArray(currentDaySchedule)) {
+        return prevInput;
+      }
+      if (editAppointmentTime) {
+        return {
+          ...prevInput,
+          openingDates: {
+            ...prevInput.openingDates,
+            [day]: currentDaySchedule.filter((_, i) => i !== index),
+          },
+        };
+      } else {
+        const updatedServices = prevInput.services.map((service) => ({
+          ...service,
+          openingDates: {
+            ...service.openingDates,
+            [day]: service.openingDates[day].filter((_, i) => i !== index),
+          },
+        }));
+
+        return {
+          ...prevInput,
+          services: updatedServices,
+        };
+      }
+    });
+  };
+  // Appointment ends
 
   return (
     <div className="flex flex-col justify-center">
       <button
         className="w-full bg-black mb-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true)
+          setEditAppointmentTime(true)
+        }}
       >
         {t("addtimeslot")}
       </button>
@@ -33,13 +258,13 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
       >
         {t("addService")} *
       </label>
-      {services.map((service, index) => (
+      {appointmentInput.services.map((service, index) => (
         <>
           <div
             key={index}
             className="items-stretch py-2 mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div className="flex-1">
+            <div className="relative mb-4">
               <input
                 type="text"
                 id="name"
@@ -47,36 +272,42 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
                 placeholder="Service Name"
                 value={service.name}
                 onChange={(e) => onServiceChange(index, 'name', e.target.value)}
-                onBlur={(e) => validateInput(index, e)}
+                // onBlur={(e) => validateInput(index, e)}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
 
-            <div className="flex">
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                placeholder="Duration"
-                value={service.duration}
-                onChange={(e) => onServiceChange(index, 'duration', e.target.value)}
-                onBlur={(e) => validateInput(index, e)}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-              <select
-                id="states"
-                name="durationUnit"
-                value={service.durationUnit}
-                className="shadow-md bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                onChange={(e) => onDurationUnitChange(index, e.target.value)}
-              >
-                <option value="minutes">min</option>
-                <option value="seconds">sec</option>
-              </select>
+            <div className="relative mb-4">
+              <div className="flex">
+                <input
+                  type="text"
+                  id="duration"
+                  name="duration"
+                  placeholder="Duration"
+                  value={service.duration}
+                  onChange={(e) => { onServiceChange(index, 'duration', e.target.value); handleInputChange(e.target.value); }}
+                  className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                />
+
+                <select
+                  id="states"
+                  name="durationUnit"
+                  value={service.durationUnit}
+                  className="shadow-md bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  onChange={(e) => onDurationUnitChange(index, e.target.value)}
+                >
+                  <option value="minutes">min</option>
+                  <option value="seconds">sec</option>
+                </select>
+              </div>
+
+              {!isValidInput && (
+                <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
+              )}
             </div>
 
             <button
-              className={`w-full hidden md:inline-block bg-blue-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ${isChecked ? "disabled:opacity-60" : ""
+              className={`w-full hidden md:inline-block bg-blue-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${isChecked ? "disabled:opacity-60" : ""
                 }`}
               onClick={() => setShowModal(true)}
               disabled={isChecked[index]}
@@ -110,10 +341,15 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
             </div>
             <button
               onClick={() => handleDeleteService(index)}
-              className="w-full hidden md:inline-block bg-red-700 mt-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
+              className="w-full hidden md:inline-block bg-red-800 mt-4 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
             >
               {t("delete")}
             </button>
+            {/* <a className="relative inline-block px-4 py-2 font-medium group" onClick={() => handleDeleteService(index)}>
+              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+              <span className="relative text-black group-hover:text-white">{t("delete")}</span>
+            </a> */}
             {showModal && (
               <div className="fixed z-50 inset-0 overflow-y-auto">
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -132,12 +368,161 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
                   <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-xl transform transition-all sm:align-middle sm:max-w-2xl sm:w-full">
                     <div className="bg-white p-4">
                       <button
-                        onClick={() => setShowModal(false)}
+                        onClick={() => {
+                          setShowModal(false)
+                          setEditAppointmentTime(false)
+                        }}
                         className="absolute top-0 right-0 p-4 text-xl cursor-pointer"
                       >
                         &times;
                       </button>
-                      <AddTimeSlots handleDeleteTimeSlot={handleDeleteTimeSlot} handleAddTimeSlot={handleAddTimeSlot} handleTimeChange={handleTimeChange} daysOfWeek={daysOfWeek} openingDates={openingDates} />
+
+
+                      {!isValidTime && (
+                        <p className="text-red-600">{t("pleaseEnterValidTime")}</p>
+                      )}
+
+                      {daysOfWeek.map((day) => (
+                        <div key={day} className="mb-4">
+                          {editAppointmentTime && appointmentInput.openingDates[day].map((timeSlot, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
+                            >
+                              <div
+                                className="flex space-x-2 items-center mt-0"
+                                style={{ width: "100px" }}
+                              >
+                                <h2 className="relative text-base font-medium mt-1 mr-3">{day}</h2>
+                              </div>
+                              <div className="flex space-x-2 mt-0 items-center">
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    id="startTime"
+                                    name="startTime"
+                                    value={timeSlot.startTime}
+                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value); handleInputTimeChange(e.target.value); }
+                                    }
+                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    placeholder="HH:mm"
+                                  />
+                                </div>
+                                <span className="relative text-gray-500"> - </span>
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    id="endTime"
+                                    name="endTime"
+                                    value={timeSlot.endTime}
+                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value); handleInputTimeChange(e.target.value); }
+                                    }
+                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    placeholder="HH:mm"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex justify-between md:space-x-2 items-center">
+                                <div className="relative">
+                                  <svg
+                                    onClick={() => handleAddTimeSlot(day)}
+                                    className="mt-1 w-6 h-6 text-blue-800 cursor-pointer"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />{" "}
+                                    <line x1="12" y1="8" x2="12" y2="16" />{" "}
+                                    <line x1="8" y1="12" x2="16" y2="12" />
+                                  </svg>
+                                </div>
+                                {index > 0 && (
+                                  <div className="relative">
+                                    <svg
+                                      onClick={() => handleDeleteTimeSlot(day, index)}
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="w-5 h-5 mt-1"
+                                      viewBox="0 0 512 512"
+                                    >
+                                      <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* {JSON.stringify(appointmentInput.services[index].openingDates[day])} */}
+                          {!editAppointmentTime && appointmentInput.services[index].openingDates[day].map((timeSlot, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
+                            >
+                              <div
+                                className="flex space-x-2 items-center mt-0"
+                                style={{ width: "100px" }}
+                              >
+                                <h2 className="relative text-base font-medium mt-1 mr-3">{day}</h2>
+                              </div>
+                              <div className="flex space-x-2 mt-0 items-center">
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    id="startTime"
+                                    name="startTime"
+                                    value={timeSlot.startTime}
+                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value); handleInputTimeChange(e.target.value); }}
+                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    placeholder="HH:mm"
+                                  />
+                                </div>
+                                <span className="relative text-gray-500"> - </span>
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    id="endTime"
+                                    name="endTime"
+                                    value={timeSlot.endTime}
+                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value); handleInputTimeChange(e.target.value); }}
+                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    placeholder="HH:mm"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex justify-between md:space-x-2 items-center">
+                                <div className="relative">
+                                  <svg
+                                    onClick={() => handleAddTimeSlot(day)}
+                                    className="mt-1 w-6 h-6 text-blue-800 cursor-pointer"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />{" "}
+                                    <line x1="12" y1="8" x2="12" y2="16" />{" "}
+                                    <line x1="8" y1="12" x2="16" y2="12" />
+                                  </svg>
+                                </div>
+                                {index > 0 && (
+                                  <div className="relative">
+                                    <svg
+                                      onClick={() => handleDeleteTimeSlot(day, index)}
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="w-5 h-5 mt-1"
+                                      viewBox="0 0 512 512"
+                                    >
+                                      <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                          <div className="my-4 bg-gray-200 h-[1px]"></div>
+                        </div>
+                      ))}
 
                       <button
                         onClick={handleDoneButtonClick}
@@ -150,7 +535,7 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
                 </div>
               </div>
             )}
-          </div>
+          </div >
 
           <div className="flex gap-2 mt-4">
             <input
@@ -166,7 +551,8 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
             </label>
           </div>
         </>
-      ))}
+      ))
+      }
 
       <button
         onClick={handleAddService}
@@ -174,25 +560,8 @@ const ServiceAndTime = ({ validateInput, onDurationUnitChange, onServiceChange, 
       >
         {t("addAnotherService")}
       </button>
-    </div>
+    </div >
   );
-};
-
-ServiceAndTime.propTypes = {
-  validateInput: PropTypes.func.isRequired,
-  onDurationUnitChange: PropTypes.func.isRequired,
-  onServiceChange: PropTypes.func.isRequired,
-  services: PropTypes.func.isRequired,
-  handleAddService: PropTypes.func.isRequired,
-  handleDeleteService: PropTypes.func.isRequired,
-  handleDeleteTimeSlot: PropTypes.func.isRequired,
-  handleCheckboxChange: PropTypes.func.isRequired,
-  handleAddTimeSlot: PropTypes.func.isRequired,
-  handleTimeChange: PropTypes.func.isRequired,
-  openingDates: PropTypes.func.isRequired,
-  daysOfWeek: PropTypes.func.isRequired,
-  isChecked: PropTypes.func.isRequired,
-  isCheckedList: PropTypes.func.isRequired,
 };
 
 export default ServiceAndTime;

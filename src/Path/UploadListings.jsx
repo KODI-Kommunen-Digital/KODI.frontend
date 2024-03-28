@@ -178,16 +178,6 @@ function UploadListings() {
 
   // Sending data to backend starts
   const [val] = useState([{ selected: "" }]);
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  const initialTimeSlot = { startTime: '', endTime: '' };
   const [input, setInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
@@ -211,11 +201,7 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
-    slotSameAsAppointment: true,
-    services: [{ name: "", duration: "", durationUnit: "minutes", openingDates: {}, }],
-    openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {})
   });
-  console.log(input)
 
   const [error, setError] = useState({
     categoryId: "",
@@ -334,134 +320,6 @@ function UploadListings() {
       setTimeout(() => setErrorMessage(false), 5000);
     }
   };
-  // Sending data to backend ends
-
-  // Appointment starts
-  const onServiceChange = (index, key, value) => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      services: prevInput.services.map((service, i) =>
-        i === index ? { ...service, [key]: value } : service
-      )
-    }));
-  };
-
-  const onDurationUnitChange = (index, value) => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      services: prevInput.services.map((service, i) =>
-        i === index ? { ...service, durationUnit: value } : service
-      )
-    }));
-  };
-
-  const handleAddService = () => {
-    setInput(prevInput => ({
-      ...prevInput,
-      services: [...prevInput.services, {
-        name: "",
-        duration: "",
-        durationUnit: "minutes",
-        openingDates: prevInput.openingDates // Include openingDates here
-      }]
-    }));
-  };
-
-  const handleDeleteService = (indexToDelete) => {
-    setInput(prevInput => ({
-      ...prevInput,
-      services: prevInput.services.filter((_, index) => index !== indexToDelete)
-    }));
-  };
-  const [isCheckedList, setIsCheckedList] = useState(
-    new Array(input.services.length).fill(false)
-  );
-  const [isChecked, setIsChecked] = useState(
-    new Array(input.services.length).fill(false)
-  );
-
-  const handleCheckboxChange = (index) => {
-    const updatedCheckedList = [...isCheckedList];
-    updatedCheckedList[index] = !updatedCheckedList[index];
-    setIsCheckedList(updatedCheckedList);
-
-    const updatedButtonDisabledList = [...isChecked];
-    updatedButtonDisabledList[index] = !updatedButtonDisabledList[index];
-    setIsChecked(updatedButtonDisabledList);
-
-    setInput((prevInput) => {
-      const { services } = prevInput;
-      const updatedServices = [...services];
-      const currentService = updatedServices[index];
-
-      if (updatedCheckedList[index]) {
-        // If the checkbox is checked, populate openingDates
-        updatedServices[index] = {
-          ...currentService,
-          openingDates: prevInput.openingDates,
-        };
-      } else {
-        // If the checkbox is unchecked, keep openingDates as it is
-        updatedServices[index] = {
-          ...currentService,
-        };
-      }
-
-      return {
-        ...prevInput,
-        slotSameAsAppointment: false,
-        services: updatedServices,
-      };
-    });
-  };
-  const handleTimeChange = (day, index, key, value) => {
-    setInput((prevInput) => {
-      const updatedOpeningDates = {
-        ...prevInput.openingDates,
-        [day]: prevInput.openingDates[day].map((slot, i) =>
-          i === index ? { ...slot, [key]: value } : slot
-        ),
-      };
-
-      return {
-        ...prevInput,
-        openingDates: updatedOpeningDates,
-      };
-    });
-  };
-
-  const handleAddTimeSlot = (day) => {
-    setInput((prevInput) => {
-      const currentDaySchedule = prevInput.openingDates[day];
-      if (!Array.isArray(currentDaySchedule)) {
-        return prevInput;
-      }
-      return {
-        ...prevInput,
-        openingDates: {
-          ...prevInput.openingDates,
-          [day]: [...currentDaySchedule, initialTimeSlot],
-        },
-      };
-    });
-  };
-
-  const handleDeleteTimeSlot = (day, index) => {
-    setInput((prevInput) => {
-      const currentDaySchedule = prevInput.openingDates[day];
-      if (!Array.isArray(currentDaySchedule)) {
-        return prevInput;
-      }
-      return {
-        ...prevInput,
-        openingDates: {
-          ...prevInput.openingDates,
-          [day]: currentDaySchedule.filter((_, i) => i !== index),
-        },
-      };
-    });
-  };
-  // Appointment ends
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -923,22 +781,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime
-            validateInput={validateInput}
-            onServiceChange={onServiceChange}
-            onDurationUnitChange={onDurationUnitChange}
-            handleDeleteService={handleDeleteService}
-            handleAddService={handleAddService}
-            services={input.services.length ? input.services : initialServices}
-            handleCheckboxChange={handleCheckboxChange}
-            handleTimeChange={handleTimeChange}
-            handleAddTimeSlot={handleAddTimeSlot}
-            handleDeleteTimeSlot={handleDeleteTimeSlot}
-            daysOfWeek={daysOfWeek}
-            openingDates={input.openingDates}
-            isCheckedList={isCheckedList}
-            isChecked={isChecked}
-          />}
+          {categoryId == 18 && <ServiceAndTime />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-4">

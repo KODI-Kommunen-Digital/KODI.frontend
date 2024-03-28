@@ -140,14 +140,14 @@ const ViewPost = () => {
           // Update existing replies without duplicates
           comment.replies = comment.replies
             ? [
-                ...comment.replies,
-                ...response.data.data.filter(
-                  (reply) =>
-                    !comment.replies.find(
-                      (existingReply) => existingReply.id === reply.id
-                    )
-                ),
-              ]
+              ...comment.replies,
+              ...response.data.data.filter(
+                (reply) =>
+                  !comment.replies.find(
+                    (existingReply) => existingReply.id === reply.id
+                  )
+              ),
+            ]
             : [...response.data.data];
           console.log("parentId:", parentId);
           setComments([...comments]);
@@ -387,7 +387,7 @@ const ViewPost = () => {
                             {t("cancel")}
                           </button>
                           <button
-                            className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                             onClick={handleReportPost}
                           >
                             {t("send")}
@@ -421,7 +421,7 @@ const ViewPost = () => {
                       forumPost.image
                         ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
                         : process.env.REACT_APP_BUCKET_HOST +
-                          "admin/DefaultForum.jpeg"
+                        "admin/DefaultForum.jpeg"
                     }
                   />
                 </div>
@@ -520,7 +520,7 @@ const ViewPost = () => {
                               src={
                                 comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    comment.image
+                                  comment.image
                                   : PROFILEIMAGE
                               }
                             />
@@ -601,8 +601,8 @@ const ViewPost = () => {
                             </svg>
                             {!comment.showReplies
                               ? t("showReplyCount", {
-                                  count: comment.childrenCount,
-                                })
+                                count: comment.childrenCount,
+                              })
                               : t("hideReplies")}
                           </button>
                         )}
@@ -645,7 +645,7 @@ const ViewPost = () => {
                                     src={
                                       reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
-                                          reply.image
+                                        reply.image
                                         : PROFILEIMAGE
                                     }
                                   />

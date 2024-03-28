@@ -77,8 +77,8 @@ const GroupMembers = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     members: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   function handleRemove(member) {
@@ -244,11 +244,10 @@ const GroupMembers = () => {
                       ) : (
                         <td className="px-6 py-4 text-center">
                           <a
-                            className={`font-medium text-blue-600 ${
-                              member.userId === currentUserId
-                                ? "hover:underline"
-                                : ""
-                            } cursor-pointer text-center pr-0`}
+                            className={`font-medium text-blue-600 ${member.userId === currentUserId
+                              ? "hover:underline"
+                              : ""
+                              } cursor-pointer text-center pr-0`}
                             onClick={() => {
                               member.userId === currentUserId &&
                                 removeMemberOnClick(member);
@@ -269,11 +268,10 @@ const GroupMembers = () => {
                       {isAdmin && (
                         <td className="px-6 py-4 text-center">
                           <button
-                            className={`font-medium hover:underline cursor-pointer text-center ${
-                              member.isAdmin === 1
-                                ? "text-red-500"
-                                : "text-green-500"
-                            }`}
+                            className={`font-medium hover:underline cursor-pointer text-center ${member.isAdmin === 1
+                              ? "text-red-500"
+                              : "text-green-500"
+                              }`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -323,8 +321,8 @@ const GroupMembers = () => {
                       <div className="sm:flex sm:items-start">
                         <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                           {isOnlyAdmin &&
-                          isAdmin &&
-                          currentUserId === memberToBeRemoved ? (
+                            isAdmin &&
+                            currentUserId === memberToBeRemoved ? (
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                               <h3 className="text-lg leading-6 font-medium text-gray-900">
                                 {t("onlyAdminWarning")}
@@ -355,7 +353,7 @@ const GroupMembers = () => {
                           <button
                             onClick={showConfirmationModal.onConfirm}
                             type="button"
-                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                           >
                             {t("remove")}
                           </button>
@@ -367,7 +365,7 @@ const GroupMembers = () => {
                             <button
                               onClick={showConfirmationModal.onConfirm}
                               type="button"
-                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                             >
                               {t("exit")}
                             </button>
@@ -377,7 +375,7 @@ const GroupMembers = () => {
                           <button
                             onClick={showConfirmationModal.onConfirm}
                             type="button"
-                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                           >
                             {t("exit")}
                           </button>

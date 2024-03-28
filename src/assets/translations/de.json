@@ -585,7 +585,7 @@
     "numberofPeople": "Anzahl der Personen",
     "selectedSlots": "Ausgewählte Slots ",
     "timeSlotValidation": "Es können maximal 8 Zeitfenster gebucht werden.",
-    "firstname":"Vorname",
+    "firstname": "Vorname",
     "remarks": "Bemerkungen",
     "phone": "Telefonnummer",
     "user": "Benutzer",
@@ -696,5 +696,7 @@
     "FinalProvisions3": "",
     "visitWebsite": "Besuchen Sie die Website :",
     "moreService": "Weitere Kategorien",
-    "mehr": "Mehr"
+    "mehr": "Mehr",
+    "pleaseEnterValidNumber": "Bitte geben Sie eine gültige Nummer ein",
+    "pleaseEnterValidTime": "Bitte geben Sie eine gültige Zeit nur im Format HH:mm ein"
 }
