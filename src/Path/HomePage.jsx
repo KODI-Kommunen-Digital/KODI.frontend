@@ -314,7 +314,7 @@ const HomePage = () => {
                     <ListingsCard listing={listing} key={index} />
                   ))}
               </div>
-              <button
+              {/* <button
                 type="submit"
                 onClick={() => {
                   localStorage.setItem("selectedItem", t("chooseOneCategory"));
@@ -324,7 +324,17 @@ const HomePage = () => {
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {t("viewMore")}
-              </button>
+                </button> */}
+
+              <a className="relative items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+                onClick={() => {
+                  localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                  navigateTo("/AllListings");
+                }} style={{ fontFamily: "Poppins, sans-serif" }}>
+                <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-slate-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+                <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-slate-800 group-hover:bg-slate-800"></span>
+                <span className="relative text-slate-800 group-hover:text-white">{t("viewMore")}</span>
+              </a>
             </div>
           ) : (
             <div>
@@ -513,12 +523,19 @@ const HomePage = () => {
                 >
                   {t("findBestCitizenServicesInTheCity")}
                 </p>
-                <a
+                {/* <a
                   onClick={() => goToCitizensPage()}
                   className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {t("clickHereToFind")}
+                  </a> */}
+                <a className="relative items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+                  onClick={() => goToCitizensPage()}
+                  style={{ fontFamily: "Poppins, sans-serif" }}>
+                  <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-blue-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+                  <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-blue-800 group-hover:bg-blue-800"></span>
+                  <span className="relative text-blue-800 group-hover:text-white">{t("clickHereToFind")}</span>
                 </a>
               </div>
 
