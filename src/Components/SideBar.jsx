@@ -39,16 +39,7 @@ function SideBar() {
 				window.sessionStorage.getItem("refreshToken");
 			try {
 				logout({ accesToken: accessToken, refreshToken }).then(() => {
-					window.localStorage.removeItem("accessToken");
-					window.localStorage.removeItem("refreshToken");
-					window.localStorage.removeItem("userId");
-					window.localStorage.removeItem("selectedItem");
-					window.sessionStorage.removeItem("accessToken");
-					window.sessionStorage.removeItem("refreshToken");
-					window.sessionStorage.removeItem("userId");
-					window.sessionStorage.removeItem("selectedItem");
-					setLoggedIn(false);
-					navigateTo("/");
+					clearStorage();
 				});
 			} catch (error) {
 				console.log(error);
@@ -57,6 +48,19 @@ function SideBar() {
 			navigateTo("/login");
 		}
 	};
+
+	function clearStorage() {
+		window.localStorage.removeItem("accessToken");
+		window.localStorage.removeItem("refreshToken");
+		window.localStorage.removeItem("userId");
+		window.localStorage.removeItem("selectedItem");
+		window.sessionStorage.removeItem("accessToken");
+		window.sessionStorage.removeItem("refreshToken");
+		window.sessionStorage.removeItem("userId");
+		window.sessionStorage.removeItem("selectedItem");
+		setLoggedIn(false);
+		navigateTo("/");
+	}
 
 	function openSidebar() {
 		const sideBar = document.querySelector(".sidebar");

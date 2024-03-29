@@ -506,6 +506,8 @@
     "hidePost": "Ausblenden",
     "unHidePost": "Einblenden",
     "hiddenPost": "Versteckte Post",
+    "incorrectPassword": "Das aktuelle Passwort ist nicht korrekt",
+    "samePassword": "Das neue Passwort ist dasselbe wie das aktuelle Passwort",
     "yes": "Ja",
     "no": "Nein",
     "request": "Anfrage senden",

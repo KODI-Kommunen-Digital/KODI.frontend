@@ -9,6 +9,7 @@ import {
   getListingsBySearch,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
+import { role } from "../Constants/role";
 import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
@@ -18,7 +19,7 @@ const Dashboard = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
   const [listings, setListings] = useState([]);
-  const [, setUserRole] = useState(3);
+  const [roleId, setUserRole] = useState(role.User);
   const [viewAllListings, setViewAllListings] = useState(null);
   const [pageNo, setPageNo] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState(null);
@@ -59,12 +60,12 @@ const Dashboard = () => {
     });
     getProfile().then((response) => {
       setUserRole(response.data.data.roleId);
+      if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
+        setViewAllListings(true);
+      } else {
+        setViewAllListings(false);
+      }
     });
-    if (window.location.pathname === "/Dashboard") {
-      setViewAllListings(false);
-    } else {
-      setViewAllListings(true);
-    }
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
 
     if (viewAllListings === true) {
@@ -164,8 +165,8 @@ const Dashboard = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   const fetchUpdatedListings = useCallback(() => {
@@ -368,7 +369,7 @@ const Dashboard = () => {
                             listing.sourceId === 1
                               ? listing.logo
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                  listing.logo
+                                listing.logo
                                 : LISTINGSIMAGE
                               : listing.logo || LISTINGSIMAGE
                           }
