@@ -19,7 +19,6 @@ const Dashboard = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
   const [listings, setListings] = useState([]);
-  const [roleId, setUserRole] = useState(role.User);
   const [viewAllListings, setViewAllListings] = useState(null);
   const [pageNo, setPageNo] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState(null);
@@ -59,7 +58,6 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
-      setUserRole(response.data.data.roleId);
       if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
         setViewAllListings(true);
       } else {

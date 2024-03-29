@@ -4,6 +4,7 @@ import logo from "../assets/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
+import { role } from "../Constants/role";
 
 function SideBar() {
 	const { t } = useTranslation();
@@ -71,7 +72,7 @@ function SideBar() {
 
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
-	const [userRole, setUserRole] = useState(3);
+	const [userRole, setUserRole] = useState(role.User);
 	useEffect(() => {
 		getProfile()
 			.then((response) => {
@@ -164,7 +165,7 @@ function SideBar() {
 							{t("uploadPost")}
 						</span>
 					</div>
-					{userRole === 1 && (
+					{userRole === role.User && (
 						<div
 							className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 							onClick={() => {

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
+import { role } from "../Constants/role";
 
 const Register = () => {
 	const { t } = useTranslation();
@@ -70,7 +71,7 @@ const Register = () => {
 		validateInput(e);
 	};
 
-	input.role = 3;
+	input.role = role.User;
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
