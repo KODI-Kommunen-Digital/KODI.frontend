@@ -155,7 +155,7 @@ const IFrame = ({ cityId }) => {
                     <div>
                         {listings && listings.length > 0 ? (
                             <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-0 mt-0 mb-0 space-y-10 flex flex-col">
-                                <div className="relative place-items-center bg-white mt-0 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 justify-start">
+                                <div className="relative place-items-center bg-white mt-0 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-10 justify-start">
                                     {listings &&
                                         listings.map((listing, index) => (
                                             <ListingsCard

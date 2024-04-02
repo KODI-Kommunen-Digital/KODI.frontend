@@ -4,6 +4,7 @@ import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
 import { updateProfile } from "../Services/usersApi";
 import Alert from "../Components/Alert";
+import errorCodes from "../Constants/errorCodes";
 
 const PasswordUpdate = () => {
 	const { t } = useTranslation();
@@ -57,7 +58,12 @@ const PasswordUpdate = () => {
 		} catch (err) {
 			setAlertInfo(true);
 			setAlertType("danger");
-			setAlertMessage("Failed. " + err.response.data.message);
+			let errorMessage = err.response.data.message
+			if (err.response.data.errorCode === errorCodes.INVALID_PASSWORD)
+				errorMessage = t("incorrectPassword")
+			if (err.response.data.errorCode === errorCodes.SAME_PASSWORD_GIVEN)
+				errorMessage = t("samePassword")
+			setAlertMessage("Failed. " + errorMessage);
 		}
 	};
 

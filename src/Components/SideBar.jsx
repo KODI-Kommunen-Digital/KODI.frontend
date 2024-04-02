@@ -4,6 +4,7 @@ import logo from "../assets/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
+import { role } from "../Constants/role";
 
 function SideBar() {
 	const { t } = useTranslation();
@@ -39,16 +40,7 @@ function SideBar() {
 				window.sessionStorage.getItem("refreshToken");
 			try {
 				logout({ accesToken: accessToken, refreshToken }).then(() => {
-					window.localStorage.removeItem("accessToken");
-					window.localStorage.removeItem("refreshToken");
-					window.localStorage.removeItem("userId");
-					window.localStorage.removeItem("selectedItem");
-					window.sessionStorage.removeItem("accessToken");
-					window.sessionStorage.removeItem("refreshToken");
-					window.sessionStorage.removeItem("userId");
-					window.sessionStorage.removeItem("selectedItem");
-					setLoggedIn(false);
-					navigateTo("/");
+					clearStorage();
 				});
 			} catch (error) {
 				console.log(error);
@@ -57,6 +49,19 @@ function SideBar() {
 			navigateTo("/login");
 		}
 	};
+
+	function clearStorage() {
+		window.localStorage.removeItem("accessToken");
+		window.localStorage.removeItem("refreshToken");
+		window.localStorage.removeItem("userId");
+		window.localStorage.removeItem("selectedItem");
+		window.sessionStorage.removeItem("accessToken");
+		window.sessionStorage.removeItem("refreshToken");
+		window.sessionStorage.removeItem("userId");
+		window.sessionStorage.removeItem("selectedItem");
+		setLoggedIn(false);
+		navigateTo("/");
+	}
 
 	function openSidebar() {
 		const sideBar = document.querySelector(".sidebar");
@@ -67,7 +72,7 @@ function SideBar() {
 
 	const [firstname, setFirstname] = useState("");
 	const [lastname, setLastname] = useState("");
-	const [userRole, setUserRole] = useState(3);
+	const [userRole, setUserRole] = useState(role.User);
 	useEffect(() => {
 		getProfile()
 			.then((response) => {
@@ -160,7 +165,7 @@ function SideBar() {
 							{t("uploadPost")}
 						</span>
 					</div>
-					{userRole === 1 && (
+					{userRole === role.Admin && (
 						<div
 							className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 							onClick={() => {

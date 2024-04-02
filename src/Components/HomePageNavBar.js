@@ -36,16 +36,8 @@ export default function HomePageNavBar() {
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
       logout({ accesToken: accessToken, refreshToken }).then(() => {
-        window.localStorage.removeItem("accessToken");
-        window.localStorage.removeItem("refreshToken");
-        window.localStorage.removeItem("userId");
-        window.localStorage.removeItem("selectedItem");
-        window.sessionStorage.removeItem("accessToken");
-        window.sessionStorage.removeItem("refreshToken");
-        window.sessionStorage.removeItem("userId");
-        window.sessionStorage.removeItem("selectedItem");
-        setIsLoggedIn(false);
-        navigateTo("/");
+      }).finally(() => {
+        clearStorage();
       });
     } else {
       navigateTo("/login");
@@ -54,6 +46,19 @@ export default function HomePageNavBar() {
   const handleGotoDashboard = () => {
     navigateTo("/Dashboard");
   };
+
+  function clearStorage() {
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
+    window.localStorage.removeItem("userId");
+    window.localStorage.removeItem("selectedItem");
+    window.sessionStorage.removeItem("accessToken");
+    window.sessionStorage.removeItem("refreshToken");
+    window.sessionStorage.removeItem("userId");
+    window.sessionStorage.removeItem("selectedItem");
+    setIsLoggedIn(false);
+    navigateTo("/");
+  }
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

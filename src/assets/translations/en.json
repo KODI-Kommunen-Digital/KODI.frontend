@@ -488,6 +488,8 @@
     "hide": "Hide",
     "reason": "Reason",
     "waldi_all_rights_reserved": "- ALL RIGHTS RESERVED ®2023",
+    "incorrectPassword": "The current password is incorrect",
+    "samePassword": "The new passsword is same as the current password",
     "checkUsernameOrPassword": "Login Failed. Please check Username / Password and try again",
     "canNotSelectSameSocialMediaTwice": "You have already provided this Social Media",
     "pleaseEnterAValidLink": "Please enter a valid link starting with 'https://' Ex: https://www.example.com",
