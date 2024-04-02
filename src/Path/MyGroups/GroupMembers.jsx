@@ -269,8 +269,8 @@ const GroupMembers = () => {
                         <td className="px-6 py-4 text-center">
                           <button
                             className={`font-medium hover:underline cursor-pointer text-center ${member.isAdmin === 1
-                              ? "text-red-500"
-                              : "text-green-500"
+                              ? "text-red-700"
+                              : "text-green-700"
                               }`}
                             style={{
                               fontFamily: "Poppins, sans-serif",

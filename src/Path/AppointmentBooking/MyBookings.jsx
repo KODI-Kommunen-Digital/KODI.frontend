@@ -47,7 +47,7 @@ const MyBookings = () => {
       .then((res) => {
         getUserBookings(
           bookings.filter(
-            (b) => b.bookingId !== bookings.id
+            (b) => b.cityId !== bookings.cityId || b.bookingId !== bookings.id
           )
         );
         console.log("Deleted successfully");

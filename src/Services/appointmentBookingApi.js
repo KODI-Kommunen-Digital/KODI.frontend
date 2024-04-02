@@ -16,3 +16,11 @@ export async function updateAppointments(cityId, listingId, appointmentId) {
 export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
     return axios.delete(`/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
 }
+
+export async function getOwnerAppointments(userId) {
+    return axios.get(`/users/${userId}/owner/bookings`);
+}
+
+export async function deleteUserAppointments(userId, appointmentId, bookingId) {
+    return axios.delete(`/user/${userId}/appointments/${appointmentId}/booking/${bookingId}`);
+}

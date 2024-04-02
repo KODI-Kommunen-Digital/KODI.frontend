@@ -3,30 +3,30 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getUserForums, deleteForums } from "../../Services/forumsApi";
+import { getOwnerAppointments, deleteUserAppointments } from "../../Services/appointmentBookingApi";
 
 const MyAppointments = () => {
   const { t } = useTranslation();
-  const [forums, setForums] = useState([]);
+  const [appointments, setOwnerAppointments] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const pageSize = 9;
 
-  const fetchForums = useCallback(() => {
-    getUserForums({
+  const fetchAppointments = useCallback(() => {
+    getOwnerAppointments({
       pageNo,
       pageSize,
     }).then((response) => {
-      setForums(response.data.data);
+      setOwnerAppointments(response.data.data);
     });
   }, [pageNo]);
 
   useEffect(() => {
     if (pageNo === 1) {
-      fetchForums();
+      fetchAppointments();
     } else {
-      fetchForums();
+      fetchAppointments();
     }
-  }, [fetchForums, pageNo]);
+  }, [fetchAppointments, pageNo]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -42,12 +42,12 @@ const MyAppointments = () => {
     onCancel: () => { },
   });
 
-  function handleDelete(forum) {
-    deleteForums(forum.cityId, forum.forumId)
+  function handleDelete(appointment) {
+    deleteUserAppointments(appointment.cityId, appointment.forumId)
       .then((res) => {
-        getUserForums(
-          forums.filter(
-            (f) => f.cityId !== forum.cityId || f.forumId !== forum.forumId
+        getOwnerAppointments(
+          appointments.filter(
+            (a) => a.userId !== appointment.userId
           )
         );
         console.log("Deleted successfully");
@@ -58,11 +58,11 @@ const MyAppointments = () => {
       .catch((error) => console.log(error));
   }
 
-  function deleteForumOnClick(forums) {
+  function deleteAppointmentOnClick(appointments) {
     setShowConfirmationModal({
       visible: true,
-      forums,
-      onConfirm: () => handleDelete(forums),
+      appointments,
+      onConfirm: () => handleDelete(appointments),
       onCancel: () => setShowConfirmationModal({ visible: false }),
     });
   }
@@ -141,7 +141,7 @@ const MyAppointments = () => {
                 </tr>
               </thead>
               <tbody>
-                {forums.map((forum, index) => {
+                {appointments.map((appointment, index) => {
                   return (
                     <tr
                       key={index}
@@ -154,14 +154,14 @@ const MyAppointments = () => {
                         <img
                           className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                           src={
-                            forum.image
-                              ? process.env.REACT_APP_BUCKET_HOST + forum.image
+                            appointment.image
+                              ? process.env.REACT_APP_BUCKET_HOST + appointment.image
                               : process.env.REACT_APP_BUCKET_HOST +
                               "admin/DefaultForum.jpeg"
                           }
                           onClick={() =>
                             navigateTo(
-                              `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                              `/Appointment?appointmentId=${appointment.appointmentId}&userId=${appointment.userId}`
                             )
                           }
                           alt="avatar"
@@ -172,11 +172,11 @@ const MyAppointments = () => {
                             style={{ fontFamily: "Poppins, sans-serif" }}
                             onClick={() =>
                               navigateTo(
-                                `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                                `/Appointment?appointmentId=${appointment.appointmentId}&userId=${appointment.userId}`
                               )
                             }
                           >
-                            {forum.forumName}
+                            {appointment.forumName}
                           </div>
                         </div>
                       </th>
@@ -186,46 +186,41 @@ const MyAppointments = () => {
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         onClick={() => navigateTo("/ViewProfile")}
                       >
-                        Akshay Sunilkumar
+                        {appointment.userName}
                       </td>
 
                       <td
                         className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        2 hrs
+                        {appointment.duration}
                       </td>
 
                       <td
                         className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        11:00
+                        {appointment.startTime}
                       </td>
 
                       <td
                         className="px-6 py-4 font-bold text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        12:30
+                        {appointment.endTime}
                       </td>
                       <td className="px-6 py-4  text-center">
-                        {forum.isAdmin ? (
-                          <div>
-                            <a
-                              className="font-bold hover:underline cursor-pointer text-center"
-                              onClick={() => deleteForumOnClick(forum)}
-                              style={{
-                                fontFamily: "Poppins, sans-serif",
-                                color: "red",
-                              }}
-                            >
-                              {t("reject")}
-                            </a>
-                          </div>
-                        ) : (
-                          <div className="text-gray-500 font-bold">{t("onlyAdmins")}</div>
-                        )}
+                        <div>
+                          <a
+                            className="font-bold hover:underline cursor-pointer text-center text-red-700 hover:text-red-600"
+                            onClick={() => deleteAppointmentOnClick(appointment)}
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            {t("reject")}
+                          </a>
+                        </div>
                         {showConfirmationModal.visible && (
                           <div className="fixed z-50 inset-0 overflow-y-auto">
                             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -321,7 +316,7 @@ const MyAppointments = () => {
               {t("page")} {pageNo}
             </span>
 
-            {forums.length >= pageSize && (
+            {appointments.length >= pageSize && (
               <span
                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                 onClick={() => setPageNo(pageNo + 1)}

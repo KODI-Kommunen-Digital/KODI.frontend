@@ -202,9 +202,12 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    if (listing.appointmentId) {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
+    } else {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    }
   }
-
   const handleSearch = async (searchQuery) => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
