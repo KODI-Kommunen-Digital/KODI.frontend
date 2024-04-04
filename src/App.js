@@ -159,7 +159,7 @@ const App = () => {
                 exact
               />
               <Route
-                path="/AppointmentBooking/BookAppointments/Select"
+                path="/Listings/BookAppointments"
                 element={<BookMyAppointments />}
                 exact
               />

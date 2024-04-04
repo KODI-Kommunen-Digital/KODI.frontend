@@ -607,6 +607,7 @@
     "useProvidedTimeSlots": "Use provided time slots",
     "timeSlotsSetFromPrevious": "Added time slots",
     "uploadFile": "Upload file",
+    "removeFile": "Remove file",
     "forumMembers": "Forum Members",
     "memberReq": "Member Requests",
     "forumReq": "Forum Requests",
@@ -680,5 +681,9 @@
     "moreService": "More Service",
     "mehr": "More",
     "pleaseEnterValidNumber": "Please enter a valid number",
-    "pleaseEnterValidTime": "Please enter a valid time in HH:mm format only"
+    "pleaseEnterValidTime": "Please enter a valid time in HH:mm format only",
+    "pleaseEnterStartTime": "Please enter a Start time",
+    "pleaseEnterEndTime": "Please enter End time",
+    "pleaseSelectServiceName": "Please enter Service name",
+    "pleaseSelectDuration": "Please enter Service duration"
 }

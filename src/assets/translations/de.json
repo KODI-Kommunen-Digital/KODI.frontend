@@ -698,5 +698,9 @@
     "moreService": "Weitere Kategorien",
     "mehr": "Mehr",
     "pleaseEnterValidNumber": "Bitte geben Sie eine gültige Nummer ein",
-    "pleaseEnterValidTime": "Bitte geben Sie eine gültige Zeit nur im Format HH:mm ein"
+    "pleaseEnterValidTime": "Bitte geben Sie eine gültige Zeit nur im Format HH:mm ein",
+    "pleaseEnterStartTime": "Bitte geben Sie eine Startzeit ein",
+    "pleaseEnterEndTime": "Bitte geben Sie die Endzeit ein",
+    "pleaseSelectServiceName": "Bitte geben Sie den Servicenamen ein",
+    "pleaseSelectDuration": "Bitte geben Sie die Servicedauer ein"
 }

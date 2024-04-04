@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
+import { getAppointmentServices } from "../../Services/appointmentBookingApi";
 import {
   getListingsById,
   postListingsData,
@@ -14,51 +15,10 @@ import Alert from "../../Components/Alert";
 import { getCategory } from "../../Services/CategoryApi";
 import dayjs from "dayjs";
 import Footer from "../../Components/Footer";
-import PropTypes from "prop-types";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { generateDate, months } from "../../Components/util/calendar";
 import cn from "../../Components/util/cn";
 
-const Description = ({ content }) => {
-  const linkify = (text) => {
-    const urlRegex =
-      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
-    text = text.replace(
-      urlRegex,
-      (url) =>
-        `<a className="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
-    );
-
-    // Regex for existing anchor tags
-    const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
-
-    return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
-      if (!/className="[^"]*underline[^"]*"/.test(attributes)) {
-        // If 'className' attribute exists, append 'underline', otherwise add 'className="underline"'
-        if (/className="/.test(attributes)) {
-          return `<a href="${url}" ${attributes.replace(
-            /className="/,
-            'className="underline '
-          )}>${linkText}</a>`;
-        } else {
-          return `<a href="${url}" className="underline" ${attributes}>${linkText}</a>`;
-        }
-      }
-      return match;
-    });
-  };
-  const linkedContent = linkify(content);
-  return (
-    <p
-      className="leading-relaxed text-md font-medium my-0 text-gray-900 dark:text-gray-900"
-      dangerouslySetInnerHTML={{ __html: linkedContent }}
-    ></p>
-  );
-};
-
-Description.propTypes = {
-  content: PropTypes.string.isRequired,
-};
 
 function BookMyAppointments() {
   const { t } = useTranslation();
@@ -67,47 +27,56 @@ function BookMyAppointments() {
   const [updating, setUpdating] = useState(false);
   const [bookingId, setBookingId] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
-  const [, setDescription] = useState("");
   const [title, setTitle] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
+  const [duration, setDuration] = useState("");
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
   const navigate = useNavigate();
 
-  const [input, setInput] = useState({
+
+
+  const days = ["S", "M", "T", "W", "T", "F", "S"];
+  const currentDate = dayjs();
+  const [today, setToday] = useState(currentDate);
+  const [selectDate, setSelectDate] = useState(currentDate);
+
+  const [selectedTimes, setSelectedTimes] = useState([]);
+  const [numberError, setNumberError] = useState(false);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
+
+  const [appointmentInput, setAppointmentInput] = useState({
     categoryId: 0,
     bookingId: 0,
-    cityId: 0,
-    statusId: 1,
-    serviceId: 0,
-    title: "",
+    description: "",
     firstName: "",
     lastName: "",
+    endTime: [],
+    startTime: [],
     remarks: "",
     email: "",
     phone: "",
+    date: "",
+    numberOfPeople: "",
     service: "",
-    logo: null,
+    friends: [],
   });
+  console.log(appointmentInput)
 
   const [error, setError] = useState({
-    categoryId: "",
-    bokingId: "",
-    title: "",
-    firstName: "",
-    lastName: "",
-    remarks: "",
-    email: "",
-    phone: "",
+    endTime: "",
+    startTime: "",
+    numberOfPeople: "",
     service: "",
   });
 
   const handleSubmit = async (event) => {
     let valid = true;
     for (const key in error) {
-      const errorMessage = getErrorMessage(key, input[key]);
+      const errorMessage = getErrorMessage(key, appointmentInput[key]);
       const newError = error;
       newError[key] = errorMessage;
       setError(newError);
@@ -120,8 +89,8 @@ function BookMyAppointments() {
       event.preventDefault();
       try {
         const response = await (newBooking
-          ? postListingsData(bookingId, input)
-          : updateListingsData(bookingId, input, listingId));
+          ? postListingsData(bookingId, appointmentInput)
+          : updateListingsData(bookingId, appointmentInput, listingId));
         if (newBooking) {
           setListingId(response.data.id);
         }
@@ -162,7 +131,14 @@ function BookMyAppointments() {
       });
       setCategories(catList);
     });
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    getAppointmentServices().then((response) => {
+      const serviceList = {};
+      response?.data.data.forEach((service) => {
+        serviceList[service.id] = service.name;
+      });
+      setServices(serviceList);
+    });
+    setAppointmentInput((prevInput) => ({ ...prevInput, categoryId }));
     setBookingId(bookingId);
     const listingId = searchParams.get("listingId");
     if (listingId && bookingId) {
@@ -171,23 +147,18 @@ function BookMyAppointments() {
       getListingsById(bookingId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
         listingData.bookingId = bookingId;
-        setInput(listingData);
-        setDescription(listingData.description);
+        setAppointmentInput(listingData);
         setCategoryId(listingData.categoryId);
         setBookingId(listingData.bookingId);
         setTitle(listingData.title);
-        setCreatedAt(
-          new Intl.DateTimeFormat("de-DE").format(
-            Date.parse(listingData.createdAt)
-          )
-        );
+        setDuration(listingData.duration);
       });
     }
   }, []);
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
-    setInput((prev) => ({
+    setAppointmentInput((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -202,54 +173,31 @@ function BookMyAppointments() {
 
   const getErrorMessage = (name, value) => {
     switch (name) {
-      case "title":
+      case "service":
         if (!value) {
-          return t("pleaseEnterTitle");
+          return t("pleaseEnterService");
         } else {
           return "";
         }
 
-      case "cityId":
+      case "numberOfPeople":
         if (!parseInt(value)) {
-          return t("pleaseSelectCity");
+          return t("pleaseSelectNumberOfPeople");
         } else {
           return "";
         }
 
-      case "categoryId":
-        if (!parseInt(value)) {
-          return t("pleaseSelectCategory");
+      case "startTime":
+        if (!value && parseInt(appointmentInput.categoryId) === 3) {
+          return t("pleaseEnterStartTime");
         } else {
           return "";
         }
 
-      case "subCategoryId":
-        if (!value && parseInt(input.categoryId) === 1) {
-          return t("pleaseSelectSubcategory");
-        } else {
-          return "";
-        }
-
-      case "description":
-        if (!value) {
-          return t("pleaseEnterDescription");
-        } else if (value.length > 65535) {
-          return t("characterLimitReacehd");
-        } else {
-          return "";
-        }
-
-      case "startDate":
-        if (!value && parseInt(input.categoryId) === 3) {
-          return t("pleaseEnterStartDate");
-        } else {
-          return "";
-        }
-
-      case "endDate":
-        if (parseInt(input.categoryId) === 3) {
-          if (value && new Date(input.startDate) > new Date(value)) {
-            return t("endDateBeforeStartDate");
+      case "endTime":
+        if (parseInt(appointmentInput.categoryId) === 3) {
+          if (value && new Date(appointmentInput.startDate) > new Date(value)) {
+            return t("pleaseEnterEndTime");
           } else {
             return "";
           }
@@ -261,23 +209,12 @@ function BookMyAppointments() {
     }
   };
 
-  const validateInput = (e) => {
-    const { name, value } = e.target;
+  const validateInput = (name, value) => {
     const errorMessage = getErrorMessage(name, value);
     setError((prevState) => {
       return { ...prevState, [name]: errorMessage };
     });
   };
-
-  const days = ["S", "M", "T", "W", "T", "F", "S"];
-  const currentDate = dayjs();
-  const [today, setToday] = useState(currentDate);
-  const [selectDate, setSelectDate] = useState(currentDate);
-
-  const [selectedTimes, setSelectedTimes] = useState([]);
-  const [numberError, setNumberError] = useState(false);
-  const [selectedCount, setSelectedCount] = useState(0);
-  const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
 
   const toggleUserDropdown = (index) => {
     setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index)); // Toggle expanded user
@@ -285,6 +222,21 @@ function BookMyAppointments() {
 
   const handleTimeSelection = (time) => {
     if (selectedTimes.length < 8) {
+      const duration = 30; // Assuming duration is in minutes
+      const startTime = dayjs()
+        .set('hour', parseInt(time.split(':')[0]))
+        .set('minute', parseInt(time.split(':')[1]));
+      const endTime = startTime.add(duration, 'minutes').format('HH:mm');
+
+      const selectedDate = selectDate.toDate().toISOString();
+
+      setAppointmentInput((prevState) => ({
+        ...prevState,
+        startTime: [...prevState.startTime, time], // Add selected time to startTime array
+        endTime: [...prevState.endTime, endTime], // Add corresponding end time to endTime array
+        date: selectedDate,
+      }));
+
       setSelectedTimes([...selectedTimes, time]);
       setSelectedCount(selectedCount + 1);
       setNumberError(false);
@@ -342,7 +294,7 @@ function BookMyAppointments() {
                       }}
                     >
                       Available time 30 min
-                      {createdAt}
+                      {duration}
                     </p>
                   </div>
                 </div>
@@ -355,7 +307,7 @@ function BookMyAppointments() {
                         fontFamily: "Poppins, sans-serif",
                       }}
                     >
-                      {t(categories[input.categoryId])}
+                      {t(categories[appointmentInput.categoryId])}
                       Appointment Booking
                     </p>
                   </div>
@@ -389,7 +341,7 @@ function BookMyAppointments() {
               <select
                 id="service"
                 name="service"
-                value={input.service}
+                value={appointmentInput.service}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
@@ -398,10 +350,11 @@ function BookMyAppointments() {
                 <option value="" disabled>
                   {t("select")}
                 </option>
-                <option value="service1">Service 1</option>
-                <option value="service2">Service 2</option>
-                <option value="service3">Service 3</option>
-                <option value="service4">Service 4</option>
+                {Object.entries(services).map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
@@ -414,7 +367,7 @@ function BookMyAppointments() {
               <select
                 id="numberOfPeople"
                 name="numberOfPeople"
-                value={input.numberOfPeople}
+                value={appointmentInput.numberOfPeople}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
@@ -486,6 +439,8 @@ function BookMyAppointments() {
                           ({ date, currentMonth, today }, index) => {
                             return (
                               <div
+                                id="date"
+                                name="date"
                                 key={index}
                                 className="p-2 text-center h-14 grid place-content-center text-sm border-t"
                               >
@@ -501,6 +456,10 @@ function BookMyAppointments() {
                                   )}
                                   onClick={() => {
                                     setSelectDate(date);
+                                    setAppointmentInput({
+                                      ...appointmentInput,
+                                      date: date.format("YYYY-MM-DD"),
+                                    });
                                   }}
                                 >
                                   {date.date()}
@@ -538,7 +497,7 @@ function BookMyAppointments() {
                             "hover:bg-gray-200",
                             "select-none",
                             selectedTimes.includes(time.format("HH:mm")) &&
-                              "border-blue-400 text-blue-400"
+                            "border-blue-400 text-blue-400"
                           )}
                           onClick={() =>
                             handleTimeSelection(time.format("HH:mm"))
@@ -568,9 +527,8 @@ function BookMyAppointments() {
                         key={index}
                         className="flex items-center justify-center gap-2"
                       >
-                        <span style={{ fontWeight: "bold" }}>{` ${
-                          index + 1
-                        }:`}</span>{" "}
+                        <span style={{ fontWeight: "bold" }}>{` ${index + 1
+                          }:`}</span>{" "}
                         <span className="p-2 rounded-full border cursor-pointer border-emerald-500 text-emerald-500">
                           {time}
                         </span>
@@ -626,16 +584,15 @@ function BookMyAppointments() {
                 </div>
 
                 <div
-                  className={`${
-                    expandedUser === index ? "block" : "hidden"
-                  } mt-4 p-4`}
+                  className={`${expandedUser === index ? "block" : "hidden"
+                    } mt-4 p-4`}
                 >
                   <div className="relative mb-0 grid grid-cols-2 gap-2">
                     <input
                       type="text"
                       id={`firstName${index}`}
                       name={`firstName${index}`}
-                      value={input.firstName}
+                      value={appointmentInput.firstName}
                       onChange={onInputChange}
                       className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                       placeholder={t("firstname")}
@@ -645,7 +602,7 @@ function BookMyAppointments() {
                       type="text"
                       id={`lastName${index}`}
                       name={`lastName${index}`}
-                      value={input.lastName}
+                      value={appointmentInput.lastName}
                       onChange={onInputChange}
                       className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
                       placeholder={t("lastname")}
@@ -656,7 +613,7 @@ function BookMyAppointments() {
                     type="email"
                     id={`email${index}`}
                     name={`email${index}`}
-                    value={input.email}
+                    value={appointmentInput.email}
                     onChange={onInputChange}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                     placeholder={t("email")}
@@ -668,7 +625,7 @@ function BookMyAppointments() {
                         type="text"
                         id="phone"
                         name="phone"
-                        value={input.phone}
+                        value={appointmentInput.phone}
                         onChange={onInputChange}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("phonenumber")}
@@ -678,7 +635,7 @@ function BookMyAppointments() {
                         type="text"
                         id={`remarks${index}`}
                         name={`remarks${index}`}
-                        value={input.remarks}
+                        value={appointmentInput.remarks}
                         onChange={onInputChange}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("remarks")}

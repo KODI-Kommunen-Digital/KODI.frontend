@@ -12,20 +12,73 @@ const ServiceAndTime = () => {
     "Saturday",
     "Sunday",
   ];
-  const initialTimeSlot = { startTime: '00:00', endTime: '00:00' };
+  const initialTimeSlot = { startTime: "", endTime: "" };
 
   const [appointmentInput, setAppointmentInput] = useState({
     openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
     services: [{ name: "", duration: "", durationUnit: "minutes", slotSameAsAppointment: false, openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }],
   });
-  // console.log(appointmentInput)
+
+  const [appointmentError, setAppointmentError] = useState({
+    name: "",
+    duration: "",
+    endTime: "",
+    startTime: "",
+  });
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [editAppointmentTime, setEditAppointmentTime] = useState(false)
 
   const [isValidInput, setIsValidInput] = useState(true);
-  const [isValidTime, setIsValidTime] = useState(true);
+
+  const getErrorMessage = (name, value) => {
+    switch (name) {
+      case "startTime":
+        if (!parseInt(value)) {
+          return t("pleaseEnterStartTime");
+        } else {
+          return "";
+        }
+
+      case "endTime":
+        if (!parseInt(value)) {
+          return t("pleaseEnterEndTime");
+        } else {
+          return "";
+        }
+
+      case "name":
+        if (!parseInt(value)) {
+          return t("pleaseSelectServiceName");
+        } else {
+          return "";
+        }
+
+      case "duration":
+        if (!parseInt(value)) {
+          return t("pleaseSelectDuration");
+        } else {
+          return "";
+        }
+      default:
+        return "";
+    }
+  };
+
+  const validateInput = (index, e) => {
+    if (e && e.target) {
+      const { name, value } = e.target;
+      const errorMessage = getErrorMessage(name, value);
+      setAppointmentError((prevState) => ({
+        ...prevState,
+        [index]: {
+          ...prevState[index],
+          [name]: errorMessage
+        }
+      }));
+    }
+  };
 
   const handleInputChange = (value) => {
     const input = value;
@@ -33,15 +86,6 @@ const ServiceAndTime = () => {
       setIsValidInput(true); // Input is valid
     } else {
       setIsValidInput(false); // Input is not valid
-    }
-  };
-
-  const handleInputTimeChange = (value) => {
-    const input = value;
-    if (/^\d{0,2}(:\d{0,2})?$/.test(input)) {
-      setIsValidTime(true); // Input is valid
-    } else {
-      setIsValidTime(false); // Input is not valid
     }
   };
 
@@ -142,6 +186,7 @@ const ServiceAndTime = () => {
   };
 
   const handleTimeChange = (day, index, key, value) => {
+    console.log("Value received:", value);
     setAppointmentInput((prevInput) => {
       if (editAppointmentTime) {
         const updatedOpeningDates = {
@@ -165,7 +210,6 @@ const ServiceAndTime = () => {
 
         const updatedServices = prevInput.services
         updatedServices[index].openingDates = updatedOpeningDates
-
         return {
           ...prevInput,
           services: updatedServices
@@ -238,6 +282,30 @@ const ServiceAndTime = () => {
       }
     });
   };
+
+  const resetTimeSlots = () => {
+    const updatedOpeningDates = daysOfWeek.reduce((acc, day) => {
+      acc[day] = appointmentInput.openingDates[day].map(() => ({
+        startTime: "",
+        endTime: "",
+      }));
+      return acc;
+    }, {});
+
+    setAppointmentInput(prevState => ({
+      ...prevState,
+      openingDates: updatedOpeningDates,
+    }));
+  };
+
+  // function formatDateTime(dateTime) {
+  //   console.log("DateTime received:", dateTime);
+  //   const date = new Date(dateTime.replace("Z", ""));
+  //   const hours = String(date.getHours()).padStart(2, "0");
+  //   const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  //   return `${hours}:${minutes}`;
+  // }
   // Appointment ends
 
   return (
@@ -272,9 +340,17 @@ const ServiceAndTime = () => {
                 placeholder="Service Name"
                 value={service.name}
                 onChange={(e) => onServiceChange(index, 'name', e.target.value)}
-                // onBlur={(e) => validateInput(index, e)}
+                onBlur={(e) => validateInput(index, e)}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
+              <div
+                className="h-[24px] text-red-600"
+                style={{
+                  visibility: appointmentError[index]?.name ? "visible" : "hidden",
+                }}
+              >
+                {appointmentError[index]?.name}
+              </div>
             </div>
 
             <div className="relative mb-4">
@@ -286,6 +362,7 @@ const ServiceAndTime = () => {
                   placeholder="Duration"
                   value={service.duration}
                   onChange={(e) => { onServiceChange(index, 'duration', e.target.value); handleInputChange(e.target.value); }}
+                  onBlur={(e) => validateInput(index, e)}
                   className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
 
@@ -301,13 +378,22 @@ const ServiceAndTime = () => {
                 </select>
               </div>
 
+              <div
+                className="h-[24px] text-red-600"
+                style={{
+                  visibility: appointmentError[index]?.duration ? "visible" : "hidden",
+                }}
+              >
+                {appointmentError[index]?.duration}
+              </div>
+
               {!isValidInput && (
                 <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
               )}
             </div>
 
             <button
-              className={`w-full hidden md:inline-block bg-blue-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${isChecked ? "disabled:opacity-60" : ""
+              className={`w-full hidden md:inline-block bg-blue-800 mt-0 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${isChecked ? "disabled:opacity-60" : ""
                 }`}
               onClick={() => setShowModal(true)}
               disabled={isChecked[index]}
@@ -341,15 +427,10 @@ const ServiceAndTime = () => {
             </div>
             <button
               onClick={() => handleDeleteService(index)}
-              className="w-full hidden md:inline-block bg-red-800 mt-4 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
+              className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
             >
               {t("delete")}
             </button>
-            {/* <a className="relative inline-block px-4 py-2 font-medium group" onClick={() => handleDeleteService(index)}>
-              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-              <span className="relative text-black group-hover:text-white">{t("delete")}</span>
-            </a> */}
             {showModal && (
               <div className="fixed z-50 inset-0 overflow-y-auto">
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -365,12 +446,13 @@ const ServiceAndTime = () => {
                   >
                     &#8203;
                   </span>
-                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-xl transform transition-all sm:align-middle sm:max-w-2xl sm:w-full">
+                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="bg-white p-4">
                       <button
                         onClick={() => {
                           setShowModal(false)
                           setEditAppointmentTime(false)
+                          resetTimeSlots();
                         }}
                         className="absolute top-0 right-0 p-4 text-xl cursor-pointer"
                       >
@@ -378,12 +460,14 @@ const ServiceAndTime = () => {
                       </button>
 
 
-                      {!isValidTime && (
+                      {/* {!isValidTime && (
                         <p className="text-red-600">{t("pleaseEnterValidTime")}</p>
-                      )}
+                      )} */}
 
                       {daysOfWeek.map((day) => (
                         <div key={day} className="mb-4">
+
+                          {/* {JSON.stringify(appointmentInput.services[index].openingDates[day])} */}
                           {editAppointmentTime && appointmentInput.openingDates[day].map((timeSlot, index) => (
                             <div
                               key={index}
@@ -398,26 +482,33 @@ const ServiceAndTime = () => {
                               <div className="flex space-x-2 mt-0 items-center">
                                 <div className="relative">
                                   <input
-                                    type="text"
+                                    type="time"
                                     id="startTime"
                                     name="startTime"
-                                    value={timeSlot.startTime}
-                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value); handleInputTimeChange(e.target.value); }
+                                    // value={timeSlot.startTime}
+                                    value={
+                                      timeSlot.startTime ? timeSlot.startTime : ""
                                     }
-                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value) }
+                                    }
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
+                                  {console.log(timeSlot)}
                                 </div>
                                 <span className="relative text-gray-500"> - </span>
                                 <div className="relative">
                                   <input
-                                    type="text"
+                                    type="time"
                                     id="endTime"
                                     name="endTime"
-                                    value={timeSlot.endTime}
-                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value); handleInputTimeChange(e.target.value); }
+                                    // value={timeSlot.endTime}
+                                    value={
+                                      timeSlot.endTime ? timeSlot.endTime : ""
                                     }
-                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value) }
+                                    }
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
                                 </div>
@@ -453,7 +544,6 @@ const ServiceAndTime = () => {
                             </div>
                           ))}
 
-                          {/* {JSON.stringify(appointmentInput.services[index].openingDates[day])} */}
                           {!editAppointmentTime && appointmentInput.services[index].openingDates[day].map((timeSlot, index) => (
                             <div
                               key={index}
@@ -468,24 +558,28 @@ const ServiceAndTime = () => {
                               <div className="flex space-x-2 mt-0 items-center">
                                 <div className="relative">
                                   <input
-                                    type="text"
+                                    type="time"
                                     id="startTime"
                                     name="startTime"
-                                    value={timeSlot.startTime}
-                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value); handleInputTimeChange(e.target.value); }}
-                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    value={
+                                      timeSlot.startTime ? timeSlot.startTime : ""
+                                    }
+                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value) }}
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
                                 </div>
                                 <span className="relative text-gray-500"> - </span>
                                 <div className="relative">
                                   <input
-                                    type="text"
+                                    type="time"
                                     id="endTime"
                                     name="endTime"
-                                    value={timeSlot.endTime}
-                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value); handleInputTimeChange(e.target.value); }}
-                                    className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                                    value={
+                                      timeSlot.endTime ? timeSlot.startTime : ""
+                                    }
+                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value) }}
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
                                 </div>
@@ -556,7 +650,7 @@ const ServiceAndTime = () => {
 
       <button
         onClick={handleAddService}
-        className="w-full bg-black mt-4 bg-black mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+        className="w-full bg-black mt-4 bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
       >
         {t("addAnotherService")}
       </button>

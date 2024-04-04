@@ -81,8 +81,6 @@ const Listing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-  const isMyBookingEnabled =
-    process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -102,6 +100,7 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
+
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
@@ -357,9 +356,8 @@ const Listing = () => {
                           </div>
 
                           <div
-                            className={`hidden md:block flex items-center mt-6 ${
-                              terminalView ? "hidden" : "visible"
-                            }`}
+                            className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
                           >
                             <button
                               type="button"
@@ -378,9 +376,8 @@ const Listing = () => {
                             </button>
                           </div>
                           <div
-                            className={`md:hidden block flex items-center mt-6 ${
-                              terminalView ? "hidden" : "visible"
-                            }`}
+                            className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -562,7 +559,7 @@ const Listing = () => {
                             src={
                               user?.image
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                  user?.image
+                                user?.image
                                 : PROFILEIMAGE
                             }
                             alt={user?.lastname}
@@ -610,10 +607,10 @@ const Listing = () => {
                   </div>
                 )}
 
-                {isMyBookingEnabled && (
+                {input.id && input.categoryId === 4 && (
                   <button
                     onClick={() =>
-                      navigateTo(`/AppointmentBooking/BookAppointments/Select`)
+                      navigateTo(`/Listings/BookAppointments`)
                     }
                     className="w-full bg-black hover:bg-slate-600 font-semibold text-white py-2 px-4 mt-4 rounded-xl"
                   >

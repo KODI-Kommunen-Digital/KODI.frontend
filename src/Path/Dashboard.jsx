@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
+import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
   updateListingsData,
@@ -177,19 +178,35 @@ const Dashboard = () => {
   }, [fetchListings]);
 
   function handleDelete(listing) {
-    deleteListing(listing.cityId, listing.id)
-      .then((res) => {
-        setListings(
-          listings.filter(
-            (l) => l.cityId !== listing.cityId || l.id !== listing.id
-          )
-        );
-        setShowConfirmationModal({ visible: false });
+    if (listing.appointmentId) {
+      deleteAppointments(listing.cityId, listing.id, listing.appointmentId)
+        .then((res) => {
+          setListings(
+            listings.filter(
+              (l) => l.cityId !== listing.cityId || l.id !== listing.id || l.appointmentId !== listing.appointmentId
+            )
+          );
+          setShowConfirmationModal({ visible: false });
 
-        fetchUpdatedListings();
-        window.location.reload();
-      })
-      .catch((error) => console.log(error));
+          fetchUpdatedListings();
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
+    } else {
+      deleteListing(listing.cityId, listing.id)
+        .then((res) => {
+          setListings(
+            listings.filter(
+              (l) => l.cityId !== listing.cityId || l.id !== listing.id
+            )
+          );
+          setShowConfirmationModal({ visible: false });
+
+          fetchUpdatedListings();
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
+    }
   }
 
   function deleteListingOnClick(listing) {
