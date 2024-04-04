@@ -646,7 +646,7 @@ function UploadListings() {
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
             >
-              {t("city")} *
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <select
               type="text"
@@ -742,7 +742,7 @@ function UploadListings() {
               {error.categoryId}
             </div>
           </div>
-          
+
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-4">
               <label
@@ -944,7 +944,7 @@ function UploadListings() {
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
             >
-              {t("streetAddress")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("stichworte") : t("streetAddress")} *
             </label>
             <div>
               <input
@@ -1008,7 +1008,7 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {t("telephone")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")} *
             </label>
             <input
               type="text"
@@ -1047,7 +1047,7 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {t("website")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("veranstaltungsinfos") : t("website")} *
             </label>
             <input
               type="text"
