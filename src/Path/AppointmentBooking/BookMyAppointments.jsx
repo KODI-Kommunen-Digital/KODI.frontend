@@ -45,41 +45,44 @@ function BookMyAppointments() {
 
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
+  const [timeSlotMinimumError, setTimeSlotMinimumError] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
   const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
 
   const [appointmentInput, setAppointmentInput] = useState({
     categoryId: 0,
     bookingId: 0,
-    description: "",
-    firstName: "",
-    lastName: "",
     endTime: [],
     startTime: [],
-    remarks: "",
-    email: "",
-    phone: "",
     date: "",
     numberOfPeople: "",
     service: "",
-    friends: [],
+    friends: [{}],
+    guestDetails: {
+      firstName: "",
+      lastName: "",
+      description: "",
+      phone: "",
+      email: ""
+    }
   });
   console.log(appointmentInput)
 
-  const [error, setError] = useState({
-    endTime: "",
-    startTime: "",
+  const [appointmentError, setAppointmentError] = useState({
     numberOfPeople: "",
     service: "",
+    firstName: "",
+    lastName: "",
+    email: "",
   });
 
   const handleSubmit = async (event) => {
     let valid = true;
-    for (const key in error) {
+    for (const key in appointmentError) {
       const errorMessage = getErrorMessage(key, appointmentInput[key]);
-      const newError = error;
+      const newError = appointmentError;
       newError[key] = errorMessage;
-      setError(newError);
+      setAppointmentError(newError);
       if (errorMessage) {
         valid = false;
       }
@@ -99,7 +102,7 @@ function BookMyAppointments() {
           setSuccessMessage(false);
           navigate("/Dashboard");
         }, 5000);
-      } catch (error) {
+      } catch (appointmentError) {
         setErrorMessage(t("changesNotSaved"));
         setSuccessMessage(false);
         setTimeout(() => setErrorMessage(false), 5000);
@@ -156,14 +159,39 @@ function BookMyAppointments() {
     }
   }, []);
 
-  const onInputChange = (e) => {
+  const onInputChange = (e, index) => {
     const { name, value } = e.target;
-    setAppointmentInput((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "service" || name === "numberOfPeople") {
+      setAppointmentInput((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      if (index === 0) {
+        setAppointmentInput((prev) => ({
+          ...prev,
+          guestDetails: {
+            ...prev.guestDetails,
+            [name]: value,
+          },
+        }));
+      } else {
+        setAppointmentInput((prev) => {
+          const updatedFriends = [...prev.friends];
+          if (!updatedFriends[index - 1]) {
+            updatedFriends[index - 1] = {}; // Ensure the friends array has enough slots
+          }
+          updatedFriends[index - 1][name] = value; // Update the specific friend's field
+          return {
+            ...prev,
+            friends: updatedFriends,
+          };
+        });
+      }
+    }
     validateInput(name, value);
   };
+
 
   const navigateTo = (path) => {
     if (path) {
@@ -187,20 +215,23 @@ function BookMyAppointments() {
           return "";
         }
 
-      case "startTime":
-        if (!value && parseInt(appointmentInput.categoryId) === 3) {
-          return t("pleaseEnterStartTime");
+      case "firstName":
+        if (!parseInt(value)) {
+          return t("pleaseSelectFirstName");
         } else {
           return "";
         }
 
-      case "endTime":
-        if (parseInt(appointmentInput.categoryId) === 3) {
-          if (value && new Date(appointmentInput.startDate) > new Date(value)) {
-            return t("pleaseEnterEndTime");
-          } else {
-            return "";
-          }
+      case "lastName":
+        if (!parseInt(value)) {
+          return t("pleaseSelectLastName");
+        } else {
+          return "";
+        }
+
+      case "email":
+        if (!parseInt(value)) {
+          return t("pleaseSelectEmail");
         } else {
           return "";
         }
@@ -209,19 +240,26 @@ function BookMyAppointments() {
     }
   };
 
-  const validateInput = (name, value) => {
-    const errorMessage = getErrorMessage(name, value);
-    setError((prevState) => {
-      return { ...prevState, [name]: errorMessage };
-    });
+  const validateInput = (index, e) => {
+    if (e && e.target) {
+      const { name, value } = e.target;
+      const errorMessage = getErrorMessage(name, value);
+      setAppointmentError((prevState) => ({
+        ...prevState,
+        [index]: {
+          ...prevState[index],
+          [name]: errorMessage
+        }
+      }));
+    }
   };
 
   const toggleUserDropdown = (index) => {
-    setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index)); // Toggle expanded user
+    setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index));
   };
 
   const handleTimeSelection = (time) => {
-    if (selectedTimes.length < 8) {
+    if (appointmentInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < appointmentInput.numberOfPeople) {
       const duration = 30; // Assuming duration is in minutes
       const startTime = dayjs()
         .set('hour', parseInt(time.split(':')[0]))
@@ -232,16 +270,20 @@ function BookMyAppointments() {
 
       setAppointmentInput((prevState) => ({
         ...prevState,
-        startTime: [...prevState.startTime, time], // Add selected time to startTime array
-        endTime: [...prevState.endTime, endTime], // Add corresponding end time to endTime array
+        startTime: [...prevState.startTime, time],
+        endTime: [...prevState.endTime, endTime],
         date: selectedDate,
       }));
 
       setSelectedTimes([...selectedTimes, time]);
       setSelectedCount(selectedCount + 1);
       setNumberError(false);
-    } else {
+    } else if (selectedTimes.length >= 8) {
       setNumberError(true);
+      setTimeSlotMinimumError(false);
+    } else if (selectedTimes.length >= appointmentInput.numberOfPeople || appointmentInput.numberOfPeople === "") {
+      setNumberError(false);
+      setTimeSlotMinimumError(true);
     }
   };
 
@@ -336,7 +378,7 @@ function BookMyAppointments() {
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                {t("select")}
+                {t("select")} *
               </label>
               <select
                 id="service"
@@ -356,13 +398,21 @@ function BookMyAppointments() {
                   </option>
                 ))}
               </select>
+              <div
+                className="h-[24px] text-red-600"
+                style={{
+                  visibility: appointmentError.service ? "visible" : "hidden",
+                }}
+              >
+                {appointmentError.service}
+              </div>
             </div>
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="numberOfPeople"
                 className="block text-md font-medium text-gray-600"
               >
-                {t("numberofPeople")}
+                {t("numberofPeople")} *
               </label>
               <select
                 id="numberOfPeople"
@@ -385,6 +435,14 @@ function BookMyAppointments() {
                 <option value="7">7</option>
                 <option value="8">8</option>
               </select>
+              <div
+                className="h-[24px] text-red-600"
+                style={{
+                  visibility: appointmentError.numberOfPeople ? "visible" : "hidden",
+                }}
+              >
+                {appointmentError.numberOfPeople}
+              </div>
             </div>
           </div>
         </div>
@@ -511,7 +569,12 @@ function BookMyAppointments() {
                 </div>
                 {numberError && (
                   <div className="text-red-500 text-center mt-2">
-                    {t("timeSlotValidation")}
+                    {t("timeSlotMaxValidation")}
+                  </div>
+                )}
+                {timeSlotMinimumError && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("timeSlotNumberValidation")}
                   </div>
                 )}
 
@@ -571,7 +634,7 @@ function BookMyAppointments() {
                       className="mr-2 w-6 h-6 rounded-full object-cover"
                     />
                     <h2 className="text-lg font-medium mb-0">
-                      User {index + 1}
+                      {t("user")} {index + 1}
                     </h2>
                   </div>
 
@@ -587,59 +650,111 @@ function BookMyAppointments() {
                   className={`${expandedUser === index ? "block" : "hidden"
                     } mt-4 p-4`}
                 >
+
                   <div className="relative mb-0 grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      id={`firstName${index}`}
-                      name={`firstName${index}`}
-                      value={appointmentInput.firstName}
-                      onChange={onInputChange}
-                      className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                      placeholder={t("firstname")}
-                      required
-                    />
-                    <input
-                      type="text"
-                      id={`lastName${index}`}
-                      name={`lastName${index}`}
-                      value={appointmentInput.lastName}
-                      onChange={onInputChange}
-                      className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
-                      placeholder={t("lastname")}
-                      required
-                    />
+                    <div className="relative mb-0">
+                      <input
+                        type="text"
+                        id={`firstName`}
+                        name={`firstName`}
+                        value={index === 0 ? appointmentInput.guestDetails.firstName : appointmentInput.firstName}
+                        onChange={(e) => onInputChange(e, index)}
+                        onBlur={(e) => validateInput(index, e)}
+                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder={t("firstname")}
+                        required
+                      />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: appointmentError.firstName ? "visible" : "hidden",
+                        }}
+                      >
+                        {appointmentError.firstName}
+                      </div>
+                    </div>
+
+                    <div className="relative mb-0">
+                      <input
+                        type="text"
+                        id={`lastName`}
+                        name={`lastName`}
+                        value={index === 0 ? appointmentInput.guestDetails.lastName : appointmentInput.lastName}
+                        onChange={(e) => onInputChange(e, index)}
+                        onBlur={(e) => validateInput(index, e)}
+                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
+                        placeholder={t("lastname")}
+                        required
+                      />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: appointmentError.lastName ? "visible" : "hidden",
+                        }}
+                      >
+                        {appointmentError.lastName}
+                      </div>
+                    </div>
                   </div>
                   <input
                     type="email"
-                    id={`email${index}`}
-                    name={`email${index}`}
-                    value={appointmentInput.email}
-                    onChange={onInputChange}
+                    id={`email`}
+                    name={`email`}
+                    value={index === 0 ? appointmentInput.guestDetails.email : appointmentInput.email}
+                    onChange={(e) => onInputChange(e, index)}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                     placeholder={t("email")}
+                    onBlur={(e) => validateInput(index, e)}
                     required
                   />
+                  <div
+                    className="h-[24px] text-red-600"
+                    style={{
+                      visibility: appointmentError.email ? "visible" : "hidden",
+                    }}
+                  >
+                    {appointmentError.email}
+                  </div>
+
                   {index === 0 && (
                     <>
                       <input
                         type="text"
                         id="phone"
                         name="phone"
-                        value={appointmentInput.phone}
-                        onChange={onInputChange}
+                        value={index === 0 ? appointmentInput.guestDetails.phone : appointmentInput.phone}
+                        onChange={(e) => onInputChange(e, index)}
+                        onBlur={(e) => validateInput(index, e)}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("phonenumber")}
                       />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: appointmentError.phone ? "visible" : "hidden",
+                        }}
+                      >
+                        {appointmentError.phone}
+                      </div>
 
                       <input
                         type="text"
-                        id={`remarks${index}`}
-                        name={`remarks${index}`}
-                        value={appointmentInput.remarks}
-                        onChange={onInputChange}
+                        id={`description`}
+                        name={`description`}
+                        value={index === 0 ? appointmentInput.guestDetails.description : appointmentInput.description}
+                        onChange={(e) => onInputChange(e, index)}
+                        onBlur={(e) => validateInput(index, e)}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("remarks")}
                       />
+                      <div
+                        className="h-[24px] text-red-600"
+                        style={{
+                          visibility: appointmentError.description ? "visible" : "hidden",
+                        }}
+                      >
+                        {appointmentError.description}
+                      </div>
                     </>
                   )}
                 </div>

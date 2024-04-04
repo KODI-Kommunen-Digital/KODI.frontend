@@ -332,7 +332,7 @@ const ServiceAndTime = () => {
             key={index}
             className="items-stretch py-2 mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <input
                 type="text"
                 id="name"
@@ -353,7 +353,7 @@ const ServiceAndTime = () => {
               </div>
             </div>
 
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <div className="flex">
                 <input
                   type="text"

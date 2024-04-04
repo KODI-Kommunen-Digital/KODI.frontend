@@ -651,7 +651,7 @@ function UploadListings() {
             {t("uploadPost")}
             <div className="my-4 bg-gray-600 h-[1px]"></div>
           </h2>
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
@@ -679,7 +679,7 @@ function UploadListings() {
             </div>
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
@@ -714,7 +714,7 @@ function UploadListings() {
           </div>
 
           {villages.length > 0 && parseInt(cityId) ? (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <label
                 htmlFor="title"
                 className="block text-sm font-medium text-gray-600"
@@ -743,7 +743,7 @@ function UploadListings() {
             <span />
           )}
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="dropdown"
               className="block text-sm font-medium text-gray-600"
@@ -784,7 +784,7 @@ function UploadListings() {
           {categoryId == 18 && <ServiceAndTime />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <label
                 htmlFor="subcategoryId"
                 className="block text-sm font-medium text-gray-600"
@@ -825,7 +825,7 @@ function UploadListings() {
           )}
 
           {categoryId == 1 && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
                 {input.disableDates ? (
                   <label
@@ -900,7 +900,7 @@ function UploadListings() {
           )}
 
           {categoryId == 3 && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
                   <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
@@ -1001,7 +1001,7 @@ function UploadListings() {
           </div>
 
           {(categoryId == 12 || categoryId == 5) && (
-            <div className="relative mb-4 grid grid-cols-2 gap-4">
+            <div className="relative mb-0 grid grid-cols-2 gap-4">
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
                   htmlFor="place"
@@ -1043,7 +1043,7 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
@@ -1062,7 +1062,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
@@ -1082,7 +1082,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
@@ -1101,7 +1101,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-600"
@@ -1277,7 +1277,7 @@ function UploadListings() {
                   <p className="mt-1 text-sm text-gray-600">
                     {t("dragAndDropImageOrPDF")}
                   </p>
-                  <div className="relative mb-4 mt-8">
+                  <div className="relative mb-0 mt-8">
                     <label
                       className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
                     >
