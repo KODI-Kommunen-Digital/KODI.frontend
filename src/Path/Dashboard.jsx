@@ -14,6 +14,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
+import { getCities } from "../Services/cities";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -23,6 +24,8 @@ const Dashboard = () => {
   const [pageNo, setPageNo] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [cityId, setCityId] = useState();
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -30,6 +33,19 @@ const Dashboard = () => {
       navigate(path);
     }
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    getCities().then((citiesResponse) => {
+      setCities(citiesResponse.data.data);
+    });
+    const cityId = parseInt(urlParams.get("cityId"));
+    if (cityId) {
+      setCityId(cityId);
+    }
+
+    document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
+  }, []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -64,33 +80,48 @@ const Dashboard = () => {
         setViewAllListings(false);
       }
     });
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
-
-    if (viewAllListings === true) {
-      getListings({
-        statusId: selectedStatus,
-        pageNo,
-      }).then((response) => {
-        setListings(response.data.data);
-      });
+    if (window.location.pathname === "/Dashboard") {
+      setViewAllListings(false);
+    } else {
+      setViewAllListings(true);
     }
 
-    if (viewAllListings === false) {
-      getUserListings({
-        statusId: selectedStatus,
-        pageNo,
-      }).then((response) => {
-        setListings(response.data.data);
-      });
-    }
+    // if (viewAllListings === true) {
+    //   getListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
+    // if (viewAllListings === false) {
+    //   getUserListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {
     if (viewAllListings === true) {
-      getListings({
+      const params = {
         statusId: selectedStatus,
         pageNo,
-      }).then((response) => {
+      };
+
+      // Check if cityId exists in the URL before adding it to params
+      const urlParams = new URLSearchParams(window.location.search);
+      const cityIdParam = urlParams.get("cityId");
+      if (cityIdParam) {
+        const cityId = parseInt(cityIdParam);
+        params.cityId = cityId;
+      }
+
+      getListings(params).then((response) => {
         setListings(response.data.data);
       });
     }
@@ -102,7 +133,7 @@ const Dashboard = () => {
         setListings(response.data.data);
       });
     }
-  }, [selectedStatus, viewAllListings, pageNo]);
+  }, [selectedStatus, viewAllListings, pageNo, cityId]);
 
   useEffect(() => {
     if (pageNo === 1) {
@@ -128,8 +159,10 @@ const Dashboard = () => {
     if (newPageNo < 1) {
       newPageNo = 1;
     }
-    // navigate(`/Dashboard?pageNo=${newPageNo}`);
-    window.location.href = `/Dashboard?pageNo=${newPageNo}`;
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("pageNo", newPageNo);
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.replaceState({}, "", newUrl);
     setPageNo(newPageNo);
   };
 
@@ -137,8 +170,10 @@ const Dashboard = () => {
     if (newPageNo < 1) {
       newPageNo = 1;
     }
-    // navigate(`/DashboardAdmin?pageNo=${newPageNo}`);
-    window.location.href = `/DashboardAdmin?pageNo=${newPageNo}`;
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("pageNo", newPageNo);
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.replaceState({}, "", newUrl);
     setPageNo(newPageNo);
   };
 
@@ -232,6 +267,24 @@ const Dashboard = () => {
     }
   };
 
+  const onCityChange = (e) => {
+    const selectedCityId = e.target.value;
+    const selectedCity = cities.find((city) => city.id.toString() === selectedCityId);
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", selectedCity.name);
+      urlParams.set("cityId", selectedCityId);
+    } else {
+      localStorage.setItem("selectedCity", t("allCities"));
+      urlParams.delete("cityId");
+    }
+
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+    setCityId(selectedCityId || 0);
+  };
+
   return (
     <section className="bg-slate-600 body-font relative h-screen">
       <SideBar />
@@ -291,14 +344,41 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="container px-5 lg:px-5 py-2 w-full md:w-auto fixed lg:w-auto relative">
-        <div className="mt-0 lg:mt-0 flex items-center justify-center">
-          <SearchBar
-            onSearch={handleSearch}
-            searchBarClassName="w-full md:w-96"
-          />
-        </div>
+      <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
+        <SearchBar
+          onSearch={handleSearch}
+          searchBarClassName="w-full md:w-96"
+        />
+
+        {window.location.pathname.includes("/DashboardAdmin") && (
+          <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-96">
+            <select
+              id="city"
+              name="city"
+              autoComplete="city-name"
+              onChange={onCityChange}
+              value={cityId || 0}
+              className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+              }}
+            >
+              <option className="font-sans" value={0} key={0}>
+                {t("allCities", {
+                  regionName: process.env.REACT_APP_REGION_NAME,
+                })}
+              </option>
+              {cities.map((city) => (
+                <option className="font-sans" value={city.id} key={city.id}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
       </div>
+
 
       <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
         <div className="h-full">
