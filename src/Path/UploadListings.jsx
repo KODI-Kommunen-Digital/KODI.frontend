@@ -646,7 +646,7 @@ function UploadListings() {
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA APP" ? t("cluster") : t("city")} *
+              {process.env.REACT_APP_NAME === "HIVADA APP" ? t("cluster") : t("city")} *
             </label>
             <select
               type="text"
@@ -944,7 +944,7 @@ function UploadListings() {
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA APP" ? t("stichworte") : t("streetAddress")} *
+              {process.env.REACT_APP_NAME === "HIVADA APP" ? t("stichworte") : t("streetAddress")} *
             </label>
             <div>
               <input
@@ -1008,7 +1008,7 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA APP" ? t("personen") : t("telephone")} *
+              {process.env.REACT_APP_NAME === "HIVADA APP" ? t("personen") : t("telephone")} *
             </label>
             <input
               type="text"
@@ -1047,7 +1047,7 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA APP" ? t("veranstaltungsinfos") : t("website")} *
+              {process.env.REACT_APP_NAME === "HIVADA APP" ? t("veranstaltungsinfos") : t("website")} *
             </label>
             <input
               type="text"
