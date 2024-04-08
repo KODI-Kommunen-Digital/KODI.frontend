@@ -106,33 +106,31 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
-          {
-            isForumEnabled && (
-              <React.Fragment>
-                <Route path="/Forum/ViewPost" element={<ViewPost />} />
-                <Route path="/Forum" element={<Forum />} />
-                <Route path="/UploadPosts" element={<UploadPosts />} />
-                <Route path="/CreateGroup" element={<CreateGroup />} exact />
-                <Route path="/MyGroups" element={<MyGroups />} exact />
-                <Route
-                  path="/MyGroups/GroupMembers"
-                  element={<GroupMembers />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/MemberRequests"
-                  element={<MemberRequests />}
-                  exact
-                />
-                <Route
-                  path="/MyGroups/ReportedPosts"
-                  element={<ReportedPosts />}
-                  exact
-                />
-                <Route path="/CitizenService/AllForums" element={<AllForums />} />
-              </React.Fragment>
-            )
-          }
+          {isForumEnabled && (
+            <React.Fragment>
+              <Route path="/Forum/ViewPost" element={<ViewPost />} />
+              <Route path="/Forum" element={<Forum />} />
+              <Route path="/UploadPosts" element={<UploadPosts />} />
+              <Route path="/CreateGroup" element={<CreateGroup />} exact />
+              <Route path="/MyGroups" element={<MyGroups />} exact />
+              <Route
+                path="/MyGroups/GroupMembers"
+                element={<GroupMembers />}
+                exact
+              />
+              <Route
+                path="/MyGroups/MemberRequests"
+                element={<MemberRequests />}
+                exact
+              />
+              <Route
+                path="/MyGroups/ReportedPosts"
+                element={<ReportedPosts />}
+                exact
+              />
+              <Route path="/CitizenService/AllForums" element={<AllForums />} />
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>
