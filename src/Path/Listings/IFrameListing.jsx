@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-// import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
-// import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import PropTypes from "prop-types";
 import CustomCarousel from "../Carousel/CustomCarousel";
@@ -18,6 +16,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
+import './HeidiListings.css'
 
 
 const Description = ({ content }) => {
@@ -282,27 +281,8 @@ const IFrameListing = () => {
         }
     };
 
-    // const [firstname, setFirstname] = useState("");
-    // const [lastname, setLastname] = useState("");
-    // const [userSocial, setUserSocial] = useState([]);
-
-    // useEffect(() => {
-    //     if (user) {
-    //         try {
-    //             const socialMedia = user.socialMedia
-    //                 ? JSON.parse(user.socialMedia)
-    //                 : {};
-    //             setUserSocial(socialMedia);
-    //             setFirstname(user.firstname);
-    //             setLastname(user.lastname);
-    //         } catch (error) {
-    //             console.error("Error parsing user.socialMedia:", error);
-    //         }
-    //     }
-    // }, [user]);
-
     return (
-        <section className="text-gray-600 bg-white body-font">
+        <section className="text-gray-600 bg-white body-font custom-scroll">
             {isLoading ? (
                 <LoadingPage />
             ) : (
@@ -532,22 +512,6 @@ const IFrameListing = () => {
                             </div>
                         </div>
                     </div>
-
-                    {input.address ? (
-                        <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-                            <h1
-                                className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("streetAddress")}
-                            </h1>
-                            <p>{input.address}</p>
-
-                            {input.place ? <p>{input.place}</p> : null}
-
-                            {input.zipcode ? <p>{input.zipcode}</p> : null}
-                        </div>
-                    ) : null}
                 </div>
             )}
         </section>
