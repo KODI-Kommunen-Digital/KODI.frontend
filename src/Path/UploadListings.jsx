@@ -21,6 +21,7 @@ import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
+import { role } from "../Constants/role";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -192,6 +193,8 @@ function UploadListings() {
     pdf: null,
     startDate: "",
     endDate: "",
+    expiryDate: getDefaultEndDate(),
+    timeless: false,
     originalPrice: "",
     zipCode: "",
     discountedPrice: "",
@@ -209,6 +212,7 @@ function UploadListings() {
     cityId: "",
     startDate: "",
     endDate: "",
+    expiryDate: "",
   });
 
   const handleSubmit = async (event) => {
@@ -324,13 +328,14 @@ function UploadListings() {
         subcatList[subCat.id] = subCat.name;
       });
       setSubCategories(subcatList);
+      console.log(response.data.data);
     });
     setInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
     setCityId(cityId);
     var listingId = searchParams.get("listingId");
     getProfile().then((response) => {
-      setIsAdmin(response.data.data.roleId === 1);
+      setIsAdmin(response.data.data.roleId === role.Admin);
     });
     if (listingId && cityId) {
       setListingId(parseInt(listingId));
@@ -346,10 +351,19 @@ function UploadListings() {
         setInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
+        setExpiryDate(listingData.expiryDate);
+
+        const hasExpiryDate = listingData.hasOwnProperty("expiryDate");
+        if (!hasExpiryDate || !listingData.expiryDate) {
+          // If no expiryDate or expiryDate is null, set getDefaultEndDate()
+          listingData.expiryDate = getDefaultEndDate();
+        }
+
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
         if (listingData.logo && listingData.otherlogos) {
+          setImage(process.env.REACT_APP_BUCKET_HOST + listingData.logo);
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
@@ -383,6 +397,15 @@ function UploadListings() {
       }
     }
   }, [error]);
+
+  // const onInputChange = (e) => {
+  // 	const { name, value } = e.target;
+  // 	setInput((prev) => ({
+  // 		...prev,
+  // 		[name]: value,
+  // 	}));
+  // 	validateInput(e);
+  // };
 
   const onInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -599,10 +622,10 @@ function UploadListings() {
   }
 
   return (
-    <section className="base-bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
@@ -1128,8 +1151,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1162,8 +1186,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1195,8 +1220,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
