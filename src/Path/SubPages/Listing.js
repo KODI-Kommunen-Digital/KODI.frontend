@@ -73,6 +73,7 @@ const Description = (props) => {
             text.innerHTML = "Anzeige";
             a.innerHTML = tag;
             a.href = ad.link;
+            a.target = "_blank";
             a.className = "flex justify-center h-80 max-h-full";
             const idx = Math.floor(parsed.body.childNodes.length / 2);
             parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
@@ -365,9 +366,8 @@ const Listing = () => {
                           </span>
                         </h1>
                       </div>
-
-                      <div className="flex flex-wrap gap-1 justify-between mt-6">
-                        <div className="flex items-center gap-2 mt-0">
+                      <div className="flex flex-wrap gap-1 justify-between mt-0">
+                        <div className="flex items-center gap-2 mt-6">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             height="1em"

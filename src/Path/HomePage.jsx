@@ -96,7 +96,7 @@ const HomePage = () => {
       localStorage.setItem("selectedCity", selectedCity.name);
       window.location.href = `?cityId=${selectedCityId}`;
     } else {
-      const defaultCityName = process.env.REACT_APP_REGION_NAME === "HIVADA APP"
+      const defaultCityName = process.env.REACT_APP_REGION_NAME === "HIVADA"
         ? t("allClusters")
         : t("allCities");
 
@@ -172,7 +172,7 @@ const HomePage = () => {
                     }}
                   >
                     <option className="font-sans" value={0} key={0}>
-                      {t(process.env.REACT_APP_REGION_NAME === "HIVADA APP"
+                      {t(process.env.REACT_APP_REGION_NAME === "HIVADA"
                         ? "allClusters"
                         : "allCities", {
                         regionName: process.env.REACT_APP_REGION_NAME,
