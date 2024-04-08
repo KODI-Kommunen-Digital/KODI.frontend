@@ -73,6 +73,7 @@ const Description = (props) => {
             text.innerHTML = "Anzeige";
             a.innerHTML = tag;
             a.href = ad.link;
+            a.target = "_blank";
             a.className = "flex justify-center h-80 max-h-full";
             const idx = Math.floor(parsed.body.childNodes.length / 2);
             parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
