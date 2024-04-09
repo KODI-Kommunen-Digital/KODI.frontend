@@ -212,58 +212,31 @@ function BookMyAppointments() {
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "service":
-        if (!value) {
-          return t("pleaseEnterService");
-        } else {
-          return "";
-        }
-
+        return value.trim() === "" ? t("pleaseEnterService") : "";
       case "numberOfPeople":
-        if (!parseInt(value)) {
-          return t("pleaseSelectNumberOfPeople");
-        } else {
-          return "";
-        }
-
+        return value.trim() === "" ? t("pleaseSelectNumberOfPeople") : "";
       case "firstName":
-        if (!parseInt(value)) {
-          return t("pleaseSelectFirstName");
-        } else {
-          return "";
-        }
-
+        return value.trim() === "" ? t("pleaseSelectFirstName") : "";
       case "lastName":
-        if (!parseInt(value)) {
-          return t("pleaseSelectLastName");
-        } else {
-          return "";
-        }
-
+        return value.trim() === "" ? t("pleaseSelectLastName") : "";
       case "phone":
-        if (!parseInt(value)) {
-          return t("pleaseSelectPhone");
-        } else {
-          return "";
-        }
-
+        return value.trim() === "" ? t("pleaseSelectPhone") : "";
       case "email":
-        if (!parseInt(value)) {
-          return t("pleaseSelectEmail");
-        } else {
-          return "";
-        }
+        return value.trim() === "" ? t("pleaseSelectEmail") : "";
       default:
         return "";
     }
   };
 
-  const validateInput = (index, e) => {
-    const { name, value } = e.target;
-    const errorMessage = getErrorMessage(name, value);
-    setAppointmentError(prevErrors => ({
-      ...prevErrors,
-      [name]: errorMessage
-    }));
+  const validateInput = (e) => {
+    if (e && e.target) {
+      const { name, value } = e.target;
+      const errorMessage = getErrorMessage(name, value);
+      setAppointmentError((prevState) => ({
+        ...prevState,
+        [name]: errorMessage
+      }));
+    }
   };
 
   const toggleUserDropdown = (index) => {
@@ -671,13 +644,13 @@ function BookMyAppointments() {
                         name={`firstName`}
                         value={index === 0 ? appointmentInput.guestDetails.firstName : appointmentInput.firstName}
                         onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(index, e)}
+                        onBlur={(e) => validateInput(e)}
                         className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("firstname")}
                         required
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="h-[24px] text-red-600 text-start"
                         style={{
                           visibility: appointmentError.firstName ? "visible" : "hidden",
                         }}
@@ -693,13 +666,13 @@ function BookMyAppointments() {
                         name={`lastName`}
                         value={index === 0 ? appointmentInput.guestDetails.lastName : appointmentInput.lastName}
                         onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(index, e)}
+                        onBlur={(e) => validateInput(e)}
                         className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
                         placeholder={t("lastname")}
                         required
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="h-[24px] text-red-600 text-start"
                         style={{
                           visibility: appointmentError.lastName ? "visible" : "hidden",
                         }}
@@ -716,11 +689,11 @@ function BookMyAppointments() {
                     onChange={(e) => onInputChange(e, index)}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                     placeholder={t("email")}
-                    onBlur={(e) => validateInput(index, e)}
+                    onBlur={(e) => validateInput(e)}
                     required
                   />
                   <div
-                    className="h-[24px] text-red-600"
+                    className="h-[24px] text-red-600 text-start"
                     style={{
                       visibility: appointmentError.email ? "visible" : "hidden",
                     }}
@@ -736,12 +709,12 @@ function BookMyAppointments() {
                         name="phone"
                         value={index === 0 ? appointmentInput.guestDetails.phone : appointmentInput.phone}
                         onChange={(e) => { onInputChange(e, index); handleInputChange(e); }}
-                        onBlur={(e) => validateInput(index, e)}
+                        onBlur={(e) => validateInput(e)}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                        placeholder={t("phonenumber")}
+                        placeholder={t("phoneNumber")}
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="h-[24px] text-red-600 text-start"
                         style={{
                           visibility: appointmentError.phone ? "visible" : "hidden",
                         }}
@@ -758,7 +731,7 @@ function BookMyAppointments() {
                         name={`description`}
                         value={index === 0 ? appointmentInput.guestDetails.description : appointmentInput.description}
                         onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(index, e)}
+                        // onBlur={(e) => validateInput(e)}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("remarks")}
                       />
