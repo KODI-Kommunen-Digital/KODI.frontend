@@ -35,7 +35,7 @@ function BookMyAppointments() {
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
-
+  const [isValidInput, setIsValidInput] = useState(true);
 
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -73,6 +73,7 @@ function BookMyAppointments() {
     service: "",
     firstName: "",
     lastName: "",
+    phone: "",
     email: "",
   });
 
@@ -199,6 +200,15 @@ function BookMyAppointments() {
     }
   };
 
+  const handleInputChange = (value) => {
+    const input = value;
+    if (/^\d*$/.test(input)) {
+      setIsValidInput(true); // Input is valid
+    } else {
+      setIsValidInput(false); // Input is not valid
+    }
+  };
+
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "service":
@@ -229,6 +239,13 @@ function BookMyAppointments() {
           return "";
         }
 
+      case "phone":
+        if (!parseInt(value)) {
+          return t("pleaseSelectPhone");
+        } else {
+          return "";
+        }
+
       case "email":
         if (!parseInt(value)) {
           return t("pleaseSelectEmail");
@@ -241,17 +258,12 @@ function BookMyAppointments() {
   };
 
   const validateInput = (index, e) => {
-    if (e && e.target) {
-      const { name, value } = e.target;
-      const errorMessage = getErrorMessage(name, value);
-      setAppointmentError((prevState) => ({
-        ...prevState,
-        [index]: {
-          ...prevState[index],
-          [name]: errorMessage
-        }
-      }));
-    }
+    const { name, value } = e.target;
+    const errorMessage = getErrorMessage(name, value);
+    setAppointmentError(prevErrors => ({
+      ...prevErrors,
+      [name]: errorMessage
+    }));
   };
 
   const toggleUserDropdown = (index) => {
@@ -723,7 +735,7 @@ function BookMyAppointments() {
                         id="phone"
                         name="phone"
                         value={index === 0 ? appointmentInput.guestDetails.phone : appointmentInput.phone}
-                        onChange={(e) => onInputChange(e, index)}
+                        onChange={(e) => { onInputChange(e, index); handleInputChange(e); }}
                         onBlur={(e) => validateInput(index, e)}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                         placeholder={t("phonenumber")}
@@ -736,6 +748,9 @@ function BookMyAppointments() {
                       >
                         {appointmentError.phone}
                       </div>
+                      {!isValidInput && (
+                        <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
+                      )}
 
                       <input
                         type="text"
