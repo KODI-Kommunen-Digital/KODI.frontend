@@ -103,6 +103,7 @@ const Listing = () => {
 
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
+  const [appointmentId, setAppointmentId] = useState(0);
   const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
@@ -127,6 +128,8 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
+    const appointmentId = searchParams.get("appointmentId");
+    setAppointmentId(appointmentId);
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -610,7 +613,7 @@ const Listing = () => {
                 {input.id && input.categoryId === 4 && (
                   <button
                     onClick={() =>
-                      navigateTo(`/Listings/BookAppointments`)
+                      navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&listingId=${appointmentId}`)
                     }
                     className="w-full bg-black hover:bg-slate-600 font-semibold text-white py-2 px-4 mt-4 rounded-xl"
                   >

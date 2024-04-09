@@ -22,7 +22,6 @@ import cn from "../../Components/util/cn";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
-  const [listingId, setListingId] = useState(0);
   const [newBooking, setNewBooking] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [bookingId, setBookingId] = useState(false);
@@ -42,6 +41,7 @@ function BookMyAppointments() {
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
+  const [listingId, setListingId] = useState(0);
 
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
@@ -135,7 +135,11 @@ function BookMyAppointments() {
       });
       setCategories(catList);
     });
-    getAppointmentServices().then((response) => {
+    const cityId = searchParams.get("cityId");
+    const listingId = searchParams.get("listingId");
+    const appointmentId = searchParams.get("appointmentId");
+
+    getAppointmentServices(cityId, listingId, appointmentId).then((response) => {
       const serviceList = {};
       response?.data.data.forEach((service) => {
         serviceList[service.id] = service.name;
@@ -144,7 +148,6 @@ function BookMyAppointments() {
     });
     setAppointmentInput((prevInput) => ({ ...prevInput, categoryId }));
     setBookingId(bookingId);
-    const listingId = searchParams.get("listingId");
     if (listingId && bookingId) {
       setListingId(parseInt(listingId));
       setNewBooking(false);
