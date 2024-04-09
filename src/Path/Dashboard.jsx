@@ -337,11 +337,11 @@ const Dashboard = () => {
       <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
         <SearchBar
           onSearch={handleSearch}
-          searchBarClassName="w-full md:w-96"
+          searchBarClassName="w-full md:w-80"
         />
 
         {window.location.pathname.includes("/DashboardAdmin") && (
-          <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-96">
+          <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
             <select
               id="city"
               name="city"
@@ -366,7 +366,6 @@ const Dashboard = () => {
             </select>
           </div>
         )}
-
       </div>
 
 
