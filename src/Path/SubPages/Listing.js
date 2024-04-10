@@ -304,7 +304,7 @@ const Listing = () => {
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
+          <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
             <div className="grid grid-cols-1 gap-4 col-span-2">
               <div className="lg:w-full md:w-full h-full">
                 <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
@@ -461,7 +461,7 @@ const Listing = () => {
 								}
 							`}
                   </style>
-                  <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+                  <div className="h-full overflow-hidden px-0 py-0 bg-white border-8 border-slate-500">
                     <div className="relative h-full">
                       {input.pdf ? (
                         <div>
