@@ -53,7 +53,7 @@ function UserProfile({ user }) {
   };
   return (
     <div>
-      <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-xl">
+      <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
         <div>
           <div
             onClick={() =>

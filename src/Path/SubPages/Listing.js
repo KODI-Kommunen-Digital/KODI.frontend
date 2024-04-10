@@ -321,7 +321,7 @@ const Listing = () => {
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
                 <div className="lg:w-full md:w-full h-full">
-                  <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+                  <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
                     <div className="mt-5 md:col-span-2 md:mt-0">
                       <form method="POST">
                         <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
@@ -473,7 +473,7 @@ const Listing = () => {
 
                 <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
                   <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                    <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
+                    <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                       <div className="relative h-full">
                         {input.pdf ? (
                           <div>
@@ -544,7 +544,7 @@ const Listing = () => {
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
-                  <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+                  <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
                     <div>
                       <div
                         onClick={() =>
