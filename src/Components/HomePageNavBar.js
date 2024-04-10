@@ -69,6 +69,19 @@ export default function HomePageNavBar() {
     navigateTo("/Dashboard");
   };
 
+  function clearStorage() {
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
+    window.localStorage.removeItem("userId");
+    window.localStorage.removeItem("selectedItem");
+    window.sessionStorage.removeItem("accessToken");
+    window.sessionStorage.removeItem("refreshToken");
+    window.sessionStorage.removeItem("userId");
+    window.sessionStorage.removeItem("selectedItem");
+    setIsLoggedIn(false);
+    navigateTo("/");
+  }
+
   // document.addEventListener("scroll", function () {
   //   const popover = document.getElementById("scrollablePopover");
   //   const scrollPosition = window.scrollY;

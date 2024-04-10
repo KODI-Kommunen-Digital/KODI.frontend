@@ -86,10 +86,11 @@ const Description = (props) => {
     }
   }, [props.cityId, props.content]);
 
+  // const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
-      dangerouslySetInnerHTML={{ __html: linkedContent }}
+      dangerouslySetInnerHTML={{ __html: desc }}
     ></p>
   );
 };
