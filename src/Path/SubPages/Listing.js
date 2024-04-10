@@ -55,7 +55,7 @@ const Description = ({ content }) => {
   const linkedContent = linkify(content);
   return (
     <p
-      className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
+      className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
       dangerouslySetInnerHTML={{ __html: linkedContent }}
     ></p>
   );
@@ -246,9 +246,6 @@ const Listing = () => {
     }
   }, [selectedCategoryId, listingId]);
 
-  const [handleClassName, setHandleClassName] = useState(
-    "rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-  );
   const handleFavorite = async (event) => {
     try {
       if (isLoggedIn) {
@@ -261,18 +258,12 @@ const Listing = () => {
           await deleteListingsById(favoriteId);
           setFavoriteId(0);
           setSuccessMessage(t("list removed from the favorites"));
-          setHandleClassName(
-            "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-          );
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
               .then((response) => {
                 setFavoriteId(response.data.id);
                 setSuccessMessage(t("List added to the favorites"));
-                setHandleClassName(
-                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                );
               })
               .catch((err) => console.log("Error", err))
             : console.log("Error");
@@ -320,7 +311,7 @@ const Listing = () => {
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <form method="POST">
                       <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                        <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                        <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                           <span
                             className="inline-block max-w-full break-words"
                             style={{
@@ -358,21 +349,13 @@ const Listing = () => {
                           className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
                             }`}
                         >
-                          <button
-                            type="button"
-                            className={handleClassName}
-                            onClick={() => handleFavorite()}
-                          >
-                            <span
-                              style={{
-                                fontFamily: "Poppins, sans-serif",
-                              }}
-                            >
-                              {favoriteId !== 0
-                                ? t("unfavorite")
-                                : t("favourites")}
+
+                          <a onClick={() => handleFavorite()} className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
+                            <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                            <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                              {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
                             </span>
-                          </button>
+                          </a>
                         </div>
                         <div
                           className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
@@ -407,7 +390,7 @@ const Listing = () => {
 
                         {input.id && input.categoryId === 3 ? (
                           <p
-                            className="leading-relaxed text-base dark:text-gray-900 font-bold"
+                            className="leading-relaxed text-base dark:text-slate-800 font-bold"
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -519,14 +502,14 @@ const Listing = () => {
 
               <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
                 <h1
-                  className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                  className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {t("description")}
                 </h1>
                 <Description content={description} />
                 {sourceId === listingSource.SCRAPER && (
-                  <p className="text-gray-900 font-medium">
+                  <p className="text-slate-800 font-medium">
                     {t("visitWebsite")}{" "}
                     <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
                       {website}
@@ -589,7 +572,7 @@ const Listing = () => {
                         {firstname + " " + lastname}
                       </h2>
                       <p
-                        className="leading-relaxed text-base font-bold dark:text-gray-900"
+                        className="leading-relaxed text-base font-bold dark:text-slate-800"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -606,7 +589,7 @@ const Listing = () => {
           {input.address ? (
             <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
               <h1
-                className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {t("streetAddress")}
@@ -620,7 +603,7 @@ const Listing = () => {
           ) : null}
 
           <div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-            <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+            <h1 className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800">
               {t("similarItems")}
             </h1>
             {listings && listings.length > 0 ? (
