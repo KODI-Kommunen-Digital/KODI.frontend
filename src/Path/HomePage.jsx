@@ -214,6 +214,9 @@ const HomePage = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+
+    // const listingsSection = document.getElementById("listingsSection");
+    // listingsSection.scrollIntoView({ behavior: "smooth" });  // Use this if you want navidation to a place in page. Use id="listingsSection" in that section
   };
 
   function goToCitizensPage() {

@@ -37,7 +37,7 @@ function ListingsCard({ listing, terminalView = false }) {
           window.location.href = listing.website;
         }
       }}
-      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-xl transition-shadow duration-300 ease-in-out"
+      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-shadow duration-300 ease-in-out"
     >
       <div className="block relative h-64 rounded-t-lg overflow-hidden">
         {listing.pdf ? (

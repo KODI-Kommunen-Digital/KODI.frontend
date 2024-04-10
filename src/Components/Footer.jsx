@@ -139,13 +139,13 @@ function Footer(props) {
               </a>
             </p>
           </div>
-          <div className="">
+          <div className="justify-center">
             <h6 className="uppercase font-semibold mb-4 flex justify-center font-sans">
               {t("mobile")}
             </h6>
-            <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
+            <div className="flex flex-col mt-4 md:gap-0 gap-2 items-center cursor-pointer">
               <div
-                className="flex mt-3 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+                className="flex mt-3 w-10 md:w-36 h-10 bg-white text-black rounded-full md:rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
                 onClick={() => {
                   if (process.env.REACT_APP_REGION_NAME === "WALDI") {
                     window.location.href = process.env.REACT_APP_APPLESTORE;
@@ -154,7 +154,7 @@ function Footer(props) {
                   }
                 }}
               >
-                <div className="mr-2">
+                <div className="mr-0 md:mr-2">
                   <svg viewBox="0 0 384 512" width="20">
                     <path
                       fill="currentColor"
@@ -162,7 +162,7 @@ function Footer(props) {
                     />
                   </svg>
                 </div>
-                <div>
+                <div className="md:block hidden">
                   <div className="text-xs">{t("downloadOnThe")}</div>
                   <div className="-mt-1 font-sans text-sm font-semibold">
                     {t("appStore")}
@@ -171,7 +171,7 @@ function Footer(props) {
               </div>
 
               <div
-                className="flex mt-3 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+                className="flex mt-3 w-10 md:w-36 h-10 bg-white text-black rounded-full md:rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
                 onClick={() => {
                   if (process.env.REACT_APP_REGION_NAME === "WALDI") {
                     window.location.href =
@@ -182,7 +182,7 @@ function Footer(props) {
                   }
                 }}
               >
-                <div className="mr-2">
+                <div className="mr-0 md:mr-2">
                   <svg viewBox="30 336.7 120.9 129.2" width="20">
                     <path
                       fill="#FFD400"
@@ -202,7 +202,7 @@ function Footer(props) {
                     />
                   </svg>
                 </div>
-                <div>
+                <div className="md:block hidden">
                   <div className="text-xs">{t("getItOn")}</div>
                   <div className="-mt-1 font-sans text-sm font-semibold">
                     {t("googlePlay")}

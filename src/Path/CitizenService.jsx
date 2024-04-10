@@ -138,7 +138,7 @@ const CitizenService = () => {
                 .map((data, index) => (
                   <div
                     key={index}
-                    className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                    className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform hover:-translate-y-2"
                   >
                     <div className="relative h-80 rounded overflow-hidden">
                       <a
