@@ -29,7 +29,7 @@ function UploadContribution() {
 
                 <div className="w-full md:w-1/2 px-4">
                     <h2 className="text-4xl text-white font-bold mb-4 font-sans">{t("citizenService")}</h2>
-                    <p className="mb-4 text-gray-900 text-lg font-bold font-sans">{t("findBestCitizenServicesInTheCity")}</p>
+                    <p className="mb-4 text-slate-800 text-lg font-bold font-sans">{t("findBestCitizenServicesInTheCity")}</p>
                     <a
                         onClick={(e) => {
                             const selectedCityId = e.target.value;

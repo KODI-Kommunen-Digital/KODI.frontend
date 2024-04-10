@@ -305,7 +305,7 @@ function CreateGroup() {
 						style={{
 							fontFamily: "Poppins, sans-serif",
 						}}
-						class="text-gray-900 text-lg mb-4 font-medium title-font"
+						class="text-slate-800 text-lg mb-4 font-medium title-font"
 					>
 						{t("createGroup")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -384,14 +384,14 @@ function CreateGroup() {
 							<div className="relative">
 								<div
 									className={`w-14 h-7 rounded-full shadow-inner ${input.visibility === "private"
-											? "bg-blue-500"
-											: "bg-gray-300"
+										? "bg-blue-500"
+										: "bg-gray-300"
 										}`}
 								></div>
 								<div
 									className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${input.visibility === "private"
-											? "translate-x-full"
-											: "translate-x-0"
+										? "translate-x-full"
+										: "translate-x-0"
 										}`}
 								></div>
 								{/* No need for an input element here */}
@@ -444,7 +444,7 @@ function CreateGroup() {
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6 space-y-10">
-					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>

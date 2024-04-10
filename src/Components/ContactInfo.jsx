@@ -42,7 +42,7 @@ function ContactInfo({ user }) {
       <div className="w-full h-full lg:h-[18rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
         <div className="p-4 space-y-0 md:space-y-6 sm:p-4">
           <h1
-            className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl"
+            className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-xl"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("contactInfo")}

@@ -116,7 +116,7 @@ const PasswordUpdate = () => {
 						src={HeidiLogo}
 						alt="HEIDI"
 					/>
-					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 						{t("updatePassword")}
 					</h3>
 				</div>
@@ -139,7 +139,7 @@ const PasswordUpdate = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("oldPassword")}
 							></input>
 							{error.oldPassword && (
@@ -157,7 +157,7 @@ const PasswordUpdate = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("newPassword")}
 							></input>
 							{error.password && <span className="err">{error.password}</span>}
@@ -173,7 +173,7 @@ const PasswordUpdate = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("confirmNewPassword")}
 							></input>
 							{error.confirmPassword && (

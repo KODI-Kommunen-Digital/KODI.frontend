@@ -83,7 +83,7 @@ const Forums = () => {
 										autoComplete="city-name"
 										onChange={(e) => setCityId(e.target.value)}
 										value={cityId || 0}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+										className="bg-gray-50 border font-sans border-gray-300 text-slate-800 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}

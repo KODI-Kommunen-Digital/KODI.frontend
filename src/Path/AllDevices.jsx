@@ -91,7 +91,7 @@ const AllDevices = () => {
 				<div className="container w-auto px-5 py-2 bg-slate-600">
 					<div className="bg-white mt-4 p-6">
 						<h2
-							className="text-gray-900 text-lg mb-4 font-medium title-font"
+							className="text-slate-800 text-lg mb-4 font-medium title-font"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
 							{t("alldevicepagetitle")}
@@ -220,7 +220,7 @@ const AllDevices = () => {
 													</svg>
 												</div>
 												<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-													<h3 className="text-lg leading-6 font-medium text-gray-900">
+													<h3 className="text-lg leading-6 font-medium text-slate-800">
 														{t("areyousure")}
 													</h3>
 													<div className="mt-2">

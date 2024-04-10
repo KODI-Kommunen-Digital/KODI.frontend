@@ -36,9 +36,8 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 		<div>
 			{isFirstPopupOpen && (
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${
-						isOpen ? "" : "hidden"
-					}`}
+					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${isOpen ? "" : "hidden"
+						}`}
 				>
 					<div className="bg-white p-6 lg:rounded-md fixed top-0 overflow-y-auto max-h-[90vh]">
 						<div className="flex-raw justify-center gap-4 py-2 px-4 mt-4 mx-auto">
@@ -50,7 +49,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 								/>
 							</div>
 							<div className="text-center">
-								<h2 className="text-gray-900 text-2xl mb-2 font-extrabold title-font">
+								<h2 className="text-slate-800 text-2xl mb-2 font-extrabold title-font">
 									{t("privacypolicy")}
 								</h2>
 							</div>
@@ -125,9 +124,8 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 
 			{isSecondPopupOpen && (
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${
-						isSecondPopupOpen ? "" : "hidden"
-					}`}
+					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${isSecondPopupOpen ? "" : "hidden"
+						}`}
 				>
 					<div className="bg-white p-6 lg:rounded-md fixed top-0 overflow-y-auto max-h-[90vh]">
 						<div className="flex justify-center gap-4 py-2 px-4 mt-4 mx-auto">
@@ -138,7 +136,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									alt="HEDI- Heimat Digital"
 								/>
 							</div>
-							<h2 className="text-gray-900 text-2xl mb-0 font-extrabold title-font">
+							<h2 className="text-slate-800 text-2xl mb-0 font-extrabold title-font">
 								{t("privacypolicy")}
 							</h2>
 						</div>

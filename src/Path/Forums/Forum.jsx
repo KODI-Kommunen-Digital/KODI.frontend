@@ -282,7 +282,7 @@ const Forum = () => {
 																	</svg>
 																</div>
 																<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-																	<h3 className="text-lg leading-6 font-medium text-gray-900">
+																	<h3 className="text-lg leading-6 font-medium text-slate-800">
 																		{t("areyousure")}
 																	</h3>
 																	<div className="mt-2">
@@ -403,12 +403,12 @@ const Forum = () => {
 					<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
 						<div className="overflow-hidden sm:p-0 mt-[0rem] px-0 py-0">
 							<h1
-								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+								className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl"
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{t("description")}
 							</h1>
-							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900">
+							<h1 className="leading-relaxed text-md font-medium my-6 text-slate-800">
 								{forum.description}
 							</h1>
 						</div>
@@ -426,7 +426,7 @@ const Forum = () => {
 						<div>
 							{forumPosts && forumPosts.length > 0 ? (
 								<div className="max-w-full lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-full">
-									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-gray-900">
+									<h1 className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl text-slate-800">
 										{t("groupPosts")}
 									</h1>
 									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
@@ -456,7 +456,7 @@ const Forum = () => {
 														</a>
 														<div className="my-5 px-2">
 															<h2
-																className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+																className="text-slate-800 title-font text-lg font-bold text-center font-sans truncate"
 																style={{ fontFamily: "Poppins, sans-serif" }}
 															>
 																{forumPost.title}

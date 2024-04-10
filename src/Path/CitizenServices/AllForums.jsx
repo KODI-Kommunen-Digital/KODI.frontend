@@ -287,7 +287,7 @@ const AllForums = () => {
                                   className="flex justify-between items-center"
                                   style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                  <h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
+                                  <h2 className="text-slate-800 title-font text-md font-bold font-sans truncate">
                                     {forum.forumName.length > 18
                                       ? forum.forumName.substring(0, 18) + "..."
                                       : forum.forumName}

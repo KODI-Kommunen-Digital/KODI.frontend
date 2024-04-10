@@ -187,7 +187,7 @@ const GroupMembers = () => {
                     >
                       <th
                         scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                        className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
                       >
                         <img
                           className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
@@ -245,8 +245,8 @@ const GroupMembers = () => {
                         <td className="px-6 py-4 text-center">
                           <a
                             className={`font-medium text-blue-600 ${member.userId === currentUserId
-                                ? "hover:underline"
-                                : ""
+                              ? "hover:underline"
+                              : ""
                               } cursor-pointer text-center pr-0`}
                             onClick={() => {
                               member.userId === currentUserId &&
@@ -269,8 +269,8 @@ const GroupMembers = () => {
                         <td className="px-6 py-4 text-center">
                           <button
                             className={`font-medium hover:underline cursor-pointer text-center ${member.isAdmin === 1
-                                ? "text-red-500"
-                                : "text-green-500"
+                              ? "text-red-500"
+                              : "text-green-500"
                               }`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
@@ -324,7 +324,7 @@ const GroupMembers = () => {
                             isAdmin &&
                             currentUserId === memberToBeRemoved ? (
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                              <h3 className="text-lg leading-6 font-medium text-slate-800">
                                 {t("onlyAdminWarning")}
                               </h3>
                               <div className="mt-2">
@@ -335,7 +335,7 @@ const GroupMembers = () => {
                             </div>
                           ) : (
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                              <h3 className="text-lg leading-6 font-medium text-slate-800">
                                 {t("areyousure")}
                               </h3>
                               <div className="mt-2">
