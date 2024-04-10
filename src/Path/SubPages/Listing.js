@@ -64,9 +64,8 @@ const Description = (props) => {
           if (ad && ad.image && ad.link) {
             const parser = new DOMParser();
             const parsed = parser.parseFromString(linkedContent, "text/html");
-            const tag = `<img src=${
-              process.env.REACT_APP_BUCKET_HOST + ad.image
-            } alt="Ad" href=${ad.link}/>`;
+            const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
+              } alt="Ad" href=${ad.link}/>`;
             const a = document.createElement("a");
             const text = document.createElement("p");
             text.className = "text-right";
@@ -304,14 +303,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  setHandleClassName(
-                    "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                setHandleClassName(
+                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -391,9 +390,8 @@ const Listing = () => {
                         </div>
 
                         <div
-                          className={`hidden md:block flex items-center mt-6 ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
+                          className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                            }`}
                         >
                           <button
                             type="button"
@@ -412,9 +410,8 @@ const Listing = () => {
                           </button>
                         </div>
                         <div
-                          className={`md:hidden block flex items-center mt-6 ${
-                            terminalView ? "hidden" : "visible"
-                          }`}
+                          className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                            }`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -516,7 +513,7 @@ const Listing = () => {
 								}
 							`}
                   </style>
-                  <div className="h-full overflow-hidden px-0 py-0 shadow-xl">
+                  <div className="h-full overflow-hidden px-0 py-0 bg-white border-8 border-slate-500">
                     <div className="relative h-full">
                       {input.pdf ? (
                         <div>
