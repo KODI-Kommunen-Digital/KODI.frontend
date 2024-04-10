@@ -244,7 +244,7 @@ const GroupFeeds = () => {
                       </a>
                       <div className="mt-5 px-2">
                         <h2
-                          className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+                          className="text-slate-800 title-font text-lg font-bold text-center font-sans truncate"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
                           {listing.title}

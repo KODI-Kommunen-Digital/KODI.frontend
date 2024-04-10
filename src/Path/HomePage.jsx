@@ -425,7 +425,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      className="text-slate-800 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -433,7 +433,7 @@ const HomePage = () => {
                       {t("createAnAccount")}
                     </h2>
                     <p
-                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -452,7 +452,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      className="text-slate-800 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -460,7 +460,7 @@ const HomePage = () => {
                       {t("getVerified")}
                     </h2>
                     <p
-                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -479,7 +479,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                      className="text-slate-800 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -487,7 +487,7 @@ const HomePage = () => {
                       {t("start")}
                     </h2>
                     <p
-                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
+                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -510,7 +510,7 @@ const HomePage = () => {
                   {t("citizenService")}
                 </h2>
                 <p
-                  className="mb-4 text-gray-900 text-lg font-bold font-sans"
+                  className="mb-4 text-slate-800 text-lg font-bold font-sans"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {t("findBestCitizenServicesInTheCity")}

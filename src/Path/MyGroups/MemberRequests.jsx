@@ -120,14 +120,14 @@ const MemberRequests = () => {
                       >
                         <th
                           scope="row"
-                          className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+                          className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap dark:text-white cursor-pointer"
                         >
                           <img
                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                             src={
                               member.image
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                  member.image
+                                member.image
                                 : PROFILEPICTURE
                             }
                             alt="avatar"
@@ -155,11 +155,10 @@ const MemberRequests = () => {
 
                         <td className="px-6 py-4 text-center">
                           <a
-                            className={`font-medium ${
-                              isLoading
+                            className={`font-medium ${isLoading
                                 ? "text-gray-400 cursor-not-allowed"
                                 : "text-blue-600 hover:underline cursor-pointer"
-                            } px-2 dark:text-blue-500`}
+                              } px-2 dark:text-blue-500`}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                             onClick={() => handleAccept(member)}
                           >

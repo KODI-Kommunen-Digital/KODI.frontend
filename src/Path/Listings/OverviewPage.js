@@ -27,7 +27,7 @@ function OverviewPage() {
 			<SideBar />
 			<div className="container w-auto px-5 py-2 bg-slate-600 h-full">
 				<div className="bg-white mt-4 p-6 space-y-10">
-					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 className="text-slate-800 text-lg mb-4 font-medium title-font">
 						Please select the entry type:
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>

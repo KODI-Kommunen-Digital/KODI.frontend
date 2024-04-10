@@ -152,7 +152,7 @@ const ReportedPosts = () => {
 											>
 												<th
 													scope="row"
-													className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+													className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap dark:text-white cursor-pointer"
 												>
 													<img
 														className="w-10 h-10 rounded-full hidden sm:table-cell"
@@ -237,7 +237,7 @@ const ReportedPosts = () => {
 																				</svg>
 																			</div>
 																			<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-																				<h3 className="text-lg leading-6 font-medium text-gray-900">
+																				<h3 className="text-lg leading-6 font-medium text-slate-800">
 																					{t("reasonforReport")}
 																				</h3>
 																				<div className="mt-2">

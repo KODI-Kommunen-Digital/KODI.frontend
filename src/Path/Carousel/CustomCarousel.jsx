@@ -61,11 +61,11 @@ const CustomCarousel = (props) => {
       >
         {sortedImageList.length <= 1 ? null : (
           <>
-            <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
+            <div className="absolute mr-1 right-0 top-1/2 transform -translate-y-1/2">
               <NextIconButton onClick={onClickNext} />
             </div>
 
-            <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
+            <div className="absolute ml-1 left-0 top-1/2 transform -translate-y-1/2">
               <PrevIconButton onClick={onClickPrev} />
             </div>
           </>
