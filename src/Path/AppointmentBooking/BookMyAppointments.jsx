@@ -289,7 +289,7 @@ function BookMyAppointments() {
 
       <div className="max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto flex flex-col items-center">
         <div className="lg:w-full md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+          <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
@@ -438,7 +438,7 @@ function BookMyAppointments() {
         <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
           <div className="lg:w-2/3 border-2 border-black rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-xl">
+              <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -524,7 +524,7 @@ function BookMyAppointments() {
 
           <div className="lg:w-1/3 mx-auto">
             <div className="grid grid-cols-1 gap-4 border-2 border-black rounded-lg">
-              <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
+              <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
                 <h1 className="text-lg text-center font-semibold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>

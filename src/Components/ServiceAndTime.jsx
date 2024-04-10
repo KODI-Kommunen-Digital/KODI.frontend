@@ -446,7 +446,7 @@ const ServiceAndTime = () => {
                   >
                     &#8203;
                   </span>
-                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
+                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="bg-white p-4">
                       <button
                         onClick={() => {

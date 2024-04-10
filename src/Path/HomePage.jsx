@@ -307,7 +307,7 @@ const HomePage = () => {
                       window.scrollTo(0, scrollPosition);
                     });
                   }}
-                  className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                  className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.38)] transform hover:-translate-y-2"
                 >
                   <div className="relative h-80 rounded overflow-hidden">
                     <img
