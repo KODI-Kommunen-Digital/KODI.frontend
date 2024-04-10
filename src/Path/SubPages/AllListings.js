@@ -12,7 +12,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
-// import { categoryByName, categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
@@ -192,13 +191,13 @@ const AllListings = () => {
       default:
         break;
     }
-  }, [selectedSortOption, listings]);
+  }, [selectedSortOption]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
-  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
-  const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
+  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-0";
+  const pyClass = terminalViewParam === "true" ? "py-0" : "py-0";
   const [showNavBar, setShowNavBar] = useState(true);
   useEffect(() => {
     if (terminalViewParam === "true") {
@@ -242,8 +241,8 @@ const AllListings = () => {
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
       >
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
-            <div className="relative lg:h-64 md:h-64 h-96">
+          <div className={`lg:h-full h-[30rem] overflow-hidden ${pyClass}`}>
+            <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -276,7 +275,7 @@ const AllListings = () => {
                         handleCityChange(e.target.value);
                       }}
                       value={cityId}
-                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -304,7 +303,7 @@ const AllListings = () => {
                       autoComplete="category-name"
                       onChange={(e) => setCategoryId(e.target.value)}
                       value={categoryId}
-                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -328,7 +327,7 @@ const AllListings = () => {
                       value={selectedSortOption}
                       onChange={handleSortOptionChange}
                       autoComplete="country-name"
-                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -373,8 +372,8 @@ const AllListings = () => {
         ) : (
           <div>
             {listings && listings.length > 0 ? (
-              <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+              <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
                   {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard

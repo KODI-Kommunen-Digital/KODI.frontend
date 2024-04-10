@@ -75,8 +75,8 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const handleDeleteAccount = () => {
@@ -174,7 +174,7 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="phoneNumber"
-										value={input.phoneNumber ||""}
+										value={input.phoneNumber || ""}
 										id="phoneNumber"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
@@ -269,7 +269,7 @@ const AccountSettings = () => {
 										>
 											&#8203;
 										</span>
-										<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+										<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 											<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 												<div className="sm:flex sm:items-start">
 													<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">

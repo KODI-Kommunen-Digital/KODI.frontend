@@ -226,7 +226,8 @@
     "streetAddress": "Address",
     "stichworte": "Address",
     "subCategory": "Sub-Category",
-    "submit": "Submit entry",
+    "submit": "Submit Entry",
+    "favorite": "Favorite",
     "telephone": "Telephone",
     "personen": "Telephone",
     "companyPortaits": "Company Portaits",
@@ -656,5 +657,6 @@
     "FinalProvisions3": "",
     "visitWebsite": "Visit the website :",
     "moreService": "More Service",
-    "mehr": "More"
+    "mehr": "More",
+    "mobile": "Mobile"
 }

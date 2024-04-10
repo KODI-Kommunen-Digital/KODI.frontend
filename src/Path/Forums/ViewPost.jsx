@@ -18,7 +18,7 @@ import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 const Description = ({ content }) => {
   return (
     <p
-      className="leading-relaxed text-md font-medium my-6 text-gray-900"
+      className="leading-relaxed text-md font-medium my-6 text-slate-800"
       dangerouslySetInnerHTML={{ __html: content }}
     ></p>
   );
@@ -140,14 +140,14 @@ const ViewPost = () => {
           // Update existing replies without duplicates
           comment.replies = comment.replies
             ? [
-                ...comment.replies,
-                ...response.data.data.filter(
-                  (reply) =>
-                    !comment.replies.find(
-                      (existingReply) => existingReply.id === reply.id
-                    )
-                ),
-              ]
+              ...comment.replies,
+              ...response.data.data.filter(
+                (reply) =>
+                  !comment.replies.find(
+                    (existingReply) => existingReply.id === reply.id
+                  )
+              ),
+            ]
             : [...response.data.data];
           console.log("parentId:", parentId);
           setComments([...comments]);
@@ -274,10 +274,10 @@ const ViewPost = () => {
       <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
         <div className="grid grid-cols-1 gap-4 col-span-2">
           <div className="lg:w-full md:w-full h-full">
-            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                  <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                  <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                     <span
                       className="inline-block max-w-full break-words"
                       style={{
@@ -412,7 +412,7 @@ const ViewPost = () => {
                   }
                 `}
               </style>
-              <div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
+              <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] galaxy-fold">
                 <div className="relative h-full">
                   <img
                     alt="listing"
@@ -421,7 +421,7 @@ const ViewPost = () => {
                       forumPost.image
                         ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
                         : process.env.REACT_APP_BUCKET_HOST +
-                          "admin/DefaultForum.jpeg"
+                        "admin/DefaultForum.jpeg"
                     }
                   />
                 </div>
@@ -430,7 +430,7 @@ const ViewPost = () => {
           </div>
           <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
             <h1
-              className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+              className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {t("description")}
@@ -443,7 +443,7 @@ const ViewPost = () => {
               <textarea
                 id="comment"
                 rows="2"
-                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
+                className="px-0 w-full text-sm text-slate-800 border-0 focus:ring-0 focus:outline-none"
                 placeholder={t("writeComment")}
                 value={newComment}
                 onChange={(event) => setNewComment(event.target.value)}
@@ -520,7 +520,7 @@ const ViewPost = () => {
                               src={
                                 comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    comment.image
+                                  comment.image
                                   : PROFILEIMAGE
                               }
                             />
@@ -601,8 +601,8 @@ const ViewPost = () => {
                             </svg>
                             {!comment.showReplies
                               ? t("showReplyCount", {
-                                  count: comment.childrenCount,
-                                })
+                                count: comment.childrenCount,
+                              })
                               : t("hideReplies")}
                           </button>
                         )}
@@ -610,7 +610,7 @@ const ViewPost = () => {
                       {comment.showReplyBox && (
                         <div className="mt-4 mb-2">
                           <textarea
-                            className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full px-4 py-2 text-sm text-slate-800 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
                             rows="2"
                             placeholder={t("writeReply")}
                             value={comment.newReply}
@@ -639,13 +639,13 @@ const ViewPost = () => {
                           >
                             <div className="flex justify-between items-center mb-2">
                               <div className="flex items-center">
-                                <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+                                <p className="inline-flex items-center mr-3 text-sm text-slate-800">
                                   <img
                                     className="mr-2 w-6 h-6 object-cover rounded-full"
                                     src={
                                       reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
-                                          reply.image
+                                        reply.image
                                         : PROFILEIMAGE
                                     }
                                   />
@@ -697,7 +697,7 @@ const ViewPost = () => {
         {userSocial && userSocial.length > 0 ? (
           <UserProfile user={postOwner} createdAt={createdAt} />
         ) : (
-          <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-56 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+          <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-56 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
             <div>
               <div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
                 <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
@@ -745,7 +745,7 @@ const ViewPost = () => {
                     {user?.firstname + " " + user?.lastname}
                   </h2>
                   <p
-                    className="leading-relaxed text-base font-bold dark:text-gray-900"
+                    className="leading-relaxed text-base font-bold dark:text-slate-800"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}

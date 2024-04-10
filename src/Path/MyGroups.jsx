@@ -54,8 +54,8 @@ const MyGroups = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     forums: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   function handleDelete(forum) {
@@ -173,7 +173,7 @@ const MyGroups = () => {
                             forum.image
                               ? process.env.REACT_APP_BUCKET_HOST + forum.image
                               : process.env.REACT_APP_BUCKET_HOST +
-                                "admin/DefaultForum.jpeg"
+                              "admin/DefaultForum.jpeg"
                           }
                           onClick={() =>
                             navigateTo(
@@ -269,7 +269,7 @@ const MyGroups = () => {
                               >
                                 &#8203;
                               </span>
-                              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                   <div className="sm:flex sm:items-start">
                                     <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">

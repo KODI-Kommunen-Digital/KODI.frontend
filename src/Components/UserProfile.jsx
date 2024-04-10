@@ -53,7 +53,7 @@ function UserProfile({ user }) {
   };
   return (
     <div>
-      <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-xl">
+      <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
         <div>
           <div
             onClick={() =>
@@ -74,26 +74,23 @@ function UserProfile({ user }) {
                 alt={user?.lastname}
               />
               <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                <button
+                <a
                   onClick={() =>
                     navigateTo(
                       user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                     )
                   }
-                  type="submit"
-                  className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                  {t("viewProfile")}
-                </button>
+                  className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
+                  <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                  <span className="relative w-full text-left text-gray-900 transition-colors duration-300 ease-in-out group-hover:text-white">
+                    {t("viewProfile")}
+                  </span>
+                </a>
               </div>
             </div>
             <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
               <h2
-                className="text-blue-700 text-lg title-font mb-2 font-bold"
+                className="text-blue-400 text-lg title-font mb-2 font-bold"
                 style={{
                   fontFamily: "Poppins, sans-serif",
                 }}
@@ -111,10 +108,10 @@ function UserProfile({ user }) {
             </div>
           </div>
 
-          <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-4 mb-2 flex flex-wrap gap-1">
+          <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-6 mb-2 flex flex-wrap gap-1">
             {userSocial &&
               Object.entries(userSocial).map(([key, value]) => (
-                <div key={key} className="flex py-1 px-1 mx-0 my-0 gap-1">
+                <div key={key} className="flex py-1 px-1 mx-0 my-0 gap-2">
                   <button
                     type="button"
                     data-te-ripple-init

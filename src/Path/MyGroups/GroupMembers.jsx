@@ -77,8 +77,8 @@ const GroupMembers = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     members: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   function handleRemove(member) {
@@ -244,11 +244,10 @@ const GroupMembers = () => {
                       ) : (
                         <td className="px-6 py-4 text-center">
                           <a
-                            className={`font-medium text-blue-600 ${
-                              member.userId === currentUserId
+                            className={`font-medium text-blue-600 ${member.userId === currentUserId
                                 ? "hover:underline"
                                 : ""
-                            } cursor-pointer text-center pr-0`}
+                              } cursor-pointer text-center pr-0`}
                             onClick={() => {
                               member.userId === currentUserId &&
                                 removeMemberOnClick(member);
@@ -269,11 +268,10 @@ const GroupMembers = () => {
                       {isAdmin && (
                         <td className="px-6 py-4 text-center">
                           <button
-                            className={`font-medium hover:underline cursor-pointer text-center ${
-                              member.isAdmin === 1
+                            className={`font-medium hover:underline cursor-pointer text-center ${member.isAdmin === 1
                                 ? "text-red-500"
                                 : "text-green-500"
-                            }`}
+                              }`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -318,13 +316,13 @@ const GroupMembers = () => {
                   >
                     &#8203;
                   </span>
-                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                  <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                       <div className="sm:flex sm:items-start">
                         <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                           {isOnlyAdmin &&
-                          isAdmin &&
-                          currentUserId === memberToBeRemoved ? (
+                            isAdmin &&
+                            currentUserId === memberToBeRemoved ? (
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                               <h3 className="text-lg leading-6 font-medium text-gray-900">
                                 {t("onlyAdminWarning")}

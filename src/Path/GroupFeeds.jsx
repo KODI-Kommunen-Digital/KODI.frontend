@@ -103,7 +103,7 @@ const GroupFeeds = () => {
       default:
         break;
     }
-  }, [selectedSortOption, listings]);
+  }, [selectedSortOption]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -123,16 +123,15 @@ const GroupFeeds = () => {
     <section className="text-gray-600 body-font relative">
       {/* <HomePageNavBar /> */}
       {showNavBar && <HomePageNavBar />}
-      <div
-        className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
-      >
+      <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
-            <div className="relative lg:h-64 md:h-64 h-96">
+          <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+            <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                 <h1
@@ -150,7 +149,7 @@ const GroupFeeds = () => {
                         autoComplete="city-name"
                         onChange={(e) => setCityId(e.target.value)}
                         value={cityId}
-                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         <option className="font-sans" value={0} key={0}>
@@ -174,7 +173,7 @@ const GroupFeeds = () => {
                         autoComplete="category-name"
                         onChange={(e) => setCategoryId(e.target.value)}
                         value={categoryId}
-                        className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         <option className="font-sans" value={0} key={0}>
@@ -196,7 +195,7 @@ const GroupFeeds = () => {
                         value={selectedSortOption}
                         onChange={handleSortOptionChange}
                         autoComplete="country-name"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         <option value="">{t("sort")}</option>

@@ -159,14 +159,15 @@ const AllForums = () => {
     <section className="text-gray-600 bg-white body-font">
       <HomePageNavBar />
       <div>
-        <div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+        <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
           <div className="w-full mr-0 ml-0">
-            <div className="h-64 overflow-hidden px-0 py-1">
-              <div className="relative h-64">
+            <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+              <div className="relative h-[30rem]">
                 <img
                   alt="ecommerce"
                   className="object-cover object-center h-full w-full"
                   src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
@@ -180,7 +181,7 @@ const AllForums = () => {
                         autoComplete="city-name"
                         onChange={(e) => handleChange(e)}
                         value={cityId || 0}
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                        className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -259,9 +260,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -273,9 +274,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -305,7 +306,7 @@ const AllForums = () => {
                                 <div className="my-4 bg-gray-200 h-[1px]"></div>
 
                                 {forum.isPrivate &&
-                                memberStatus[forum.id] ===
+                                  memberStatus[forum.id] ===
                                   statusByName.Pending ? (
                                   <div className="text-center">
                                     <a

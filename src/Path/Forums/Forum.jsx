@@ -169,18 +169,15 @@ const Forum = () => {
 			<HomePageNavBar />
 			{isValidForum ? (
 				<div>
-					<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+					<div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
 						<div className="w-full mr-0 ml-0">
-							<div className="h-96 overflow-hidden px-0 py-1">
-								<div className="relative h-96">
+							<div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+								<div className="relative h-[30rem]">
 									<img
-										alt="forumImage"
+										alt="ecommerce"
 										className="object-cover object-center h-full w-full"
-										src={
-											process.env.REACT_APP_BUCKET_HOST + (forum.image
-												? forum.image
-												: "admin/DefaultForum.jpeg")
-										}
+										src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+										loading="lazy"
 									/>
 									<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 										<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
@@ -264,7 +261,7 @@ const Forum = () => {
 													>
 														&#8203;
 													</span>
-													<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+													<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 														<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 															<div className="sm:flex sm:items-start">
 																<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
