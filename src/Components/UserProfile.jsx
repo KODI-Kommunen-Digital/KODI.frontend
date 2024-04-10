@@ -52,89 +52,87 @@ function UserProfile({ user }) {
     }
   };
   return (
-    <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
-      <div>
-        <div
-          onClick={() =>
-            navigateTo(
-              user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-            )
-          }
-          className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1"
-        >
-          <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
-            <img
-              className="rounded-full h-20 w-20 object-cover"
-              src={
-                user?.image
-                  ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                  : PROFILEIMAGE
+    <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+      <div
+        onClick={() =>
+          navigateTo(
+            user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+          )
+        }
+        className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1"
+      >
+        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
+          <img
+            className="rounded-full h-20 w-20 object-cover"
+            src={
+              user?.image
+                ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                : PROFILEIMAGE
+            }
+            alt={user?.lastname}
+          />
+          <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+            <a
+              onClick={() =>
+                navigateTo(
+                  user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+                )
               }
-              alt={user?.lastname}
-            />
-            <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-              <a
-                onClick={() =>
-                  navigateTo(
-                    user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                  )
-                }
-                className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
-                <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
-                <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-                  {t("viewProfile")}
-                </span>
-              </a>
-            </div>
-          </div>
-          <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
-            <h2
-              className="text-blue-400 text-lg title-font mb-2 font-bold"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
-              {user?.firstname + " " + user?.lastname}
-            </h2>
-            <p
-              className="leading-relaxed text-base font-bold"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
-              {user?.username}
-            </p>
+              className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
+              <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                {t("viewProfile")}
+              </span>
+            </a>
           </div>
         </div>
+        <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
+          <h2
+            className="text-blue-400 text-lg title-font mb-2 font-bold"
+            style={{
+              fontFamily: "Poppins, sans-serif",
+            }}
+          >
+            {user?.firstname + " " + user?.lastname}
+          </h2>
+          <p
+            className="leading-relaxed text-base font-bold"
+            style={{
+              fontFamily: "Poppins, sans-serif",
+            }}
+          >
+            {user?.username}
+          </p>
+        </div>
+      </div>
 
-        <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-6 mb-2 flex flex-wrap gap-1">
-          {userSocial &&
-            Object.entries(userSocial).map(([key, value]) => (
-              <div key={key} className="flex py-1 px-1 mx-0 my-0 gap-2">
-                <button
-                  type="button"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                  className={
-                    "inline-block rounded-full px-2.5 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg " +
-                    socialMediaSVGPathList[key].bgColor
-                  }
-                  onClick={() => {
-                    window.open(value, "_blank");
-                  }}
+      <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-6 mb-2 flex flex-wrap gap-1">
+        {userSocial &&
+          Object.entries(userSocial).map(([key, value]) => (
+            <div key={key} className="flex py-1 px-1 mx-0 my-0 gap-2">
+              <button
+                type="button"
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                className={
+                  "inline-block rounded-full px-2.5 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg " +
+                  socialMediaSVGPathList[key].bgColor
+                }
+                onClick={() => {
+                  window.open(value, "_blank");
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d={socialMediaSVGPathList[key].link} />
-                  </svg>
-                </button>
-              </div>
-            ))}
-        </div>
+                  <path d={socialMediaSVGPathList[key].link} />
+                </svg>
+              </button>
+            </div>
+          ))}
       </div>
     </div>
   );
