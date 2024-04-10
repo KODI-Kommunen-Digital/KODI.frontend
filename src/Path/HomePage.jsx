@@ -318,7 +318,7 @@ const HomePage = () => {
                   ))}
               </div>
 
-              <a className="relative items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+              <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
                 onClick={() => {
                   localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   navigateTo("/AllListings");
@@ -522,7 +522,7 @@ const HomePage = () => {
                 >
                   {t("clickHereToFind")}
                   </a> */}
-                <a className="relative items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+                <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
                   onClick={() => goToCitizensPage()}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
                   <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-blue-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
