@@ -586,6 +586,7 @@
     "client": "client",
     "reject": "Reject",
     "myBooking": "My Booking",
+    "myServices": "My Services",
     "myAppoinment": "My Appoinments",
     "booking": "Bookings",
     "cart": "Cart",

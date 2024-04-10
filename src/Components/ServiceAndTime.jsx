@@ -18,6 +18,7 @@ const ServiceAndTime = () => {
     openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
     services: [{ name: "", duration: "", durationUnit: "minutes", slotSameAsAppointment: false, openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }],
   });
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -35,28 +36,28 @@ const ServiceAndTime = () => {
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "startTime":
-        if (!parseInt(value)) {
+        if (!value.trim()) {
           return t("pleaseEnterStartTime");
         } else {
           return "";
         }
 
       case "endTime":
-        if (!parseInt(value)) {
+        if (!value.trim()) {
           return t("pleaseEnterEndTime");
         } else {
           return "";
         }
 
       case "name":
-        if (!parseInt(value)) {
+        if (!value.trim()) {
           return t("pleaseSelectServiceName");
         } else {
           return "";
         }
 
       case "duration":
-        if (!parseInt(value)) {
+        if (!value.trim()) {
           return t("pleaseSelectDuration");
         } else {
           return "";
@@ -576,7 +577,7 @@ const ServiceAndTime = () => {
                                     id="endTime"
                                     name="endTime"
                                     value={
-                                      timeSlot.endTime ? timeSlot.startTime : ""
+                                      timeSlot.endTime ? timeSlot.endTime : ""
                                     }
                                     onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value) }}
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"

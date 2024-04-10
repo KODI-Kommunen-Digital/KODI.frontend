@@ -1,6 +1,14 @@
 import { instance } from "../api/axiosInstance";
 const axios = instance;
 
+export async function getMyServices(userId) {
+    return axios.get(`/users/${userId}/bookings`);
+}
+
+export async function deleteMyServices(cityId, listingId, serviceId) {
+    return axios.delete(`/cities/${cityId}/listings/${listingId}/service/${serviceId}`);
+}
+
 export async function getUserBookings(userId) {
     return axios.get(`/users/${userId}/bookings`);
 }
