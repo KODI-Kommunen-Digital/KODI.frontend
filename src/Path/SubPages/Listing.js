@@ -339,289 +339,292 @@ const Listing = () => {
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
-            <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="lg:w-full md:w-full h-full">
-                <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
-                  <div className="mt-5 md:col-span-2 md:mt-0">
-                    <form method="POST">
-                      <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                        <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
-                          <span
-                            className="inline-block max-w-full break-words"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {title}
-                          </span>
-                        </h1>
-                      </div>
-                      <div className="flex flex-wrap gap-1 justify-between mt-0">
-                        <div className="flex items-center gap-2 mt-6">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="1em"
-                            viewBox="0 0 448 512"
-                            fill="#4299e1"
-                          >
-                            <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
-                          </svg>
-                          <p
-                            className="leading-relaxed text-base text-blue-400"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {t("uploaded_on")}
-                            {createdAt}
-                          </p>
-                        </div>
-
-                        <div
-                          className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                            }`}
-                        >
-
-                          <a onClick={() => handleFavorite()} className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
-                            <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
-                            <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-                              {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
+          <div className="mx-auto w-full flex flex-col lg:flex-row  max-w-2xl gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+            <div className="lg:w-2/3">
+              <div className="grid grid-cols-1 gap-4 col-span-2">
+                <div className="lg:w-full md:w-full h-full">
+                  <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
+                    <div className="mt-5 md:col-span-2 md:mt-0">
+                      <form method="POST">
+                        <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                          <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                            <span
+                              className="inline-block max-w-full break-words"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {title}
                             </span>
-                          </a>
-                        </div>
-                        <div
-                          className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                            }`}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="block md:hidden  mr-1 w-8 h-6"
-                            viewBox="0 0 576 512"
-                            onClick={() => handleFavorite()}
-                          >
-                            {favoriteId !== 0 ? (
-                              <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
-                            ) : (
-                              <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
+                          </h1>
 
-                      <div className="flex flex-wrap gap-1 justify-between mt-6">
-                        <div>
-                          <p
-                            className="text-start font-bold"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {t(categories[input.categoryId])}
-                          </p>
                         </div>
 
-                        {input.id && input.categoryId === 3 ? (
-                          <p
-                            className="leading-relaxed text-base dark:text-slate-800 font-bold"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
+                        <div className="flex flex-wrap gap-1 justify-between mt-0">
+                          <div className="flex items-center gap-2 mt-6">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              fill="#4299e1"
+                            >
+                              <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
+                            </svg>
+                            <p
+                              className="leading-relaxed text-base text-blue-400"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {t("uploaded_on")}
+                              {createdAt}
+                            </p>
+                          </div>
+
+                          <div
+                            className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
                           >
-                            {input.startDate && (
-                              <>
-                                <span>
-                                  {new Date(
-                                    input.startDate.slice(0, 10)
-                                  ).toLocaleDateString("de-DE")}{" "}
-                                  (
-                                  {new Date(
-                                    input.startDate.replace("Z", "")
-                                  ).toLocaleTimeString("de-DE", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    timeZone: "Europe/Berlin",
-                                  })}
-                                  )
-                                </span>
-                                {input.endDate && (
-                                  <>
-                                    <span className="text-blue-400">
-                                      {" "}
-                                      {t("To")}{" "}
-                                    </span>
-                                    <span>
-                                      {new Date(
-                                        input.endDate.slice(0, 10)
-                                      ).toLocaleDateString("de-DE")}{" "}
-                                      (
-                                      {new Date(
-                                        input.endDate.replace("Z", "")
-                                      ).toLocaleTimeString("de-DE", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        timeZone: "Europe/Berlin",
-                                      })}
-                                      )
-                                    </span>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </p>
-                        ) : (
-                          <p
-                            className="leading-relaxed text-base"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          ></p>
-                        )}
-                      </div>
-                    </form>
+
+                            <a onClick={() => handleFavorite()} className="relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border border-blue-400">
+                              <span className="w-48 h-48 rounded rotate-[-40deg] bg-blue-400 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                                {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
+                              </span>
+                            </a>
+                          </div>
+                          <div
+                            className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="block md:hidden  mr-1 w-8 h-6"
+                              viewBox="0 0 576 512"
+                              onClick={() => handleFavorite()}
+                            >
+                              {favoriteId !== 0 ? (
+                                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+                              ) : (
+                                <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z" />
+                              )}
+                            </svg>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1 justify-between mt-6">
+                          <div>
+                            <p
+                              className="text-start font-bold"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {t(categories[input.categoryId])}
+                            </p>
+                          </div>
+
+                          {input.id && input.categoryId === 3 ? (
+                            <p
+                              className="leading-relaxed text-base dark:text-slate-800 font-bold"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              {input.startDate && (
+                                <>
+                                  <span>
+                                    {new Date(
+                                      input.startDate.slice(0, 10)
+                                    ).toLocaleDateString("de-DE")}{" "}
+                                    (
+                                    {new Date(
+                                      input.startDate.replace("Z", "")
+                                    ).toLocaleTimeString("de-DE", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      timeZone: "Europe/Berlin",
+                                    })}
+                                    )
+                                  </span>
+                                  {input.endDate && (
+                                    <>
+                                      <span className="text-blue-400">
+                                        {" "}
+                                        {t("To")}{" "}
+                                      </span>
+                                      <span>
+                                        {new Date(
+                                          input.endDate.slice(0, 10)
+                                        ).toLocaleDateString("de-DE")}{" "}
+                                        (
+                                        {new Date(
+                                          input.endDate.replace("Z", "")
+                                        ).toLocaleTimeString("de-DE", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                          timeZone: "Europe/Berlin",
+                                        })}
+                                        )
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </p>
+                          ) : (
+                            <p
+                              className="leading-relaxed text-base"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            ></p>
+                          )}
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
-                <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                  <style>
-                    {`
+                <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
+                  <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
+                    <style>
+                      {`
 								@media (max-width: 280px) {
 									.galaxy-fold {
 										margin-top: 6rem; /* Adjust the margin value as needed */
 									}
 								}
 							`}
-                  </style>
-                  <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
-                    <div className="relative h-full">
-                      {input.pdf ? (
-                        <div>
-                          <div className="pdf-container">
-                            {terminalView ? (
-                              <PDFDisplay
-                                url={
-                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
-                                }
-                              />
-                            ) : (
-                              <iframe
-                                src={
-                                  process.env.REACT_APP_BUCKET_HOST + input.pdf
-                                }
-                                type="text/html"
-                                className="object-cover object-center h-[600px] w-full"
-                              ></iframe>
-                            )}
+                    </style>
+                    <div className="h-full overflow-hidden px-0 py-0 bg-white border-8 border-slate-500">
+                      <div className="relative h-full">
+                        {input.pdf ? (
+                          <div>
+                            <div className="pdf-container">
+                              {terminalView ? (
+                                <PDFDisplay
+                                  url={
+                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                  }
+                                />
+                              ) : (
+                                <iframe
+                                  src={
+                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                  }
+                                  type="text/html"
+                                  className="object-cover object-center h-[600px] w-full"
+                                ></iframe>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ) : input.logo ? (
-                        <CustomCarousel
-                          imageList={input.otherlogos}
-                          sourceId={input.sourceId}
-                        />
-                      ) : (
-                        <img
-                          alt="default"
-                          className="object-cover object-center h-[600px] w-full"
-                          src={LISTINGSIMAGE}
-                        />
-                      )}
+                        ) : input.logo ? (
+                          <CustomCarousel
+                            imageList={input.otherlogos}
+                            sourceId={input.sourceId}
+                          />
+                        ) : (
+                          <img
+                            alt="default"
+                            className="object-cover object-center h-[600px] w-full"
+                            src={LISTINGSIMAGE}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
-                <h1
-                  className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("description")}
-                </h1>
-                <Description content={description} cityId={cityId} />
-                {sourceId === listingSource.SCRAPER && (
-                  <p className="text-slate-800 font-medium">
-                    {t("visitWebsite")}{" "}
-                    <a
-                      href={website}
-                      className="text-blue-600 font-medium"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {website}
-                    </a>
-                  </p>
-                )}
+                <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
+                  <h1
+                    className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("description")}
+                  </h1>
+                  <Description content={description} />
+                  {sourceId === listingSource.SCRAPER && (
+                    <p className="text-slate-800 font-medium">
+                      {t("visitWebsite")}{" "}
+                      <a href={website} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
+                        {website}
+                      </a>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
-            {userSocial && userSocial.length > 0 ? (
-              <UserProfile user={user} />
-            ) : (
-              <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
-                <div>
-                  <div
-                    onClick={() =>
-                      navigateTo(
-                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                      )
-                    }
-                    className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
-                  >
-                    <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
-                      <img
-                        className="rounded-full h-20 w-20"
-                        src={
-                          user?.image
-                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                            : PROFILEIMAGE
+            <div className="lg:w-1/3 mx-auto">
+              <div className="grid grid-cols-1 gap-4">
+                {userSocial && userSocial.length > 0 ? (
+                  <UserProfile user={user} />
+                ) : (
+                  <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
+                    <div>
+                      <div
+                        onClick={() =>
+                          navigateTo(
+                            user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+                          )
                         }
-                        alt={user?.lastname}
-                      />
-                      <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                        <button
-                          onClick={() =>
-                            navigateTo(
-                              user
-                                ? `/ViewProfile/${user.username}`
-                                : "/ViewProfile"
-                            )
-                          }
-                          type="submit"
-                          className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                          {t("viewProfile")}
-                        </button>
+                        className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
+                      >
+                        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
+                          <img
+                            className="rounded-full h-20 w-20"
+                            src={
+                              user?.image
+                                ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                                : PROFILEIMAGE
+                            }
+                            alt={user?.lastname}
+                          />
+                          <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
+                            <button
+                              onClick={() =>
+                                navigateTo(
+                                  user
+                                    ? `/ViewProfile/${user.username}`
+                                    : "/ViewProfile"
+                                )
+                              }
+                              type="submit"
+                              className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                            >
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
+                              {t("viewProfile")}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
+                          <h2
+                            className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            {firstname + " " + lastname}
+                          </h2>
+                          <p
+                            className="leading-relaxed text-base font-bold dark:text-slate-800"
+                            style={{
+                              fontFamily: "Poppins, sans-serif",
+                            }}
+                          >
+                            {user?.username}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
-                      <h2
-                        className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        {firstname + " " + lastname}
-                      </h2>
-                      <p
-                        className="leading-relaxed text-base font-bold dark:text-slate-800"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        {user?.username}
-                      </p>
-                    </div>
                   </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {input.address ? (

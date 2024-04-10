@@ -286,7 +286,7 @@ const HomePage = () => {
 
             <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 px-5 py-6">
               <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-                <select
+                {/* <select
                   id="country"
                   name="country"
                   value={selectedSortOption}
@@ -296,6 +296,19 @@ const HomePage = () => {
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}
+                >
+                  <option value="">{t("sort")}</option>
+                  <option value="titleAZ">{t("atoztitle")}</option>
+                  <option value="titleZA">{t("ztoatitle")}</option>
+                  <option value="recent">{t("recent")}</option>
+                  <option value="oldest">{t("oldest")}</option>
+                </select> */}
+
+                <select
+                  className="text-slate-800 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                  value={selectedSortOption}
+                  onChange={handleSortOptionChange}
+                  style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   <option value="">{t("sort")}</option>
                   <option value="titleAZ">{t("atoztitle")}</option>

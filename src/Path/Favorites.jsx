@@ -76,6 +76,7 @@ const Favorites = () => {
     window.history.replaceState({}, "", newUrl);
     getFavoriteListings(params).then((response) => {
       const data = response.data.data;
+      console.log(data)
       setFavListings(data);
       console.log(data);
       setIsLoading(false);

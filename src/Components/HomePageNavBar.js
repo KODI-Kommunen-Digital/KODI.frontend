@@ -155,7 +155,7 @@ export default function HomePageNavBar() {
                     autoComplete="city-name"
                     onChange={onCityChange}
                     value={cityId || 0}
-                    className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                    className="text-white rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
