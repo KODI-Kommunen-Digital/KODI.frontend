@@ -702,9 +702,11 @@ const Listing = () => {
               </div>
             )}
           </div>
-          <div className="bottom-0 w-full">
-            <Footer />
-          </div>
+          {!isLoading && (
+            <div className="bottom-0 w-full">
+              <Footer />
+            </div>
+          )}
         </div>
       )}
     </section>

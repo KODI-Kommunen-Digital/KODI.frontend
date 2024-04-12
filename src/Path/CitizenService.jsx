@@ -23,7 +23,6 @@ const CitizenService = () => {
   };
 
   useEffect(() => {
-    // if (!isLoading) {
     setIsLoading(true)
     const urlParams = new URLSearchParams(window.location.search);
     document.title =
@@ -42,15 +41,9 @@ const CitizenService = () => {
       if (cityIdParam && temp[cityIdParam]) setCityId(cityIdParam);
     });
 
-    // getCitizenServices().then((response) => {
-    //   setCitizenServices(response.data.data);
-    //   setIsLoading(false)
-    // });
-
     setTimeout(() => {
       fetchData();
     }, 1000);
-    // }
   }, []);
 
   const fetchData = async () => {
@@ -64,7 +57,6 @@ const CitizenService = () => {
       setIsLoading(false);
     }
   };
-
 
   const handleLinkClick = (data) => {
     if (data.isExternalLink) {
@@ -82,6 +74,10 @@ const CitizenService = () => {
       navigateTo(urlWithCityId);
     }
   };
+
+  function goBack() {
+    navigateTo(`/`);
+  }
 
   return (
     <section className="text-gray-600 bg-white body-font">
@@ -183,7 +179,7 @@ const CitizenService = () => {
               </div>
             </div>
           ) : (
-            <div className="md:mb-60 mt-20 mb-20 p-6">
+            <div>
               <div className="text-center">
                 <div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
                   <h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
@@ -195,15 +191,29 @@ const CitizenService = () => {
                     {t("currently_no_services")}
                   </h1>
                 </div>
+                <div
+                  className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  <a
+                    onClick={() => goBack()}
+                    className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("goBack")}
+                  </a>
+                </div>
               </div>
             </div>
           )}
         </div>
       )}
 
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
     </section>
   );
 };

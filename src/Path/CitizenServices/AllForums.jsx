@@ -454,9 +454,12 @@ const AllForums = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
     </section>
   );
 };

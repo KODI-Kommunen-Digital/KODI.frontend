@@ -133,51 +133,53 @@ export default function HomePageNavBar() {
           <div
             className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
           >
-            <div>
-              <img
-                className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
-                src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
-                alt="HEDI- Heimat Digital"
-                onClick={() => {
-                  window.localStorage.removeItem("selectedCity");
-                  navigateTo("/");
-                  window.location.reload();
-                }}
-              />
-            </div>
-
-            {location.pathname === '/' && (
-              <div className="relative w-40 px-0 mb-0 md:w-80">
-                <div className="relative">
-                  <select
-                    id="city"
-                    name="city"
-                    autoComplete="city-name"
-                    onChange={onCityChange}
-                    value={cityId || 0}
-                    className="text-white rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    <option className="font-sans" value={0} key={0}>
-                      {t("allCities", {
-                        regionName: process.env.REACT_APP_REGION_NAME,
-                      })}
-                    </option>
-                    {cities.map((city) => (
-                      <option
-                        className="font-sans"
-                        value={city.id}
-                        key={city.id}
-                      >
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            <div className="items-center justify-start flex">
+              <div>
+                <img
+                  className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
+                  src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
+                  alt="HEDI- Heimat Digital"
+                  onClick={() => {
+                    window.localStorage.removeItem("selectedCity");
+                    navigateTo("/");
+                    window.location.reload();
+                  }}
+                />
               </div>
-            )}
+
+              {location.pathname === '/' && (
+                <div className="relative w-40 px-0 mb-0 md:w-80">
+                  <div className="relative">
+                    <select
+                      id="city"
+                      name="city"
+                      autoComplete="city-name"
+                      onChange={onCityChange}
+                      value={cityId || 0}
+                      className="text-white rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option className="font-sans" value={0} key={0}>
+                        {t("allCities", {
+                          regionName: process.env.REACT_APP_REGION_NAME,
+                        })}
+                      </option>
+                      {cities.map((city) => (
+                        <option
+                          className="font-sans"
+                          value={city.id}
+                          key={city.id}
+                        >
+                          {city.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
               <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
@@ -240,22 +242,24 @@ export default function HomePageNavBar() {
             </div>
           </div>
 
-          <div
-            className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
-          >
-            <a
-              onClick={() => {
-                if (terminalViewParam === "true") {
-                  navigateTo("/AllListings?terminalView=true");
-                } else {
-                  navigateTo("/");
-                }
-              }}
-              className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-bold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
+          {location.pathname !== '/' && (
+            <div
+              className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
             >
-              <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
-            </a>
-          </div>
+              <a
+                onClick={() => {
+                  if (terminalViewParam === "true") {
+                    navigateTo("/AllListings?terminalView=true");
+                  } else {
+                    navigateTo("/");
+                  }
+                }}
+                className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-black px-8 py-2 text-base font-bold text-white cursor-pointer ${gobackClass}`}
+              >
+                <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
+              </a>
+            </div>
+          )}
         </div>
 
         <Transition
