@@ -558,9 +558,11 @@ const HomePage = () => {
         </>
       )}
 
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
 
     </section>
   );

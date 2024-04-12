@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../Components/Footer";
 import { getCities, getCitizenServices } from "../Services/cities";
+import LoadingPage from "../Components/LoadingPage";
 
 const CitizenService = () => {
   window.scrollTo(0, 0);
@@ -12,6 +13,7 @@ const CitizenService = () => {
   const [citizenService, setCitizenServices] = useState({});
   const [citiesArray, setCitiesArray] = useState([]);
   const [cityId, setCityId] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -21,6 +23,7 @@ const CitizenService = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true)
     const urlParams = new URLSearchParams(window.location.search);
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
@@ -38,10 +41,22 @@ const CitizenService = () => {
       if (cityIdParam && temp[cityIdParam]) setCityId(cityIdParam);
     });
 
-    getCitizenServices().then((response) => {
-      setCitizenServices(response.data.data);
-    });
+    setTimeout(() => {
+      fetchData();
+    }, 1000);
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await getCitizenServices();
+      setCitizenServices(response.data.data);
+    } catch (error) {
+      setCitizenServices([]);
+      console.error("Error fetching citizenServices:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLinkClick = (data) => {
     if (data.isExternalLink) {
@@ -60,14 +75,9 @@ const CitizenService = () => {
     }
   };
 
-  // const handleLinkClick = (data) => {
-  // 	if (data.isExternalLink) {
-  // 		window.open(data.link, "_blank");
-  // 	} else {
-  // 		const urlWithCityId = cityId ? `${data.link}?cityId=${cityId}` : data.link;
-  // 		navigateTo(urlWithCityId);
-  // 	}
-  // };
+  function goBack() {
+    navigateTo(`/`);
+  }
 
   return (
     <section className="text-gray-600 bg-white body-font">
@@ -129,58 +139,78 @@ const CitizenService = () => {
         </div>
       </div>
 
-      {citizenService && citizenService.length > 0 ? (
-        <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-            {citizenService &&
-              citizenService
-                // .filter((data) => data.title !== "forums" || showForum)
-                .map((data, index) => (
-                  <div
-                    key={index}
-                    className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform hover:-translate-y-2"
-                  >
-                    <div className="relative h-80 rounded overflow-hidden">
-                      <a
-                        rel="noreferrer noopener"
-                        onClick={() => handleLinkClick(data)}
-                      >
-                        <img
-                          alt={data.title}
-                          className="object-cover object-center h-full w-full"
-                          src={process.env.REACT_APP_BUCKET_HOST + data.image}
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-end bg-opacity-50 text-white z--1">
-                          <p className="mb-4 ml-4 font-sans">
-                            {cities[data.cityId]}
-                          </p>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                ))}
-          </div>
-        </div>
+      {isLoading ? (
+        <LoadingPage />
       ) : (
-        <div className="md:mb-60 mt-20 mb-20 p-6">
-          <div className="text-center">
-            <div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
-              <h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-                Oops !
-              </h1>
+        <div>
+          {citizenService && citizenService.length > 0 ? (
+            <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+                {citizenService &&
+                  citizenService
+                    // .filter((data) => data.title !== "forums" || showForum)
+                    .map((data, index) => (
+                      <div
+                        key={index}
+                        className="h-80 w-full rounded-lg cursor-pointer transition-all duration-300 hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform hover:-translate-y-2"
+                      >
+                        <div className="relative h-80 rounded overflow-hidden">
+                          <a
+                            rel="noreferrer noopener"
+                            onClick={() => handleLinkClick(data)}
+                          >
+                            <img
+                              alt={data.title}
+                              className="object-cover object-center h-full w-full"
+                              src={process.env.REACT_APP_BUCKET_HOST + data.image}
+                            />
+                            <div className="absolute inset-0 flex flex-col justify-end bg-opacity-50 text-white z--1">
+                              <p className="mb-4 ml-4 font-sans">
+                                {cities[data.cityId]}
+                              </p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+              </div>
             </div>
-            <div className="m-auto mt-20 mb-20 text-center font-sans font-bold text-xl">
-              <h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
-                {t("currently_no_services")}
-              </h1>
+          ) : (
+            <div>
+              <div className="text-center">
+                <div className="m-auto md:mt-20 mt-0 mb-20 text-center font-sans font-bold text-xl">
+                  <h1 className="text-5xl md:text-8xl lg:text-10xl text-center font-bold my-10 font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+                    Oops !
+                  </h1>
+                </div>
+                <div className="m-auto mt-20 mb-20 text-center font-sans font-bold text-xl">
+                  <h1 className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black">
+                    {t("currently_no_services")}
+                  </h1>
+                </div>
+                <div
+                  className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                >
+                  <a
+                    onClick={() => goBack()}
+                    className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("goBack")}
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
     </section>
   );
 };
