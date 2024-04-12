@@ -13,6 +13,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
+import PdfThumbnail from "../Components/PdfThumbnail";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -362,18 +363,32 @@ const Dashboard = () => {
                         className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
                         onClick={() => goToListingPage(listing)}
                       >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            listing.sourceId === 1
-                              ? listing.logo
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                listing.logo
-                                : LISTINGSIMAGE
-                              : listing.logo || LISTINGSIMAGE
-                          }
-                          alt="avatar"
-                        />
+                        {listing.pdf ? (
+                          <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
+                            <PdfThumbnail
+                              pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+                            />
+                          </div>
+                        ) : listing.logo ? (
+                          <img
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={
+                              listing.sourceId === 1
+                                ? listing.logo
+                                  ? process.env.REACT_APP_BUCKET_HOST +
+                                  listing.logo
+                                  : LISTINGSIMAGE
+                                : listing.logo || LISTINGSIMAGE
+                            }
+                            alt="avatar"
+                          />
+                        ) : (
+                          <img
+                            alt="Listing"
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={LISTINGSIMAGE}
+                          />
+                        )}
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
                             className="font-normal text-gray-500 truncate"

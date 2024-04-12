@@ -22,7 +22,7 @@ const CustomCarousel = (props) => {
   };
 
   const mainImageComponent = (
-    <div className={`aspect-w-16 aspect-h-9 px-2 py-2`}>
+    <div className={`aspect-w-16 aspect-h-9 px-0 py-0`}>
       <img
         src={
           props.sourceId === source.User
@@ -72,7 +72,7 @@ const CustomCarousel = (props) => {
       </div>
 
       {sortedImageList.length <= 1 ? null : (
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 mb-4">
           <PrevIconButton onClick={onClickPrev} />
           <NextIconButton onClick={onClickNext} />
         </div>
@@ -80,8 +80,8 @@ const CustomCarousel = (props) => {
 
       {sortedImageList.length <= 1 ? null : (
         <>
-          <div className="my-4 bg-slate-500 h-[1px]"></div>
-          <div className="flex px-4 py-2 overflow-x-auto">{thumbnailComponent}</div>
+          {/* <div className="my-4 bg-slate-500 h-[1px]"></div> */}
+          <div className="flex px-0 py-0 overflow-x-auto bg-slate-100 border-t-8 border-slate-500">{thumbnailComponent}</div>
         </>
       )}
 
