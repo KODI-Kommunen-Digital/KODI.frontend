@@ -21,7 +21,7 @@ function Footer(props) {
   return (
     <footer className="text-center lg:text-left bg-black text-white">
       <div className="mx-6 py-10 text-left">
-        <div className={`flex gap-10 md:gap-40 justify-start`}>
+        <div className={`flex gap-10 md:gap-40 lg:px-20 md:px-5 px-5 py-6 justify-start`}>
           {process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
             <>
               <div>
