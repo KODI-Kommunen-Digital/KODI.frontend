@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { getCategory } from "../Services/CategoryApi";
 
 const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
-  MostPopulatCategories.propTypes = {
-    listingsCount: PropTypes.array.isRequired,
-    t: PropTypes.func.isRequired,
-    goToAllListingsPage: PropTypes.func.isRequired,
-  };
+    MostPopulatCategories.propTypes = {
+        listingsCount: PropTypes.array.isRequired,
+        t: PropTypes.func.isRequired,
+        goToAllListingsPage: PropTypes.func.isRequired,
+    };
 
     MostPopulatCategories.propTypes = {
         listingsCount: PropTypes.array.isRequired,
@@ -241,6 +241,19 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 </div>
                             );
                             break;
+                        case 18:
+                            categoryIcon = (
+                                <div className="h-20 w-20 bg-purple-400 flex items-center justify-center rounded-full m-auto shadow-xl">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 448 512"
+                                        className="h-8 w-40 mr-0"
+                                    >
+                                        <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                                    </svg>
+                                </div>
+                            );
+                            break;
                         default:
                             categoryName = t("unknownCategory");
                             categoryIcon = null;
@@ -267,8 +280,8 @@ const MostPopulatCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                     );
                 })}
             </div>
-      </div>
-  );
+        </div>
+    );
 };
 
 export default MostPopulatCategories;
