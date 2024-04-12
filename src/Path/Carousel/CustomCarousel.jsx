@@ -22,7 +22,7 @@ const CustomCarousel = (props) => {
   };
 
   const mainImageComponent = (
-    <div className={`aspect-w-16 aspect-h-9 px-4 py-2`}>
+    <div className={`aspect-w-16 aspect-h-9 px-2 py-2`}>
       <img
         src={
           props.sourceId === source.User

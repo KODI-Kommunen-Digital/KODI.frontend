@@ -479,7 +479,7 @@ const Listing = () => {
                                     process.env.REACT_APP_BUCKET_HOST + input.pdf
                                   }
                                   type="text/html"
-                                  className="object-cover object-center h-[600px] w-full"
+                                  className="w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain"
                                 ></iframe>
                               )}
                             </div>
