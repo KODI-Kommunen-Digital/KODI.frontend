@@ -267,7 +267,13 @@ const Dashboard = () => {
       localStorage.setItem("selectedCity", selectedCity.name);
       urlParams.set("cityId", selectedCityId);
     } else {
-      localStorage.setItem("selectedCity", t("allCities"));
+      localStorage.setItem(
+        "selectedCity",
+        t(process.env.REACT_APP_REGION_NAME === "HIVADA"
+          ? "allClusters"
+          : (process.env.REACT_APP_NAME === 'KODI - DEMO' ? "allCategories" : "allCities")
+        )
+      );
       urlParams.delete("cityId");
     }
 
@@ -355,7 +361,9 @@ const Dashboard = () => {
               }}
             >
               <option className="font-sans" value={0} key={0}>
-                {t("allCities", {
+                {t(process.env.REACT_APP_REGION_NAME === "HIVADA"
+                  ? "allClusters"
+                  : (process.env.REACT_APP_NAME === 'KODI - DEMO' ? "allCategories" : "allCities"), {
                   regionName: process.env.REACT_APP_REGION_NAME,
                 })}
               </option>

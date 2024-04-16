@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../assets/HEIDI_Logo_Landscape.png";
+import kodiLogo from "../assets/KODILOGO.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -18,11 +19,20 @@ const Error = () => {
 			style={{ animation: "gradientFlow 10s linear infinite alternate" }}
 		>
 			<div className="bg-black text-white p-10 rounded-lg shadow-lg w-full max-w-xl md:max-w-2xl lg:max-w-4xl h-full md:h-auto transform hover:-translate-y-2 transition-all duration-300">
-				<img
-					className="h-20 md:h-40 mx-auto"
-					src={logo}
-					alt="HEDI- Heimat Digital"
-				/>
+				{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
+					<img
+						onClick={() => navigateTo("/")}
+						className="h-20 md:h-40 mx-auto"
+						src={kodiLogo}
+						alt="KODI"
+					/>
+				) : (
+					<img
+						className="h-20 md:h-40 mx-auto"
+						src={logo}
+						alt="HEDI- Heimat Digital"
+					/>
+				)}
 				<div className="text-center">
 					<h1 className="text-8xl md:text-8xl lg:text-10xl text-center font-bold py-10 font-sans bg-white text-transparent bg-clip-text">
 						404
