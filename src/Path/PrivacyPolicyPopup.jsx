@@ -62,14 +62,14 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp2")}
 									<a
 										href="/PrivacyPolicy"
-										className="text-blue-800 font-semibold"
+										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-800'} font-semibold`}
 									>
 										{t("privacypolicyp5")}
 									</a>
 									{t("privacypolicyp6")}
 									<a
 										href="/PrivacyPolicy"
-										className="text-blue-800 font-semibold"
+										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-800'} font-semibold`}
 									>
 										{t("privacypolicyp7")}
 									</a>
@@ -147,7 +147,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp8")}{" "}
 									<a
 										href="/PrivacyPolicy"
-										className="text-blue-800 font-semibold"
+										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : 'bg-blue-800'} font-semibold`}
 									>
 										{t("privacypolicyp9")}
 									</a>

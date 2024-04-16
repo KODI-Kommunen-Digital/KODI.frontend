@@ -54,7 +54,7 @@
 }
 
 .loading-wheel {
-    border: 8px solid #60a5fa;
+    /* border: 8px solid #60a5fa; */
     /* You can customize the color */
     border-top: 8px solid #fff;
     /* You can customize the color */

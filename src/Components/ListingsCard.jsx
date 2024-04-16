@@ -100,7 +100,7 @@ function ListingsCard({ listing, terminalView = false }) {
               )
               {listing.endDate && (
                 <>
-                  <span className="text-blue-400"> {t("To")} </span>
+                  <span className="text-slate-500"> {t("To")} </span>
                   {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
                     "de-DE"
                   )}{" "}
