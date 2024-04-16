@@ -21,6 +21,7 @@ import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
+import { role } from "../Constants/role";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -330,7 +331,7 @@ function UploadListings() {
     setCityId(cityId);
     var listingId = searchParams.get("listingId");
     getProfile().then((response) => {
-      setIsAdmin(response.data.data.roleId === 1);
+      setIsAdmin(response.data.data.roleId === role.Admin);
     });
     if (listingId && cityId) {
       setListingId(parseInt(listingId));
