@@ -704,5 +704,7 @@
     "pleaseEnterStartTime": "Bitte geben Sie eine Startzeit ein",
     "pleaseEnterEndTime": "Bitte geben Sie die Endzeit ein",
     "pleaseSelectServiceName": "Bitte geben Sie den Servicenamen ein",
-    "pleaseSelectDuration": "Bitte geben Sie die Servicedauer ein"
+    "pleaseSelectDuration": "Bitte geben Sie die Servicedauer ein",
+    "maximumNumOfService1": "Sie können maximal hinzufügen ",
+    "maximumNumOfService2": " Dienstleistungen."
 }

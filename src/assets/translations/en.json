@@ -693,5 +693,7 @@
     "pleaseSelectEmail": "Please enter email",
     "pleaseSelectPhone": "Please enter phone",
     "pleaseSelectFirstName": "Please enter First Name",
-    "pleaseSelectLastName": "Please enter Last Name"
+    "pleaseSelectLastName": "Please enter Last Name",
+    "maximumNumOfService1": "You can only add a maximum of ",
+    "maximumNumOfService2": " services."
 }

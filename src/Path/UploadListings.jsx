@@ -781,7 +781,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime />}
+          {categoryId == 18 && <ServiceAndTime description={description} title={title} />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-0">

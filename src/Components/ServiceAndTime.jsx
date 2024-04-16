@@ -15,7 +15,14 @@ const ServiceAndTime = () => {
   const initialTimeSlot = { startTime: "", endTime: "" };
 
   const [appointmentInput, setAppointmentInput] = useState({
-    openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+    title: "",
+    description: "",
+    startDate: Date.now,
+    metadata: {
+      holidays: [],
+      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+      maxBookingPerSlot: 5,
+    },
     services: [{ name: "", duration: "", durationUnit: "minutes", slotSameAsAppointment: false, openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }],
   });
   console.log(appointmentInput)
@@ -25,13 +32,20 @@ const ServiceAndTime = () => {
     duration: "",
     endTime: "",
     startTime: "",
+    metadata: {
+      holidays: "",
+      openingDates: "",
+      maxBookingPerSlot: "",
+    },
   });
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [editAppointmentTime, setEditAppointmentTime] = useState(false)
+  const [validNumberofServicesError, setValidNumberofServicesError] = useState("");
 
   const [isValidInput, setIsValidInput] = useState(true);
+  const [isValidServiceCount, setIsValidServiceCount] = useState(true);
 
   const getErrorMessage = (name, value) => {
     switch (name) {
@@ -121,21 +135,33 @@ const ServiceAndTime = () => {
   };
 
   const handleAddService = () => {
-    setAppointmentInput((prevInput) => ({
-      ...prevInput,
-      services: [
-        ...prevInput.services,
-        {
-          name: "",
-          duration: "",
-          durationUnit: "minutes",
-          openingDates: daysOfWeek.reduce(
-            (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
-            {}
-          ),
-        },
-      ],
-    }));
+    setAppointmentInput((prevInput) => {
+      const { services } = prevInput;
+      const { maxBookingPerSlot } = prevInput.metadata;
+
+      if (services.length >= maxBookingPerSlot) {
+        setIsValidServiceCount(false)
+        setValidNumberofServicesError(t("maximumNumOfService1") + maxBookingPerSlot + t("maximumNumOfService2"));
+        return prevInput;
+      }
+
+      // Add a new service
+      return {
+        ...prevInput,
+        services: [
+          ...services,
+          {
+            name: "",
+            duration: "",
+            durationUnit: "minutes",
+            openingDates: daysOfWeek.reduce(
+              (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+              {}
+            ),
+          },
+        ],
+      };
+    });
   };
 
   const handleDeleteService = (indexToDelete) => {
@@ -166,15 +192,14 @@ const ServiceAndTime = () => {
       const currentService = updatedServices[index];
 
       if (updatedCheckedList[index]) {
-        // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
           ...currentService,
-          openingDates: prevInput.openingDates,
+          openingDates: prevInput.metadata.openingDates,
         };
       } else {
-        // If the checkbox is unchecked, keep openingDates as it is
         updatedServices[index] = {
           ...currentService,
+          openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
         };
       }
 
@@ -191,15 +216,18 @@ const ServiceAndTime = () => {
     setAppointmentInput((prevInput) => {
       if (editAppointmentTime) {
         const updatedOpeningDates = {
-          ...prevInput.openingDates,
-          [day]: prevInput.openingDates[day].map((slot, i) =>
+          ...prevInput.metadata.openingDates,
+          [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
             i === index ? { ...slot, [key]: value } : slot
           ),
         };
 
         return {
           ...prevInput,
-          openingDates: updatedOpeningDates,
+          metadata: {
+            ...prevInput.metadata,
+            openingDates: updatedOpeningDates,
+          },
         };
       } else {
         const updatedOpeningDates = {
@@ -221,7 +249,8 @@ const ServiceAndTime = () => {
 
   const handleAddTimeSlot = (day) => {
     setAppointmentInput((prevInput) => {
-      const currentDaySchedule = prevInput.openingDates[day];
+      // const currentDaySchedule = prevInput.openingDates[day];
+      const currentDaySchedule = prevInput.metadata.openingDates[day];
 
       if (!Array.isArray(currentDaySchedule)) {
         return prevInput;
@@ -229,12 +258,15 @@ const ServiceAndTime = () => {
 
       if (editAppointmentTime) {
         const updatedOpeningDates = {
-          ...prevInput.openingDates,
+          ...prevInput.metadata.openingDates,
           [day]: [...currentDaySchedule, initialTimeSlot],
         };
         return {
           ...prevInput,
-          openingDates: updatedOpeningDates,
+          metadata: {
+            ...prevInput.metadata,
+            openingDates: updatedOpeningDates,
+          },
         };
       } else {
         const updatedServices = prevInput.services.map((service) => ({
@@ -255,16 +287,25 @@ const ServiceAndTime = () => {
 
   const handleDeleteTimeSlot = (day, index) => {
     setAppointmentInput((prevInput) => {
-      const currentDaySchedule = prevInput.openingDates[day];
+      // const currentDaySchedule = prevInput.openingDates[day];
+      const currentDaySchedule = prevInput.metadata.openingDates[day];
+
       if (!Array.isArray(currentDaySchedule)) {
         return prevInput;
       }
       if (editAppointmentTime) {
         return {
           ...prevInput,
-          openingDates: {
-            ...prevInput.openingDates,
-            [day]: currentDaySchedule.filter((_, i) => i !== index),
+          // openingDates: {
+          //   ...prevInput.openingDates,
+          //   [day]: currentDaySchedule.filter((_, i) => i !== index),
+          // },
+          metadata: {
+            ...prevInput.metadata,
+            openingDates: {
+              ...prevInput.metadata.openingDates,
+              [day]: currentDaySchedule.filter((_, i) => i !== index),
+            },
           },
         };
       } else {
@@ -298,15 +339,6 @@ const ServiceAndTime = () => {
       openingDates: updatedOpeningDates,
     }));
   };
-
-  // function formatDateTime(dateTime) {
-  //   console.log("DateTime received:", dateTime);
-  //   const date = new Date(dateTime.replace("Z", ""));
-  //   const hours = String(date.getHours()).padStart(2, "0");
-  //   const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  //   return `${hours}:${minutes}`;
-  // }
   // Appointment ends
 
   return (
@@ -469,7 +501,7 @@ const ServiceAndTime = () => {
                         <div key={day} className="mb-4">
 
                           {/* {JSON.stringify(appointmentInput.services[index].openingDates[day])} */}
-                          {editAppointmentTime && appointmentInput.openingDates[day].map((timeSlot, index) => (
+                          {editAppointmentTime && appointmentInput.metadata.openingDates[day].map((timeSlot, index) => (
                             <div
                               key={index}
                               className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
@@ -649,12 +681,22 @@ const ServiceAndTime = () => {
       ))
       }
 
-      <button
-        onClick={handleAddService}
-        className="w-full bg-black mt-4 bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-      >
-        {t("addAnotherService")}
-      </button>
+      <div className="py-2 mt-1 px-2">
+        <button
+          onClick={handleAddService}
+          className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+        >
+          {t("addAnotherService")}
+        </button>
+
+        <div
+          className="h-[24px] text-red-600"
+        >
+          {!isValidServiceCount && (
+            <p >{t(validNumberofServicesError)}</p>
+          )}
+        </div>
+      </div>
     </div >
   );
 };
