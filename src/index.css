@@ -34,6 +34,7 @@
     80% { transform: rotate(90deg); }
     100% { transform: rotate(0deg); }
 }
+
 @keyframes flip {
     0% { transform: rotate(0deg); }
     20% { transform: rotate(-90deg); }
@@ -44,13 +45,20 @@
 } */
 
 @keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-wheel {
-    border: 8px solid #60a5fa; /* You can customize the color */
-    border-top: 8px solid #fff; /* You can customize the color */
+    border: 8px solid #60a5fa;
+    /* You can customize the color */
+    border-top: 8px solid #fff;
+    /* You can customize the color */
     border-radius: 50%;
     width: 50px;
     height: 50px;

@@ -302,7 +302,7 @@ function UploadPosts() {
 		setForumId(forumId);
 		setInput((prev) => ({
 			...prev,
-			forumId: forumId,
+			forumId,
 		}));
 		validateInput(e);
 
@@ -317,7 +317,7 @@ function UploadPosts() {
 
 		setInput((prev) => ({
 			...prev,
-			cityId: cityId,
+			cityId,
 		}));
 
 		validateInput(e);

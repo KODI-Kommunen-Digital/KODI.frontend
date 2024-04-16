@@ -14,8 +14,8 @@ import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
-const LazyMostPopulatCategories = lazy(() =>
-  import("../Components//MostPopulatCategories")
+const LazyMostPopularCategories = lazy(() =>
+  import("../Components//MostPopularCategories")
 );
 
 const HomePage = () => {
@@ -302,12 +302,12 @@ const HomePage = () => {
         className="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
-        {t("mostPopulatCategories")}
+        {t("mostPopularCategories")}
       </h2>
 
-      {/* <MostPopulatCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} /> */}
+      {/* <MostPopularCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} /> */}
       <Suspense fallback={<div>Loading...</div>}>
-        <LazyMostPopulatCategories
+        <LazyMostPopularCategories
           listingsCount={listingsCount}
           t={t}
           goToAllListingsPage={goToAllListingsPage}
