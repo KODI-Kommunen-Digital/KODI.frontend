@@ -185,7 +185,7 @@ const LoginPage = () => {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);
 			setAlertType("success");
-			setAlertMessage("checkYourmail");
+			setAlertMessage(t("checkYourmail"))
 		} catch (err) {
 			setForgotPasswordLoading(false);
 			setAlertInfo(true);

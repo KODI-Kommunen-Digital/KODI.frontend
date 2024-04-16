@@ -9,6 +9,7 @@ import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
+import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePage from "./Path/HomePage";
@@ -21,7 +22,7 @@ import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
 import UploadPosts from "./Path/Forums/UploadPosts";
 import AllForums from "./Path/CitizenServices/AllForums";
-import DigitalManagement from "./Path/CitizenServices/DigitalManagement";
+import CitizenServiceManagement from "./Path/CitizenServices/CitizenServiceManagement";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 import UploadListings from "./Path/UploadListings";
@@ -40,9 +41,14 @@ import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
+import IFrame from "./Path/Listings/IFrame.jsx";
+import IFrameListing from './Path/Listings/IFrameListing.jsx'
+import Modal from 'react-modal';
+Modal.setAppElement('#root');
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const inFrame = process.env.REACT_APP_INFRAME === "True";
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -57,13 +63,13 @@ const App = () => {
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="Listing" element={<Listing />} exact />
+          <Route path="/Listing" element={<Listing />} exact />
           <Route path="/AllListings" element={<AllListings />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
-            path="/CitizenService/DigitalManagement"
-            element={<DigitalManagement />}
+            path="/CitizenService/CitizenServiceManagement"
+            element={<CitizenServiceManagement />}
           />
 
           <Route path="/Dashboard" element={<Dashboard />} exact />
@@ -78,7 +84,16 @@ const App = () => {
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+          {
+            inFrame && (
+              <React.Fragment>
+                <Route path="/IFrame" element={<IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />} exact />
+                <Route path="/IFrameListing" element={<IFrameListing />} exact />
+              </React.Fragment>
+            )
+          }
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
@@ -114,8 +129,8 @@ const App = () => {
                 exact
               />
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
-            </React.Fragment>)}
-
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>

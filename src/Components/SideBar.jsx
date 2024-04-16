@@ -124,6 +124,7 @@ function SideBar() {
 						className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 						onClick={() => {
 							navigateTo("/Dashboard");
+							window.location.reload();
 						}}
 					>
 						<svg
@@ -156,7 +157,7 @@ function SideBar() {
 							className="text-[15px] ml-4 text-gray-200 font-bold"
 							style={{ fontFamily: "Poppins, sans-serif" }}
 						>
-							{t("upload")}
+							{t("uploadPost")}
 						</span>
 					</div>
 					{userRole === 1 && (

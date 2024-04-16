@@ -109,6 +109,9 @@ function UploadPosts() {
 				}
 			);
 		}
+		if (forumIdFromURL && cityIdFromURL) {
+			setNewPost(true);
+		}
 	}, []);
 
 	useEffect(() => {
