@@ -2,12 +2,12 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsCount } from "../Services/listingsApi";
+import SearchBar from "../Components/SearchBar";
+import { getListings, getListingsCount, getListingsBySearch } from "../Services/listingsApi";
 import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
-// import MostPopulatCategories from "../Components//MostPopulatCategories";
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
@@ -96,7 +96,11 @@ const HomePage = () => {
       localStorage.setItem("selectedCity", selectedCity.name);
       window.location.href = `?cityId=${selectedCityId}`;
     } else {
-      localStorage.setItem("selectedCity", t("allCities"));
+      const defaultCityName = process.env.REACT_APP_REGION_NAME === "HIVADA"
+        ? t("allClusters")
+        : t("allCities");
+
+      localStorage.setItem("selectedCity", defaultCityName);
       urlParams.delete("cityId");
       setCityId(0);
     }
@@ -132,6 +136,33 @@ const HomePage = () => {
     setShowPopup(false);
   };
 
+  const handleSearch = async (searchQuery) => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = { statusId: 1 };
+
+      const cityId = urlParams.get("cityId");
+      if (cityId && parseInt(cityId)) {
+        params.cityId = parseInt(cityId);
+      }
+
+      const categoryId = urlParams.get("categoryId");
+      if (categoryId && parseInt(categoryId)) {
+        params.categoryId = parseInt(categoryId);
+      }
+      const response = await getListingsBySearch({
+        searchQuery,
+        ...params,
+      });
+      setListings(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    const listingsSection = document.getElementById("listingsSection");
+    listingsSection.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="text-gray-600 body-font relative">
       <HomePageNavBar />
@@ -155,34 +186,45 @@ const HomePage = () => {
                 >
                   {t("homePageHeading")}
                 </h1>
-                <div className="relative w-full px-4 mb-4 md:w-80">
-                  <select
-                    id="city"
-                    name="city"
-                    autoComplete="city-name"
-                    onChange={onCityChange}
-                    value={cityId || 0}
-                    className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    <option className="font-sans" value={0} key={0}>
-                      {t("allCities", {
-                        regionName: process.env.REACT_APP_REGION_NAME,
-                      })}
-                    </option>
-                    {cities.map((city) => (
-                      <option
-                        className="font-sans"
-                        value={city.id}
-                        key={city.id}
-                      >
-                        {city.name}
+
+                <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
+                  <div className="relative w-full px-4 mb-4 mt-1 md:w-80">
+                    <select
+                      id="city"
+                      name="city"
+                      autoComplete="city-name"
+                      onChange={onCityChange}
+                      value={cityId || 0}
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option className="font-sans" value={0} key={0}>
+                        {t(process.env.REACT_APP_REGION_NAME === "HIVADA"
+                          ? "allClusters"
+                          : "allCities", {
+                          regionName: process.env.REACT_APP_REGION_NAME,
+                        })}
                       </option>
-                    ))}
-                  </select>
+                      {cities.map((city) => (
+                        <option
+                          className="font-sans"
+                          value={city.id}
+                          key={city.id}
+                        >
+                          {city.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <SearchBar
+                    onSearch={handleSearch}
+                    searchBarClassName="w-full md:w-80"
+                  />
                 </div>
+
                 <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
                   <div
                     className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
@@ -344,6 +386,7 @@ const HomePage = () => {
       <div className="my-4 bg-gray-200 h-[1px]"></div>
 
       <h2
+        id="listingsSection"
         className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
