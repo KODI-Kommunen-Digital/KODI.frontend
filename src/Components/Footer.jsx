@@ -19,9 +19,9 @@ function Footer(props) {
   }, [terminalViewParam]);
 
   return (
-    <footer className="text-center lg:text-left bg-black text-white">
-      <div className="mx-6 py-10 text-left">
-        <div className={`flex gap-10 md:gap-40 lg:px-20 md:px-5 px-5 py-6 justify-start`}>
+    <footer className="text-center md:text-left bg-black text-white">
+      <div className="mx-6 py-10 text-center md:text-left">
+        <div className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 md:gap-20 lg:px-20 md:px-5 px-5 py-6 justify-center md:justify-start`}>
           {process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
             <>
               <div>
@@ -114,7 +114,7 @@ function Footer(props) {
             </>
           )}
           <div className="">
-            <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
+            <h6 className="uppercase font-semibold mb-4 justify-center md:justify-start font-sans">
               {t("learn_more")}
             </h6>
             <p className={`${footerClass} mb-4`}>
@@ -141,7 +141,7 @@ function Footer(props) {
           </div>
 
           <div className="">
-            <h6 className="uppercase font-semibold mb-4 flex justify-start font-sans">
+            <h6 className="uppercase font-semibold mb-4 flex justify-center md:justify-start font-sans">
               {t("legal")}
             </h6>
             <p className="mb-4">
