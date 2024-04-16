@@ -122,17 +122,19 @@ function Footer(props) {
                 href="https://heidi-app.de/"
                 className="text-gray-600 font-sans"
               >
-                {t("developer_community")}
+                {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("developer_community_KODI") : t("developer_community")}
               </a>
             </p>
-            <p className={`${footerClass} mb-4`}>
-              <a
-                href="https://heidi-app.de/"
-                className="text-gray-600 font-sans"
-              >
-                {t("contact_us")}
-              </a>
-            </p>
+            {process.env.REACT_APP_NAME !== 'KODI - DEMO' && (
+              <p className={`${footerClass} mb-4`}>
+                <a
+                  href="https://heidi-app.de/"
+                  className="text-gray-600 font-sans"
+                >
+                  {t("contact_us")}
+                </a>
+              </p>
+            )}
             <p className={`${footerClass} mb-4`}>
               <a href="/login" className="text-gray-600 font-sans">
                 {t("login")}

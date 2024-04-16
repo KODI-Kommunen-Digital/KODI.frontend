@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/HEIDI_Logo_Landscape.png";
+import kodiLogo from "../assets/KODILOGO.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
@@ -102,12 +103,21 @@ function SideBar() {
 			<div className="sidebar fixed top-0 bottom-0 p-2 w-[300px] z-50 overflow-y-auto text-center bg-black">
 				<div className="text-gray-100 text-xl">
 					<div className="p-2.5 mt-1 flex items-center">
-						<img
-							onClick={() => navigateTo("/")}
-							className="p-5 cursor-pointer"
-							src={logo}
-							alt="HEDI- Heimat Digital"
-						/>
+						{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
+							<img
+								onClick={() => navigateTo("/")}
+								className="p-5 cursor-pointer"
+								src={kodiLogo}
+								alt="KODI"
+							/>
+						) : (
+							<img
+								onClick={() => navigateTo("/")}
+								className="p-5 cursor-pointer"
+								src={logo}
+								alt="HEDI- Heimat Digital"
+							/>
+						)}
 						<span
 							className="text-white bg-black cursor-pointer"
 							onClick={openSidebar}
