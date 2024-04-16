@@ -359,7 +359,7 @@ const HomePage = () => {
                   {t("to_upload_new_listing")}
                 </span>
                 <a
-                  className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+                  className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-400' : 'text-blue-400'}`}
                   style={{ fontFamily: "Poppins, sans-serif" }}
                   onClick={() => {
                     localStorage.setItem("selectedItem", "Choose one category");
@@ -513,7 +513,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="bg-blue-400 mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem]">
+          <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : 'bg-blue-400'}`}>
             <div className="flex flex-wrap items-center">
               <div className="w-full md:w-1/2 px-4">
                 <h2
@@ -538,8 +538,8 @@ const HomePage = () => {
                 <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
                   onClick={() => goToCitizensPage()}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
-                  <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-blue-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-                  <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-blue-800 group-hover:bg-blue-800"></span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : 'bg-blue-800'} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'border-yellow-600 group-hover:bg-yellow-600' : 'border-blue-800 group-hover:bg-blue-800'}`}></span>
                   <span className="relative text-blue-800 group-hover:text-white">{t("clickHereToFind")}</span>
                 </a>
               </div>
@@ -556,7 +556,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="bg-blue-800 lg:px-20 md:px-5 px-5 py-6 flex justify-start">
+          <div className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : 'bg-blue-800'} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
             <style>
               {`
 								@media (max-width: 280px) {

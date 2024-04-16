@@ -96,7 +96,7 @@ const ViewProfile = () => {
         </h1>
         <a
           onClick={() => goBack()}
-          className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+          className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : 'bg-blue-800 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
           style={{ fontFamily: "Poppins, sans-serif" }}
         >
           {t("goBack")}
@@ -142,7 +142,7 @@ const ViewProfile = () => {
                     </div>
                     <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
                       <h2
-                        className="text-blue-400 text-lg title-font mb-2 font-bold"
+                        className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-400' : 'text-blue-400'} text-lg title-font mb-2 font-bold`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         {user?.firstname + " " + user?.lastname}
@@ -189,8 +189,8 @@ const ViewProfile = () => {
             </div>
             <div className="my-4 bg-gray-200 h-[1px]"></div>
 
-            <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center py-2 px-2 sm:justify-start mx-4 my-4 gap-4">
-              <div className="flex items-center">
+            <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center p-4 sm:p-4 sm:justify-start gap-4">
+              <div className="flex items-center px-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
@@ -206,7 +206,7 @@ const ViewProfile = () => {
                 </p>
               </div>
               {user?.website && (
-                <div className="flex items-center">
+                <div className="flex items-center px-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"

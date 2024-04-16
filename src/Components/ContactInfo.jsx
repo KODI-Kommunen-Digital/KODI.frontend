@@ -50,8 +50,8 @@ function ContactInfo({ user }) {
         </div>
         <div className="my-4 bg-gray-200 h-[1px]"></div>
 
-        <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center py-2 px-2 sm:justify-start mx-0 my-4 gap-4">
-          <div className="flex items-center py-0 px-2">
+        <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center p-4 sm:p-4 sm:justify-start gap-4">
+          <div className="flex items-center px-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -67,7 +67,7 @@ function ContactInfo({ user }) {
             </p>
           </div>
           {user?.website && (
-            <div className="flex items-center py-0 px-2">
+            <div className="flex items-center px-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
