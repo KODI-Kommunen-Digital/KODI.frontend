@@ -23,6 +23,29 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     16: "officialnotification",
   };
   module.exports = { categoryByName, categoryById };
+} else if (process.env.REACT_APP_REGION_NAME === "KODI - DEMO") {
+  const categoryByName = {
+    Mobilität: 11,
+    Integration: 13,
+    DigitaleBürgerservices: 14,
+    Tourismus: 15,
+    DigitaleStadtplanung: 16,
+    Wirtschaftsförderung: 17,
+    Abfallwirtschaft: 18,
+    Bürgerbeteiligung: 20,
+  };
+
+  const categoryById = {
+    11: "Mobilität",
+    13: "Integration",
+    14: "DigitaleBürgerservices",
+    15: "Tourismus",
+    16: "DigitaleStadtplanung",
+    17: "Wirtschaftsförderung",
+    18: "Abfallwirtschaft",
+    20: "Bürgerbeteiligung",
+  };
+  module.exports = { categoryByName, categoryById };
 } else {
   const categoryByName = {
     news: 1,
