@@ -23,7 +23,17 @@ const ServiceAndTime = () => {
       openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
       maxBookingPerSlot: 5,
     },
-    services: [{ name: "", duration: "", durationUnit: "minutes", slotSameAsAppointment: false, openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}) }],
+    services: [{
+      name: "",
+      duration: "",
+      durationUnit: "minutes",
+      slotSameAsAppointment: false,
+      metadata: {
+        holidays: [],
+        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+        maxBookingPerSlot: 5,
+      },
+    }],
   });
   console.log(appointmentInput)
 
@@ -41,6 +51,7 @@ const ServiceAndTime = () => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [editServiceIndex, setEditServciceIndex] = useState();
   const [editAppointmentTime, setEditAppointmentTime] = useState(false)
   const [validNumberofServicesError, setValidNumberofServicesError] = useState("");
 
@@ -106,13 +117,14 @@ const ServiceAndTime = () => {
 
   const handleTextClick = () => {
     if (!isChecked.some((checked) => checked)) {
-      setShowModal(true);
+      // setShowModal(true);
     }
   };
 
   const handleDoneButtonClick = () => {
     setShowModal(false);
     setEditAppointmentTime(false)
+    setEditServciceIndex()
   };
 
   // Appointment starts
@@ -140,26 +152,24 @@ const ServiceAndTime = () => {
       const { maxBookingPerSlot } = prevInput.metadata;
 
       if (services.length >= maxBookingPerSlot) {
-        setIsValidServiceCount(false)
+        setIsValidServiceCount(false);
         setValidNumberofServicesError(t("maximumNumOfService1") + maxBookingPerSlot + t("maximumNumOfService2"));
         return prevInput;
       }
+      const newService = {
+        name: "",
+        duration: "",
+        durationUnit: "minutes",
+        metadata: {
+          holidays: [],
+          openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+          maxBookingPerSlot: 5, // Or you can adjust it according to your logic
+        },
+      };
 
-      // Add a new service
       return {
         ...prevInput,
-        services: [
-          ...services,
-          {
-            name: "",
-            duration: "",
-            durationUnit: "minutes",
-            openingDates: daysOfWeek.reduce(
-              (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
-              {}
-            ),
-          },
-        ],
+        services: [...services, newService],
       };
     });
   };
@@ -192,14 +202,23 @@ const ServiceAndTime = () => {
       const currentService = updatedServices[index];
 
       if (updatedCheckedList[index]) {
+        // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
           ...currentService,
-          openingDates: prevInput.metadata.openingDates,
+          metadata: {
+            ...currentService.metadata,
+            openingDates: prevInput.metadata.openingDates,
+          },
         };
       } else {
+        // If the checkbox is unchecked, keep openingDates as it is
         updatedServices[index] = {
-          ...currentService,
-          openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+          // ...currentService,
+          // openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+          metadata: {
+            ...currentService.metadata,
+            openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+          },
         };
       }
 
@@ -211,14 +230,13 @@ const ServiceAndTime = () => {
     });
   };
 
-  const handleTimeChange = (day, index, key, value) => {
-    console.log("Value received:", value);
+  const handleTimeChange = (day, index, key, value, dayIndex) => {
     setAppointmentInput((prevInput) => {
       if (editAppointmentTime) {
         const updatedOpeningDates = {
           ...prevInput.metadata.openingDates,
           [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
-            i === index ? { ...slot, [key]: value } : slot
+            i === dayIndex ? { ...slot, [key]: value } : slot
           ),
         };
 
@@ -230,18 +248,28 @@ const ServiceAndTime = () => {
           },
         };
       } else {
-        const updatedOpeningDates = {
-          ...prevInput.services[index].openingDates,
-          [day]: prevInput.services[index].openingDates[day].map((slot, i) =>
-            i === index ? { ...slot, [key]: value } : slot
-          ),
-        };
+        const updatedServices = prevInput.services.map((service, i) => {
+          if (i === editServiceIndex) {
+            const updatedOpeningDates = {
+              ...service.metadata.openingDates,
+              [day]: service.metadata.openingDates[day].map((slot, j) =>
+                j === dayIndex ? { ...slot, [key]: value } : slot
+              ),
+            };
+            return {
+              ...service,
+              metadata: {
+                ...service.metadata,
+                openingDates: updatedOpeningDates,
+              },
+            };
+          }
+          return service;
+        });
 
-        const updatedServices = prevInput.services
-        updatedServices[index].openingDates = updatedOpeningDates
         return {
           ...prevInput,
-          services: updatedServices
+          services: updatedServices,
         };
       }
     });
@@ -249,7 +277,6 @@ const ServiceAndTime = () => {
 
   const handleAddTimeSlot = (day) => {
     setAppointmentInput((prevInput) => {
-      // const currentDaySchedule = prevInput.openingDates[day];
       const currentDaySchedule = prevInput.metadata.openingDates[day];
 
       if (!Array.isArray(currentDaySchedule)) {
@@ -269,13 +296,22 @@ const ServiceAndTime = () => {
           },
         };
       } else {
-        const updatedServices = prevInput.services.map((service) => ({
-          ...service,
-          openingDates: {
-            ...service.openingDates,
-            [day]: [...service.openingDates[day], initialTimeSlot],
-          },
-        }));
+        const updatedServices = prevInput.services.map((service, index) => {
+          if (index === editServiceIndex) {
+            return {
+              ...service,
+              metadata: {
+                ...service.metadata,
+                openingDates: {
+                  ...service.metadata.openingDates,
+                  [day]: [...service.metadata.openingDates[day], initialTimeSlot],
+                },
+              },
+            };
+          } else {
+            return service;
+          }
+        });
 
         return {
           ...prevInput,
@@ -287,7 +323,6 @@ const ServiceAndTime = () => {
 
   const handleDeleteTimeSlot = (day, index) => {
     setAppointmentInput((prevInput) => {
-      // const currentDaySchedule = prevInput.openingDates[day];
       const currentDaySchedule = prevInput.metadata.openingDates[day];
 
       if (!Array.isArray(currentDaySchedule)) {
@@ -296,10 +331,6 @@ const ServiceAndTime = () => {
       if (editAppointmentTime) {
         return {
           ...prevInput,
-          // openingDates: {
-          //   ...prevInput.openingDates,
-          //   [day]: currentDaySchedule.filter((_, i) => i !== index),
-          // },
           metadata: {
             ...prevInput.metadata,
             openingDates: {
@@ -311,9 +342,12 @@ const ServiceAndTime = () => {
       } else {
         const updatedServices = prevInput.services.map((service) => ({
           ...service,
-          openingDates: {
-            ...service.openingDates,
-            [day]: service.openingDates[day].filter((_, i) => i !== index),
+          metadata: {
+            ...service.metadata,
+            openingDates: {
+              ...service.metadata.openingDates,
+              [day]: service.metadata.openingDates[day].filter((_, i) => i !== index),
+            },
           },
         }));
 
@@ -326,17 +360,20 @@ const ServiceAndTime = () => {
   };
 
   const resetTimeSlots = () => {
-    const updatedOpeningDates = daysOfWeek.reduce((acc, day) => {
-      acc[day] = appointmentInput.openingDates[day].map(() => ({
-        startTime: "",
-        endTime: "",
-      }));
-      return acc;
-    }, {});
+    const updatedServices = appointmentInput.services.map(service => ({
+      ...service,
+      openingDates: daysOfWeek.reduce((acc, day) => {
+        acc[day] = appointmentInput.metadata.openingDates[day].map(() => ({
+          startTime: "",
+          endTime: "",
+        }));
+        return acc;
+      }, {}),
+    }));
 
     setAppointmentInput(prevState => ({
       ...prevState,
-      openingDates: updatedOpeningDates,
+      services: updatedServices,
     }));
   };
   // Appointment ends
@@ -359,10 +396,10 @@ const ServiceAndTime = () => {
       >
         {t("addService")} *
       </label>
-      {appointmentInput.services.map((service, index) => (
+      {appointmentInput.services.map((service, serviceIndex) => (
         <>
           <div
-            key={index}
+            key={serviceIndex}
             className="items-stretch py-2 mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
           >
             <div className="relative mb-0">
@@ -372,17 +409,17 @@ const ServiceAndTime = () => {
                 name="name"
                 placeholder="Service Name"
                 value={service.name}
-                onChange={(e) => onServiceChange(index, 'name', e.target.value)}
-                onBlur={(e) => validateInput(index, e)}
+                onChange={(e) => onServiceChange(serviceIndex, 'name', e.target.value)}
+                onBlur={(e) => validateInput(serviceIndex, e)}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: appointmentError[index]?.name ? "visible" : "hidden",
+                  visibility: appointmentError[serviceIndex]?.name ? "visible" : "hidden",
                 }}
               >
-                {appointmentError[index]?.name}
+                {appointmentError[serviceIndex]?.name}
               </div>
             </div>
 
@@ -394,8 +431,8 @@ const ServiceAndTime = () => {
                   name="duration"
                   placeholder="Duration"
                   value={service.duration}
-                  onChange={(e) => { onServiceChange(index, 'duration', e.target.value); handleInputChange(e.target.value); }}
-                  onBlur={(e) => validateInput(index, e)}
+                  onChange={(e) => { onServiceChange(serviceIndex, 'duration', e.target.value); handleInputChange(e.target.value); }}
+                  onBlur={(e) => validateInput(serviceIndex, e)}
                   className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
 
@@ -404,7 +441,7 @@ const ServiceAndTime = () => {
                   name="durationUnit"
                   value={service.durationUnit}
                   className="shadow-md bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                  onChange={(e) => onDurationUnitChange(index, e.target.value)}
+                  onChange={(e) => onDurationUnitChange(serviceIndex, e.target.value)}
                 >
                   <option value="minutes">min</option>
                   <option value="seconds">sec</option>
@@ -414,52 +451,54 @@ const ServiceAndTime = () => {
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: appointmentError[index]?.duration ? "visible" : "hidden",
+                  visibility: appointmentError[serviceIndex]?.duration ? "visible" : "hidden",
                 }}
               >
-                {appointmentError[index]?.duration}
+                {appointmentError[serviceIndex]?.duration}
               </div>
 
               {!isValidInput && (
                 <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
               )}
             </div>
-
             <button
               className={`w-full hidden md:inline-block bg-blue-800 mt-0 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl ${isChecked ? "disabled:opacity-60" : ""
                 }`}
-              onClick={() => setShowModal(true)}
-              disabled={isChecked[index]}
+              onClick={() => {
+                setShowModal(true)
+                setEditServciceIndex(serviceIndex)
+              }}
+              disabled={isChecked[serviceIndex]}
             >
               {t("addtimeslot")}
             </button>
 
             <div className="flex justify-between md:hidden sm:inline-block">
               <p
-                className={`font-bold text-blue-600 hover:underline cursor-pointer text-center${isChecked[index] ? " text-green-600" : "text-blue-600"
+                className={`font-bold text-blue-600 hover:underline cursor-pointer text-center${isChecked[serviceIndex] ? " text-green-600" : "text-blue-600"
                   }`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={handleTextClick}
               >
-                {isChecked[index]
+                {isChecked[serviceIndex]
                   ? t("timeSlotsSetFromPrevious")
                   : t("addtimeslot")}
               </p>
-              {index > 0 && (
+              {serviceIndex > 0 && (
                 <p
                   className="font-bold hover:underline cursor-pointer text-center"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                     color: "red",
                   }}
-                  onClick={() => handleDeleteService(index)}
+                  onClick={() => handleDeleteService(serviceIndex)}
                 >
                   {t("delete")}
                 </p>
               )}
             </div>
             <button
-              onClick={() => handleDeleteService(index)}
+              onClick={() => handleDeleteService(serviceIndex)}
               className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
             >
               {t("delete")}
@@ -484,6 +523,8 @@ const ServiceAndTime = () => {
                       <button
                         onClick={() => {
                           setShowModal(false)
+                          setEditServciceIndex()
+                          setEditServciceIndex()
                           setEditAppointmentTime(false)
                           resetTimeSlots();
                         }}
@@ -491,6 +532,7 @@ const ServiceAndTime = () => {
                       >
                         &times;
                       </button>
+
 
 
                       {/* {!isValidTime && (
@@ -522,7 +564,7 @@ const ServiceAndTime = () => {
                                     value={
                                       timeSlot.startTime ? timeSlot.startTime : ""
                                     }
-                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value) }
+                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value, index) }
                                     }
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
@@ -539,7 +581,7 @@ const ServiceAndTime = () => {
                                     value={
                                       timeSlot.endTime ? timeSlot.endTime : ""
                                     }
-                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value) }
+                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value, index) }
                                     }
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
@@ -577,7 +619,7 @@ const ServiceAndTime = () => {
                             </div>
                           ))}
 
-                          {!editAppointmentTime && appointmentInput.services[index].openingDates[day].map((timeSlot, index) => (
+                          {!editAppointmentTime && appointmentInput.services[editServiceIndex].metadata.openingDates[day].map((timeSlot, index) => (
                             <div
                               key={index}
                               className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
@@ -590,6 +632,8 @@ const ServiceAndTime = () => {
                               </div>
                               <div className="flex space-x-2 mt-0 items-center">
                                 <div className="relative">
+
+
                                   <input
                                     type="time"
                                     id="startTime"
@@ -597,7 +641,7 @@ const ServiceAndTime = () => {
                                     value={
                                       timeSlot.startTime ? timeSlot.startTime : ""
                                     }
-                                    onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value) }}
+                                    onChange={(e) => { handleTimeChange(day, serviceIndex, "startTime", e.target.value, index) }}
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
@@ -611,7 +655,7 @@ const ServiceAndTime = () => {
                                     value={
                                       timeSlot.endTime ? timeSlot.endTime : ""
                                     }
-                                    onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value) }}
+                                    onChange={(e) => { handleTimeChange(day, serviceIndex, "endTime", e.target.value, index) }}
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
@@ -667,8 +711,8 @@ const ServiceAndTime = () => {
           <div className="flex gap-2 mt-4">
             <input
               type="checkbox"
-              checked={isCheckedList[index]}
-              onChange={() => handleCheckboxChange(index)}
+              checked={isCheckedList[serviceIndex]}
+              onChange={() => handleCheckboxChange(serviceIndex)}
             />
             <label
               htmlFor="disableDates"
