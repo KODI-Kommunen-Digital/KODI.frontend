@@ -102,11 +102,11 @@ function SideBar() {
 			</span>
 			<div className="sidebar fixed top-0 bottom-0 p-2 w-[300px] z-50 overflow-y-auto text-center bg-black">
 				<div className="text-gray-100 text-xl">
-					<div className="p-2.5 mt-1 flex items-center">
+					<div className="p-2.5 mt-1 flex items-center justify-center">
 						{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
 							<img
 								onClick={() => navigateTo("/")}
-								className="p-5 cursor-pointer"
+								className="p-5 h-40 w-40 cursor-pointer"
 								src={kodiLogo}
 								alt="KODI"
 							/>
