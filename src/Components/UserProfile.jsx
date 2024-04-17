@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
+import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 function UserProfile({ user }) {
   const { t } = useTranslation();
+  const regionName = process.env.REACT_APP_NAME;
+  const colors = RegionColors[regionName] || RegionColors['Other Region'];
   const [userSocial, setUserSocial] = useState({});
   const socialMediaSVGPathList = {
     Facebook: {
@@ -78,8 +81,8 @@ function UserProfile({ user }) {
                   user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                 )
               }
-              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'border-yellow-400' : 'border-blue-400'}`}>
-              <span className={`w-48 h-48 rounded rotate-[-40deg] ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : 'bg-blue-400'} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.lightBorderColor}`}>
+              <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                 {t("viewProfile")}
               </span>
