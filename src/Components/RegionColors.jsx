@@ -6,6 +6,9 @@ const RegionColors = {
         lightTextColor: 'text-yellow-400',
         darkBorderColor: 'border-yellow-600',
         lightBorderColor: 'border-yellow-400',
+        lightHoverColor: 'hover:bg-yellow-400',
+        lightHoverShadowColor: 'hover:shadow-yellow-400',
+        lightHoverTextShadowColor: 'hover:text-yellow-400',
     },
     'Other Region': {
         darkTextColor: 'text-blue-800',
@@ -14,6 +17,9 @@ const RegionColors = {
         lightBgColor: 'bg-blue-400',
         darkBorderColor: 'border-blue-800',
         lightBorderColor: 'border-blue-400',
+        lightHoverColor: 'hover:bg-blue-400',
+        lightHoverShadowColor: 'hover:shadow-blue-400',
+        lightHoverTextShadowColor: 'hover:text-blue-400',
     },
 };
 

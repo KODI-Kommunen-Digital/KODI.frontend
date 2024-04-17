@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import STYLEIMAGE from "../assets/styleimage.png";
-
+import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getCities } from "../Services/cities";
 
 function UploadContribution() {
     const { t } = useTranslation();
+    const regionName = process.env.REACT_APP_NAME;
+    const colors = RegionColors[regionName] || RegionColors['Other Region'];
     const [cities, setCities] = useState([]);
 
     const navigate = useNavigate();
@@ -24,7 +26,7 @@ function UploadContribution() {
 
 
     return (
-        <div className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : 'bg-blue-400'} mx-auto py-10 px-4 flex justify-center lg:h-[28rem] sm:h-[35rem]`}>
+        <div className={`${colors.lightBgColor} mx-auto py-10 px-4 flex justify-center lg:h-[28rem] sm:h-[35rem]`}>
             <div className="flex flex-wrap items-center">
 
                 <div className="w-full md:w-1/2 px-4">
