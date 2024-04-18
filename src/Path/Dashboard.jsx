@@ -158,7 +158,7 @@ const Dashboard = () => {
   function goToEditListingsPage(listing) {
     if (listing.categoryId === 18) {
       navigateTo(
-        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
       );
     } else {
       navigateTo(
@@ -178,21 +178,10 @@ const Dashboard = () => {
   }, [fetchListings]);
 
   function handleDelete(listing) {
-    if (listing.appointmentId) {
-      deleteAppointments(listing.cityId, listing.id, listing.appointmentId)
-        .then((res) => {
-          setListings(
-            listings.filter(
-              (l) => l.cityId !== listing.cityId || l.id !== listing.id || l.appointmentId !== listing.appointmentId
-            )
-          );
-          setShowConfirmationModal({ visible: false });
-
-          fetchUpdatedListings();
-          window.location.reload();
-        })
-        .catch((error) => console.log(error));
-    } else {
+    try {
+      if (listing.appointmentId) {
+        deleteAppointments(listing.cityId, listing.id, listing.appointmentId);
+      }
       deleteListing(listing.cityId, listing.id)
         .then((res) => {
           setListings(
@@ -206,6 +195,8 @@ const Dashboard = () => {
           window.location.reload();
         })
         .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
     }
   }
 

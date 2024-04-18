@@ -36,6 +36,7 @@ function UploadListings() {
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
+  const [appointmentAdded, setAppointmentAdded] = useState(false);
   const [, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -221,12 +222,13 @@ function UploadListings() {
     "Saturday",
     "Sunday",
   ];
-  const initialTimeSlot = { startTime: "", endTime: "" };
+  const initialTimeSlot = { startTime: "00:00", endTime: "00:00" };
 
   const [appointmentInput, setAppointmentInput] = useState({
-    title: listingInput.title,
-    description: listingInput.description,
-    startDate: Date.now,
+    title: "",
+    description: "",
+    startDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
+
     metadata: {
       holidays: [],
       openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
@@ -235,7 +237,7 @@ function UploadListings() {
     services: [{
       name: "",
       duration: "",
-      durationUnit: "minutes",
+      // durationUnit: "minutes",
       slotSameAsAppointment: false,
       metadata: {
         holidays: [],
@@ -244,7 +246,6 @@ function UploadListings() {
       },
     }],
   });
-  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -305,7 +306,7 @@ function UploadListings() {
           }
         }
 
-        if (listingResponse.data.id) {
+        if (appointmentAdded) {
           try {
             appointmentResponse = await (newListing
               ? createAppointments(cityId, listingResponse.data.id, appointmentInput)
@@ -320,17 +321,19 @@ function UploadListings() {
 
         if (localImageOrPdf) {
           if (image) {
-            // Upload image if it exists
             const imageForm = new FormData();
             for (let i = 0; i < image.length; i++) {
               imageForm.append("image", image[i]);
             }
-
             await uploadListingImage(
               imageForm,
               cityId,
               response.data.id || listingId
-            );
+            ).then(() => {
+              console.log("Image uploaded successfully");
+            }).catch(error => {
+              console.error("Error uploading image:", error);
+            });
           } else if (pdf) {
             // Upload PDF if it exists
             const pdfForm = new FormData();
@@ -340,6 +343,8 @@ function UploadListings() {
               cityId,
               response.data.id || listingId
             );
+          } else {
+            console.log("No image found");
           }
         }
 
@@ -471,6 +476,11 @@ function UploadListings() {
         ...prev,
         [name]: value,
       }));
+
+      setAppointmentInput((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
 
     validateInput(e);
@@ -482,7 +492,7 @@ function UploadListings() {
     }
   };
 
-  const [description, setDescription] = useState("");
+  const [, setDescription] = useState("");
 
   const onDescriptionChange = (newContent) => {
     let descriptionHTML = newContent;
@@ -507,6 +517,11 @@ function UploadListings() {
       });
     }
     setListingInput((prev) => ({
+      ...prev,
+      description: descriptionHTML,
+    }));
+
+    setAppointmentInput((prev) => ({
       ...prev,
       description: descriptionHTML,
     }));
@@ -647,6 +662,9 @@ function UploadListings() {
         subcatList[subCat.id] = subCat.name;
       });
       setSubCategories(subcatList);
+    }
+    if (categoryId == 18) {
+      setAppointmentAdded(true)
     }
     setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);

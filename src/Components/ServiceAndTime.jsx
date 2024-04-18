@@ -92,14 +92,14 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
     }));
   };
 
-  const onDurationUnitChange = (index, value) => {
-    setAppointmentInput((prevInput) => ({
-      ...prevInput,
-      services: prevInput.services.map((service, i) =>
-        i === index ? { ...service, durationUnit: value } : service
-      ),
-    }));
-  };
+  // const onDurationUnitChange = (index, value) => {
+  //   setAppointmentInput((prevInput) => ({
+  //     ...prevInput,
+  //     services: prevInput.services.map((service, i) =>
+  //       i === index ? { ...service, durationUnit: value } : service
+  //     ),
+  //   }));
+  // };
 
   const handleAddService = () => {
     setAppointmentInput((prevInput) => {
@@ -114,7 +114,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       const newService = {
         name: "",
         duration: "",
-        durationUnit: "minutes",
+        // durationUnit: "minutes",
         metadata: {
           holidays: [],
           openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
@@ -161,6 +161,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
         // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
           ...currentService,
+          slotSameAsAppointment: true,
           metadata: {
             ...currentService.metadata,
             openingDates: prevInput.metadata.openingDates,
@@ -169,8 +170,8 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       } else {
         // If the checkbox is unchecked, keep openingDates as it is
         updatedServices[index] = {
-          // ...currentService,
-          // openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+          ...currentService,
+          slotSameAsAppointment: false,
           metadata: {
             ...currentService.metadata,
             openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
@@ -180,7 +181,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
 
       return {
         ...prevInput,
-        slotSameAsAppointment: false,
+        // slotSameAsAppointment: false,
         services: updatedServices,
       };
     });
@@ -392,7 +393,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                   className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
 
-                <select
+                {/* <select
                   id="states"
                   name="durationUnit"
                   value={service.durationUnit}
@@ -401,7 +402,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                 >
                   <option value="minutes">min</option>
                   <option value="seconds">sec</option>
-                </select>
+                </select> */}
               </div>
 
               <div
@@ -511,14 +512,13 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                     id="startTime"
                                     name="startTime"
                                     value={
-                                      timeSlot.startTime ? timeSlot.startTime : ""
+                                      timeSlot.startTime ? timeSlot.startTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value, index) }
                                     }
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
-                                  {console.log(timeSlot)}
                                 </div>
                                 <span className="relative text-gray-500"> - </span>
                                 <div className="relative">
@@ -527,7 +527,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                     id="endTime"
                                     name="endTime"
                                     value={
-                                      timeSlot.endTime ? timeSlot.endTime : ""
+                                      timeSlot.endTime ? timeSlot.endTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value, index) }
                                     }
@@ -587,7 +587,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                     id="startTime"
                                     name="startTime"
                                     value={
-                                      timeSlot.startTime ? timeSlot.startTime : ""
+                                      timeSlot.startTime ? timeSlot.startTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, serviceIndex, "startTime", e.target.value, index) }}
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -601,7 +601,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                     id="endTime"
                                     name="endTime"
                                     value={
-                                      timeSlot.endTime ? timeSlot.endTime : ""
+                                      timeSlot.endTime ? timeSlot.endTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, serviceIndex, "endTime", e.target.value, index) }}
                                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
