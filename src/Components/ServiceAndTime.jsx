@@ -1,53 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-const ServiceAndTime = () => {
-
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  const initialTimeSlot = { startTime: "", endTime: "" };
-
-  const [appointmentInput, setAppointmentInput] = useState({
-    title: "",
-    description: "",
-    startDate: Date.now,
-    metadata: {
-      holidays: [],
-      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
-      maxBookingPerSlot: 5,
-    },
-    services: [{
-      name: "",
-      duration: "",
-      durationUnit: "minutes",
-      slotSameAsAppointment: false,
-      metadata: {
-        holidays: [],
-        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
-        maxBookingPerSlot: 5,
-      },
-    }],
-  });
-  console.log(appointmentInput)
-
-  const [appointmentError, setAppointmentError] = useState({
-    name: "",
-    duration: "",
-    endTime: "",
-    startTime: "",
-    metadata: {
-      holidays: "",
-      openingDates: "",
-      maxBookingPerSlot: "",
-    },
-  });
+const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -181,10 +136,11 @@ const ServiceAndTime = () => {
     }));
   };
   const [isCheckedList, setIsCheckedList] = useState(
-    new Array(appointmentInput.services.length).fill(false)
+    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
+
   const [isChecked, setIsChecked] = useState(
-    new Array(appointmentInput.services.length).fill(false)
+    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
 
   const handleCheckboxChange = (index) => {
@@ -735,6 +691,15 @@ const ServiceAndTime = () => {
       </div>
     </div >
   );
+};
+
+ServiceAndTime.propTypes = {
+  appointmentError: PropTypes.object.isRequired,
+  appointmentInput: PropTypes.object.isRequired,
+  setAppointmentError: PropTypes.func.isRequired,
+  setAppointmentInput: PropTypes.func.isRequired,
+  daysOfWeek: PropTypes.array.isRequired,
+  initialTimeSlot: PropTypes.object.isRequired,
 };
 
 export default ServiceAndTime;

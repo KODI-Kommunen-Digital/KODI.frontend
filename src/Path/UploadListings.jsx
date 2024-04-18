@@ -22,12 +22,13 @@ import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
-import { createAppointments, updateAppointments } from "../Services/appointmentBookingApi";
+import { createAppointments, updateAppointments, getAppointments } from "../Services/appointmentBookingApi";
 
 function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
   const [listingId, setListingId] = useState(0);
+  const [appointmentId, setAppointmentId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -35,18 +36,16 @@ function UploadListings() {
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
-  const [dragging, setDragging] = useState(false);
+  const [, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [startDate, setStartDate] = useState([]);
-  const [endDate, setEndDate] = useState([]);
-  const [expiryDate, setExpiryDate] = useState([]);
+  const [, setStartDate] = useState([]);
+  const [, setEndDate] = useState([]);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -89,7 +88,7 @@ function UploadListings() {
         setImage(e.target.files);
       } else if (file.type === "application/pdf") {
         setPdf(file);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -114,7 +113,7 @@ function UploadListings() {
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
         setPdf(file);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -146,7 +145,7 @@ function UploadListings() {
 
   function handleRemoveImage() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removeImage: true,
         logo: null,
@@ -161,14 +160,14 @@ function UploadListings() {
 
   function handleRemovePDF() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removePdf: true,
         pdf: null,
       }));
     }
     setPdf(null);
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       hasAttachment: false,
     }));
@@ -178,7 +177,7 @@ function UploadListings() {
 
   // Sending data to backend starts
   const [val] = useState([{ selected: "" }]);
-  const [input, setInput] = useState({
+  const [listingInput, setListingInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
     cityId: 0,
@@ -213,10 +212,56 @@ function UploadListings() {
     endDate: "",
   });
 
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const initialTimeSlot = { startTime: "", endTime: "" };
+
+  const [appointmentInput, setAppointmentInput] = useState({
+    title: listingInput.title,
+    description: listingInput.description,
+    startDate: Date.now,
+    metadata: {
+      holidays: [],
+      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+      maxBookingPerSlot: 5,
+    },
+    services: [{
+      name: "",
+      duration: "",
+      durationUnit: "minutes",
+      slotSameAsAppointment: false,
+      metadata: {
+        holidays: [],
+        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+        maxBookingPerSlot: 5,
+      },
+    }],
+  });
+  console.log(appointmentInput)
+
+  const [appointmentError, setAppointmentError] = useState({
+    name: "",
+    duration: "",
+    endTime: "",
+    startTime: "",
+    metadata: {
+      holidays: "",
+      openingDates: "",
+      maxBookingPerSlot: "",
+    },
+  });
+
   const handleSubmit = async (event) => {
     let valid = true;
     for (let key in error) {
-      var errorMessage = getErrorMessage(key, input[key]);
+      var errorMessage = getErrorMessage(key, listingInput[key]);
       var newError = error;
       newError[key] = errorMessage;
       setError(newError);
@@ -228,34 +273,20 @@ function UploadListings() {
       setUpdating(true);
       event.preventDefault();
       try {
-        let response;
-        if (newListing && input.categoryId === 18) {
-          try {
-            setListingId(response.data.id);
-            response = await createAppointments(cityId, input, listingId);
-          } catch (error) {
-            console.error('Error creating listing and appointments:', error);
+        let listingResponse;
+        let appointmentResponse;
+        try {
+          listingResponse = await (newListing
+            ? postListingsData(cityId, listingInput)
+            : updateListingsData(cityId, listingInput, listingId));
+          if (newListing) {
+            setListingId(listingResponse.data.id);
           }
-        } else if (!newListing && input.categoryId === 18) {
-          try {
-            await updateAppointments(cityId, listingId, appointmentId);
-          } catch (error) {
-            console.error('Error updating listing and appointments:', error);
-          }
-        } else {
-          try {
-            response = await (newListing
-              ? postListingsData(cityId, input)
-              : updateListingsData(cityId, input, listingId));
-            if (newListing) {
-              setListingId(response.data.id);
-            }
-          } catch (error) {
-            console.error('Error posting or updating listings:', error);
-          }
+        } catch (error) {
+          console.error('Error posting or updating listings:', error);
         }
 
-        if (input.removeImage) {
+        if (listingInput.removeImage) {
           if (image.length === 0) {
             await deleteListingImage(cityId, listingId);
           } else {
@@ -271,6 +302,19 @@ function UploadListings() {
                 response.data.id || listingId
               );
             }
+          }
+        }
+
+        if (listingResponse.data.id) {
+          try {
+            appointmentResponse = await (newListing
+              ? createAppointments(cityId, listingResponse.data.id, appointmentInput)
+              : updateAppointments(cityId, listingId, appointmentId, appointmentInput));
+            if (newListing) {
+              setAppointmentId(appointmentResponse.data.id);
+            }
+          } catch (error) {
+            console.error('Error posting or updating appointment:', error);
           }
         }
 
@@ -347,7 +391,12 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     });
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
+    setAppointmentInput(prevAppointmentInput => ({
+      ...prevAppointmentInput,
+      title: listingInput.title,
+      description: listingInput.description,
+    }));
     setSubcategoryId(null);
     setCityId(cityId);
     var listingId = searchParams.get("listingId");
@@ -358,14 +407,15 @@ function UploadListings() {
       setListingId(parseInt(listingId));
       setNewListing(false);
       getVillages(cityId).then((response) => setVillages(response.data.data));
+      getAppointments(appointmentId).then((appointmentResponse) => {
+        let appointmentData = appointmentResponse.data.data;
+        setAppointmentInput(appointmentData);
+      });
       getListingsById(cityId, listingId).then((listingsResponse) => {
         let listingData = listingsResponse.data.data;
-        // if (listingData.startDate)
-        // 	listingData.startDate = listingData.startDate.slice(0, 10);
-        // if (listingData.endDate)
-        // 	listingData.endDate = listingData.endDate.slice(0, 10);
         listingData.cityId = cityId;
-        setInput(listingData);
+        setListingInput(listingData);
+        setAppointmentInput(appointmentData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
         setDescription(listingData.description);
@@ -410,14 +460,14 @@ function UploadListings() {
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: checked,
         timeless: checked,
         expiryDate: checked ? null : getDefaultEndDate(),
       }));
     } else {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -456,7 +506,7 @@ function UploadListings() {
         return plainTextListItems.join("\n");
       });
     }
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       description: descriptionHTML,
     }));
@@ -487,7 +537,7 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -503,15 +553,15 @@ function UploadListings() {
         }
 
       case "startDate":
-        if (!value && parseInt(input.categoryId) == 3) {
+        if (!value && parseInt(listingInput.categoryId) == 3) {
           return t("pleaseEnterStartDate");
         } else {
           return "";
         }
 
       case "endDate":
-        if (parseInt(input.categoryId) === 3) {
-          if (value && new Date(input.startDate) > new Date(value)) {
+        if (parseInt(listingInput.categoryId) === 3) {
+          if (value && new Date(listingInput.startDate) > new Date(value)) {
             return t("endDateBeforeStartDate");
           } else {
             return "";
@@ -521,7 +571,7 @@ function UploadListings() {
         }
 
       case "expiryDate":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseEnterExpiryDate");
         } else {
           return "";
@@ -563,7 +613,7 @@ function UploadListings() {
   }, []);
 
   useEffect(() => {
-    setInput((prevState) => ({
+    setListingInput((prevState) => ({
       ...prevState,
       selected: val.map((item) => item.selected),
     }));
@@ -575,7 +625,7 @@ function UploadListings() {
   async function onCityChange(e) {
     const cityId = e.target.value;
     setCityId(cityId);
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       cityId: cityId,
       villageId: 0,
@@ -598,7 +648,7 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     }
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
     validateInput(event);
 
@@ -612,7 +662,7 @@ function UploadListings() {
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
     setSubcategoryId(subcategoryId);
-    setInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
     validateInput(event);
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("subcategoryId", subcategoryId);
@@ -662,7 +712,7 @@ function UploadListings() {
               type="text"
               id="title"
               name="title"
-              value={input.title}
+              value={listingInput.title}
               onChange={onInputChange}
               onBlur={validateInput}
               required
@@ -725,7 +775,7 @@ function UploadListings() {
                 type="villageId"
                 id="villageId"
                 name="villageId"
-                value={input.villageId || 0}
+                value={listingInput.villageId || 0}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 autoComplete="country-name"
@@ -781,7 +831,8 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime title={input.title} description={input.description} />}
+          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
+            appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
             <div className="relative mb-0">
@@ -827,7 +878,7 @@ function UploadListings() {
           {categoryId == 1 && (
             <div className="relative mb-0">
               <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
-                {input.disableDates ? (
+                {listingInput.disableDates ? (
                   <label
                     htmlFor="dropdown"
                     className="text-gray-600 text-md mb-4 font-medium title-font"
@@ -857,15 +908,15 @@ function UploadListings() {
                         id="expiryDate"
                         name="expiryDate"
                         value={
-                          input.expiryDate
-                            ? formatDateTime(input.expiryDate)
+                          listingInput.expiryDate
+                            ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
                         onChange={onInputChange}
                         onBlur={validateInput}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder="Expiry Date"
-                        disabled={input.disableDates}
+                        disabled={listingInput.disableDates}
                       />
                       <div
                         className="h-[24px] text-red-600"
@@ -885,7 +936,7 @@ function UploadListings() {
                   type="checkbox"
                   id="disableDates"
                   name="disableDates"
-                  checked={input.disableDates}
+                  checked={listingInput.disableDates}
                   onChange={onInputChange}
                   className="mt-0"
                 />
@@ -923,7 +974,7 @@ function UploadListings() {
                     id="startDate"
                     name="startDate"
                     value={
-                      input.startDate ? formatDateTime(input.startDate) : null
+                      listingInput.startDate ? formatDateTime(listingInput.startDate) : null
                     }
                     onChange={onInputChange}
                     onBlur={validateInput}
@@ -960,7 +1011,7 @@ function UploadListings() {
                     type="datetime-local"
                     id="endDate"
                     name="endDate"
-                    value={input.endDate ? formatDateTime(input.endDate) : null}
+                    value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
                     onChange={onInputChange}
                     onBlur={validateInput}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -991,7 +1042,7 @@ function UploadListings() {
                 type="text"
                 id="address"
                 name="address"
-                value={input.address}
+                value={listingInput.address}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -1013,7 +1064,7 @@ function UploadListings() {
                   type="text"
                   id="originalPrice"
                   name="originalPrice"
-                  value={input.originalPrice}
+                  value={listingInput.originalPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -1032,7 +1083,7 @@ function UploadListings() {
                   type="text"
                   id="discountedPrice"
                   name="discountedPrice"
-                  value={input.discountedPrice}
+                  value={listingInput.discountedPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -1054,7 +1105,7 @@ function UploadListings() {
               type="text"
               id="phone"
               name="phone"
-              value={input.phone}
+              value={listingInput.phone}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1073,7 +1124,7 @@ function UploadListings() {
               type="email"
               id="email"
               name="email"
-              value={input.email}
+              value={listingInput.email}
               onChange={onInputChange}
               onBlur={validateInput}
               required
@@ -1093,7 +1144,7 @@ function UploadListings() {
               type="text"
               id="website"
               name="website"
-              value={input.website}
+              value={listingInput.website}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1113,7 +1164,7 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              value={input.description}
+              value={listingInput.description}
               onChange={(newContent) => onDescriptionChange(newContent)}
               onBlur={(range, source, editor) => {
                 validateInput({
