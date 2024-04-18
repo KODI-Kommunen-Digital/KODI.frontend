@@ -28,7 +28,7 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 448 512"
-                                    className="h-8 w-40 mr-1"
+                                    className={categoryIcon.svgClassName}
                                 >
                                     <path d={categoryIcon.svgIcon} />
                                 </svg>
