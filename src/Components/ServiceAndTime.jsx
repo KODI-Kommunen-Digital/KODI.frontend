@@ -524,7 +524,7 @@ const ServiceAndTime = () => {
                         onClick={() => {
                           setShowModal(false)
                           setEditServciceIndex()
-                          setEditServciceIndex()
+                          // setEditServciceIndex()
                           setEditAppointmentTime(false)
                           resetTimeSlots();
                         }}
@@ -532,12 +532,6 @@ const ServiceAndTime = () => {
                       >
                         &times;
                       </button>
-
-
-
-                      {/* {!isValidTime && (
-                        <p className="text-red-600">{t("pleaseEnterValidTime")}</p>
-                      )} */}
 
                       {daysOfWeek.map((day) => (
                         <div key={day} className="mb-4">
@@ -560,7 +554,6 @@ const ServiceAndTime = () => {
                                     type="time"
                                     id="startTime"
                                     name="startTime"
-                                    // value={timeSlot.startTime}
                                     value={
                                       timeSlot.startTime ? timeSlot.startTime : ""
                                     }
@@ -577,7 +570,6 @@ const ServiceAndTime = () => {
                                     type="time"
                                     id="endTime"
                                     name="endTime"
-                                    // value={timeSlot.endTime}
                                     value={
                                       timeSlot.endTime ? timeSlot.endTime : ""
                                     }
