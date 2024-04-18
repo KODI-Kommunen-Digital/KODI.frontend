@@ -260,6 +260,112 @@ function UploadListings() {
     },
   });
 
+  // const handleSubmit = async (event) => {
+  //   let valid = true;
+  //   for (let key in error) {
+  //     var errorMessage = getErrorMessage(key, listingInput[key]);
+  //     var newError = error;
+  //     newError[key] = errorMessage;
+  //     setError(newError);
+  //     if (errorMessage) {
+  //       valid = false;
+  //     }
+  //   }
+  //   if (valid) {
+  //     setUpdating(true);
+  //     event.preventDefault();
+  //     try {
+  //       let listingResponse;
+  //       let appointmentResponse;
+  //       try {
+  //         listingResponse = await (newListing
+  //           ? postListingsData(cityId, listingInput)
+  //           : updateListingsData(cityId, listingInput, listingId));
+  //         if (newListing) {
+  //           setListingId(listingResponse.data.id);
+  //         }
+  //       }
+  //       catch (error) {
+  //         console.error('Error posting or updating listings:', error);
+  //       }
+
+  //       if (listingInput.removeImage) {
+  //         if (image.length === 0) {
+  //           await deleteListingImage(cityId, listingId);
+  //         } else {
+  //           if (!localImageOrPdf) {
+  //             const imageForm = new FormData();
+  //             for (let i = 0; i < image.length; i++) {
+  //               imageForm.append("image", image[i]);
+  //             }
+
+  //             await uploadListingImage(
+  //               imageForm,
+  //               cityId,
+  //               response.data.id || listingId
+  //             );
+  //           }
+  //         }
+  //       }
+
+  //       if (appointmentAdded) {
+  //         try {
+  //           appointmentResponse = await (newListing
+  //             ? createAppointments(cityId, listingResponse.data.id, appointmentInput)
+  //             : updateAppointments(cityId, listingId, appointmentId, appointmentInput));
+  //           if (newListing) {
+  //             setAppointmentId(appointmentResponse.data.id);
+  //           }
+  //         } catch (error) {
+  //           console.error('Error posting or updating appointment:', error);
+  //         }
+  //       }
+
+  //       if (localImageOrPdf) {
+  //         if (image) {
+  //           const imageForm = new FormData();
+  //           for (let i = 0; i < image.length; i++) {
+  //             imageForm.append("image", image[i]);
+  //           }
+  //           await uploadListingImage(
+  //             imageForm,
+  //             cityId,
+  //             response.data.id || listingId
+  //           );
+  //         } else if (pdf) {
+  //           // Upload PDF if it exists
+  //           const pdfForm = new FormData();
+  //           pdfForm.append("pdf", pdf);
+  //           await uploadListingPDF(
+  //             pdfForm,
+  //             cityId,
+  //             response.data.id || listingId
+  //           );
+  //         }
+  //       }
+
+  //       isAdmin
+  //         ? setSuccessMessage(t("listingUpdatedAdmin"))
+  //         : setSuccessMessage(t("listingUpdated"));
+  //       setErrorMessage(false);
+  //       setIsSuccess(true);
+  //       setTimeout(() => {
+  //         setSuccessMessage(false);
+  //         navigate("/Dashboard");
+  //       }, 5000);
+  //     } catch (error) {
+  //       setErrorMessage(t("changesNotSaved"));
+  //       setSuccessMessage(false);
+  //       setTimeout(() => setErrorMessage(false), 5000);
+  //     }
+  //     setUpdating(false);
+  //   } else {
+  //     setErrorMessage(t("invalidData"));
+  //     setSuccessMessage(false);
+  //     setTimeout(() => setErrorMessage(false), 5000);
+  //   }
+  // };
+
   const handleSubmit = async (event) => {
     let valid = true;
     for (let key in error) {
@@ -275,17 +381,11 @@ function UploadListings() {
       setUpdating(true);
       event.preventDefault();
       try {
-        let listingResponse;
-        let appointmentResponse;
-        try {
-          listingResponse = await (newListing
-            ? postListingsData(cityId, listingInput)
-            : updateListingsData(cityId, listingInput, listingId));
-          if (newListing) {
-            setListingId(listingResponse.data.id);
-          }
-        } catch (error) {
-          console.error('Error posting or updating listings:', error);
+        let response = await (newListing
+          ? postListingsData(cityId, listingInput)
+          : updateListingsData(cityId, listingInput, listingId));
+        if (newListing) {
+          setListingId(response.data.id);
         }
 
         if (listingInput.removeImage) {
@@ -307,6 +407,31 @@ function UploadListings() {
           }
         }
 
+        if (localImageOrPdf) {
+          if (image) {
+            // Upload image if it exists
+            const imageForm = new FormData();
+            for (let i = 0; i < image.length; i++) {
+              imageForm.append("image", image[i]);
+            }
+
+            await uploadListingImage(
+              imageForm,
+              cityId,
+              response.data.id || listingId
+            );
+          } else if (pdf) {
+            // Upload PDF if it exists
+            const pdfForm = new FormData();
+            pdfForm.append("pdf", pdf);
+            await uploadListingPDF(
+              pdfForm,
+              cityId,
+              response.data.id || listingId
+            );
+          }
+        }
+
         if (appointmentAdded) {
           try {
             appointmentResponse = await (newListing
@@ -317,35 +442,6 @@ function UploadListings() {
             }
           } catch (error) {
             console.error('Error posting or updating appointment:', error);
-          }
-        }
-
-        if (localImageOrPdf) {
-          if (image) {
-            const imageForm = new FormData();
-            for (let i = 0; i < image.length; i++) {
-              imageForm.append("image", image[i]);
-            }
-            await uploadListingImage(
-              imageForm,
-              cityId,
-              response.data.id || listingId
-            ).then(() => {
-              console.log("Image uploaded successfully");
-            }).catch(error => {
-              console.error("Error uploading image:", error);
-            });
-          } else if (pdf) {
-            // Upload PDF if it exists
-            const pdfForm = new FormData();
-            pdfForm.append("pdf", pdf);
-            await uploadListingPDF(
-              pdfForm,
-              cityId,
-              response.data.id || listingId
-            );
-          } else {
-            console.log("No image found");
           }
         }
 
