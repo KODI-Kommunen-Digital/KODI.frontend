@@ -246,6 +246,7 @@ function UploadListings() {
       },
     }],
   });
+  // console.log("shhhhhh", appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -388,6 +389,7 @@ function UploadListings() {
         catList[cat.id] = cat.name;
       });
       setCategories(catList);
+
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
@@ -412,26 +414,28 @@ function UploadListings() {
       setListingId(parseInt(listingId));
       setNewListing(false);
       getVillages(cityId).then((response) => setVillages(response.data.data));
-      getAppointments(appointmentId).then((appointmentResponse) => {
-        let appointmentData = appointmentResponse.data.data;
-        setAppointmentInput(appointmentData);
-      });
       getListingsById(cityId, listingId).then((listingsResponse) => {
         let listingData = listingsResponse.data.data;
         listingData.cityId = cityId;
         setListingInput(listingData);
-        setAppointmentInput(appointmentData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
+
+        const appointmentId = listingData.appointmentId;
+        if (appointmentId) {
+          getAppointments(appointmentId).then((appointmentResponse) => {
+            let appointmentData = appointmentResponse.data.data;
+            setAppointmentInput(appointmentData);
+          });
+        }
         if (listingData.logo && listingData.otherlogos) {
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
           setImage(temp);
-          console.log(temp);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
