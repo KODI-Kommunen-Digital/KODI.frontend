@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeidiLogo from "../assets/HEIDI_Logo.png";
+import kodiLogo from "../assets/KODILOGO.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
@@ -209,12 +210,21 @@ const LoginPage = () => {
 			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div>
-						<img
-							onClick={() => navigate("/")}
-							className="mx-auto h-20 w-auto cursor-pointer"
-							src={HeidiLogo}
-							alt="HEDI- Heimat Digital"
-						/>
+						{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
+							<img
+								onClick={() => navigate("/")}
+								className="mx-auto h-20 w-auto cursor-pointer"
+								src={kodiLogo}
+								alt="KODI Logo"
+							/>
+						) : (
+							<img
+								onClick={() => navigate("/")}
+								className="mx-auto h-20 w-auto cursor-pointer"
+								src={HeidiLogo}
+								alt="Heidi Logo"
+							/>
+						)}
 						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
 							{t("signIntoAccount")}
 						</h2>

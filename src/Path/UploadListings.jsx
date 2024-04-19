@@ -647,7 +647,13 @@ function UploadListings() {
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+              {
+                process.env.REACT_APP_REGION_NAME === "HIVADA"
+                  ? t("cluster")
+                  : process.env.REACT_APP_REGION_NAME === "KODI - DEMO"
+                    ? t("kodiCategory")
+                    : t("city")
+              }*
             </label>
             <select
               type="text"

@@ -188,7 +188,10 @@ const HomePage = () => {
                     fontFamily: "Poppins, sans-serif",
                   }}
                 >
-                  {t("homePageHeading")}
+                  {t(process.env.REACT_APP_NAME === "KODI - DEMO"
+                    ? "homePageHeadingKODI"
+                    : "homePageHeading",
+                  )}
                 </h1>
 
                 <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
@@ -345,7 +348,11 @@ const HomePage = () => {
       <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
           {cities.map((city) => {
-            if (city.id !== Number(cityId)) {
+            const citiesToHide = ["2", "5", "7"];
+            if (
+              city.id !== Number(cityId) &&
+              !(process.env.REACT_APP_NAME === "KODI - DEMO" && citiesToHide.includes(city.id.toString()))
+            ) {
               return (
                 <div
                   key={city.id}
@@ -369,7 +376,7 @@ const HomePage = () => {
                           : CITYIMAGE
                       }
                       onError={(e) => {
-                        e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+                        e.target.src = CITYDEFAULTIMAGE;
                       }}
                     />
                     <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
@@ -398,7 +405,10 @@ const HomePage = () => {
         className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
-        {t("recentListings")}
+        {t(process.env.REACT_APP_NAME === "KODI - DEMO"
+          ? "recentListingsKODI"
+          : "recentListings",
+        )}
       </h2>
 
       {listings && listings.length > 0 ? (
