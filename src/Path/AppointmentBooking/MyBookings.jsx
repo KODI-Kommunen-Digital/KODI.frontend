@@ -12,13 +12,13 @@ const MyBookings = () => {
   const pageSize = 9;
 
   const fetchUserBookings = useCallback(() => {
+    const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
     getUserBookings({
-      pageNo,
-      pageSize,
+      userId
     }).then((response) => {
       setUserBookings(response.data.data);
     });
-  }, [pageNo]);
+  }, []);
 
   useEffect(() => {
     if (pageNo === 1) {
