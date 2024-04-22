@@ -55,11 +55,15 @@ export async function deleteAppointments(cityId, listingId, appointmentId) {
   );
 }
 
-export async function getOwnerAppointments(userId) {
+export async function getOwnerAppointments({ userId }) {
   return axios.get(`/v1/users/${userId}/owner/bookings`);
 }
 
-export async function deleteUserAppointments(userId, appointmentId, bookingId) {
+export async function deleteUserAppointments({
+  userId,
+  appointmentId,
+  bookingId,
+}) {
   return axios.delete(
     `/v1/user/${userId}/appointments/${appointmentId}/booking/${bookingId}`
   );

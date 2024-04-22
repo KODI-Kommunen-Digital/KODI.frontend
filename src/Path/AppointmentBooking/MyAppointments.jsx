@@ -12,13 +12,13 @@ const MyAppointments = () => {
   const pageSize = 9;
 
   const fetchAppointments = useCallback(() => {
+    const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
     getOwnerAppointments({
-      pageNo,
-      pageSize,
+      userId,
     }).then((response) => {
       setOwnerAppointments(response.data.data);
     });
-  }, [pageNo]);
+  }, []);
 
   useEffect(() => {
     if (pageNo === 1) {
@@ -43,7 +43,7 @@ const MyAppointments = () => {
   });
 
   function handleDelete(appointment) {
-    deleteUserAppointments(appointment.cityId, appointment.forumId)
+    deleteUserAppointments(appointment.userId, appointment.appointmentId, appointment.id )
       .then((res) => {
         getOwnerAppointments(
           appointments.filter(
