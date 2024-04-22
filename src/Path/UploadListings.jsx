@@ -246,7 +246,7 @@ function UploadListings() {
       },
     }],
   });
-  // console.log("shhhhhh", appointmentInput)
+  console.log("shhhhhh", appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -434,8 +434,8 @@ function UploadListings() {
 
         if (appointmentAdded) {
           try {
-            appointmentResponse = await (newListing
-              ? createAppointments(cityId, listingResponse.data.id, appointmentInput)
+            let appointmentResponse = await (newListing
+              ? createAppointments(cityId, response.data.id || listingId, appointmentInput)
               : updateAppointments(cityId, listingId, appointmentId, appointmentInput));
             if (newListing) {
               setAppointmentId(appointmentResponse.data.id);
