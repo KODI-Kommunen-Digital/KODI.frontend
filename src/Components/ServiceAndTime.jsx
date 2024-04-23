@@ -353,7 +353,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       >
         {t("addService")} *
       </label>
-      {appointmentInput.services.map((service, serviceIndex) => (
+      {Array.isArray(appointmentInput.services) && appointmentInput.services.map((service, serviceIndex) => (
         <>
           <div
             key={serviceIndex}

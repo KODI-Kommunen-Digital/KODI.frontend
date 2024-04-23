@@ -12,13 +12,15 @@ const MyServices = () => {
     const pageSize = 9;
 
     const fetchMyServices = useCallback(() => {
-        getMyServices({
-            pageNo,
-            pageSize,
-        }).then((response) => {
-            setMyServices(response.data.data);
-        });
-    }, [pageNo]);
+        const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
+        getMyServices(userId)
+            .then((response) => {
+                setMyServices(response.data.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching services:", error);
+            });
+    }, []);
 
     useEffect(() => {
         if (pageNo === 1) {

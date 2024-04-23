@@ -22,7 +22,7 @@ import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
-import { createAppointments, updateAppointments, getAppointments } from "../Services/appointmentBookingApi";
+import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -521,12 +521,26 @@ function UploadListings() {
         setSubcategoryId(listingData.subcategoryId);
 
         const appointmentId = listingData.appointmentId;
+        const listingId = listingData.id
         if (appointmentId) {
-          getAppointments(appointmentId).then((appointmentResponse) => {
-            let appointmentData = appointmentResponse.data.data;
+          getAppointments(cityId, listingId, appointmentId).then((appointmentResponse) => {
+            const appointmentData = appointmentResponse.data.data;
             setAppointmentInput(appointmentData);
+
+            getAppointmentServices(cityId, listingId, appointmentId)
+              .then((servicesResponse) => {
+                let servicesData = servicesResponse.data.data;
+                setAppointmentInput(prevState => ({
+                  ...prevState,
+                  services: servicesData
+                }));
+              })
+              .catch((error) => {
+                console.error("Error fetching appointment services:", error);
+              });
           });
         }
+
         if (listingData.logo && listingData.otherlogos) {
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)

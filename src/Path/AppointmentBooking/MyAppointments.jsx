@@ -13,10 +13,10 @@ const MyAppointments = () => {
 
   const fetchAppointments = useCallback(() => {
     const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
-    getOwnerAppointments({
-      userId,
-    }).then((response) => {
+    getOwnerAppointments(userId).then((response) => {
       setOwnerAppointments(response.data.data);
+    }).catch((error) => {
+      console.error("Error fetching services:", error);
     });
   }, []);
 
@@ -43,7 +43,7 @@ const MyAppointments = () => {
   });
 
   function handleDelete(appointment) {
-    deleteUserAppointments(appointment.userId, appointment.appointmentId, appointment.id )
+    deleteUserAppointments(appointment.userId, appointment.appointmentId, appointment.id)
       .then((res) => {
         getOwnerAppointments(
           appointments.filter(
