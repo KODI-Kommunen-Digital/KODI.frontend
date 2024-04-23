@@ -18,7 +18,7 @@ const MyBookings = () => {
     }).then((response) => {
       setUserBookings(response.data.data);
     });
-  }, [pageNo]);
+  }, []);
 
   useEffect(() => {
     if (pageNo === 1) {
