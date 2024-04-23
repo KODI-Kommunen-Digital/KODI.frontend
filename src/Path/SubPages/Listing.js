@@ -611,14 +611,6 @@ const Listing = () => {
                 )}
 
                 {input.id && input.categoryId === 18 && (
-                  // <button
-                  //   onClick={() =>
-                  //     navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&listingId=${appointmentId}`)
-                  //   }
-                  //   className="w-full bg-black hover:bg-slate-600 font-semibold text-white py-2 px-4 mt-4 rounded-xl"
-                  // >
-                  //   {t("clickHereToBook")}
-                  // </button>
                   <a onClick={() =>
                     navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&listingId=${appointmentId}`)
                   }

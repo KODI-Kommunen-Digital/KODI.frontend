@@ -1,25 +1,24 @@
 import { appointmentInstance } from "../api/axiosInstance";
-import { getUserId } from "./usersApi";
 const axios = appointmentInstance;
 
 export async function getMyServices(userId) {
-    return axios.get(`/v1/users/${getUserId()}/bookings`);
+    return axios.get(`/v1/users/${userId}/bookings`);
 }
 
 export async function deleteMyServices(cityId, listingId, serviceId) {
     return axios.delete(`/v1/cities/${cityId}/listings/${listingId}/service/${serviceId}`);
 }
 
-export async function getUserBookings(params = {}, userId) {
-    return axios.get(`/v1/users/${getUserId()}/bookings`, { params });
+export async function getUserBookings({ userId }) {
+    return axios.get(`/v1/users/${userId}/bookings`);
 }
 
 export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
     return axios.delete(`/v1//cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
 }
 
-export async function getAppointments(appointmentId) {
-    return axios.get(`/v1/appointments/${appointmentId}`);
+export async function getAppointments(cityId, listingId, appointmentId) {
+    return axios.get(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}`);
 }
 
 export async function createAppointments(cityId, listingId, newDataOb) {

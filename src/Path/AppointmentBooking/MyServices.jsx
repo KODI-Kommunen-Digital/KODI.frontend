@@ -12,9 +12,9 @@ const MyServices = () => {
     const pageSize = 9;
 
     const fetchMyServices = useCallback(() => {
+        const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
         getMyServices({
-            pageNo,
-            pageSize,
+            userId
         }).then((response) => {
             setMyServices(response.data.data);
         });
