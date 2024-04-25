@@ -354,7 +354,7 @@ const Listing = () => {
                               }`}
                           >
 
-                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.lightHoverColor}`}>
+                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.lightBorderColor}`}>
                               <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
                               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                                 {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
@@ -465,7 +465,7 @@ const Listing = () => {
 								}
 							`}
                     </style>
-                    <div className="h-full overflow-hidden px-0 py-0 bg-white border-8 border-slate-500">
+                    <div className="h-full overflow-hidden px-0 py-0 bg-white">
                       <div className="relative h-full">
                         {input.pdf ? (
                           <div>
@@ -524,8 +524,8 @@ const Listing = () => {
               </div>
             </div>
 
-            <div className="lg:w-1/3 w-2/3 mx-auto">
-              <div className="grid grid-cols-1 gap-4">
+            <div className="w-2/3 lg:w-1/3 mx-auto">
+              <div className="grid grid-cols-1 gap-4 col-span-2 lg:col-span-1">
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
@@ -556,7 +556,7 @@ const Listing = () => {
                                   user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                                 )
                               }
-                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.ligtBorderColor}`}>
+                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.lightBorderColor}`}>
                               <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
                               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                                 {t("viewProfile")}
@@ -566,7 +566,7 @@ const Listing = () => {
                         </div>
                         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
                           <h2
-                            className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-700'} text-lg title-font mb-2 font-bold`}
+                            className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-700'} text-lg title-font mb-2 font-bold truncate`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -574,7 +574,7 @@ const Listing = () => {
                             {firstname + " " + lastname}
                           </h2>
                           <p
-                            className="leading-relaxed text-base font-bold dark:text-slate-800"
+                            className="leading-relaxed text-base font-bold dark:text-slate-800 truncate"
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
