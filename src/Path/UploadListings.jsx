@@ -28,7 +28,7 @@ function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
   const [listingId, setListingId] = useState(0);
-  const [appointmentId, setAppointmentId] = useState(0);
+  const [setAppointmentId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -227,7 +227,7 @@ function UploadListings() {
   const [appointmentInput, setAppointmentInput] = useState({
     title: "",
     description: "",
-    startDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    startDate: new Date().toISOString().slice(0, 16) + ":00",
 
     metadata: {
       holidays: [],
@@ -246,7 +246,7 @@ function UploadListings() {
       },
     }],
   });
-  console.log("shhhhhh", appointmentInput)
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -259,112 +259,6 @@ function UploadListings() {
       maxBookingPerSlot: "",
     },
   });
-
-  // const handleSubmit = async (event) => {
-  //   let valid = true;
-  //   for (let key in error) {
-  //     var errorMessage = getErrorMessage(key, listingInput[key]);
-  //     var newError = error;
-  //     newError[key] = errorMessage;
-  //     setError(newError);
-  //     if (errorMessage) {
-  //       valid = false;
-  //     }
-  //   }
-  //   if (valid) {
-  //     setUpdating(true);
-  //     event.preventDefault();
-  //     try {
-  //       let listingResponse;
-  //       let appointmentResponse;
-  //       try {
-  //         listingResponse = await (newListing
-  //           ? postListingsData(cityId, listingInput)
-  //           : updateListingsData(cityId, listingInput, listingId));
-  //         if (newListing) {
-  //           setListingId(listingResponse.data.id);
-  //         }
-  //       }
-  //       catch (error) {
-  //         console.error('Error posting or updating listings:', error);
-  //       }
-
-  //       if (listingInput.removeImage) {
-  //         if (image.length === 0) {
-  //           await deleteListingImage(cityId, listingId);
-  //         } else {
-  //           if (!localImageOrPdf) {
-  //             const imageForm = new FormData();
-  //             for (let i = 0; i < image.length; i++) {
-  //               imageForm.append("image", image[i]);
-  //             }
-
-  //             await uploadListingImage(
-  //               imageForm,
-  //               cityId,
-  //               response.data.id || listingId
-  //             );
-  //           }
-  //         }
-  //       }
-
-  //       if (appointmentAdded) {
-  //         try {
-  //           appointmentResponse = await (newListing
-  //             ? createAppointments(cityId, listingResponse.data.id, appointmentInput)
-  //             : updateAppointments(cityId, listingId, appointmentId, appointmentInput));
-  //           if (newListing) {
-  //             setAppointmentId(appointmentResponse.data.id);
-  //           }
-  //         } catch (error) {
-  //           console.error('Error posting or updating appointment:', error);
-  //         }
-  //       }
-
-  //       if (localImageOrPdf) {
-  //         if (image) {
-  //           const imageForm = new FormData();
-  //           for (let i = 0; i < image.length; i++) {
-  //             imageForm.append("image", image[i]);
-  //           }
-  //           await uploadListingImage(
-  //             imageForm,
-  //             cityId,
-  //             response.data.id || listingId
-  //           );
-  //         } else if (pdf) {
-  //           // Upload PDF if it exists
-  //           const pdfForm = new FormData();
-  //           pdfForm.append("pdf", pdf);
-  //           await uploadListingPDF(
-  //             pdfForm,
-  //             cityId,
-  //             response.data.id || listingId
-  //           );
-  //         }
-  //       }
-
-  //       isAdmin
-  //         ? setSuccessMessage(t("listingUpdatedAdmin"))
-  //         : setSuccessMessage(t("listingUpdated"));
-  //       setErrorMessage(false);
-  //       setIsSuccess(true);
-  //       setTimeout(() => {
-  //         setSuccessMessage(false);
-  //         navigate("/Dashboard");
-  //       }, 5000);
-  //     } catch (error) {
-  //       setErrorMessage(t("changesNotSaved"));
-  //       setSuccessMessage(false);
-  //       setTimeout(() => setErrorMessage(false), 5000);
-  //     }
-  //     setUpdating(false);
-  //   } else {
-  //     setErrorMessage(t("invalidData"));
-  //     setSuccessMessage(false);
-  //     setTimeout(() => setErrorMessage(false), 5000);
-  //   }
-  // };
 
   const handleSubmit = async (event) => {
     let valid = true;
@@ -432,16 +326,18 @@ function UploadListings() {
           }
         }
 
-        if (appointmentAdded) {
+        if (!newListing && listingInput.appointmentId) {
           try {
-            let appointmentResponse = await (newListing
-              ? createAppointments(cityId, response.data.id || listingId, appointmentInput)
-              : updateAppointments(cityId, listingId, appointmentId, appointmentInput));
-            if (newListing) {
-              setAppointmentId(appointmentResponse.data.id);
-            }
+            await updateAppointments(cityId, listingId, listingInput.appointmentId, appointmentInput);
           } catch (error) {
-            console.error('Error posting or updating appointment:', error);
+            console.error('Error updating appointment:', error);
+          }
+        } else if (appointmentAdded) {
+          try {
+            let appointmentResponse = await createAppointments(cityId, response.data.id || listingId, appointmentInput);
+            setAppointmentId(appointmentResponse.data.id);
+          } catch (error) {
+            console.error('Error posting appointment:', error);
           }
         }
 
@@ -511,7 +407,7 @@ function UploadListings() {
       setNewListing(false);
       getVillages(cityId).then((response) => setVillages(response.data.data));
       getListingsById(cityId, listingId).then((listingsResponse) => {
-        let listingData = listingsResponse.data.data;
+        const listingData = listingsResponse.data.data;
         listingData.cityId = cityId;
         setListingInput(listingData);
         setStartDate(listingData.startDate);
@@ -524,12 +420,16 @@ function UploadListings() {
         const listingId = listingData.id
         if (appointmentId) {
           getAppointments(cityId, listingId, appointmentId).then((appointmentResponse) => {
-            const appointmentData = appointmentResponse.data.data;
+            const appointmentData = appointmentResponse.data.data[0];
+            appointmentData.metadata = JSON.parse(appointmentData.metadata)
             setAppointmentInput(appointmentData);
 
             getAppointmentServices(cityId, listingId, appointmentId)
               .then((servicesResponse) => {
-                let servicesData = servicesResponse.data.data;
+                const servicesData = servicesResponse.data.data.map((item) => {
+                  const metadata = JSON.parse(item.MetaData);
+                  return { ...item, metadata };
+                });
                 setAppointmentInput(prevState => ({
                   ...prevState,
                   services: servicesData
@@ -963,7 +863,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
+          {categoryId == 18 && <ServiceAndTime newListing={newListing} appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
             appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (

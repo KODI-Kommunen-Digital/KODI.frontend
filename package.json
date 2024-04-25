@@ -56,7 +56,7 @@
     "react-modal": "^3.16.1",
     "react-pdf": "^7.5.0",
     "react-quill": "^2.0.0",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",
     "react-spring": "^9.7.3",
     "react-tailwindcss-datepicker": "^1.6.6",

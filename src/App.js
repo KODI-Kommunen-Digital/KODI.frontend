@@ -9,7 +9,8 @@ import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
-import BookingConfirmation from "./Path/AppointmentBooking/BookingConfirmation";
+import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
+import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
@@ -46,7 +47,7 @@ import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
 import IFrameListing from "./Path/Listings/IframeListings.jsx";
 import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
-import MyServices from "./Path/AppointmentBooking/MyServices";
+import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserCreated";
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
@@ -95,9 +96,15 @@ const App = () => {
             element={<Summary />}
           />
           <Route
-            path="/AppointmentBooking/BookAppointments/BookingConfirmation"
-            element={<BookingConfirmation />}
+            path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+            element={<BookingSuccessConfirmation />}
           />
+
+          <Route
+            path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+            element={<BookingErrorConfirmation />}
+          />
+
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
@@ -160,8 +167,8 @@ const App = () => {
                 exact
               />
               <Route
-                path="/AppointmentBooking/MyServices"
-                element={<MyServices />}
+                path="/AppointmentBooking/AppointmentsUserCreated"
+                element={<AppointmentsUserCreated />}
                 exact
               />
               <Route

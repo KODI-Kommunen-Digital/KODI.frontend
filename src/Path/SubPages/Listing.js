@@ -317,7 +317,7 @@ const Listing = () => {
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full flex flex-col lg:flex-row  max-w-2xl gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+          <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl mt-4 md:mt-0 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
                 <div className="lg:w-full md:w-full h-full">
@@ -539,8 +539,8 @@ const Listing = () => {
               </div>
             </div>
 
-            <div className="lg:w-1/3 mx-auto">
-              <div className="grid grid-cols-1 gap-4">
+            <div className="w-2/3 lg:w-1/3 mx-auto">
+              <div className="grid grid-cols-1 gap-4 col-span-2 lg:col-span-1">
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
@@ -611,13 +611,18 @@ const Listing = () => {
                 )}
 
                 {input.id && input.categoryId === 18 && (
-                  <a onClick={() =>
-                    navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&listingId=${appointmentId}`)
-                  }
-                    className="relative mt-4 inline-block px-4 py-2 font-medium group" >
-                    <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-                    <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-                    <span className="relative text-black group-hover:text-white">{t("clickHereToBook")}</span>
+                  <a
+                    onClick={() =>
+                      navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`)
+                    }
+                    className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group">
+                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </span>
+                    <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("clickHereToBook")}</span>
+                    <span className="relative invisible">
+                      {t("clickHereToBook")}
+                    </span>
                   </a>
                 )}
               </div>
@@ -640,7 +645,7 @@ const Listing = () => {
             </div>
           ) : null}
 
-          <div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
+          <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
             <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
               {t("similarItems")}
             </h1>

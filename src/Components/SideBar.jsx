@@ -355,7 +355,7 @@ function SideBar() {
                       className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                       onClick={() => {
                         localStorage.setItem("selectedItem", t("myBooking"));
-                        navigateTo("/AppointmentBooking/MyServices");
+                        navigateTo("/AppointmentBooking/AppointmentsUserCreated");
                       }}
                     >
                       <svg
@@ -369,7 +369,7 @@ function SideBar() {
                         className="text-[15px] ml-4 text-gray-200 font-bold"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {t("myServices")}
+                        {t("createdAppointments")}
                       </span>
                     </div>
                   </div>
