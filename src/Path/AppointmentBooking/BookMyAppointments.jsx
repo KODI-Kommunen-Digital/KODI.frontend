@@ -19,12 +19,10 @@ import cn from "../../Components/util/cn";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
-  const [categoryId, setCategoryId] = useState(0);
   const [title, setTitle] = useState("");
   const [duration, setDuration] = useState("___");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  const [isValidInput, setIsValidInput] = useState(true);
 
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -46,30 +44,24 @@ function BookMyAppointments() {
   const [appointmentId, setAppointmentId] = useState(0);
 
   const [bookingInput, setBookingInput] = useState({
-    categoryId: 0,
-    bookingId: 0,
-    endTime: [],
-    startTime: [],
+    endTime: "",
+    startTime: "",
     date: currentDate,
-    numberOfPeople: "",
-    service: "",
     friends: [],
     guestDetails: {
-      firstName: "",
+      firstname: "",
       lastName: "",
       description: "",
-      phone: "",
-      email: ""
+      emailId: ""
     }
   });
 
   const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
     service: "",
-    firstName: "",
+    firstname: "",
     lastName: "",
-    phone: "",
-    email: "",
+    emailId: "",
   });
 
   const handleButtonClick = () => {
@@ -99,15 +91,13 @@ function BookMyAppointments() {
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
     setListingId(listingId);
-    setBookingInput((prevInput) => ({ ...prevInput, categoryId }));
+    setBookingInput((prevInput) => ({ ...prevInput }));
     if (listingId && cityId) {
       getListingsById(cityId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
         setListingData(listingData)
         listingData.cityId = cityId;
         listingData.bookingId = bookingId;
-        setBookingInput(listingData);
-        setCategoryId(listingData.categoryId);
         setTitle(listingData.title);
 
         const appointmentId = listingData.appointmentId;
@@ -132,10 +122,9 @@ function BookMyAppointments() {
             ...prevInput,
             guestDetails: {
               ...prevInput.guestDetails,
-              firstName: user.firstname || "",
+              firstname: user.firstname || "",
               lastName: user.lastname || "",
-              email: user.email || "",
-              phone: user.phone || "",
+              emailId: user.email || "",
               description: user.description || ""
             }
           }));
@@ -202,28 +191,19 @@ function BookMyAppointments() {
     }
   };
 
-  const handleInputChange = (value) => {
-    const input = value;
-    if (/^\d*$/.test(input)) {
-      setIsValidInput(true); // Input is valid
-    } else {
-      setIsValidInput(false); // Input is not valid
-    }
-  };
-
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "service":
         return value.trim() === "" ? t("pleaseEnterService") : "";
       case "numberOfPeople":
         return value.trim() === "" ? t("pleaseSelectNumberOfPeople") : "";
-      case "firstName":
+      case "firstname":
         return value.trim() === "" ? t("pleaseSelectFirstName") : "";
       case "lastName":
         return value.trim() === "" ? t("pleaseSelectLastName") : "";
       case "phone":
         return value.trim() === "" ? t("pleaseSelectPhone") : "";
-      case "email":
+      case "emailId":
         return value.trim() === "" ? t("pleaseSelectEmail") : "";
       default:
         return "";
@@ -271,14 +251,14 @@ function BookMyAppointments() {
       endMinute = endMinute.toString().padStart(2, '0');
       const endTime = `${endHour}:${endMinute}`;
 
-      const selectedDate = selectDate.toDate().toISOString();
+      // const selectedDate = selectDate.toDate().toISOString();
 
       if (selectedTimes.length === 0) {
         setBookingInput((prevState) => ({
           ...prevState,
-          startTime: [startTime],
-          endTime: [endTime],
-          date: selectedDate,
+          startTime: startTime,
+          endTime: endTime,
+          // date: selectedDate,
         }));
       } else {
         if (selectedTimes.length === 1) {
@@ -329,8 +309,8 @@ function BookMyAppointments() {
     <section className="text-gray-600 bg-white body-font">
       <HomePageNavBar />
 
-      <div className="max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto flex flex-col items-center">
-        <div className="lg:w-full md:w-full h-full">
+      <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="lg:w-full py-5 px-4 md:w-full h-full">
           <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
@@ -394,7 +374,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="items-stretch py-2 w-full">
+        <div className="items-stretch py-5 px-4 px-4 w-full">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
@@ -409,7 +389,7 @@ function BookMyAppointments() {
               <select
                 id="service"
                 name="service"
-                value={bookingInput.service}
+                value={bookingInput.service || ""}
                 onChange={(event) => {
                   onInputChange(event);
                   onServiceChange(event);
@@ -446,7 +426,7 @@ function BookMyAppointments() {
               <select
                 id="numberOfPeople"
                 name="numberOfPeople"
-                value={bookingInput.numberOfPeople}
+                value={bookingInput.numberOfPeople || ""}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
@@ -476,7 +456,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="mx-auto w-full flex py-2 flex-col lg:flex-row mt-[2rem] mt-4 md:mt-0 gap-x-8">
+        <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
           <div className="lg:w-2/3 border-2 border-black rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
               <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
@@ -564,8 +544,8 @@ function BookMyAppointments() {
           </div>
 
           <div className="w-2/3 lg:w-1/3 mx-auto">
-            <div className="grid grid-cols-1 gap-4 col-span-2 lg:col-span-1 border-2 border-black rounded-lg">
-              <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+            <div className="grid grid-cols-1 gap-4 col-span-1">
+              <div className="bg-white mx-auto border-2 border-black rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
                 <h1 className="text-lg text-center font-semibold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
@@ -684,12 +664,12 @@ function BookMyAppointments() {
                     <div className="relative mb-0">
                       <input
                         type="text"
-                        id={`firstName`}
-                        name={`firstName`}
+                        id={`firstname`}
+                        name={`firstname`}
                         value={
                           index === 0
-                            ? (bookingInput.guestDetails?.firstName || user.firstname || "")
-                            : (bookingInput?.friends[index - 1]?.firstName || "")
+                            ? (bookingInput.guestDetails?.firstname || user.firstname || "")
+                            : (bookingInput?.friends[index - 1]?.firstname || "")
                         }
                         onChange={(e) => onInputChange(e, index)}
                         onBlur={(e) => validateInput(e)}
@@ -700,10 +680,10 @@ function BookMyAppointments() {
                       <div
                         className="h-[24px] text-red-600 text-start"
                         style={{
-                          visibility: bookingError.firstName ? "visible" : "hidden",
+                          visibility: bookingError.firstname ? "visible" : "hidden",
                         }}
                       >
-                        {bookingError.firstName}
+                        {bookingError.firstname}
                       </div>
                     </div>
 
@@ -733,14 +713,15 @@ function BookMyAppointments() {
                       </div>
                     </div>
                   </div>
+
                   <input
-                    type="email"
-                    id={`email`}
-                    name={`email`}
+                    type="emailId"
+                    id={`emailId`}
+                    name={`emailId`}
                     value={
                       index === 0
-                        ? (bookingInput.guestDetails?.email || user.email || "")
-                        : (bookingInput?.friends[index - 1]?.email || "")
+                        ? (bookingInput.guestDetails?.emailId || user.email || "")
+                        : (bookingInput?.friends[index - 1]?.emailId || "")
                     }
                     onChange={(e) => onInputChange(e, index)}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
@@ -751,40 +732,14 @@ function BookMyAppointments() {
                   <div
                     className="h-[24px] text-red-600 text-start"
                     style={{
-                      visibility: bookingError.email ? "visible" : "hidden",
+                      visibility: bookingError.emailId ? "visible" : "hidden",
                     }}
                   >
-                    {bookingError.email}
+                    {bookingError.emailId}
                   </div>
 
                   {index === 0 && (
                     <>
-                      <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value={
-                          index === 0
-                            ? bookingInput.guestDetails?.phone || ""
-                            : bookingInput.phone || ""
-                        }
-                        onChange={(e) => { onInputChange(e, index); handleInputChange(e); }}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                        placeholder={t("phoneNumber")}
-                      />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: bookingError.phone ? "visible" : "hidden",
-                        }}
-                      >
-                        {bookingError.phone}
-                      </div>
-                      {!isValidInput && (
-                        <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
-                      )}
-
                       <input
                         type="text"
                         id={`description`}
@@ -816,7 +771,7 @@ function BookMyAppointments() {
         </div>
       </div>
 
-      <div className="relative max-w-2xl mt-4 md:mt-0 px-5 py-2 lg:max-w-7xl mx-auto">
+      <div className="bg-white h-full items-center py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="py-2 mt-1 px-o">
           <a
             onClick={handleButtonClick}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
-import Footer from "../../Components/Footer";
 import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { createBookings } from "../../Services/appointmentBookingApi";
@@ -59,22 +58,21 @@ const Summary = () => {
     <section className="bg-white body-font relative">
       <HomePageNavBar />
 
-      <div className="bg-white h-full items-center mt-20 px-5 py-2 mx-auto max-w-screen-lg lg:mx-20">
-        <p className="font-sans font-bold text-purple-900  mb-1 text-4xl title-font text-center">
-          {t("summaryBooking")}
-        </p>
+      <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+          <p className="font-sans font-bold text-purple-900  mb-1 text-4xl title-font text-center">
+            {t("summaryBooking")}
+          </p>
+        </div>
 
-        <div className="max-w-2xl gap-y-4 pt-4 pb-4 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+        <div className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
           <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
             <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
               <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                {bookingInput.guestDetails.firstName + " " + bookingInput.guestDetails.lastName}
+                {bookingInput.guestDetails.firstname + " " + bookingInput.guestDetails.lastName}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                {bookingInput.guestDetails.email}
-              </p>
-              <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                {bookingInput.guestDetails.phone}
+                {bookingInput.guestDetails.emailId}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
                 {bookingInput.guestDetails.description}
@@ -85,20 +83,14 @@ const Summary = () => {
 
         {/* Friends Details */}
         {bookingInput.friends.map((friend, index) => (
-          <div key={index} className="max-w-2xl gap-y-4 pt-4 pb-4 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+          <div key={index} className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
             <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
               <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
                 <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                  {friend.firstName + " " + friend.lastName}
+                  {friend.firstname + " " + friend.lastName}
                 </p>
                 <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {friend.email}
-                </p>
-                <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {friend.phone}
-                </p>
-                <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {friend.description}
+                  {friend.emailId}
                 </p>
               </div>
             </div>
@@ -111,11 +103,11 @@ const Summary = () => {
           <a
             onClick={handleSubmit}
             disabled={updating}
-            className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group">
-            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+            className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group">
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
-            <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
+            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
             <span className="relative invisible">
               {t("confirm")}
 
@@ -140,10 +132,6 @@ const Summary = () => {
             </span>
           </a>
         </div>
-      </div>
-
-      <div className="bottom-0 w-full">
-        <Footer />
       </div>
     </section>
   );
