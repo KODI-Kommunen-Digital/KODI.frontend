@@ -43,7 +43,7 @@ export async function deleteUserAppointments(userId, appointmentId, bookingId) {
 }
 
 export async function createBookings(cityId, listingId, appointmentId) {
-    return axios.get(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`);
+    return axios.post(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`);
 }
 
 export async function getAppointmentServices(cityId, listingId, appointmentId) {

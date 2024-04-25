@@ -28,7 +28,7 @@ function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
   const [listingId, setListingId] = useState(0);
-  const [appointmentId, setAppointmentId] = useState(0);
+  const [setAppointmentId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -227,7 +227,7 @@ function UploadListings() {
   const [appointmentInput, setAppointmentInput] = useState({
     title: "",
     description: "",
-    startDate: "2024-02-23T14:00:00",
+    startDate: new Date().toISOString().slice(0, 16) + ":00",
 
     metadata: {
       holidays: [],
@@ -246,6 +246,7 @@ function UploadListings() {
       },
     }],
   });
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",

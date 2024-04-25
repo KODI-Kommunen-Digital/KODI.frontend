@@ -604,6 +604,8 @@
     "bookingSuccess": "Booking Successful",
     "thanks": "Your booking is successful. Thanks for booking with us!",
     "lookForeward": "We look forward to seeing you soon! If you have any questions or concerns, please do not hesitate to contact us.",
+    "bookingError": "Booking Error",
+    "bookingErrorMessage": "We sincerely appologize, but something went wrong with your booking",
     "confirm": "Confirm",
     "goToMyBookings": "Go to my bookings",
     "useProvidedTimeSlots": "Use provided time slots",

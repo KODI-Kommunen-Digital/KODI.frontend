@@ -9,7 +9,8 @@ import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
-import BookingConfirmation from "./Path/AppointmentBooking/BookingConfirmation";
+import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
+import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
@@ -95,9 +96,15 @@ const App = () => {
             element={<Summary />}
           />
           <Route
-            path="/AppointmentBooking/BookAppointments/BookingConfirmation"
-            element={<BookingConfirmation />}
+            path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+            element={<BookingSuccessConfirmation />}
           />
+
+          <Route
+            path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+            element={<BookingErrorConfirmation />}
+          />
+
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />

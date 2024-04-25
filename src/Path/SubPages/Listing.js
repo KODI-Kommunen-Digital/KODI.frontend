@@ -612,7 +612,7 @@ const Listing = () => {
 
                 {input.id && input.categoryId === 18 && (
                   <a onClick={() =>
-                    navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&listingId=${appointmentId}`)
+                    navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`)
                   }
                     className="relative mt-4 inline-block px-4 py-2 font-medium group" >
                     <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
