@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
-import { BookingSummary } from '../../Constants/BookingSummary.js';
+// import { BookingSummary } from '../../Constants/BookingSummary.js';
+import PropTypes from "prop-types";
 
-export default function Summary() {
+const Summary = ({ appointmentInput }) => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function Summary() {
       navigate(path);
     }
   };
+  // console.log("Shit is " + appointmentInput)
 
   return (
     <section className="bg-white body-font relative">
@@ -30,28 +32,44 @@ export default function Summary() {
         </p>
         <br />
 
-        {BookingSummary.map((booking) => (
-          <div key={booking.id}>
-            {booking.user && (
-              <div className="max-w-2xl gap-y-4 pt-4 pb-4 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
-              <div className="lg:w-full border-2 border-purple-900 rounded-xl md:w-full h-full">
+        <div className="max-w-2xl gap-y-4 pt-4 pb-4 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+          <div className="lg:w-full border-2 border-purple-900 rounded-xl md:w-full h-full">
+            <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
+              <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
+                {appointmentInput.guestDetails.firstName + " " + appointmentInput.guestDetails.lastName}
+              </p>
+              <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
+                {appointmentInput.guestDetails.email}
+              </p>
+              <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
+                {appointmentInput.guestDetails.phone}
+              </p>
+              <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
+                {appointmentInput.guestDetails.description}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Friends Details */}
+        {appointmentInput.friends.map((friend, index) => (
+          <div key={index} className="max-w-2xl gap-y-4 pt-4 pb-4 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+            <div className="lg:w-full border-2 border-purple-900 rounded-xl md:w-full h-full">
               <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
                 <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                  {booking.user.username}
+                  {friend.firstName + " " + friend.lastName}
                 </p>
                 <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {booking.user.email}
+                  {friend.email}
                 </p>
                 <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {booking.user.mobile}
+                  {friend.phone}
                 </p>
                 <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {booking.user.remarks}
+                  {friend.description}
                 </p>
               </div>
-              </div>
-              </div>
-            )}
+            </div>
           </div>
         ))}
       </div>
@@ -77,4 +95,39 @@ export default function Summary() {
       </div>
     </section>
   );
-}
+};
+
+Summary.propTypes = {
+  appointmentInput: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      appointmentInput: PropTypes.shape({
+        categoryId: PropTypes.number,
+        bookingId: PropTypes.number,
+        endTime: PropTypes.arrayOf(PropTypes.string),
+        startTime: PropTypes.arrayOf(PropTypes.string),
+        date: PropTypes.string,
+        numberOfPeople: PropTypes.string,
+        service: PropTypes.string,
+        friends: PropTypes.arrayOf(
+          PropTypes.shape({
+            firstName: PropTypes.string,
+            lastName: PropTypes.string,
+            email: PropTypes.string,
+            phone: PropTypes.string,
+            description: PropTypes.string
+          })
+        ),
+        guestDetails: PropTypes.shape({
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          email: PropTypes.string,
+          phone: PropTypes.string,
+          description: PropTypes.string
+        })
+      })
+    })
+  })
+};
+
+export default Summary;

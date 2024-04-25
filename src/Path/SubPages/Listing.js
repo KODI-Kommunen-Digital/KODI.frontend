@@ -317,7 +317,7 @@ const Listing = () => {
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full flex flex-col lg:flex-row  max-w-2xl gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+          <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl mt-4 md:mt-0 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
                 <div className="lg:w-full md:w-full h-full">
@@ -539,8 +539,8 @@ const Listing = () => {
               </div>
             </div>
 
-            <div className="lg:w-1/3 mx-auto">
-              <div className="grid grid-cols-1 gap-4">
+            <div className="w-2/3 lg:w-1/3 mx-auto">
+              <div className="grid grid-cols-1 gap-4 col-span-2 lg:col-span-1">
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (

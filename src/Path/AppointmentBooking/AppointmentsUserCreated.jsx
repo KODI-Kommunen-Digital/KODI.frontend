@@ -3,32 +3,35 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getMyServices, deleteMyServices } from "../../Services/appointmentBookingApi";
+import { getAppointmentsUserCreated, deleteMyServices } from "../../Services/appointmentBookingApi";
 
-const MyServices = () => {
+const AppointmentsUserCreated = () => {
     const { t } = useTranslation();
     const [services, setMyServices] = useState([]);
-    const [pageNo, setPageNo] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
 
     const fetchMyServices = useCallback(() => {
-        const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
-        getMyServices(userId)
+        // const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
+        getAppointmentsUserCreated({
+            pageNumber,
+            pageSize,
+        })
             .then((response) => {
                 setMyServices(response.data.data);
             })
             .catch((error) => {
                 console.error("Error fetching services:", error);
             });
-    }, []);
+    }, [pageNumber]);
 
     useEffect(() => {
-        if (pageNo === 1) {
+        if (pageNumber === 1) {
             fetchMyServices();
         } else {
             fetchMyServices();
         }
-    }, [fetchMyServices, pageNo]);
+    }, [fetchMyServices, pageNumber]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -47,7 +50,7 @@ const MyServices = () => {
     function handleDelete(services) {
         deleteMyServices(services.cityId, services.id)
             .then((res) => {
-                getMyServices(
+                getAppointmentsUserCreated(
                     services.filter(
                         (s) => s.cityId !== services.cityId || s.serviceId !== services.id
                     )
@@ -98,27 +101,6 @@ const MyServices = () => {
                                     >
                                         {t("duration")}
                                     </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 sm:px-6 py-3 text-center "
-                                        style={{
-                                            fontFamily: "Poppins, sans-serif",
-                                            width: "16.66%",
-                                        }}
-                                    >
-                                        {t("from")}
-                                    </th>
-
-                                    <th
-                                        scope="col"
-                                        className="px-6 sm:px-6 py-3 text-center "
-                                        style={{
-                                            fontFamily: "Poppins, sans-serif",
-                                            width: "16.66%",
-                                        }}
-                                    >
-                                        {t("to")}
-                                    </th>
 
                                     <th
                                         scope="col"
@@ -168,7 +150,7 @@ const MyServices = () => {
                                                             )
                                                         }
                                                     >
-                                                        {service.serviceName}
+                                                        {service.title}
                                                     </div>
                                                 </div>
                                             </th>
@@ -177,22 +159,9 @@ const MyServices = () => {
                                                 className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {service.duration}
+                                                {service.startDate}
                                             </td>
 
-                                            <td
-                                                className="px-6 py-4  text-center"
-                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                            >
-                                                {service.startTime}
-                                            </td>
-
-                                            <td
-                                                className="px-6 py-4  text-center"
-                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                            >
-                                                {service.endTime}
-                                            </td>
                                             <td className="px-6 py-4  text-center">
                                                 <div>
                                                     <a
@@ -280,10 +249,10 @@ const MyServices = () => {
                     </div>
 
                     <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                        {pageNo !== 1 ? (
+                        {pageNumber !== 1 ? (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                onClick={() => setPageNo(pageNo - 1)}
+                                onClick={() => setPageNumber(pageNumber - 1)}
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
                                 {"<"}{" "}
@@ -295,13 +264,13 @@ const MyServices = () => {
                             className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                             style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                            {t("page")} {pageNo}
+                            {t("page")} {pageNumber}
                         </span>
 
                         {services.length >= pageSize && (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                onClick={() => setPageNo(pageNo + 1)}
+                                onClick={() => setPageNumber(pageNumber + 1)}
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
                                 {">"}
@@ -314,4 +283,4 @@ const MyServices = () => {
     );
 };
 
-export default MyServices;
+export default AppointmentsUserCreated;

@@ -8,25 +8,26 @@ import { getUserBookings, deleteUserBooking } from "../../Services/appointmentBo
 const MyBookings = () => {
   const { t } = useTranslation();
   const [bookings, setUserBookings] = useState([]);
-  const [pageNo, setPageNo] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 9;
 
   const fetchUserBookings = useCallback(() => {
-    const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
+    // const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
     getUserBookings({
-      userId
+      pageNumber,
+      pageSize,
     }).then((response) => {
       setUserBookings(response.data.data);
     });
-  }, []);
+  }, [pageNumber]);
 
   useEffect(() => {
-    if (pageNo === 1) {
+    if (pageNumber === 1) {
       fetchUserBookings();
     } else {
       fetchUserBookings();
     }
-  }, [fetchUserBookings, pageNo]);
+  }, [fetchUserBookings, pageNumber]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -278,10 +279,10 @@ const MyBookings = () => {
           </div>
 
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-            {pageNo !== 1 ? (
+            {pageNumber !== 1 ? (
               <span
                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                onClick={() => setPageNo(pageNo - 1)}
+                onClick={() => setPageNumber(pageNumber - 1)}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {"<"}{" "}
@@ -293,13 +294,13 @@ const MyBookings = () => {
               className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
-              {t("page")} {pageNo}
+              {t("page")} {pageNumber}
             </span>
 
             {bookings.length >= pageSize && (
               <span
                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                onClick={() => setPageNo(pageNo + 1)}
+                onClick={() => setPageNumber(pageNumber + 1)}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {">"}

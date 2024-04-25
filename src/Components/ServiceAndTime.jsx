@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
+const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -104,7 +104,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
   const handleAddService = () => {
     setAppointmentInput((prevInput) => {
       const { services } = prevInput;
-      const { maxBookingPerSlot } = prevInput.metadata;
+      const { maxBookingPerSlot } = 5;
 
       if (services.length >= maxBookingPerSlot) {
         setIsValidServiceCount(false);
@@ -386,7 +386,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                   type="text"
                   id="duration"
                   name="duration"
-                  placeholder="Duration"
+                  placeholder="Duration in min"
                   value={service.duration}
                   onChange={(e) => { onServiceChange(serviceIndex, 'duration', e.target.value); handleInputChange(e.target.value); }}
                   onBlur={(e) => validateInput(serviceIndex, e)}
@@ -477,24 +477,23 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                   </span>
                   <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden p-6 mx-4 my-8 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="bg-white p-4">
-                      <button
+                      {/* <button
                         onClick={() => {
                           setShowModal(false)
                           setEditServciceIndex()
-                          // setEditServciceIndex()
                           setEditAppointmentTime(false)
                           resetTimeSlots();
                         }}
                         className="absolute top-0 right-0 p-4 text-xl cursor-pointer"
                       >
                         &times;
-                      </button>
+                      </button> */}
 
                       {daysOfWeek.map((day) => (
                         <div key={day} className="mb-4">
 
                           {/* {JSON.stringify(appointmentInput.services[index].openingDates[day])} */}
-                          {editAppointmentTime && appointmentInput.metadata.openingDates[day].map((timeSlot, index) => (
+                          {editAppointmentTime && appointmentInput.metadata && appointmentInput.metadata.openingDates[day].map((timeSlot, index) => (
                             <div
                               key={index}
                               className="flex flex-col space-y-4 space-x-2 sm:flex-row sm:space-y-0 sm:items-center mt-2"
@@ -643,12 +642,26 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                         </div>
                       ))}
 
-                      <button
-                        onClick={handleDoneButtonClick}
-                        className="w-full bg-black hover:bg-slate-600  text-white py-2 px-4 mt-4 rounded-md"
-                      >
-                        {t("done")}
-                      </button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button
+                          onClick={handleDoneButtonClick}
+                          className="w-full bg-black hover:bg-slate-600 text-white py-2 px-4 mt-4 ext-white font-bold py-2 px-4 rounded-xl"
+                        >
+                          {t("done")}
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setShowModal(false)
+                            setEditServciceIndex()
+                            setEditAppointmentTime(false)
+                            resetTimeSlots();
+                          }}
+                          className="w-full bg-red-800 hover:bg-red-700 text-white py-2 px-4 mt-4 ext-white font-bold py-2 px-4 rounded-xl"
+                        >
+                          {t("cancel")}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -694,6 +707,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
 };
 
 ServiceAndTime.propTypes = {
+  newListing: PropTypes.object.isRequired,
   appointmentError: PropTypes.object.isRequired,
   appointmentInput: PropTypes.object.isRequired,
   setAppointmentError: PropTypes.func.isRequired,

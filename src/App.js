@@ -46,7 +46,7 @@ import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
 import IFrameListing from "./Path/Listings/IframeListings.jsx";
 import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
-import MyServices from "./Path/AppointmentBooking/MyServices";
+import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserCreated";
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
@@ -160,8 +160,8 @@ const App = () => {
                 exact
               />
               <Route
-                path="/AppointmentBooking/MyServices"
-                element={<MyServices />}
+                path="/AppointmentBooking/AppointmentsUserCreated"
+                element={<AppointmentsUserCreated />}
                 exact
               />
               <Route
