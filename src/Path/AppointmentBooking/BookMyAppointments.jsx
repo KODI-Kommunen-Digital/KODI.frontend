@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
-import { getAppointmentServices } from "../../Services/appointmentBookingApi";
+import { getAppointmentServices, getAppointmentSlots } from "../../Services/appointmentBookingApi";
 import {
   getListingsById
 } from "../../Services/listingsApi";
@@ -16,6 +16,7 @@ import Footer from "../../Components/Footer";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { generateDate, months } from "../../Components/util/calendar";
 import cn from "../../Components/util/cn";
+import moment from "moment";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
@@ -38,15 +39,19 @@ function BookMyAppointments() {
   const [user, setUser] = useState();
   const [serviceData, setServiceData] = useState([]);
   const [listingData, setListingData] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
+  const [serviceId, setServiceId] = useState(0);
+  const [selectedServiceId, setSelectedServiceId] = useState(0);
 
+  const todayDate = new Date().toISOString().slice(0, 10);
   const [bookingInput, setBookingInput] = useState({
     endTime: "",
     startTime: "",
-    date: currentDate,
+    date: todayDate,
     friends: [],
     guestDetails: {
       firstname: "",
@@ -55,6 +60,7 @@ function BookMyAppointments() {
       emailId: ""
     }
   });
+  // console.log(bookingInput)
 
   const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
@@ -108,6 +114,7 @@ function BookMyAppointments() {
             try {
               const serviceResponse = await getAppointmentServices(cityId, listingId, appointmentId);
               const serviceData = serviceResponse.data.data;
+
               setServiceData(serviceData);
             } catch (error) {
               console.error("Error fetching appointment or services:", error);
@@ -151,13 +158,6 @@ function BookMyAppointments() {
           [name]: value,
           friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({}))
         }));
-      }
-
-      if (name === "service") {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("serviceId", value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.replaceState(null, null, newUrl);
       }
     } else {
       if (index === 0) {
@@ -225,8 +225,20 @@ function BookMyAppointments() {
     setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index));
   };
 
+  // const onServiceChange = (event) => {
+  //   const selectedServiceId = event.target.value;
+  //   const selectedService = serviceData.find(
+  //     (service) => service.id === parseInt(selectedServiceId)
+  //   );
+
+  //   if (selectedService) {
+  //     setDuration(selectedService.duration);
+  //   }
+  // };
+
   const onServiceChange = (event) => {
     const selectedServiceId = event.target.value;
+    setSelectedServiceId(selectedServiceId)
     const selectedService = serviceData.find(
       (service) => service.id === parseInt(selectedServiceId)
     );
@@ -234,7 +246,43 @@ function BookMyAppointments() {
     if (selectedService) {
       setDuration(selectedService.duration);
     }
+    fetchTimeSlots(selectedServiceId);
   };
+
+  const onDateChange = (date) => {
+    setSelectDate(moment(date)); // Convert date to moment object here
+    setBookingInput({
+      ...bookingInput,
+      date: moment(date).format("YYYY-MM-DD"),
+    });
+    fetchTimeSlots(selectedServiceId, moment(date).format("YYYY-MM-DD"));
+  };
+
+  const fetchTimeSlots = async (selectedServiceId, formattedDate) => {
+    const serviceId = selectedServiceId;
+    setServiceId(serviceId)
+    const date = formattedDate || todayDate;
+    console.log("const date" + date)
+    if (serviceId && date) {
+      try {
+        const timeSlotResponse = await getAppointmentSlots(
+          cityId,
+          listingId,
+          appointmentId,
+          date,
+          serviceId
+        );
+        setTimeSlots(timeSlotResponse.data.data);
+        console.log("Got time slots:", timeSlotResponse.data.data);
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchTimeSlots();
+  }, [selectDate, bookingInput.service]);
 
   const handleTimeSelection = (time) => {
     if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
@@ -522,11 +570,7 @@ function BookMyAppointments() {
                                     "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
                                   )}
                                   onClick={() => {
-                                    setSelectDate(date);
-                                    setBookingInput({
-                                      ...bookingInput,
-                                      date: date.format("YYYY-MM-DD"),
-                                    });
+                                    onDateChange(date.toDate());
                                   }}
                                 >
                                   {date.date()}
@@ -549,33 +593,25 @@ function BookMyAppointments() {
                 <h1 className="text-lg text-center font-semibold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
-                <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {Array.from({ length: 24 * 2 }).map((_, index) => {
-                      const time = dayjs()
-                        .hour(8)
-                        .minute(0)
-                        .add(index * 60, "minutes");
-                      return (
+
+                {serviceId && (
+                  <div className="time-selection-container overflow-y-auto max-h-[100px]">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {timeSlots.map((timeSlot, index) => (
                         <div
                           key={index}
-                          className={cn(
-                            "p-2 rounded-full border cursor-pointer transition-all",
-                            "hover:bg-gray-200",
-                            "select-none",
-                            selectedTimes.includes(time.format("HH:mm")) &&
-                            "border-blue-400 text-blue-400"
-                          )}
-                          onClick={() =>
-                            handleTimeSelection(time.format("HH:mm"))
-                          }
+                          onClick={() => handleTimeSelection(timeSlot)}
+                          className="bg-gray-200 p-2 rounded cursor-pointer"
                         >
-                          {time.format("HH:mm")}
+                          {timeSlot.openingHours.map((hours, i) => (
+                            <span key={i}>{hours.startTime.format("HH:mm")} - {hours.endTime.format("HH:mm")}</span>
+                          ))}
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
                 {numberError && (
                   <div className="text-red-500 text-center mt-2">
                     {t("timeSlotMaxValidation")}
@@ -791,7 +827,7 @@ function BookMyAppointments() {
       <div className="bottom-0 w-full">
         <Footer />
       </div>
-    </section>
+    </section >
   );
 }
 
