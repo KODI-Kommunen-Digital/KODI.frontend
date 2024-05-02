@@ -115,6 +115,7 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
         name: "",
         duration: "",
         // durationUnit: "minutes",
+        slotSameAsAppointment: false,
         metadata: {
           holidays: [],
           openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
@@ -156,6 +157,7 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
       const { services } = prevInput;
       const updatedServices = [...services];
       const currentService = updatedServices[index];
+      console.log(currentService)
 
       if (updatedCheckedList[index]) {
         // If the checkbox is checked, populate openingDates

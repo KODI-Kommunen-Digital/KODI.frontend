@@ -246,7 +246,6 @@ function UploadListings() {
       },
     }],
   });
-  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -427,7 +426,7 @@ function UploadListings() {
             getAppointmentServices(cityId, listingId, appointmentId)
               .then((servicesResponse) => {
                 const servicesData = servicesResponse.data.data.map((item) => {
-                  const metadata = JSON.parse(item.MetaData);
+                  const metadata = JSON.parse(item.metadata);
                   return { ...item, metadata };
                 });
                 setAppointmentInput(prevState => ({
@@ -438,6 +437,8 @@ function UploadListings() {
               .catch((error) => {
                 console.error("Error fetching appointment services:", error);
               });
+          }).catch((error) => {
+            console.error("Error fetching appointment details:", error);
           });
         }
 

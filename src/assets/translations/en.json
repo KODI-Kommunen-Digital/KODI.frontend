@@ -698,5 +698,10 @@
     "pleaseSelectLastName": "Please enter Last Name",
     "maximumNumOfService1": "You can only add a maximum of ",
     "maximumNumOfService2": " services.",
-    "costInEuros": "Cost € "
+    "costInEuros": "Cost € ",
+    "noSlotsAvailable": "No slots available for this date",
+    "selectServiceMsg": "Please select a service and number of people",
+    "cannotFillMoreValidation": "Slots are filled",
+    "slotsLeft": "Slots left",
+    "bookingName": "Booking name"
 }

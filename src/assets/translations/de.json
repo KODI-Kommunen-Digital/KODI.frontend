@@ -709,5 +709,10 @@
     "pleaseSelectDuration": "Bitte geben Sie die Servicedauer ein",
     "maximumNumOfService1": "Sie können maximal hinzufügen ",
     "maximumNumOfService2": " Dienstleistungen.",
-    "costInEuros": "Kosten € "
+    "costInEuros": "Kosten € ",
+    "noSlotsAvailable": "Für dieses Datum sind keine Plätze verfügbar",
+    "selectServiceMsg": "Bitte wählen Sie eine Dienstleistung aus",
+    "cannotFillMoreValidation": "Die Plätze sind besetzt",
+    "slotsLeft": "Slots kostenlos",
+    "bookingName": "Buchungsname"
 }

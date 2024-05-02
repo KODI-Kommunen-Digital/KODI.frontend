@@ -22,11 +22,7 @@ const MyBookings = () => {
   }, [pageNumber]);
 
   useEffect(() => {
-    if (pageNumber === 1) {
-      fetchUserBookings();
-    } else {
-      fetchUserBookings();
-    }
+    fetchUserBookings();
   }, [fetchUserBookings, pageNumber]);
 
   const navigate = useNavigate();
@@ -82,27 +78,17 @@ const MyBookings = () => {
                     className="px-6 sm:px-6 py-3"
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
+                      width: "20%",
                     }}
                   >
-                    {t("serviceName")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("duration")}
+                    {t("bookingName")}
                   </th>
                   <th
                     scope="col"
                     className="px-6 sm:px-6 py-3 text-center "
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
+                      width: "20%",
                     }}
                   >
                     {t("from")}
@@ -113,7 +99,7 @@ const MyBookings = () => {
                     className="px-6 sm:px-6 py-3 text-center "
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
+                      width: "20%",
                     }}
                   >
                     {t("to")}
@@ -124,7 +110,7 @@ const MyBookings = () => {
                     className="px-6 sm:px-6 py-3 text-center "
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
+                      width: "20%",
                     }}
                   >
                     {t("action")}
@@ -142,21 +128,6 @@ const MyBookings = () => {
                         scope="row"
                         className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
                       >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            booking.image
-                              ? process.env.REACT_APP_BUCKET_HOST + booking.image
-                              : process.env.REACT_APP_BUCKET_HOST +
-                              "admin/DefaultForum.jpeg"
-                          }
-                          onClick={() =>
-                            navigateTo(
-                              `/Forum?forumId=${booking.bookingId}`
-                            )
-                          }
-                          alt="avatar"
-                        />
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
                             className="font-medium text-gray-500 cursor-pointer text-center truncate"
@@ -173,25 +144,31 @@ const MyBookings = () => {
                       </th>
 
                       <td
-                        className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                        className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {booking.duration}
+                        {new Date(booking.startTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </td>
 
                       <td
                         className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {booking.startTime}
+                        {new Date(booking.endTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </td>
 
-                      <td
-                        className="px-6 py-4  text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {booking.endTime}
-                      </td>
                       <td className="px-6 py-4  text-center">
                         <div>
                           <a

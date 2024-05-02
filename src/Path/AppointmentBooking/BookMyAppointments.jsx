@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
-import { getAppointmentServices } from "../../Services/appointmentBookingApi";
+import { getAppointmentServices, getAppointmentSlots } from "../../Services/appointmentBookingApi";
 import {
   getListingsById
 } from "../../Services/listingsApi";
@@ -16,6 +16,7 @@ import Footer from "../../Components/Footer";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { generateDate, months } from "../../Components/util/calendar";
 import cn from "../../Components/util/cn";
+import moment from "moment";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
@@ -33,28 +34,34 @@ function BookMyAppointments() {
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
   const [timeSlotMinimumError, setTimeSlotMinimumError] = useState(false);
+  const [cannotFillMore, setCannotFillMore] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
   const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
   const [user, setUser] = useState();
   const [serviceData, setServiceData] = useState([]);
   const [listingData, setListingData] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
+  const [selectedServiceId, setSelectedServiceId] = useState(0);
+  const [maxBookingPerSlot, setMaxBookingPerSlot] = useState(0);
 
+  const todayDate = new Date().toISOString().slice(0, 10);
   const [bookingInput, setBookingInput] = useState({
     endTime: "",
     startTime: "",
-    date: currentDate,
+    remark: "",
+    date: todayDate,
     friends: [],
     guestDetails: {
       firstname: "",
       lastName: "",
-      description: "",
       emailId: ""
     }
   });
+  console.log(bookingInput)
 
   const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
@@ -65,7 +72,8 @@ function BookMyAppointments() {
   });
 
   const handleButtonClick = () => {
-    navigate(`/AppointmentBooking/BookAppointments/Summary?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`, { state: { bookingInput } });
+    const { service, numberOfPeople, ...bookingData } = bookingInput;
+    navigate(`/AppointmentBooking/BookAppointments/Summary?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`, { state: { bookingData } });
   };
 
   useEffect(() => {
@@ -92,6 +100,7 @@ function BookMyAppointments() {
     const listingId = searchParams.get("listingId");
     setListingId(listingId);
     setBookingInput((prevInput) => ({ ...prevInput }));
+    // console.log(...prevInput)
     if (listingId && cityId) {
       getListingsById(cityId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
@@ -108,6 +117,7 @@ function BookMyAppointments() {
             try {
               const serviceResponse = await getAppointmentServices(cityId, listingId, appointmentId);
               const serviceData = serviceResponse.data.data;
+
               setServiceData(serviceData);
             } catch (error) {
               console.error("Error fetching appointment or services:", error);
@@ -125,7 +135,6 @@ function BookMyAppointments() {
               firstname: user.firstname || "",
               lastName: user.lastname || "",
               emailId: user.email || "",
-              description: user.description || ""
             }
           }));
           setUser(user);
@@ -152,13 +161,6 @@ function BookMyAppointments() {
           friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({}))
         }));
       }
-
-      if (name === "service") {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("serviceId", value);
-        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
-        window.history.replaceState(null, null, newUrl);
-      }
     } else {
       if (index === 0) {
         setBookingInput((prev) => ({
@@ -183,6 +185,14 @@ function BookMyAppointments() {
       }
     }
     validateInput(name, value);
+  };
+
+  const handleRemarksChange = (e) => {
+    const { name, value } = e.target;
+    setBookingInput((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
   };
 
   const navigateTo = (path) => {
@@ -227,6 +237,7 @@ function BookMyAppointments() {
 
   const onServiceChange = (event) => {
     const selectedServiceId = event.target.value;
+    setSelectedServiceId(selectedServiceId)
     const selectedService = serviceData.find(
       (service) => service.id === parseInt(selectedServiceId)
     );
@@ -234,19 +245,50 @@ function BookMyAppointments() {
     if (selectedService) {
       setDuration(selectedService.duration);
     }
+    fetchTimeSlots(selectedServiceId);
   };
 
-  const handleTimeSelection = (time) => {
-    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+  const onDateChange = (date) => {
+    setSelectDate(moment(date)); // Convert date to moment object here
+    setBookingInput({
+      ...bookingInput,
+      date: moment(date).format("YYYY-MM-DD"),
+    });
+    fetchTimeSlots(selectedServiceId, moment(date).format("YYYY-MM-DD"));
+  };
+
+  const fetchTimeSlots = async (selectedServiceId, formattedDate) => {
+    const serviceId = selectedServiceId;
+    const date = formattedDate || todayDate;
+    if (serviceId && date) {
+      try {
+        const timeSlotResponse = await getAppointmentSlots(
+          cityId,
+          listingId,
+          appointmentId,
+          date,
+          serviceId
+        );
+        setTimeSlots(timeSlotResponse.data.data);
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchTimeSlots();
+  // }, [selectDate, bookingInput.service]);
+
+  const [slotsLeft, setSlotsLeft] = useState([]);
+
+  const handleTimeSelection = (time, slotIndex) => {
+    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople && selectedTimes.length < timeSlots[slotIndex].maxBookingPerSlot) {
 
       const startTime = time;
       const [startHour, startMinute] = time.split(':').map(Number);
-
-      // Calculate end time
       let endHour = startHour + Math.floor((startMinute + duration) / 60);
       let endMinute = (startMinute + duration) % 60;
-
-      // Formatting end time
       endHour = endHour.toString().padStart(2, '0');
       endMinute = endMinute.toString().padStart(2, '0');
       const endTime = `${endHour}:${endMinute}`;
@@ -287,13 +329,21 @@ function BookMyAppointments() {
 
       setSelectedTimes([...selectedTimes, time]);
       setSelectedCount(selectedCount + 1);
+      setMaxBookingPerSlot(timeSlots[slotIndex].maxBookingPerSlot)
+      setSlotsLeft(timeSlots[slotIndex].maxBookingPerSlot - (selectedCount + 1))
       setNumberError(false);
     } else if (selectedTimes.length >= 8) {
       setNumberError(true);
       setTimeSlotMinimumError(false);
+      setCannotFillMore(false);
     } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
       setNumberError(false);
       setTimeSlotMinimumError(true);
+      setCannotFillMore(false);
+    } else if (selectedTimes.length >= timeSlots[slotIndex].maxBookingPerSlot) {
+      setNumberError(false);
+      setTimeSlotMinimumError(false);
+      setCannotFillMore(true);
     }
   };
 
@@ -302,14 +352,15 @@ function BookMyAppointments() {
     updatedTimes.splice(index, 1);
     setSelectedTimes(updatedTimes);
     setSelectedCount(selectedCount - 1);
+    setSlotsLeft(maxBookingPerSlot - index)
     setNumberError(false);
   };
 
   return (
-    <section className="text-gray-600 bg-white body-font">
+    <section className="text-gray-600 bg-gray-100 body-font">
       <HomePageNavBar />
 
-      <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-gray-100 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
           <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
@@ -522,11 +573,7 @@ function BookMyAppointments() {
                                     "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
                                   )}
                                   onClick={() => {
-                                    setSelectDate(date);
-                                    setBookingInput({
-                                      ...bookingInput,
-                                      date: date.format("YYYY-MM-DD"),
-                                    });
+                                    onDateChange(date.toDate());
                                   }}
                                 >
                                   {date.date()}
@@ -549,41 +596,41 @@ function BookMyAppointments() {
                 <h1 className="text-lg text-center font-semibold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
-                <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {Array.from({ length: 24 * 2 }).map((_, index) => {
-                      const time = dayjs()
-                        .hour(8)
-                        .minute(0)
-                        .add(index * 60, "minutes");
-                      return (
-                        <div
-                          key={index}
-                          className={cn(
-                            "p-2 rounded-full border cursor-pointer transition-all",
-                            "hover:bg-gray-200",
-                            "select-none",
-                            selectedTimes.includes(time.format("HH:mm")) &&
-                            "border-blue-400 text-blue-400"
-                          )}
-                          onClick={() =>
-                            handleTimeSelection(time.format("HH:mm"))
-                          }
-                        >
-                          {time.format("HH:mm")}
+
+                {!selectedServiceId ? (
+                  <p className="h-[40px] text-emerald-500 text-center">{t("selectServiceMsg")}</p>
+                ) : (
+                  timeSlots.length === 0 ? (
+                    <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
+                  ) : (
+                    timeSlots.map(slot => (
+                      <div key={slot.serviceId} className="time-selection-container overflow-y-auto max-h-[100px]">
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {slot.openingHours.map((openingHour, index) => (
+                            <div key={index} onClick={() => handleTimeSelection(openingHour.startTime, index)} className="bg-gray-200 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                              <p>{openingHour.startTime}</p>
+                              <p className="text-xs">{selectedTimes.length === 0 ? slot.maxBookingPerSlot : slotsLeft} {t("slotsLeft")}</p>
+                            </div>
+                          ))}
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                      </div>
+                    ))
+                  )
+                )}
+
                 {numberError && (
-                  <div className="text-red-500 text-center mt-2">
+                  <div className="text-red-600 text-center mt-2">
                     {t("timeSlotMaxValidation")}
                   </div>
                 )}
                 {timeSlotMinimumError && (
                   <div className="text-red-500 text-center mt-2">
                     {t("timeSlotNumberValidation")}
+                  </div>
+                )}
+                {cannotFillMore && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("cannotFillMoreValidation")}
                   </div>
                 )}
 
@@ -593,7 +640,7 @@ function BookMyAppointments() {
                   <h2 className="text-lg text-center font-semibold mb-4">
                     {t("selectedSlots")}
                   </h2>
-                  <ul className="mb-2 grid grid-cols-2 text-center gap-2">
+                  <ul className="mb-2 grid grid-cols-1 md:grid-cols-2 text-center gap-2">
                     {selectedTimes.map((time, index) => (
                       <li
                         key={index}
@@ -601,11 +648,11 @@ function BookMyAppointments() {
                       >
                         <span style={{ fontWeight: "bold" }}>{` ${index + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full border cursor-pointer border-emerald-500 text-emerald-500">
+                        <span className="p-2 rounded-full cursor-pointer bg-emerald-500 font-semibold text-white">
                           {time}
                         </span>
                         <button
-                          className="ml-0 text-red-500"
+                          className="ml-0 text-red-600"
                           onClick={() => handleDeleteSlot(index)}
                         >
                           <svg
@@ -631,10 +678,10 @@ function BookMyAppointments() {
         </div>
 
         {/* User details box */}
-        <div className={`text-center gap-4 w-full`}>
+        <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
           {Array.from({ length: selectedCount }, (_, index) => (
             <div key={index} className="mt-4">
-              <div className="items-center justify-between border border-gray-300 rounded p-4">
+              <div className="bg-gray-200 items-center justify-between rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <img
@@ -737,45 +784,31 @@ function BookMyAppointments() {
                   >
                     {bookingError.emailId}
                   </div>
-
-                  {index === 0 && (
-                    <>
-                      <input
-                        type="text"
-                        id={`description`}
-                        name={`description`}
-                        value={
-                          index === 0
-                            ? bookingInput.guestDetails?.description || ""
-                            : bookingInput.description || ""
-                        }
-                        onChange={(e) => onInputChange(e, index)}
-                        // onBlur={(e) => validateInput(e)}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                        placeholder={t("remarks")}
-                      />
-                      <div
-                        className="h-[24px] text-red-600"
-                        style={{
-                          visibility: bookingError.description ? "visible" : "hidden",
-                        }}
-                      >
-                        {bookingError.description}
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
           ))}
+
+          <div className="flex flex-col mt-14">
+            <label className="mb-2 font-bold text-lg text-gray-600" htmlFor="comment">{t("remarks")}</label>
+            <textarea
+              rows="4"
+              className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] border-2 border-black"
+              id="comment"
+              name="remark"
+              value={bookingInput.remark}
+              onChange={handleRemarksChange}
+            ></textarea>
+          </div>
+
         </div>
       </div>
 
-      <div className="bg-white h-full items-center py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
-        <div className="py-2 mt-1 px-o">
+      <div className="bg-gray-100 h-full items-center py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="py-2 mt-1 px-0">
           <a
             onClick={handleButtonClick}
-            className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group">
+            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group">
             <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
@@ -791,7 +824,7 @@ function BookMyAppointments() {
       <div className="bottom-0 w-full">
         <Footer />
       </div>
-    </section>
+    </section >
   );
 }
 
