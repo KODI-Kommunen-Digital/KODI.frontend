@@ -19,7 +19,7 @@ function BookingSuccessConfirmation() {
     <section className="text-gray-600 bg-white body-font relative">
       <HomePageNavBar />
       <div className="md:mt-40 mt-40 mb-20 p-6">
-        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-xl">
+        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
           <div className="flex flex-col items-center mb-4 justify-center gap-4">
             <FiCheckCircle className="text-green-500 mr-2" size={40} />
             <h2 className="font-sans font-semibold text-black mb-1 text-3xl title-font">

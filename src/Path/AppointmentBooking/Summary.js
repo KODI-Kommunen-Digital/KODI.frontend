@@ -11,7 +11,7 @@ const Summary = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [updating, setUpdating] = useState(false);
-  const bookingInput = state.bookingInput;
+  const bookingData = state.bookingData;
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
@@ -41,7 +41,7 @@ const Summary = () => {
 
     try {
       setUpdating(true);
-      const response = await createBookings(cityId, listingId, appointmentId, bookingInput);
+      const response = await createBookings(cityId, listingId, appointmentId, bookingData);
       console.log("Booking created:", response);
       setUpdating(false);
       navigate("/AppointmentBooking/BookAppointments/BookingSuccessConfirmation");
@@ -52,13 +52,13 @@ const Summary = () => {
     }
   };
 
-  console.log(bookingInput)
+  console.log(bookingData)
 
   return (
-    <section className="bg-white body-font relative">
+    <section className="bg-gray-100 body-font relative">
       <HomePageNavBar />
 
-      <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-gray-100 h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
           <p className="font-sans font-bold text-purple-900  mb-1 text-4xl title-font text-center">
             {t("summaryBooking")}
@@ -69,20 +69,20 @@ const Summary = () => {
           <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
             <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
               <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                {bookingInput.guestDetails.firstname + " " + bookingInput.guestDetails.lastName}
+                {bookingData.guestDetails.firstname + " " + bookingData.guestDetails.lastName}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                {bookingInput.guestDetails.emailId}
+                {bookingData.guestDetails.emailId}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                {bookingInput.guestDetails.description}
+                {bookingData.guestDetails.description}
               </p>
             </div>
           </div>
         </div>
 
         {/* Friends Details */}
-        {bookingInput.friends.map((friend, index) => (
+        {bookingData.friends.map((friend, index) => (
           <div key={index} className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
             <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
               <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
@@ -98,12 +98,12 @@ const Summary = () => {
         ))}
       </div>
 
-      <div className="bg-white h-full items-center mt-0 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-gray-100 h-full items-center mt-0 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="py-2 mt-1 px-0">
           <a
             onClick={handleSubmit}
             disabled={updating}
-            className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group">
+            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group">
             <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
@@ -138,17 +138,16 @@ const Summary = () => {
 };
 
 Summary.propTypes = {
-  bookingInput: PropTypes.object.isRequired,
+  bookingData: PropTypes.object.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
-      bookingInput: PropTypes.shape({
+      bookingData: PropTypes.shape({
         categoryId: PropTypes.number,
         bookingId: PropTypes.number,
         endTime: PropTypes.arrayOf(PropTypes.string),
         startTime: PropTypes.arrayOf(PropTypes.string),
         date: PropTypes.string,
         numberOfPeople: PropTypes.string,
-        service: PropTypes.string,
         friends: PropTypes.arrayOf(
           PropTypes.shape({
             firstName: PropTypes.string,
