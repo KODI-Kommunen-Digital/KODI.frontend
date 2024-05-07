@@ -172,7 +172,7 @@ const MyBookings = () => {
                       <td className="px-6 py-4  text-center">
                         <div>
                           <a
-                            className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                            className="font-medium text-red-700 hover:text-red-600 hover:underline cursor-pointer text-center"
                             onClick={() => deleteForumOnClick(booking)}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                           >

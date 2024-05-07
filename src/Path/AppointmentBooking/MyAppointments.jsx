@@ -101,16 +101,6 @@ const MyAppointments = () => {
                   </th>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("duration")}
-                  </th>
-                  <th
-                    scope="col"
                     className="px-6 sm:px-6 py-3 text-center "
                     style={{
                       fontFamily: "Poppins, sans-serif",
@@ -193,29 +183,34 @@ const MyAppointments = () => {
                       </td>
 
                       <td
-                        className="px-6 py-4 font-bold text-center"
+                        className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {appointment.duration}
+                        {new Date(appointment.startTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </td>
 
                       <td
-                        className="px-6 py-4 font-bold text-center"
+                        className="px-6 py-4  text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {appointment.startTime}
-                      </td>
-
-                      <td
-                        className="px-6 py-4 font-bold text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {appointment.endTime}
+                        {new Date(appointment.endTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </td>
                       <td className="px-6 py-4  text-center">
                         <div>
                           <a
-                            className="font-bold hover:underline cursor-pointer text-center text-red-700 hover:text-red-600"
+                            className="hover:underline cursor-pointer text-center text-red-700 hover:text-red-600"
                             onClick={() => deleteAppointmentOnClick(appointment)}
                             style={{
                               fontFamily: "Poppins, sans-serif",

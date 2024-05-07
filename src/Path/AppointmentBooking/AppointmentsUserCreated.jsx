@@ -86,7 +86,7 @@ const AppointmentsUserCreated = () => {
                                         className="px-6 sm:px-6 py-3"
                                         style={{
                                             fontFamily: "Poppins, sans-serif",
-                                            width: "16.66%",
+                                            width: "33.33%",
                                         }}
                                     >
                                         {t("serviceName")}
@@ -96,7 +96,7 @@ const AppointmentsUserCreated = () => {
                                         className="px-6 sm:px-6 py-3 text-center"
                                         style={{
                                             fontFamily: "Poppins, sans-serif",
-                                            width: "16.66%",
+                                            width: "33.33%",
                                         }}
                                     >
                                         {t("duration")}
@@ -107,7 +107,7 @@ const AppointmentsUserCreated = () => {
                                         className="px-6 sm:px-6 py-3 text-center "
                                         style={{
                                             fontFamily: "Poppins, sans-serif",
-                                            width: "16.66%",
+                                            width: "33.33%",
                                         }}
                                     >
                                         {t("action")}
@@ -156,16 +156,22 @@ const AppointmentsUserCreated = () => {
                                             </th>
 
                                             <td
-                                                className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                                                className="px-6 py-4  text-center"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {service.startDate}
+                                                {new Date(service.startDate).toLocaleString("en-US", {
+                                                    year: "numeric",
+                                                    month: "2-digit",
+                                                    day: "2-digit",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
                                             </td>
 
                                             <td className="px-6 py-4  text-center">
                                                 <div>
                                                     <a
-                                                        className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
+                                                        className="font-medium text-red-700 hover:text-red-600 hover:underline cursor-pointer text-center"
                                                         onClick={() => deleteForumOnClick(service)}
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
