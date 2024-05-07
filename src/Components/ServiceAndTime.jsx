@@ -581,8 +581,6 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
                               </div>
                               <div className="flex space-x-2 mt-0 items-center">
                                 <div className="relative">
-
-
                                   <input
                                     type="time"
                                     id="startTime"
