@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getUserBookings, deleteUserBooking } from "../../Services/appointmentBookingApi";
+import { getListings } from "../../Services/listingsApi";
 
 const MyBookings = () => {
   const { t } = useTranslation();
@@ -12,13 +13,33 @@ const MyBookings = () => {
   const pageSize = 9;
 
   const fetchUserBookings = useCallback(() => {
-    // const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
     getUserBookings({
       pageNumber,
       pageSize,
     }).then((response) => {
-      setUserBookings(response.data.data);
-    });
+      const bookings = response.data.data;
+
+      getListings().then((listingsResponse) => {
+        const listings = listingsResponse.data.data;
+        if (listings.length > 0) {
+          const bookingsWithListings = bookings.map(booking => {
+            const matchingListing = listings.find(listing => listing.appointmentId === booking.appointmentId);
+            if (matchingListing) {
+              return { ...booking, cityId: matchingListing.cityId, listingId: matchingListing.id };
+            } else {
+              return booking;
+            }
+          });
+
+          setUserBookings(bookingsWithListings);
+        }
+      }).catch((error) => {
+        console.error("Error fetching listings:", error);
+      });
+    })
+      .catch((error) => {
+        console.error("Error fetching appointments:", error);
+      });
   }, [pageNumber]);
 
   useEffect(() => {
@@ -39,12 +60,13 @@ const MyBookings = () => {
     onCancel: () => { },
   });
 
-  function handleDelete(bookings) {
-    deleteUserBooking(bookings.cityId, bookings.id)
+  function handleDelete(booking) {
+    console.log("Appointments with Listings:", booking);
+    deleteUserBooking(booking.cityId, booking.listingId, booking.appointmentId, booking.id)
       .then((res) => {
         getUserBookings(
           bookings.filter(
-            (b) => b.cityId !== bookings.cityId || b.bookingId !== bookings.id
+            (b) => b.cityId !== booking.cityId || b.listingId !== booking.listingId || b.appointmentId !== booking.appointmentId || b.id !== booking.id
           )
         );
         console.log("Deleted successfully");
@@ -55,11 +77,11 @@ const MyBookings = () => {
       .catch((error) => console.log(error));
   }
 
-  function deleteForumOnClick(bookings) {
+  function deleteForumOnClick(booking) {
     setShowConfirmationModal({
       visible: true,
-      bookings,
-      onConfirm: () => handleDelete(bookings),
+      booking,
+      onConfirm: () => handleDelete(booking),
       onCancel: () => setShowConfirmationModal({ visible: false }),
     });
   }

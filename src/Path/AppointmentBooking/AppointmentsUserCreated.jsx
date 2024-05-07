@@ -3,25 +3,44 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getAppointmentsUserCreated, deleteMyServices } from "../../Services/appointmentBookingApi";
+import { getAppointmentsUserCreated, deleteAppointments } from "../../Services/appointmentBookingApi";
+import { getListings } from "../../Services/listingsApi";
 
 const AppointmentsUserCreated = () => {
     const { t } = useTranslation();
-    const [services, setMyServices] = useState([]);
+    const [appointments, setMyAppointments] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
 
     const fetchMyServices = useCallback(() => {
-        // const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
         getAppointmentsUserCreated({
             pageNumber,
             pageSize,
         })
             .then((response) => {
-                setMyServices(response.data.data);
+                const appointments = response.data.data;
+
+                getListings().then((listingsResponse) => {
+                    const listings = listingsResponse.data.data;
+                    if (listings.length > 0) {
+                        const appointmentsWithListings = appointments.map(appointment => {
+                            const matchingListing = listings.find(listing => listing.appointmentId === appointment.id);
+                            if (matchingListing) {
+                                return { ...appointment, cityId: matchingListing.cityId, listingId: matchingListing.id };
+                            } else {
+                                return appointment;
+                            }
+                        });
+
+                        setMyAppointments(appointmentsWithListings);
+                        // console.log("Appointments with Listings:", appointmentsWithListings);
+                    }
+                }).catch((error) => {
+                    console.error("Error fetching listings:", error);
+                });
             })
             .catch((error) => {
-                console.error("Error fetching services:", error);
+                console.error("Error fetching appointments:", error);
             });
     }, [pageNumber]);
 
@@ -47,12 +66,13 @@ const AppointmentsUserCreated = () => {
         onCancel: () => { },
     });
 
-    function handleDelete(services) {
-        deleteMyServices(services.cityId, services.id)
+    function handleDelete(appointment) {
+        console.log("Appointments with Listings:", appointment);
+        deleteAppointments(appointment.cityId, appointment.listingId, appointment.id)
             .then((res) => {
                 getAppointmentsUserCreated(
-                    services.filter(
-                        (s) => s.cityId !== services.cityId || s.serviceId !== services.id
+                    appointments.filter(
+                        (a) => a.cityId !== appointment.cityId || a.listingId !== appointment.listingId || a.id !== appointment.id
                     )
                 );
                 console.log("Deleted successfully");
@@ -63,11 +83,11 @@ const AppointmentsUserCreated = () => {
             .catch((error) => console.log(error));
     }
 
-    function deleteForumOnClick(services) {
+    function deleteForumOnClick(appointment) {
         setShowConfirmationModal({
             visible: true,
-            services,
-            onConfirm: () => handleDelete(services),
+            appointment,
+            onConfirm: () => handleDelete(appointment),
             onCancel: () => setShowConfirmationModal({ visible: false }),
         });
     }
@@ -115,7 +135,7 @@ const AppointmentsUserCreated = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {services.map((service, index) => {
+                                {appointments.map((appointment, index) => {
                                     return (
                                         <tr
                                             key={index}
@@ -128,14 +148,14 @@ const AppointmentsUserCreated = () => {
                                                 <img
                                                     className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                     src={
-                                                        service.image
-                                                            ? process.env.REACT_APP_BUCKET_HOST + service.image
+                                                        appointment.image
+                                                            ? process.env.REACT_APP_BUCKET_HOST + appointment.image
                                                             : process.env.REACT_APP_BUCKET_HOST +
                                                             "admin/DefaultForum.jpeg"
                                                     }
                                                     onClick={() =>
                                                         navigateTo(
-                                                            `/Forum?forumId=${service.serviceId}`
+                                                            `/Listing?listingId=${appointment.listingId}&cityId=${appointment.cityId}&appointmentId=${appointment.id}`
                                                         )
                                                     }
                                                     alt="avatar"
@@ -146,11 +166,11 @@ const AppointmentsUserCreated = () => {
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                         onClick={() =>
                                                             navigateTo(
-                                                                `/Forum?forumId=${service.serviceId}`
+                                                                `/Listing?listingId=${appointment.listingId}&cityId=${appointment.cityId}&appointmentId=${appointment.id}`
                                                             )
                                                         }
                                                     >
-                                                        {service.title}
+                                                        {appointment.title}
                                                     </div>
                                                 </div>
                                             </th>
@@ -159,7 +179,7 @@ const AppointmentsUserCreated = () => {
                                                 className="px-6 py-4  text-center"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {new Date(service.startDate).toLocaleString("en-US", {
+                                                {new Date(appointment.startDate).toLocaleString("en-US", {
                                                     year: "numeric",
                                                     month: "2-digit",
                                                     day: "2-digit",
@@ -172,7 +192,7 @@ const AppointmentsUserCreated = () => {
                                                 <div>
                                                     <a
                                                         className="font-medium text-red-700 hover:text-red-600 hover:underline cursor-pointer text-center"
-                                                        onClick={() => deleteForumOnClick(service)}
+                                                        onClick={() => deleteForumOnClick(appointment)}
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
                                                         {t("delete")}
@@ -273,7 +293,7 @@ const AppointmentsUserCreated = () => {
                             {t("page")} {pageNumber}
                         </span>
 
-                        {services.length >= pageSize && (
+                        {appointments.length >= pageSize && (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                 onClick={() => setPageNumber(pageNumber + 1)}
