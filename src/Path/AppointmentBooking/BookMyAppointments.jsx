@@ -354,10 +354,10 @@ function BookMyAppointments() {
   };
 
   return (
-    <section className="text-slate-800 bg-neutral-400 body-font">
+    <section className="text-slate-800 bg-white body-font">
       <HomePageNavBar />
 
-      <div className="bg-neutral-400 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
           <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
@@ -686,7 +686,7 @@ function BookMyAppointments() {
       </div>
 
       {/* User details box */}
-      <div className="bg-red-600">
+      <div className="bg-stone-700">
         <div className="h-full items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
             {Array.from({ length: selectedCount }, (_, index) => (
@@ -820,7 +820,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="bg-red-600 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="bg-stone-700 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className="py-2 mt-1 px-0">
             <a
               onClick={handleButtonClick}
