@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
+const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -104,7 +104,7 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
   const handleAddService = () => {
     setAppointmentInput((prevInput) => {
       const { services } = prevInput;
-      const { maxBookingPerSlot } = 5;
+      const maxBookingPerSlot = 5;
 
       if (services.length >= maxBookingPerSlot) {
         setIsValidServiceCount(false);
@@ -136,12 +136,24 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
       services: prevInput.services.filter((_, index) => index !== indexToDelete),
     }));
   };
+  // const [isCheckedList, setIsCheckedList] = useState(
+  //   appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
+  // );
+
+  // const [isChecked, setIsChecked] = useState(
+  //   appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
+  // );
+
   const [isCheckedList, setIsCheckedList] = useState(
-    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
+    appointmentInput.services
+      ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+      : []
   );
 
   const [isChecked, setIsChecked] = useState(
-    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
+    appointmentInput.services
+      ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+      : []
   );
 
   const handleCheckboxChange = (index) => {
@@ -157,8 +169,11 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
       const { services } = prevInput;
       const updatedServices = [...services];
       const currentService = updatedServices[index];
-      console.log(currentService)
 
+      if (currentService.slotSameAsAppointment) {
+        updatedCheckedList[index] = true;
+      }
+      console.log(currentService.slotSameAsAppointment)
       if (updatedCheckedList[index]) {
         // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
