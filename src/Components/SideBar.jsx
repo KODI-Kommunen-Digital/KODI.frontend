@@ -4,7 +4,6 @@ import logo from "../assets/HEIDI_Logo_Landscape.png";
 import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
-import { role } from "../Constants/role";
 
 function SideBar() {
   const { t } = useTranslation();
