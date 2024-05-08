@@ -359,7 +359,7 @@ function BookMyAppointments() {
 
       <div className="bg-neutral-400 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-zinc-600 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
+          <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
@@ -508,7 +508,7 @@ function BookMyAppointments() {
         <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
           <div className="lg:w-2/3 rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-zinc-600 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+              <div className="bg-stone-700 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -590,7 +590,7 @@ function BookMyAppointments() {
 
           <div className="w-2/3 lg:w-1/3 mx-auto">
             <div className="grid grid-cols-1 gap-4 col-span-1">
-              <div className="bg-zinc-600 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+              <div className="bg-stone-700 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
                 {/* border-2 border-black */}
                 <h1 className="text-lg text-center text-white font-bold mb-4">
                   {selectDate.toDate().toDateString()}
@@ -686,7 +686,7 @@ function BookMyAppointments() {
       </div>
 
       {/* User details box */}
-      <div className="bg-zinc-600">
+      <div className="bg-red-600">
         <div className="h-full items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
             {Array.from({ length: selectedCount }, (_, index) => (
@@ -820,7 +820,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="bg-zinc-600 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="bg-red-600 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className="py-2 mt-1 px-0">
             <a
               onClick={handleButtonClick}
