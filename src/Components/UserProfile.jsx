@@ -55,7 +55,7 @@ function UserProfile({ user }) {
     }
   };
   return (
-    <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-72 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+    <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-64 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
       <div
         onClick={() =>
           navigateTo(
@@ -91,7 +91,7 @@ function UserProfile({ user }) {
         </div>
         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
           <h2
-            className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-700'} text-lg title-font mb-2 font-bold`}
+            className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-700'} text-lg title-font mb-2 font-bold truncate`}
             style={{
               fontFamily: "Poppins, sans-serif",
             }}
@@ -99,7 +99,7 @@ function UserProfile({ user }) {
             {user?.firstname + " " + user?.lastname}
           </h2>
           <p
-            className="leading-relaxed text-base font-bold"
+            className="leading-relaxed text-base font-bold truncate"
             style={{
               fontFamily: "Poppins, sans-serif",
             }}
@@ -109,7 +109,7 @@ function UserProfile({ user }) {
         </div>
       </div>
 
-      <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-6 mb-2 flex flex-wrap gap-1">
+      <div className="bg-white lg:justify-start justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-2 mb-2 flex flex-wrap gap-1">
         {userSocial &&
           Object.entries(userSocial).map(([key, value]) => (
             <div key={key} className="flex py-1 px-1 mx-0 my-0 gap-2">
