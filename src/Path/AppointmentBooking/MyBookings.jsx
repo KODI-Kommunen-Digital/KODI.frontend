@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../../Components/SideBar";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getUserBookings, deleteUserBooking } from "../../Services/appointmentBookingApi";
@@ -46,13 +45,6 @@ const MyBookings = () => {
     fetchUserBookings();
   }, [fetchUserBookings, pageNumber]);
 
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     forums: null,
@@ -97,13 +89,13 @@ const MyBookings = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3"
+                    className="px-6 sm:px-6 py-3 text-center "
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "20%",
                     }}
                   >
-                    {t("bookingName")}
+                    {t("bookingId")}
                   </th>
                   <th
                     scope="col"
@@ -148,25 +140,18 @@ const MyBookings = () => {
                     >
                       <th
                         scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                        className="px-6 py-4 text-center"
                       >
-                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                          <div
-                            className="font-medium text-gray-500 cursor-pointer text-center truncate"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                            onClick={() =>
-                              navigateTo(
-                                `/Forum?forumId=${booking.bookingId}`
-                              )
-                            }
-                          >
-                            {booking.bookingName}
-                          </div>
+                        <div
+                          className="font-medium text-blue-600 cursor-pointer text-center truncate"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {`MBK${booking.id.toString().padStart(6, '0')}`}
                         </div>
                       </th>
 
                       <td
-                        className="px-6 py-4  text-center"
+                        className="px-6 py-4 text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         {new Date(booking.startTime).toLocaleString("en-US", {
@@ -242,7 +227,7 @@ const MyBookings = () => {
                                       </h3>
                                       <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                          {t("doyoureallywanttodeleteListing")}
+                                          {t("doyoureallywanttodeleteBooking")}
                                         </p>
                                       </div>
                                     </div>

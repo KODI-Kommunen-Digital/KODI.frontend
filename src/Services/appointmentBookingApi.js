@@ -39,7 +39,7 @@ export async function getOwnerAppointments(params) {
 }
 
 export async function deleteUserAppointments(userId, appointmentId, bookingId) {
-    return axios.delete(`/v1/user/${userId}/appointments/${appointmentId}/booking/${bookingId}`);
+    return axios.delete(`/v1/users/${userId}/appointments/${appointmentId}/booking/${bookingId}`);
 }
 
 export async function createBookings(cityId, listingId, appointmentId, params) {

@@ -69,6 +69,8 @@
     "discoverMorePlaces": "Discover more places",
     "displayed_publicly": "This information will be displayed publicly, so be careful what you share",
     "doyoureallywanttodeleteListing": "Do you really want to delete this listing? This action cannot be reverted.",
+    "doyoureallywanttodeleteAppointment": "Do you really want to delete this appointment? This action cannot be reverted.",
+    "doyoureallywanttodeleteBooking": "Do you really want to delete this booking? This action cannot be reverted.",
     "doyoureallywanttodeleteAccount": "Do you really want to delete your Account? It will be deleted permanently.",
     "dragNDrop": "Drag & Drop",
     "ecocomy": "Economy",
@@ -703,5 +705,8 @@
     "selectServiceMsg": "Please select a service and number of people",
     "cannotFillMoreValidation": "Slots are filled",
     "slotsLeft": "Slots left",
-    "bookingName": "Booking name"
+    "bookingName": "Booking name",
+    "serviceId": "Service Id",
+    "bookingId": "Booking Id",
+    "pastDate": "Booking date is in the past"
 }

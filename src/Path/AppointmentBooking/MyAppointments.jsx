@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../../Components/SideBar";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
+import { getProfile } from "../../Services/usersApi";
 import { getOwnerAppointments, deleteUserAppointments } from "../../Services/appointmentBookingApi";
 
 const MyAppointments = () => {
@@ -10,14 +10,18 @@ const MyAppointments = () => {
   const [appointments, setOwnerAppointments] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 9;
+  const [userId, setUserId] = useState(0);
 
   const fetchAppointments = useCallback(() => {
-    // const userId = window.localStorage.getItem("userId") || window.sessionStorage.getItem("userId");
     getOwnerAppointments({
       pageNumber,
       pageSize,
     }).then((response) => {
       setOwnerAppointments(response.data.data);
+
+      getProfile().then((response) => {
+        setUserId(response.data.data.id);
+      });
     }).catch((error) => {
       console.error("Error fetching services:", error);
     });
@@ -31,13 +35,6 @@ const MyAppointments = () => {
     }
   }, [fetchAppointments, pageNumber]);
 
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     forums: null,
@@ -46,11 +43,11 @@ const MyAppointments = () => {
   });
 
   function handleDelete(appointment) {
-    deleteUserAppointments(appointment.cityId, appointment.forumId)
+    deleteUserAppointments(userId, appointment.appointmentId, appointment.id)
       .then((res) => {
         getOwnerAppointments(
           appointments.filter(
-            (a) => a.userId !== appointment.userId
+            (a) => a.appointmentId !== appointment.appointmentId || a.id !== appointment.id
           )
         );
         console.log("Deleted successfully");
@@ -81,13 +78,13 @@ const MyAppointments = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3"
+                    className="px-6 sm:px-6 py-3 text-center"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "16.66%",
                     }}
                   >
-                    {t("serviceName")}
+                    {t("serviceId")}
                   </th>
                   <th
                     scope="col"
@@ -98,6 +95,16 @@ const MyAppointments = () => {
                     }}
                   >
                     {t("client")}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 sm:px-6 py-3 text-center"
+                    style={{
+                      fontFamily: "Poppins, sans-serif",
+                      width: "16.66%",
+                    }}
+                  >
+                    {t("email")}
                   </th>
                   <th
                     scope="col"
@@ -142,44 +149,28 @@ const MyAppointments = () => {
                     >
                       <th
                         scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                        className="px-6 py-4 text-center"
                       >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            appointment.image
-                              ? process.env.REACT_APP_BUCKET_HOST + appointment.image
-                              : process.env.REACT_APP_BUCKET_HOST +
-                              "admin/DefaultForum.jpeg"
-                          }
-                          onClick={() =>
-                            navigateTo(
-                              `/Appointment?appointmentId=${appointment.appointmentId}&userId=${appointment.userId}`
-                            )
-                          }
-                          alt="avatar"
-                        />
-                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                          <div
-                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                            onClick={() =>
-                              navigateTo(
-                                `/Appointment?appointmentId=${appointment.appointmentId}&userId=${appointment.userId}`
-                              )
-                            }
-                          >
-                            {appointment.forumName}
-                          </div>
+                        <div
+                          className="font-medium text-blue-600 cursor-pointer text-center truncate"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {`MAP${appointment.id.toString().padStart(6, '0')}`}
                         </div>
                       </th>
 
                       <td
-                        className="font-bold text-blue-600 hover:underline cursor-pointer text-center"
+                        className="px-6 py-4 text-center truncate"
                         style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() => navigateTo("/ViewProfile")}
                       >
-                        {appointment.userName}
+                        {appointment.guest_details?.firstName + " " + appointment.guest_details?.lastName}
+                      </td>
+
+                      <td
+                        className="text-blue-600 hover:underline cursor-pointer text-center truncate"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                      >
+                        {appointment.guest_details?.email}
                       </td>
 
                       <td
@@ -260,7 +251,7 @@ const MyAppointments = () => {
                                       </h3>
                                       <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                          {t("doyoureallywanttodeleteListing")}
+                                          {t("doyoureallywanttodeleteBooking")}
                                         </p>
                                       </div>
                                     </div>

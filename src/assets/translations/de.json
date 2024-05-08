@@ -70,6 +70,8 @@
     "discoverMorePlaces": "In der Nähe",
     "displayed_publicly": "Hinweis: Diese Information wird öffentlich verfügbar sein.",
     "doyoureallywanttodeleteListing": "Möchten Sie diesen Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "doyoureallywanttodeleteAppointment": "Möchten Sie diesen Termin wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "doyoureallywanttodeleteBooking": "Möchten Sie diese Buchung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "doyoureallywanttodeleteAccount": "Möchten Sie Ihr Konto wirklich löschen? Es wird dauerhaft gelöscht.",
     "dragAndDropFile": "Klicke oder ziehe dein Bild hier rein",
     "dragNDrop": "Ziehen & Ablegen",
@@ -714,5 +716,8 @@
     "selectServiceMsg": "Bitte wählen Sie eine Dienstleistung aus",
     "cannotFillMoreValidation": "Die Plätze sind besetzt",
     "slotsLeft": "Slots kostenlos",
-    "bookingName": "Buchungsname"
+    "bookingName": "Buchungs name",
+    "serviceId": "Dienst-ID",
+    "bookingId": "Buchungs-ID",
+    "pastDate": "Das Buchungsdatum liegt in der Vergangenheit"
 }

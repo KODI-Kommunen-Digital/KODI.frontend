@@ -41,6 +41,8 @@ function BookMyAppointments() {
   const [serviceData, setServiceData] = useState([]);
   const [listingData, setListingData] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
+  const [, setAccessToken] = useState("");
+  const [, setRefreshToken] = useState("");
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
@@ -57,18 +59,17 @@ function BookMyAppointments() {
     friends: [],
     guestDetails: {
       firstname: "",
-      lastName: "",
-      emailId: ""
+      lastname: "",
+      email: ""
     }
   });
-  console.log(bookingInput)
 
   const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
     service: "",
     firstname: "",
-    lastName: "",
-    emailId: "",
+    lastname: "",
+    email: "",
   });
 
   const handleButtonClick = () => {
@@ -78,15 +79,6 @@ function BookMyAppointments() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
-      navigateTo("/login");
-    }
     const bookingId = searchParams.get("bookingId");
     getCategory().then((response) => {
       const catList = {};
@@ -126,19 +118,30 @@ function BookMyAppointments() {
         }
 
         const cityUserId = listingData.userId;
-        getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-          const user = res.data.data;
-          setBookingInput((prevInput) => ({
-            ...prevInput,
-            guestDetails: {
-              ...prevInput.guestDetails,
-              firstname: user.firstname || "",
-              lastName: user.lastname || "",
-              emailId: user.email || "",
-            }
-          }));
-          setUser(user);
-        });
+        const accessToken =
+          window.localStorage.getItem("accessToken") ||
+          window.sessionStorage.getItem("accessToken");
+        setAccessToken(accessToken)
+        const refreshToken =
+          window.localStorage.getItem("refreshToken") ||
+          window.sessionStorage.getItem("refreshToken");
+        setRefreshToken(refreshToken)
+        if (accessToken && refreshToken) {
+
+          getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+            const user = res.data.data;
+            setBookingInput((prevInput) => ({
+              ...prevInput,
+              guestDetails: {
+                ...prevInput.guestDetails,
+                firstname: user.firstname || "",
+                lastname: user.lastname || "",
+                email: user.email || "",
+              }
+            }));
+            setUser(user);
+          });
+        }
       });
     }
   }, []);
@@ -195,12 +198,6 @@ function BookMyAppointments() {
     }));
   };
 
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "service":
@@ -209,11 +206,11 @@ function BookMyAppointments() {
         return value.trim() === "" ? t("pleaseSelectNumberOfPeople") : "";
       case "firstname":
         return value.trim() === "" ? t("pleaseSelectFirstName") : "";
-      case "lastName":
+      case "lastname":
         return value.trim() === "" ? t("pleaseSelectLastName") : "";
       case "phone":
         return value.trim() === "" ? t("pleaseSelectPhone") : "";
-      case "emailId":
+      case "email":
         return value.trim() === "" ? t("pleaseSelectEmail") : "";
       default:
         return "";
@@ -357,16 +354,16 @@ function BookMyAppointments() {
   };
 
   return (
-    <section className="text-gray-600 bg-gray-100 body-font">
+    <section className="text-slate-800 bg-neutral-400 body-font">
       <HomePageNavBar />
 
-      <div className="bg-gray-100 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-neutral-400 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
+          <div className="md:grid md:gap-6 bg-zinc-600 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
-                  <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                  <h1 className="text-white mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                     <span
                       className="inline-block max-w-full break-words"
                       style={{
@@ -399,7 +396,7 @@ function BookMyAppointments() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 justify-between mt-6">
+                <div className="flex flex-wrap gap-1 justify-between mt-6 text-white">
                   <div>
                     <p
                       className="text-start font-bold"
@@ -412,7 +409,7 @@ function BookMyAppointments() {
                   </div>
 
                   <p
-                    className="leading-relaxed text-base font-bold"
+                    className="leading-relaxed text-base font-bold text-white"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
@@ -426,11 +423,12 @@ function BookMyAppointments() {
         </div>
 
         <div className="items-stretch py-5 px-4 px-4 w-full">
+          {/* border-2 border-black  */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="country"
-                className="block text-md font-medium text-gray-600"
+                className="block text-md font-medium text-slate-800"
                 style={{
                   fontFamily: "Poppins, sans-serif",
                 }}
@@ -447,7 +445,7 @@ function BookMyAppointments() {
                 }}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -470,7 +468,7 @@ function BookMyAppointments() {
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="numberOfPeople"
-                className="block text-md font-medium text-gray-600"
+                className="block text-md font-medium text-slate-800"
               >
                 {t("numberofPeople")} *
               </label>
@@ -481,7 +479,7 @@ function BookMyAppointments() {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -508,9 +506,9 @@ function BookMyAppointments() {
         </div>
 
         <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
-          <div className="lg:w-2/3 border-2 border-black rounded-lg">
+          <div className="lg:w-2/3 rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+              <div className="bg-zinc-600 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -523,7 +521,7 @@ function BookMyAppointments() {
                             }}
                           />
                           <h1
-                            className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
+                            className="select-none text-white font-semibold cursor-pointer hover:scale-105 transition-all font-bold"
                             onClick={() => {
                               setToday(currentDate);
                             }}
@@ -539,7 +537,7 @@ function BookMyAppointments() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-7 bg-black text-white rounded-lg">
+                      <div className="grid grid-cols-7 bg-black text-white rounded-lg font-bold">
                         {days.map((day, index) => {
                           return (
                             <h1
@@ -560,12 +558,12 @@ function BookMyAppointments() {
                                 id="date"
                                 name="date"
                                 key={index}
-                                className="p-2 text-center h-14 grid place-content-center text-sm border-t"
+                                className="p-2 text-center h-14 grid place-content-center text-sm font-bold"
                               >
                                 <h1
                                   className={cn(
-                                    currentMonth ? "" : "text-gray-400",
-                                    today ? "bg-red-600 text-white" : "",
+                                    currentMonth ? "text-white" : "text-slate-800",
+                                    today ? "bg-neutral-400 text-slate-800" : "",
                                     selectDate.toDate().toDateString() ===
                                       date.toDate().toDateString()
                                       ? "bg-black text-white"
@@ -592,13 +590,22 @@ function BookMyAppointments() {
 
           <div className="w-2/3 lg:w-1/3 mx-auto">
             <div className="grid grid-cols-1 gap-4 col-span-1">
-              <div className="bg-white mx-auto border-2 border-black rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
-                <h1 className="text-lg text-center font-semibold mb-4">
+              <div className="bg-zinc-600 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+                {/* border-2 border-black */}
+                <h1 className="text-lg text-center text-white font-bold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
 
+                {/* {selectDate.toDate() < new Date() && (
+                  <p className="h-[40px] text-red-600 text-center">
+                    Booking date is in the past.
+                  </p>
+                )} */}
+
                 {!selectedServiceId ? (
                   <p className="h-[40px] text-emerald-500 text-center">{t("selectServiceMsg")}</p>
+                ) : new Date(selectDate.toDate()).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) ? (
+                  <p className="h-[24px] text-red-600 text-center">{t("pastDate")}</p>
                 ) : (
                   timeSlots.length === 0 ? (
                     <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
@@ -607,7 +614,7 @@ function BookMyAppointments() {
                       <div key={slot.serviceId} className="time-selection-container overflow-y-auto max-h-[100px]">
                         <div className="flex flex-wrap gap-2 justify-center">
                           {slot.openingHours.map((openingHour, index) => (
-                            <div key={index} onClick={() => handleTimeSelection(openingHour.startTime, index)} className="bg-gray-200 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                            <div key={index} onClick={() => handleTimeSelection(openingHour.startTime, index)} className="bg-neutral-400 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
                               <p>{openingHour.startTime}</p>
                               <p className="text-xs">{selectedTimes.length === 0 ? slot.maxBookingPerSlot : slotsLeft} {t("slotsLeft")}</p>
                             </div>
@@ -634,10 +641,10 @@ function BookMyAppointments() {
                   </div>
                 )}
 
-                <div className="my-4 bg-gray-200 h-[1px]"></div>
+                <div className="my-4 bg-neutral-400 h-[1px]"></div>
 
                 <div className="mt-4">
-                  <h2 className="text-lg text-center font-semibold mb-4">
+                  <h2 className="text-lg text-white text-center font-bold mb-4">
                     {t("selectedSlots")}
                   </h2>
                   <ul className="mb-2 grid grid-cols-1 md:grid-cols-2 text-center gap-2">
@@ -648,7 +655,7 @@ function BookMyAppointments() {
                       >
                         <span style={{ fontWeight: "bold" }}>{` ${index + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full cursor-pointer bg-emerald-500 font-semibold text-white">
+                        <span className="p-2 rounded-full cursor-pointer bg-neutral-400 font-bold text-white">
                           {time}
                         </span>
                         <button
@@ -676,148 +683,158 @@ function BookMyAppointments() {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* User details box */}
-        <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
-          {Array.from({ length: selectedCount }, (_, index) => (
-            <div key={index} className="mt-4">
-              <div className="bg-gray-200 items-center justify-between rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <img
-                      src={PROFILEIMAGE}
-                      alt={`Profile Picture ${index}`}
-                      className="mr-2 w-6 h-6 rounded-full object-cover"
-                    />
-                    <h2 className="text-lg font-medium mb-0">
-                      {t("user")} {index + 1}
-                    </h2>
-                  </div>
-
-                  <button
-                    onClick={() => toggleUserDropdown(index)}
-                    className="ml-2 text-blue-500 focus:outline-none text-2xl"
-                  >
-                    {expandedUser === index ? "▼" : "►"}
-                  </button>
-                </div>
-
-                <div
-                  className={`${expandedUser === index ? "block" : "hidden"
-                    } mt-4 p-4`}
-                >
-
-                  <div className="relative mb-0 grid grid-cols-2 gap-2">
-                    <div className="relative mb-0">
-                      <input
-                        type="text"
-                        id={`firstname`}
-                        name={`firstname`}
-                        value={
-                          index === 0
-                            ? (bookingInput.guestDetails?.firstname || user.firstname || "")
-                            : (bookingInput?.friends[index - 1]?.firstname || "")
-                        }
-                        onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder={t("firstname")}
-                        required
+      {/* User details box */}
+      <div className="bg-zinc-600">
+        <div className="h-full items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+          <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
+            {Array.from({ length: selectedCount }, (_, index) => (
+              <div key={index} className="mt-4">
+                <div className="bg-white items-center justify-between rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <img
+                        src={PROFILEIMAGE}
+                        alt={`Profile Picture ${index}`}
+                        className="mr-2 w-6 h-6 rounded-full object-cover"
                       />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: bookingError.firstname ? "visible" : "hidden",
-                        }}
-                      >
-                        {bookingError.firstname}
-                      </div>
+                      <h2 className="text-lg font-medium mb-0">
+                        {t("user")} {index + 1}
+                      </h2>
                     </div>
 
-                    <div className="relative mb-0">
-                      <input
-                        type="text"
-                        id={`lastName`}
-                        name={`lastName`}
-                        value={
-                          index === 0
-                            ? (bookingInput.guestDetails?.lastName || user.lastname || "")
-                            : (bookingInput?.friends[index - 1]?.lastName || "")
-                        }
-                        onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
-                        placeholder={t("lastname")}
-                        required
-                      />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: bookingError.lastName ? "visible" : "hidden",
-                        }}
-                      >
-                        {bookingError.lastName}
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => toggleUserDropdown(index)}
+                      className="ml-2 text-blue-500 focus:outline-none text-2xl"
+                    >
+                      {expandedUser === index ? "▼" : "►"}
+                    </button>
                   </div>
 
-                  <input
-                    type="emailId"
-                    id={`emailId`}
-                    name={`emailId`}
-                    value={
-                      index === 0
-                        ? (bookingInput.guestDetails?.emailId || user.email || "")
-                        : (bookingInput?.friends[index - 1]?.emailId || "")
-                    }
-                    onChange={(e) => onInputChange(e, index)}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                    placeholder={t("email")}
-                    onBlur={(e) => validateInput(e)}
-                    required
-                  />
                   <div
-                    className="h-[24px] text-red-600 text-start"
-                    style={{
-                      visibility: bookingError.emailId ? "visible" : "hidden",
-                    }}
+                    className={`${expandedUser === index ? "block" : "hidden"
+                      } mt-4 p-4`}
                   >
-                    {bookingError.emailId}
+
+                    <div className="relative mb-0 grid grid-cols-2 gap-2">
+                      <div className="relative mb-0">
+                        <input
+                          type="text"
+                          id={`firstname`}
+                          name={`firstname`}
+                          // value={
+                          //   index === 0
+                          //     ? (bookingInput.guestDetails?.firstname || user.firstname || "")
+                          //     : (bookingInput?.friends[index - 1]?.firstname || "")
+                          // }
+                          value={
+                            index === 0
+                              ? (bookingInput.guestDetails?.firstname || user?.firstname || "")
+                              : (bookingInput?.friends[index - 1]?.firstname || "")
+                          }
+
+                          onChange={(e) => onInputChange(e, index)}
+                          onBlur={(e) => validateInput(e)}
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                          placeholder={t("firstname")}
+                          required
+                        />
+                        <div
+                          className="h-[24px] text-red-600 text-start"
+                          style={{
+                            visibility: bookingError.firstname ? "visible" : "hidden",
+                          }}
+                        >
+                          {bookingError.firstname}
+                        </div>
+                      </div>
+
+                      <div className="relative mb-0">
+                        <input
+                          type="text"
+                          id={`lastname`}
+                          name={`lastname`}
+                          value={
+                            index === 0
+                              ? (bookingInput.guestDetails?.lastname || user?.lastname || "")
+                              : (bookingInput?.friends[index - 1]?.lastname || "")
+                          }
+                          onChange={(e) => onInputChange(e, index)}
+                          onBlur={(e) => validateInput(e)}
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
+                          placeholder={t("lastname")}
+                          required
+                        />
+                        <div
+                          className="h-[24px] text-red-600 text-start"
+                          style={{
+                            visibility: bookingError.lastname ? "visible" : "hidden",
+                          }}
+                        >
+                          {bookingError.lastname}
+                        </div>
+                      </div>
+                    </div>
+
+                    <input
+                      type="email"
+                      id={`email`}
+                      name={`email`}
+                      value={
+                        index === 0
+                          ? (bookingInput.guestDetails?.email || user?.email || "")
+                          : (bookingInput?.friends[index - 1]?.email || "")
+                      }
+                      onChange={(e) => onInputChange(e, index)}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                      placeholder={t("email")}
+                      onBlur={(e) => validateInput(e)}
+                      required
+                    />
+                    <div
+                      className="h-[24px] text-red-600 text-start"
+                      style={{
+                        visibility: bookingError.email ? "visible" : "hidden",
+                      }}
+                    >
+                      {bookingError.email}
+                    </div>
                   </div>
                 </div>
               </div>
+            ))}
+
+            <div className="flex flex-col mt-4">
+              <label className="mb-2 font-bold text-lg text-white" htmlFor="comment">{t("remarks")}</label>
+              <textarea
+                rows="4"
+                className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]"
+                id="comment"
+                name="remark"
+                value={bookingInput.remark}
+                onChange={handleRemarksChange}
+              ></textarea>
             </div>
-          ))}
 
-          <div className="flex flex-col mt-14">
-            <label className="mb-2 font-bold text-lg text-gray-600" htmlFor="comment">{t("remarks")}</label>
-            <textarea
-              rows="4"
-              className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] border-2 border-black"
-              id="comment"
-              name="remark"
-              value={bookingInput.remark}
-              onChange={handleRemarksChange}
-            ></textarea>
           </div>
-
         </div>
-      </div>
 
-      <div className="bg-gray-100 h-full items-center py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
-        <div className="py-2 mt-1 px-0">
-          <a
-            onClick={handleButtonClick}
-            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group">
-            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </span>
-            <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("saveChanges")}</span>
-            <span className="relative invisible">
-              {t("saveChanges")}
-            </span>
-          </a>
+        <div className="bg-zinc-600 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+          <div className="py-2 mt-1 px-0">
+            <a
+              onClick={handleButtonClick}
+              className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
+              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </span>
+              <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("saveChanges")}</span>
+              <span className="relative invisible">
+                {t("saveChanges")}
+              </span>
+            </a>
 
+          </div>
         </div>
       </div>
 
