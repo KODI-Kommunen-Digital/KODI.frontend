@@ -125,5 +125,6 @@ const createInstance = (baseURL) => {
 // Create instances for different API endpoints using the createInstance function and export them
 const instance = createInstance(process.env.REACT_APP_API_BASE_URL);
 const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
+const appointmentInstance = createInstance(process.env.REACT_APP_API_APPOINTMENT_URL);
 
-export { instance, forumInstance };
+export { instance, forumInstance, appointmentInstance };

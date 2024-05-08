@@ -155,7 +155,7 @@ export default function SocialMedia({ setSocialMedia }) {
 														}}
 													/>
 												</div>
-												<div className="flex ml-2 mt-8">
+												<div className="flex ml-2 mt-8 hidden md:inline-block">
 													<button onClick={() => handleDelete(i)}>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
@@ -166,6 +166,12 @@ export default function SocialMedia({ setSocialMedia }) {
 														</svg>
 													</button>
 												</div>
+												<button
+													onClick={() => handleDelete(i)}
+													className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2 md:hidden sm:inline-block inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+												>
+													{t("delete")}
+												</button>
 											</div>
 										);
 									})}

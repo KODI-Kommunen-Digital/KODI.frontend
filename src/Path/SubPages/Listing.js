@@ -138,8 +138,11 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
+
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
+  const [appointmentId, setAppointmentId] = useState(0);
+  const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
     document.title =
@@ -162,6 +165,8 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
+    const appointmentId = searchParams.get("appointmentId");
+    setAppointmentId(appointmentId);
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -360,7 +365,6 @@ const Listing = () => {
                               {title}
                             </span>
                           </h1>
-
                         </div>
 
                         <div className="flex flex-wrap gap-1 justify-between mt-0">
