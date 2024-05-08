@@ -113,7 +113,7 @@ const App = () => {
               <Route
                 path="/IFrame"
                 element={
-                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID} />
+                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID || '1'} />
                 }
                 exact
               />

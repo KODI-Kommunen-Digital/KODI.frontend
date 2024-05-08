@@ -239,7 +239,7 @@ const AppointmentsUserCreated = () => {
                                                                             </h3>
                                                                             <div className="mt-2">
                                                                                 <p className="text-sm text-gray-500">
-                                                                                    {t("doyoureallywanttodeleteListing")}
+                                                                                    {t("doyoureallywanttodeleteAppointment")}
                                                                                 </p>
                                                                             </div>
                                                                         </div>

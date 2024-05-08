@@ -19,15 +19,15 @@ const Summary = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
-      navigate("/login");
-    }
+    // const accessToken =
+    //   window.localStorage.getItem("accessToken") ||
+    //   window.sessionStorage.getItem("accessToken");
+    // const refreshToken =
+    //   window.localStorage.getItem("refreshToken") ||
+    //   window.sessionStorage.getItem("refreshToken");
+    // if (!accessToken && !refreshToken) {
+    //   navigate("/login");
+    // }
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
@@ -69,10 +69,10 @@ const Summary = () => {
           <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
             <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
               <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                {bookingData.guestDetails.firstname + " " + bookingData.guestDetails.lastName}
+                {bookingData.guestDetails.firstname + " " + bookingData.guestDetails.lastname}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                {bookingData.guestDetails.emailId}
+                {bookingData.guestDetails.email}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
                 {bookingData.guestDetails.description}
@@ -87,10 +87,10 @@ const Summary = () => {
             <div className="lg:w-full border-2 border-purple-900 rounded-xl w-full h-full">
               <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
                 <p className="font-sans font-bold text-purple-900  mb-4 md:mb-1 text-md title-font">
-                  {friend.firstname + " " + friend.lastName}
+                  {friend.firstname + " " + friend.lastname}
                 </p>
                 <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
-                  {friend.emailId}
+                  {friend.email}
                 </p>
               </div>
             </div>
@@ -103,7 +103,7 @@ const Summary = () => {
           <a
             onClick={handleSubmit}
             disabled={updating}
-            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group">
+            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
             <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
@@ -151,7 +151,7 @@ Summary.propTypes = {
         friends: PropTypes.arrayOf(
           PropTypes.shape({
             firstName: PropTypes.string,
-            lastName: PropTypes.string,
+            lastname: PropTypes.string,
             email: PropTypes.string,
             phone: PropTypes.string,
             description: PropTypes.string
@@ -159,7 +159,7 @@ Summary.propTypes = {
         ),
         guestDetails: PropTypes.shape({
           firstName: PropTypes.string,
-          lastName: PropTypes.string,
+          lastname: PropTypes.string,
           email: PropTypes.string,
           phone: PropTypes.string,
           description: PropTypes.string

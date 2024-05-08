@@ -60,14 +60,8 @@ export async function getOwnerAppointments(params) {
     return axios.get(`/v1/users/${getUserId()}/owner/bookings`, params);
 }
 
-export async function deleteUserAppointments({
-    userId,
-    appointmentId,
-    bookingId,
-}) {
-    return axios.delete(
-        `/v1/user/${userId}/appointments/${appointmentId}/booking/${bookingId}`
-    );
+export async function deleteUserAppointments(userId, appointmentId, bookingId) {
+    return axios.delete(`/v1/users/${userId}/appointments/${appointmentId}/booking/${bookingId}`);
 }
 
 export async function createBookings(cityId, listingId, appointmentId, params) {
