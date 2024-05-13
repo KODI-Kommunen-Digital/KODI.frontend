@@ -272,9 +272,11 @@ function UploadListings() {
         valid = false;
       }
     }
+
     if (valid) {
       setUpdating(true);
       event.preventDefault();
+
       try {
         let response = await (newListing
           ? postListingsData(cityId, listingInput)
@@ -869,7 +871,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime newListing={newListing} appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
+          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
             appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (

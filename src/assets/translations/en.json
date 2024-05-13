@@ -720,5 +720,6 @@
     "bookingName": "Booking name",
     "serviceId": "Service Id",
     "bookingId": "Booking Id",
-    "pastDate": "Booking date is in the past"
+    "pastDate": "Booking date is in the past",
+    "timeValidation": "Start time cannot be the same as end time"
 }

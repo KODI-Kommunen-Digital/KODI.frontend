@@ -730,5 +730,6 @@
     "bookingName": "Buchungs name",
     "serviceId": "Dienst-ID",
     "bookingId": "Buchungs-ID",
-    "pastDate": "Das Buchungsdatum liegt in der Vergangenheit"
+    "pastDate": "Das Buchungsdatum liegt in der Vergangenheit",
+    "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein"
 }
