@@ -45,8 +45,8 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [, setStartDate] = useState([]);
-  const [, setEndDate] = useState([]);
+  // const [, setStartDate] = useState([]);
+  // const [, setEndDate] = useState([]);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -247,6 +247,8 @@ function UploadListings() {
     }],
   });
 
+  console.log(appointmentInput)
+
   const [appointmentError, setAppointmentError] = useState({
     name: "",
     duration: "",
@@ -270,9 +272,11 @@ function UploadListings() {
         valid = false;
       }
     }
+
     if (valid) {
       setUpdating(true);
       event.preventDefault();
+
       try {
         let response = await (newListing
           ? postListingsData(cityId, listingInput)
@@ -409,8 +413,8 @@ function UploadListings() {
         const listingData = listingsResponse.data.data;
         listingData.cityId = cityId;
         setListingInput(listingData);
-        setStartDate(listingData.startDate);
-        setEndDate(listingData.endDate);
+        // setStartDate(listingData.startDate);
+        // setEndDate(listingData.endDate);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
@@ -419,8 +423,8 @@ function UploadListings() {
         const listingId = listingData.id
         if (appointmentId) {
           getAppointments(cityId, listingId, appointmentId).then((appointmentResponse) => {
-            const appointmentData = appointmentResponse.data.data[0];
-            appointmentData.metadata = JSON.parse(appointmentData.metadata)
+            const appointmentData = appointmentResponse.data.data;
+            appointmentData.metadata = JSON.parse(appointmentData.metadata);
             setAppointmentInput(appointmentData);
 
             getAppointmentServices(cityId, listingId, appointmentId)
@@ -864,7 +868,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime newListing={newListing} appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
+          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
             appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (

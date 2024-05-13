@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
+const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -104,7 +104,7 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
   const handleAddService = () => {
     setAppointmentInput((prevInput) => {
       const { services } = prevInput;
-      const { maxBookingPerSlot } = 5;
+      const maxBookingPerSlot = 5;
 
       if (services.length >= maxBookingPerSlot) {
         setIsValidServiceCount(false);
@@ -136,6 +136,7 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
       services: prevInput.services.filter((_, index) => index !== indexToDelete),
     }));
   };
+
   const [isCheckedList, setIsCheckedList] = useState(
     appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
@@ -143,6 +144,18 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
   const [isChecked, setIsChecked] = useState(
     appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
+
+  // const [isCheckedList, setIsCheckedList] = useState(
+  //   appointmentInput.services
+  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+  //     : []
+  // );
+
+  // const [isChecked, setIsChecked] = useState(
+  //   appointmentInput.services
+  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+  //     : []
+  // );
 
   const handleCheckboxChange = (index) => {
     const updatedCheckedList = [...isCheckedList];
@@ -157,8 +170,10 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
       const { services } = prevInput;
       const updatedServices = [...services];
       const currentService = updatedServices[index];
-      console.log(currentService)
 
+      if (currentService.slotSameAsAppointment) {
+        updatedCheckedList[index] = true;
+      }
       if (updatedCheckedList[index]) {
         // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
@@ -189,14 +204,70 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
     });
   };
 
+  // const handleTimeChange = (day, index, key, value, dayIndex) => {
+  //   setAppointmentInput((prevInput) => {
+  //     if (editAppointmentTime) {
+  //       const updatedOpeningDates = {
+  //         ...prevInput.metadata.openingDates,
+  //         [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
+  //           i === dayIndex ? { ...slot, [key]: value } : slot
+  //         ),
+  //       };
+
+  //       return {
+  //         ...prevInput,
+  //         metadata: {
+  //           ...prevInput.metadata,
+  //           openingDates: updatedOpeningDates,
+  //         },
+  //       };
+  //     } else {
+  //       const updatedServices = prevInput.services.map((service, i) => {
+  //         if (i === editServiceIndex) {
+  //           const updatedOpeningDates = {
+  //             ...service.metadata.openingDates,
+  //             [day]: service.metadata.openingDates[day].map((slot, j) =>
+  //               j === dayIndex ? { ...slot, [key]: value } : slot
+  //             ),
+  //           };
+  //           return {
+  //             ...service,
+  //             metadata: {
+  //               ...service.metadata,
+  //               openingDates: updatedOpeningDates,
+  //             },
+  //           };
+  //         }
+  //         return service;
+  //       });
+
+  //       return {
+  //         ...prevInput,
+  //         services: updatedServices,
+  //       };
+  //     }
+  //   });
+  // };
+
   const handleTimeChange = (day, index, key, value, dayIndex) => {
     setAppointmentInput((prevInput) => {
       if (editAppointmentTime) {
         const updatedOpeningDates = {
           ...prevInput.metadata.openingDates,
-          [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
-            i === dayIndex ? { ...slot, [key]: value } : slot
-          ),
+          [day]: prevInput.metadata.openingDates[day].map((slot, i) => {
+            if (i === dayIndex) {
+              if (key === "startTime" && value === slot.endTime) {
+                alert(t("timeValidation"));
+                return slot;
+              }
+              if (key === "endTime" && value === slot.startTime) {
+                alert(t("timeValidation"));
+                return slot;
+              }
+              return { ...slot, [key]: value };
+            }
+            return slot;
+          }),
         };
 
         return {
@@ -211,9 +282,20 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
           if (i === editServiceIndex) {
             const updatedOpeningDates = {
               ...service.metadata.openingDates,
-              [day]: service.metadata.openingDates[day].map((slot, j) =>
-                j === dayIndex ? { ...slot, [key]: value } : slot
-              ),
+              [day]: service.metadata.openingDates[day].map((slot, j) => {
+                if (j === dayIndex) {
+                  if (key === "startTime" && value === slot.endTime) {
+                    alert(t("timeValidation"));
+                    return slot;
+                  }
+                  if (key === "endTime" && value === slot.startTime) {
+                    alert(t("timeValidation"));
+                    return slot;
+                  }
+                  return { ...slot, [key]: value };
+                }
+                return slot;
+              }),
             };
             return {
               ...service,
@@ -456,12 +538,14 @@ const ServiceAndTime = ({ newListing, appointmentInput, setAppointmentInput, app
                 </p>
               )}
             </div>
-            <button
-              onClick={() => handleDeleteService(serviceIndex)}
-              className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
-            >
-              {t("delete")}
-            </button>
+            {serviceIndex > 0 && (
+              <button
+                onClick={() => handleDeleteService(serviceIndex)}
+                className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
+              >
+                {t("delete")}
+              </button>
+            )}
             {showModal && (
               <div className="fixed z-50 inset-0 overflow-y-auto">
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
