@@ -136,25 +136,26 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       services: prevInput.services.filter((_, index) => index !== indexToDelete),
     }));
   };
-  // const [isCheckedList, setIsCheckedList] = useState(
-  //   appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
-  // );
-
-  // const [isChecked, setIsChecked] = useState(
-  //   appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
-  // );
 
   const [isCheckedList, setIsCheckedList] = useState(
-    appointmentInput.services
-      ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
-      : []
+    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
 
   const [isChecked, setIsChecked] = useState(
-    appointmentInput.services
-      ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
-      : []
+    appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
+
+  // const [isCheckedList, setIsCheckedList] = useState(
+  //   appointmentInput.services
+  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+  //     : []
+  // );
+
+  // const [isChecked, setIsChecked] = useState(
+  //   appointmentInput.services
+  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
+  //     : []
+  // );
 
   const handleCheckboxChange = (index) => {
     const updatedCheckedList = [...isCheckedList];
@@ -173,7 +174,6 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       if (currentService.slotSameAsAppointment) {
         updatedCheckedList[index] = true;
       }
-      console.log(currentService.slotSameAsAppointment)
       if (updatedCheckedList[index]) {
         // If the checkbox is checked, populate openingDates
         updatedServices[index] = {
@@ -204,14 +204,70 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
     });
   };
 
+  // const handleTimeChange = (day, index, key, value, dayIndex) => {
+  //   setAppointmentInput((prevInput) => {
+  //     if (editAppointmentTime) {
+  //       const updatedOpeningDates = {
+  //         ...prevInput.metadata.openingDates,
+  //         [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
+  //           i === dayIndex ? { ...slot, [key]: value } : slot
+  //         ),
+  //       };
+
+  //       return {
+  //         ...prevInput,
+  //         metadata: {
+  //           ...prevInput.metadata,
+  //           openingDates: updatedOpeningDates,
+  //         },
+  //       };
+  //     } else {
+  //       const updatedServices = prevInput.services.map((service, i) => {
+  //         if (i === editServiceIndex) {
+  //           const updatedOpeningDates = {
+  //             ...service.metadata.openingDates,
+  //             [day]: service.metadata.openingDates[day].map((slot, j) =>
+  //               j === dayIndex ? { ...slot, [key]: value } : slot
+  //             ),
+  //           };
+  //           return {
+  //             ...service,
+  //             metadata: {
+  //               ...service.metadata,
+  //               openingDates: updatedOpeningDates,
+  //             },
+  //           };
+  //         }
+  //         return service;
+  //       });
+
+  //       return {
+  //         ...prevInput,
+  //         services: updatedServices,
+  //       };
+  //     }
+  //   });
+  // };
+
   const handleTimeChange = (day, index, key, value, dayIndex) => {
     setAppointmentInput((prevInput) => {
       if (editAppointmentTime) {
         const updatedOpeningDates = {
           ...prevInput.metadata.openingDates,
-          [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
-            i === dayIndex ? { ...slot, [key]: value } : slot
-          ),
+          [day]: prevInput.metadata.openingDates[day].map((slot, i) => {
+            if (i === dayIndex) {
+              if (key === "startTime" && value === slot.endTime) {
+                alert(t("timeValidation"));
+                return slot;
+              }
+              if (key === "endTime" && value === slot.startTime) {
+                alert(t("timeValidation"));
+                return slot;
+              }
+              return { ...slot, [key]: value };
+            }
+            return slot;
+          }),
         };
 
         return {
@@ -226,9 +282,20 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
           if (i === editServiceIndex) {
             const updatedOpeningDates = {
               ...service.metadata.openingDates,
-              [day]: service.metadata.openingDates[day].map((slot, j) =>
-                j === dayIndex ? { ...slot, [key]: value } : slot
-              ),
+              [day]: service.metadata.openingDates[day].map((slot, j) => {
+                if (j === dayIndex) {
+                  if (key === "startTime" && value === slot.endTime) {
+                    alert(t("timeValidation"));
+                    return slot;
+                  }
+                  if (key === "endTime" && value === slot.startTime) {
+                    alert(t("timeValidation"));
+                    return slot;
+                  }
+                  return { ...slot, [key]: value };
+                }
+                return slot;
+              }),
             };
             return {
               ...service,
@@ -471,12 +538,14 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                 </p>
               )}
             </div>
-            <button
-              onClick={() => handleDeleteService(serviceIndex)}
-              className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
-            >
-              {t("delete")}
-            </button>
+            {serviceIndex > 0 && (
+              <button
+                onClick={() => handleDeleteService(serviceIndex)}
+                className="w-full hidden md:inline-block bg-red-800 mt-0 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
+              >
+                {t("delete")}
+              </button>
+            )}
             {showModal && (
               <div className="fixed z-50 inset-0 overflow-y-auto">
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

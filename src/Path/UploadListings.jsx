@@ -247,7 +247,7 @@ function UploadListings() {
     }],
   });
 
-  // console.log(appointmentInput)
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -272,9 +272,11 @@ function UploadListings() {
         valid = false;
       }
     }
+
     if (valid) {
       setUpdating(true);
       event.preventDefault();
+
       try {
         let response = await (newListing
           ? postListingsData(cityId, listingInput)
@@ -424,12 +426,9 @@ function UploadListings() {
             const appointmentData = appointmentResponse.data.data;
             appointmentData.metadata = JSON.parse(appointmentData.metadata);
             setAppointmentInput(appointmentData);
-            // console.log(appointmentData)
 
             getAppointmentServices(cityId, listingId, appointmentId)
               .then((servicesResponse) => {
-
-                // console.log(servicesResponse.data.data)
                 const servicesData = servicesResponse.data.data.map((item) => {
                   const metadata = JSON.parse(item.metadata);
                   return { ...item, metadata };
