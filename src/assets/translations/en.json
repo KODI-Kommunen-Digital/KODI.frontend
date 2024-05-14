@@ -655,5 +655,6 @@
     "FinalProvisions3": "",
     "visitWebsite": "Visit the website :",
     "moreService": "More Service",
-    "mehr": "More"
+    "mehr": "More",
+    "listingInactiveMessage": "This listing is not active and cannot be viewed by the public"
 }

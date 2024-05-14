@@ -4,7 +4,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfile, getUserId } from "../../Services/usersApi";
 import { getAds } from "../../Services/AdvertiseApi";
 
 import Footer from "../../Components/Footer";
@@ -114,6 +114,7 @@ const Listing = () => {
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
 
   const [input, setInput] = useState({
@@ -167,25 +168,32 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      if (accessToken || refreshToken) {
-        setIsLoggedIn(true);
-      }
+      const isLoggedIn = accessToken || refreshToken;
+      setIsLoggedIn(isLoggedIn);
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
+          setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
           if (
             listingsResponse.data.data.sourceId !== source.User &&
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-          } else if (listingsResponse.data.data.statusId !== 1) {
-            navigateTo("/Error");
           } else {
-            setInput(listingsResponse.data.data);
-            const cityUserId = listingsResponse.data.data.userId;
-            setTimeout(() => {
-              getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-                setUser(res.data.data);
-                if (isLoggedIn) {
+            if (isLoggedIn) {
+              setInput(listingsResponse.data.data);
+              const cityUserId = listingsResponse.data.data.userId;
+              const currentUserId = Number(getUserId())
+              setTimeout(() => {
+                getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+                  const user = res.data.data
+                  setUser(user);
+                  if (
+                    listingsResponse.data.data.statusId !== statusByName.Active &&
+                    currentUserId !== user.id &&
+                    user.roleId !== 1
+                  ) {
+                    navigateTo("/Error");
+                  }
                   getFavorites().then((response) => {
                     const favorite = response.data.data.find(
                       (f) =>
@@ -199,11 +207,17 @@ const Listing = () => {
                     }
                     setIsLoading(false);
                   });
-                } else {
-                  setIsLoading(false);
-                }
-              });
-            }, 1000);
+                });
+              }, 1000);
+            } else {
+              if (
+                listingsResponse.data.data.statusId !== statusByName.Active
+              ) {
+                navigateTo("/Error");
+              }
+              setIsLoading(false);
+            }
+
 
             setSelectedCategoryId(listingsResponse.data.data.categoryId);
             setListingId(listingsResponse.data.data.id);
@@ -367,6 +381,16 @@ const Listing = () => {
                           </span>
                         </h1>
                       </div>
+
+                      {!isActive && <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                        <span className="text-gray-400 mb-4 text-sm md:text-md mt-4 lg:text-xl title-font text-start font-bold overflow-hidden"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("listingInactiveMessage")}
+                        </span>
+                      </div>}
 
                       <div className="flex flex-wrap gap-1 justify-between mt-0">
                         <div className="flex items-center gap-2 mt-6">
