@@ -15,7 +15,7 @@ export async function getUserBookings(params) {
 }
 
 export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
-    return axios.delete(`/v1//cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
+    return axios.delete(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
 }
 
 export async function getAppointments(cityId, listingId, appointmentId) {
