@@ -115,7 +115,8 @@ function BookMyAppointments() {
           })();
         }
 
-        const cityUserId = listingData.userId;
+        // const cityUserId = listingData.userId;
+        const userId = localStorage.getItem('userId');
         const accessToken =
           window.localStorage.getItem("accessToken") ||
           window.sessionStorage.getItem("accessToken");
@@ -126,7 +127,7 @@ function BookMyAppointments() {
         setRefreshToken(refreshToken)
         if (accessToken && refreshToken) {
 
-          getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+          getProfile(userId).then((res) => {
             const user = res.data.data;
             setBookingInput((prevInput) => ({
               ...prevInput,
