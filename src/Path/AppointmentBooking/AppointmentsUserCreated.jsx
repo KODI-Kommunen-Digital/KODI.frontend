@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getAppointmentsUserCreated, deleteAppointments } from "../../Services/appointmentBookingApi";
 import { getListings } from "../../Services/listingsApi";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 
 const AppointmentsUserCreated = () => {
     const { t } = useTranslation();
@@ -151,8 +152,11 @@ const AppointmentsUserCreated = () => {
                                                         appointment.image
                                                             ? process.env.REACT_APP_BUCKET_HOST + appointment.image
                                                             : process.env.REACT_APP_BUCKET_HOST +
-                                                            "admin/DefaultForum.jpeg"
+                                                            "admin/DefaultAppointmentImage.jpeg"
                                                     }
+                                                    onError={(e) => {
+                                                        e.target.src = APPOINTMENTDEFAULTIMAGE; // Set default image if loading fails
+                                                    }}
                                                     onClick={() =>
                                                         navigateTo(
                                                             `/Listing?listingId=${appointment.listingId}&cityId=${appointment.cityId}&appointmentId=${appointment.id}`
