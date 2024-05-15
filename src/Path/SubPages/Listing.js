@@ -141,7 +141,7 @@ const Listing = () => {
 
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
-  const [appointmentId, setAppointmentId] = useState(0);
+  // const [appointmentId, setAppointmentId] = useState(0);
   const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
@@ -168,8 +168,8 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    const appointmentId = searchParams.get("appointmentId");
-    setAppointmentId(appointmentId);
+    // const appointmentId = searchParams.get("appointmentId");
+    // setAppointmentId(appointmentId);
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -632,7 +632,7 @@ const Listing = () => {
                 {input.id && input.categoryId === 18 && (
                   <a
                     onClick={() =>
-                      navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`)
+                      navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`)
                     }
                     className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">

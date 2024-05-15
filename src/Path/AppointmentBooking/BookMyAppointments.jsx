@@ -48,7 +48,7 @@ function BookMyAppointments() {
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
   const [selectedServiceId, setSelectedServiceId] = useState(0);
-  const [maxBookingPerSlot, setMaxBookingPerSlot] = useState(0);
+  // const [availableSlotLeft, setAvailableSlotsLeft] = useState(0);
 
   const todayDate = new Date().toISOString().slice(0, 10);
   const [bookingInput, setBookingInput] = useState({
@@ -92,7 +92,6 @@ function BookMyAppointments() {
     const listingId = searchParams.get("listingId");
     setListingId(listingId);
     setBookingInput((prevInput) => ({ ...prevInput }));
-    // console.log(...prevInput)
     if (listingId && cityId) {
       getListingsById(cityId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
@@ -109,7 +108,6 @@ function BookMyAppointments() {
             try {
               const serviceResponse = await getAppointmentServices(cityId, listingId, appointmentId);
               const serviceData = serviceResponse.data.data;
-
               setServiceData(serviceData);
             } catch (error) {
               console.error("Error fetching appointment or services:", error);
@@ -267,20 +265,16 @@ function BookMyAppointments() {
           serviceId
         );
         setTimeSlots(timeSlotResponse.data.data);
+        console.log(timeSlots)
       } catch (error) {
         console.error("Error fetching time slots:", error);
       }
     }
   };
 
-  // useEffect(() => {
-  //   fetchTimeSlots();
-  // }, [selectDate, bookingInput.service]);
-
-  const [slotsLeft, setSlotsLeft] = useState([]);
-
-  const handleTimeSelection = (time, slotIndex) => {
-    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople && selectedTimes.length < timeSlots[slotIndex].maxBookingPerSlot) {
+  const [, setSlotsLeftCount] = useState("");
+  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
 
       const startTime = time;
       const [startHour, startMinute] = time.split(':').map(Number);
@@ -289,8 +283,6 @@ function BookMyAppointments() {
       endHour = endHour.toString().padStart(2, '0');
       endMinute = endMinute.toString().padStart(2, '0');
       const endTime = `${endHour}:${endMinute}`;
-
-      // const selectedDate = selectDate.toDate().toISOString();
 
       if (selectedTimes.length === 0) {
         setBookingInput((prevState) => ({
@@ -326,8 +318,24 @@ function BookMyAppointments() {
 
       setSelectedTimes([...selectedTimes, time]);
       setSelectedCount(selectedCount + 1);
-      setMaxBookingPerSlot(timeSlots[slotIndex].maxBookingPerSlot)
-      setSlotsLeft(timeSlots[slotIndex].maxBookingPerSlot - (selectedCount + 1))
+
+      if (
+        timeSlots &&
+        timeSlots.length > 0 &&
+        timeSlots[index].openingHours &&
+        timeSlots[index].openingHours[slotIndex] &&
+        timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+      ) {
+        const updatedOpeningHours = [...timeSlots[index].openingHours];
+        const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
+        setSlotsLeftCount(SlotsLeftCount);
+
+        return {
+          ...timeSlots[index],
+          openingHours: updatedOpeningHours
+        };
+      }
+
       setNumberError(false);
     } else if (selectedTimes.length >= 8) {
       setNumberError(true);
@@ -337,19 +345,27 @@ function BookMyAppointments() {
       setNumberError(false);
       setTimeSlotMinimumError(true);
       setCannotFillMore(false);
-    } else if (selectedTimes.length >= timeSlots[slotIndex].maxBookingPerSlot) {
+    } else if (selectedTimes.length >= timeSlots[index].availableSlot) {
       setNumberError(false);
       setTimeSlotMinimumError(false);
       setCannotFillMore(true);
     }
   };
 
-  const handleDeleteSlot = (index) => {
+  const handleDeleteSlot = (slotIndex) => {
     const updatedTimes = [...selectedTimes];
-    updatedTimes.splice(index, 1);
+    const timeToDelete = updatedTimes[slotIndex]
+    console.log(timeSlots)
+    timeSlots[0].openingHours.forEach((openingHour) => {
+      if (openingHour.startTime === timeToDelete) {
+        openingHour.availableSlot += 1
+      }
+    });
+    updatedTimes.splice(slotIndex, 1);
+    setTimeSlots(timeSlots);
     setSelectedTimes(updatedTimes);
     setSelectedCount(selectedCount - 1);
-    setSlotsLeft(maxBookingPerSlot - index)
+
     setNumberError(false);
   };
 
@@ -610,13 +626,13 @@ function BookMyAppointments() {
                   timeSlots.length === 0 ? (
                     <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
                   ) : (
-                    timeSlots.map(slot => (
-                      <div key={slot.serviceId} className="time-selection-container overflow-y-auto max-h-[100px]">
+                    timeSlots.map((slot, index) => (
+                      <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
                         <div className="flex flex-wrap gap-2 justify-center">
-                          {slot.openingHours.map((openingHour, index) => (
-                            <div key={index} onClick={() => handleTimeSelection(openingHour.startTime, index)} className="bg-neutral-400 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                          {slot.openingHours.map((openingHour, slotIndex) => (
+                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-neutral-400 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
                               <p>{openingHour.startTime}</p>
-                              <p className="text-xs">{selectedTimes.length === 0 ? slot.maxBookingPerSlot : slotsLeft} {t("slotsLeft")}</p>
+                              <p className="text-xs">{selectedTimes.length === 0 ? openingHour.availableSlot : openingHour.availableSlot} {t("slotsLeft")}</p>
                             </div>
                           ))}
                         </div>
@@ -648,19 +664,19 @@ function BookMyAppointments() {
                     {t("selectedSlots")}
                   </h2>
                   <ul className="mb-2 grid grid-cols-1 md:grid-cols-2 text-center gap-2">
-                    {selectedTimes.map((time, index) => (
+                    {selectedTimes.map((time, slotIndex) => (
                       <li
-                        key={index}
+                        key={slotIndex}
                         className="flex items-center justify-center gap-2"
                       >
-                        <span style={{ fontWeight: "bold" }}>{` ${index + 1
+                        <span style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
                           }:`}</span>{" "}
                         <span className="p-2 rounded-full cursor-pointer bg-neutral-400 font-bold text-white">
                           {time}
                         </span>
                         <button
                           className="ml-0 text-red-600"
-                          onClick={() => handleDeleteSlot(index)}
+                          onClick={() => handleDeleteSlot(slotIndex)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
