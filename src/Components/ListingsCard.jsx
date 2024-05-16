@@ -5,6 +5,7 @@ import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { listingSource } from "../Constants/listingSource";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
 function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   const { t } = useTranslation();
@@ -62,7 +63,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 : listing.logo
             }
             onError={(e) => {
-              e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
             }}
           />
         ) : (

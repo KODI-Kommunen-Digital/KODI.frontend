@@ -17,6 +17,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import { getCities } from "../Services/cities";
 import PdfThumbnail from "../Components/PdfThumbnail";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -466,22 +467,21 @@ const Dashboard = () => {
                           <img
                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                             src={
-                              listing.sourceId === 1
-                                ? listing.logo
-                                  ? process.env.REACT_APP_BUCKET_HOST +
-                                  listing.logo
-                                  : LISTINGSIMAGE
-                                : listing.logo || LISTINGSIMAGE
+                              listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
                             }
+                            onError={(e) => {
+                              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                            }}
                             alt="avatar"
                           />
                         ) : (
                           <img
                             alt="Listing"
                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                            src={LISTINGSIMAGE}
+                            src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                           />
                         )}
+
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
                             className="font-normal text-gray-500 truncate"

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import Footer from "../../Components/Footer";
+// import PropTypes from "prop-types";
 import { createBookings } from "../../Services/appointmentBookingApi";
 
 const Summary = () => {
@@ -12,6 +12,7 @@ const Summary = () => {
   const { state } = useLocation();
   const [updating, setUpdating] = useState(false);
   const bookingData = state.bookingData;
+  console.log("Booking created:", bookingData);
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
@@ -176,36 +177,36 @@ const Summary = () => {
   );
 };
 
-Summary.propTypes = {
-  bookingData: PropTypes.object.isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      bookingData: PropTypes.shape({
-        categoryId: PropTypes.number,
-        bookingId: PropTypes.number,
-        endTime: PropTypes.arrayOf(PropTypes.string),
-        startTime: PropTypes.arrayOf(PropTypes.string),
-        date: PropTypes.string,
-        numberOfPeople: PropTypes.string,
-        friends: PropTypes.arrayOf(
-          PropTypes.shape({
-            firstName: PropTypes.string,
-            lastname: PropTypes.string,
-            email: PropTypes.string,
-            phone: PropTypes.string,
-            description: PropTypes.string
-          })
-        ),
-        guestDetails: PropTypes.shape({
-          firstName: PropTypes.string,
-          lastname: PropTypes.string,
-          email: PropTypes.string,
-          phone: PropTypes.string,
-          description: PropTypes.string
-        })
-      })
-    })
-  })
-};
+// Summary.propTypes = {
+//   bookingData: PropTypes.object.isRequired,
+//   location: PropTypes.shape({
+//     state: PropTypes.shape({
+//       bookingData: PropTypes.shape({
+//         categoryId: PropTypes.number,
+//         bookingId: PropTypes.number,
+//         endTime: PropTypes.arrayOf(PropTypes.string),
+//         startTime: PropTypes.arrayOf(PropTypes.string),
+//         date: PropTypes.string,
+//         numberOfPeople: PropTypes.string,
+//         friends: PropTypes.arrayOf(
+//           PropTypes.shape({
+//             firstName: PropTypes.string,
+//             lastname: PropTypes.string,
+//             email: PropTypes.string,
+//             phone: PropTypes.string,
+//             description: PropTypes.string
+//           })
+//         ),
+//         guestDetails: PropTypes.shape({
+//           firstName: PropTypes.string,
+//           lastname: PropTypes.string,
+//           email: PropTypes.string,
+//           phone: PropTypes.string,
+//           description: PropTypes.string
+//         })
+//       })
+//     })
+//   })
+// };
 
 export default Summary;
