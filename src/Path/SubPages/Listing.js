@@ -308,7 +308,7 @@ const Listing = () => {
   }, [user]);
 
   return (
-    <section className="text-gray-600 bg-white body-font">
+    <section className="text-slate-800 bg-white body-font">
       {isLoading ? (
         <LoadingPage />
       ) : (
@@ -628,7 +628,7 @@ const Listing = () => {
                   )
                 ) : (
                   <div className="w-full items-center text-center justify-center">
-                    <p className="text-gray-900 hover:text-gray-200 rounded-lg font-bold bg-gray-200 hover:bg-gray-900 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                    <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                       onClick={() => navigateTo("/login")}>
                       {t("pleaseLogin")}
