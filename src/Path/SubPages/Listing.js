@@ -302,14 +302,14 @@ const Listing = () => {
   }, [user]);
 
   return (
-    <section className="text-gray-600 bg-white body-font">
+    <section className="text-slate-800 bg-white body-font">
       {isLoading ? (
         <LoadingPage />
       ) : (
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full flex flex-col lg:flex-row  max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+          <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
                 <div className="lg:w-full md:w-full h-full">
@@ -607,7 +607,7 @@ const Listing = () => {
                   )
                 ) : (
                   <div className="w-full items-center text-center justify-center">
-                    <p className="text-gray-900 hover:text-gray-200 rounded-lg font-bold bg-gray-200 hover:bg-gray-900 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                    <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                       onClick={() => navigateTo("/login")}>
                       {t("pleaseLogin")}
