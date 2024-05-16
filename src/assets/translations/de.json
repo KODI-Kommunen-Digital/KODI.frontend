@@ -721,5 +721,6 @@
     "serviceId": "Dienst-ID",
     "bookingId": "Buchungs-ID",
     "pastDate": "Das Buchungsdatum liegt in der Vergangenheit",
-    "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein"
+    "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein",
+    "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen"
 }
