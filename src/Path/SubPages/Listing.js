@@ -537,7 +537,7 @@ const Listing = () => {
 								}
 							`}
                   </style>
-                  <div className="h-full overflow-hidden px-0 py-0 bg-white border-8 border-slate-500">
+                  <div className="h-full overflow-hidden px-0 py-0 bg-white">
                     <div className="relative h-full">
                       {input.pdf ? (
                         <div>
@@ -554,7 +554,7 @@ const Listing = () => {
                                   process.env.REACT_APP_BUCKET_HOST + input.pdf
                                 }
                                 type="text/html"
-                                className="object-cover object-center h-[600px] w-full"
+                                className="w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain"
                               ></iframe>
                             )}
                           </div>
