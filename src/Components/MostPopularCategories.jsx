@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { getCategory } from "../Services/CategoryApi";
 import { useLocation } from 'react-router-dom';
 
-const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
+const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
 
-    MostPopulatCategories.propTypes = {
+    MostPopularCategories.propTypes = {
         listingsCount: PropTypes.array.isRequired,
         t: PropTypes.func.isRequired,
         getTheListings: PropTypes.func.isRequired,
@@ -291,4 +291,4 @@ const MostPopulatCategories = ({ listingsCount, t, getTheListings }) => {
     );
 };
 
-export default MostPopulatCategories;
+export default MostPopularCategories;

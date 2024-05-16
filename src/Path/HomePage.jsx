@@ -23,7 +23,7 @@ import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
 import ONEIMAGE from "../assets/01.png";
 import TWOIMAGE from "../assets/02.png";
 import THREEIMAGE from "../assets/03.png";
-import MostPopulatCategories from "../Components//MostPopulatCategories";
+import MostPopularCategories from "../Components/MostPopularCategories";
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -265,7 +265,7 @@ const HomePage = () => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0">
-          <MostPopulatCategories
+          <MostPopularCategories
             listingsCount={listingsCount}
             t={t}
             getTheListings={getTheListings}
