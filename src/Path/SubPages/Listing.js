@@ -104,7 +104,6 @@ const Listing = () => {
 
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
-  // const [appointmentId, setAppointmentId] = useState(0);
   const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
   useEffect(() => {
@@ -129,8 +128,6 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    // const appointmentId = searchParams.get("appointmentId");
-    // setAppointmentId(appointmentId);
     if (listingId && cityId) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
@@ -612,21 +609,33 @@ const Listing = () => {
                   </div>
                 )}
 
-                {input.id && input.categoryId === 18 && (
-                  <a
-                    onClick={() =>
-                      navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`)
-                    }
-                    className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
-                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("clickHereToBook")}</span>
-                    <span className="relative invisible">
-                      {t("clickHereToBook")}
-                    </span>
-                  </a>
+                {isLoggedIn ? (
+                  input.id && input.categoryId === 18 && (
+                    <a
+                      onClick={() =>
+                        navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`)
+                      }
+                      className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                    >
+                      <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                      </span>
+                      <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("clickHereToBook")}</span>
+                      <span className="relative invisible">
+                        {t("clickHereToBook")}
+                      </span>
+                    </a>
+                  )
+                ) : (
+                  <div className="w-full items-center text-center justify-center">
+                    <p className="text-gray-900 hover:text-gray-200 rounded-lg font-bold bg-gray-200 hover:bg-gray-900 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      onClick={() => navigateTo("/login")}>
+                      {t("pleaseLogin")}
+                    </p>
+                  </div>
                 )}
+
               </div>
             </div>
           </div>
