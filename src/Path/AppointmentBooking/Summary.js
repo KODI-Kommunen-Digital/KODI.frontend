@@ -55,7 +55,7 @@ const Summary = () => {
     <section className="bg-gray-100 body-font relative">
       <HomePageNavBar />
 
-      <div className="bg-gray-100 h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+      <div className="bg-gray-100 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
         <div className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
           <p className="font-sans font-bold text-purple-900  mb-1 text-4xl title-font text-center">
             {t("summaryBooking")}
