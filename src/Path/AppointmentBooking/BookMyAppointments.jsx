@@ -52,6 +52,7 @@ function BookMyAppointments() {
 
   const todayDate = new Date().toISOString().slice(0, 10);
   const [bookingInput, setBookingInput] = useState({
+    serviceId: "",
     endTime: "",
     startTime: "",
     remark: "",
@@ -67,10 +68,12 @@ function BookMyAppointments() {
   const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
     service: "",
+    serviceId: "",
     firstname: "",
     lastname: "",
     email: "",
   });
+  console.log(bookingInput)
 
   const handleButtonClick = () => {
     const { service, numberOfPeople, ...bookingData } = bookingInput;
@@ -234,6 +237,7 @@ function BookMyAppointments() {
   const onServiceChange = (event) => {
     const selectedServiceId = event.target.value;
     setSelectedServiceId(selectedServiceId)
+
     const selectedService = serviceData.find(
       (service) => service.id === parseInt(selectedServiceId)
     );
@@ -266,6 +270,10 @@ function BookMyAppointments() {
           serviceId
         );
         setTimeSlots(timeSlotResponse.data.data);
+        setBookingInput(prevState => ({
+          ...prevState,
+          serviceId: serviceId
+        }));
         console.log(timeSlots)
       } catch (error) {
         console.error("Error fetching time slots:", error);
