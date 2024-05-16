@@ -5,128 +5,83 @@ import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
-import { getAppointmentServices } from "../../Services/appointmentBookingApi";
+import { getAppointmentServices, getAppointmentSlots } from "../../Services/appointmentBookingApi";
 import {
-  getListingsById,
-  postListingsData,
-  updateListingsData,
+  getListingsById
 } from "../../Services/listingsApi";
-import Alert from "../../Components/Alert";
+import { getProfile } from "../../Services/usersApi";
 import { getCategory } from "../../Services/CategoryApi";
 import dayjs from "dayjs";
 import Footer from "../../Components/Footer";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { generateDate, months } from "../../Components/util/calendar";
 import cn from "../../Components/util/cn";
-
+import moment from "moment";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
-  const [newBooking, setNewBooking] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [bookingId, setBookingId] = useState(false);
-  const [categoryId, setCategoryId] = useState(0);
   const [title, setTitle] = useState("");
-  const [duration, setDuration] = useState("");
-
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [duration, setDuration] = useState("___");
   const [categories, setCategories] = useState([]);
-  const [services, setServices] = useState([]);
   const navigate = useNavigate();
-  const [isValidInput, setIsValidInput] = useState(true);
 
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
-  const [listingId, setListingId] = useState(0);
 
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
   const [timeSlotMinimumError, setTimeSlotMinimumError] = useState(false);
+  const [cannotFillMore, setCannotFillMore] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
   const [expandedUser, setExpandedUser] = useState(0); // Initially, no user is expanded
+  const [user, setUser] = useState();
+  const [serviceData, setServiceData] = useState([]);
+  const [listingData, setListingData] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [, setAccessToken] = useState("");
+  const [, setRefreshToken] = useState("");
 
-  const [appointmentInput, setAppointmentInput] = useState({
-    categoryId: 0,
-    bookingId: 0,
-    endTime: [],
-    startTime: [],
-    date: "",
-    numberOfPeople: "",
-    service: "",
-    friends: [{}],
+  const [cityId, setCityId] = useState(0);
+  const [listingId, setListingId] = useState(0);
+  const [appointmentId, setAppointmentId] = useState(0);
+  const [selectedServiceId, setSelectedServiceId] = useState(0);
+  // const [availableSlotLeft, setAvailableSlotsLeft] = useState(0);
+
+  const todayDate = new Date().toISOString().slice(0, 10);
+  const [bookingInput, setBookingInput] = useState({
+    serviceId: "",
+    endTime: "",
+    startTime: "",
+    remark: "",
+    date: todayDate,
+    friends: [],
     guestDetails: {
-      firstName: "",
-      lastName: "",
-      description: "",
-      phone: "",
+      firstname: "",
+      lastname: "",
       email: ""
     }
   });
-  console.log(appointmentInput)
 
-  const [appointmentError, setAppointmentError] = useState({
+  const [bookingError, setBookingError] = useState({
     numberOfPeople: "",
     service: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
+    serviceId: "",
+    firstname: "",
+    lastname: "",
     email: "",
   });
+  console.log(bookingInput)
 
-  const handleSubmit = async (event) => {
-    let valid = true;
-    for (const key in appointmentError) {
-      const errorMessage = getErrorMessage(key, appointmentInput[key]);
-      const newError = appointmentError;
-      newError[key] = errorMessage;
-      setAppointmentError(newError);
-      if (errorMessage) {
-        valid = false;
-      }
-    }
-    if (valid) {
-      setUpdating(true);
-      event.preventDefault();
-      try {
-        const response = await (newBooking
-          ? postListingsData(bookingId, appointmentInput)
-          : updateListingsData(bookingId, appointmentInput, listingId));
-        if (newBooking) {
-          setListingId(response.data.id);
-        }
-        setErrorMessage(false);
-        setTimeout(() => {
-          setSuccessMessage(false);
-          navigate("/Dashboard");
-        }, 5000);
-      } catch (appointmentError) {
-        setErrorMessage(t("changesNotSaved"));
-        setSuccessMessage(false);
-        setTimeout(() => setErrorMessage(false), 5000);
-      }
-      setUpdating(false);
-    } else {
-      setErrorMessage(t("invalidData"));
-      setSuccessMessage(false);
-      setTimeout(() => setErrorMessage(false), 5000);
-    }
+  const handleButtonClick = () => {
+    const { service, numberOfPeople, ...bookingData } = bookingInput;
+    navigate(`/AppointmentBooking/BookAppointments/Summary?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`, { state: { bookingData } });
   };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
-      navigateTo("/login");
-    }
     const bookingId = searchParams.get("bookingId");
     getCategory().then((response) => {
       const catList = {};
@@ -136,29 +91,59 @@ function BookMyAppointments() {
       setCategories(catList);
     });
     const cityId = searchParams.get("cityId");
+    setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    const appointmentId = searchParams.get("appointmentId");
-
-    getAppointmentServices(cityId, listingId, appointmentId).then((response) => {
-      const serviceList = {};
-      response?.data.data.forEach((service) => {
-        serviceList[service.id] = service.name;
-      });
-      setServices(serviceList);
-    });
-    setAppointmentInput((prevInput) => ({ ...prevInput, categoryId }));
-    setBookingId(bookingId);
-    if (listingId && bookingId) {
-      setListingId(parseInt(listingId));
-      setNewBooking(false);
-      getListingsById(bookingId, listingId).then((listingsResponse) => {
+    setListingId(listingId);
+    setBookingInput((prevInput) => ({ ...prevInput }));
+    if (listingId && cityId) {
+      getListingsById(cityId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
+        setListingData(listingData)
+        listingData.cityId = cityId;
         listingData.bookingId = bookingId;
-        setAppointmentInput(listingData);
-        setCategoryId(listingData.categoryId);
-        setBookingId(listingData.bookingId);
         setTitle(listingData.title);
-        setDuration(listingData.duration);
+
+        const appointmentId = listingData.appointmentId;
+        setAppointmentId(appointmentId);
+        const listingId = listingData.id
+        if (appointmentId) {
+          (async () => {
+            try {
+              const serviceResponse = await getAppointmentServices(cityId, listingId, appointmentId);
+              const serviceData = serviceResponse.data.data;
+              setServiceData(serviceData);
+            } catch (error) {
+              console.error("Error fetching appointment or services:", error);
+            }
+          })();
+        }
+
+        // const cityUserId = listingData.userId;
+        const userId = localStorage.getItem('userId');
+        const accessToken =
+          window.localStorage.getItem("accessToken") ||
+          window.sessionStorage.getItem("accessToken");
+        setAccessToken(accessToken)
+        const refreshToken =
+          window.localStorage.getItem("refreshToken") ||
+          window.sessionStorage.getItem("refreshToken");
+        setRefreshToken(refreshToken)
+        if (accessToken && refreshToken) {
+
+          getProfile(userId).then((res) => {
+            const user = res.data.data;
+            setBookingInput((prevInput) => ({
+              ...prevInput,
+              guestDetails: {
+                ...prevInput.guestDetails,
+                firstname: user.firstname || "",
+                lastname: user.lastname || "",
+                email: user.email || "",
+              }
+            }));
+            setUser(user);
+          });
+        }
       });
     }
   }, []);
@@ -166,13 +151,24 @@ function BookMyAppointments() {
   const onInputChange = (e, index) => {
     const { name, value } = e.target;
     if (name === "service" || name === "numberOfPeople") {
-      setAppointmentInput((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      if (index === 0) {
+        setBookingInput(prevState => ({
+          ...prevState,
+          guestDetails: {
+            ...prevState.guestDetails,
+            [name]: value
+          }
+        }));
+      } else {
+        setBookingInput(prevState => ({
+          ...prevState,
+          [name]: value,
+          friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({}))
+        }));
+      }
     } else {
       if (index === 0) {
-        setAppointmentInput((prev) => ({
+        setBookingInput((prev) => ({
           ...prev,
           guestDetails: {
             ...prev.guestDetails,
@@ -180,36 +176,28 @@ function BookMyAppointments() {
           },
         }));
       } else {
-        setAppointmentInput((prev) => {
-          const updatedFriends = [...prev.friends];
-          if (!updatedFriends[index - 1]) {
-            updatedFriends[index - 1] = {}; // Ensure the friends array has enough slots
-          }
-          updatedFriends[index - 1][name] = value; // Update the specific friend's field
-          return {
-            ...prev,
-            friends: updatedFriends,
-          };
-        });
+        setBookingInput(prevState => ({
+          ...prevState,
+          friends: [
+            ...prevState.friends.slice(0, index - 1),
+            {
+              ...prevState.friends[index - 1] || {},
+              [name]: value
+            },
+            ...prevState.friends.slice(index)
+          ]
+        }));
       }
     }
     validateInput(name, value);
   };
 
-
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
-  const handleInputChange = (value) => {
-    const input = value;
-    if (/^\d*$/.test(input)) {
-      setIsValidInput(true); // Input is valid
-    } else {
-      setIsValidInput(false); // Input is not valid
-    }
+  const handleRemarksChange = (e) => {
+    const { name, value } = e.target;
+    setBookingInput((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
   };
 
   const getErrorMessage = (name, value) => {
@@ -218,9 +206,9 @@ function BookMyAppointments() {
         return value.trim() === "" ? t("pleaseEnterService") : "";
       case "numberOfPeople":
         return value.trim() === "" ? t("pleaseSelectNumberOfPeople") : "";
-      case "firstName":
+      case "firstname":
         return value.trim() === "" ? t("pleaseSelectFirstName") : "";
-      case "lastName":
+      case "lastname":
         return value.trim() === "" ? t("pleaseSelectLastName") : "";
       case "phone":
         return value.trim() === "" ? t("pleaseSelectPhone") : "";
@@ -235,7 +223,7 @@ function BookMyAppointments() {
     if (e && e.target) {
       const { name, value } = e.target;
       const errorMessage = getErrorMessage(name, value);
-      setAppointmentError((prevState) => ({
+      setBookingError((prevState) => ({
         ...prevState,
         [name]: errorMessage
       }));
@@ -246,54 +234,161 @@ function BookMyAppointments() {
     setExpandedUser((prevIndex) => (prevIndex === index ? -1 : index));
   };
 
-  const handleTimeSelection = (time) => {
-    if (appointmentInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < appointmentInput.numberOfPeople) {
-      const duration = 30; // Assuming duration is in minutes
-      const startTime = dayjs()
-        .set('hour', parseInt(time.split(':')[0]))
-        .set('minute', parseInt(time.split(':')[1]));
-      const endTime = startTime.add(duration, 'minutes').format('HH:mm');
+  const onServiceChange = (event) => {
+    const selectedServiceId = event.target.value;
+    setSelectedServiceId(selectedServiceId)
 
-      const selectedDate = selectDate.toDate().toISOString();
+    const selectedService = serviceData.find(
+      (service) => service.id === parseInt(selectedServiceId)
+    );
 
-      setAppointmentInput((prevState) => ({
-        ...prevState,
-        startTime: [...prevState.startTime, time],
-        endTime: [...prevState.endTime, endTime],
-        date: selectedDate,
-      }));
+    if (selectedService) {
+      setDuration(selectedService.duration);
+    }
+    fetchTimeSlots(selectedServiceId);
+  };
+
+  const onDateChange = (date) => {
+    setSelectDate(moment(date)); // Convert date to moment object here
+    setBookingInput({
+      ...bookingInput,
+      date: moment(date).format("YYYY-MM-DD"),
+    });
+    fetchTimeSlots(selectedServiceId, moment(date).format("YYYY-MM-DD"));
+  };
+
+  const fetchTimeSlots = async (selectedServiceId, formattedDate) => {
+    const serviceId = selectedServiceId;
+    const date = formattedDate || todayDate;
+    if (serviceId && date) {
+      try {
+        const timeSlotResponse = await getAppointmentSlots(
+          cityId,
+          listingId,
+          appointmentId,
+          date,
+          serviceId
+        );
+        setTimeSlots(timeSlotResponse.data.data);
+        setBookingInput(prevState => ({
+          ...prevState,
+          serviceId: serviceId
+        }));
+        console.log(timeSlots)
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+      }
+    }
+  };
+
+  const [, setSlotsLeftCount] = useState("");
+  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+
+      const startTime = time;
+      const [startHour, startMinute] = time.split(':').map(Number);
+      let endHour = startHour + Math.floor((startMinute + duration) / 60);
+      let endMinute = (startMinute + duration) % 60;
+      endHour = endHour.toString().padStart(2, '0');
+      endMinute = endMinute.toString().padStart(2, '0');
+      const endTime = `${endHour}:${endMinute}`;
+
+      if (selectedTimes.length === 0) {
+        setBookingInput((prevState) => ({
+          ...prevState,
+          startTime: startTime,
+          endTime: endTime,
+          // date: selectedDate,
+        }));
+      } else {
+        if (selectedTimes.length === 1) {
+          setBookingInput((prevState) => ({
+            ...prevState,
+            friends: [
+              {
+                startTime: startTime,
+                endTime: endTime,
+              },
+            ],
+          }));
+        } else {
+          setBookingInput((prevState) => ({
+            ...prevState,
+            friends: [
+              ...prevState.friends,
+              {
+                startTime: startTime,
+                endTime: endTime,
+              },
+            ],
+          }));
+        }
+      }
 
       setSelectedTimes([...selectedTimes, time]);
       setSelectedCount(selectedCount + 1);
+
+      if (
+        timeSlots &&
+        timeSlots.length > 0 &&
+        timeSlots[index].openingHours &&
+        timeSlots[index].openingHours[slotIndex] &&
+        timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+      ) {
+        const updatedOpeningHours = [...timeSlots[index].openingHours];
+        const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
+        setSlotsLeftCount(SlotsLeftCount);
+
+        return {
+          ...timeSlots[index],
+          openingHours: updatedOpeningHours
+        };
+      }
+
       setNumberError(false);
     } else if (selectedTimes.length >= 8) {
       setNumberError(true);
       setTimeSlotMinimumError(false);
-    } else if (selectedTimes.length >= appointmentInput.numberOfPeople || appointmentInput.numberOfPeople === "") {
+      setCannotFillMore(false);
+    } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
       setNumberError(false);
       setTimeSlotMinimumError(true);
+      setCannotFillMore(false);
+    } else if (selectedTimes.length >= timeSlots[index].availableSlot) {
+      setNumberError(false);
+      setTimeSlotMinimumError(false);
+      setCannotFillMore(true);
     }
   };
 
-  const handleDeleteSlot = (index) => {
+  const handleDeleteSlot = (slotIndex) => {
     const updatedTimes = [...selectedTimes];
-    updatedTimes.splice(index, 1);
+    const timeToDelete = updatedTimes[slotIndex]
+    console.log(timeSlots)
+    timeSlots[0].openingHours.forEach((openingHour) => {
+      if (openingHour.startTime === timeToDelete) {
+        openingHour.availableSlot += 1
+      }
+    });
+    updatedTimes.splice(slotIndex, 1);
+    setTimeSlots(timeSlots);
     setSelectedTimes(updatedTimes);
     setSelectedCount(selectedCount - 1);
+
     setNumberError(false);
   };
 
   return (
-    <section className="text-gray-600 bg-white body-font">
+    <section className="text-slate-800 bg-neutral-400 body-font">
       <HomePageNavBar />
 
-      <div className="max-w-2xl gap-y-16 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4 mx-auto flex flex-col items-center">
-        <div className="lg:w-full md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+      <div className="bg-neutral-400 h-full items-center mt-20 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="lg:w-full py-5 px-4 md:w-full h-full">
+          <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
-                  <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                  <h1 className="text-white mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                     <span
                       className="inline-block max-w-full break-words"
                       style={{
@@ -301,8 +396,6 @@ function BookMyAppointments() {
                       }}
                     >
                       {title}
-                      Appointment Booking Du möchtest dein Haus energetisch
-                      sanieren ?
                     </span>
                   </h1>
                 </div>
@@ -323,13 +416,12 @@ function BookMyAppointments() {
                         fontFamily: "Poppins, sans-serif",
                       }}
                     >
-                      Available time 30 min
-                      {duration}
+                      Available time {duration} min
                     </p>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 justify-between mt-6">
+                <div className="flex flex-wrap gap-1 justify-between mt-6 text-white">
                   <div>
                     <p
                       className="text-start font-bold"
@@ -337,18 +429,17 @@ function BookMyAppointments() {
                         fontFamily: "Poppins, sans-serif",
                       }}
                     >
-                      {t(categories[appointmentInput.categoryId])}
-                      Appointment Booking
+                      {t(categories[listingData.categoryId])}
                     </p>
                   </div>
 
                   <p
-                    className="leading-relaxed text-base font-bold"
+                    className="leading-relaxed text-base font-bold text-white"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
                   >
-                    Cost € 10.00
+                    {t("costInEuros")}10.00
                   </p>
                 </div>
               </form>
@@ -356,12 +447,13 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="items-stretch py-2 px-0 w-full">
+        <div className="items-stretch py-5 px-4 px-4 w-full">
+          {/* border-2 border-black  */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="country"
-                className="block text-md font-medium text-gray-600"
+                className="block text-md font-medium text-slate-800"
                 style={{
                   fontFamily: "Poppins, sans-serif",
                 }}
@@ -371,45 +463,48 @@ function BookMyAppointments() {
               <select
                 id="service"
                 name="service"
-                value={appointmentInput.service}
-                onChange={onInputChange}
+                value={bookingInput.service || ""}
+                onChange={(event) => {
+                  onInputChange(event);
+                  onServiceChange(event);
+                }}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
                 </option>
-                {Object.entries(services).map(([id, name]) => (
-                  <option key={id} value={id}>
-                    {name}
+                {serviceData.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
                   </option>
                 ))}
               </select>
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: appointmentError.service ? "visible" : "hidden",
+                  visibility: bookingError.service ? "visible" : "hidden",
                 }}
               >
-                {appointmentError.service}
+                {bookingError.service}
               </div>
             </div>
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="numberOfPeople"
-                className="block text-md font-medium text-gray-600"
+                className="block text-md font-medium text-slate-800"
               >
                 {t("numberofPeople")} *
               </label>
               <select
                 id="numberOfPeople"
                 name="numberOfPeople"
-                value={appointmentInput.numberOfPeople}
+                value={bookingInput.numberOfPeople || ""}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -426,19 +521,19 @@ function BookMyAppointments() {
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: appointmentError.numberOfPeople ? "visible" : "hidden",
+                  visibility: bookingError.numberOfPeople ? "visible" : "hidden",
                 }}
               >
-                {appointmentError.numberOfPeople}
+                {bookingError.numberOfPeople}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mx-auto w-full flex flex-col lg:flex-row mt-[2rem] gap-y-16 gap-x-8">
-          <div className="lg:w-2/3 border-2 border-black rounded-lg">
+        <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
+          <div className="lg:w-2/3 rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-white col-span-2 p-0 rounded-lg w-full h-full shadow-xl">
+              <div className="bg-stone-700 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -451,7 +546,7 @@ function BookMyAppointments() {
                             }}
                           />
                           <h1
-                            className="select-none font-semibold cursor-pointer hover:scale-105 transition-all"
+                            className="select-none text-white font-semibold cursor-pointer hover:scale-105 transition-all font-bold"
                             onClick={() => {
                               setToday(currentDate);
                             }}
@@ -467,7 +562,7 @@ function BookMyAppointments() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-7 bg-black text-white rounded-lg">
+                      <div className="grid grid-cols-7 bg-black text-white rounded-lg font-bold">
                         {days.map((day, index) => {
                           return (
                             <h1
@@ -488,12 +583,12 @@ function BookMyAppointments() {
                                 id="date"
                                 name="date"
                                 key={index}
-                                className="p-2 text-center h-14 grid place-content-center text-sm border-t"
+                                className="p-2 text-center h-14 grid place-content-center text-sm font-bold"
                               >
                                 <h1
                                   className={cn(
-                                    currentMonth ? "" : "text-gray-400",
-                                    today ? "bg-red-600 text-white" : "",
+                                    currentMonth ? "text-white" : "text-slate-800",
+                                    today ? "bg-neutral-400 text-slate-800" : "",
                                     selectDate.toDate().toDateString() ===
                                       date.toDate().toDateString()
                                       ? "bg-black text-white"
@@ -501,11 +596,7 @@ function BookMyAppointments() {
                                     "h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
                                   )}
                                   onClick={() => {
-                                    setSelectDate(date);
-                                    setAppointmentInput({
-                                      ...appointmentInput,
-                                      date: date.format("YYYY-MM-DD"),
-                                    });
+                                    onDateChange(date.toDate());
                                   }}
                                 >
                                   {date.date()}
@@ -522,41 +613,45 @@ function BookMyAppointments() {
             </div>
           </div>
 
-          <div className="lg:w-1/3 mx-auto">
-            <div className="grid grid-cols-1 gap-4 border-2 border-black rounded-lg">
-              <div className="bg-white col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-xl scrollbar">
-                <h1 className="text-lg text-center font-semibold mb-4">
+          <div className="w-2/3 lg:w-1/3 mx-auto">
+            <div className="grid grid-cols-1 gap-4 col-span-1">
+              <div className="bg-stone-700 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+                {/* border-2 border-black */}
+                <h1 className="text-lg text-center text-white font-bold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
-                <div className="time-selection-container overflow-y-auto max-h-[100px]">
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {Array.from({ length: 24 * 2 }).map((_, index) => {
-                      const time = dayjs()
-                        .hour(8)
-                        .minute(0)
-                        .add(index * 60, "minutes");
-                      return (
-                        <div
-                          key={index}
-                          className={cn(
-                            "p-2 rounded-full border cursor-pointer transition-all",
-                            "hover:bg-gray-200",
-                            "select-none",
-                            selectedTimes.includes(time.format("HH:mm")) &&
-                            "border-blue-400 text-blue-400"
-                          )}
-                          onClick={() =>
-                            handleTimeSelection(time.format("HH:mm"))
-                          }
-                        >
-                          {time.format("HH:mm")}
+
+                {/* {selectDate.toDate() < new Date() && (
+                  <p className="h-[40px] text-red-600 text-center">
+                    Booking date is in the past.
+                  </p>
+                )} */}
+
+                {!selectedServiceId ? (
+                  <p className="h-[40px] text-emerald-500 text-center">{t("selectServiceMsg")}</p>
+                ) : new Date(selectDate.toDate()).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) ? (
+                  <p className="h-[24px] text-red-600 text-center">{t("pastDate")}</p>
+                ) : (
+                  timeSlots.length === 0 ? (
+                    <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
+                  ) : (
+                    timeSlots.map((slot, index) => (
+                      <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {slot.openingHours.map((openingHour, slotIndex) => (
+                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-neutral-400 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                              <p>{openingHour.startTime}</p>
+                              <p className="text-xs">{selectedTimes.length === 0 ? openingHour.availableSlot : openingHour.availableSlot} {t("slotsLeft")}</p>
+                            </div>
+                          ))}
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                      </div>
+                    ))
+                  )
+                )}
+
                 {numberError && (
-                  <div className="text-red-500 text-center mt-2">
+                  <div className="text-red-600 text-center mt-2">
                     {t("timeSlotMaxValidation")}
                   </div>
                 )}
@@ -565,27 +660,32 @@ function BookMyAppointments() {
                     {t("timeSlotNumberValidation")}
                   </div>
                 )}
+                {cannotFillMore && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("cannotFillMoreValidation")}
+                  </div>
+                )}
 
-                <div className="my-4 bg-gray-200 h-[1px]"></div>
+                <div className="my-4 bg-neutral-400 h-[1px]"></div>
 
                 <div className="mt-4">
-                  <h2 className="text-lg text-center font-semibold mb-4">
+                  <h2 className="text-lg text-white text-center font-bold mb-4">
                     {t("selectedSlots")}
                   </h2>
-                  <ul className="mb-2 grid grid-cols-2 text-center gap-2">
-                    {selectedTimes.map((time, index) => (
+                  <ul className="mb-2 grid grid-cols-1 md:grid-cols-2 text-center gap-2">
+                    {selectedTimes.map((time, slotIndex) => (
                       <li
-                        key={index}
+                        key={slotIndex}
                         className="flex items-center justify-center gap-2"
                       >
-                        <span style={{ fontWeight: "bold" }}>{` ${index + 1
+                        <span style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full border cursor-pointer border-emerald-500 text-emerald-500">
+                        <span className="p-2 rounded-full cursor-pointer bg-neutral-400 font-bold text-white">
                           {time}
                         </span>
                         <button
-                          className="ml-0 text-red-500"
-                          onClick={() => handleDeleteSlot(index)}
+                          className="ml-0 text-red-600"
+                          onClick={() => handleDeleteSlot(slotIndex)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -608,197 +708,165 @@ function BookMyAppointments() {
             </div>
           </div>
         </div>
-
-        {/* User details box */}
-        <div className={`text-center gap-4 w-full`}>
-          {Array.from({ length: selectedCount }, (_, index) => (
-            <div key={index} className="mt-4">
-              <div className="items-center justify-between border border-gray-300 rounded p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <img
-                      src={PROFILEIMAGE}
-                      alt={`Profile Picture ${index}`}
-                      className="mr-2 w-6 h-6 rounded-full object-cover"
-                    />
-                    <h2 className="text-lg font-medium mb-0">
-                      {t("user")} {index + 1}
-                    </h2>
-                  </div>
-
-                  <button
-                    onClick={() => toggleUserDropdown(index)}
-                    className="ml-2 text-blue-500 focus:outline-none text-2xl"
-                  >
-                    {expandedUser === index ? "▼" : "►"}
-                  </button>
-                </div>
-
-                <div
-                  className={`${expandedUser === index ? "block" : "hidden"
-                    } mt-4 p-4`}
-                >
-
-                  <div className="relative mb-0 grid grid-cols-2 gap-2">
-                    <div className="relative mb-0">
-                      <input
-                        type="text"
-                        id={`firstName`}
-                        name={`firstName`}
-                        value={index === 0 ? appointmentInput.guestDetails.firstName : appointmentInput.firstName}
-                        onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder={t("firstname")}
-                        required
-                      />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: appointmentError.firstName ? "visible" : "hidden",
-                        }}
-                      >
-                        {appointmentError.firstName}
-                      </div>
-                    </div>
-
-                    <div className="relative mb-0">
-                      <input
-                        type="text"
-                        id={`lastName`}
-                        name={`lastName`}
-                        value={index === 0 ? appointmentInput.guestDetails.lastName : appointmentInput.lastName}
-                        onChange={(e) => onInputChange(e, index)}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
-                        placeholder={t("lastname")}
-                        required
-                      />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: appointmentError.lastName ? "visible" : "hidden",
-                        }}
-                      >
-                        {appointmentError.lastName}
-                      </div>
-                    </div>
-                  </div>
-                  <input
-                    type="email"
-                    id={`email`}
-                    name={`email`}
-                    value={index === 0 ? appointmentInput.guestDetails.email : appointmentInput.email}
-                    onChange={(e) => onInputChange(e, index)}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                    placeholder={t("email")}
-                    onBlur={(e) => validateInput(e)}
-                    required
-                  />
-                  <div
-                    className="h-[24px] text-red-600 text-start"
-                    style={{
-                      visibility: appointmentError.email ? "visible" : "hidden",
-                    }}
-                  >
-                    {appointmentError.email}
-                  </div>
-
-                  {index === 0 && (
-                    <>
-                      <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value={index === 0 ? appointmentInput.guestDetails.phone : appointmentInput.phone}
-                        onChange={(e) => { onInputChange(e, index); handleInputChange(e); }}
-                        onBlur={(e) => validateInput(e)}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                        placeholder={t("phoneNumber")}
-                      />
-                      <div
-                        className="h-[24px] text-red-600 text-start"
-                        style={{
-                          visibility: appointmentError.phone ? "visible" : "hidden",
-                        }}
-                      >
-                        {appointmentError.phone}
-                      </div>
-                      {!isValidInput && (
-                        <p className="text-red-600">{t("pleaseEnterValidNumber")}</p>
-                      )}
-
-                      <input
-                        type="text"
-                        id={`description`}
-                        name={`description`}
-                        value={index === 0 ? appointmentInput.guestDetails.description : appointmentInput.description}
-                        onChange={(e) => onInputChange(e, index)}
-                        // onBlur={(e) => validateInput(e)}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
-                        placeholder={t("remarks")}
-                      />
-                      <div
-                        className="h-[24px] text-red-600"
-                        style={{
-                          visibility: appointmentError.description ? "visible" : "hidden",
-                        }}
-                      >
-                        {appointmentError.description}
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
-      <div className="relative max-w-2xl gap-y-16 px-5 py-2 lg:max-w-7xl mx-auto">
-        <div className="py-2 mt-1 px-o">
-          <button
-            type="button"
-            onClick={() => {
-              handleSubmit();
-              navigateTo(`/AppointmentBooking/BookAppointments/Summary`);
-            }}
-            disabled={updating}
-            className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-          >
-            {t("saveChanges")}
-            {updating && (
-              <svg
-                aria-hidden="true"
-                className="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
-            )}
-          </button>
+      {/* User details box */}
+      <div className="bg-stone-700">
+        <div className="h-full items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+          <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
+            {Array.from({ length: selectedCount }, (_, index) => (
+              <div key={index} className="mt-4">
+                <div className="bg-white items-center justify-between rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <img
+                        src={PROFILEIMAGE}
+                        alt={`Profile Picture ${index}`}
+                        className="mr-2 w-6 h-6 rounded-full object-cover"
+                      />
+                      <h2 className="text-lg font-medium mb-0">
+                        {t("user")} {index + 1}
+                      </h2>
+                    </div>
+
+                    <button
+                      onClick={() => toggleUserDropdown(index)}
+                      className="ml-2 text-blue-500 focus:outline-none text-2xl"
+                    >
+                      {expandedUser === index ? "▼" : "►"}
+                    </button>
+                  </div>
+
+                  <div
+                    className={`${expandedUser === index ? "block" : "hidden"
+                      } mt-4 p-4`}
+                  >
+
+                    <div className="relative mb-0 grid grid-cols-2 gap-2">
+                      <div className="relative mb-0">
+                        <input
+                          type="text"
+                          id={`firstname`}
+                          name={`firstname`}
+                          // value={
+                          //   index === 0
+                          //     ? (bookingInput.guestDetails?.firstname || user.firstname || "")
+                          //     : (bookingInput?.friends[index - 1]?.firstname || "")
+                          // }
+                          value={
+                            index === 0
+                              ? (bookingInput.guestDetails?.firstname || user?.firstname || "")
+                              : (bookingInput?.friends[index - 1]?.firstname || "")
+                          }
+
+                          onChange={(e) => onInputChange(e, index)}
+                          onBlur={(e) => validateInput(e)}
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                          placeholder={t("firstname")}
+                          required
+                        />
+                        <div
+                          className="h-[24px] text-red-600 text-start"
+                          style={{
+                            visibility: bookingError.firstname ? "visible" : "hidden",
+                          }}
+                        >
+                          {bookingError.firstname}
+                        </div>
+                      </div>
+
+                      <div className="relative mb-0">
+                        <input
+                          type="text"
+                          id={`lastname`}
+                          name={`lastname`}
+                          value={
+                            index === 0
+                              ? (bookingInput.guestDetails?.lastname || user?.lastname || "")
+                              : (bookingInput?.friends[index - 1]?.lastname || "")
+                          }
+                          onChange={(e) => onInputChange(e, index)}
+                          onBlur={(e) => validateInput(e)}
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
+                          placeholder={t("lastname")}
+                          required
+                        />
+                        <div
+                          className="h-[24px] text-red-600 text-start"
+                          style={{
+                            visibility: bookingError.lastname ? "visible" : "hidden",
+                          }}
+                        >
+                          {bookingError.lastname}
+                        </div>
+                      </div>
+                    </div>
+
+                    <input
+                      type="email"
+                      id={`email`}
+                      name={`email`}
+                      value={
+                        index === 0
+                          ? (bookingInput.guestDetails?.email || user?.email || "")
+                          : (bookingInput?.friends[index - 1]?.email || "")
+                      }
+                      onChange={(e) => onInputChange(e, index)}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                      placeholder={t("email")}
+                      onBlur={(e) => validateInput(e)}
+                      required
+                    />
+                    <div
+                      className="h-[24px] text-red-600 text-start"
+                      style={{
+                        visibility: bookingError.email ? "visible" : "hidden",
+                      }}
+                    >
+                      {bookingError.email}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex flex-col mt-4">
+              <label className="mb-2 font-bold text-lg text-white" htmlFor="comment">{t("remarks")}</label>
+              <textarea
+                rows="4"
+                className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]"
+                id="comment"
+                name="remark"
+                value={bookingInput.remark}
+                onChange={handleRemarksChange}
+              ></textarea>
+            </div>
+
+          </div>
         </div>
-        <div className="py-2 mt-1 px-2">
-          {successMessage && (
-            <Alert type={"success"} message={successMessage} />
-          )}
-          {errorMessage && <Alert type={"danger"} message={errorMessage} />}
+
+        <div className="bg-stone-700 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+          <div className="py-2 mt-1 px-0">
+            <a
+              onClick={handleButtonClick}
+              className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
+              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </span>
+              <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("saveChanges")}</span>
+              <span className="relative invisible">
+                {t("saveChanges")}
+              </span>
+            </a>
+
+          </div>
         </div>
       </div>
 
       <div className="bottom-0 w-full">
         <Footer />
       </div>
-    </section>
+    </section >
   );
 }
 

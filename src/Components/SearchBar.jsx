@@ -45,7 +45,7 @@ function SearchBar({ onSearch, searchBarClassName }) {
 
 SearchBar.propTypes = {
   onSearch: PropTypes.func.isRequired,
-  searchBarClassName: PropTypes.func.isRequired,
+  searchBarClassName: PropTypes.string.isRequired,
 };
 
 export default SearchBar;

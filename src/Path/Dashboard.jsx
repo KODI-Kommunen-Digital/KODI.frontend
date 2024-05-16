@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
 import { getUserListings, getProfile } from "../Services/usersApi";
+import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
   updateListingsData,
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -155,13 +157,17 @@ const Dashboard = () => {
       .catch((error) => console.log(error));
   }
 
-  // Navigate to Edit Listings page Starts
   function goToEditListingsPage(listing) {
-    navigateTo(
-      `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
-    );
+    if (listing.categoryId === 18) {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+      );
+    } else {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+      );
+    }
   }
-
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
@@ -174,19 +180,26 @@ const Dashboard = () => {
   }, [fetchListings]);
 
   function handleDelete(listing) {
-    deleteListing(listing.cityId, listing.id)
-      .then((res) => {
-        setListings(
-          listings.filter(
-            (l) => l.cityId !== listing.cityId || l.id !== listing.id
-          )
-        );
-        setShowConfirmationModal({ visible: false });
+    try {
+      if (listing.appointmentId) {
+        deleteAppointments(listing.cityId, listing.id, listing.appointmentId);
+      }
+      deleteListing(listing.cityId, listing.id)
+        .then((res) => {
+          setListings(
+            listings.filter(
+              (l) => l.cityId !== listing.cityId || l.id !== listing.id
+            )
+          );
+          setShowConfirmationModal({ visible: false });
 
-        fetchUpdatedListings();
-        window.location.reload();
-      })
-      .catch((error) => console.log(error));
+          fetchUpdatedListings();
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function deleteListingOnClick(listing) {
@@ -199,11 +212,12 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    if (listing.appointmentId) {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
+    } else {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    }
   }
-
-  // Navigate to Edit Listings page Starts
-
   const handleSearch = async (searchQuery) => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -373,22 +387,21 @@ const Dashboard = () => {
                           <img
                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                             src={
-                              listing.sourceId === 1
-                                ? listing.logo
-                                  ? process.env.REACT_APP_BUCKET_HOST +
-                                  listing.logo
-                                  : LISTINGSIMAGE
-                                : listing.logo || LISTINGSIMAGE
+                              listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
                             }
+                            onError={(e) => {
+                              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                            }}
                             alt="avatar"
                           />
                         ) : (
                           <img
                             alt="Listing"
                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                            src={LISTINGSIMAGE}
+                            src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                           />
                         )}
+
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
                             className="font-normal text-gray-500 truncate"
@@ -477,7 +490,7 @@ const Dashboard = () => {
                                   <button
                                     onClick={showConfirmationModal.onConfirm}
                                     type="button"
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                                   >
                                     {t("delete")}
                                   </button>

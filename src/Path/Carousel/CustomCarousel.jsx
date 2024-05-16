@@ -4,6 +4,7 @@ import { source } from "../../Constants/source";
 import NextIconButton from "./NextIconButton";
 import PrevIconButton from "./PrevIconButton";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,7 +32,7 @@ const CustomCarousel = (props) => {
             : sortedImageList[activeIndex]?.logo // from drive
         }
         onError={(e) => {
-          e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+          e.target.src = props.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
         }}
         alt={`image ${activeIndex}`}
         className={`w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain`}
@@ -96,6 +97,7 @@ CustomCarousel.propTypes = {
     })
   ).isRequired,
   sourceId: PropTypes.number.isRequired,
+  appointmentId: PropTypes.number.isRequired,
 };
 
 export default CustomCarousel;

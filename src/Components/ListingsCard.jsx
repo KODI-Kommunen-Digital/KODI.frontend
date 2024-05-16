@@ -5,8 +5,9 @@ import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { listingSource } from "../Constants/listingSource";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
-function ListingsCard({ listing, terminalView = false }) {
+function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -19,14 +20,21 @@ function ListingsCard({ listing, terminalView = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (
+        if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+          window.open(listing.website, '_blank');
+        } else if (iFrame) {
+          navigateTo(
+            `/IFrameListing?listingId=${listing.id}&cityId=${listing.cityId}`
+          );
+        } else if (
           listing.sourceId === listingSource.USER_ENTRY ||
           listing.showExternal === 0
         ) {
-          navigateTo(
-            `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""
-            }`
-          );
+          if (listing.appointmentId) {
+            navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
+          } else {
+            navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+          }
         } else if (
           (listing.sourceId === listingSource.SCRAPER &&
             listing.showExternal === 1) ||
@@ -54,7 +62,7 @@ function ListingsCard({ listing, terminalView = false }) {
                 : listing.logo
             }
             onError={(e) => {
-              e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
             }}
           />
         ) : (
@@ -161,6 +169,7 @@ function ListingsCard({ listing, terminalView = false }) {
 ListingsCard.propTypes = {
   listing: PropTypes.object.isRequired,
   terminalView: PropTypes.bool,
+  iFrame: PropTypes.bool
 };
 
 export default ListingsCard;

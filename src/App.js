@@ -8,6 +8,9 @@ import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
+import Summary from "./Path/AppointmentBooking/Summary";
+import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
+import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
@@ -41,12 +44,19 @@ import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
+import IFrame from "./Path/Listings/IFrame";
+import IFrameListing from "./Path/Listings/IframeListings.jsx";
+import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
+import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserCreated";
+import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
+import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
-import Modal from 'react-modal';
-Modal.setAppElement('#root');
+import Modal from "react-modal";
+Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const inFrame = process.env.REACT_APP_INFRAME === "True";
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -81,9 +91,35 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
+          <Route
+            path="/AppointmentBooking/BookAppointments/Summary"
+            element={<Summary />}
+          />
+          <Route
+            path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+            element={<BookingSuccessConfirmation />}
+          />
+
+          <Route
+            path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+            element={<BookingErrorConfirmation />}
+          />
+
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+          {inFrame && (
+            <React.Fragment>
+              <Route
+                path="/IFrame"
+                element={
+                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID || '1'} />
+                }
+                exact
+              />
+              <Route path="/IFrameListing" element={<IFrameListing />} exact />
+            </React.Fragment>
+          )}
 
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
@@ -119,8 +155,29 @@ const App = () => {
                 exact
               />
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
-            </React.Fragment>)}
 
+              <Route
+                path="/AppointmentBooking/MyAppointments"
+                element={<MyAppointments />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/MyBookings"
+                element={<MyBookings />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/AppointmentsUserCreated"
+                element={<AppointmentsUserCreated />}
+                exact
+              />
+              <Route
+                path="/Listings/BookAppointments"
+                element={<BookMyAppointments />}
+                exact
+              />
+            </React.Fragment>
+          )}
         </Routes>
       </div>
     </BrowserRouter>

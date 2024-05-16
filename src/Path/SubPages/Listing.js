@@ -7,6 +7,7 @@ import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
@@ -103,6 +104,7 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
+
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
@@ -325,7 +327,6 @@ const Listing = () => {
                               {title}
                             </span>
                           </h1>
-
                         </div>
 
                         <div className="flex flex-wrap gap-1 justify-between mt-0">
@@ -496,7 +497,7 @@ const Listing = () => {
                           <img
                             alt="default"
                             className="object-cover object-center h-[600px] w-full"
-                            src={LISTINGSIMAGE}
+                            src={input.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                           />
                         )}
                       </div>
@@ -586,6 +587,34 @@ const Listing = () => {
                     </div>
                   </div>
                 )}
+
+                {isLoggedIn ? (
+                  input.id && input.categoryId === 18 && (
+                    <a
+                      onClick={() =>
+                        navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`)
+                      }
+                      className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                    >
+                      <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                      </span>
+                      <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("clickHereToBook")}</span>
+                      <span className="relative invisible">
+                        {t("clickHereToBook")}
+                      </span>
+                    </a>
+                  )
+                ) : (
+                  <div className="w-full items-center text-center justify-center">
+                    <p className="text-gray-900 hover:text-gray-200 rounded-lg font-bold bg-gray-200 hover:bg-gray-900 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      onClick={() => navigateTo("/login")}>
+                      {t("pleaseLogin")}
+                    </p>
+                  </div>
+                )}
+
               </div>
             </div>
           </div>
@@ -616,7 +645,9 @@ const Listing = () => {
                   {listings &&
                     listings
                       .filter(
-                        (listing) => listing.statusId === statusByName.Active && listing.id !== listingId
+                        (listing) =>
+                          listing.statusId === statusByName.Active &&
+                          listing.id !== listingId
                       )
                       .map((listing, index) => (
                         <ListingsCard
