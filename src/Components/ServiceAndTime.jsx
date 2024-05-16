@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { useLocation } from 'react-router-dom';
 
 const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentError, setAppointmentError, daysOfWeek, initialTimeSlot }) => {
 
@@ -9,6 +10,11 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
   const [editServiceIndex, setEditServciceIndex] = useState();
   const [editAppointmentTime, setEditAppointmentTime] = useState(false)
   const [validNumberofServicesError, setValidNumberofServicesError] = useState("");
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const urlAppointmentId = params.get('appointmentId');
+  const [editAppointmentFlag] = useState(!!urlAppointmentId)
 
   const [isValidInput, setIsValidInput] = useState(true);
   const [isValidServiceCount, setIsValidServiceCount] = useState(true);
@@ -145,18 +151,6 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
     appointmentInput.services ? new Array(appointmentInput.services.length).fill(false) : []
   );
 
-  // const [isCheckedList, setIsCheckedList] = useState(
-  //   appointmentInput.services
-  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
-  //     : []
-  // );
-
-  // const [isChecked, setIsChecked] = useState(
-  //   appointmentInput.services
-  //     ? appointmentInput.services.map((service) => service.slotSameAsAppointment)
-  //     : []
-  // );
-
   const handleCheckboxChange = (index) => {
     const updatedCheckedList = [...isCheckedList];
     updatedCheckedList[index] = !updatedCheckedList[index];
@@ -198,56 +192,10 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
 
       return {
         ...prevInput,
-        // slotSameAsAppointment: false,
         services: updatedServices,
       };
     });
   };
-
-  // const handleTimeChange = (day, index, key, value, dayIndex) => {
-  //   setAppointmentInput((prevInput) => {
-  //     if (editAppointmentTime) {
-  //       const updatedOpeningDates = {
-  //         ...prevInput.metadata.openingDates,
-  //         [day]: prevInput.metadata.openingDates[day].map((slot, i) =>
-  //           i === dayIndex ? { ...slot, [key]: value } : slot
-  //         ),
-  //       };
-
-  //       return {
-  //         ...prevInput,
-  //         metadata: {
-  //           ...prevInput.metadata,
-  //           openingDates: updatedOpeningDates,
-  //         },
-  //       };
-  //     } else {
-  //       const updatedServices = prevInput.services.map((service, i) => {
-  //         if (i === editServiceIndex) {
-  //           const updatedOpeningDates = {
-  //             ...service.metadata.openingDates,
-  //             [day]: service.metadata.openingDates[day].map((slot, j) =>
-  //               j === dayIndex ? { ...slot, [key]: value } : slot
-  //             ),
-  //           };
-  //           return {
-  //             ...service,
-  //             metadata: {
-  //               ...service.metadata,
-  //               openingDates: updatedOpeningDates,
-  //             },
-  //           };
-  //         }
-  //         return service;
-  //       });
-
-  //       return {
-  //         ...prevInput,
-  //         services: updatedServices,
-  //       };
-  //     }
-  //   });
-  // };
 
   const handleTimeChange = (day, index, key, value, dayIndex) => {
     setAppointmentInput((prevInput) => {
@@ -428,7 +376,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
           setEditAppointmentTime(true)
         }}
       >
-        {t("addtimeslot")}
+        {editAppointmentFlag ? t("editTimeSlot") : t("addtimeslot")}
       </button>
 
       <label
@@ -511,7 +459,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
               }}
               disabled={isChecked[serviceIndex]}
             >
-              {t("addtimeslot")}
+              {editAppointmentFlag ? t("editTimeSlot") : t("addtimeslot")}
             </button>
 
             <div className="flex justify-between md:hidden sm:inline-block">

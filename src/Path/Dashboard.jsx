@@ -14,6 +14,7 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -378,8 +379,11 @@ const Dashboard = () => {
                         <img
                           className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                           src={
-                            listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo || LISTINGSIMAGE
+                            listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
                           }
+                          onError={(e) => {
+                            e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                          }}
                           alt="avatar"
                         />
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">

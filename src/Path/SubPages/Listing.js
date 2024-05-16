@@ -7,6 +7,7 @@ import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
@@ -501,12 +502,13 @@ const Listing = () => {
                           <CustomCarousel
                             imageList={input.otherlogos}
                             sourceId={input.sourceId}
+                            appointmentId={input.appointmentId}
                           />
                         ) : (
                           <img
                             alt="default"
                             className="object-cover object-center h-[600px] w-full"
-                            src={LISTINGSIMAGE}
+                            src={input.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                           />
                         )}
                       </div>

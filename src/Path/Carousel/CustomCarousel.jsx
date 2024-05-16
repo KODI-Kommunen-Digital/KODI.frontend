@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { source } from "../../Constants/source";
-// import { Carousel } from "@material-tailwind/react";
 import NextIconButton from "./NextIconButton";
 import PrevIconButton from "./PrevIconButton";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -28,11 +28,11 @@ const CustomCarousel = (props) => {
         src={
           props.sourceId === source.User
             ? process.env.REACT_APP_BUCKET_HOST +
-              sortedImageList[activeIndex]?.logo // uploaded image
+            sortedImageList[activeIndex]?.logo // uploaded image
             : sortedImageList[activeIndex]?.logo // from drive
         }
         onError={(e) => {
-          e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+          e.target.src = props.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
         }}
         alt={`image ${activeIndex}`}
         className="w-full h-[32rem] object-cover"
@@ -57,9 +57,8 @@ const CustomCarousel = (props) => {
   return (
     <div className="relative">
       <div
-        className={`rounded-xl mb-${
-          sortedImageList.length <= 1 ? 0 : 4
-        } relative`}
+        className={`rounded-xl mb-${sortedImageList.length <= 1 ? 0 : 4
+          } relative`}
       >
         {sortedImageList.length <= 1 ? null : (
           <>
@@ -90,6 +89,7 @@ CustomCarousel.propTypes = {
     })
   ).isRequired,
   sourceId: PropTypes.number.isRequired,
+  appointmentId: PropTypes.number.isRequired,
 };
 
 export default CustomCarousel;
