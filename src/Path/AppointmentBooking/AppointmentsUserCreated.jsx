@@ -158,9 +158,7 @@ const AppointmentsUserCreated = () => {
                                                         e.target.src = APPOINTMENTDEFAULTIMAGE; // Set default image if loading fails
                                                     }}
                                                     onClick={() =>
-                                                        navigateTo(
-                                                            `/Listing?listingId=${appointment.listingId}&cityId=${appointment.cityId}&appointmentId=${appointment.id}`
-                                                        )
+                                                        navigateTo(`/AppointmentBooking/MyAppointments?appointmentId=${appointment.id}`)
                                                     }
                                                     alt="avatar"
                                                 />
@@ -169,9 +167,7 @@ const AppointmentsUserCreated = () => {
                                                         className="font-medium text-gray-500 cursor-pointer text-center truncate"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                         onClick={() =>
-                                                            navigateTo(
-                                                                `/Listing?listingId=${appointment.listingId}&cityId=${appointment.cityId}&appointmentId=${appointment.id}`
-                                                            )
+                                                            navigateTo(`/AppointmentBooking/MyAppointments?appointmentId=${appointment.id}`)
                                                         }
                                                     >
                                                         {appointment.title}
