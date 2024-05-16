@@ -722,5 +722,6 @@
     "serviceId": "Service Id",
     "bookingId": "Booking Id",
     "pastDate": "Booking date is in the past",
-    "timeValidation": "Start time cannot be the same as end time"
+    "timeValidation": "Start time cannot be the same as end time",
+    "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure."
 }
