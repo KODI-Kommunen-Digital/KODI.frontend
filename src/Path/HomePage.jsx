@@ -428,11 +428,12 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="my-4 bg-gray-200 h-[1px]"></div>
+          {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
-          <div className="bg-white lg:px-20 md:px-5 px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+          {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
+          <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
                 <div className="relative h-96 rounded overflow-hidden w-auto">
                   <img
                     alt="ecommerce"
@@ -459,7 +460,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
                 <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
                   <img
                     alt="ecommerce"
@@ -486,7 +487,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
                 <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
                   <img
                     alt="ecommerce"
