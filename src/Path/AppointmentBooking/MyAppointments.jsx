@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
@@ -12,10 +12,14 @@ const MyAppointments = () => {
   const pageSize = 9;
   const [userId, setUserId] = useState(0);
 
-  const fetchAppointments = useCallback(() => {
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const appointmentId = urlParams.get('appointmentId');
+
     getOwnerAppointments({
       pageNumber,
       pageSize,
+      appointmentId
     }).then((response) => {
       setOwnerAppointments(response.data.data);
 
@@ -26,14 +30,6 @@ const MyAppointments = () => {
       console.error("Error fetching services:", error);
     });
   }, [pageNumber]);
-
-  useEffect(() => {
-    if (pageNumber === 1) {
-      fetchAppointments();
-    } else {
-      fetchAppointments();
-    }
-  }, [fetchAppointments, pageNumber]);
 
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
