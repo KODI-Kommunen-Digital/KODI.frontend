@@ -3,7 +3,7 @@ import { getUserId } from "./usersApi";
 const axios = appointmentInstance;
 
 export async function getAppointmentsUserCreated(params) {
-    return axios.get(`/v1/users/${getUserId()}/appointments`, params);
+    return axios.get(`/v1/users/${getUserId()}/appointments`, { params });
 }
 
 export async function deleteMyServices(cityId, listingId, serviceId) {
@@ -13,7 +13,7 @@ export async function deleteMyServices(cityId, listingId, serviceId) {
 }
 
 export async function getUserBookings(params) {
-    return axios.get(`/v1/users/${getUserId()}/bookings`, params);
+    return axios.get(`/v1/users/${getUserId()}/bookings`, { params });
 }
 
 export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
@@ -52,7 +52,7 @@ export async function deleteAppointments(cityId, listingId, appointmentId) {
 }
 
 export async function getOwnerAppointments(params) {
-    return axios.get(`/v1/users/${getUserId()}/owner/bookings`, params);
+    return axios.get(`/v1/users/${getUserId()}/owner/bookings`, { params });
 }
 
 export async function deleteUserAppointments(userId, appointmentId, bookingId) {
@@ -62,10 +62,7 @@ export async function deleteUserAppointments(userId, appointmentId, bookingId) {
 }
 
 export async function createBookings(cityId, listingId, appointmentId, params) {
-    return axios.post(
-        `/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`,
-        params
-    );
+    return axios.post(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`, { params });
 }
 
 export async function getAppointmentServices(cityId, listingId, appointmentId) {
