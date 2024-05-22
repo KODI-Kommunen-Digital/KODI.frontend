@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
 import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
@@ -182,7 +181,7 @@ const Register = () => {
 					<img
 						onClick={() => navigate("/")}
 						className="mx-auto h-20 w-auto cursor-pointer"
-						src={HeidiLogo}
+						src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 						alt="HEDI- Heimat Digital"
 					/>
 					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
