@@ -521,6 +521,9 @@ function UploadListings() {
   useEffect(() => {
     getCities().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
+      if(citiesResponse.data.data.length == 1) {
+        setCityId(citiesResponse.data.data[0].id)
+      }
     });
   }, []);
 
@@ -642,6 +645,7 @@ function UploadListings() {
             </div>
           </div>
 
+          {cities.length > 1 && 
           <div className="relative mb-4">
             <label
               htmlFor="title"
@@ -675,6 +679,7 @@ function UploadListings() {
               {error.cityId}
             </div>
           </div>
+          }
 
           {villages.length > 0 && parseInt(cityId) ? (
             <div className="relative mb-4">
