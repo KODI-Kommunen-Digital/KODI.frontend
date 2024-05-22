@@ -247,6 +247,8 @@ function UploadListings() {
     }],
   });
 
+  console.log(appointmentInput)
+
   const [appointmentError, setAppointmentError] = useState({
     name: "",
     duration: "",
@@ -260,6 +262,40 @@ function UploadListings() {
   });
 
   const handleSubmit = async (event) => {
+
+    const validateTimeSlots = () => {
+      for (let service of appointmentInput.services) {
+        const { duration, metadata: { openingDates } } = service;
+        const durationInMinutes = parseInt(duration, 10);
+
+        for (let day in openingDates) {
+          for (let slot of openingDates[day]) {
+            const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+            const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+            const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+
+            if (slotDuration !== durationInMinutes) {
+              return t("slotDurationMismatch", {
+                day,
+                duration,
+                startTime: slot.startTime,
+                endTime: slot.endTime
+              });
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    if (appointmentAdded) {
+      const errorMessage = validateTimeSlots();
+      if (errorMessage) {
+        setErrorMessage(errorMessage);
+        return;
+      }
+    }
+
     let valid = true;
     for (let key in error) {
       var errorMessage = getErrorMessage(key, listingInput[key]);
@@ -1418,7 +1454,7 @@ function UploadListings() {
               )}
             </button>
           </div>
-          <div>
+          <div className="py-2 mt-1 px-2">
             {successMessage && (
               <Alert type={"success"} message={successMessage} />
             )}
