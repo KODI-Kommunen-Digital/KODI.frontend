@@ -523,6 +523,13 @@ function UploadListings() {
       setCities(citiesResponse.data.data);
       if(citiesResponse.data.data.length == 1) {
         setCityId(citiesResponse.data.data[0].id)
+        setInput((prev) => ({
+          ...prev,
+          cityId: citiesResponse.data.data[0].id,
+          villageId: 0,
+        }));
+        if (parseInt(citiesResponse.data.data[0].id))
+          getVillages(citiesResponse.data.data[0].id).then((response) => setVillages(response.data.data));
       }
     });
   }, []);
