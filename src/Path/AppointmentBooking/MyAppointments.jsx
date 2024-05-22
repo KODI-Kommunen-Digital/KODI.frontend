@@ -151,7 +151,7 @@ const MyAppointments = () => {
                           className="font-medium text-blue-600 cursor-pointer text-center truncate"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {`MAP${appointment.id.toString().padStart(6, '0')}`}
+                          {`${appointment.appointmentId}${appointment.serviceId ?? ''}${appointment.id}`}
                         </div>
                       </th>
 

@@ -27,14 +27,14 @@ const AppointmentsUserCreated = () => {
                         const appointmentsWithListings = appointments.map(appointment => {
                             const matchingListing = listings.find(listing => listing.appointmentId === appointment.id);
                             if (matchingListing) {
-                                return { ...appointment, cityId: matchingListing.cityId, listingId: matchingListing.id };
+                                return { ...appointment, cityId: matchingListing.cityId, listingId: matchingListing.id, listingImage: matchingListing.image };
                             } else {
                                 return appointment;
                             }
                         });
 
                         setMyAppointments(appointmentsWithListings);
-                        // console.log("Appointments with Listings:", appointmentsWithListings);
+                        console.log("Appointments with Listings:", response.data.data);
                     }
                 }).catch((error) => {
                     console.error("Error fetching listings:", error);
@@ -150,7 +150,7 @@ const AppointmentsUserCreated = () => {
                                                     className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                     src={
                                                         appointment.image
-                                                            ? process.env.REACT_APP_BUCKET_HOST + appointment.image
+                                                            ? process.env.REACT_APP_BUCKET_HOST + appointment.listingImage
                                                             : process.env.REACT_APP_BUCKET_HOST +
                                                             "admin/DefaultAppointmentImage.jpeg"
                                                     }
