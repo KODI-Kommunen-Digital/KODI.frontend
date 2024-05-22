@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.10.6",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
+    "@sentry/react": "^8.2.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
