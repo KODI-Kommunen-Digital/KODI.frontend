@@ -711,5 +711,7 @@
     "bookingId": "Booking Id",
     "pastDate": "Booking date is in the past",
     "timeValidation": "Start time cannot be the same as end time",
-    "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure."
+    "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure.",
+    "Failed": "Failed",
+    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}"
 }
