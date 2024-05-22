@@ -724,5 +724,6 @@
     "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein",
     "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen",
     "Failed": "Fehlgeschlagen",
+    "pleaseSelectTimeSlotForAll": "Bitte wählen Sie Zeitfenster für alle Personen aus",
     "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}"
 }

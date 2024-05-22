@@ -247,8 +247,6 @@ function UploadListings() {
     }],
   });
 
-  console.log(appointmentInput)
-
   const [appointmentError, setAppointmentError] = useState({
     name: "",
     duration: "",
