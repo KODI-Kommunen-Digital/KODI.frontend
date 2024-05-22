@@ -695,6 +695,7 @@
     "pleaseSelectDuration": "Please enter Service duration",
     "pleaseEnterService": "Please select Service",
     "pleaseSelectNumberOfPeople": "Please select Number of people",
+    "pleaseSelectTimeSlotForAll": "Please select time slots for all the people",
     "pleaseSelectEmail": "Please enter email",
     "pleaseSelectPhone": "Please enter phone",
     "pleaseSelectFirstName": "Please enter First Name",
