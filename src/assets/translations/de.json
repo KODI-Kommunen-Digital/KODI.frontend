@@ -722,5 +722,7 @@
     "bookingId": "Buchungs-ID",
     "pastDate": "Das Buchungsdatum liegt in der Vergangenheit",
     "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein",
-    "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen"
+    "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen",
+    "Failed": "Fehlgeschlagen",
+    "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}"
 }
