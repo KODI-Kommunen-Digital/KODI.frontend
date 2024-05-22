@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
-import Footer from "../../Components/Footer";
 // import PropTypes from "prop-types";
 import { createBookings } from "../../Services/appointmentBookingApi";
 
@@ -12,11 +11,17 @@ const Summary = () => {
   const { state } = useLocation();
   const [updating, setUpdating] = useState(false);
   const bookingData = state.bookingData;
-  console.log("Booking created:", bookingData);
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
+
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -41,13 +46,6 @@ const Summary = () => {
       console.error("Error creating booking:", error);
       navigate("/AppointmentBooking/BookAppointments/BookingErrorConfirmation");
       setUpdating(false);
-    }
-  };
-
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
     }
   };
 
@@ -100,11 +98,11 @@ const Summary = () => {
           <a
             onClick={handleSubmit}
             disabled={updating}
-            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
-            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
+            className="bg-purple-900 relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-purple-900 duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
-            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
+            <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
             <span className="relative invisible">
               {t("confirm")}
 
@@ -139,10 +137,12 @@ const Summary = () => {
             }
             disabled={updating}
             className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
-            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-purple-900 group-hover:-translate-x-0 ease">
+              <svg className="w-6 h-6 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
             </span>
-            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:translate-x-full ease">{t("goBack")}</span>
+            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:-translate-x-full ease">{t("goBack")}</span>
             <span className="relative invisible">
               {t("goBack")}
 
@@ -167,11 +167,6 @@ const Summary = () => {
             </span>
           </a>
         </div>
-      </div>
-
-
-      <div className="bottom-0 w-full">
-        <Footer />
       </div>
     </section>
   );

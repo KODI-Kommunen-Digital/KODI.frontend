@@ -61,11 +61,8 @@ export async function deleteUserAppointments(userId, appointmentId, bookingId) {
     );
 }
 
-export async function createBookings(cityId, listingId, appointmentId, params) {
-    return axios.post(
-        `/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`,
-        { params }
-    );
+export async function createBookings(cityId, listingId, appointmentId, bookingData) {
+    return axios.post(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/book`, bookingData);
 }
 
 export async function getAppointmentServices(cityId, listingId, appointmentId) {
