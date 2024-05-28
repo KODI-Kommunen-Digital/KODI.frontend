@@ -726,7 +726,8 @@
     "pastDate": "Booking date is in the past",
     "timeValidation": "Start time cannot be the same as end time",
     "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure.",
-    "listingInactiveMessage": "This listing is not active and cannot be viewed by the public",
     "Failed": "Failed",
-    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}"
+    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}",
+    "listingInactiveMessage": "This listing is not active and cannot be viewed by the public",
+    "pleaseEnterValidEmail": "Please enter a valid email address"
 }

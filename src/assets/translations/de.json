@@ -736,8 +736,9 @@
     "pastDate": "Das Buchungsdatum liegt in der Vergangenheit",
     "timeValidation": "Die Startzeit darf nicht mit der Endzeit identisch sein",
     "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen",
-    "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden",
     "Failed": "Fehlgeschlagen",
     "pleaseSelectTimeSlotForAll": "Bitte wählen Sie Zeitfenster für alle Personen aus",
-    "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}"
+    "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}",
+    "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden",
+    "pleaseEnterValidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
 }
