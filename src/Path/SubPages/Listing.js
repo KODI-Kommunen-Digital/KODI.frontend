@@ -597,7 +597,7 @@ const Listing = () => {
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
-                  <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
+                  <div className="w-full md:ml-[0rem] lg:ml-[0rem] ml-[0rem] h-full lg:h-64 bg-white rounded-xl md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                     <div>
                       <div
                         onClick={() =>
