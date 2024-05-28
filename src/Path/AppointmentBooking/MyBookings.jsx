@@ -146,7 +146,8 @@ const MyBookings = () => {
                           className="font-medium text-blue-600 cursor-pointer text-center truncate"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {`MBK${booking.id.toString().padStart(6, '0')}`}
+                          {/* {`MBK${booking.id.toString().padStart(6, '0')}`} */}
+                          {`${booking.appointmentId}${booking.serviceId ?? ''}${booking.id}`}
                         </div>
                       </th>
 

@@ -32,7 +32,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           listing.showExternal === 0
         ) {
           if (listing.appointmentId) {
-            navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
+            navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
           } else {
             navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
           }

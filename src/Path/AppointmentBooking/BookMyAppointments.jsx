@@ -465,7 +465,7 @@ function BookMyAppointments() {
     <section className="text-slate-800 bg-gray-100 body-font">
       <HomePageNavBar />
 
-      <div className="bg-gray-100 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+      <div className="bg-neutral-400 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
           <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
