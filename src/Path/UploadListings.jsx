@@ -85,7 +85,11 @@ function UploadListings() {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
-        setImage(e.target.files);
+        setImage(e.dataTransfer.files);
+        setInput((prev) => ({
+          ...prev,
+          hasAttachment: true,
+        }));
       } else if (file.type === "application/pdf") {
         setPdf(file);
         setInput((prev) => ({

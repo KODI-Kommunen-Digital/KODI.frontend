@@ -8,9 +8,10 @@ import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const sortedImageList = [...props.imageList].sort(
-    (a, b) => a.imageOrder - b.imageOrder
-  );
+  const sortedImageList = Array.isArray(props.imageList)
+    ? [...props.imageList].sort((a, b) => a.imageOrder - b.imageOrder)
+    : [];
+
   const onClickNext = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % sortedImageList.length);
   };
