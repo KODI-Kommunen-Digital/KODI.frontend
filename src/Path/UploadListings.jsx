@@ -382,7 +382,7 @@ function UploadListings() {
 
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
-          : setSuccessMessage(t("listingUpdated"));
+          : newListing ? setSuccessMessage(t("listingCreated")) : setSuccessMessage(t("listingUpdated"));
         setErrorMessage(false);
         setIsSuccess(true);
         setTimeout(() => {
