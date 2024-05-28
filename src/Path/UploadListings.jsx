@@ -272,7 +272,7 @@ function UploadListings() {
             const [endHour, endMinute] = slot.endTime.split(":").map(Number);
             const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
 
-            if (slotDuration !== durationInMinutes) {
+            if (slotDuration > durationInMinutes) {
               return t("slotDurationMismatch", {
                 day,
                 duration,
