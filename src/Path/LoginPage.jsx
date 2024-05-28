@@ -370,7 +370,7 @@ const LoginPage = () => {
 								{t("notMember")}
 								<span
 									onClick={routeChangeToRegister}
-									className="font-medium cursor-pointer text-black hover:text-blue-400"
+									className="font-medium cursor-pointer text-black hover:text-slate-400"
 								>
 									{" "}
 									{t("clickToRegister")}
@@ -393,35 +393,28 @@ const LoginPage = () => {
 											<div className="modal-content py-4 text-left px-6">
 												<div>
 													<h2 className="font-bold text-xl text-center mb-4">
-														Anleitung
+														{t("anleitung")}
 													</h2>
 													<h3 className="font-bold text-lg text-center mb-4">
-														Registrieren in der App
+														{t("subtitle")}
 													</h3>
 													<p className="mb-6">
-														<strong>Schritt 1:</strong> Nutzername und Passwort
-														festlegen{" "}
+														<strong>{t("step1")} </strong>
 													</p>
 													<p className="mb-6">
-														<strong>Schritt 2:</strong> Es wird Ihnen eine
-														E-Mail gesendet an die Mail, die Sie eingegeben
-														haben
+														<strong>{t("step2")}</strong>
 													</p>
 													<p className="mb-6">
-														<strong>Schritt 3:</strong> Bitte verifizieren Sie
-														die Mail, indem Sie in Ihr Postfach gehen und den
-														Bestätigungslink drücken
+														<strong>{t("step3")}</strong>
 													</p>
 													<p className="mb-6">
-														<strong>Schritt 4:</strong> Ihr Account ist
-														verifiziert und Sie können sich mit Ihren
-														Login-Daten einloggen
+														<strong>{t("step4")}</strong>
 													</p>
 													<p className="mb-6">
-														Wir wünschen Ihnen viel Spaß beim Benutzen der App!
+														<strong>{t("enjoyApp")}</strong>
 													</p>
 													<p className="mb-6">
-														<strong>Danke!!</strong>
+														<strong>{t("thankYou")}</strong>
 													</p>
 												</div>
 

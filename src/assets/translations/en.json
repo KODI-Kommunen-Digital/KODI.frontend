@@ -731,5 +731,11 @@
     "listingInactiveMessage": "This listing is not active and cannot be viewed by the public",
     "pleaseEnterValidEmail": "Please enter a valid email address",
     "numberOfPeopleAndSelectedSlotDifference": "Number of people and selected slots dose not match",
-    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}. Duration added is more than time slots added"
+    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}. Duration added is more than time slots added",
+    "subtitle": "Registering in the App",
+    "step1": "Step 1: Set Username and Password",
+    "step2": "Step 2: An email will be sent to the email you provided",
+    "step3": "Step 3: Please verify the email by going to your inbox and clicking the confirmation link",
+    "step4": "Step 4: Your account is verified, and you can log in with your login credentials",
+    "thankYou": "Thank you!!"
 }
