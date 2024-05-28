@@ -738,7 +738,7 @@
     "pleaseLogin": "Klicken Sie hier, um sich anzumelden und Ihr nächstes Abenteuer zu buchen",
     "Failed": "Fehlgeschlagen",
     "pleaseSelectTimeSlotForAll": "Bitte wählen Sie Zeitfenster für alle Personen aus",
-    "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}",
     "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden",
-    "pleaseEnterValidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    "pleaseEnterValidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}. Die hinzugefügte Dauer ist länger als die hinzugefügten Zeitfenster"
 }
