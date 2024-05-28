@@ -402,6 +402,10 @@ function UploadListings() {
     }
   };
 
+  const handleCancel = () => {
+    navigate('/Dashboard');
+  };
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const accessToken =
@@ -1489,6 +1493,16 @@ function UploadListings() {
                 </svg>
               )}
             </button>
+
+            {!newListing && (
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                {t("cancel")}
+              </button>
+            )}
           </div>
           <div className="py-2 mt-1 px-2">
             {successMessage && (
