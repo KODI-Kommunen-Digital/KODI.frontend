@@ -33,7 +33,7 @@ const VerifyEmail = () => {
 			setUserId(urlUserId);
 			setMakeVerifyEmailCall(true);
 		}
-	}, [navigate]);
+	}, []);
 
 	const [count, setCount] = useState(10);
 	const [redirect, setRedirect] = useState(false);
