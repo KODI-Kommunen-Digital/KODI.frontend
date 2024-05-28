@@ -85,7 +85,11 @@ function UploadListings() {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
-        setImage(e.target.files);
+        setImage(e.dataTransfer.files);
+        setInput((prev) => ({
+          ...prev,
+          hasAttachment: true,
+        }));
       } else if (file.type === "application/pdf") {
         setPdf(file);
         setInput((prev) => ({
@@ -442,6 +446,11 @@ function UploadListings() {
     setDescription(newContent);
   };
 
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "title":
@@ -499,6 +508,15 @@ function UploadListings() {
           return "";
         }
 
+      case "email":
+        if (name === "email") {
+          if (!value) {
+            return t("pleaseEnterValidEmail");
+          } else if (!isValidEmail(value)) {
+            return t("pleaseEnterValidEmail");
+          }
+        }
+
       case "expiryDate":
         if (!value && parseInt(input.categoryId) == 1) {
           return t("pleaseEnterExpiryDate");
@@ -521,7 +539,7 @@ function UploadListings() {
   useEffect(() => {
     getCities().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
-      if(citiesResponse.data.data.length == 1) {
+      if (citiesResponse.data.data.length == 1) {
         setCityId(citiesResponse.data.data[0].id)
         setInput((prev) => ({
           ...prev,
@@ -652,40 +670,40 @@ function UploadListings() {
             </div>
           </div>
 
-          {cities.length > 1 && 
-          <div className="relative mb-4">
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-            </label>
-            <select
-              type="text"
-              id="cityId"
-              name="cityId"
-              value={cityId || 0}
-              onChange={onCityChange}
-              autoComplete="country-name"
-              disabled={!newListing}
-              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-            >
-              <option value={0}>{t("select")}</option>
-              {cities.map((city) => (
-                <option key={Number(city.id)} value={Number(city.id)}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-            <div
-              className="h-[24px] text-red-600"
-              style={{
-                visibility: error.cityId ? "visible" : "hidden",
-              }}
-            >
-              {error.cityId}
+          {cities.length > 1 &&
+            <div className="relative mb-4">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-600"
+              >
+                {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+              </label>
+              <select
+                type="text"
+                id="cityId"
+                name="cityId"
+                value={cityId || 0}
+                onChange={onCityChange}
+                autoComplete="country-name"
+                disabled={!newListing}
+                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+              >
+                <option value={0}>{t("select")}</option>
+                {cities.map((city) => (
+                  <option key={Number(city.id)} value={Number(city.id)}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+              <div
+                className="h-[24px] text-red-600"
+                style={{
+                  visibility: error.cityId ? "visible" : "hidden",
+                }}
+              >
+                {error.cityId}
+              </div>
             </div>
-          </div>
           }
 
           {villages.length > 0 && parseInt(cityId) ? (
@@ -1053,6 +1071,14 @@ function UploadListings() {
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("emailExample")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.email ? "visible" : "hidden",
+              }}
+            >
+              {error.email}
+            </div>
           </div>
 
           <div className="relative mb-4">

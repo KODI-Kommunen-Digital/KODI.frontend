@@ -679,5 +679,6 @@
     "moreService": "Weitere Kategorien",
     "mehr": "Mehr",
     "Failed": "Fehlgeschlagen",
-    "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden"
+    "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden",
+    "pleaseEnterValidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
 }
