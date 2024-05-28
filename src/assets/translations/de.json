@@ -741,5 +741,8 @@
     "pleaseSelectTimeSlotForAll": "Bitte wählen Sie Zeitfenster für alle Personen aus",
     "listingInactiveMessage": "Dieser Eintrag ist nicht aktiv und kann nicht öffentlich eingesehen werden",
     "pleaseEnterValidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "numberOfPeopleAndSelectedSlotDifference": "Anzahl der Personen und ausgewählte Slots stimmen nicht überein",
+    "pleaseSelectNumberOfPeople": "Bitte wählen Sie die Anzahl der Personen aus",
+    "pleaseEnterService": "Bitte wählen Sie Service aus",
     "slotDurationMismatch": "Die Slotdauer passt nicht am {{day}} für den Service mit einer Dauer von {{duration}} Minuten. Slot: {{startTime}} - {{endTime}}. Die hinzugefügte Dauer ist länger als die hinzugefügten Zeitfenster"
 }
