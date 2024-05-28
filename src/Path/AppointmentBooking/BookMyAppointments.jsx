@@ -69,7 +69,7 @@ function BookMyAppointments() {
       email: ""
     }
   });
-  console.log(bookingInput)
+
   const [bookingError, setBookingError] = useState({
     service: "",
     serviceId: "",
@@ -106,8 +106,6 @@ function BookMyAppointments() {
       setSlotNotSelected(true);
       setErrorMessage(t("pleaseSelectTimeSlotForAll"));
     }
-
-    console.log("bookingInput.numberOfPeople" + " " + bookingInput.numberOfPeople + "selectedCount" + " " + selectedCount)
     if (hasTimeSlots && parseInt(bookingInput.numberOfPeople) !== selectedCount) {
       isValid = false;
       setNumberMismatchError(true);
@@ -223,7 +221,6 @@ function BookMyAppointments() {
 
   const onInputChange = (e, index) => {
     const { name, value } = e.target;
-    console.log("value" + value)
 
     if (name === "service" || name === "numberOfPeople") {
       if (index === 0) {
@@ -240,7 +237,10 @@ function BookMyAppointments() {
           [name]: value,
           friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({})) // According to the change in value the friends array changes, imporovements needed
         }));
-        console.log(bookingInput)
+      }
+
+      if (selectedTimes.length < value) {
+        setTimeSlotMinimumError(false);
       }
     } else {
       if (index === 0) {
@@ -348,6 +348,7 @@ function BookMyAppointments() {
           serviceId
         );
         setTimeSlots(timeSlotResponse.data.data);
+
         if (timeSlotResponse.data.data && timeSlotResponse.data.data.length > 0) {
           setHasTimeSlots(true);
         } else {
@@ -357,7 +358,6 @@ function BookMyAppointments() {
           ...prevState,
           serviceId: serviceId
         }));
-        console.log(timeSlots)
       } catch (error) {
         console.error("Error fetching time slots:", error);
       }
@@ -365,9 +365,96 @@ function BookMyAppointments() {
   };
 
   const [, setSlotsLeftCount] = useState("");
-  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
-    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+  // const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+  //   console.log(slotIndex)
+  //   console.log(index)
+  //   if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+  //     const startTime = time;
+  //     const [startHour, startMinute] = time.split(':').map(Number);
+  //     let endHour = startHour + Math.floor((startMinute + duration) / 60);
+  //     let endMinute = (startMinute + duration) % 60;
+  //     endHour = endHour.toString().padStart(2, '0');
+  //     endMinute = endMinute.toString().padStart(2, '0');
+  //     const endTime = `${endHour}:${endMinute}`;
 
+  //     if (selectedTimes.length === 0) {
+  //       setBookingInput((prevState) => ({
+  //         ...prevState,
+  //         startTime: startTime,
+  //         endTime: endTime,
+  //         // date: selectedDate,
+  //       }));
+  //     } else {
+  //       if (selectedTimes.length === 1) {
+  //         setBookingInput((prevState) => ({
+  //           ...prevState,
+  //           friends: [
+  //             {
+  //               startTime: startTime,
+  //               endTime: endTime,
+  //             },
+  //           ],
+  //         }));
+  //       } else {
+  //         setBookingInput((prevState) => ({
+  //           ...prevState,
+  //           friends: [
+  //             ...prevState.friends,
+  //             {
+  //               startTime: startTime,
+  //               endTime: endTime,
+  //             },
+  //           ],
+  //         }));
+  //       }
+  //     }
+
+  //     setSelectedTimes([...selectedTimes, time]);
+  //     setSelectedCount(selectedCount + 1);
+
+  //     if (
+  //       timeSlots &&
+  //       timeSlots.length > 0 &&
+  //       timeSlots[index].openingHours &&
+  //       timeSlots[index].openingHours[slotIndex] &&
+  //       timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+  //     ) {
+  //       const updatedOpeningHours = [...timeSlots[index].openingHours];
+  //       const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
+  //       setSlotsLeftCount(SlotsLeftCount);
+
+  //       return {
+  //         ...timeSlots[index],
+  //         openingHours: updatedOpeningHours
+  //       };
+  //     }
+
+  //     setNumberError(false);
+  //   } else if (selectedTimes.length >= 8) {
+  //     setNumberError(true);
+  //     setTimeSlotMinimumError(false);
+  //     setCannotFillMore(false);
+  //   } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
+  //     setNumberError(false);
+  //     setTimeSlotMinimumError(true);
+  //     setCannotFillMore(false);
+  //   } else if (selectedTimes.length >= timeSlots[index].openingHours[slotIndex].availableSlot) {
+  //     setNumberError(false);
+  //     setTimeSlotMinimumError(false);
+  //     setCannotFillMore(true);
+  //   }
+  // };
+
+  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+    console.log(slotIndex);
+    console.log(index);
+
+    // Reset error states before performing checks
+    setNumberError(false);
+    setTimeSlotMinimumError(false);
+    setCannotFillMore(false);
+
+    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
       const startTime = time;
       const [startHour, startMinute] = time.split(':').map(Number);
       let endHour = startHour + Math.floor((startMinute + duration) / 60);
@@ -376,78 +463,90 @@ function BookMyAppointments() {
       endMinute = endMinute.toString().padStart(2, '0');
       const endTime = `${endHour}:${endMinute}`;
 
-      if (selectedTimes.length === 0) {
-        setBookingInput((prevState) => ({
-          ...prevState,
-          startTime: startTime,
-          endTime: endTime,
-          // date: selectedDate,
-        }));
-      } else {
-        if (selectedTimes.length === 1) {
+      // Check if the selected time slot has enough available slots
+      if (slotsLeft > 0) {
+        if (selectedTimes.length === 0) {
           setBookingInput((prevState) => ({
             ...prevState,
-            friends: [
-              {
-                startTime: startTime,
-                endTime: endTime,
-              },
-            ],
+            startTime: startTime,
+            endTime: endTime,
+            // date: selectedDate,
           }));
         } else {
-          setBookingInput((prevState) => ({
-            ...prevState,
-            friends: [
-              ...prevState.friends,
-              {
-                startTime: startTime,
-                endTime: endTime,
-              },
-            ],
-          }));
+          if (selectedTimes.length === 1) {
+            setBookingInput((prevState) => ({
+              ...prevState,
+              friends: [
+                {
+                  startTime: startTime,
+                  endTime: endTime,
+                },
+              ],
+            }));
+          } else {
+            setBookingInput((prevState) => ({
+              ...prevState,
+              friends: [
+                ...prevState.friends,
+                {
+                  startTime: startTime,
+                  endTime: endTime,
+                },
+              ],
+            }));
+          }
         }
+
+        setSelectedTimes([...selectedTimes, time]);
+        setSelectedCount(selectedCount + 1);
+
+        if (
+          timeSlots &&
+          timeSlots.length > 0 &&
+          timeSlots[index].openingHours &&
+          timeSlots[index].openingHours[slotIndex] &&
+          timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+        ) {
+          const updatedOpeningHours = [...timeSlots[index].openingHours];
+          updatedOpeningHours[slotIndex].availableSlot -= 1;
+          setSlotsLeftCount(updatedOpeningHours[slotIndex].availableSlot);
+
+          // Update the timeSlots state to reflect the decreased available slot
+          const updatedTimeSlots = [...timeSlots];
+          updatedTimeSlots[index].openingHours = updatedOpeningHours;
+          setTimeSlots(updatedTimeSlots);
+
+          return {
+            ...timeSlots[index],
+            openingHours: updatedOpeningHours,
+          };
+        }
+      } else {
+        setCannotFillMore(true);
       }
-
-      setSelectedTimes([...selectedTimes, time]);
-      setSelectedCount(selectedCount + 1);
-
-      if (
-        timeSlots &&
-        timeSlots.length > 0 &&
-        timeSlots[index].openingHours &&
-        timeSlots[index].openingHours[slotIndex] &&
-        timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
-      ) {
-        const updatedOpeningHours = [...timeSlots[index].openingHours];
-        const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
-        setSlotsLeftCount(SlotsLeftCount);
-
-        return {
-          ...timeSlots[index],
-          openingHours: updatedOpeningHours
-        };
-      }
-
-      setNumberError(false);
     } else if (selectedTimes.length >= 8) {
       setNumberError(true);
-      setTimeSlotMinimumError(false);
-      setCannotFillMore(false);
     } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
-      setNumberError(false);
       setTimeSlotMinimumError(true);
-      setCannotFillMore(false);
-    } else if (selectedTimes.length >= timeSlots[index].availableSlot) {
-      setNumberError(false);
-      setTimeSlotMinimumError(false);
-      setCannotFillMore(true);
     }
   };
+
+  timeSlots.map((slot, index) => (
+    <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
+      <div className="flex flex-wrap gap-2 justify-center">
+        {slot.openingHours.map((openingHour, slotIndex) => (
+          <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-gray-100 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+            <p>{openingHour.startTime}</p>
+            <p className="text-xs">{openingHour.availableSlot} slots left</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ));
 
   const handleDeleteSlot = (slotIndex) => {
     const updatedTimes = [...selectedTimes];
     const timeToDelete = updatedTimes[slotIndex]
-    console.log(timeSlots)
     timeSlots[0].openingHours.forEach((openingHour) => {
       if (openingHour.startTime === timeToDelete) {
         openingHour.availableSlot += 1
@@ -457,7 +556,7 @@ function BookMyAppointments() {
     setTimeSlots(timeSlots);
     setSelectedTimes(updatedTimes);
     setSelectedCount(selectedCount - 1);
-
+    setCannotFillMore(false);
     setNumberError(false);
   };
 
