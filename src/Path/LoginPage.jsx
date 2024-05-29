@@ -399,33 +399,22 @@ const LoginPage = () => {
 										<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
 											<div className="modal-content py-4 text-left px-6">
 												<div>
-													<h2 className="font-bold text-xl text-center mb-4">
+													<h2 className="font-bold text-xl text-center mb-6">
 														{t("anleitung")}
 													</h2>
-													<h3 className="font-bold text-lg text-center mb-4">
+													<h3 className="font-bold text-lg text-center mb-6">
 														{t("subtitle")}
 													</h3>
-													<p className="mb-6">
-														<strong>{t("step1")} </strong>
-													</p>
-													<p className="mb-6">
-														<strong>{t("step2")}</strong>
-													</p>
-													<p className="mb-6">
-														<strong>{t("step3")}</strong>
-													</p>
-													<p className="mb-6">
-														<strong>{t("step4")}</strong>
-													</p>
-													<p className="mb-6">
-														<strong>{t("enjoyApp")}</strong>
-													</p>
-													<p className="mb-6">
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step1") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step2") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step3") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step4") }}></p>
+													<p className="font-bold text-lg text-center mb-6">
 														<strong>{t("thankYou")}</strong>
 													</p>
 												</div>
 
-												<div className="mt-4 text-center">
+												<div className="mt-6 text-center">
 													<button
 														onClick={closeModal}
 														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
