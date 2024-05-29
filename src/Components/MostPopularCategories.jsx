@@ -53,7 +53,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
             <div className="flex flex-row relative items-center justify-center">
                 <div className="flex justify-between w-full category-animation rounded-t-xl">
                     <div
-                        className="flex overflow-x-scroll scrollbar"
+                        className="flex overflow-x-scroll" // scrollbar
                     >
                         <div
                             className="flex flex-nowrap md:gap-20 gap-8"
