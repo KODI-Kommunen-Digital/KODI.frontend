@@ -142,9 +142,8 @@ const Register = () => {
 						stateObj[name] = t("passwordValidation");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
-					} else if (input.username && value.includes(input.username)) {
-						stateObj[name] = t("passwordContainsUsername");
-					} else {
+					}
+					else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
 							: error.confirmPassword;
