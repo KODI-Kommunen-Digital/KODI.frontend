@@ -24,6 +24,11 @@ const LoginPage = () => {
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
 	const routeChangeToUpload = useCallback(() => {
 		const path = `/UploadListings`;
@@ -135,10 +140,12 @@ const LoginPage = () => {
 			setRememberMe(false);
 
 			if (window.sessionStorage.getItem("path")) {
-				navigate(window.sessionStorage.getItem("path"));
-				sessionStorage.removeItem("path");
+				// navigate(window.sessionStorage.getItem("path"));
+				// sessionStorage.removeItem("path");
+				navigateTo("/");
 			} else if (window.sessionStorage.getItem("redirectTo")) {
-				navigate(window.sessionStorage.getItem("redirectTo"));
+				// navigate(window.sessionStorage.getItem("redirectTo"));
+				navigateTo("/");
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
 				routeChangeToUpload();

@@ -289,12 +289,9 @@ const HomePage = () => {
 
             <div className="flex flex-col md:flex-row lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 px-5 py-6">
               <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-                {/* <select
-                  id="country"
-                  name="country"
+                <select
                   value={selectedSortOption}
                   onChange={handleSortOptionChange}
-                  autoComplete="country-name"
                   className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                   style={{
                     fontFamily: "Poppins, sans-serif",
@@ -305,9 +302,9 @@ const HomePage = () => {
                   <option value="titleZA">{t("ztoatitle")}</option>
                   <option value="recent">{t("recent")}</option>
                   <option value="oldest">{t("oldest")}</option>
-                </select> */}
+                </select>
 
-                <select
+                {/* <select
                   className="text-slate-800 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
                   value={selectedSortOption}
                   onChange={handleSortOptionChange}
@@ -318,7 +315,7 @@ const HomePage = () => {
                   <option value="titleZA">{t("ztoatitle")}</option>
                   <option value="recent">{t("recent")}</option>
                   <option value="oldest">{t("oldest")}</option>
-                </select>
+                </select> */}
               </div>
 
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
