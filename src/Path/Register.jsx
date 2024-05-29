@@ -112,10 +112,6 @@ const Register = () => {
 				case "username":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterUsername");
-					} else if (value.length < 6) {
-						stateObj[name] = t("userNameTooShort");
-					} else if (value.length > 15) {
-						stateObj[name] = t("userNameTooLong");
 					} else if (
 						value[0] === value[0].toUpperCase() ||
 						/\s/.test(value) ||
@@ -124,11 +120,17 @@ const Register = () => {
 						/[&='+,;<>.]/.test(value)
 					) {
 						stateObj[name] = t("userNameValidation");
+					} else if (value.length < 6) {
+						stateObj[name] = t("userNameTooShort");
+					} else if (value.length > 15) {
+						stateObj[name] = t("userNameTooLong");
 					}
 					break;
 				case "email":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterEmailAddress");
+					} else if (!/\S+@\S+\.\S+/.test(value)) {
+						stateObj[name] = t("invalidEmailAddress");
 					}
 					break;
 				case "password":
@@ -140,9 +142,8 @@ const Register = () => {
 						stateObj[name] = t("passwordValidation");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
-					} else if (value.includes(input.username)) {
-						stateObj[name] = t("passwordContainsUsername");
-					} else {
+					}
+					else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
 							: error.confirmPassword;

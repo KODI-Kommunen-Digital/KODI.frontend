@@ -662,5 +662,11 @@
     "mehr": "More",
     "Failed": "Failed",
     "listingInactiveMessage": "This listing is not active and cannot be viewed by the public",
-    "pleaseEnterValidEmail": "Please enter a valid email address"
+    "pleaseEnterValidEmail": "Please enter a valid email address",
+    "subtitle": "Registering in the App",
+    "step1": "<strong>Step 1:</strong> Set Username and Password",
+    "step2": "<strong>Step 2:</strong> An email will be sent to the email you provided",
+    "step3": "<strong>Step 3:</strong> Please verify the email by going to your inbox and clicking the confirmation link",
+    "step4": "<strong>Step 4:</strong> Your account is verified, and you can log in with your login credentials",
+    "thankYou": "Thank you!!"
 }

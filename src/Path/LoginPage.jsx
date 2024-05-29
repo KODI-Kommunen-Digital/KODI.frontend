@@ -370,7 +370,7 @@ const LoginPage = () => {
 								{t("notMember")}
 								<span
 									onClick={routeChangeToRegister}
-									className="font-medium cursor-pointer text-black hover:text-blue-400"
+									className="font-medium cursor-pointer text-black hover:text-slate-400"
 								>
 									{" "}
 									{t("clickToRegister")}
@@ -392,40 +392,22 @@ const LoginPage = () => {
 										<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
 											<div className="modal-content py-4 text-left px-6">
 												<div>
-													<h2 className="font-bold text-xl text-center mb-4">
-														Anleitung
+													<h2 className="font-bold text-xl text-center mb-6">
+														{t("anleitung")}
 													</h2>
-													<h3 className="font-bold text-lg text-center mb-4">
-														Registrieren in der App
+													<h3 className="font-bold text-lg text-center mb-6">
+														{t("subtitle")}
 													</h3>
-													<p className="mb-6">
-														<strong>Schritt 1:</strong> Nutzername und Passwort
-														festlegen{" "}
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 2:</strong> Es wird Ihnen eine
-														E-Mail gesendet an die Mail, die Sie eingegeben
-														haben
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 3:</strong> Bitte verifizieren Sie
-														die Mail, indem Sie in Ihr Postfach gehen und den
-														Bestätigungslink drücken
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 4:</strong> Ihr Account ist
-														verifiziert und Sie können sich mit Ihren
-														Login-Daten einloggen
-													</p>
-													<p className="mb-6">
-														Wir wünschen Ihnen viel Spaß beim Benutzen der App!
-													</p>
-													<p className="mb-6">
-														<strong>Danke!!</strong>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step1") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step2") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step3") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step4") }}></p>
+													<p className="font-bold text-lg text-center mb-6">
+														<strong>{t("thankYou")}</strong>
 													</p>
 												</div>
 
-												<div className="mt-4 text-center">
+												<div className="mt-6 text-center">
 													<button
 														onClick={closeModal}
 														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
