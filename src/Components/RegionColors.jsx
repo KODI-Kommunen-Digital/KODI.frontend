@@ -14,7 +14,7 @@ const RegionColors = {
         hoverTextColor: 'text-yellow-400',
         hoverShadowColor: 'shadow-yellow-400',
     },
-    'WUNSIEDEL': {
+    'FICHTEL': {
         darkBgColor: 'bg-lime-700',
         lightBgColor: 'bg-lime-300',
         darkTextColor: 'text-lime-700',
