@@ -86,12 +86,14 @@ function UploadListings() {
     if (file) {
       if (file.type.startsWith("image/")) {
         setImage(e.dataTransfer.files);
+        setLocalImageOrPdf(true);
         setInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
       } else if (file.type === "application/pdf") {
         setPdf(file);
+        setLocalImageOrPdf(true);
         setInput((prev) => ({
           ...prev,
           hasAttachment: true,
