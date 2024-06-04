@@ -292,7 +292,7 @@ const HomePage = () => {
                 <select
                   value={selectedSortOption}
                   onChange={handleSortOptionChange}
-                  className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                  className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}
@@ -537,13 +537,18 @@ const HomePage = () => {
                   <span className={`relative ${colors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
                 </a> */}
 
-                <p
-                  className={`relative ${colors.darkTextColor} hover:text-white text-lg font-bold group-hover:text-white cursor-pointer`}
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                <a
                   onClick={() => goToCitizensPage()}
-                >
-                  {t("clickHereToFind")}
-                </p>
+                  className={`flex items-center ${colors.darkTextColor} border ${colors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+                  style={{ fontFamily: "Poppins, sans-serif" }}>
+                  <span>
+                    {t("clickHereToFind")}
+                  </span>
+                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    viewBox="0 0 24 24" className="w-6 h-6 ml-2">
+                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </a>
               </div>
 
               <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">

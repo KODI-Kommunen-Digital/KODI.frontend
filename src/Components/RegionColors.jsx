@@ -19,7 +19,7 @@ const RegionColors = {
         lightBgColor: 'bg-lime-300',
         darkTextColor: 'text-lime-700',
         lightTextColor: 'text-lime-300',
-        darkBorderColor: 'border-lime-300',
+        darkBorderColor: 'border-lime-700',
         lightBorderColor: 'border-lime-300',
         lightHoverColor: 'hover:bg-lime-300',
         lightHoverShadowColor: 'hover:shadow-lime-300',
