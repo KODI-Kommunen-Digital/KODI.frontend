@@ -10,6 +10,7 @@ import {
   updatePassword,
   uploadProfilePic,
 } from "../Services/usersApi";
+import { getCookie } from '../cookies/cookieServices';
 
 import { useTranslation, withTranslation } from "react-i18next";
 import PROFILEIMAGE from "../assets/ProfilePicture.png";
@@ -83,10 +84,10 @@ class ProfilePage extends React.Component {
   componentDidMount() {
     const accessToken =
       window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
+      getCookie("accessToken");
     const refreshToken =
       window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
+      getCookie("refreshToken");
     if (!accessToken && !refreshToken) {
       this.navigateTo("/login");
     }
@@ -323,7 +324,7 @@ class ProfilePage extends React.Component {
     }
 
     updatePassword({ currentPassword, newPassword })
-      .then((response) => {})
+      .then((response) => { })
       .catch((error) => {
         console.error(error);
       });
@@ -485,7 +486,7 @@ class ProfilePage extends React.Component {
                             src={
                               this.state.profile.image
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                  this.state.profile.image
+                                this.state.profile.image
                                 : PROFILEIMAGE
                             }
                             alt="profile"

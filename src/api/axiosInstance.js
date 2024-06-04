@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setCookie, getCookie } from '../cookies/cookieServices';
 
 // Function to create a new axios instance with a specified baseURL
 const createInstance = (baseURL) => {
@@ -16,9 +17,6 @@ const createInstance = (baseURL) => {
 			window.localStorage.removeItem("refreshToken");
 			window.localStorage.removeItem("userId");
 			window.localStorage.removeItem("selectedItem");
-			window.sessionStorage.removeItem("accessToken");
-			window.sessionStorage.removeItem("refreshToken");
-			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
 		} catch (error) {
 			return error;
@@ -85,16 +83,10 @@ const createInstance = (baseURL) => {
 									"refreshToken",
 									response.data.data.refreshToken
 								);
-							} else if (window.sessionStorage.getItem("refreshToken")) {
+							} else if (getCookie("refreshToken")) {
 								// If using session storage for refresh token, update access and refresh tokens in session storage
-								window.sessionStorage.setItem(
-									"accessToken",
-									response.data.data.accessToken
-								);
-								window.sessionStorage.setItem(
-									"refreshToken",
-									response.data.data.refreshToken
-								);
+								setCookie("accessToken", response.data.data.accessToken);
+								setCookie("refreshToken", response.data.data.refreshToken);
 							}
 							// Retry the original request with the updated access token
 							return instance(originalRequest);

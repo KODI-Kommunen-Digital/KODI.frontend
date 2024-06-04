@@ -5,11 +5,12 @@ import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
 import { role } from "../Constants/role";
+import { useAuth } from "../Components/AuthContext";
 
 function SideBar() {
 	const { t } = useTranslation();
-	const [loggedIn, setLoggedIn] = useState(true);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { isAuthenticated, setLogout } = useAuth();
 	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === 'True';
 
 	const navigate = useNavigate();
@@ -19,28 +20,20 @@ function SideBar() {
 		}
 	};
 	useEffect(() => {
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken || refreshToken) {
+		if (isAuthenticated()) {
 			setIsLoggedIn(true);
 		}
-	}, []);
+	}, [isAuthenticated]);
 
 	const handleLogout = () => {
 		if (isLoggedIn) {
-			const accessToken =
-				window.localStorage.getItem("accessToken") ||
-				window.sessionStorage.getItem("accessToken");
-			const refreshToken =
-				window.localStorage.getItem("refreshToken") ||
-				window.sessionStorage.getItem("refreshToken");
 			try {
-				logout({ accesToken: accessToken, refreshToken }).then(() => {
-					clearStorage();
+				logout().then(() => {
+					window.localStorage.removeItem("selectedItem");
+					window.sessionStorage.removeItem("selectedItem");
+					setLogout();
+					setIsLoggedIn(false);
+					navigateTo("/");
 				});
 			} catch (error) {
 				console.log(error);
@@ -49,19 +42,6 @@ function SideBar() {
 			navigateTo("/login");
 		}
 	};
-
-	function clearStorage() {
-		window.localStorage.removeItem("accessToken");
-		window.localStorage.removeItem("refreshToken");
-		window.localStorage.removeItem("userId");
-		window.localStorage.removeItem("selectedItem");
-		window.sessionStorage.removeItem("accessToken");
-		window.sessionStorage.removeItem("refreshToken");
-		window.sessionStorage.removeItem("userId");
-		window.sessionStorage.removeItem("selectedItem");
-		setLoggedIn(false);
-		navigateTo("/");
-	}
 
 	function openSidebar() {
 		const sideBar = document.querySelector(".sidebar");
@@ -274,7 +254,7 @@ function SideBar() {
 
 						<div className="my-2 bg-gray-600 h-[1px]"></div>
 
-						{loggedIn && (
+						{isLoggedIn && (
 							<div
 								className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
 								onClick={handleLogout}

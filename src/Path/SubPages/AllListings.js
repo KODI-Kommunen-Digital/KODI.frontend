@@ -16,6 +16,7 @@ import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
+import { useAuth } from '../../Components/AuthContext';
 
 const AllListings = () => {
   window.scrollTo(0, 0);
@@ -36,17 +37,12 @@ const AllListings = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken && refreshToken) {
+    if (isAuthenticated()) {
       setIsLoggedIn(true);
     }
     setIsLoading(true);
@@ -94,7 +90,7 @@ const AllListings = () => {
         fetchData(params);
       }, 1000);
     });
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!isLoading) {
