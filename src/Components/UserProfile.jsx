@@ -91,7 +91,7 @@ function UserProfile({ user }) {
         </div>
         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
           <h2
-            className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-700'} text-lg title-font mb-2 font-bold truncate`}
+            className={`${colors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
             style={{
               fontFamily: "Poppins, sans-serif",
             }}

@@ -428,7 +428,7 @@ const HomePage = () => {
           {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
           {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
-          <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
+          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
               <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
                 <div className="relative h-96 rounded overflow-hidden w-auto">
@@ -533,8 +533,8 @@ const HomePage = () => {
                   onClick={() => goToCitizensPage()}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
                   <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${colors.darkBgColor} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'border-yellow-600 group-hover:bg-yellow-600' : 'border-blue-800 group-hover:bg-blue-800'}`}></span>
-                  <span className="relative text-blue-800 group-hover:text-white">{t("clickHereToFind")}</span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${colors.borderColor} group-hover:${colors.hoverBgColor}`}></span>
+                  <span className={`relative ${colors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
                 </a>
               </div>
 

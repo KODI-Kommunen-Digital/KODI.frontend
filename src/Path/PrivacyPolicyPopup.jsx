@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import RegionColors from "../Components/RegionColors";
 
 const PrivacyPolicyPopup = ({ onClose }) => {
 	const [isOpen, setIsOpen] = useState(true);
 	const { t } = useTranslation();
 	const [isFirstPopupOpen, setIsFirstPopupOpen] = useState(true);
 	const [isSecondPopupOpen, setIsSecondPopupOpen] = useState(false);
+
+	const regionName = process.env.REACT_APP_NAME;
+	const colors = RegionColors[regionName] || RegionColors['Other Region'];
 
 	useEffect(() => {
 		setIsFirstPopupOpen(true);
@@ -62,14 +66,14 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp2")}
 									<a
 										href="/PrivacyPolicy"
-										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-800'} font-semibold`}
+										className={`${colors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp5")}
 									</a>
 									{t("privacypolicyp6")}
 									<a
 										href="/PrivacyPolicy"
-										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'text-yellow-600' : 'text-blue-800'} font-semibold`}
+										className={`${colors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp7")}
 									</a>
@@ -147,7 +151,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp8")}{" "}
 									<a
 										href="/PrivacyPolicy"
-										className={`${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : 'bg-blue-800'} font-semibold`}
+										className={`${colors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp9")}
 									</a>
