@@ -533,7 +533,7 @@ const HomePage = () => {
                   onClick={() => goToCitizensPage()}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
                   <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${colors.darkBgColor} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${colors.borderColor} group-hover:${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'WUNSIEDEL' ? 'bg-lime-700' : 'bg-blue-800'}`}></span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${colors.borderColor} hover:${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700' : 'bg-blue-800'}`}></span>
                   <span className={`relative ${colors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
                 </a>
               </div>
