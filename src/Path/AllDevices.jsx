@@ -33,8 +33,8 @@ const AllDevices = () => {
 			try {
 				await logoutOfAllDevices();
 				setLogout();
-				window.localStorage.removeItem("selectedItem");
-				window.sessionStorage.removeItem("selectedItem");
+				// window.localStorage.removeItem("selectedItem");
+				// window.sessionStorage.removeItem("selectedItem");
 				setIsLoggedIn(false);
 				navigateTo("/");
 			} catch (error) {
