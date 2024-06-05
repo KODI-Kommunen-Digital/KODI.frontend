@@ -178,8 +178,8 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      const loggedIn = accessToken || refreshToken;
-      setIsLoggedIn(!!loggedIn); // Ensure isLoggedIn is either true or false
+      const isLoggedIn = !!(accessToken || refreshToken); // Ensure isLoggedIn is either true or false
+      setIsLoggedIn(isLoggedIn);
 
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
@@ -195,16 +195,18 @@ const Listing = () => {
             setInput(listingData);
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
-            getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-              const user = res.data.data;
-              setUser(user);
-              if (
-                listingsResponse.data.data.statusId !== statusByName.Active &&
-                currentUserId !== user.id &&
-                user.roleId !== 1
-              ) {
-                navigateTo("/Error");
-              }
+            getProfile(currentUserId).then((currentUserResult) => {
+              getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+                const user = res.data.data;
+                setUser(user);
+                if (
+                  listingsResponse.data.data.statusId !== statusByName.Active &&
+                  currentUserId !== user.id &&
+                  currentUserResult.data.data.roleId !== 1
+                ) {
+                  navigateTo("/Error");
+                }
+              });
             });
 
             if (isLoggedIn) {
