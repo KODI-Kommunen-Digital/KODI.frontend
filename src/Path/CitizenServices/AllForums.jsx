@@ -12,6 +12,7 @@ import {
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 import { statusByName } from "../../Constants/forumStatus";
+import { useAuth } from '../../Components/AuthContext';
 
 const AllForums = () => {
   window.scrollTo(0, 0);
@@ -25,16 +26,11 @@ const AllForums = () => {
   const navigate = useNavigate();
   const [requestId, setRequestId] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken || refreshToken) {
+    if (isAuthenticated()) {
       setIsLoggedIn(true);
     }
     getCities({ hasForum: true }).then((citiesResponse) => {
@@ -44,7 +40,7 @@ const AllForums = () => {
       const cityIdParam = urlParams.get("cityId");
       if (cityIdParam) setCityId(cityIdParam);
     });
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -259,9 +255,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -273,9 +269,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -305,7 +301,7 @@ const AllForums = () => {
                                 <div className="my-4 bg-gray-200 h-[1px]"></div>
 
                                 {forum.isPrivate &&
-                                memberStatus[forum.id] ===
+                                  memberStatus[forum.id] ===
                                   statusByName.Pending ? (
                                   <div className="text-center">
                                     <a

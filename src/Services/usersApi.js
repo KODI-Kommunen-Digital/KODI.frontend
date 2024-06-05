@@ -1,9 +1,14 @@
 import { instance } from "../api/axiosInstance";
 import UAParser from "ua-parser-js";
+import { getCookie } from '../cookies/cookieServices';
 const axiosInstance = instance;
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
+
+const accessToken = window.localStorage.getItem("accessToken") || getCookie("accessToken");
+const refreshToken = window.localStorage.getItem("refreshToken") || getCookie("refreshToken");
+
 if (userAgent.device.vendor === undefined) {
 	userAgent.device.vendor = "";
 }
@@ -21,14 +26,18 @@ const deviceType =
 const headers = { browserName, deviceType };
 
 export function getUserId() {
-	return (
-		window.localStorage.getItem("userId") ||
-		window.sessionStorage.getItem("userId")
-	);
+	// return (
+	// 	window.localStorage.getItem("userId") ||
+	// 	window.sessionStorage.getItem("userId")
+	// );
+	const userId = window.localStorage.getItem("userId") || getCookie("userId");
+	return userId;
 }
 
 export async function getProfile(userId, params = {}) {
-	if (!userId) userId = getUserId();
+	if (!userId) {
+		userId = getUserId();
+	}
 	return axiosInstance.get(`/users/${userId}`, { params });
 }
 
@@ -73,8 +82,8 @@ export async function login(credentials) {
 	return axiosInstance.post(`/users/login`, credentials, { headers });
 }
 
-export async function logout(credentials) {
-	return axiosInstance.post(`users/${getUserId()}/logout`, credentials);
+export async function logout() {
+	return axiosInstance.post(`users/${getUserId()}/logout`, { accessToken, refreshToken });
 }
 
 export async function uploadProfilePic(formData) {

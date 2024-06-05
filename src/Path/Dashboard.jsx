@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import { getCities } from "../Services/cities";
+import { useAuth } from '../Components/AuthContext';
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -26,6 +27,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
+  const { isAuthenticated } = useAuth();
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -57,14 +59,8 @@ const Dashboard = () => {
       const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
       window.history.replaceState({}, "", newUrl);
     }
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
-      window.location.href = "/login";
+    if (!isAuthenticated()) {
+      navigateTo("/login");
     }
     getCategory().then((response) => {
       const catList = {};
@@ -101,7 +97,7 @@ const Dashboard = () => {
     //     setListings(response.data.data);
     //   });
     // }
-  }, [window.location.pathname]);
+  }, [isAuthenticated, window.location.pathname]);
 
   const fetchListings = useCallback(() => {
     if (viewAllListings === true) {

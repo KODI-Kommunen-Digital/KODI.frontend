@@ -8,6 +8,7 @@ import { getCities } from "../Services/cities";
 import Footer from "../Components/Footer";
 import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
 import ListingsCard from "../Components/ListingsCard";
+import { useAuth } from '../Components/AuthContext';
 
 import CITYIMAGE from "../assets/City.png";
 import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
@@ -25,6 +26,7 @@ const HomePage = () => {
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -56,13 +58,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken || refreshToken) {
+    if (isAuthenticated()) {
       setIsLoggedIn(true);
     }
     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
@@ -78,7 +74,7 @@ const HomePage = () => {
       const data = response.data.data;
       setListings(data);
     });
-  }, [cities, cityId]);
+  }, [isAuthenticated, cities, cityId]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {

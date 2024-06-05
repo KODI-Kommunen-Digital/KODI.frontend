@@ -24,6 +24,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
+import { useAuth } from '../../Components/AuthContext';
 
 const Description = (props) => {
   const [desc, setDesc] = useState();
@@ -55,6 +56,7 @@ const Description = (props) => {
       return match;
     });
   };
+
   useEffect(() => {
     const linkedContent = linkify(props.content);
     setDesc(linkedContent);
@@ -117,6 +119,7 @@ const Listing = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
+  const { isAuthenticated } = useAuth();
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -164,14 +167,9 @@ const Listing = () => {
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
     if (listingId && cityId) {
-      const accessToken =
-        window.localStorage.getItem("accessToken") ||
-        window.sessionStorage.getItem("accessToken");
-      const refreshToken =
-        window.localStorage.getItem("refreshToken") ||
-        window.sessionStorage.getItem("refreshToken");
-      const loggedIn = accessToken || refreshToken;
-      setIsLoggedIn(!!loggedIn); // Ensure isLoggedIn is either true or false
+      if (isAuthenticated()) {
+        setIsLoggedIn(true);
+      }
 
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {

@@ -1,20 +1,20 @@
-import React, { createContext, useState } from "react";
-import PropTypes from "prop-types";
+// import React, { createContext, useState } from "react";
+// import PropTypes from "prop-types";
 
-const AuthContext = createContext({});
+// const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState({});
+// export const AuthProvider = ({ children }) => {
+//     const [auth, setAuth] = useState({});
 
-    return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
-            {children}
-        </AuthContext.Provider>
-    );
-};
+//     return (
+//         <AuthContext.Provider value={{ auth, setAuth }}>
+//             {children}
+//         </AuthContext.Provider>
+//     );
+// };
 
-AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-};
+// AuthProvider.propTypes = {
+//     children: PropTypes.node.isRequired,
+// };
 
-export default AuthContext;
+// export default AuthContext;

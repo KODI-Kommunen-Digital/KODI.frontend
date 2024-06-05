@@ -22,6 +22,7 @@ import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import { role } from "../Constants/role";
+import { useAuth } from '../Components/AuthContext';
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -47,6 +48,7 @@ function UploadListings() {
   const [endDate, setEndDate] = useState([]);
   const [expiryDate, setExpiryDate] = useState([]);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const getDefaultEndDate = () => {
     const now = new Date();
@@ -310,13 +312,7 @@ function UploadListings() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
+    if (!isAuthenticated()) {
       navigateTo("/login");
     }
     var cityId = searchParams.get("cityId");
@@ -372,7 +368,7 @@ function UploadListings() {
         }
       });
     }
-  }, [listingId]);
+  }, [isAuthenticated, listingId]);
 
   function categoryDescription(category) {
     if (category === "4") {

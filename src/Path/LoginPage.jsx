@@ -6,6 +6,7 @@ import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
+import { useAuth } from '../Components/AuthContext';
 
 const LoginPage = () => {
 	const { t } = useTranslation();
@@ -24,6 +25,7 @@ const LoginPage = () => {
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
+	const { setLogin, isAuthenticated } = useAuth();
 
 	const routeChangeToUpload = useCallback(() => {
 		const path = `/UploadListings`;
@@ -40,13 +42,7 @@ const LoginPage = () => {
 		const searchParams = new URLSearchParams(location.search);
 
 		userRef.current.focus();
-		const accessToken =
-			window.localStorage.getItem("accessToken") ||
-			window.sessionStorage.getItem("accessToken");
-		const refreshToken =
-			window.localStorage.getItem("refreshToken") ||
-			window.sessionStorage.getItem("refreshToken");
-		if (accessToken?.length === 456 || refreshToken?.length === 456) {
+		if (isAuthenticated()) {
 			routeChangeToUpload();
 		}
 
@@ -57,7 +53,7 @@ const LoginPage = () => {
 				settimeOutAlertMessage("");
 			}, TIMEOUT_DURATION);
 		}
-	}, [routeChangeToUpload, location]);
+	}, [isAuthenticated, routeChangeToUpload, location]);
 
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -101,38 +97,13 @@ const LoginPage = () => {
 				password: pwd,
 			});
 			setLoginLoading(false);
-			if (rememberMe) {
-				window.localStorage.setItem(
-					"accessToken",
-					response.data.data.accessToken
-				);
-				window.localStorage.setItem(
-					"refreshToken",
-					response.data.data.refreshToken
-				);
-				window.localStorage.setItem("userId", response.data.data.userId);
-				window.localStorage.setItem(
-					"cityUsers",
-					JSON.stringify(response.data.data.cityUsers)
-				);
-			} else {
-				window.sessionStorage.setItem(
-					"accessToken",
-					response.data.data.accessToken
-				);
-				window.sessionStorage.setItem(
-					"refreshToken",
-					response.data.data.refreshToken
-				);
-				window.sessionStorage.setItem("userId", response.data.data.userId);
-				window.localStorage.setItem(
-					"cityUsers",
-					JSON.stringify(response.data.data.cityUsers)
-				);
-			}
-			setUser("");
-			setPwd("");
-			setRememberMe(false);
+			setLogin(
+				response.data.data.accessToken,
+				response.data.data.refreshToken,
+				response.data.data.userId,
+				response.data.data.cityUsers,
+				rememberMe
+			);
 
 			if (window.sessionStorage.getItem("path")) {
 				navigate(window.sessionStorage.getItem("path"));
@@ -140,7 +111,7 @@ const LoginPage = () => {
 			} else if (window.sessionStorage.getItem("redirectTo")) {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
-				localStorage.setItem("selectedItem", t("chooseOneCategory"));
+				// localStorage.setItem("selectedItem", t("chooseOneCategory"));
 				routeChangeToUpload();
 			}
 		} catch (err) {
@@ -253,7 +224,7 @@ const LoginPage = () => {
 									onChange={handlePasswordChange}
 									onKeyDown={handleKeyDown}
 									required
-									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
 								/>
 								<button
