@@ -29,7 +29,8 @@ const Description = (props) => {
   const [desc, setDesc] = useState();
   const linkify = (text) => {
     const urlRegex =
-      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+      /(?<!<img\s[^>]*)(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+
     text = text.replace(
       urlRegex,
       (url) =>
