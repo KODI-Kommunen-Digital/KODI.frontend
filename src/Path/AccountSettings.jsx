@@ -18,6 +18,12 @@ const AccountSettings = () => {
 		phoneNumber: "",
 	});
 
+	const [error, setError] = useState({
+		username: "",
+		email: "",
+		phoneNumber: "",
+	});
+
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -48,13 +54,36 @@ const AccountSettings = () => {
 		});
 	}, []);
 
+	const validatePhoneNumber = (phoneNumber) => {
+		const phoneRegex = /^[0-9]{8,15}$/;
+		return phoneRegex.test(phoneNumber);
+	};
+
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		console.log(`Changing ${name} to ${value}`); // Debugging line
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
 		}));
+
+		if (name === "phoneNumber") {
+			const isValid = validatePhoneNumber(value);
+			console.log(`Phone number validation result: ${isValid}`); // Debugging line
+			if (!isValid) {
+				setError((prev) => ({
+					...prev,
+					phoneNumber: t("phoneNumValidation"),
+				}));
+			} else {
+				setError((prev) => ({
+					...prev,
+					phoneNumber: "",
+				}));
+			}
+		}
 	};
+
 
 	const handleSave = async (event) => {
 		event.preventDefault();
@@ -181,6 +210,12 @@ const AccountSettings = () => {
 										style={{ fontFamily: "Poppins, sans-serif" }}
 										onChange={onInputChange}
 									/>
+
+									{error.phoneNumber && (
+										<div className="text-red-600 h-[24px]">
+											{error.phoneNumber}
+										</div>
+									)}
 								</div>
 							</div>
 						</div>

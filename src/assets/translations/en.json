@@ -188,6 +188,7 @@
     "cityAlreadySelected": "This city is already selected!",
     "pleaseSelectSubcategory": "Please select a subcategory",
     "politics": "Politics",
+    "phoneNumValidation": "Phone number is not valid",
     "privacy_policy": "privacy policy* ",
     "profile": "Profile",
     "profileEntries": "Profile Entries",

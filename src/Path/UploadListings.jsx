@@ -565,7 +565,7 @@ function UploadListings() {
     }
   };
 
-  const [, setDescription] = useState("");
+  const [description, setDescription] = useState("");
 
   const onDescriptionChange = (newContent) => {
     let descriptionHTML = newContent;
@@ -1395,7 +1395,8 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              value={listingInput.description}
+              // value={input.description}
+              value={description}
               onChange={(newContent) => onDescriptionChange(newContent)}
               onBlur={(range, source, editor) => {
                 validateInput({
