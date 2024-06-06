@@ -1236,7 +1236,8 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              value={input.description}
+              // value={input.description}
+              value={description}
               onChange={(newContent) => onDescriptionChange(newContent)}
               onBlur={(range, source, editor) => {
                 validateInput({
