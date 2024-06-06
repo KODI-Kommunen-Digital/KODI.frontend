@@ -15,7 +15,6 @@ import {
 } from "../Services/listingsApi";
 import { getProfile } from "../Services/usersApi";
 import { getCities } from "../Services/cities";
-import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
@@ -87,7 +86,8 @@ function UploadListings() {
     if (file) {
       if (file.type.startsWith("image/")) {
         setImage(e.dataTransfer.files);
-        setInput((prev) => ({
+        setLocalImageOrPdf(true);
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -182,10 +182,13 @@ function UploadListings() {
 
   // Sending data to backend starts
   const [val] = useState([{ selected: "" }]);
+  const [cityId, setCityId] = useState(0);
+  const [cities, setCities] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
   const [listingInput, setListingInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
-    cityId: 0,
+    cityIds: [],
     statusId: 1,
     title: "",
     place: "",
@@ -213,6 +216,7 @@ function UploadListings() {
     title: "",
     description: "",
     cityId: "",
+    cityAlreadySelected: "",
     startDate: "",
     endDate: "",
   });
@@ -297,6 +301,7 @@ function UploadListings() {
         return;
       }
     }
+    event.preventDefault();  // Prevent default form submission
 
     let valid = true;
     for (let key in error) {
@@ -311,9 +316,15 @@ function UploadListings() {
 
     if (valid) {
       setUpdating(true);
-      event.preventDefault();
 
       try {
+        // Prepare the data to be sent to the backend
+        const dataToSubmit = {
+          ...input,
+          cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
+        };
+
+        // Post or update listing data
         let response = await (newListing
           ? postListingsData(cityId, listingInput)
           : updateListingsData(cityId, listingInput, listingId));
@@ -330,7 +341,6 @@ function UploadListings() {
               for (let i = 0; i < image.length; i++) {
                 imageForm.append("image", image[i]);
               }
-
               await uploadListingImage(
                 imageForm,
                 cityId,
@@ -347,7 +357,6 @@ function UploadListings() {
             for (let i = 0; i < image.length; i++) {
               imageForm.append("image", image[i]);
             }
-
             await uploadListingImage(
               imageForm,
               cityId,
@@ -383,8 +392,10 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing ? setSuccessMessage(t("listingCreated")) : setSuccessMessage(t("listingUpdated"));
+
         setErrorMessage(false);
         setIsSuccess(true);
+
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
@@ -448,7 +459,7 @@ function UploadListings() {
     if (listingId && cityId) {
       setListingId(parseInt(listingId));
       setNewListing(false);
-      getVillages(cityId).then((response) => setVillages(response.data.data));
+      // getVillages(cityId).then((response) => setVillages(response.data.data));
       getListingsById(cityId, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
         listingData.cityId = cityId;
@@ -699,16 +710,18 @@ function UploadListings() {
 
   useEffect(() => {
     getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
-      if (citiesResponse.data.data.length == 1) {
-        setCityId(citiesResponse.data.data[0].id)
-        setInput((prev) => ({
+      const citiesData = citiesResponse.data.data;
+      setCities(citiesData);
+      if (citiesData.length === 1) {
+        const cityId = citiesData[0].id;
+        const cityName = citiesData[0].name;
+        setSelectedCities([{ id: cityId, name: cityName }]);
+        setListingInput((prev) => ({
           ...prev,
-          cityId: citiesResponse.data.data[0].id,
+          cityId: [cityId],
           villageId: 0,
         }));
-        if (parseInt(citiesResponse.data.data[0].id))
-          getVillages(citiesResponse.data.data[0].id).then((response) => setVillages(response.data.data));
+        // getVillages(cityId).then((response) => setVillages(response.data.data));
       }
     });
   }, []);
@@ -720,21 +733,73 @@ function UploadListings() {
     }));
   }, [val]);
 
-  const [cityId, setCityId] = useState(0);
-  const [villages, setVillages] = useState([]);
-  const [cities, setCities] = useState([]);
-  async function onCityChange(e) {
-    const cityId = e.target.value;
-    setCityId(cityId);
+  const onCityChange = async (e) => {
+    const selectedCityId = parseInt(e.target.value);
+
+    if (process.env.REACT_APP_MULTIPLECITYSELECTION === 'True') {
+      if (selectedCities.some(city => city.id === selectedCityId)) {
+        setError((prevState) => ({
+          ...prevState,
+          cityAlreadySelected: t("cityAlreadySelected"),
+        }));
+        return;
+      } else {
+        setError((prevState) => ({
+          ...prevState,
+          cityAlreadySelected: "",
+        }));
+      }
+
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      if (selectedCity) {
+        const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
+        setSelectedCities(updatedSelectedCities);
+        setListingInput((prev) => ({
+          ...prev,
+          cityId: updatedSelectedCities.map(city => city.id),
+          villageId: 0,
+        }));
+      }
+
+      if (selectedCities.length === 0 || cities.length > 1) {
+        validateInput(e);
+      }
+    } else {
+      setCityId(selectedCityId);
+      setListingInput((prev) => ({
+        ...prev,
+        cityId: cityId,
+        villageId: 0,
+      }));
+      if (parseInt(cityId))
+        validateInput(e);
+    }
+  };
+
+  console.log(selectedCities)
+
+  const removeCity = (cityId) => {
+    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityId);
+    setSelectedCities(updatedSelectedCities);
     setListingInput((prev) => ({
       ...prev,
-      cityId: cityId,
+      cityId: updatedSelectedCities.map(city => city.id),
       villageId: 0,
     }));
-    if (parseInt(cityId))
-      getVillages(cityId).then((response) => setVillages(response.data.data));
-    validateInput(e);
-  }
+
+    if (updatedSelectedCities.length === 0 && cities.length > 1) {
+      setError(prevState => ({
+        ...prevState,
+        cityId: t("pleaseSelectCity"),
+      }));
+    } else {
+      setError(prevState => ({
+        ...prevState,
+        cityId: "", // Reset the cityId error when there are selected cities again
+      }));
+    }
+  };
+
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
@@ -833,44 +898,96 @@ function UploadListings() {
             </div>
           </div>
 
-          {cities.length > 1 &&
-            <div className="relative mb-4">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-600"
-              >
-                {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-              </label>
-              <select
-                type="text"
-                id="cityId"
-                name="cityId"
-                value={cityId || 0}
-                onChange={onCityChange}
-                autoComplete="country-name"
-                disabled={!newListing}
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-              >
-                <option value={0}>{t("select")}</option>
-                {cities.map((city) => (
-                  <option key={Number(city.id)} value={Number(city.id)}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-              <div
-                className="h-[24px] text-red-600"
-                style={{
-                  visibility: error.cityId ? "visible" : "hidden",
-                }}
-              >
-                {error.cityId}
-              </div>
-            </div>
-          }
+          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' ? (
+            cities.length > 1 && (
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+                </label>
+                <select
+                  id="cityId"
+                  name="cityId"
+                  value=""
+                  onChange={onCityChange}
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value="">{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
 
-          {villages.length > 0 && parseInt(cityId) ? (
-            <div className="relative mb-0">
+                <div className="flex flex-wrap mt-0">
+                  {selectedCities.map((city) => (
+                    <div key={city.id} className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300">
+                      <span>{city.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeCity(city.id)}
+                        className="text-red-600 ml-2"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility: (selectedCities.length === 0 && error.cityId) || error.cityAlreadySelected ? "visible" : "hidden",
+                  }}
+                >
+                  {selectedCities.length === 0 ? error.cityId : error.cityAlreadySelected}
+                </div>
+              </div>
+            )
+          ) : (
+            cities.length > 1 && (
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+                </label>
+                <select
+                  type="text"
+                  id="cityId"
+                  name="cityId"
+                  value={cityId || 0}
+                  onChange={onCityChange}
+                  autoComplete="country-name"
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value={0}>{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={Number(city.id)} value={Number(city.id)}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility: selectedCities.length === 0 && error.cityId ? "visible" : "hidden",
+                  }}
+                >
+                  {error.cityId}
+                </div>
+              </div>
+            )
+          )}
+
+          {/* {villages.length > 0 && parseInt(cityId) ? (
+            <div className="relative mb-4">
               <label
                 htmlFor="title"
                 className="block text-sm font-medium text-gray-600"
@@ -897,7 +1014,7 @@ function UploadListings() {
             </div>
           ) : (
             <span />
-          )}
+          )} */}
 
           <div className="relative mb-0">
             <label
@@ -1136,7 +1253,7 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="col-span-6">
+          <div className="relative mb-4">
             <label
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
