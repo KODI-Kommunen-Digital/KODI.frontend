@@ -699,6 +699,7 @@
     "pleaseSelectDuration": "Please enter Service duration",
     "pleaseEnterService": "Please select Service",
     "pleaseSelectNumberOfPeople": "Please select Number of people",
+    "pleaseSelectTimeSlotForAll": "Please select time slots for all the people",
     "pleaseSelectEmail": "Please enter email",
     "pleaseSelectPhone": "Please enter phone",
     "pleaseSelectFirstName": "Please enter First Name",
@@ -715,5 +716,8 @@
     "bookingId": "Booking Id",
     "pastDate": "Booking date is in the past",
     "timeValidation": "Start time cannot be the same as end time",
-    "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure."
+    "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure.",
+    "Failed": "Failed",
+    "numberOfPeopleAndSelectedSlotDifference": "Number of people and selected slots dose not match",
+    "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}. Duration added is more than time slots added"
 }

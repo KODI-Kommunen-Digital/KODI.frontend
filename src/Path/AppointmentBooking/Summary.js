@@ -9,14 +9,20 @@ const Summary = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
   const { state } = useLocation();
-  const navigate = useNavigate();
   const [updating, setUpdating] = useState(false);
   const bookingData = state.bookingData;
-  console.log("Booking created:", bookingData);
 
   const [cityId, setCityId] = useState(0);
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -35,14 +41,17 @@ const Summary = () => {
       setUpdating(true);
       const response = await createBookings(cityId, listingId, appointmentId, bookingData);
       console.log("Booking created:", response);
+      setIsSuccess(true); // Set isSuccess to true upon successful submission
       setUpdating(false);
       navigate("/AppointmentBooking/BookAppointments/BookingSuccessConfirmation");
     } catch (error) {
       console.error("Error creating booking:", error);
+      setIsSuccess(false); // Set isSuccess to false upon failed submission
       navigate("/AppointmentBooking/BookAppointments/BookingErrorConfirmation");
       setUpdating(false);
     }
   };
+
 
   console.log(bookingData)
 
@@ -94,12 +103,12 @@ const Summary = () => {
         <div className="py-2 mt-1 px-0">
           <a
             onClick={handleSubmit}
-            disabled={updating}
-            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
-            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-900 group-hover:translate-x-0 ease">
+            disabled={updating || isSuccess}
+            className="bg-purple-900 relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-purple-900 duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </span>
-            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
+            <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
             <span className="relative invisible">
               {t("confirm")}
 
@@ -121,6 +130,27 @@ const Summary = () => {
                   />
                 </svg>
               )}
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div className="bg-gray-100 h-full items-center mt-0 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="py-2 mt-1 px-0">
+          <a
+            onClick={() =>
+              navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`)
+            }
+            disabled={updating}
+            className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-purple-900 transition duration-300 ease-out border-2 border-purple-900 rounded-full shadow-md group cursor-pointer">
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-purple-900 group-hover:-translate-x-0 ease">
+              <svg className="w-6 h-6 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </span>
+            <span className="absolute flex items-center justify-center w-full h-full text-purple-900 transition-all duration-300 transform group-hover:-translate-x-full ease">{t("goBack")}</span>
+            <span className="relative invisible">
+              {t("goBack")}
             </span>
           </a>
         </div>

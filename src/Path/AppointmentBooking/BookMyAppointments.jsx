@@ -17,6 +17,7 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { generateDate, months } from "../../Components/util/calendar";
 import cn from "../../Components/util/cn";
 import moment from "moment";
+import Alert from "../../Components/Alert";
 
 function BookMyAppointments() {
   const { t } = useTranslation();
@@ -33,6 +34,9 @@ function BookMyAppointments() {
 
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [numberError, setNumberError] = useState(false);
+  const [slotNotSelected, setSlotNotSelected] = useState(false);
+  const [numberMismatchError, setNumberMismatchError] = useState(false);
+  const [hasTimeSlots, setHasTimeSlots] = useState(false);
   const [timeSlotMinimumError, setTimeSlotMinimumError] = useState(false);
   const [cannotFillMore, setCannotFillMore] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
@@ -48,11 +52,12 @@ function BookMyAppointments() {
   const [listingId, setListingId] = useState(0);
   const [appointmentId, setAppointmentId] = useState(0);
   const [selectedServiceId, setSelectedServiceId] = useState(0);
-  // const [availableSlotLeft, setAvailableSlotsLeft] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const todayDate = new Date().toISOString().slice(0, 10);
   const [bookingInput, setBookingInput] = useState({
     serviceId: "",
+    numberOfPeople: "",
     endTime: "",
     startTime: "",
     remark: "",
@@ -66,18 +71,84 @@ function BookMyAppointments() {
   });
 
   const [bookingError, setBookingError] = useState({
-    numberOfPeople: "",
     service: "",
     serviceId: "",
+    numberOfPeople: "",
     firstname: "",
     lastname: "",
     email: "",
   });
-  console.log(bookingInput)
 
   const handleButtonClick = () => {
-    const { service, numberOfPeople, ...bookingData } = bookingInput;
-    navigate(`/AppointmentBooking/BookAppointments/Summary?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`, { state: { bookingData } });
+    let isValid = true;
+    const errors = {};
+
+    if (!bookingInput.serviceId) {
+      isValid = false;
+      errors.service = t("pleaseEnterService");
+      setErrorMessage(t("pleaseEnterService"));
+    }
+
+    if (!bookingInput.numberOfPeople) {
+      isValid = false;
+      errors.numberOfPeople = t("pleaseSelectNumberOfPeople");
+      setErrorMessage(t("pleaseSelectNumberOfPeople"));
+    }
+
+    if (!bookingInput.startTime) {
+      isValid = false;
+      setSlotNotSelected(true);
+      setErrorMessage(t("noSlotsAvailable"));
+    }
+
+    if (hasTimeSlots && !bookingInput.startTime) {
+      isValid = false;
+      setSlotNotSelected(true);
+      setErrorMessage(t("pleaseSelectTimeSlotForAll"));
+    }
+    if (hasTimeSlots && parseInt(bookingInput.numberOfPeople) !== selectedCount) {
+      isValid = false;
+      setNumberMismatchError(true);
+      setErrorMessage(t("numberOfPeopleAndSelectedSlotDifference"));
+    }
+
+    for (let index = 0; index < selectedCount; index++) {
+      const firstName = index === 0
+        ? (bookingInput.guestDetails?.firstname || user?.firstname || "")
+        : (bookingInput?.friends[index - 1]?.firstname || "");
+      const lastName = index === 0
+        ? (bookingInput.guestDetails?.lastname || user?.lastname || "")
+        : (bookingInput?.friends[index - 1]?.lastname || "");
+      const email = index === 0
+        ? (bookingInput.guestDetails?.email || user?.email || "")
+        : (bookingInput?.friends[index - 1]?.email || "");
+
+      if (!firstName.trim()) {
+        isValid = false;
+        errors[`firstname${index}`] = t("pleaseSelectFirstName");
+        setErrorMessage(t("pleaseSelectFirstName"));
+      }
+
+      if (!lastName.trim()) {
+        isValid = false;
+        errors[`lastname${index}`] = t("pleaseSelectLastName");
+        setErrorMessage(t("pleaseSelectLastName"));
+      }
+
+      if (!email.trim()) {
+        isValid = false;
+        errors[`email${index}`] = t("pleaseSelectEmail");
+        setErrorMessage(t("pleaseSelectEmail"));
+      }
+    }
+
+    // Update state with validation errors
+    setBookingError(errors);
+
+    if (isValid) {
+      const { service, numberOfPeople, ...bookingData } = bookingInput;
+      navigate(`/AppointmentBooking/BookAppointments/Summary?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`, { state: { bookingData } });
+    }
   };
 
   useEffect(() => {
@@ -150,6 +221,7 @@ function BookMyAppointments() {
 
   const onInputChange = (e, index) => {
     const { name, value } = e.target;
+
     if (name === "service" || name === "numberOfPeople") {
       if (index === 0) {
         setBookingInput(prevState => ({
@@ -163,8 +235,12 @@ function BookMyAppointments() {
         setBookingInput(prevState => ({
           ...prevState,
           [name]: value,
-          friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({}))
+          friends: Array.from({ length: parseInt(value, 10) - 1 }, () => ({})) // According to the change in value the friends array changes, imporovements needed
         }));
+      }
+
+      if (selectedTimes.length < value) {
+        setTimeSlotMinimumError(false);
       }
     } else {
       if (index === 0) {
@@ -204,6 +280,8 @@ function BookMyAppointments() {
     switch (name) {
       case "service":
         return value.trim() === "" ? t("pleaseEnterService") : "";
+      case "timeSlot":
+        return value.trim() === "" ? t("pleaseSelectTimeSlotForAll") : "";
       case "numberOfPeople":
         return value.trim() === "" ? t("pleaseSelectNumberOfPeople") : "";
       case "firstname":
@@ -219,13 +297,13 @@ function BookMyAppointments() {
     }
   };
 
-  const validateInput = (e) => {
+  const validateInput = (e, index) => {
     if (e && e.target) {
       const { name, value } = e.target;
       const errorMessage = getErrorMessage(name, value);
       setBookingError((prevState) => ({
         ...prevState,
-        [name]: errorMessage
+        [name + index]: errorMessage // Append index to the error key
       }));
     }
   };
@@ -270,11 +348,16 @@ function BookMyAppointments() {
           serviceId
         );
         setTimeSlots(timeSlotResponse.data.data);
+
+        if (timeSlotResponse.data.data && timeSlotResponse.data.data.length > 0) {
+          setHasTimeSlots(true);
+        } else {
+          setHasTimeSlots(false);
+        }
         setBookingInput(prevState => ({
           ...prevState,
           serviceId: serviceId
         }));
-        console.log(timeSlots)
       } catch (error) {
         console.error("Error fetching time slots:", error);
       }
@@ -282,9 +365,96 @@ function BookMyAppointments() {
   };
 
   const [, setSlotsLeftCount] = useState("");
-  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
-    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+  // const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+  //   console.log(slotIndex)
+  //   console.log(index)
+  //   if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
+  //     const startTime = time;
+  //     const [startHour, startMinute] = time.split(':').map(Number);
+  //     let endHour = startHour + Math.floor((startMinute + duration) / 60);
+  //     let endMinute = (startMinute + duration) % 60;
+  //     endHour = endHour.toString().padStart(2, '0');
+  //     endMinute = endMinute.toString().padStart(2, '0');
+  //     const endTime = `${endHour}:${endMinute}`;
 
+  //     if (selectedTimes.length === 0) {
+  //       setBookingInput((prevState) => ({
+  //         ...prevState,
+  //         startTime: startTime,
+  //         endTime: endTime,
+  //         // date: selectedDate,
+  //       }));
+  //     } else {
+  //       if (selectedTimes.length === 1) {
+  //         setBookingInput((prevState) => ({
+  //           ...prevState,
+  //           friends: [
+  //             {
+  //               startTime: startTime,
+  //               endTime: endTime,
+  //             },
+  //           ],
+  //         }));
+  //       } else {
+  //         setBookingInput((prevState) => ({
+  //           ...prevState,
+  //           friends: [
+  //             ...prevState.friends,
+  //             {
+  //               startTime: startTime,
+  //               endTime: endTime,
+  //             },
+  //           ],
+  //         }));
+  //       }
+  //     }
+
+  //     setSelectedTimes([...selectedTimes, time]);
+  //     setSelectedCount(selectedCount + 1);
+
+  //     if (
+  //       timeSlots &&
+  //       timeSlots.length > 0 &&
+  //       timeSlots[index].openingHours &&
+  //       timeSlots[index].openingHours[slotIndex] &&
+  //       timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+  //     ) {
+  //       const updatedOpeningHours = [...timeSlots[index].openingHours];
+  //       const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
+  //       setSlotsLeftCount(SlotsLeftCount);
+
+  //       return {
+  //         ...timeSlots[index],
+  //         openingHours: updatedOpeningHours
+  //       };
+  //     }
+
+  //     setNumberError(false);
+  //   } else if (selectedTimes.length >= 8) {
+  //     setNumberError(true);
+  //     setTimeSlotMinimumError(false);
+  //     setCannotFillMore(false);
+  //   } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
+  //     setNumberError(false);
+  //     setTimeSlotMinimumError(true);
+  //     setCannotFillMore(false);
+  //   } else if (selectedTimes.length >= timeSlots[index].openingHours[slotIndex].availableSlot) {
+  //     setNumberError(false);
+  //     setTimeSlotMinimumError(false);
+  //     setCannotFillMore(true);
+  //   }
+  // };
+
+  const handleTimeSelection = (time, slotsLeft, slotIndex, index) => {
+    console.log(slotIndex);
+    console.log(index);
+
+    // Reset error states before performing checks
+    setNumberError(false);
+    setTimeSlotMinimumError(false);
+    setCannotFillMore(false);
+
+    if (bookingInput.numberOfPeople !== "" && selectedTimes.length < 8 && selectedTimes.length < bookingInput.numberOfPeople) {
       const startTime = time;
       const [startHour, startMinute] = time.split(':').map(Number);
       let endHour = startHour + Math.floor((startMinute + duration) / 60);
@@ -293,78 +463,90 @@ function BookMyAppointments() {
       endMinute = endMinute.toString().padStart(2, '0');
       const endTime = `${endHour}:${endMinute}`;
 
-      if (selectedTimes.length === 0) {
-        setBookingInput((prevState) => ({
-          ...prevState,
-          startTime: startTime,
-          endTime: endTime,
-          // date: selectedDate,
-        }));
-      } else {
-        if (selectedTimes.length === 1) {
+      // Check if the selected time slot has enough available slots
+      if (slotsLeft > 0) {
+        if (selectedTimes.length === 0) {
           setBookingInput((prevState) => ({
             ...prevState,
-            friends: [
-              {
-                startTime: startTime,
-                endTime: endTime,
-              },
-            ],
+            startTime: startTime,
+            endTime: endTime,
+            // date: selectedDate,
           }));
         } else {
-          setBookingInput((prevState) => ({
-            ...prevState,
-            friends: [
-              ...prevState.friends,
-              {
-                startTime: startTime,
-                endTime: endTime,
-              },
-            ],
-          }));
+          if (selectedTimes.length === 1) {
+            setBookingInput((prevState) => ({
+              ...prevState,
+              friends: [
+                {
+                  startTime: startTime,
+                  endTime: endTime,
+                },
+              ],
+            }));
+          } else {
+            setBookingInput((prevState) => ({
+              ...prevState,
+              friends: [
+                ...prevState.friends,
+                {
+                  startTime: startTime,
+                  endTime: endTime,
+                },
+              ],
+            }));
+          }
         }
+
+        setSelectedTimes([...selectedTimes, time]);
+        setSelectedCount(selectedCount + 1);
+
+        if (
+          timeSlots &&
+          timeSlots.length > 0 &&
+          timeSlots[index].openingHours &&
+          timeSlots[index].openingHours[slotIndex] &&
+          timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
+        ) {
+          const updatedOpeningHours = [...timeSlots[index].openingHours];
+          updatedOpeningHours[slotIndex].availableSlot -= 1;
+          setSlotsLeftCount(updatedOpeningHours[slotIndex].availableSlot);
+
+          // Update the timeSlots state to reflect the decreased available slot
+          const updatedTimeSlots = [...timeSlots];
+          updatedTimeSlots[index].openingHours = updatedOpeningHours;
+          setTimeSlots(updatedTimeSlots);
+
+          return {
+            ...timeSlots[index],
+            openingHours: updatedOpeningHours,
+          };
+        }
+      } else {
+        setCannotFillMore(true);
       }
-
-      setSelectedTimes([...selectedTimes, time]);
-      setSelectedCount(selectedCount + 1);
-
-      if (
-        timeSlots &&
-        timeSlots.length > 0 &&
-        timeSlots[index].openingHours &&
-        timeSlots[index].openingHours[slotIndex] &&
-        timeSlots[index].openingHours[slotIndex].availableSlot !== undefined
-      ) {
-        const updatedOpeningHours = [...timeSlots[index].openingHours];
-        const SlotsLeftCount = updatedOpeningHours[slotIndex].availableSlot -= 1;
-        setSlotsLeftCount(SlotsLeftCount);
-
-        return {
-          ...timeSlots[index],
-          openingHours: updatedOpeningHours
-        };
-      }
-
-      setNumberError(false);
     } else if (selectedTimes.length >= 8) {
       setNumberError(true);
-      setTimeSlotMinimumError(false);
-      setCannotFillMore(false);
     } else if (selectedTimes.length >= bookingInput.numberOfPeople || bookingInput.numberOfPeople === "") {
-      setNumberError(false);
       setTimeSlotMinimumError(true);
-      setCannotFillMore(false);
-    } else if (selectedTimes.length >= timeSlots[index].availableSlot) {
-      setNumberError(false);
-      setTimeSlotMinimumError(false);
-      setCannotFillMore(true);
     }
   };
+
+  timeSlots.map((slot, index) => (
+    <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
+      <div className="flex flex-wrap gap-2 justify-center">
+        {slot.openingHours.map((openingHour, slotIndex) => (
+          <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-gray-100 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+            <p>{openingHour.startTime}</p>
+            <p className="text-xs">{openingHour.availableSlot} slots left</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ));
 
   const handleDeleteSlot = (slotIndex) => {
     const updatedTimes = [...selectedTimes];
     const timeToDelete = updatedTimes[slotIndex]
-    console.log(timeSlots)
     timeSlots[0].openingHours.forEach((openingHour) => {
       if (openingHour.startTime === timeToDelete) {
         openingHour.availableSlot += 1
@@ -374,15 +556,15 @@ function BookMyAppointments() {
     setTimeSlots(timeSlots);
     setSelectedTimes(updatedTimes);
     setSelectedCount(selectedCount - 1);
-
+    setCannotFillMore(false);
     setNumberError(false);
   };
 
   return (
-    <section className="text-slate-800 bg-neutral-400 body-font">
+    <section className="text-slate-800 bg-gray-100 body-font">
       <HomePageNavBar />
 
-      <div className="bg-neutral-400 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+      <div className="bg-gray-100 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
           <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
@@ -463,7 +645,7 @@ function BookMyAppointments() {
               <select
                 id="service"
                 name="service"
-                value={bookingInput.service || ""}
+                value={bookingInput.serviceId || ""}
                 onChange={(event) => {
                   onInputChange(event);
                   onServiceChange(event);
@@ -588,7 +770,7 @@ function BookMyAppointments() {
                                 <h1
                                   className={cn(
                                     currentMonth ? "text-white" : "text-slate-800",
-                                    today ? "bg-neutral-400 text-slate-800" : "",
+                                    today ? "bg-red-600 text-slate-800" : "",
                                     selectDate.toDate().toDateString() ===
                                       date.toDate().toDateString()
                                       ? "bg-black text-white"
@@ -620,13 +802,6 @@ function BookMyAppointments() {
                 <h1 className="text-lg text-center text-white font-bold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
-
-                {/* {selectDate.toDate() < new Date() && (
-                  <p className="h-[40px] text-red-600 text-center">
-                    Booking date is in the past.
-                  </p>
-                )} */}
-
                 {!selectedServiceId ? (
                   <p className="h-[40px] text-emerald-500 text-center">{t("selectServiceMsg")}</p>
                 ) : new Date(selectDate.toDate()).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) ? (
@@ -639,7 +814,7 @@ function BookMyAppointments() {
                       <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
                         <div className="flex flex-wrap gap-2 justify-center">
                           {slot.openingHours.map((openingHour, slotIndex) => (
-                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-neutral-400 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-gray-100 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
                               <p>{openingHour.startTime}</p>
                               <p className="text-xs">{selectedTimes.length === 0 ? openingHour.availableSlot : openingHour.availableSlot} {t("slotsLeft")}</p>
                             </div>
@@ -665,8 +840,19 @@ function BookMyAppointments() {
                     {t("cannotFillMoreValidation")}
                   </div>
                 )}
+                {slotNotSelected && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("pleaseSelectTimeSlotForAll")}
+                  </div>
+                )}
+                {numberMismatchError && (
+                  <div className="text-red-500 text-center mt-2">
+                    {t("numberOfPeopleAndSelectedSlotDifference")}
+                  </div>
+                )}
 
-                <div className="my-4 bg-neutral-400 h-[1px]"></div>
+
+                <div className="my-4 bg-gray-100 h-[1px]"></div>
 
                 <div className="mt-4">
                   <h2 className="text-lg text-white text-center font-bold mb-4">
@@ -680,7 +866,7 @@ function BookMyAppointments() {
                       >
                         <span style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full cursor-pointer bg-neutral-400 font-bold text-white">
+                        <span className="p-2 rounded-full cursor-pointer bg-black font-bold text-white">
                           {time}
                         </span>
                         <button
@@ -748,11 +934,6 @@ function BookMyAppointments() {
                           type="text"
                           id={`firstname`}
                           name={`firstname`}
-                          // value={
-                          //   index === 0
-                          //     ? (bookingInput.guestDetails?.firstname || user.firstname || "")
-                          //     : (bookingInput?.friends[index - 1]?.firstname || "")
-                          // }
                           value={
                             index === 0
                               ? (bookingInput.guestDetails?.firstname || user?.firstname || "")
@@ -760,7 +941,7 @@ function BookMyAppointments() {
                           }
 
                           onChange={(e) => onInputChange(e, index)}
-                          onBlur={(e) => validateInput(e)}
+                          onBlur={(e) => validateInput(e, index)}
                           className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                           placeholder={t("firstname")}
                           required
@@ -768,10 +949,10 @@ function BookMyAppointments() {
                         <div
                           className="h-[24px] text-red-600 text-start"
                           style={{
-                            visibility: bookingError.firstname ? "visible" : "hidden",
+                            visibility: bookingError[`firstname${index}`] ? "visible" : "hidden",
                           }}
                         >
-                          {bookingError.firstname}
+                          {bookingError[`firstname${index}`]}
                         </div>
                       </div>
 
@@ -786,7 +967,7 @@ function BookMyAppointments() {
                               : (bookingInput?.friends[index - 1]?.lastname || "")
                           }
                           onChange={(e) => onInputChange(e, index)}
-                          onBlur={(e) => validateInput(e)}
+                          onBlur={(e) => validateInput(e, index)}
                           className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
                           placeholder={t("lastname")}
                           required
@@ -794,10 +975,10 @@ function BookMyAppointments() {
                         <div
                           className="h-[24px] text-red-600 text-start"
                           style={{
-                            visibility: bookingError.lastname ? "visible" : "hidden",
+                            visibility: bookingError[`lastname${index}`] ? "visible" : "hidden",
                           }}
                         >
-                          {bookingError.lastname}
+                          {bookingError[`lastname${index}`]}
                         </div>
                       </div>
                     </div>
@@ -814,17 +995,18 @@ function BookMyAppointments() {
                       onChange={(e) => onInputChange(e, index)}
                       className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                       placeholder={t("email")}
-                      onBlur={(e) => validateInput(e)}
+                      onBlur={(e) => validateInput(e, index)}
                       required
                     />
                     <div
                       className="h-[24px] text-red-600 text-start"
                       style={{
-                        visibility: bookingError.email ? "visible" : "hidden",
+                        visibility: bookingError[`email${index}`] ? "visible" : "hidden",
                       }}
                     >
-                      {bookingError.email}
+                      {bookingError[`email${index}`]}
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -849,16 +1031,19 @@ function BookMyAppointments() {
           <div className="py-2 mt-1 px-0">
             <a
               onClick={handleButtonClick}
-              className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
-              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+              className="bg-black relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer">
+              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-black duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </span>
-              <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("saveChanges")}</span>
+              <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">{t("saveChanges")}</span>
               <span className="relative invisible">
                 {t("saveChanges")}
               </span>
             </a>
+          </div>
 
+          <div className="py-2 mt-1 px-2">
+            {errorMessage && <Alert type={"danger"} message={errorMessage} />}
           </div>
         </div>
       </div>
