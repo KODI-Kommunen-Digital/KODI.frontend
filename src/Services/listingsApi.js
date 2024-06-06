@@ -19,8 +19,12 @@ export async function getListingsById(cityId, listingsId) {
 	return axios.get(`/cities/${cityId}/listings/${listingsId}`);
 }
 
+// export async function postListingsData(cityId, newListingsDataObj) {
+// 	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
+// }
+
 export async function postListingsData(cityId, newListingsDataObj) {
-	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
+	return axios.post(`/listings`, newListingsDataObj);
 }
 
 export async function getListingsBySearch(params) {
