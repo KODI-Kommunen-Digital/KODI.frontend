@@ -776,7 +776,7 @@ function UploadListings() {
       if (selectedCity) {
         setCityId(selectedCityId);
         setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           cityIds: [selectedCityId],
           villageId: 0,
