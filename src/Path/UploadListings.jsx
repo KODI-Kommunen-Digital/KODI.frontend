@@ -179,10 +179,7 @@ function UploadListings() {
   //Drag and Drop ends
 
   //Sending data to backend starts
-  const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
-  // const [date, setDate] = useState();
-  const [cityId, setCityId] = useState(0);
-  // const [villages, setVillages] = useState([]);
+  const [cityIds, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [input, setInput] = useState({
@@ -215,7 +212,7 @@ function UploadListings() {
     subcategoryId: "",
     title: "",
     description: "",
-    cityId: "",
+    cityIds: "",
     cityAlreadySelected: "",
     startDate: "",
     endDate: "",
@@ -226,95 +223,113 @@ function UploadListings() {
 
     let valid = true;
     for (let key in error) {
-      var errorMessage = getErrorMessage(key, input[key]);
-      var newError = error;
-      newError[key] = errorMessage;
+      const errorMessage = getErrorMessage(key, input[key]);
+      const newError = { ...error, [key]: errorMessage };
       setError(newError);
       if (errorMessage) {
         valid = false;
       }
     }
+
     if (valid) {
       setUpdating(true);
 
       try {
-        // Prepare the data to be sent to the backend
+        console.log("selectedCities before submission:", selectedCities);
         const dataToSubmit = {
           ...input,
           cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
         };
 
+        console.log(dataToSubmit)
+
         // Post or update listing data
-        let response = await (newListing
-          ? postListingsData(cityId, dataToSubmit)
-          : updateListingsData(cityId, dataToSubmit, listingId));
+        const response = await (newListing
+          ? postListingsData(dataToSubmit)
+          : updateListingsData(dataToSubmit, listingId));
+
+        let currentListingId = [];
+        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          currentListingId = response.data.data.map(item => item.listingId);
+        }
+
+        let cityIdsArray = [];
+        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          cityIdsArray = response.data.data.map(item => item.cityId);
+        }
 
         if (newListing) {
-          setListingId(response.data.id);
+          setListingId(currentListingId);
         }
+
+        // Handle image removal and upload
         if (input.removeImage) {
           if (image.length === 0) {
-            await deleteListingImage(cityId, listingId);
-          } else {
-            if (!localImageOrPdf) {
-              const imageForm = new FormData();
-              for (let i = 0; i < image.length; i++) {
-                imageForm.append("image", image[i]);
-              }
-              await uploadListingImage(
-                imageForm,
-                cityId,
-                response.data.id || listingId
-              );
+            await Promise.all(cityIdsArray.map((cityId, index) => deleteListingImage(cityId, currentListingId[index])));
+          } else if (!localImageOrPdf) {
+            const minIterations = Math.min(cityIdsArray.length);
+            let allPromises = []
+            for (let index = 0; index < minIterations; index++) {
+              const img = imageArray[index];
+              const cityId = cityIdsArray[index];
+              const listingId = currentListingId[index];
+              imageForm.append("image", img);
+              console.log("cityId:", cityId, "listingId:", listingId);
+              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
             }
+            await Promise.all(allPromises)
           }
         }
 
         if (localImageOrPdf) {
-          if (image) {
-            // Upload image if it exists
+          if (image && image.length > 0) {
+            const imageArray = Array.from(image);
             const imageForm = new FormData();
-            for (let i = 0; i < image.length; i++) {
-              imageForm.append("image", image[i]);
+            const minIterations = Math.min(cityIdsArray.length);
+            let allPromises = []
+            for (let index = 0; index < minIterations; index++) {
+              const img = imageArray[index];
+              const cityId = cityIdsArray[index];
+              const listingId = currentListingId[index];
+              imageForm.append("image", img);
+              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
             }
-            await uploadListingImage(
-              imageForm,
-              cityId,
-              response.data.id || listingId
-            );
+            await Promise.all(allPromises)
           } else if (pdf) {
-            // Upload PDF if it exists
+            let allPromises = []
             const pdfForm = new FormData();
-            pdfForm.append("pdf", pdf);
-            await uploadListingPDF(
-              pdfForm,
-              cityId,
-              response.data.id || listingId
-            );
+            const minIterations = Math.min(cityIdsArray.length);
+            for (let index = 0; index < minIterations; index++) {
+              const cityId = cityIdsArray[index];
+              const listingId = currentListingId[index];
+              pdfForm.append("pdf", pdf);
+              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
+            }
+            await Promise.all(allPromises)
           }
         }
 
         // Set success message based on admin status and new listing
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
-          : newListing ? setSuccessMessage(t("listingCreated")) : setSuccessMessage(t("listingUpdated"));
+          : newListing
+            ? setSuccessMessage(t("listingCreated"))
+            : setSuccessMessage(t("listingUpdated"));
 
-        setErrorMessage(false);
         setIsSuccess(true);
-
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
         }, 5000);
       } catch (error) {
+        console.error("Error during submission:", error);
         setErrorMessage(t("changesNotSaved"));
-        setSuccessMessage(false);
         setTimeout(() => setErrorMessage(false), 5000);
+      } finally {
+        setUpdating(false);
       }
-      setUpdating(false);
     } else {
       setErrorMessage(t("invalidData"));
-      setSuccessMessage(false);
       setTimeout(() => setErrorMessage(false), 5000);
     }
   };
@@ -334,7 +349,7 @@ function UploadListings() {
     if (!accessToken && !refreshToken) {
       navigateTo("/login");
     }
-    var cityId = searchParams.get("cityId");
+    var cityIds = searchParams.get("cityIds");
     getCategory().then((response) => {
       const catList = {};
       response?.data.data.forEach((cat) => {
@@ -351,22 +366,17 @@ function UploadListings() {
     });
     setInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
-    setCityId(cityId);
+    setCityId(cityIds);
     var listingId = searchParams.get("listingId");
     getProfile().then((response) => {
       setIsAdmin(response.data.data.roleId === role.Admin);
     });
-    if (listingId && cityId) {
+    if (listingId && cityIds) {
       setListingId(parseInt(listingId));
       setNewListing(false);
-      // getVillages(cityId).then((response) => setVillages(response.data.data));
-      getListingsById(cityId, listingId).then((listingsResponse) => {
+      getListingsById(cityIds, listingId).then((listingsResponse) => {
         let listingData = listingsResponse.data.data;
-        // if (listingData.startDate)
-        // 	listingData.startDate = listingData.startDate.slice(0, 10);
-        // if (listingData.endDate)
-        // 	listingData.endDate = listingData.endDate.slice(0, 10);
-        listingData.cityId = cityId;
+        listingData.cityIds = cityIds;
         setInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
@@ -479,7 +489,7 @@ function UploadListings() {
           return "";
         }
 
-      case "cityId":
+      case "cityIds":
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -560,25 +570,17 @@ function UploadListings() {
       const citiesData = citiesResponse.data.data;
       setCities(citiesData);
       if (citiesData.length === 1) {
-        const cityId = citiesData[0].id;
+        const cityIds = citiesData[0].id;
         const cityName = citiesData[0].name;
-        setSelectedCities([{ id: cityId, name: cityName }]);
+        setSelectedCities([{ id: cityIds, name: cityName }]);
         setInput((prev) => ({
           ...prev,
-          cityId: [cityId],
+          cityIds: [cityIds],
           villageId: 0,
         }));
-        // getVillages(cityId).then((response) => setVillages(response.data.data));
       }
     });
   }, []);
-
-  useEffect(() => {
-    setInput((prevState) => ({
-      ...prevState,
-      selected: val.map((item) => item.selected),
-    }));
-  }, [val]);
 
   const onCityChange = async (e) => {
     const selectedCityId = parseInt(e.target.value);
@@ -599,11 +601,12 @@ function UploadListings() {
 
       const selectedCity = cities.find(city => city.id === selectedCityId);
       if (selectedCity) {
+        setCityId(selectedCityId);
         const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
         setSelectedCities(updatedSelectedCities);
         setInput((prev) => ({
           ...prev,
-          cityId: updatedSelectedCities.map(city => city.id),
+          cityIds: updatedSelectedCities.map(city => city.id),
           villageId: 0,
         }));
       }
@@ -612,37 +615,39 @@ function UploadListings() {
         validateInput(e);
       }
     } else {
-      setCityId(selectedCityId);
-      setInput((prev) => ({
-        ...prev,
-        cityId: cityId,
-        villageId: 0,
-      }));
-      if (parseInt(cityId))
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      if (selectedCity) {
+        setCityId(selectedCityId);
+        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
+        setInput((prev) => ({
+          ...prev,
+          cityIds: [selectedCityId],
+          villageId: 0,
+        }));
+      }
+      if (parseInt(cityIds))
         validateInput(e);
     }
   };
 
-  console.log(selectedCities)
-
-  const removeCity = (cityId) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityId);
+  const removeCity = (cityIds) => {
+    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
     setSelectedCities(updatedSelectedCities);
     setInput((prev) => ({
       ...prev,
-      cityId: updatedSelectedCities.map(city => city.id),
+      cityIds: updatedSelectedCities.map(city => city.id),
       villageId: 0,
     }));
 
     if (updatedSelectedCities.length === 0 && cities.length > 1) {
       setError(prevState => ({
         ...prevState,
-        cityId: t("pleaseSelectCity"),
+        cityIds: t("pleaseSelectCity"),
       }));
     } else {
       setError(prevState => ({
         ...prevState,
-        cityId: "", // Reset the cityId error when there are selected cities again
+        cityIds: "", // Reset the cityIds error when there are selected cities again
       }));
     }
   };
@@ -752,8 +757,8 @@ function UploadListings() {
                   {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
                 </label>
                 <select
-                  id="cityId"
-                  name="cityId"
+                  id="cityIds"
+                  name="cityIds"
                   value=""
                   onChange={onCityChange}
                   disabled={!newListing}
@@ -785,10 +790,10 @@ function UploadListings() {
                 <div
                   className="h-[24px] text-red-600"
                   style={{
-                    visibility: (selectedCities.length === 0 && error.cityId) || error.cityAlreadySelected ? "visible" : "hidden",
+                    visibility: (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected ? "visible" : "hidden",
                   }}
                 >
-                  {selectedCities.length === 0 ? error.cityId : error.cityAlreadySelected}
+                  {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
                 </div>
               </div>
             )
@@ -803,9 +808,9 @@ function UploadListings() {
                 </label>
                 <select
                   type="text"
-                  id="cityId"
-                  name="cityId"
-                  value={cityId || 0}
+                  id="cityIds"
+                  name="cityIds"
+                  value={cityIds || 0}
                   onChange={onCityChange}
                   autoComplete="country-name"
                   disabled={!newListing}
@@ -821,44 +826,14 @@ function UploadListings() {
                 <div
                   className="h-[24px] text-red-600"
                   style={{
-                    visibility: selectedCities.length === 0 && error.cityId ? "visible" : "hidden",
+                    visibility: selectedCities.length === 0 && error.cityIds ? "visible" : "hidden",
                   }}
                 >
-                  {error.cityId}
+                  {error.cityIds}
                 </div>
               </div>
             )
           )}
-
-          {/* {villages.length > 0 && parseInt(cityId) ? (
-            <div className="relative mb-4">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-600"
-              >
-                {t("village")}
-              </label>
-              <select
-                type="villageId"
-                id="villageId"
-                name="villageId"
-                value={input.villageId || 0}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                autoComplete="country-name"
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-              >
-                <option value={0}>{t("select")}</option>
-                {villages.map((village) => (
-                  <option key={Number(village.id)} value={Number(village.id)}>
-                    {village.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <span />
-          )} */}
 
           <div className="relative mb-4">
             <label

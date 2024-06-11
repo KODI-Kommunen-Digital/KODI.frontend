@@ -23,7 +23,7 @@ export async function getListingsById(cityId, listingsId) {
 // 	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
 // }
 
-export async function postListingsData(cityId, newListingsDataObj) {
+export async function postListingsData(newListingsDataObj) {
 	return axios.post(`/listings`, newListingsDataObj);
 }
 
