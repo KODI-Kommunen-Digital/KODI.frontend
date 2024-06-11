@@ -265,19 +265,20 @@ function UploadListings() {
         // Handle image removal and upload
         if (input.removeImage) {
           if (image.length === 0) {
-            await Promise.all(cityIdsArray.map((cityId, index) => deleteListingImage(cityId, currentListingId[index])));
-          } else if (!localImageOrPdf) {
-            const minIterations = Math.min(cityIdsArray.length);
-            let allPromises = []
-            for (let index = 0; index < minIterations; index++) {
-              const img = imageArray[index];
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
-              imageForm.append("image", img);
-              console.log("cityId:", cityId, "listingId:", listingId);
-              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
+            await deleteListingImage(cityId, listingId);
+          } else {
+            if (!localImageOrPdf) {
+              const imageForm = new FormData();
+              for (let i = 0; i < image.length; i++) {
+                imageForm.append("image", image[i]);
+              }
+
+              await uploadListingImage(
+                imageForm,
+                cityId,
+                response.data.id || listingId
+              );
             }
-            await Promise.all(allPromises)
           }
         }
 
@@ -539,10 +540,10 @@ function UploadListings() {
 
       case "email":
         if (name === "email") {
-          if (!value) {
-            return t("pleaseEnterValidEmail");
-          } else if (!isValidEmail(value)) {
-            return t("pleaseEnterValidEmail");
+          if (value) {
+            if (!isValidEmail(value)) {
+              return "Please enter a valid email address";
+            }
           }
         }
 
@@ -1166,7 +1167,6 @@ function UploadListings() {
               value={input.email}
               onChange={onInputChange}
               onBlur={validateInput}
-              required
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("emailExample")}
             />
