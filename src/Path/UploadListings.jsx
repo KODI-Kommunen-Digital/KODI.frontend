@@ -321,11 +321,7 @@ function UploadListings() {
     }
     var cityId = searchParams.get("cityId");
     getCategory().then((response) => {
-      const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
-      setCategories(catList);
+      setCategories(response?.data?.data || []);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
@@ -760,10 +756,10 @@ function UploadListings() {
               <option className="font-sans" value={0} key={0}>
                 {t("chooseOneCategory")}
               </option>
-              {Object.keys(categories).map((key) => {
+              {categories.map((category) => {
                 return (
-                  <option className="font-sans" value={key} key={key}>
-                    {t(categories[key])} {t(categoryDescription(key))}
+                  <option className="font-sans" value={category.id} key={category.id}>
+                    {t(category.name)} {t(categoryDescription(category.id))}
                   </option>
                 );
               })}
