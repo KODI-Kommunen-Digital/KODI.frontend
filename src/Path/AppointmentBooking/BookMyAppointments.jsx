@@ -566,11 +566,11 @@ function BookMyAppointments() {
 
       <div className="bg-gray-100 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-stone-700 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
+          <div className="md:grid md:gap-6 bg-gray-300 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
-                  <h1 className="text-white mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                  <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                     <span
                       className="inline-block max-w-full break-words"
                       style={{
@@ -603,7 +603,7 @@ function BookMyAppointments() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 justify-between mt-6 text-white">
+                <div className="flex flex-wrap gap-1 justify-between mt-6 text-slate-800">
                   <div>
                     <p
                       className="text-start font-bold"
@@ -616,7 +616,7 @@ function BookMyAppointments() {
                   </div>
 
                   <p
-                    className="leading-relaxed text-base font-bold text-white"
+                    className="leading-relaxed text-base font-bold text-slate-800"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
@@ -715,7 +715,7 @@ function BookMyAppointments() {
         <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
           <div className="lg:w-2/3 rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-stone-700 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+              <div className="bg-gray-300 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -728,7 +728,7 @@ function BookMyAppointments() {
                             }}
                           />
                           <h1
-                            className="select-none text-white font-semibold cursor-pointer hover:scale-105 transition-all font-bold"
+                            className="select-none text-slate-800 font-semibold cursor-pointer hover:scale-105 transition-all font-bold"
                             onClick={() => {
                               setToday(currentDate);
                             }}
@@ -769,7 +769,7 @@ function BookMyAppointments() {
                               >
                                 <h1
                                   className={cn(
-                                    currentMonth ? "text-white" : "text-slate-800",
+                                    currentMonth ? "text-slate-800" : "text-white",
                                     today ? "bg-red-600 text-slate-800" : "",
                                     selectDate.toDate().toDateString() ===
                                       date.toDate().toDateString()
@@ -797,9 +797,9 @@ function BookMyAppointments() {
 
           <div className="w-2/3 lg:w-1/3 mx-auto">
             <div className="grid grid-cols-1 gap-4 col-span-1">
-              <div className="bg-stone-700 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+              <div className="bg-gray-300 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
                 {/* border-2 border-black */}
-                <h1 className="text-lg text-center text-white font-bold mb-4">
+                <h1 className="text-lg text-center text-slate-800 font-bold mb-4">
                   {selectDate.toDate().toDateString()}
                 </h1>
                 {!selectedServiceId ? (
@@ -855,7 +855,7 @@ function BookMyAppointments() {
                 <div className="my-4 bg-gray-100 h-[1px]"></div>
 
                 <div className="mt-4">
-                  <h2 className="text-lg text-white text-center font-bold mb-4">
+                  <h2 className="text-lg text-slate-800 text-center font-bold mb-4">
                     {t("selectedSlots")}
                   </h2>
                   <ul className="mb-2 grid grid-cols-1 md:grid-cols-2 text-center gap-2">
@@ -866,7 +866,7 @@ function BookMyAppointments() {
                       >
                         <span style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full cursor-pointer bg-black font-bold text-white">
+                        <span className="p-2 rounded-full cursor-pointer bg-black font-bold text-slate-800">
                           {time}
                         </span>
                         <button
@@ -897,8 +897,8 @@ function BookMyAppointments() {
       </div>
 
       {/* User details box */}
-      <div className="bg-stone-700">
-        <div className="bg-stone-700 h-full h-full gap-y-8 items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-2xl lg:max-w-7xl">
+      <div className="bg-gray-300">
+        <div className="bg-gray-300 h-full h-full gap-y-8 items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-2xl lg:max-w-7xl">
           <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
             {Array.from({ length: selectedCount }, (_, index) => (
               <div key={index} className="mt-4">
@@ -1013,7 +1013,7 @@ function BookMyAppointments() {
             ))}
 
             <div className="flex flex-col mt-4">
-              <label className="mb-2 font-bold text-lg text-white" htmlFor="comment">{t("remarks")}</label>
+              <label className="mb-2 font-bold text-lg text-slate-800" htmlFor="comment">{t("remarks")}</label>
               <textarea
                 rows="4"
                 className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]"
@@ -1027,7 +1027,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="bg-stone-700 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="bg-gray-300 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className="py-2 mt-1 px-0">
             <a
               onClick={handleButtonClick}
