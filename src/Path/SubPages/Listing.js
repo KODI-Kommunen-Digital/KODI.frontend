@@ -3,7 +3,7 @@ import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
-import { getProfile, getUserId } from "../../Services/usersApi";
+import { getProfile } from "../../Services/usersApi";
 import { getAds } from "../../Services/AdvertiseApi";
 
 import Footer from "../../Components/Footer";
@@ -178,65 +178,57 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      const isLoggedIn = !!(accessToken || refreshToken); // Ensure isLoggedIn is either true or false
-      setIsLoggedIn(isLoggedIn);
-
+      if (accessToken || refreshToken) {
+        setIsLoggedIn(true);
+      }
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
-          const listingData = listingsResponse.data.data;
           setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
           if (
             listingsResponse.data.data.sourceId !== source.User &&
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
+          } else if (listingsResponse.data.data.statusId !== 1) {
+            navigateTo("/Error");
           } else {
-            console.log(listingData);
-            setInput(listingData);
+            setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
-            const currentUserId = isLoggedIn ? Number(getUserId()) : null;
-            getProfile(currentUserId).then((currentUserResult) => {
+            setTimeout(() => {
               getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-                const user = res.data.data;
-                setUser(user);
-                if (
-                  listingsResponse.data.data.statusId !== statusByName.Active &&
-                  currentUserId !== user.id &&
-                  currentUserResult.data.data.roleId !== 1
-                ) {
-                  navigateTo("/Error");
-                }
-              });
-            });
-
-            if (isLoggedIn) {
-              getFavorites().then((response) => {
-                const favorite = response.data.data.find(
-                  (f) =>
-                    f.listingId === parseInt(listingId) &&
-                    f.cityId === parseInt(cityId)
-                );
-                if (favorite) {
-                  setFavoriteId(favorite.id);
+                setUser(res.data.data);
+                if (isLoggedIn) {
+                  getFavorites().then((response) => {
+                    const favorite = response.data.data.find(
+                      (f) =>
+                        f.listingId === parseInt(listingId) &&
+                        f.cityId === parseInt(cityId)
+                    );
+                    if (favorite) {
+                      setFavoriteId(favorite.id);
+                    } else {
+                      setFavoriteId(0);
+                    }
+                    setIsLoading(false);
+                  });
                 } else {
-                  setFavoriteId(0);
+                  setIsLoading(false);
                 }
-                // setIsLoading(false);
               });
-            }
-          }
+            }, 1000);
 
-          setSelectedCategoryId(listingsResponse.data.data.categoryId);
-          setListingId(listingsResponse.data.data.id);
-          setDescription(listingsResponse.data.data.description);
-          setTitle(listingsResponse.data.data.title);
-          setSourceId(listingsResponse.data.data.sourceId);
-          setWebsite(listingsResponse.data.data.website);
-          setCreatedAt(
-            new Intl.DateTimeFormat("de-DE").format(
-              Date.parse(listingsResponse.data.data.createdAt)
-            )
-          );
+            setSelectedCategoryId(listingsResponse.data.data.categoryId);
+            setListingId(listingsResponse.data.data.id);
+            setDescription(listingsResponse.data.data.description);
+            setTitle(listingsResponse.data.data.title);
+            setSourceId(listingsResponse.data.data.sourceId);
+            setWebsite(listingsResponse.data.data.website);
+            setCreatedAt(
+              new Intl.DateTimeFormat("de-DE").format(
+                Date.parse(listingsResponse.data.data.createdAt)
+              )
+            );
+          }
         })
         .catch((error) => {
           console.error("Error fetching listing:", error);
