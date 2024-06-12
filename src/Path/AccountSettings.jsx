@@ -18,6 +18,12 @@ const AccountSettings = () => {
 		phoneNumber: "",
 	});
 
+	const [error, setError] = useState({
+		username: "",
+		email: "",
+		phoneNumber: "",
+	});
+
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
@@ -48,13 +54,36 @@ const AccountSettings = () => {
 		});
 	}, []);
 
+	const validatePhoneNumber = (phoneNumber) => {
+		const phoneRegex = /^[0-9]{8,15}$/;
+		return phoneRegex.test(phoneNumber);
+	};
+
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		console.log(`Changing ${name} to ${value}`); // Debugging line
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
 		}));
+
+		if (name === "phoneNumber") {
+			const isValid = validatePhoneNumber(value);
+			console.log(`Phone number validation result: ${isValid}`); // Debugging line
+			if (!isValid) {
+				setError((prev) => ({
+					...prev,
+					phoneNumber: t("phoneNumValidation"),
+				}));
+			} else {
+				setError((prev) => ({
+					...prev,
+					phoneNumber: "",
+				}));
+			}
+		}
 	};
+
 
 	const handleSave = async (event) => {
 		event.preventDefault();
@@ -75,8 +104,8 @@ const AccountSettings = () => {
 
 	const [showConfirmationModal, setShowConfirmationModal] = useState({
 		visible: false,
-		onConfirm: () => {},
-		onCancel: () => {},
+		onConfirm: () => { },
+		onCancel: () => { },
 	});
 
 	const handleDeleteAccount = () => {
@@ -174,13 +203,19 @@ const AccountSettings = () => {
 									<input
 										type="text"
 										name="phoneNumber"
-										value={input.phoneNumber ||""}
+										value={input.phoneNumber || ""}
 										id="phoneNumber"
 										className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 										placeholder={t("enter_phone")}
 										style={{ fontFamily: "Poppins, sans-serif" }}
 										onChange={onInputChange}
 									/>
+
+									{error.phoneNumber && (
+										<div className="text-red-600 h-[24px]">
+											{error.phoneNumber}
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
