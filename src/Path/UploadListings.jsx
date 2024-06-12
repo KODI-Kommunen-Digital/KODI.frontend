@@ -265,7 +265,7 @@ function UploadListings() {
         // Handle image removal and upload
         if (input.removeImage) {
           if (image.length === 0) {
-            await deleteListingImage(cityId, listingId);
+            await deleteListingImage(cityIds, listingId);
           } else {
             if (!localImageOrPdf) {
               const imageForm = new FormData();
@@ -275,7 +275,7 @@ function UploadListings() {
 
               await uploadListingImage(
                 imageForm,
-                cityId,
+                cityIds,
                 response.data.id || listingId
               );
             }
