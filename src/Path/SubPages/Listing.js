@@ -70,8 +70,7 @@ Description.propTypes = {
 const Listing = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
   const [listingId, setListingId] = useState(0);
   const [description, setDescription] = useState("");
   const [createdAt, setCreatedAt] = useState("");
@@ -336,12 +335,12 @@ const Listing = () => {
                               height="1em"
                               viewBox="0 0 448 512"
                               fill={process.env.REACT_APP_NAME === 'Salzkotten APP' ? '#fecc00' :
-                                process.env.REACT_APP_NAME === 'FICHTEL' ? '#4d7c0f' : '#4299e1'}
+                                process.env.REACT_APP_NAME === 'FICHTEL' ? '#4d7c0f' : '#1e40af'}
                             >
                               <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                             </svg>
                             <p
-                              className={`leading-relaxed text-base ${colors.darkTextColor}`}
+                              className={`leading-relaxed text-base ${RegionColors.darkTextColor}`}
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                               }}
@@ -356,8 +355,8 @@ const Listing = () => {
                               }`}
                           >
 
-                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${colors.lightBorderColor}`}>
-                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
+                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
                               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                                 {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
                               </span>
@@ -419,7 +418,7 @@ const Listing = () => {
                                   </span>
                                   {input.endDate && (
                                     <>
-                                      <span className={`${colors.lightTextColor}`}>
+                                      <span className={`${RegionColors.lightTextColor}`}>
                                         {" "}
                                         {t("To")}{" "}
                                       </span>
@@ -517,7 +516,7 @@ const Listing = () => {
                   {sourceId === listingSource.SCRAPER && (
                     <p className="text-slate-800 font-medium">
                       {t("visitWebsite")}{" "}
-                      <a href={website} className={`${colors.lightTextColor} font-medium" target="_blank" rel="noopener noreferrer`}>
+                      <a href={website} className={`${RegionColors.lightTextColor} font-medium" target="_blank" rel="noopener noreferrer`}>
                         {website}
                       </a>
                     </p>
@@ -558,8 +557,8 @@ const Listing = () => {
                                   user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                                 )
                               }
-                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${colors.lightBorderColor}`}>
-                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
+                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
                               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                                 {t("viewProfile")}
                               </span>
@@ -568,7 +567,7 @@ const Listing = () => {
                         </div>
                         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
                           <h2
-                            className={`${colors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
+                            className={`${RegionColors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -679,7 +678,7 @@ const Listing = () => {
                     {t("to_upload_new_listing")}
                   </span>
                   <a
-                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${colors.lightTextColor}`}
+                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                     onClick={() => {
                       localStorage.setItem(
                         "selectedItem",

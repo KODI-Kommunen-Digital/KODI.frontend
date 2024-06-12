@@ -1,49 +1,26 @@
+const themeString = process.env.REACT_APP_THEME || '{}';
+
+let colors = {};
+try {
+    colors = JSON.parse(themeString);
+} catch (error) {
+    console.error('Error parsing theme JSON:', error);
+}
+
 const RegionColors = {
-    'Salzkotten APP': {
-        darkBgColor: 'bg-yellow-600',
-        lightBgColor: 'bg-yellow-400',
-        darkTextColor: 'text-yellow-600',
-        lightTextColor: 'text-yellow-400',
-        darkBorderColor: 'border-yellow-600',
-        lightBorderColor: 'border-yellow-400',
-        lightHoverColor: 'hover:bg-yellow-400',
-        lightHoverShadowColor: 'hover:shadow-yellow-400',
-        lightHoverTextShadowColor: 'hover:text-yellow-400',
-        borderColor: 'border-yellow-600',
-        hoverBgColor: 'bg-yellow-600',
-        hoverTextColor: 'text-yellow-400',
-        hoverShadowColor: 'shadow-yellow-400',
-    },
-    'FICHTEL': {
-        darkBgColor: 'bg-lime-700',
-        lightBgColor: 'bg-lime-300',
-        darkTextColor: 'text-lime-700',
-        lightTextColor: 'text-lime-300',
-        darkBorderColor: 'border-lime-700',
-        lightBorderColor: 'border-lime-300',
-        lightHoverColor: 'hover:bg-lime-300',
-        lightHoverShadowColor: 'hover:shadow-lime-300',
-        lightHoverTextShadowColor: 'hover:text-lime-300',
-        borderColor: 'border-lime-700',
-        hoverBgColor: 'bg-lime-700',
-        hoverTextColor: 'text-lime-300',
-        hoverShadowColor: 'shadow-lime-300',
-    },
-    'Other Region': {
-        darkTextColor: 'text-blue-800',
-        lightTextColor: 'text-blue-400',
-        darkBgColor: 'bg-blue-800',
-        lightBgColor: 'bg-blue-400',
-        darkBorderColor: 'border-blue-800',
-        lightBorderColor: 'border-blue-400',
-        lightHoverColor: 'hover:bg-blue-400',
-        lightHoverShadowColor: 'hover:shadow-blue-400',
-        lightHoverTextShadowColor: 'hover:text-blue-400',
-        borderColor: 'border-blue-800',
-        hoverBgColor: 'bg-blue-800',
-        hoverTextColor: 'text-blue-400',
-        hoverShadowColor: 'shadow-blue-400',
-    },
+    darkTextColor: colors.darkTextColor || 'text-blue-800',
+    lightTextColor: colors.lightTextColor || 'text-blue-400',
+    darkBgColor: colors.darkBgColor || 'bg-blue-800',
+    lightBgColor: colors.lightBgColor || 'bg-blue-400',
+    darkBorderColor: colors.darkBorderColor || 'border-blue-800',
+    lightBorderColor: colors.lightBorderColor || 'border-blue-400',
+    lightHoverColor: colors.lightHoverColor || 'hover:bg-blue-400',
+    lightHoverShadowColor: colors.lightHoverShadowColor || 'hover:shadow-blue-400',
+    lightHoverTextShadowColor: colors.lightHoverTextShadowColor || 'hover:text-blue-400',
+    borderColor: colors.borderColor || 'border-blue-800',
+    hoverBgColor: colors.hoverBgColor || 'bg-blue-800',
+    hoverTextColor: colors.hoverTextColor || 'text-blue-400',
+    hoverShadowColor: colors.hoverShadowColor || 'shadow-blue-400',
 };
 
 export default RegionColors;

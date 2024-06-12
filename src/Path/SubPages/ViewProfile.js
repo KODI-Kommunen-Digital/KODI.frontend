@@ -17,8 +17,8 @@ import RegionColors from "../../Components/RegionColors";
 
 const ViewProfile = () => {
   window.scrollTo(0, 0);
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
+
   const { t } = useTranslation();
   useEffect(() => {
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("profile");
@@ -144,7 +144,7 @@ const ViewProfile = () => {
                     </div>
                     <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0">
                       <h2
-                        className={`${colors.lightTextColor} text-lg title-font mb-2 font-bold`}
+                        className={`${RegionColors.lightTextColor} text-lg title-font mb-2 font-bold`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         {user?.firstname + " " + user?.lastname}

@@ -20,8 +20,6 @@ import RegionColors from "../../Components/RegionColors";
 const AllListings = () => {
   window.scrollTo(0, 0);
   const pageSize = 12;
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
   const { t } = useTranslation();
   const [cityId, setCityId] = useState("");
   const [cities, setCities] = useState([]);
@@ -405,7 +403,7 @@ const AllListings = () => {
                     {t("to_upload_new_listing")}
                   </span>
                   <a
-                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${colors.lightTextColor}`}
+                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                     onClick={() => {
                       localStorage.setItem(
@@ -427,7 +425,7 @@ const AllListings = () => {
         <div className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600 hover:bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700 hover:bg-lime-300' : 'bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold cursor-pointer`}>
           {pageNo !== 1 ? (
             <span
-              className={`text-lg px-3 ${colors.lightHoverColor} cursor-pointer`}
+              className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
               style={{ fontFamily: "Poppins, sans-serif" }}
               onClick={() => setPageNo(pageNo - 1)}
             >
@@ -444,7 +442,7 @@ const AllListings = () => {
           </span>
           {listings.length >= pageSize && (
             <span
-              className={`text-lg px-3 ${colors.lightHoverColor} cursor-pointer rounded-lg`}
+              className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer rounded-lg`}
               style={{ fontFamily: "Poppins, sans-serif" }}
               onClick={() => setPageNo(pageNo + 1)}
             >

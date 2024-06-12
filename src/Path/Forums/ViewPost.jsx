@@ -32,8 +32,6 @@ Description.propTypes = {
 const ViewPost = () => {
   // window.scrollTo(0, 0);
   const { t } = useTranslation();
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
   const [postOwner, setPostOwner] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [forumPost, setForumPost] = useState({});
@@ -305,7 +303,7 @@ const ViewPost = () => {
                         </span>
                       </a>
 
-                      <a className={`${colors.lightTextColor} font-semibold text-base cursor-pointer`}>
+                      <a className={`${RegionColors.lightTextColor} font-semibold text-base cursor-pointer`}>
                         <span
                           className="ml-0"
                           style={{ fontFamily: "Poppins, sans-serif" }}
@@ -331,7 +329,7 @@ const ViewPost = () => {
                       <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                     </svg>
                     <p
-                      className={`${colors.lightTextColor} flex leading-relaxed text-base`}
+                      className={`${RegionColors.lightTextColor} flex leading-relaxed text-base`}
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -479,7 +477,7 @@ const ViewPost = () => {
 
               <a
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent  
-                ${colors.darkBgColor} text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                ${RegionColors.darkBgColor} text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={toggleComments}
               >
@@ -622,7 +620,7 @@ const ViewPost = () => {
                             }
                           ></textarea>
                           <button
-                            className={`mt-2 px-4 py-2 text-sm font-medium text-white ${colors.darkBgColor} rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700`}
+                            className={`mt-2 px-4 py-2 text-sm font-medium text-white ${RegionColors.darkBgColor} rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700`}
                             type="button"
                             onClick={() => {
                               postComment(comment.id);
@@ -728,7 +726,7 @@ const ViewPost = () => {
                         )
                       }
                       type="submit"
-                      className={`rounded-xl bg-white border ${colors.lightBorderColor} ${colors.lightTextColor} py-2 px-4 text-sm cursor-pointer hidden md:block`}
+                      className={`rounded-xl bg-white border ${RegionColors.lightBorderColor} ${RegionColors.lightTextColor} py-2 px-4 text-sm cursor-pointer hidden md:block`}
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}

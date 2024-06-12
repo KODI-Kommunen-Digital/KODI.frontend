@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 function UserProfile({ user }) {
   const { t } = useTranslation();
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
   const [userSocial, setUserSocial] = useState({});
   const socialMediaSVGPathList = {
     Facebook: {
@@ -81,8 +80,8 @@ function UserProfile({ user }) {
                   user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                 )
               }
-              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${colors.lightBorderColor}`}>
-              <span className={`w-48 h-48 rounded rotate-[-40deg] ${colors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border ${RegionColors.lightBorderColor}`}>
+              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                 {t("viewProfile")}
               </span>
@@ -91,7 +90,7 @@ function UserProfile({ user }) {
         </div>
         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
           <h2
-            className={`${colors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
+            className={`${RegionColors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
             style={{
               fontFamily: "Poppins, sans-serif",
             }}

@@ -9,8 +9,8 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 	const [isFirstPopupOpen, setIsFirstPopupOpen] = useState(true);
 	const [isSecondPopupOpen, setIsSecondPopupOpen] = useState(false);
 
-	const regionName = process.env.REACT_APP_NAME;
-	const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
+
 
 	useEffect(() => {
 		setIsFirstPopupOpen(true);
@@ -66,14 +66,14 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp2")}
 									<a
 										href="/PrivacyPolicy"
-										className={`${colors.darkTextColor} font-semibold`}
+										className={`${RegionColors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp5")}
 									</a>
 									{t("privacypolicyp6")}
 									<a
 										href="/PrivacyPolicy"
-										className={`${colors.darkTextColor} font-semibold`}
+										className={`${RegionColors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp7")}
 									</a>
@@ -151,7 +151,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 									{t("privacypolicyp8")}{" "}
 									<a
 										href="/PrivacyPolicy"
-										className={`${colors.darkTextColor} font-semibold`}
+										className={`${RegionColors.darkTextColor} font-semibold`}
 									>
 										{t("privacypolicyp9")}
 									</a>
