@@ -615,7 +615,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
               //   {t("delete")}
               // </button>
               <button onClick={() => handleDeleteService(serviceIndex)}
-                className="relative mb-[24px] hidden md:inline-block">
+                className="relative mb-[24px] w-[24px] hidden md:inline-block">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
@@ -682,7 +682,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                   }
                                   onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value, index) }
                                   }
-                                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                  className={`w-full rounded border focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.startTime && timeSlot.startTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
                                   placeholder="HH:mm"
                                 />
                               </div>
@@ -697,7 +697,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                   }
                                   onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value, index) }
                                   }
-                                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                  className={`w-full rounded border focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.endTime && timeSlot.endTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
                                   placeholder="HH:mm"
                                 />
                               </div>

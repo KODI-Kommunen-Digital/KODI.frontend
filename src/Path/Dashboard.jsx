@@ -254,9 +254,6 @@ const Dashboard = () => {
       navigateTo(`/error`);
     }
   }
-
-  // Navigate to Edit Listings page Starts
-
   const handleSearch = async (searchQuery, statusName) => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
