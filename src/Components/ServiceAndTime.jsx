@@ -615,7 +615,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
               //   {t("delete")}
               // </button>
               <button onClick={() => handleDeleteService(serviceIndex)}
-                className="relative mb-[24px] hidden md:inline-block">
+                className="relative mb-[24px] w-[24px] hidden md:inline-block">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
