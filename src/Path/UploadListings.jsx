@@ -445,7 +445,7 @@ function UploadListings() {
     if (!accessToken && !refreshToken) {
       navigateTo("/login");
     }
-    var cityIds = searchParams.get("cityIds");
+    var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
       setCategories(response?.data?.data || []);
     });
@@ -483,13 +483,13 @@ function UploadListings() {
         const appointmentId = listingData.appointmentId;
         const listingId = listingData.id
         if (appointmentId) {
-          getAppointments(cityId, listingId, appointmentId).then((appointmentResponse) => {
+          getAppointments(cityIds, listingId, appointmentId).then((appointmentResponse) => {
             const appointmentData = appointmentResponse.data.data;
             appointmentData.metadata = JSON.parse(appointmentData.metadata);
             setAppointmentInput(appointmentData);
             // console.log(appointmentData)
 
-            getAppointmentServices(cityId, listingId, appointmentId)
+            getAppointmentServices(cityIds, listingId, appointmentId)
               .then((servicesResponse) => {
 
                 console.log(servicesResponse.data.data)
