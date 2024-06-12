@@ -4,8 +4,8 @@ import RegionColors from "../Components/RegionColors";
 function LocationSelectionInput() {
     const [location, setLocation] = useState('');
     const [address, setAddress] = useState('');
-    const regionName = process.env.REACT_APP_NAME;
-    const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
+
 
     function handleLocationChange(event) {
         setLocation(event.target.value);
@@ -59,7 +59,7 @@ function LocationSelectionInput() {
                 <button
                     type="button"
                     onClick={getCurrentLocation}
-                    className={`ml-2 py-2 px-4 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent ${colors.darkBgColor} text-base font-semibold text-white shadow-sm hover:bg-cyan-500`}
+                    className={`ml-2 py-2 px-4 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent ${RegionColors.darkBgColor} text-base font-semibold text-white shadow-sm hover:bg-cyan-500`}
                 >
                     Select
                 </button>

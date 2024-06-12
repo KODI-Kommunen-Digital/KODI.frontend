@@ -27,8 +27,6 @@ import MostPopularCategories from "../Components/MostPopularCategories";
 
 const HomePage = () => {
   const { t } = useTranslation();
-  const regionName = process.env.REACT_APP_NAME;
-  const colors = RegionColors[regionName] || RegionColors['Other Region'];
   const [cityId, setCityId] = useState();
   const [categoryId, setCategoryId] = useState();
   const [cities, setCities] = useState([]);
@@ -359,7 +357,7 @@ const HomePage = () => {
                   {t("to_upload_new_listing")}
                 </span>
                 <a
-                  className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${colors.lightTextColor}`}
+                  className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                   style={{ fontFamily: "Poppins, sans-serif" }}
                   onClick={() => {
                     localStorage.setItem("selectedItem", "Choose one category");
@@ -514,7 +512,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${colors.lightBgColor}`}>
+          <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
             <div className="flex flex-wrap items-center">
               <div className="w-full md:w-1/2 px-4">
                 <h2
@@ -532,14 +530,14 @@ const HomePage = () => {
                 {/* <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group cursor-pointer" type="submit"
                   onClick={() => goToCitizensPage()}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${colors.darkBgColor} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${colors.borderColor} hover:${colors.hoverBgColor}`}></span>
-                  <span className={`relative ${colors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${RegionColors.darkBgColor} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
+                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${RegionColors.borderColor} hover:${RegionColors.hoverBgColor}`}></span>
+                  <span className={`relative ${RegionColors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
                 </a> */}
 
                 <a
                   onClick={() => goToCitizensPage()}
-                  className={`flex items-center ${colors.darkTextColor} border ${colors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+                  className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
                   <span>
                     {t("clickHereToFind")}
@@ -563,7 +561,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`${colors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
+          <div className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
             <style>
               {`
 								@media (max-width: 280px) {

@@ -7,8 +7,8 @@ import { getCities } from "../Services/cities";
 
 function UploadContribution() {
     const { t } = useTranslation();
-    const regionName = process.env.REACT_APP_NAME;
-    const colors = RegionColors[regionName] || RegionColors['Other Region'];
+
+
     const [cities, setCities] = useState([]);
 
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ function UploadContribution() {
 
 
     return (
-        <div className={`${colors.lightBgColor} mx-auto py-10 px-4 flex justify-center lg:h-[28rem] sm:h-[35rem]`}>
+        <div className={`${RegionColors.lightBgColor} mx-auto py-10 px-4 flex justify-center lg:h-[28rem] sm:h-[35rem]`}>
             <div className="flex flex-wrap items-center">
 
                 <div className="w-full md:w-1/2 px-4">
