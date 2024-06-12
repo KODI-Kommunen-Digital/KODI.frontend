@@ -447,12 +447,7 @@ function UploadListings() {
     }
     var cityIds = searchParams.get("cityIds");
     getCategory().then((response) => {
-      const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
-      setCategories(catList);
-
+      setCategories(response?.data?.data || []);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
