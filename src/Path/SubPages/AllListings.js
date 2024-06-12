@@ -36,6 +36,7 @@ const AllListings = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
@@ -138,6 +139,7 @@ const AllListings = () => {
   const handleCityChange = (newCityId) => {
     setIsLoading(true);
     setCityId(newCityId);
+    clearSearchResults();
     setIsLoading(false);
     setPageNo(1);
   };
@@ -155,9 +157,10 @@ const AllListings = () => {
     }
   };
 
-  function handleSortOptionChange(event) {
+  const handleSortOptionChange = (event) => {
     setSelectedSortOption(event.target.value);
-  }
+    clearSearchResults();
+  };
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -204,8 +207,14 @@ const AllListings = () => {
     }
   }, [terminalViewParam]);
 
+  const handleCategoryChange = (newCategoryId) => {
+    setCategoryId(newCategoryId);
+    clearSearchResults();
+  };
+
   const handleSearch = async (searchQuery) => {
     console.log("Search term:", searchQuery);
+    setSearchQuery(searchQuery); // Save the search query
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -220,6 +229,7 @@ const AllListings = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+
       const response = await getListingsBySearch({
         searchQuery,
         ...params
@@ -229,6 +239,11 @@ const AllListings = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const clearSearchResults = () => {
+    setListings([]); // Clear the listings to remove the search results
+    setSearchQuery(""); // Clear the search query
   };
 
   return (
@@ -298,7 +313,9 @@ const AllListings = () => {
                       id="category"
                       name="category"
                       autoComplete="category-name"
-                      onChange={(e) => setCategoryId(e.target.value)}
+                      onChange={(e) => {
+                        handleCategoryChange(e.target.value);
+                      }}
                       value={categoryId || 0}
                       className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                       style={{
@@ -337,7 +354,7 @@ const AllListings = () => {
                     </select>
                   </div>
 
-                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
                 </div>
               </div>
             </div>
