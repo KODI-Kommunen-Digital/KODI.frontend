@@ -16,8 +16,8 @@ export async function getUserBookings(params) {
     return axios.get(`/v1/users/${getUserId()}/bookings`, { params });
 }
 
-export async function deleteUserBooking(cityId, listingId, appointmentId, bookingId) {
-    return axios.delete(`/v1/cities/${cityId}/listings/${listingId}/appointments/${appointmentId}/booking/${bookingId}`);
+export async function deleteUserBooking(appointmentId, bookingId) {
+    return axios.delete(`/v1/users/${getUserId()}/appointments/${appointmentId}/booking/${bookingId}`);
 }
 
 export async function getAppointments(cityId, listingId, appointmentId) {

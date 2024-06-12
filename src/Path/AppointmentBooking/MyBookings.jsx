@@ -54,11 +54,11 @@ const MyBookings = () => {
 
   function handleDelete(booking) {
     console.log("Appointments with Listings:", booking);
-    deleteUserBooking(booking.cityId, booking.listingId, booking.appointmentId, booking.id)
+    deleteUserBooking(booking.appointmentId, booking.id)
       .then((res) => {
         getUserBookings(
           bookings.filter(
-            (b) => b.cityId !== booking.cityId || b.listingId !== booking.listingId || b.appointmentId !== booking.appointmentId || b.id !== booking.id
+            (b) => b.appointmentId !== booking.appointmentId || b.id !== booking.id
           )
         );
         console.log("Deleted successfully");
