@@ -254,10 +254,16 @@ const Dashboard = () => {
       navigateTo(`/error`);
     }
   }
-  const handleSearch = async (searchQuery) => {
+
+  // Navigate to Edit Listings page Starts
+
+  const handleSearch = async (searchQuery, statusName) => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const params = { statusId: 1 };
+      const params = {};
+      if (statusName && statusByName[statusName]) {
+        params.statusId = statusByName[statusName];
+      }
 
       const cityId = urlParams.get("cityId");
       if (cityId && parseInt(cityId)) {
@@ -268,10 +274,12 @@ const Dashboard = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+
       const response = await getListingsBySearch({
         searchQuery,
         ...params,
       });
+
       setListings(response.data.data);
     } catch (error) {
       console.error("Error:", error);
