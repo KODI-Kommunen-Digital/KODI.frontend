@@ -316,6 +316,25 @@ function UploadListings() {
       event.preventDefault();
 
       try {
+        // Filter opening dates for appointmentInput and services before submitting
+        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
+        const filteredServices = appointmentInput.services.map(service => ({
+          ...service,
+          metadata: {
+            ...service.metadata,
+            openingDates: filterOpeningDates(service.metadata.openingDates),
+          },
+        }));
+
+        const filteredAppointmentInput = {
+          ...appointmentInput,
+          metadata: {
+            ...appointmentInput.metadata,
+            openingDates: filteredOpeningDates,
+          },
+          services: filteredServices,
+        };
+
         let response = await (newListing
           ? postListingsData(cityId, listingInput)
           : updateListingsData(cityId, listingInput, listingId));
@@ -369,13 +388,13 @@ function UploadListings() {
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityId, listingId, listingInput.appointmentId, appointmentInput);
+            await updateAppointments(cityId, listingId, listingInput.appointmentId, filteredAppointmentInput);
           } catch (error) {
             console.error('Error updating appointment:', error);
           }
         } else if (appointmentAdded) {
           try {
-            let appointmentResponse = await createAppointments(cityId, response.data.id || listingId, appointmentInput);
+            let appointmentResponse = await createAppointments(cityId, response.data.id || listingId, filteredAppointmentInput);
             setAppointmentId(appointmentResponse.data.id);
           } catch (error) {
             console.error('Error posting appointment:', error);
@@ -403,6 +422,16 @@ function UploadListings() {
       setTimeout(() => setErrorMessage(false), 5000);
     }
   };
+
+  const filterOpeningDates = (openingDates) => {
+    return Object.keys(openingDates).reduce((acc, day) => {
+      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+        acc[day] = openingDates[day];
+      }
+      return acc;
+    }, {});
+  };
+
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
