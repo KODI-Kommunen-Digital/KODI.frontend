@@ -323,14 +323,10 @@ function UploadListings() {
       setUpdating(true);
 
       try {
-        console.log("selectedCities before submission:", selectedCities);
         const dataToSubmit = {
           ...listingInput,
           cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
         };
-
-        console.log(dataToSubmit)
-
         // Post or update listing data
         const response = await (newListing
           ? postListingsData(dataToSubmit)
@@ -346,9 +342,24 @@ function UploadListings() {
           cityIdsArray = response.data.data.map(item => item.cityId);
         }
 
-        if (newListing) {
-          setListingId(currentListingId);
-        }
+        // Filter opening dates for appointmentInput and services before submitting
+        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
+        const filteredServices = appointmentInput.services.map(service => ({
+          ...service,
+          metadata: {
+            ...service.metadata,
+            openingDates: filterOpeningDates(service.metadata.openingDates),
+          },
+        }));
+
+        const filteredAppointmentInput = {
+          ...appointmentInput,
+          metadata: {
+            ...appointmentInput.metadata,
+            openingDates: filteredOpeningDates,
+          },
+          services: filteredServices,
+        };
 
         if (listingInput.removeImage) {
           if (image.length === 0) {
@@ -399,13 +410,13 @@ function UploadListings() {
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityIds, listingId, listingInput.appointmentId, appointmentInput);
+            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
           } catch (error) {
             console.error('Error updating appointment:', error);
           }
         } else if (appointmentAdded) {
           try {
-            let appointmentResponse = await createAppointments(cityIds, response.data.id || listingId, appointmentInput);
+            let appointmentResponse = await createAppointments(cityIds, response.data.id || listingId, filteredAppointmentInput);
             setAppointmentId(appointmentResponse.data.id);
           } catch (error) {
             console.error('Error posting appointment:', error);
@@ -438,6 +449,15 @@ function UploadListings() {
 
   const handleCancel = () => {
     navigate('/Dashboard');
+  };
+
+  const filterOpeningDates = (openingDates) => {
+    return Object.keys(openingDates).reduce((acc, day) => {
+      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+        acc[day] = openingDates[day];
+      }
+      return acc;
+    }, {});
   };
 
   useEffect(() => {
