@@ -277,6 +277,12 @@ function UploadListings() {
           for (let slot of openingDates[day]) {
             const [startHour, startMinute] = slot.startTime.split(":").map(Number);
             const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+
+            // Skip validation if both startTime and endTime are 00:00
+            if (slot.startTime === "00:00" && slot.endTime === "00:00") {
+              continue;
+            }
+
             const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
 
             if (slotDuration < durationInMinutes) {
