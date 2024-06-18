@@ -399,13 +399,13 @@ function UploadListings() {
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityId, listingId, listingInput.appointmentId, appointmentInput);
+            await updateAppointments(cityIds, listingId, listingInput.appointmentId, appointmentInput);
           } catch (error) {
             console.error('Error updating appointment:', error);
           }
         } else if (appointmentAdded) {
           try {
-            let appointmentResponse = await createAppointments(cityId, response.data.id || listingId, appointmentInput);
+            let appointmentResponse = await createAppointments(cityIds, response.data.id || listingId, appointmentInput);
             setAppointmentId(appointmentResponse.data.id);
           } catch (error) {
             console.error('Error posting appointment:', error);
@@ -731,7 +731,7 @@ function UploadListings() {
       if (citiesData.length === 1) {
         const cityIds = citiesData[0].id;
         const cityName = citiesData[0].name;
-        setSelectedCities([{ id: cityId, name: cityName }]);
+        setSelectedCities([{ id: cityIds, name: cityName }]);
         setListingInput((prev) => ({
           ...prev,
           cityIds: [cityIds],
