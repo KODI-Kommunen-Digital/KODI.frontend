@@ -415,12 +415,24 @@ function UploadListings() {
             console.error('Error updating appointment:', error);
           }
         } else if (appointmentAdded) {
-          try {
-            let appointmentResponse = await createAppointments(cityIds, response.data.id || listingId, filteredAppointmentInput);
-            setAppointmentId(appointmentResponse.data.id);
-          } catch (error) {
-            console.error('Error posting appointment:', error);
+          const minIterations = Math.min(cityIdsArray.length);
+          let allAppointmentPromises = []
+          for (let index = 0; index < minIterations; index++) {
+            const cityId = cityIdsArray[index];
+            const listingId = currentListingId[index];
+
+            try {
+              let appointmentResponse = await createAppointments(cityId, listingId, filteredAppointmentInput);
+              console.log(appointmentResponse)
+              setAppointmentId(appointmentResponse.data.id);
+              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+            } catch (error) {
+              console.error('Error posting appointment:', error);
+            }
           }
+
+
+          await Promise.all(allAppointmentPromises);
         }
 
         isAdmin
