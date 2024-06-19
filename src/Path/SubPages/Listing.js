@@ -4,7 +4,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfile, getUserId } from "../../Services/usersApi";
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
@@ -152,27 +152,40 @@ const Listing = () => {
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
+            const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
-              getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-                setUser(res.data.data);
-                if (isLoggedIn) {
-                  getFavorites().then((response) => {
-                    const favorite = response.data.data.find(
-                      (f) =>
-                        f.listingId === parseInt(listingId) &&
-                        f.cityId === parseInt(cityId)
-                    );
-                    if (favorite) {
-                      setFavoriteId(favorite.id);
-                    } else {
-                      setFavoriteId(0);
-                    }
-                    setIsLoading(false);
-                  });
-                } else {
-                  setIsLoading(false);
-                }
+
+              getProfile(currentUserId).then((currentUserResult) => {
+                getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+                  const user = res.data.data;
+                  setUser(user);
+                  if (
+                    listingsResponse.data.data.statusId !== statusByName.Active &&
+                    currentUserId !== user.id &&
+                    currentUserResult.data.data.roleId !== 1
+                  ) {
+                    navigateTo("/Error");
+                  }
+                });
               });
+
+              if (isLoggedIn) {
+                getFavorites().then((response) => {
+                  const favorite = response.data.data.find(
+                    (f) =>
+                      f.listingId === parseInt(listingId) &&
+                      f.cityId === parseInt(cityId)
+                  );
+                  if (favorite) {
+                    setFavoriteId(favorite.id);
+                  } else {
+                    setFavoriteId(0);
+                  }
+                  setIsLoading(false);
+                });
+              } else {
+                setIsLoading(false);
+              }
             }, 1000);
 
             setSelectedCategoryId(listingsResponse.data.data.categoryId);
@@ -611,15 +624,15 @@ const Listing = () => {
                   </div>
                 )}
 
-                {!isActive && <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                  <span className="text-gray-400 mb-4 text-sm md:text-md mt-4 lg:text-xl title-font text-start font-bold overflow-hidden"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    {t("listingInactiveMessage")}
-                  </span>
-                </div>}
+                {!isActive &&
+                  <div className="w-full items-center text-center justify-center">
+                    <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-red-600 duration-300 group-hover:translate-x-0 ease"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      onClick={() => navigateTo("/login")}>
+                      {t("listingInactiveMessage")}
+                    </p>
+                  </div>
+                }
 
                 {isLoggedIn ? (
                   input.id && input.categoryId === 18 && (
