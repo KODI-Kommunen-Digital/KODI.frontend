@@ -9,9 +9,6 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     rathaus: 14,
     newsletter: 15,
     officialnotification: 16,
-    ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
-      ? { appointmentBooking: 18 }
-      : {}),
     defectReporter: 19,
   };
 
