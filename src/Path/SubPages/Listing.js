@@ -188,8 +188,8 @@ const Listing = () => {
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-          } else if (listingsResponse.data.data.statusId !== 1) {
-            navigateTo("/Error");
+            // } else if (listingsResponse.data.data.statusId !== 1) {
+            //   navigateTo("/Error");
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
