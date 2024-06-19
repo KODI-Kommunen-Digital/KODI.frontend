@@ -4,7 +4,7 @@ import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
-import { getProfile } from "../../Services/usersApi";
+import { getProfile, getUserId } from "../../Services/usersApi";
 import { getAds } from "../../Services/AdvertiseApi";
 
 import Footer from "../../Components/Footer";
@@ -182,32 +182,43 @@ const Listing = () => {
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-            // } else if (listingsResponse.data.data.statusId !== 1) {
-            //   navigateTo("/Error");
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
+            const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
-              getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-                setUser(res.data.data);
-                if (isLoggedIn) {
-                  getFavorites().then((response) => {
-                    const favorite = response.data.data.find(
-                      (f) =>
-                        f.listingId === parseInt(listingId) &&
-                        f.cityId === parseInt(cityId)
-                    );
-                    if (favorite) {
-                      setFavoriteId(favorite.id);
-                    } else {
-                      setFavoriteId(0);
-                    }
-                    setIsLoading(false);
-                  });
-                } else {
-                  setIsLoading(false);
-                }
+
+              getProfile(currentUserId).then((currentUserResult) => {
+                getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
+                  const user = res.data.data;
+                  setUser(user);
+                  if (
+                    listingsResponse.data.data.statusId !== statusByName.Active &&
+                    currentUserId !== user.id &&
+                    currentUserResult.data.data.roleId !== 1
+                  ) {
+                    navigateTo("/Error");
+                  }
+                });
               });
+
+              if (isLoggedIn) {
+                getFavorites().then((response) => {
+                  const favorite = response.data.data.find(
+                    (f) =>
+                      f.listingId === parseInt(listingId) &&
+                      f.cityId === parseInt(cityId)
+                  );
+                  if (favorite) {
+                    setFavoriteId(favorite.id);
+                  } else {
+                    setFavoriteId(0);
+                  }
+                  setIsLoading(false);
+                });
+              } else {
+                setIsLoading(false);
+              }
             }, 1000);
 
             setSelectedCategoryId(listingsResponse.data.data.categoryId);
