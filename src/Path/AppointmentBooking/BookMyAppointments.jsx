@@ -535,7 +535,7 @@ function BookMyAppointments() {
     <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
       <div className="flex flex-wrap gap-2 justify-center">
         {slot.openingHours.map((openingHour, slotIndex) => (
-          <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-gray-100 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+          <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-white text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
             <p>{openingHour.startTime}</p>
             <p className="text-xs">{openingHour.availableSlot} slots left</p>
           </div>
@@ -561,12 +561,12 @@ function BookMyAppointments() {
   };
 
   return (
-    <section className="text-slate-800 bg-gray-100 body-font">
+    <section className="text-white bg-white body-font">
       <HomePageNavBar />
 
-      <div className="bg-gray-100 mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+      <div className="bg-white mx-auto w-full max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
         <div className="lg:w-full py-5 px-4 md:w-full h-full">
-          <div className="md:grid md:gap-6 bg-gray-300 rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
+          <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col w-full">
             <div className="mt-5 md:col-span-2 md:mt-0">
               <form method="POST">
                 <div className="text-center">
@@ -582,27 +582,6 @@ function BookMyAppointments() {
                   </h1>
                 </div>
 
-                <div className="flex flex-wrap gap-1 justify-between mt-6">
-                  <div className="flex items-center gap-2 mt-0">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5"
-                      viewBox="0 0 512 512"
-                      fill="#4299e1"
-                    >
-                      <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                    </svg>
-                    <p
-                      className="leading-relaxed text-base text-blue-400"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      Available time {duration} min
-                    </p>
-                  </div>
-                </div>
-
                 <div className="flex flex-wrap gap-1 justify-between mt-6 text-slate-800">
                   <div>
                     <p
@@ -615,27 +594,37 @@ function BookMyAppointments() {
                     </p>
                   </div>
 
-                  <p
-                    className="leading-relaxed text-base font-bold text-slate-800"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    {t("costInEuros")}10.00
-                  </p>
+                  <div className="flex items-center gap-2 mt-0">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5"
+                      viewBox="0 0 512 512"
+                      fill="#1e293b"
+                    >
+                      <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                    </svg>
+                    <p
+                      className="leading-relaxed text-base text-slate-800"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      Available time {duration} min
+                    </p>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
-        <div className="items-stretch py-5 px-4 px-4 w-full">
+        <div className="items-stretch p-8 w-full">
           {/* border-2 border-black  */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="country"
-                className="block text-md font-medium text-slate-800"
+                className="block text-md font-bold text-slate-800"
                 style={{
                   fontFamily: "Poppins, sans-serif",
                 }}
@@ -652,7 +641,7 @@ function BookMyAppointments() {
                 }}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -675,7 +664,7 @@ function BookMyAppointments() {
             <div className="col-span-1 sm:col-span-full mt-1 px-0 mr-2 w-full">
               <label
                 htmlFor="numberOfPeople"
-                className="block text-md font-medium text-slate-800"
+                className="block text-md font-bold text-slate-800"
               >
                 {t("numberofPeople")} *
               </label>
@@ -712,10 +701,10 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 py-5 px-4 flex-col lg:flex-row gap-x-8">
+        <div className="mx-auto w-full flex gap-y-8 lg:gap-y-0 p-8 flex-col lg:flex-row gap-x-8">
           <div className="lg:w-2/3 rounded-lg">
             <div className="grid grid-cols-1 gap-4 col-span-2">
-              <div className="bg-gray-300 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+              <div className="bg-zinc-100 col-span-2 p-0 rounded-lg w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
                 <div className="relative h-full mx-2 py-2 px-2 my-2">
                   <div className="flex justify-center items-center">
                     <div className="relative w-full h-full">
@@ -769,7 +758,7 @@ function BookMyAppointments() {
                               >
                                 <h1
                                   className={cn(
-                                    currentMonth ? "text-slate-800" : "text-white",
+                                    currentMonth ? "text-slate-800" : "text-slate-400",
                                     today ? "bg-red-600 text-slate-800" : "",
                                     selectDate.toDate().toDateString() ===
                                       date.toDate().toDateString()
@@ -797,7 +786,7 @@ function BookMyAppointments() {
 
           <div className="w-2/3 lg:w-1/3 mx-auto">
             <div className="grid grid-cols-1 gap-4 col-span-1">
-              <div className="bg-gray-300 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
+              <div className="bg-zinc-100 mx-auto rounded-lg col-span-1 p-4 rounded-lg max-w-md w-full h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] scrollbar">
                 {/* border-2 border-black */}
                 <h1 className="text-lg text-center text-slate-800 font-bold mb-4">
                   {selectDate.toDate().toDateString()}
@@ -811,10 +800,10 @@ function BookMyAppointments() {
                     <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
                   ) : (
                     timeSlots.map((slot, index) => (
-                      <div key={index} className="time-selection-container overflow-y-auto max-h-[100px]">
+                      <div key={index} className="time-selection-container overflow-y-auto max-h-[200px]">
                         <div className="flex flex-wrap gap-2 justify-center">
                           {slot.openingHours.map((openingHour, slotIndex) => (
-                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-gray-100 text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
+                            <div key={slotIndex} onClick={() => handleTimeSelection(openingHour.startTime, openingHour.availableSlot, slotIndex, index)} className="bg-white text-slate-800 p-2 rounded-xl font-semibold cursor-pointer text-center">
                               <p>{openingHour.startTime}</p>
                               <p className="text-xs">{selectedTimes.length === 0 ? openingHour.availableSlot : openingHour.availableSlot} {t("slotsLeft")}</p>
                             </div>
@@ -852,7 +841,7 @@ function BookMyAppointments() {
                 )}
 
 
-                <div className="my-4 bg-gray-100 h-[1px]"></div>
+                <div className="my-4 bg-white h-[1px]"></div>
 
                 <div className="mt-4">
                   <h2 className="text-lg text-slate-800 text-center font-bold mb-4">
@@ -864,9 +853,9 @@ function BookMyAppointments() {
                         key={slotIndex}
                         className="flex items-center justify-center gap-2"
                       >
-                        <span style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
+                        <span className="text-slate-800" style={{ fontWeight: "bold" }}>{` ${slotIndex + 1
                           }:`}</span>{" "}
-                        <span className="p-2 rounded-full cursor-pointer bg-black font-bold text-slate-800">
+                        <span className="p-2 rounded-full cursor-pointer bg-slate-800 font-bold text-white">
                           {time}
                         </span>
                         <button
@@ -897,8 +886,8 @@ function BookMyAppointments() {
       </div>
 
       {/* User details box */}
-      <div className="bg-gray-300">
-        <div className="bg-gray-300 h-full h-full gap-y-8 items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-2xl lg:max-w-7xl">
+      <div className="bg-slate-800">
+        <div className="bg-slate-800 h-full h-full gap-y-8 items-center mt-14 py-5 xl:px-0 md:px-10 px-2 mx-auto max-w-2xl lg:max-w-7xl">
           <div className={`text-center w-full gap-y-8 lg:gap-y-0 py-5 px-4`}>
             {Array.from({ length: selectedCount }, (_, index) => (
               <div key={index} className="mt-4">
@@ -1013,10 +1002,10 @@ function BookMyAppointments() {
             ))}
 
             <div className="flex flex-col mt-4">
-              <label className="mb-2 font-bold text-lg text-slate-800" htmlFor="comment">{t("remarks")}</label>
+              <label className="mb-2 font-bold text-lg text-white" htmlFor="comment">{t("remarks")}</label>
               <textarea
                 rows="4"
-                className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]"
+                className="rounded-xl p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]  text-slate-800"
                 id="comment"
                 name="remark"
                 value={bookingInput.remark}
@@ -1027,7 +1016,7 @@ function BookMyAppointments() {
           </div>
         </div>
 
-        <div className="bg-gray-300 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
+        <div className="bg-slate-800 h-full items-center py-5 md:px-10 px-2 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
           <div className="py-2 mt-1 px-0">
             <a
               onClick={handleButtonClick}
