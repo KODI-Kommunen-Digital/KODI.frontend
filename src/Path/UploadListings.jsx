@@ -27,7 +27,6 @@ function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
   const [listingId, setListingId] = useState(0);
-  const [setAppointmentId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -253,6 +252,7 @@ function UploadListings() {
       },
     }],
   });
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -267,7 +267,17 @@ function UploadListings() {
   });
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
 
+    // Function to trim .000Z part from startDate
+    const trimStartDate = (startDate) => {
+      if (startDate.endsWith(".000Z")) {
+        return startDate.slice(0, -5); // Remove the last 5 characters (.000Z)
+      }
+      return startDate; // Return as is if .000Z is not found
+    };
+
+    // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
         const { duration, metadata: { openingDates } } = service;
@@ -299,6 +309,7 @@ function UploadListings() {
       return null;
     };
 
+    // Validate time slots if appointment is added
     if (appointmentAdded) {
       const errorMessage = validateTimeSlots();
       if (errorMessage) {
@@ -308,11 +319,11 @@ function UploadListings() {
     }
     event.preventDefault();  // Prevent default form submission
 
+    // Validate other form errors
     let valid = true;
     for (let key in error) {
-      var errorMessage = getErrorMessage(key, listingInput[key]);
-      var newError = error;
-      newError[key] = errorMessage;
+      const errorMessage = getErrorMessage(key, listingInput[key]);
+      const newError = { ...error, [key]: errorMessage };
       setError(newError);
       if (errorMessage) {
         valid = false;
@@ -354,6 +365,7 @@ function UploadListings() {
 
         const filteredAppointmentInput = {
           ...appointmentInput,
+          startDate: trimStartDate(appointmentInput.startDate), // Trim .000Z part from startDate
           metadata: {
             ...appointmentInput.metadata,
             openingDates: filteredOpeningDates,
@@ -422,9 +434,7 @@ function UploadListings() {
             const listingId = currentListingId[index];
 
             try {
-              let appointmentResponse = await createAppointments(cityId, listingId, filteredAppointmentInput);
-              console.log(appointmentResponse)
-              setAppointmentId(appointmentResponse.data.id);
+              await createAppointments(cityId, listingId, filteredAppointmentInput);
               allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
             } catch (error) {
               console.error('Error posting appointment:', error);
@@ -524,6 +534,13 @@ function UploadListings() {
           getAppointments(cityIds, listingId, appointmentId).then((appointmentResponse) => {
             const appointmentData = appointmentResponse.data.data;
             appointmentData.metadata = JSON.parse(appointmentData.metadata);
+
+            daysOfWeek.forEach((day) => {
+              if (!appointmentData.metadata.openingDates[day]) {
+                appointmentData.metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+              }
+            });
+
             setAppointmentInput(appointmentData);
             // console.log(appointmentData)
 
@@ -533,6 +550,14 @@ function UploadListings() {
                 console.log(servicesResponse.data.data)
                 const servicesData = servicesResponse.data.data.map((item) => {
                   const metadata = JSON.parse(item.metadata);
+
+                  // Ensure all days of the week have at least one time slot
+                  daysOfWeek.forEach((day) => {
+                    if (!metadata.openingDates[day]) {
+                      metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                    }
+                  });
+
                   return { ...item, metadata };
                 });
                 setAppointmentInput(prevState => ({
