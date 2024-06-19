@@ -716,5 +716,6 @@
     "pleaseLogin": "Unlock the magic! Click here to login to book your next adventure.",
     "Failed": "Failed",
     "numberOfPeopleAndSelectedSlotDifference": "Number of people and selected slots dose not match",
+    "listingInactiveMessage": "This listing is not active and cannot be viewed by the public",
     "slotDurationMismatch": "Slot duration mismatch on {{day}} for service with duration {{duration}} minutes. Slot: {{startTime}} - {{endTime}}. Duration added is more than time slots added"
 }
