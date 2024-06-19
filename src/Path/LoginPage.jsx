@@ -24,6 +24,11 @@ const LoginPage = () => {
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
 	const routeChangeToUpload = useCallback(() => {
 		const path = `/UploadListings`;
@@ -135,10 +140,12 @@ const LoginPage = () => {
 			setRememberMe(false);
 
 			if (window.sessionStorage.getItem("path")) {
-				navigate(window.sessionStorage.getItem("path"));
-				sessionStorage.removeItem("path");
+				// navigate(window.sessionStorage.getItem("path"));
+				// sessionStorage.removeItem("path");
+				navigateTo("/");
 			} else if (window.sessionStorage.getItem("redirectTo")) {
-				navigate(window.sessionStorage.getItem("redirectTo"));
+				// navigate(window.sessionStorage.getItem("redirectTo"));
+				navigateTo("/");
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
 				routeChangeToUpload();
@@ -205,7 +212,7 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className="i">
+		<div>
 			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div>
@@ -216,7 +223,7 @@ const LoginPage = () => {
 							src={HeidiLogo}
 							alt="HEDI- Heimat Digital"
 						/>
-						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 							{t("signIntoAccount")}
 						</h2>
 					</div>
@@ -237,7 +244,7 @@ const LoginPage = () => {
 									onChange={(e) => setUser(e.target.value)}
 									onKeyDown={handleKeyDown}
 									required
-									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("usernameOrEmail") + "*"}
 								/>
 							</div>
@@ -253,7 +260,7 @@ const LoginPage = () => {
 									onChange={handlePasswordChange}
 									onKeyDown={handleKeyDown}
 									required
-									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
 								/>
 								<button
@@ -280,7 +287,7 @@ const LoginPage = () => {
 								/>
 								<label
 									htmlFor="remember-me"
-									className="ml-2 block text-sm text-gray-900"
+									className="ml-2 block text-sm text-slate-800"
 								>
 									{t("rememberMe")}
 								</label>
@@ -436,7 +443,7 @@ const LoginPage = () => {
 									value={userReset}
 									onChange={(e) => setUserReset(e.target.value)}
 									required
-									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={forgotPassword ? t("usernameOrEmail") : t("pleaseEnterEmailAddress") + "*"}
 								/>
 								<div className="flex gap-2">

@@ -39,10 +39,10 @@ function ContactInfo({ user }) {
   }, [user]);
   return (
     <div>
-      <div className="w-full h-full lg:h-[18rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0 shadow-xl">
+      <div className="w-full h-full lg:h-[18rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
         <div className="p-4 space-y-0 md:space-y-6 sm:p-4">
           <h1
-            className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-xl"
+            className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-xl"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("contactInfo")}
@@ -50,8 +50,8 @@ function ContactInfo({ user }) {
         </div>
         <div className="my-4 bg-gray-200 h-[1px]"></div>
 
-        <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center py-2 px-2 sm:justify-start mx-0 my-4 gap-4">
-          <div className="flex items-center py-0 px-2">
+        <div className="flex-grow text-center sm:text-left mt-6 sm:mt-0 justify-center p-4 sm:p-4 sm:justify-start gap-4">
+          <div className="flex items-center px-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -67,7 +67,7 @@ function ContactInfo({ user }) {
             </p>
           </div>
           {user?.website && (
-            <div className="flex items-center py-0 px-2">
+            <div className="flex items-center px-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"

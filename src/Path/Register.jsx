@@ -187,7 +187,7 @@ const Register = () => {
 						src={HeidiLogo}
 						alt="HEDI- Heimat Digital"
 					/>
-					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 						{t("createAccount")}
 					</h3>
 				</div>
@@ -208,7 +208,7 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterFirstName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
 								<label htmlFor="lastname" className="sr-only">
 									{t("lastName")}
@@ -222,7 +222,7 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterLastName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
 							</span>
 						</div>
@@ -239,7 +239,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterUsername") + "*"}
 							></input>
 							{error.username && <span className="err">{error.username}</span>}
@@ -257,7 +257,7 @@ const Register = () => {
 								onBlur={validateInput}
 								autoComplete="email"
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterEmailAddress") + "*"}
 							></input>
 							{error.email && <span className="err">{error.email}</span>}
@@ -273,7 +273,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterPassword") + "*"}
 							></input>
 							{error.password && <span className="err">{error.password}</span>}
@@ -289,7 +289,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseConfirmPassword") + "*"}
 							></input>
 							{error.confirmPassword && (
@@ -309,7 +309,7 @@ const Register = () => {
 							/>
 							<label
 								htmlFor="remember-me"
-								className="ml-2 block text-sm text-gray-900"
+								className="ml-2 block text-sm text-slate-800"
 							>
 								{t("i_hereby_accept_the")}
 								<a

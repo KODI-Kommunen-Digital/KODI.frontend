@@ -238,7 +238,7 @@ const IFrame = ({ cityId }) => {
 };
 
 IFrame.propTypes = {
-    cityId: PropTypes.number.isRequired,
+    cityId: PropTypes.string.isRequired,
 };
 
 export default IFrame;

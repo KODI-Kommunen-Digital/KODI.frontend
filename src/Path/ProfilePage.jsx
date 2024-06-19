@@ -323,7 +323,7 @@ class ProfilePage extends React.Component {
     }
 
     updatePassword({ currentPassword, newPassword })
-      .then((response) => {})
+      .then((response) => { })
       .catch((error) => {
         console.error(error);
       });
@@ -358,7 +358,7 @@ class ProfilePage extends React.Component {
             <div className="container w-auto px-5 py-2">
               <div className="bg-white mt-4 p-6">
                 <h2
-                  className="text-gray-900 text-lg mb-4 font-medium title-font"
+                  className="text-slate-800 text-lg mb-4 font-medium title-font"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}
@@ -485,7 +485,7 @@ class ProfilePage extends React.Component {
                             src={
                               this.state.profile.image
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                  this.state.profile.image
+                                this.state.profile.image
                                 : PROFILEIMAGE
                             }
                             alt="profile"

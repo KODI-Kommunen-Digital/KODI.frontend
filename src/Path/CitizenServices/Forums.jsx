@@ -61,14 +61,15 @@ const Forums = () => {
 		<section className="text-gray-600 bg-white body-font">
 			<HomePageNavBar />
 
-			<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+			<div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
 				<div className="w-full mr-0 ml-0">
-					<div className="h-64 overflow-hidden px-0 py-1">
-						<div className="relative h-64">
+					<div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+						<div className="relative h-[30rem]">
 							<img
 								alt="ecommerce"
 								className="object-cover object-center h-full w-full"
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+								loading="lazy"
 							/>
 							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
@@ -82,7 +83,7 @@ const Forums = () => {
 										autoComplete="city-name"
 										onChange={(e) => setCityId(e.target.value)}
 										value={cityId || 0}
-										className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+										className="bg-gray-50 border font-sans border-gray-300 text-slate-800 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 										style={{
 											fontFamily: "Poppins, sans-serif",
 										}}
@@ -119,7 +120,7 @@ const Forums = () => {
 					</h1>
 					<a
 						onClick={() => goToAllForums()}
-						className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+						className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700' : 'bg-blue-800 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
 						style={{ fontFamily: "Poppins, sans-serif" }}
 					>
 						{t("goBack")}

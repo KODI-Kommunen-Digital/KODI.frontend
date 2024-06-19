@@ -31,15 +31,19 @@ function CreateGroup() {
 	const [forumId, setForumId] = useState(0);
 	const navigate = useNavigate();
 
+	// const handleGroupTypeChange = (event) => {
+	// 	const isPrivate = event.target.checked;
+	// 	setInput((prevInput) => ({
+	// 		...prevInput,
+	// 		isPrivate,
+	// 		visibility: isPrivate ? "private" : "public",
+	// 	}));
+	// };
 	const handleToggle = () => {
-		setInput((prevInput) => {
-			const newVisibility = prevInput.visibility === "public" ? "private" : "public";
-			return {
-				...prevInput,
-				visibility: newVisibility,
-				isPrivate: newVisibility === "private" ? 1 : 0,
-			};
-		});
+		setInput((prevInput) => ({
+			...prevInput,
+			visibility: prevInput.visibility === "public" ? "private" : "public", // Toggle between "public" and "private"
+		}));
 	};
 
 	function handleDragEnter(e) {
@@ -86,16 +90,17 @@ function CreateGroup() {
 		image: null,
 		removeImage: false,
 		visibility: "public",
-		isPrivate: 0,
 	});
 	console.log(input);
 
 	const [error, setError] = useState({
+		categoryId: "",
+		subcategoryId: "",
 		forumName: "",
 		description: "",
-		image: null,
-		removeImage: false,
-		visibility: "public",
+		cityId: "",
+		startDate: "",
+		endDate: "",
 	});
 
 	const onInputChange = (e) => {
@@ -300,7 +305,7 @@ function CreateGroup() {
 						style={{
 							fontFamily: "Poppins, sans-serif",
 						}}
-						class="text-gray-900 text-lg mb-4 font-medium title-font"
+						class="text-slate-800 text-lg mb-4 font-medium title-font"
 					>
 						{t("createGroup")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -440,7 +445,7 @@ function CreateGroup() {
 
 			<div class="container w-auto px-5 py-2 bg-slate-600">
 				<div class="bg-white mt-4 p-6 space-y-10">
-					<h2 class="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>

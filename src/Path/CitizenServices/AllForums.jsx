@@ -12,10 +12,13 @@ import {
 import { getCities } from "../../Services/cities";
 import Footer from "../../Components/Footer";
 import { statusByName } from "../../Constants/forumStatus";
+import RegionColors from "../../Components/RegionColors";
 
 const AllForums = () => {
   window.scrollTo(0, 0);
+  const pageSize = 12;
   const { t } = useTranslation();
+
   const [cityId, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
   const [forums, setForums] = useState([]);
@@ -159,14 +162,15 @@ const AllForums = () => {
     <section className="text-gray-600 bg-white body-font">
       <HomePageNavBar />
       <div>
-        <div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+        <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
           <div className="w-full mr-0 ml-0">
-            <div className="h-64 overflow-hidden px-0 py-1">
-              <div className="relative h-64">
+            <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+              <div className="relative h-[30rem]">
                 <img
                   alt="ecommerce"
                   className="object-cover object-center h-full w-full"
                   src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
                   <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
@@ -180,7 +184,7 @@ const AllForums = () => {
                         autoComplete="city-name"
                         onChange={(e) => handleChange(e)}
                         value={cityId || 0}
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                        className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -233,7 +237,7 @@ const AllForums = () => {
                           ? navigateTo("/CreateGroup")
                           : navigateTo("/login");
                       }}
-                      className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                      className={`mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-300' : 'bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer`}
                     >
                       {t("createGroup")}
                     </a>
@@ -259,9 +263,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -273,9 +277,9 @@ const AllForums = () => {
                                       src={
                                         forum.image
                                           ? process.env.REACT_APP_BUCKET_HOST +
-                                            forum.image
+                                          forum.image
                                           : process.env.REACT_APP_BUCKET_HOST +
-                                            "admin/DefaultForum.jpeg"
+                                          "admin/DefaultForum.jpeg"
                                       }
                                     />
                                   </>
@@ -286,18 +290,18 @@ const AllForums = () => {
                                   className="flex justify-between items-center"
                                   style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                  <h2 className="text-gray-900 title-font text-md font-bold font-sans truncate">
+                                  <h2 className="text-slate-800 title-font text-md font-bold font-sans truncate">
                                     {forum.forumName.length > 18
                                       ? forum.forumName.substring(0, 18) + "..."
                                       : forum.forumName}
                                   </h2>
 
                                   {forum.isPrivate === 0 ? (
-                                    <h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
+                                    <h2 className={`${RegionColors.lightTextColor} title-font text-md font-bold font-sans truncate`}>
                                       {t("public")}
                                     </h2>
                                   ) : (
-                                    <h2 className="text-blue-400 title-font text-md font-bold font-sans truncate">
+                                    <h2 className={`${RegionColors.lightTextColor} title-font text-md font-bold font-sans truncate`}>
                                       {t("private")}
                                     </h2>
                                   )}
@@ -305,7 +309,7 @@ const AllForums = () => {
                                 <div className="my-4 bg-gray-200 h-[1px]"></div>
 
                                 {forum.isPrivate &&
-                                memberStatus[forum.id] ===
+                                  memberStatus[forum.id] ===
                                   statusByName.Pending ? (
                                   <div className="text-center">
                                     <a
@@ -342,7 +346,7 @@ const AllForums = () => {
                                       style={{
                                         fontFamily: "Poppins, sans-serif",
                                       }}
-                                      className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+                                      className="mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans text-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                                     >
                                       {t("follow")}
                                     </a>
@@ -371,7 +375,7 @@ const AllForums = () => {
                           {t("to_upload_new_forum")}
                         </span>
                         <a
-                          className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+                          className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                           style={{ fontFamily: "Poppins, sans-serif" }}
                           onClick={() => {
                             localStorage.setItem(
@@ -407,7 +411,7 @@ const AllForums = () => {
                       {t("to_create_new_forum")}
                     </span>
                     <a
-                      className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+                      className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                       style={{ fontFamily: "Poppins, sans-serif" }}
                       onClick={() => {
                         isLoggedIn
@@ -423,10 +427,10 @@ const AllForums = () => {
             </>
           )}
 
-          <div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+          <div className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600 hover:bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700 hover:bg-lime-300' : 'bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold cursor-pointer`}>
             {pageNo !== 1 ? (
               <span
-                className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+                className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => setPageNo(pageNo - 1)}
               >
@@ -441,9 +445,9 @@ const AllForums = () => {
             >
               {t("page")} {pageNo}
             </span>
-            {forums.length >= 9 && (
+            {forums.length >= pageSize && (
               <span
-                className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+                className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer rounded-lg`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => setPageNo(pageNo + 1)}
               >
@@ -453,9 +457,12 @@ const AllForums = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
     </section>
   );
 };
