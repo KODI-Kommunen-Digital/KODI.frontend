@@ -28,7 +28,6 @@ function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
   const [listingId, setListingId] = useState(0);
-  const [setAppointmentId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
@@ -246,6 +245,7 @@ function UploadListings() {
       },
     }],
   });
+  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -260,7 +260,17 @@ function UploadListings() {
   });
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
 
+    // Function to trim .000Z part from startDate
+    const trimStartDate = (startDate) => {
+      if (startDate.endsWith(".000Z")) {
+        return startDate.slice(0, -5); // Remove the last 5 characters (.000Z)
+      }
+      return startDate; // Return as is if .000Z is not found
+    };
+
+    // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
         const { duration, metadata: { openingDates } } = service;
@@ -270,6 +280,12 @@ function UploadListings() {
           for (let slot of openingDates[day]) {
             const [startHour, startMinute] = slot.startTime.split(":").map(Number);
             const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+
+            // Skip validation if both startTime and endTime are 00:00
+            if (slot.startTime === "00:00" && slot.endTime === "00:00") {
+              continue;
+            }
+
             const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
 
             if (slotDuration < durationInMinutes) {
@@ -286,6 +302,7 @@ function UploadListings() {
       return null;
     };
 
+    // Validate time slots if appointment is added
     if (appointmentAdded) {
       const errorMessage = validateTimeSlots();
       if (errorMessage) {
@@ -294,11 +311,11 @@ function UploadListings() {
       }
     }
 
+    // Validate other form errors
     let valid = true;
     for (let key in error) {
-      var errorMessage = getErrorMessage(key, listingInput[key]);
-      var newError = error;
-      newError[key] = errorMessage;
+      const errorMessage = getErrorMessage(key, listingInput[key]);
+      const newError = { ...error, [key]: errorMessage };
       setError(newError);
       if (errorMessage) {
         valid = false;
@@ -307,14 +324,34 @@ function UploadListings() {
 
     if (valid) {
       setUpdating(true);
-      event.preventDefault();
 
       try {
-        let response = await (newListing
-          ? postListingsData(cityId, listingInput)
-          : updateListingsData(cityId, listingInput, listingId));
+        // Filter opening dates for appointmentInput and services before submitting
+        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
+        const filteredServices = appointmentInput.services.map(service => ({
+          ...service,
+          metadata: {
+            ...service.metadata,
+            openingDates: filterOpeningDates(service.metadata.openingDates),
+          },
+        }));
+
+        const filteredAppointmentInput = {
+          ...appointmentInput,
+          startDate: trimStartDate(appointmentInput.startDate), // Trim .000Z part from startDate
+          metadata: {
+            ...appointmentInput.metadata,
+            openingDates: filteredOpeningDates,
+          },
+          services: filteredServices,
+        };
+
+        let response;
         if (newListing) {
+          response = await postListingsData(cityId, listingInput);
           setListingId(response.data.id);
+        } else {
+          response = await updateListingsData(cityId, listingInput, listingId);
         }
 
         if (listingInput.removeImage) {
@@ -363,14 +400,13 @@ function UploadListings() {
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityId, listingId, listingInput.appointmentId, appointmentInput);
+            await updateAppointments(cityId, listingId, listingInput.appointmentId, filteredAppointmentInput);
           } catch (error) {
             console.error('Error updating appointment:', error);
           }
         } else if (appointmentAdded) {
           try {
-            let appointmentResponse = await createAppointments(cityId, response.data.id || listingId, appointmentInput);
-            setAppointmentId(appointmentResponse.data.id);
+            await createAppointments(cityId, response.data.id || listingId, filteredAppointmentInput);
           } catch (error) {
             console.error('Error posting appointment:', error);
           }
@@ -396,6 +432,15 @@ function UploadListings() {
       setSuccessMessage(false);
       setTimeout(() => setErrorMessage(false), 5000);
     }
+  };
+
+  const filterOpeningDates = (openingDates) => {
+    return Object.keys(openingDates).reduce((acc, day) => {
+      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+        acc[day] = openingDates[day];
+      }
+      return acc;
+    }, {});
   };
 
   useEffect(() => {
@@ -445,8 +490,6 @@ function UploadListings() {
         const listingData = listingsResponse.data.data;
         listingData.cityId = cityId;
         setListingInput(listingData);
-        // setStartDate(listingData.startDate);
-        // setEndDate(listingData.endDate);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
@@ -457,12 +500,27 @@ function UploadListings() {
           getAppointments(cityId, listingId, appointmentId).then((appointmentResponse) => {
             const appointmentData = appointmentResponse.data.data;
             appointmentData.metadata = JSON.parse(appointmentData.metadata);
+
+            daysOfWeek.forEach((day) => {
+              if (!appointmentData.metadata.openingDates[day]) {
+                appointmentData.metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+              }
+            });
+
             setAppointmentInput(appointmentData);
 
             getAppointmentServices(cityId, listingId, appointmentId)
               .then((servicesResponse) => {
                 const servicesData = servicesResponse.data.data.map((item) => {
                   const metadata = JSON.parse(item.metadata);
+
+                  // Ensure all days of the week have at least one time slot
+                  daysOfWeek.forEach((day) => {
+                    if (!metadata.openingDates[day]) {
+                      metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                    }
+                  });
+
                   return { ...item, metadata };
                 });
                 setAppointmentInput(prevState => ({

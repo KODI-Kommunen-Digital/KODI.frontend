@@ -83,6 +83,7 @@ const Listing = () => {
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
 
   const [input, setInput] = useState({
@@ -142,13 +143,14 @@ const Listing = () => {
       }
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
+          setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
           if (
             listingsResponse.data.data.sourceId !== source.User &&
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-          } else if (listingsResponse.data.data.statusId !== 1) {
-            navigateTo("/Error");
+            // } else if (listingsResponse.data.data.statusId !== 1) {
+            //   navigateTo("/Error");
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
@@ -587,6 +589,16 @@ const Listing = () => {
                     </div>
                   </div>
                 )}
+
+                {!isActive && <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
+                  <span className="text-gray-400 mb-4 text-sm md:text-md mt-4 lg:text-xl title-font text-start font-bold overflow-hidden"
+                    style={{
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    {t("listingInactiveMessage")}
+                  </span>
+                </div>}
 
                 {isLoggedIn ? (
                   input.id && input.categoryId === 18 && (
