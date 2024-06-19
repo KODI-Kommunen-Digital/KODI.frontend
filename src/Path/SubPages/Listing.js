@@ -5,6 +5,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
 import { getProfile, getUserId } from "../../Services/usersApi";
+import { getAds } from "../../Services/AdvertiseApi";
+
 import Footer from "../../Components/Footer";
 import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
@@ -25,11 +27,12 @@ import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
 
-
-const Description = ({ content }) => {
+const Description = (props) => {
+  const [desc, setDesc] = useState();
   const linkify = (text) => {
     const urlRegex =
-      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+      /(?<!<img\s[^>]*)(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
+
     text = text.replace(
       urlRegex,
       (url) =>
@@ -54,17 +57,49 @@ const Description = ({ content }) => {
       return match;
     });
   };
-  const linkedContent = linkify(content);
+  useEffect(() => {
+    const linkedContent = linkify(props.content);
+    setDesc(linkedContent);
+    try {
+      if (linkedContent.length > 800) {
+        getAds(props.cityId).then((value) => {
+          const ad = value.data.data;
+          if (ad && ad.image && ad.link) {
+            const parser = new DOMParser();
+            const parsed = parser.parseFromString(linkedContent, "text/html");
+            const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
+              } alt="Ad" href=${ad.link}/>`;
+            const a = document.createElement("a");
+            const text = document.createElement("p");
+            text.className = "text-right";
+            text.innerHTML = "Anzeige";
+            a.innerHTML = tag;
+            a.href = ad.link;
+            a.target = "_blank";
+            a.className = "flex justify-center h-80 max-h-full";
+            const idx = Math.floor(parsed.body.childNodes.length / 2);
+            parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
+            parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
+            setDesc(parsed.body.innerHTML);
+          }
+        });
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }, [props.cityId, props.content]);
+
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
-      dangerouslySetInnerHTML={{ __html: linkedContent }}
+      dangerouslySetInnerHTML={{ __html: desc }}
     ></p>
   );
 };
 
 Description.propTypes = {
   content: PropTypes.string.isRequired,
+  cityId: PropTypes.string.isRequired,
 };
 
 const Listing = () => {
@@ -96,7 +131,8 @@ const Listing = () => {
     phone: "",
     email: "",
     description: "",
-    logo: [],
+    logo: "",
+    otherlogos: [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -149,15 +185,13 @@ const Listing = () => {
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-            // } else if (listingsResponse.data.data.statusId !== 1) {
-            //   navigateTo("/Error");
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
 
-              getProfile(currentUserId).then((currentUserResult) => {
+              getProfile(cityUserId).then((currentUserResult) => {
                 getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
                   const user = res.data.data;
                   setUser(user);
@@ -258,7 +292,9 @@ const Listing = () => {
     if (selectedCategoryId) {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
-          const filteredListings = response.data.data.filter((listing) => listing.id !== listingId);
+          const filteredListings = response.data.data.filter(
+            (listing) => listing.id !== listingId
+          );
           setListings(filteredListings);
         }
       );
@@ -641,7 +677,6 @@ const Listing = () => {
                     </div>
                   )
                 )}
-
               </div>
             </div>
           </div>

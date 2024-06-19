@@ -12,6 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
+import { categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
@@ -36,6 +37,7 @@ const AllListings = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
@@ -52,11 +54,7 @@ const AllListings = () => {
     setIsLoading(true);
     Promise.all([getCities(), getCategory()]).then((response) => {
       setCities(response[0].data.data);
-      const catList = {};
-      response[1]?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
-      setCategories(catList);
+      setCategories(response[1]?.data?.data || []);
       const params = { pageSize, statusId: 1 };
       const pageNoParam = parseInt(urlParams.get("pageNo"));
       if (pageNoParam > 1) {
@@ -81,9 +79,9 @@ const AllListings = () => {
       const categoryIdParam = urlParams.get("categoryId");
       if (categoryIdParam) {
         const categoryId = parseInt(categoryIdParam);
-        if (catList[categoryId]) {
+        if (categoryById[categoryId]) {
           setCategoryId(categoryId);
-          setCategoryName(t(catList[categoryId]));
+          setCategoryName(t(categoryById[categoryId]));
           params.categoryId = categoryId;
           if (categoryId === 3) {
             params.sortByStartDate = true;
@@ -114,7 +112,7 @@ const AllListings = () => {
         urlParams.delete("cityId");
       }
       if (parseInt(categoryId)) {
-        setCategoryName(t(categories[categoryId]));
+        setCategoryName(t(categoryById[categoryId]));
         params.categoryId = parseInt(categoryId);
         urlParams.set("categoryId", parseInt(categoryId));
       } else {
@@ -142,6 +140,7 @@ const AllListings = () => {
   const handleCityChange = (newCityId) => {
     setIsLoading(true);
     setCityId(newCityId);
+    clearSearchResults();
     setIsLoading(false);
     setPageNo(1);
   };
@@ -159,9 +158,10 @@ const AllListings = () => {
     }
   };
 
-  function handleSortOptionChange(event) {
+  const handleSortOptionChange = (event) => {
     setSelectedSortOption(event.target.value);
-  }
+    clearSearchResults();
+  };
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -208,8 +208,14 @@ const AllListings = () => {
     }
   }, [terminalViewParam]);
 
+  const handleCategoryChange = (newCategoryId) => {
+    setCategoryId(newCategoryId);
+    clearSearchResults();
+  };
+
   const handleSearch = async (searchQuery) => {
     console.log("Search term:", searchQuery);
+    setSearchQuery(searchQuery); // Save the search query
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -233,6 +239,11 @@ const AllListings = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const clearSearchResults = () => {
+    setListings([]); // Clear the listings to remove the search results
+    setSearchQuery(""); // Clear the search query
   };
 
   return (
@@ -302,8 +313,10 @@ const AllListings = () => {
                       id="category"
                       name="category"
                       autoComplete="category-name"
-                      onChange={(e) => setCategoryId(e.target.value)}
-                      value={categoryId}
+                      onChange={(e) => {
+                        handleCategoryChange(e.target.value);
+                      }}
+                      value={categoryId || 0}
                       className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
@@ -312,10 +325,10 @@ const AllListings = () => {
                       <option className="font-sans" value={0} key={0}>
                         {t("allCategories")}
                       </option>
-                      {Object.keys(categories).map((key) => {
+                      {categories.map((category) => {
                         return (
-                          <option className="font-sans" value={key} key={key}>
-                            {t(categories[key])}
+                          <option className="font-sans" value={category.id} key={category.id}>
+                            {t(category.name)}
                           </option>
                         );
                       })}
@@ -341,7 +354,7 @@ const AllListings = () => {
                     </select>
                   </div>
 
-                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
                 </div>
               </div>
             </div>

@@ -22,9 +22,10 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         e.stopPropagation();
         if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
           window.open(listing.website, '_blank');
-        } else if (iFrame) {
+        }
+        else if (iFrame) {
           navigateTo(
-            `/IFrameListing?listingId=${listing.id}&cityId=${listing.cityId}`
+            `/IframeListing?listingId=${listing.id}&cityId=${listing.cityId}`
           );
         } else if (
           listing.sourceId === listingSource.USER_ENTRY ||

@@ -22,11 +22,17 @@ const VerifyEmail = () => {
 	const [token, setToken] = useState("");
 	const [userId, setUserId] = useState(0);
 	useEffect(() => {
-		const url = window.location;
-		const params = new URLSearchParams(url.search);
-		setToken(params.get("token"));
-		setUserId(params.get("userId"));
-		setMakeVerifyEmailCall(true);
+		const params = new URLSearchParams(window.location.search);
+		const urlToken = params.get("token");
+		const urlUserId = params.get("userId");
+
+		if (!urlToken || !urlUserId) {
+			navigate('/login');
+		} else {
+			setToken(urlToken);
+			setUserId(urlUserId);
+			setMakeVerifyEmailCall(true);
+		}
 	}, []);
 
 	const [count, setCount] = useState(10);

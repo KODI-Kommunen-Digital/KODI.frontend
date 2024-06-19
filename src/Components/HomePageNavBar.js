@@ -58,16 +58,8 @@ export default function HomePageNavBar() {
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
       logout({ accesToken: accessToken, refreshToken }).then(() => {
-        window.localStorage.removeItem("accessToken");
-        window.localStorage.removeItem("refreshToken");
-        window.localStorage.removeItem("userId");
-        window.localStorage.removeItem("selectedItem");
-        window.sessionStorage.removeItem("accessToken");
-        window.sessionStorage.removeItem("refreshToken");
-        window.sessionStorage.removeItem("userId");
-        window.sessionStorage.removeItem("selectedItem");
-        setIsLoggedIn(false);
-        navigateTo("/");
+      }).finally(() => {
+        clearStorage();
       });
     } else {
       navigateTo("/login");
@@ -77,20 +69,18 @@ export default function HomePageNavBar() {
     navigateTo("/Dashboard");
   };
 
-  // document.addEventListener("scroll", function () {
-  //   const popover = document.getElementById("scrollablePopover");
-  //   const scrollPosition = window.scrollY;
-  //   const viewportHeight = window.innerHeight;
-  //   const SOME_THRESHOLD = viewportHeight * 0.45;
-
-  //   if (scrollPosition > SOME_THRESHOLD) {
-  //     popover.classList.add("bg-black", "bg-opacity-25");
-  //     popover.classList.remove("bg-gradient-to-b", "from-black", "to-transparent");
-  //   } else {
-  //     popover.classList.add("bg-gradient-to-b", "from-black", "to-transparent");
-  //     popover.classList.remove("bg-black", "bg-opacity-25");
-  //   }
-  // });
+  function clearStorage() {
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
+    window.localStorage.removeItem("userId");
+    window.localStorage.removeItem("selectedItem");
+    window.sessionStorage.removeItem("accessToken");
+    window.sessionStorage.removeItem("refreshToken");
+    window.sessionStorage.removeItem("userId");
+    window.sessionStorage.removeItem("selectedItem");
+    setIsLoggedIn(false);
+    navigateTo("/");
+  }
 
   const onCityChange = (e) => {
     const selectedCityId = e.target.value;

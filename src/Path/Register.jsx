@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
+import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
+import { role } from "../Constants/role";
 
 const Register = () => {
 	const { t } = useTranslation();
@@ -70,7 +71,7 @@ const Register = () => {
 		validateInput(e);
 	};
 
-	input.role = 3;
+	input.role = role.User;
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -111,10 +112,6 @@ const Register = () => {
 				case "username":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterUsername");
-					} else if (value.length < 6) {
-						stateObj[name] = t("userNameTooShort");
-					} else if (value.length > 15) {
-						stateObj[name] = t("userNameTooLong");
 					} else if (
 						value[0] === value[0].toUpperCase() ||
 						/\s/.test(value) ||
@@ -123,11 +120,17 @@ const Register = () => {
 						/[&='+,;<>.]/.test(value)
 					) {
 						stateObj[name] = t("userNameValidation");
+					} else if (value.length < 6) {
+						stateObj[name] = t("userNameTooShort");
+					} else if (value.length > 15) {
+						stateObj[name] = t("userNameTooLong");
 					}
 					break;
 				case "email":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterEmailAddress");
+					} else if (!/\S+@\S+\.\S+/.test(value)) {
+						stateObj[name] = t("invalidEmailAddress");
 					}
 					break;
 				case "password":
@@ -139,9 +142,8 @@ const Register = () => {
 						stateObj[name] = t("passwordValidation");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
-					} else if (value.includes(input.username)) {
-						stateObj[name] = t("passwordContainsUsername");
-					} else {
+					}
+					else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
 							: error.confirmPassword;
@@ -181,6 +183,7 @@ const Register = () => {
 					<img
 						onClick={() => navigate("/")}
 						className="mx-auto h-20 w-auto cursor-pointer"
+						// src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 						src={HeidiLogo}
 						alt="HEDI- Heimat Digital"
 					/>

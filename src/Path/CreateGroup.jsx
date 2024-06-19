@@ -370,40 +370,41 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div
-						className="relative mb-4 flex items-center"
-						onClick={handleToggle}
-					>
-						<div className="flex items-center">
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 mr-2"
-							>
-								{t("public")}
-							</label>
-							<div className="relative">
-								<div
-									className={`w-14 h-7 rounded-full shadow-inner ${input.visibility === "private"
-										? "bg-blue-500"
-										: "bg-gray-300"
-										}`}
-								></div>
-								<div
-									className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${input.visibility === "private"
-										? "translate-x-full"
-										: "translate-x-0"
-										}`}
-								></div>
-								{/* No need for an input element here */}
+					{newGroup && (
+						<div
+							className="relative mb-4 flex items-center"
+							onClick={handleToggle}
+						>
+							<div className="flex items-center">
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 mr-2"
+								>
+									{t("public")}
+								</label>
+								<div className="relative">
+									<div
+										className={`w-14 h-7 rounded-full shadow-inner ${input.visibility === "private"
+											? "bg-blue-500"
+											: "bg-gray-300"
+											}`}
+									></div>
+									<div
+										className={`absolute top-0 left-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-300 ease-in-out transform ${input.visibility === "private"
+											? "translate-x-full"
+											: "translate-x-0"
+											}`}
+									></div>
+								</div>
+								<label
+									htmlFor="groupType"
+									className="block text-sm font-medium text-gray-600 ml-2"
+								>
+									{t("private")}
+								</label>
 							</div>
-							<label
-								htmlFor="groupType"
-								className="block text-sm font-medium text-gray-600 ml-2"
-							>
-								{t("private")}
-							</label>
 						</div>
-					</div>
+					)}
 
 					<div class="relative mb-4">
 						<label
