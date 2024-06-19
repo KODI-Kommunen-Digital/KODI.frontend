@@ -611,15 +611,15 @@ const Listing = () => {
                   </div>
                 )}
 
-                {!isActive && <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                  <span className="text-gray-400 mb-4 text-sm md:text-md mt-4 lg:text-xl title-font text-start font-bold overflow-hidden"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    {t("listingInactiveMessage")}
-                  </span>
-                </div>}
+                {!isActive &&
+                  <div className="w-full items-center text-center justify-center">
+                    <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-red-600 duration-300 group-hover:translate-x-0 ease"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      onClick={() => navigateTo("/login")}>
+                      {t("listingInactiveMessage")}
+                    </p>
+                  </div>
+                }
 
                 {isLoggedIn ? (
                   input.id && input.categoryId === 18 && (
