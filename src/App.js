@@ -15,11 +15,13 @@ import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
-import HomePage from "./Path/HomePage";
-import Favorites from "./Path/Favorites";
+import HomePageV1 from "./Path/V1/HomePage";
+import HomePageV2 from "./Path/V2/HomePage";
+import AllListingsV1 from "./Path/V1/AllListings";
+import AllListingsV2 from "./Path/V2/AllListings";
 
+import Favorites from "./Path/Favorites";
 import Listing from "./Path/SubPages/Listing";
-import AllListings from "./Path/SubPages/AllListings";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
@@ -34,12 +36,10 @@ import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
-
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
 import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
-
 import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
@@ -57,6 +57,8 @@ Modal.setAppElement("#root");
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
+  const frontendVersion = process.env.REACT_APP_FORNTENDVERSION;
+
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -66,13 +68,14 @@ const App = () => {
     link.href = HeidiLogo;
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
+
   return (
     <BrowserRouter>
       <div>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={frontendVersion === '1' ? <HomePageV1 /> : <HomePageV2 />} />
           <Route path="/Listing" element={<Listing />} exact />
-          <Route path="/AllListings" element={<AllListings />} />
+          <Route path="/AllListings" element={frontendVersion === '1' ? <AllListingsV1 /> : <AllListingsV2 />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route

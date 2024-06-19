@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import LoadingPage from "../../Components/LoadingPage";
 import {

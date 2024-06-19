@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";

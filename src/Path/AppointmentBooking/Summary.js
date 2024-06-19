@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 // import PropTypes from "prop-types";
 import { createBookings } from "../../Services/appointmentBookingApi";

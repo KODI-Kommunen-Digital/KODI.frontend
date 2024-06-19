@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../Components/HomePageNavBar";
+import HomePageNavBar from "../Components/V2/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import { getFavoriteListings } from "../Services/favoritesApi";
 import {

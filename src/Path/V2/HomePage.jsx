@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
-import HomePageNavBar from "../Components/HomePageNavBar";
-import RegionColors from "../Components/RegionColors";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
+import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsCount, getListingsBySearch } from "../Services/listingsApi";
-import { getCities } from "../Services/cities";
-import Footer from "../Components/Footer";
-import PrivacyPolicyPopup from "./PrivacyPolicyPopup";
-import ListingsCard from "../Components/ListingsCard";
-import SearchBar from "../Components/SearchBar";
-import { getCategory } from "../Services/CategoryApi";
-import LoadingPage from "../Components/LoadingPage";
+import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
+import { getCities } from "../../Services/cities";
+import Footer from "../../Components/Footer";
+import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
+import ListingsCard from "../../Components/ListingsCard";
+import SearchBar from "../../Components/SearchBar";
+import { getCategory } from "../../Services/CategoryApi";
+import LoadingPage from "../../Components/LoadingPage";
 import {
   sortByTitleAZ,
   sortByTitleZA,
   sortLatestFirst,
   sortOldestFirst,
-} from "../Services/helper";
+} from "../../Services/helper";
 
-import CITYIMAGE from "../assets/City.png";
-import CITYDEFAULTIMAGE from "../assets/CityDefault.png";
-import ONEIMAGE from "../assets/01.png";
-import TWOIMAGE from "../assets/02.png";
-import THREEIMAGE from "../assets/03.png";
-import MostPopularCategories from "../Components/MostPopularCategories";
+import CITYIMAGE from "../../assets/City.png";
+import CITYDEFAULTIMAGE from "../../assets/CityDefault.png";
+import ONEIMAGE from "../../assets/01.png";
+import TWOIMAGE from "../../assets/02.png";
+import THREEIMAGE from "../../assets/03.png";
+import MostPopularCategories from "../../Components/V2/MostPopularCategories";
 
 const HomePage = () => {
   const { t } = useTranslation();

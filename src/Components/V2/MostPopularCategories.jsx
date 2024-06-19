@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import { getCategory } from "../Services/CategoryApi";
+import { getCategory } from "../../Services/CategoryApi";
 import { useLocation } from 'react-router-dom';
 
 const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {

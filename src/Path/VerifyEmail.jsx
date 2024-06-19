@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { verifyEmail } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../Components/HomePageNavBar";
+import HomePageNavBar from "../Components/V2/HomePageNavBar";
 import Footer from "../Components/Footer";
 
 const VerifyEmail = () => {

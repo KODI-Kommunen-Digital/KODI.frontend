@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
 import { getAppointmentServices, getAppointmentSlots } from "../../Services/appointmentBookingApi";

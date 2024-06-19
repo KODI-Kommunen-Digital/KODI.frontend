@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V1/HomePageNavBar";
 import SearchBar from "../../Components/SearchBar";
 import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -16,7 +16,6 @@ import { categoryById } from "../../Constants/categories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
-import RegionColors from "../../Components/RegionColors";
 
 const AllListings = () => {
   window.scrollTo(0, 0);
@@ -192,13 +191,13 @@ const AllListings = () => {
       default:
         break;
     }
-  }, [selectedSortOption]);
+  }, [selectedSortOption, listings]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
-  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-0";
-  const pyClass = terminalViewParam === "true" ? "py-0" : "py-0";
+  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
+  const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
   const [showNavBar, setShowNavBar] = useState(true);
   useEffect(() => {
     if (terminalViewParam === "true") {
@@ -230,6 +229,7 @@ const AllListings = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+
       const response = await getListingsBySearch({
         searchQuery,
         ...params
@@ -253,8 +253,8 @@ const AllListings = () => {
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
       >
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-full h-[30rem] overflow-hidden ${pyClass}`}>
-            <div className="relative h-[30rem]">
+          <div className={`lg:h-64 md:h-64 h-96 overflow-hidden ${pyClass}`}>
+            <div className="relative lg:h-64 md:h-64 h-96">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -287,7 +287,7 @@ const AllListings = () => {
                         handleCityChange(e.target.value);
                       }}
                       value={cityId}
-                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -317,7 +317,7 @@ const AllListings = () => {
                         handleCategoryChange(e.target.value);
                       }}
                       value={categoryId || 0}
-                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -341,7 +341,7 @@ const AllListings = () => {
                       value={selectedSortOption}
                       onChange={handleSortOptionChange}
                       autoComplete="country-name"
-                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -386,8 +386,8 @@ const AllListings = () => {
         ) : (
           <div>
             {listings && listings.length > 0 ? (
-              <div className="bg-white lg:px-20 md:px-5 sm:px-0 px-2 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
+              <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
                   {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard
@@ -416,7 +416,7 @@ const AllListings = () => {
                     {t("to_upload_new_listing")}
                   </span>
                   <a
-                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
+                    className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                     onClick={() => {
                       localStorage.setItem(
@@ -435,10 +435,10 @@ const AllListings = () => {
             )}
           </div>
         )}
-        <div className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600 hover:bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700 hover:bg-lime-300' : 'bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold cursor-pointer`}>
+        <div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
           {pageNo !== 1 ? (
             <span
-              className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
+              className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
               style={{ fontFamily: "Poppins, sans-serif" }}
               onClick={() => setPageNo(pageNo - 1)}
             >
@@ -455,7 +455,7 @@ const AllListings = () => {
           </span>
           {listings.length >= pageSize && (
             <span
-              className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer rounded-lg`}
+              className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
               style={{ fontFamily: "Poppins, sans-serif" }}
               onClick={() => setPageNo(pageNo + 1)}
             >
@@ -464,14 +464,10 @@ const AllListings = () => {
           )}
         </div>
       </div>
-      {
-        !isLoading && (
-          <div className="bottom-0 w-full">
-            <Footer />
-          </div>
-        )
-      }
-    </section >
+      <div className="bottom-0 w-full">
+        <Footer />
+      </div>
+    </section>
   );
 };
 
