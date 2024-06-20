@@ -434,7 +434,7 @@ function UploadListings() {
             const listingId = currentListingId[index];
 
             try {
-              await createAppointments(cityId, listingId, filteredAppointmentInput);
+              // await createAppointments(cityId, listingId, filteredAppointmentInput);
               allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
             } catch (error) {
               console.error('Error posting appointment:', error);
