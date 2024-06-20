@@ -56,6 +56,7 @@ Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const isAppointmentEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   useEffect(() => {
     const link =
@@ -108,6 +109,7 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+
           {inFrame && (
             <React.Fragment>
               <Route
@@ -132,6 +134,7 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+
           {isForumEnabled && (
             <React.Fragment>
               <Route path="/Forum/ViewPost" element={<ViewPost />} />
@@ -155,7 +158,11 @@ const App = () => {
                 exact
               />
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
+            </React.Fragment>
+          )}
 
+          {isAppointmentEnabled && (
+            <React.Fragment>
               <Route
                 path="/AppointmentBooking/MyAppointments"
                 element={<MyAppointments />}
