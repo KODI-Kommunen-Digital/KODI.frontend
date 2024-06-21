@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HomePageNavBar from "../Components/HomePageNavBar";
 import Footer from "../Components/Footer";
+import RegionColors from "../Components/RegionColors";
 
 const VerifyEmail = () => {
 	const { t } = useTranslation();
@@ -108,7 +109,7 @@ const VerifyEmail = () => {
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700' : 'bg-blue-800 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
+								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
 							>
 								{t("goback")}
 							</button>
@@ -141,7 +142,7 @@ const VerifyEmail = () => {
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700' : 'bg-blue-800 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
+								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
 							>
 								{t("goback")}
 							</button>

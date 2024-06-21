@@ -5,6 +5,7 @@ try {
     colors = JSON.parse(themeString);
 } catch (error) {
     console.error('Error parsing theme JSON:', error);
+    colors = {}; // Ensure colors is an empty object if there's a parsing error
 }
 
 const RegionColors = {
