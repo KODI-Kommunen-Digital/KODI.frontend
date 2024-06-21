@@ -9,10 +9,9 @@ function SideBar() {
   const { t } = useTranslation();
   const [loggedIn, setLoggedIn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isBookingEnabled =
-    process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
-  const isContainerEnabled = "False";
+  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM;
+  const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING;
+  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER;
   const [isForumExpanded, setIsForumExpanded] = useState(false);
   const [isListingExpanded, setIsListingExpanded] = useState(false);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
@@ -99,7 +98,7 @@ function SideBar() {
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [userRole, setUserRole] = useState(3);
+  const [userRole, setUserRole] = useState(role.User);
   useEffect(() => {
     getProfile()
       .then((response) => {
@@ -322,59 +321,62 @@ function SideBar() {
           )}
           <div className="my-2 bg-gray-600 h-[1px]"></div>
 
-          <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-            onClick={handleBookingSegmentClick}
-          >
-            <svg
-              className="h-6 w-10 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 496 512"
-            >
-              <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-            </svg>
-            <span className="text-[15px] ml-4 text-gray-200 font-bold">
-              {t("booking")}
-            </span>
-
-            <svg
-              className={`h-6 w-6 ml-4 fill-current ${isBookingExpanded ? "rotate-180" : ""
-                }`}
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </div>
-          {isBookingExpanded && (
+          {isBookingEnabled && (
             <>
-              {isBookingEnabled && (
-                <div className="ml-4">
-                  <div>
-                    <div
-                      className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                      onClick={() => {
-                        localStorage.setItem("selectedItem", t("myBooking"));
-                        navigateTo("/AppointmentBooking/AppointmentsUserCreated");
-                      }}
-                    >
-                      <svg
-                        className="h-6 w-10 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 496 512"
-                      >
-                        <path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z" />
-                      </svg>
-                      <span
-                        className="text-[15px] ml-4 text-gray-200 font-bold"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {t("myAppoinment")}
-                      </span>
-                    </div>
-                  </div>
+              <div
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                onClick={handleBookingSegmentClick}
+              >
+                <svg
+                  className="h-6 w-10 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 496 512"
+                >
+                  <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                </svg>
+                <span className="text-[15px] ml-4 text-gray-200 font-bold">
+                  {t("booking")}
+                </span>
 
-                  {/* <div>
+                <svg
+                  className={`h-6 w-6 ml-4 fill-current ${isBookingExpanded ? "rotate-180" : ""
+                    }`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </div>
+
+              {isBookingExpanded && (
+                <>
+                  {isBookingEnabled && (
+                    <div className="ml-4">
+                      <div>
+                        <div
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                          onClick={() => {
+                            localStorage.setItem("selectedItem", t("myBooking"));
+                            navigateTo("/AppointmentBooking/AppointmentsUserCreated");
+                          }}
+                        >
+                          <svg
+                            className="h-6 w-10 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 496 512"
+                          >
+                            <path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z" />
+                          </svg>
+                          <span
+                            className="text-[15px] ml-4 text-gray-200 font-bold"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("myAppoinment")}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* <div>
                     <div
                       className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                       onClick={() => {
@@ -398,34 +400,36 @@ function SideBar() {
                     </div>
                   </div> */}
 
-                  <div>
-                    <div
-                      className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                      onClick={() => {
-                        localStorage.setItem("selectedItem", t("myBooking"));
-                        navigateTo("/AppointmentBooking/MyBookings");
-                      }}
-                    >
-                      <svg
-                        className="h-6 w-10 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 496 512"
-                      >
-                        <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                      </svg>
-                      <span
-                        className="text-[15px] ml-4 text-gray-200 font-bold"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {t("myBooking")}
-                      </span>
+                      <div>
+                        <div
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                          onClick={() => {
+                            localStorage.setItem("selectedItem", t("myBooking"));
+                            navigateTo("/AppointmentBooking/MyBookings");
+                          }}
+                        >
+                          <svg
+                            className="h-6 w-10 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 496 512"
+                          >
+                            <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                          </svg>
+                          <span
+                            className="text-[15px] ml-4 text-gray-200 font-bold"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("myBooking")}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </>
               )}
+              <div className="my-2 bg-gray-600 h-[1px]"></div>
             </>
           )}
-          <div className="my-2 bg-gray-600 h-[1px]"></div>
 
           {isContainerEnabled === "True" && (
             <>
@@ -453,78 +457,78 @@ function SideBar() {
                   <path d="M7 10l5 5 5-5z" />
                 </svg>
               </div>
-            </>
-          )}
-          {isContainerExpanded && (
-            <>
-              {isContainerEnabled && (
-                <div className="ml-4">
-                  <div
-                    className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                    onClick={() => {
-                      localStorage.setItem("selectedItem", t("myProducts"));
-                      navigateTo("/MyProducts");
-                    }}
-                  >
-                    <svg
-                      className="h-6 w-10 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 496 512"
-                    >
-                      <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
-                    </svg>
-                    <span
-                      className="text-[15px] ml-4 text-gray-200 font-bold"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {t("myProducts")}
-                    </span>
-                  </div>
+              {isContainerExpanded && (
+                <>
+                  {isContainerEnabled && (
+                    <div className="ml-4">
+                      <div
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        onClick={() => {
+                          localStorage.setItem("selectedItem", t("myProducts"));
+                          navigateTo("/MyProducts");
+                        }}
+                      >
+                        <svg
+                          className="h-6 w-10 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 496 512"
+                        >
+                          <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                        </svg>
+                        <span
+                          className="text-[15px] ml-4 text-gray-200 font-bold"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {t("myProducts")}
+                        </span>
+                      </div>
 
-                  <div
-                    className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                    onClick={() => {
-                      localStorage.setItem("selectedItem", t("addNewProduct"));
-                      navigateTo("/AddNewProducts");
-                    }}
-                  >
-                    <svg
-                      className="h-6 w-10 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 496 512"
-                    >
-                      <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                    </svg>
-                    <span
-                      className="text-[15px] ml-4 text-gray-200 font-bold"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {t("addNewProduct")}
-                    </span>
-                  </div>
+                      <div
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        onClick={() => {
+                          localStorage.setItem("selectedItem", t("addNewProduct"));
+                          navigateTo("/AddNewProducts");
+                        }}
+                      >
+                        <svg
+                          className="h-6 w-10 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 496 512"
+                        >
+                          <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                        </svg>
+                        <span
+                          className="text-[15px] ml-4 text-gray-200 font-bold"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {t("addNewProduct")}
+                        </span>
+                      </div>
 
-                  <div
-                    className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
-                    onClick={() => {
-                      localStorage.setItem("selectedItem", t("myOrders"));
-                      navigateTo("/MyOrders");
-                    }}
-                  >
-                    <svg
-                      className="h-6 w-10 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 496 512"
-                    >
-                      <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                    </svg>
-                    <span
-                      className="text-[15px] ml-4 text-gray-200 font-bold"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {t("myOrders")}
-                    </span>
-                  </div>
-                </div>
+                      <div
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        onClick={() => {
+                          localStorage.setItem("selectedItem", t("myOrders"));
+                          navigateTo("/MyOrders");
+                        }}
+                      >
+                        <svg
+                          className="h-6 w-10 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 496 512"
+                        >
+                          <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                        </svg>
+                        <span
+                          className="text-[15px] ml-4 text-gray-200 font-bold"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {t("myOrders")}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}

@@ -623,10 +623,12 @@ function UploadListings() {
         [name]: value,
       }));
 
-      setAppointmentInput((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      if (name !== "email") {
+        setAppointmentInput((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
     }
 
     validateInput(e);

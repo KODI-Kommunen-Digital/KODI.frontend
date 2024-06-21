@@ -188,15 +188,13 @@ const Listing = () => {
             listingsResponse.data.data.showExternal !== 0
           ) {
             window.location.replace(listingsResponse.data.data.website);
-            // } else if (listingsResponse.data.data.statusId !== 1) {
-            //   navigateTo("/Error");
           } else {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
 
-              getProfile(currentUserId).then((currentUserResult) => {
+              getProfile(cityUserId).then((currentUserResult) => {
                 getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
                   const user = res.data.data;
                   setUser(user);
@@ -686,7 +684,6 @@ const Listing = () => {
                     </div>
                   )
                 )}
-
               </div>
             </div>
           </div>

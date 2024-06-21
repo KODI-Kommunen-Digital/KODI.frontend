@@ -31,15 +31,19 @@ function CreateGroup() {
 	const [forumId, setForumId] = useState(0);
 	const navigate = useNavigate();
 
+	// const handleGroupTypeChange = (event) => {
+	// 	const isPrivate = event.target.checked;
+	// 	setInput((prevInput) => ({
+	// 		...prevInput,
+	// 		isPrivate,
+	// 		visibility: isPrivate ? "private" : "public",
+	// 	}));
+	// };
 	const handleToggle = () => {
-		setInput((prevInput) => {
-			const newVisibility = prevInput.visibility === "public" ? "private" : "public";
-			return {
-				...prevInput,
-				visibility: newVisibility,
-				isPrivate: newVisibility === "private" ? 1 : 0,
-			};
-		});
+		setInput((prevInput) => ({
+			...prevInput,
+			visibility: prevInput.visibility === "public" ? "private" : "public", // Toggle between "public" and "private"
+		}));
 	};
 
 	function handleDragEnter(e) {
@@ -86,16 +90,17 @@ function CreateGroup() {
 		image: null,
 		removeImage: false,
 		visibility: "public",
-		isPrivate: 0,
 	});
 	console.log(input);
 
 	const [error, setError] = useState({
+		categoryId: "",
+		subcategoryId: "",
 		forumName: "",
 		description: "",
-		image: null,
-		removeImage: false,
-		visibility: "public",
+		cityId: "",
+		startDate: "",
+		endDate: "",
 	});
 
 	const onInputChange = (e) => {

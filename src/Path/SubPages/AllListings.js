@@ -230,7 +230,6 @@ const AllListings = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
-
       const response = await getListingsBySearch({
         searchQuery,
         ...params
@@ -318,7 +317,7 @@ const AllListings = () => {
                         handleCategoryChange(e.target.value);
                       }}
                       value={categoryId || 0}
-                      className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}

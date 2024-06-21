@@ -82,21 +82,6 @@ export default function HomePageNavBar() {
     navigateTo("/");
   }
 
-  // document.addEventListener("scroll", function () {
-  //   const popover = document.getElementById("scrollablePopover");
-  //   const scrollPosition = window.scrollY;
-  //   const viewportHeight = window.innerHeight;
-  //   const SOME_THRESHOLD = viewportHeight * 0.45;
-
-  //   if (scrollPosition > SOME_THRESHOLD) {
-  //     popover.classList.add("bg-black", "bg-opacity-25");
-  //     popover.classList.remove("bg-gradient-to-b", "from-black", "to-transparent");
-  //   } else {
-  //     popover.classList.add("bg-gradient-to-b", "from-black", "to-transparent");
-  //     popover.classList.remove("bg-black", "bg-opacity-25");
-  //   }
-  // });
-
   const onCityChange = (e) => {
     const selectedCityId = e.target.value;
     const selectedCategoryId = categoryId; // Assuming categoryId is available in scope

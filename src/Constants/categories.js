@@ -25,9 +25,6 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     14: "rathaus",
     15: "newsletter",
     16: "officialnotification",
-    // ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
-    //   ? { 18: "appointmentBooking" }
-    //   : {}),
     19: "defectReporter",
   };
   if (process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True") {
@@ -52,9 +49,6 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     rathaus: 14,
     newsletter: 15,
     officialnotification: 16,
-    // ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
-    //   ? { appointmentBooking: 18 }
-    //   : {}),
     freetimeAndTourisms: 17,
     defectReporter: 19,
   };
@@ -73,9 +67,6 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     14: "rathaus",
     15: "newsletter",
     16: "officialnotification",
-    // ...(process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True"
-    //   ? { 18: "appointmentBooking" }
-    //   : {}),
     17: "freetimeAndTourisms", // Freizeit und Tourismus
     19: "defectReporter",
   };

@@ -527,13 +527,6 @@ const HomePage = () => {
                 >
                   {t("findBestCitizenServicesInTheCity")}
                 </p>
-                {/* <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group cursor-pointer" type="submit"
-                  onClick={() => goToCitizensPage()}
-                  style={{ fontFamily: "Poppins, sans-serif" }}>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${RegionColors.darkBgColor} group-hover:-translate-x-0 group-hover:-translate-y-0`}></span>
-                  <span className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-2 ${RegionColors.borderColor} hover:${RegionColors.hoverBgColor}`}></span>
-                  <span className={`relative ${RegionColors.darkTextColor} group-hover:text-white`}>{t("clickHereToFind")}</span>
-                </a> */}
 
                 <a
                   onClick={() => goToCitizensPage()}
