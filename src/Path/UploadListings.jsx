@@ -350,7 +350,7 @@ function UploadListings() {
     if (!accessToken && !refreshToken) {
       navigateTo("/login");
     }
-    var cityIds = searchParams.get("cityIds");
+    var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
       setCategories(response?.data?.data || []);
     });
