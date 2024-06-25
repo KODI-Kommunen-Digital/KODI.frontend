@@ -152,14 +152,14 @@ const ReportedPosts = () => {
 											>
 												<th
 													scope="row"
-													className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white cursor-pointer"
+													className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap dark:text-white cursor-pointer"
 												>
 													<img
 														className="w-10 h-10 rounded-full hidden sm:table-cell"
 														src={
 															report.image
 																? process.env.REACT_APP_BUCKET_HOST +
-																  report.image
+																report.image
 																: PROFILEPICTURE
 														}
 														alt="avatar"
@@ -216,7 +216,7 @@ const ReportedPosts = () => {
 																>
 																	&#8203;
 																</span>
-																<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+																<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 																	<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 																		<div className="sm:flex sm:items-start">
 																			<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -237,7 +237,7 @@ const ReportedPosts = () => {
 																				</svg>
 																			</div>
 																			<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-																				<h3 className="text-lg leading-6 font-medium text-gray-900">
+																				<h3 className="text-lg leading-6 font-medium text-slate-800">
 																					{t("reasonforReport")}
 																				</h3>
 																				<div className="mt-2">
@@ -256,7 +256,7 @@ const ReportedPosts = () => {
 																		<button
 																			onClick={showReportsModal.onCancel}
 																			type="button"
-																			className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+																			className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 																		>
 																			{t("cancel")}
 																		</button>

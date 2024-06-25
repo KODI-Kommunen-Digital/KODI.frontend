@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
-import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsById } from "../../Services/listingsApi";
@@ -25,6 +24,7 @@ import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
+import RegionColors from "../../Components/RegionColors";
 
 const Description = (props) => {
   const [desc, setDesc] = useState();
@@ -37,13 +37,10 @@ const Description = (props) => {
       (url) =>
         `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
     );
-
-    // Regex for existing anchor tags
     const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
 
     return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
       if (!/class="[^"]*underline[^"]*"/.test(attributes)) {
-        // If 'class' attribute exists, append 'underline', otherwise add 'class="underline"'
         if (/class="/.test(attributes)) {
           return `<a href="${url}" ${attributes.replace(
             /class="/,
@@ -90,7 +87,7 @@ const Description = (props) => {
 
   return (
     <p
-      className="leading-relaxed text-md font-medium my-6 text-gray-900 dark:text-gray-900"
+      className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
       dangerouslySetInnerHTML={{ __html: desc }}
     ></p>
   );
@@ -104,6 +101,9 @@ Description.propTypes = {
 const Listing = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
+
   const [listingId, setListingId] = useState(0);
   const [description, setDescription] = useState("");
   const [createdAt, setCreatedAt] = useState("");
@@ -138,6 +138,7 @@ const Listing = () => {
     zipcode: "",
     discountedPrice: "",
   });
+
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
@@ -188,7 +189,7 @@ const Listing = () => {
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
 
-              getProfile(currentUserId).then((currentUserResult) => {
+              getProfile(cityUserId).then((currentUserResult) => {
                 getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
                   const user = res.data.data;
                   setUser(user);
@@ -298,9 +299,6 @@ const Listing = () => {
     }
   }, [selectedCategoryId, listingId]);
 
-  const [handleClassName, setHandleClassName] = useState(
-    "rounded-xl bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-  );
   const handleFavorite = async (event) => {
     try {
       if (isLoggedIn) {
@@ -313,18 +311,12 @@ const Listing = () => {
           await deleteListingsById(favoriteId);
           setFavoriteId(0);
           setSuccessMessage(t("list removed from the favorites"));
-          setHandleClassName(
-            "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-          );
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
               .then((response) => {
                 setFavoriteId(response.data.id);
                 setSuccessMessage(t("List added to the favorites"));
-                setHandleClassName(
-                  "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                );
               })
               .catch((err) => console.log("Error", err))
             : console.log("Error");
@@ -358,14 +350,14 @@ const Listing = () => {
   }, [user]);
 
   return (
-    <section className="text-gray-600 bg-white body-font">
+    <section className="text-slate-800 bg-white body-font">
       {isLoading ? (
         <LoadingPage />
       ) : (
         <div>
           <HomePageNavBar />
 
-          <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl mt-4 md:mt-0 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
+          <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
                 <div className="lg:w-full md:w-full h-full">
@@ -373,7 +365,7 @@ const Listing = () => {
                     <div className="mt-5 md:col-span-2 md:mt-0">
                       <form method="POST">
                         <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                          <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                          <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                             <span
                               className="inline-block max-w-full break-words"
                               style={{
@@ -391,12 +383,13 @@ const Listing = () => {
                               xmlns="http://www.w3.org/2000/svg"
                               height="1em"
                               viewBox="0 0 448 512"
-                              fill="#4299e1"
+                              fill={process.env.REACT_APP_NAME === 'Salzkotten APP' ? '#fecc00' :
+                                process.env.REACT_APP_NAME === 'FICHTEL' ? '#4d7c0f' : '#1e40af'}
                             >
                               <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                             </svg>
                             <p
-                              className="leading-relaxed text-base text-blue-400"
+                              className={`leading-relaxed text-base ${RegionColors.darkTextColor}`}
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                               }}
@@ -410,21 +403,13 @@ const Listing = () => {
                             className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
                               }`}
                           >
-                            <button
-                              type="button"
-                              className={handleClassName}
-                              onClick={() => handleFavorite()}
-                            >
-                              <span
-                                style={{
-                                  fontFamily: "Poppins, sans-serif",
-                                }}
-                              >
-                                {favoriteId !== 0
-                                  ? t("unfavorite")
-                                  : t("favourites")}
+
+                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
+                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                                {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
                               </span>
-                            </button>
+                            </a>
                           </div>
                           <div
                             className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
@@ -459,7 +444,7 @@ const Listing = () => {
 
                           {input.id && input.categoryId === 3 ? (
                             <p
-                              className="leading-relaxed text-base dark:text-gray-900 font-bold"
+                              className="leading-relaxed text-base dark:text-slate-800 font-bold"
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                               }}
@@ -482,7 +467,7 @@ const Listing = () => {
                                   </span>
                                   {input.endDate && (
                                     <>
-                                      <span className="text-blue-400">
+                                      <span className={`${RegionColors.lightTextColor}`}>
                                         {" "}
                                         {t("To")}{" "}
                                       </span>
@@ -521,7 +506,16 @@ const Listing = () => {
 
                 <div className="mt-4 md:mt-0 container-fluid lg:w-full md:w-full">
                   <div className="mr-0 ml-0 mt-2 md:mt-2 lg:mt-2 md:grid md:grid-cols-1">
-                    <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+                    <style>
+                      {`
+								@media (max-width: 280px) {
+									.galaxy-fold {
+										margin-top: 6rem; /* Adjust the margin value as needed */
+									}
+								}
+							`}
+                    </style>
+                    <div className="h-full overflow-hidden px-0 py-0 bg-white">
                       <div className="relative h-full">
                         {input.pdf ? (
                           <div>
@@ -529,18 +523,16 @@ const Listing = () => {
                               {terminalView ? (
                                 <PDFDisplay
                                   url={
-                                    process.env.REACT_APP_BUCKET_HOST +
-                                    input.pdf
+                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
                                   }
                                 />
                               ) : (
                                 <iframe
                                   src={
-                                    process.env.REACT_APP_BUCKET_HOST +
-                                    input.pdf
+                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
                                   }
                                   type="text/html"
-                                  className="object-cover object-center h-[600px] w-full"
+                                  className="w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain"
                                 ></iframe>
                               )}
                             </div>
@@ -549,7 +541,6 @@ const Listing = () => {
                           <CustomCarousel
                             imageList={input.otherlogos}
                             sourceId={input.sourceId}
-                            appointmentId={input.appointmentId}
                           />
                         ) : (
                           <img
@@ -565,21 +556,16 @@ const Listing = () => {
 
                 <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
                   <h1
-                    className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                    className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("description")}
                   </h1>
                   <Description content={description} />
                   {sourceId === listingSource.SCRAPER && (
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-slate-800 font-medium">
                       {t("visitWebsite")}{" "}
-                      <a
-                        href={website}
-                        className="text-blue-600 font-medium"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a href={website} className={`${RegionColors.lightTextColor} font-medium" target="_blank" rel="noopener noreferrer`}>
                         {website}
                       </a>
                     </p>
@@ -598,9 +584,7 @@ const Listing = () => {
                       <div
                         onClick={() =>
                           navigateTo(
-                            user
-                              ? `/ViewProfile/${user.username}`
-                              : "/ViewProfile"
+                            user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                           )
                         }
                         className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
@@ -610,35 +594,29 @@ const Listing = () => {
                             className="rounded-full h-20 w-20"
                             src={
                               user?.image
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                user?.image
+                                ? process.env.REACT_APP_BUCKET_HOST + user?.image
                                 : PROFILEIMAGE
                             }
                             alt={user?.lastname}
                           />
                           <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                            <button
+                            <a
                               onClick={() =>
                                 navigateTo(
-                                  user
-                                    ? `/ViewProfile/${user.username}`
-                                    : "/ViewProfile"
+                                  user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                                 )
                               }
-                              type="submit"
-                              className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
-                              style={{
-                                fontFamily: "Poppins, sans-serif",
-                              }}
-                            >
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3"></span>
-                              {t("viewProfile")}
-                            </button>
+                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
+                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                                {t("viewProfile")}
+                              </span>
+                            </a>
                           </div>
                         </div>
                         <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
                           <h2
-                            className="text-blue-700 text-lg title-font mb-2 font-bold dark:text-blue-700"
+                            className={`${RegionColors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -646,7 +624,7 @@ const Listing = () => {
                             {firstname + " " + lastname}
                           </h2>
                           <p
-                            className="leading-relaxed text-base font-bold dark:text-gray-900"
+                            className="leading-relaxed text-base font-bold dark:text-slate-800 truncate"
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -704,7 +682,7 @@ const Listing = () => {
           {input.address ? (
             <div className="mx-auto grid max-w-2xl gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
               <h1
-                className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+                className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {t("streetAddress")}
@@ -718,7 +696,7 @@ const Listing = () => {
           ) : null}
 
           <div className="mx-auto grid max-w-2xl  gap-y-1 gap-x-8 pb-8 pt-8 px-4 sm:px-6 sm:py-10 lg:max-w-7xl">
-            <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900">
+            <h1 className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800">
               {t("similarItems")}
             </h1>
             {listings && listings.length > 0 ? (
@@ -758,7 +736,7 @@ const Listing = () => {
                     {t("to_upload_new_listing")}
                   </span>
                   <a
-                    className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+                    className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
                     onClick={() => {
                       localStorage.setItem(
                         "selectedItem",
@@ -776,9 +754,11 @@ const Listing = () => {
               </div>
             )}
           </div>
-          <div className="bottom-0 w-full">
-            <Footer />
-          </div>
+          {!isLoading && (
+            <div className="bottom-0 w-full">
+              <Footer />
+            </div>
+          )}
         </div>
       )}
     </section>
