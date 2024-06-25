@@ -92,19 +92,6 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
-          <Route
-            path="/AppointmentBooking/BookAppointments/Summary"
-            element={<Summary />}
-          />
-          <Route
-            path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
-            element={<BookingSuccessConfirmation />}
-          />
-
-          <Route
-            path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
-            element={<BookingErrorConfirmation />}
-          />
 
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
@@ -182,6 +169,19 @@ const App = () => {
                 path="/Listings/BookAppointments"
                 element={<BookMyAppointments />}
                 exact
+              />
+              <Route
+                path="/AppointmentBooking/BookAppointments/Summary"
+                element={<Summary />}
+              />
+              <Route
+                path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+                element={<BookingSuccessConfirmation />}
+              />
+
+              <Route
+                path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+                element={<BookingErrorConfirmation />}
               />
             </React.Fragment>
           )}
