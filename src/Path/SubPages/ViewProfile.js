@@ -16,13 +16,8 @@ import RegionColors from "../../Components/RegionColors";
 
 const ViewProfile = () => {
   window.scrollTo(0, 0);
-  let HomePageNavBar;
-
-  if (process.env.REACT_APP_FRONTENDVERSION === '2') {
-    HomePageNavBar = require('../../Components/V2/HomePageNavBar').default;
-  } else {
-    HomePageNavBar = require('../../Components/V1/HomePageNavBar').default;
-  }
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -101,7 +96,7 @@ const ViewProfile = () => {
         </h1>
         <a
           onClick={() => goBack()}
-          className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700' : 'bg-blue-800 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
+          className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
           style={{ fontFamily: "Poppins, sans-serif" }}
         >
           {t("goBack")}
