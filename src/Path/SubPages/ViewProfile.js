@@ -16,13 +16,8 @@ import RegionColors from "../../Components/RegionColors";
 
 const ViewProfile = () => {
   window.scrollTo(0, 0);
-  let HomePageNavBar;
-
-  if (process.env.REACT_APP_FRONTENDVERSION === '2') {
-    HomePageNavBar = require('../../Components/V2/HomePageNavBar').default;
-  } else {
-    HomePageNavBar = require('../../Components/V1/HomePageNavBar').default;
-  }
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
   const { t } = useTranslation();
   useEffect(() => {

@@ -37,13 +37,10 @@ const Description = (props) => {
       (url) =>
         `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
     );
-
-    // Regex for existing anchor tags
     const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
 
     return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
       if (!/class="[^"]*underline[^"]*"/.test(attributes)) {
-        // If 'class' attribute exists, append 'underline', otherwise add 'class="underline"'
         if (/class="/.test(attributes)) {
           return `<a href="${url}" ${attributes.replace(
             /class="/,
@@ -104,13 +101,8 @@ Description.propTypes = {
 const Listing = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
-  let HomePageNavBar;
-
-  if (process.env.REACT_APP_FRONTENDVERSION === '2') {
-    HomePageNavBar = require('../../Components/V2/HomePageNavBar').default;
-  } else {
-    HomePageNavBar = require('../../Components/V1/HomePageNavBar').default;
-  }
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
   const [listingId, setListingId] = useState(0);
   const [description, setDescription] = useState("");

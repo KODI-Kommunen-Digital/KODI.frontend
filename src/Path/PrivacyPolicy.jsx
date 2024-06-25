@@ -1,10 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../Components/V2/HomePageNavBar";
 import Footer from "../Components/Footer";
 
 export default function ImprintPage() {
     const { t } = useTranslation();
+    const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+    const HomePageNavBar = require(`../Components/V${version}/HomePageNavBar`).default;
 
     return (
         <section className="bg-white body-font relative">
