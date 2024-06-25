@@ -310,7 +310,31 @@ function UploadListings() {
           }
         }
 
-        // Set success message based on admin status and new listing
+        if (!newListing && listingInput.appointmentId) {
+          try {
+            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
+          } catch (error) {
+            console.error('Error updating appointment:', error);
+          }
+        } else if (appointmentAdded) {
+          const minIterations = Math.min(cityIdsArray.length);
+          let allAppointmentPromises = []
+          for (let index = 0; index < minIterations; index++) {
+            const cityId = cityIdsArray[index];
+            const listingId = currentListingId[index];
+
+            try {
+              // await createAppointments(cityId, listingId, filteredAppointmentInput);
+              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+            } catch (error) {
+              console.error('Error posting appointment:', error);
+            }
+          }
+
+
+          await Promise.all(allAppointmentPromises);
+        }
+
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
