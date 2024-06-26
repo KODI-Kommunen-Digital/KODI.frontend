@@ -38,12 +38,6 @@ const MyOrders = () => {
         }
     };
 
-    // function goToViewDetailsPage() {
-    //     let navUrl = `/CitizenService`;
-    //     if (cityId) navUrl = `/CitizenService?cityId=${cityId}`;
-    //     navigateTo(navUrl);
-    // }
-
     return (
         <section className="bg-slate-600 body-font relative h-screen">
             <SideBar />
@@ -153,23 +147,24 @@ const MyOrders = () => {
                                                 {products.numberOfOrders}
                                             </td>
 
-                                            <td
-                                                className="px-6 py-4 text-center font-bold"
-                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                            >
-                                                {products.customerName}
-                                            </td>
-
-                                            <td>
+                                            <td className="px-6 py-4 text-center">
                                                 <a
-                                                    // onClick={() => goToViewDetailsPage()}
-                                                    className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                    <span>
-                                                        {t("clickHereToFind")}
-                                                    </span>
-                                                    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                        viewBox="0 0 24 24" className="w-6 h-6 ml-2">
+                                                    onClick={() => {
+                                                        navigateTo("/CustomerScreen/MyOrders/ViewDetails");
+                                                    }}
+                                                    className={`flex items-center ${RegionColors.darkTextColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
+                                                    <span>{t("clickHere")}</span>
+                                                    <svg
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                        className="w-6 h-6 ml-2"
+                                                    >
                                                         <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                                                     </svg>
                                                 </a>

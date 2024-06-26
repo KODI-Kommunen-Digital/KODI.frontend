@@ -10,7 +10,7 @@ const SellerStatistics = ({ percentItemsSold, totalIncome, totalOwedAmount }) =>
                 <div className="w-full text-sm text-left lg:mt-[0rem] mt-[0rem] text-gray-500 p-0 space-y-10 rounded-lg">
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 mt-5 ">
                         <a className="transform hover:scale-105 transition duration-300 shadow-xl rounded-lg bg-white"
-                            href="#">
+                        >
                             <div className="p-5">
                                 <div className="flex justify-between">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-400"
@@ -34,7 +34,7 @@ const SellerStatistics = ({ percentItemsSold, totalIncome, totalOwedAmount }) =>
                             </div>
                         </a>
                         <a className="transform hover:scale-105 transition duration-300 shadow-xl rounded-lg bg-white"
-                            href="#">
+                        >
                             <div className="p-5">
                                 <div className="flex justify-between">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-yellow-400"
@@ -58,7 +58,7 @@ const SellerStatistics = ({ percentItemsSold, totalIncome, totalOwedAmount }) =>
                             </div>
                         </a>
                         <a className="transform hover:scale-105 transition duration-300 shadow-xl rounded-lg bg-white"
-                            href="#">
+                        >
                             <div className="p-5">
                                 <div className="flex justify-between">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-pink-600"

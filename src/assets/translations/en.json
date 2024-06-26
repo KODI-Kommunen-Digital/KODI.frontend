@@ -810,5 +810,10 @@
     "applyCard": "Get Card",
     "applyForCard": "To apply for your shopping card click here",
     "amount": "Amount",
-    "orderDate": "Date Order Placed"
+    "orderDate": "Date Order Placed",
+    "clickHere": "Click here",
+    "numberOfProducts": "Number of products",
+    "close": "Close",
+    "count": "Count",
+    "cartItems": "Cart Items"
 }

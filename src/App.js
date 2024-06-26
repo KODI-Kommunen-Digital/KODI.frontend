@@ -57,6 +57,8 @@ import OrdersSold from "./Path/Container/OrdersSold";
 import AddNewProducts from "./Path/Container/AddNewProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
+import ViewDetails from "./Path/Container/ViewDetails";
+import ShoppingCart from "./Path/Container/ShoppingCart";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -236,8 +238,14 @@ const App = () => {
               />
 
               <Route
-                path="/CustomerScreen/MyOrders/"
-                element={<MyOrders />}
+                path="/CustomerScreen/MyOrders/ViewDetails"
+                element={<ViewDetails />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/ShoppingCart"
+                element={<ShoppingCart />}
                 exact
               />
 
