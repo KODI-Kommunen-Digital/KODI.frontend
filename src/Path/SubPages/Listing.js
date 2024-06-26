@@ -54,7 +54,7 @@ const Description = (props) => {
     });
   };
   useEffect(() => {
-    if (process.env.REACT_APP_HASADVERTISMENT === "True") {
+    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "True") {
       const linkedContent = linkify(props.content);
       setDesc(linkedContent);
       try {
