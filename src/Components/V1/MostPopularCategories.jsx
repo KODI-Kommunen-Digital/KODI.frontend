@@ -15,6 +15,7 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
             <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
                 {listingsCount.map((listing) => {
                     const categoryIcon = categoryIcons[listing.categoryId] || { categoryName: "unknownCategory", className: "h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-xl" }
+
                     return (
                         <div
                             key={listing.categoryId}
