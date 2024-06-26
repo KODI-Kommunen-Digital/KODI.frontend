@@ -55,7 +55,7 @@ const Description = (props) => {
   };
 
   useEffect(() => {
-    if (process.env.REACT_APP_HASADVERTISMENT === "GESEKE") {
+    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "GESEKE") {
       const linkedContent = linkify(props.content);
       setDesc(linkedContent);
       try {
