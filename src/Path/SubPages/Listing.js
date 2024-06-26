@@ -58,7 +58,7 @@ const Description = (props) => {
       const linkedContent = linkify(props.content);
       setDesc(linkedContent);
       try {
-        if (linkedContent.length > 800) {
+        if (linkedContent.length > 800 && !isNaN(props.cityId)) {
           getAds(props.cityId).then((value) => {
             const ad = value.data.data;
             if (ad && ad.image && ad.link) {
