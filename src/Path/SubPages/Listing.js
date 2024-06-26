@@ -58,7 +58,7 @@ const Description = (props) => {
     });
   };
   useEffect(() => {
-    if (process.env.REACT_APP_NAME === "GESEKE") {
+    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "True") {
       const linkedContent = linkify(props.content);
       setDesc(linkedContent);
       try {
