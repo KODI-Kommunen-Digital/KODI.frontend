@@ -53,35 +53,38 @@ const Description = (props) => {
       return match;
     });
   };
+
   useEffect(() => {
-    const linkedContent = linkify(props.content);
-    setDesc(linkedContent);
-    try {
-      if (linkedContent.length > 800) {
-        getAds(props.cityId).then((value) => {
-          const ad = value.data.data;
-          if (ad && ad.image && ad.link) {
-            const parser = new DOMParser();
-            const parsed = parser.parseFromString(linkedContent, "text/html");
-            const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
-              } alt="Ad" href=${ad.link}/>`;
-            const a = document.createElement("a");
-            const text = document.createElement("p");
-            text.className = "text-right";
-            text.innerHTML = "Anzeige";
-            a.innerHTML = tag;
-            a.href = ad.link;
-            a.target = "_blank";
-            a.className = "flex justify-center h-80 max-h-full";
-            const idx = Math.floor(parsed.body.childNodes.length / 2);
-            parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
-            parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
-            setDesc(parsed.body.innerHTML);
-          }
-        });
+    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "GESEKE") {
+      const linkedContent = linkify(props.content);
+      setDesc(linkedContent);
+      try {
+        if (linkedContent.length > 800 && !isNaN(props.cityId)) {
+          getAds(props.cityId).then((value) => {
+            const ad = value.data.data;
+            if (ad && ad.image && ad.link) {
+              const parser = new DOMParser();
+              const parsed = parser.parseFromString(linkedContent, "text/html");
+              const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
+                } alt="Ad" href=${ad.link}/>`;
+              const a = document.createElement("a");
+              const text = document.createElement("p");
+              text.className = "text-right";
+              text.innerHTML = "Anzeige";
+              a.innerHTML = tag;
+              a.href = ad.link;
+              a.target = "_blank";
+              a.className = "flex justify-center h-80 max-h-full";
+              const idx = Math.floor(parsed.body.childNodes.length / 2);
+              parsed.body.insertBefore(a, parsed.body.childNodes[idx]);
+              parsed.body.insertBefore(text, parsed.body.childNodes[idx]);
+              setDesc(parsed.body.innerHTML);
+            }
+          });
+        }
+      } catch (error) {
+        console.log("Error", error);
       }
-    } catch (error) {
-      console.log("Error", error);
     }
   }, [props.cityId, props.content]);
 
