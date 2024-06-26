@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import { categoryIcons } from '../../Constants/categoryIcons'
-import { getCategory } from "../../Services/CategoryApi";
 import "../../index.css";
 const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
 
@@ -11,24 +10,12 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
         goToAllListingsPage: PropTypes.func.isRequired,
     };
 
-    const [categories, setCategories] = useState([]);
-    useEffect(() => {
-        getCategory().then((response) => {
-            const catList = {};
-            response?.data.data.forEach((cat) => {
-                catList[cat.id] = cat.name;
-            });
-            setCategories(catList);
-        });
-    }, []);
-
     return (
         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 flex flex-col most-popular-category">
             <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
                 {listingsCount.map((listing) => {
                     const categoryIcon = categoryIcons[listing.categoryId] || { categoryName: "unknownCategory", className: "h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-xl" }
 
-                    const categoryName = categories[listing.categoryId];
                     return (
                         <div
                             key={listing.categoryId}
@@ -51,7 +38,7 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 className="flex items-center justify-center m-auto mt-2 text-center font-sans font-bold"
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
-                                {t(categoryName)}
+                                {t(categoryIcon.categoryName)}
                             </h2>
                         </div>
                     );
