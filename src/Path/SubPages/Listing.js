@@ -207,7 +207,7 @@ const Listing = () => {
                     }
                   });
                 } else {
-                  getProfile(cityUserId).then((res) => {
+                  getProfile(currentUserId).then((res) => {
                     const user = res.data.data;
                     setUser(user);
                     if (
