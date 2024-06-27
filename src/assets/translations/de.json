@@ -728,6 +728,7 @@
     "pleaseEnterEndTime": "Bitte geben Sie die Endzeit ein",
     "pleaseSelectServiceName": "Bitte geben Sie den Servicenamen ein",
     "pleaseSelectDuration": "Bitte geben Sie die Servicedauer ein",
+    "pleaseEnterValidPhoneNumber": "Bitte geben Sie eine gültige Telefonnummer ein. Diese sollte nur Zahlen und keine Leerzeichen dazwischen enthalten",
     "maximumNumOfService1": "Sie können maximal hinzufügen ",
     "maximumNumOfService2": " Dienstleistungen.",
     "costInEuros": "Kosten € ",
