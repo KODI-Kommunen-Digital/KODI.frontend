@@ -1163,7 +1163,7 @@ function UploadListings() {
 
           <div className="relative mb-4">
             <label
-              htmlFor="place"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
