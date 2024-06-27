@@ -29,7 +29,13 @@ export function getUserId() {
 
 export async function getProfile(userId, params = {}) {
 	if (!userId) userId = getUserId();
-	return axiosInstance.get(`/users/${userId}`, { params });
+	let url;
+	if (params.cityId && params.cityUser) {
+		url = `/users/${userId}?cityUser=true&cityId=${params.cityId}`;
+	} else {
+		url = `/users/${userId}`;
+	}
+	return axiosInstance.get(url);
 }
 
 export async function fetchUsers(params = {}) {
