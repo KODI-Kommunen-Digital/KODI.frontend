@@ -193,17 +193,33 @@ const Listing = () => {
             setTimeout(() => {
 
               getProfile(cityUserId).then((currentUserResult) => {
-                getProfile(cityUserId, { cityId, cityUser: true }).then((res) => {
-                  const user = res.data.data;
-                  setUser(user);
-                  if (
-                    listingsResponse.data.data.statusId !== statusByName.Active &&
-                    currentUserId !== user.id &&
-                    currentUserResult.data.data.roleId !== 1
-                  ) {
-                    navigateTo("/Error");
-                  }
-                });
+                const params = { cityId, cityUser: true };
+
+                if (params.cityId && params.cityUser) {
+                  getProfile(cityUserId, params).then((res) => {
+                    const user = res.data.data;
+                    setUser(user);
+                    if (
+                      listingsResponse.data.data.statusId !== statusByName.Active &&
+                      currentUserId !== user.id &&
+                      currentUserResult.data.data.roleId !== 1
+                    ) {
+                      navigateTo("/Error");
+                    }
+                  });
+                } else {
+                  getProfile(cityUserId).then((res) => {
+                    const user = res.data.data;
+                    setUser(user);
+                    if (
+                      listingsResponse.data.data.statusId !== statusByName.Active &&
+                      currentUserId !== user.id &&
+                      currentUserResult.data.data.roleId !== 1
+                    ) {
+                      navigateTo("/Error");
+                    }
+                  });
+                }
               });
 
               if (isLoggedIn) {
@@ -582,62 +598,52 @@ const Listing = () => {
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
-                  <div className="w-full h-64 lg:h-52 md:h-56 md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
-                    <div>
-                      <div
+                  <div
+                    className="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
+                    <div onClick={() =>
+                      navigateTo(
+                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+                      )
+                    }
+                      className="rounded-t-lg h-32 overflow-hidden">
+                      <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' />
+                    </div>
+                    <div onClick={() =>
+                      navigateTo(
+                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+                      )
+                    }
+                      className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                      <img
+                        className="object-cover object-center h-32"
+                        src={
+                          user?.image
+                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                            : PROFILEIMAGE
+                        }
+                        alt={user?.lastname}
+                      />
+                    </div>
+                    <div className="text-center mt-2 p-4">
+                      <h2 className="font-semibold">{firstname + " " + lastname}</h2>
+                      <p className="text-gray-500">{user?.username}</p>
+                    </div>
+
+                    <div className="flex justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:flex">
+                      <a
                         onClick={() =>
                           navigateTo(
                             user ? `/ViewProfile/${user.username}` : "/ViewProfile"
                           )
                         }
-                        className="items-center mx-2 py-2 px-2 my-2 gap-2 grid grid-cols-1 sm:grid-cols-1"
-                      >
-                        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
-                          <img
-                            className="rounded-full h-20 w-20"
-                            src={
-                              user?.image
-                                ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                                : PROFILEIMAGE
-                            }
-                            alt={user?.lastname}
-                          />
-                          <div className="justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:block">
-                            <a
-                              onClick={() =>
-                                navigateTo(
-                                  user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                                )
-                              }
-                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
-                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
-                              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-                                {t("viewProfile")}
-                              </span>
-                            </a>
-                          </div>
-                        </div>
-                        <div className="flex-grow text-center lg:text-start mt-6 sm:mt-0">
-                          <h2
-                            className={`${RegionColors.darkTextColor} text-lg title-font mb-2 font-bold truncate`}
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {firstname + " " + lastname}
-                          </h2>
-                          <p
-                            className="leading-relaxed text-base font-bold dark:text-slate-800 truncate"
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                          >
-                            {user?.username}
-                          </p>
-                        </div>
-                      </div>
+                        className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
+                        <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                        <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                          {t("viewProfile")}
+                        </span>
+                      </a>
                     </div>
-                  </div>
+                  </div >
                 )}
 
                 {!isActive &&
