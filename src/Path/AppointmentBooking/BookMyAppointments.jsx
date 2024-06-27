@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import "react-quill/dist/quill.snow.css";
 import { getAppointmentServices, getAppointmentSlots } from "../../Services/appointmentBookingApi";
@@ -25,6 +24,8 @@ function BookMyAppointments() {
   const [duration, setDuration] = useState("___");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];

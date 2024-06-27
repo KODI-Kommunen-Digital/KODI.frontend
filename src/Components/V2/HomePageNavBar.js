@@ -3,9 +3,9 @@ import { Popover, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../Services/usersApi";
+import { logout } from "../../Services/usersApi";
 import PropTypes from 'prop-types';
-import { getCities } from "../Services/cities";
+import { getCities } from "../../Services/cities";
 
 export default function HomePageNavBar() {
   const location = useLocation();

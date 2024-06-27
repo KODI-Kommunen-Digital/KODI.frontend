@@ -341,7 +341,7 @@ function UploadListings() {
         // Post or update listing data
         const response = await (newListing
           ? postListingsData(dataToSubmit)
-          : updateListingsData(dataToSubmit, listingId));
+          : updateListingsData(cityIds, dataToSubmit, listingId));
 
         let currentListingId = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
@@ -522,7 +522,7 @@ function UploadListings() {
       // getVillages(cityId).then((response) => setVillages(response.data.data));
       getListingsById(cityIds, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
-        listingData.cityId = cityIds;
+        listingData.cityIds = cityIds;
         setListingInput(listingData);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
@@ -691,6 +691,7 @@ function UploadListings() {
         }
 
       case "cityIds":
+
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -767,6 +768,14 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "phone":
+        const phoneRegex = /^\d+$/;
+        if (!value.match(phoneRegex)) {
+          return t("pleaseEnterValidPhoneNumber");
+        }
+        return "";
+
       default:
         return "";
     }
@@ -968,7 +977,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' ? (
+          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' && newListing ? (
             cities.length > 1 && (
               <div className="relative mb-4">
                 <label
@@ -980,7 +989,7 @@ function UploadListings() {
                 <select
                   id="cityIds"
                   name="cityIds"
-                  value=""
+                  value={cityIds || 0}
                   onChange={onCityChange}
                   disabled={!newListing}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
@@ -1359,7 +1368,7 @@ function UploadListings() {
 
           <div className="relative mb-0">
             <label
-              htmlFor="place"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
@@ -1374,6 +1383,14 @@ function UploadListings() {
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("pleaseEnterPhone")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.phone ? "visible" : "hidden",
+              }}
+            >
+              {error.phone}
+            </div>
           </div>
 
           <div className="relative mb-0">

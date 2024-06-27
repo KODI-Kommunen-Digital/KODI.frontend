@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
 import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
@@ -8,6 +7,8 @@ import { FiCheckCircle } from "react-icons/fi";
 function BookingSuccessConfirmation() {
   const { t } = useTranslation();
   window.scrollTo(0, 0);
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {

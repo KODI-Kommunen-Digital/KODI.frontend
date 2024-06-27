@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
@@ -17,7 +16,8 @@ import RegionColors from "../../Components/RegionColors";
 
 const ViewProfile = () => {
   window.scrollTo(0, 0);
-
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -26,9 +26,7 @@ const ViewProfile = () => {
 
   const [user, setUser] = useState();
   const [userSocial, setUserSocial] = useState([]);
-
   const [listings, setListings] = useState([]);
-
   const [selectedSortOption] = useState("");
 
   useEffect(() => {

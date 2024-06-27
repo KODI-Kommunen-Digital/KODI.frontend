@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 // import PropTypes from "prop-types";
 import { createBookings } from "../../Services/appointmentBookingApi";
@@ -8,6 +7,8 @@ import { createBookings } from "../../Services/appointmentBookingApi";
 const Summary = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
+  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
   const { state } = useLocation();
   const [updating, setUpdating] = useState(false);
   const bookingData = state.bookingData;

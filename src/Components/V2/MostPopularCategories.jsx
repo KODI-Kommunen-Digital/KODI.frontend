@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import { getCategory } from "../Services/CategoryApi";
+import { getCategory } from "../../Services/CategoryApi";
 import { useLocation } from 'react-router-dom';
 
 const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
@@ -258,6 +258,17 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                                                 viewBox="0 0 487.3 487.3"
                                             >
                                                 <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                                            </svg>
+                                        );
+                                        break;
+                                    case 19:
+                                        categoryIcon = (
+                                            <svg
+                                                className="h-4 w-8 fill-current"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 487.3 487.3"
+                                            >
+                                                <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z" />
                                             </svg>
                                         );
                                         break;

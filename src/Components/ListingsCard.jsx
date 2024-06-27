@@ -140,20 +140,6 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             className="flex text-slate-500 title-font text-start text-sm font-semibold text-center font-special truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 mr-1 text-yellow-500 fill-yellow-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 2L9.25 8.5H2.5L8.5 12.75L6.5 19.25L12 15.5L17.5 19.25L15.5 12.75L21.5 8.5H14.75L12 2z"
-              />
-            </svg>
             {new Date(listing.createdAt).toLocaleDateString('en-GB')}
           </h2>
         </div>
