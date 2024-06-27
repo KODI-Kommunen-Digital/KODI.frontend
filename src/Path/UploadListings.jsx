@@ -573,6 +573,14 @@ function UploadListings() {
         } else {
           return "";
         }
+
+      case "phone":
+        const phoneRegex = /^\d+$/;
+        if (!value.match(phoneRegex)) {
+          return t("pleaseEnterValidPhoneNumber");
+        }
+        return "";
+
       default:
         return "";
     }
@@ -1156,7 +1164,7 @@ function UploadListings() {
 
           <div className="relative mb-4">
             <label
-              htmlFor="place"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
@@ -1171,6 +1179,14 @@ function UploadListings() {
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("pleaseEnterPhone")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.phone ? "visible" : "hidden",
+              }}
+            >
+              {error.phone}
+            </div>
           </div>
 
           <div className="relative mb-4">
