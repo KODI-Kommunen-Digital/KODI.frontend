@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PROFILEIMAGE from "../assets/ProfilePicture.png";
+import PROFILEIMAGE from "../assets/ProfilePicture.jpeg";
 import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
