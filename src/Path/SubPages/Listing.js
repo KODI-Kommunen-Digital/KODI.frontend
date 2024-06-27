@@ -55,7 +55,7 @@ const Description = (props) => {
   };
 
   useEffect(() => {
-    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "GESEKE") {
+    if (process.env.REACT_APP_SHOW_ADVERTISMENT === "True") {
       const linkedContent = linkify(props.content);
       setDesc(linkedContent);
       try {
@@ -208,7 +208,7 @@ const Listing = () => {
                     }
                   });
                 } else {
-                  getProfile(cityUserId).then((res) => {
+                  getProfile(currentUserId).then((res) => {
                     const user = res.data.data;
                     setUser(user);
                     if (
