@@ -191,34 +191,16 @@ const Listing = () => {
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
-
-              getProfile(cityUserId).then((currentUserResult) => {
-                const params = { cityId, cityUser: true };
-
-                if (params.cityId && params.cityUser) {
-                  getProfile(cityUserId, params).then((res) => {
-                    const user = res.data.data;
-                    setUser(user);
-                    if (
-                      listingsResponse.data.data.statusId !== statusByName.Active &&
-                      currentUserId !== user.id &&
-                      currentUserResult.data.data.roleId !== 1
-                    ) {
-                      navigateTo("/Error");
-                    }
-                  });
-                } else {
-                  getProfile(currentUserId).then((res) => {
-                    const user = res.data.data;
-                    setUser(user);
-                    if (
-                      listingsResponse.data.data.statusId !== statusByName.Active &&
-                      currentUserId !== user.id &&
-                      currentUserResult.data.data.roleId !== 1
-                    ) {
-                      navigateTo("/Error");
-                    }
-                  });
+              const params = { cityId, cityUser: true };
+              getProfile(cityUserId, params).then((currentUserResult) => {
+                const user = currentUserResult.data.data;
+                setUser(user);
+                if (
+                  listingsResponse.data.data.statusId !== statusByName.Active &&
+                  currentUserId !== user.id &&
+                  currentUserResult.data.data.roleId !== 1
+                ) {
+                  navigateTo("/Error");
                 }
               });
 
