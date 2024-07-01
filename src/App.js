@@ -59,6 +59,7 @@ import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
 import ViewDetails from "./Path/Container/ViewDetails";
 import ShoppingCart from "./Path/Container/ShoppingCart";
+import PaymentStatus from "./Path/Container/PaymentStatus";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -246,6 +247,12 @@ const App = () => {
               <Route
                 path="/CustomerScreen/ShoppingCart"
                 element={<ShoppingCart />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/PaymentStatus"
+                element={<PaymentStatus />}
                 exact
               />
 

@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../../Components/SideBar";
 import { ProductsTest } from "../../Constants/productsForSale";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getUserForums } from "../../Services/forumsApi";
-import RegionColors from "../../Components/RegionColors";
 
-const MyOrders = () => {
+const PaymentStatus = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [forums, setForums] = useState([]);
@@ -31,13 +29,6 @@ const MyOrders = () => {
         }
     }, [fetchForums, pageNo]);
 
-    const navigate = useNavigate();
-    const navigateTo = (path) => {
-        if (path) {
-            navigate(path);
-        }
-    };
-
     return (
         <section className="bg-slate-600 body-font relative h-screen">
             <SideBar />
@@ -49,13 +40,13 @@ const MyOrders = () => {
                                 <tr>
                                     <th
                                         scope="col"
-                                        className="px-6 sm:px-6 py-3"
+                                        className="px-6 sm:px-6 py-3 text-center"
                                         style={{
                                             fontFamily: "Poppins, sans-serif",
                                             width: "25%",
                                         }}
                                     >
-                                        {t("productName")}
+                                        {t("cardId")}
                                     </th>
                                     <th
                                         scope="col"
@@ -86,7 +77,7 @@ const MyOrders = () => {
                                             width: "25%",
                                         }}
                                     >
-                                        {t("viewDetails")}
+                                        {t("status")}
                                     </th>
                                 </tr>
                             </thead>
@@ -98,40 +89,12 @@ const MyOrders = () => {
                                             key={index}
                                             className="bg-white border-b hover:bg-gray-50"
                                         >
-                                            <th
-                                                scope="row"
-                                                className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                            <td
+                                                className="px-6 py-4 text-center font-bold"
+                                                style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                <img
-                                                    className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                    src={
-                                                        products.image
-                                                            ? process.env.REACT_APP_BUCKET_HOST +
-                                                            products.image
-                                                            : process.env.REACT_APP_BUCKET_HOST +
-                                                            "admin/DefaultForum.jpeg"
-                                                    }
-                                                    onClick={() =>
-                                                        navigateTo(
-                                                            `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
-                                                        )
-                                                    }
-                                                    alt="avatar"
-                                                />
-                                                <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                    <div
-                                                        className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        onClick={() =>
-                                                            navigateTo(
-                                                                `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
-                                                            )
-                                                        }
-                                                    >
-                                                        {products.productName}
-                                                    </div>
-                                                </div>
-                                            </th>
+                                                {products.id}
+                                            </td>
 
                                             <td
                                                 className="px-6 py-4 text-center font-bold"
@@ -144,30 +107,25 @@ const MyOrders = () => {
                                                 className="px-6 py-4 text-center font-bold text-blue-600"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {products.numberOfOrders}
+                                                {products.createdAt}
                                             </td>
 
                                             <td className="px-6 py-4 text-center">
-                                                <a
-                                                    onClick={() => {
-                                                        navigateTo("/CustomerScreen/MyOrders/ViewDetails");
-                                                    }}
-                                                    className={`flex items-center ${RegionColors.darkTextColor} py-2 px-6 gap-2 rounded inline-flex cursor-pointer`}
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    <span>{t("clickHere")}</span>
-                                                    <svg
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
-                                                        className="w-6 h-6 ml-2"
-                                                    >
-                                                        <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                                    </svg>
-                                                </a>
+                                                {products.Status === 1 && (
+                                                    <div className="inline-flex items-center rounded-full bg-blue-600 py-2 px-3 text-xs text-white">
+                                                        {t("complete")}
+                                                    </div>
+                                                )}
+                                                {products.Status === 2 && (
+                                                    <div className="inline-flex items-center rounded-full bg-red-200 py-1 px-2 text-red-500">
+                                                        {t("cancelled")}
+                                                    </div>
+                                                )}
+                                                {products.Status === 3 && (
+                                                    <div className="inline-flex items-center rounded-full bg-blue-200 py-1 px-2 text-blue-600">
+                                                        {t("pending")}
+                                                    </div>
+                                                )}
                                             </td>
                                         </tr>
                                     );
@@ -211,4 +169,4 @@ const MyOrders = () => {
     );
 };
 
-export default MyOrders;
+export default PaymentStatus;

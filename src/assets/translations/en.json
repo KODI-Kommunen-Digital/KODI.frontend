@@ -816,5 +816,11 @@
     "numberOfProducts": "Number of products",
     "close": "Close",
     "count": "Count",
-    "cartItems": "Cart Items"
+    "cartItems": "Cart Items",
+    "checkout": "Check out",
+    "subTotal": "Subtotal",
+    "tax": "Tax",
+    "total": "Total",
+    "includingVAT": "Including VAT",
+    "complete": "Complete"
 }

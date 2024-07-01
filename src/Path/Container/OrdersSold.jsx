@@ -424,7 +424,7 @@ const OrdersSold = () => {
                                                 className="px-6 py-4 text-center font-bold"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                €{products.price}
+                                                € {products.price}
                                             </td>
                                             <td
                                                 className="px-6 py-4 text-center font-bold text-green-600"
