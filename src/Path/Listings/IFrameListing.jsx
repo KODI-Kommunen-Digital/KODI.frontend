@@ -17,7 +17,7 @@ import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
 import './HeidiListings.css'
-
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 const Description = ({ content }) => {
     const linkify = (text) => {
@@ -107,9 +107,11 @@ const IFrameListing = () => {
         setTerminalView(terminalViewParam === "true");
         getCategory().then((response) => {
             const catList = {};
-            response?.data.data.forEach((cat) => {
-                catList[cat.id] = cat.name;
-            });
+            response?.data?.data
+                .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+                .forEach((cat) => {
+                    catList[cat.id] = cat.name;
+                });
             setCategories(catList);
         });
     }, []);
@@ -188,8 +190,13 @@ const IFrameListing = () => {
         const fetchData = async () => {
             try {
                 const response = await getListings(params);
-                const data = response.data.data;
-                setListings(data);
+                const listings = response.data.data;
+
+                const filteredListings = listings.filter(
+                    listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+                );
+
+                setListings(filteredListings);
             } catch (error) {
                 console.error("Error fetching listings:", error);
             } finally {

@@ -18,6 +18,7 @@ import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { getCities } from "../Services/cities";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -71,9 +72,11 @@ const Dashboard = () => {
     }
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
     getProfile().then((response) => {
@@ -85,25 +88,6 @@ const Dashboard = () => {
     });
 
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
-
-    // if (viewAllListings === true) {
-    //   getListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
-    // if (viewAllListings === false) {
-    //   getUserListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {
@@ -455,7 +439,11 @@ const Dashboard = () => {
                       <th
                         scope="row"
                         className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
-                        onClick={() => goToListingPage(listing)}
+                        onClick={() => {
+                          if (!hiddenCategories.hiddenCategories.includes(listing.categoryId)) {
+                            goToListingPage(listing);
+                          }
+                        }}
                       >
                         {listing.pdf ? (
                           <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">

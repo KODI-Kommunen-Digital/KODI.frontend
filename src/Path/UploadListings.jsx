@@ -18,6 +18,7 @@ import { getCities } from "../Services/cities";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
@@ -495,7 +496,13 @@ function UploadListings() {
     }
     var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
-      setCategories(response?.data?.data || []);
+      const categories = response?.data?.data || [];
+
+      const filteredCategories = categories.filter(
+        category => !hiddenCategories.hiddenCategories.includes(category.id)
+      );
+
+      setCategories(filteredCategories);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};

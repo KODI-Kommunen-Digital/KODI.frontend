@@ -25,6 +25,7 @@ import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 const Description = (props) => {
   const [desc, setDesc] = useState();
@@ -154,9 +155,11 @@ const Listing = () => {
     setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
   }, []);

@@ -9,6 +9,7 @@ import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
 
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 import CITYIMAGE from "../../assets/City.png";
 import CITYDEFAULTIMAGE from "../../assets/CityDefault.png";
 import ONEIMAGE from "../../assets/01.png";
@@ -73,8 +74,13 @@ const HomePage = () => {
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
     getListings(params).then((response) => {
-      const data = response.data.data;
-      setListings(data);
+      const listings = response.data.data;
+
+      const filteredListings = listings.filter(
+        listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+      );
+
+      setListings(filteredListings);
     });
   }, [cities, cityId]);
 

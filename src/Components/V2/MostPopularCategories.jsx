@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { getCategory } from "../../Services/CategoryApi";
 import { useLocation } from 'react-router-dom';
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
 
@@ -31,22 +32,14 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     useEffect(() => {
         getCategory().then((response) => {
             const catList = {};
-            response?.data.data.forEach((cat) => {
-                catList[cat.id] = cat.name;
-            });
+            response?.data?.data
+                .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+                .forEach((cat) => {
+                    catList[cat.id] = cat.name;
+                });
             setCategories(catList);
         });
     }, []);
-
-    // function getScreenSize() {
-    //     const width = window.innerWidth;
-    //     if (width >= 1024) {
-    //         return "large";
-    //     } else {
-    //         return "small";
-    //     }
-    // }
-    // const screenSize = getScreenSize();
 
     return (
         <div className="lg:px-20 md:px-0 px-0 py-0 mt-10 mb-0 flex flex-col w-full">

@@ -14,6 +14,7 @@ import ListingsCard from "../Components/ListingsCard";
 import LoadingPage from "../Components/LoadingPage";
 import { getCategory } from "../Services/CategoryApi";
 import RegionColors from "../Components/RegionColors";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Favorites = () => {
   window.scrollTo(0, 0);
@@ -44,9 +45,11 @@ const Favorites = () => {
     const urlParams = new URLSearchParams(window.location.search);
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id)) // Filter out hidden categories
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
     getCities().then((citiesResponse) => {

@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { getListings, getListingsBySearch } from "../../Services/listingsApi";
 import { getCities } from "../../Services/cities";
 import { categoryById } from "../../Constants/categories";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
@@ -54,7 +55,12 @@ const AllListings = () => {
     setIsLoading(true);
     Promise.all([getCities(), getCategory()]).then((response) => {
       setCities(response[0].data.data);
-      setCategories(response[1]?.data?.data || []);
+
+      const filteredCategories = response[1]?.data?.data.filter(
+        category => !hiddenCategories.hiddenCategories.includes(category.id)
+      );
+
+      setCategories(filteredCategories || []);
       const params = { pageSize, statusId: 1 };
       const pageNoParam = parseInt(urlParams.get("pageNo"));
       if (pageNoParam > 1) {
@@ -149,7 +155,13 @@ const AllListings = () => {
     params.showExternalListings = "false";
     try {
       const response = await getListings(params);
-      setListings(response.data.data);
+      const listings = response.data.data;
+
+      const filteredListings = listings.filter(
+        listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+      );
+
+      setListings(filteredListings);
     } catch (error) {
       setListings([]);
       console.error("Error fetching listings:", error);
@@ -364,12 +376,18 @@ const AllListings = () => {
 
       <div className="mt-5 mb-20 customproview py-6">
         {terminalViewParam && (<div className="text-center mt-4 mb-4">
-          <button
+          <a
             onClick={handleOfficialNotificationButton}
-            className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            {t("officialnotification")}
-          </button>
+            className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+            style={{ fontFamily: "Poppins, sans-serif" }}>
+            <span>
+              {t("officialnotification")}
+            </span>
+            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              viewBox="0 0 24 24" className="w-6 h-6 ml-2">
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
         </div>
         )}
         <style>

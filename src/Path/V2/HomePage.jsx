@@ -17,6 +17,7 @@ import {
   sortLatestFirst,
   sortOldestFirst,
 } from "../../Services/helper";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 import CITYIMAGE from "../../assets/City.png";
 import CITYDEFAULTIMAGE from "../../assets/CityDefault.png";
@@ -69,9 +70,11 @@ const HomePage = () => {
 
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
 
@@ -116,7 +119,13 @@ const HomePage = () => {
     params.showExternalListings = "false";
     try {
       const response = await getListings(params);
-      setListings(response.data.data);
+      const listings = response.data.data;
+
+      const filteredListings = listings.filter(
+        listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+      );
+
+      setListings(filteredListings);
     } catch (error) {
       setListings([]);
       console.error("Error fetching listings:", error);
