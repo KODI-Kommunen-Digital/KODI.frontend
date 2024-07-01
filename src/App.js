@@ -45,7 +45,7 @@ import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
-import IFrameListing from "./Path/Listings/IframeListings";
+import IFrameListing from "./Path/Listings/IFrameListing.jsx";
 import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
 import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserCreated";
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
