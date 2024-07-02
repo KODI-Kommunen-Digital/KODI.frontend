@@ -19,7 +19,7 @@ const PaymentStatus = () => {
         }).then((response) => {
             setForums(response.data.data);
         });
-    }, [pageNo]);
+    }, []);
 
     useEffect(() => {
         if (pageNo === 1) {

@@ -6,7 +6,7 @@ import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import RegionColors from "../../Components/RegionColors";
 
-const ShoppingCart = () => {
+const OrderDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
 
@@ -27,8 +27,8 @@ const ShoppingCart = () => {
             <SideBar />
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-300 min-h-screen flex flex-col">
                 <div className="h-full">
-                    <div className="bg-gray-300 mt-0 p-0 space-y-10 overflow-x-auto">
-                        <h1 className="mb-10 text-center text-2xl font-bold">{t("cartItems")}</h1>
+                    <div className="bg-gray-300 mt-20 p-0 space-y-10 overflow-x-auto">
+                        <h1 className="mb-10 text-center text-2xl font-bold">{t("myOrders")}</h1>
                         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
                             <div className="rounded-lg md:w-2/3">
                                 {ProductsTest.map((product, index) => (
@@ -42,7 +42,7 @@ const ShoppingCart = () => {
                                             <div className="mt-5">
                                                 <h2 className="text-lg font-bold text-gray-900">{product.productName}</h2>
                                                 <p className={`mt-1 text-md font-bold text-red-600`}>€ {product.price}</p>
-                                                <p className="mt-1 text-xs text-gray-700">{product.cartId}</p>
+                                                <p className="mt-1 text-xs text-gray-700">{product.createdAt}</p>
                                             </div>
                                             <div className="mt-5">
                                                 <h2 className={`text-lg font-bold ${RegionColors.darkTextColor}`}>{product.description}</h2>
@@ -67,18 +67,18 @@ const ShoppingCart = () => {
                                 <div className="flex justify-between">
                                     <p className="text-lg font-bold">{t("total")}</p>
                                     <div className="">
-                                        <p className="mb-1 text-lg font-bold">€ {grandTotal} EUR</p>
-                                        <p className="text-sm text-gray-700">{t("includingVAT")}</p>
+                                        <p className="mb-1 text-lg font-bold text-end">€ {grandTotal} EUR</p>
+                                        <p className="text-sm text-gray-700 text-end">{t("includingVAT")}</p>
                                     </div>
                                 </div>
-                                <a
+                                {/* <a
                                     className={`relative mt-6 w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 ${RegionColors.darkBorderColor} rounded-full shadow-md group cursor-pointer`}>
                                     <span className={`absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full ${RegionColors.darkBgColor} group-hover:translate-x-0 ease`}>
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                     </span>
                                     <span className={`absolute flex items-center justify-center w-full h-full ${RegionColors.darkTextColor} transition-all duration-300 transform group-hover:translate-x-full ease`}>{t("checkout")}</span>
                                     <span className="relative invisible">{t("checkout")}</span>
-                                </a>
+                                </a> */}
                             </div>
                         </div>
                     </div>
@@ -88,4 +88,4 @@ const ShoppingCart = () => {
     );
 };
 
-export default ShoppingCart;
+export default OrderDetails;

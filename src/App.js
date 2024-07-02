@@ -53,12 +53,13 @@ import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
 import SellerScreen from "./Path/Container/SellerScreen";
 import SellerRequests from "./Path/Container/SellerRequests";
+import SellerRequestPage from "./Path/Container/SellerRequestPage";
 import OrdersSold from "./Path/Container/OrdersSold";
 import AddNewProducts from "./Path/Container/AddNewProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
 import ViewDetails from "./Path/Container/ViewDetails";
-import ShoppingCart from "./Path/Container/ShoppingCart";
+import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 
 import Modal from "react-modal";
@@ -215,6 +216,12 @@ const App = () => {
               />
 
               <Route
+                path="/SellerScreen/SellerRequestPage"
+                element={<SellerRequestPage />}
+                exact
+              />
+
+              <Route
                 path="/SellerScreen/SellerRequests"
                 element={<SellerRequests />}
                 exact
@@ -245,8 +252,8 @@ const App = () => {
               />
 
               <Route
-                path="/CustomerScreen/ShoppingCart"
-                element={<ShoppingCart />}
+                path="/CustomerScreen/OrderDetails"
+                element={<OrderDetails />}
                 exact
               />
 

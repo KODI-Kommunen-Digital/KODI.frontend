@@ -21,7 +21,7 @@ const MyOrders = () => {
         }).then((response) => {
             setForums(response.data.data);
         });
-    }, [pageNo]);
+    }, []);
 
     useEffect(() => {
         if (pageNo === 1) {
@@ -150,7 +150,7 @@ const MyOrders = () => {
                                             <td className="px-6 py-4 text-center">
                                                 <a
                                                     onClick={() => {
-                                                        navigateTo("/CustomerScreen/MyOrders/ViewDetails");
+                                                        navigateTo("/CustomerScreen/OrderDetails");
                                                     }}
                                                     className={`flex items-center ${RegionColors.darkTextColor} py-2 px-6 gap-2 rounded inline-flex cursor-pointer`}
                                                     style={{ fontFamily: "Poppins, sans-serif" }}

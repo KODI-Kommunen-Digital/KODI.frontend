@@ -28,7 +28,7 @@ const MyGroups = () => {
       console.log(sortedForums);
       setForums(sortedForums);
     });
-  }, [pageNo]);
+  }, []);
 
   useEffect(() => {
     if (pageNo === 1) {

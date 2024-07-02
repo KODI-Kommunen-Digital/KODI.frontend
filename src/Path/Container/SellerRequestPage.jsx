@@ -1,16 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import Alert from "../../Components/Alert";
+import { createSellerAccount, getShopsInACity } from "../../Services/containerApi";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/cities";
-import Alert from "../../Components/Alert";
-import { createNewProduct, getShopsInACity } from "../../Services/containerApi";
 
-function AddNewProducts() {
+function SellerRequestPage() {
     const { t } = useTranslation();
 
     const editor = useRef(null);
@@ -26,12 +26,6 @@ function AddNewProducts() {
         cityId: 0,
         title: "",
         description: "",
-        price: "",
-        tax: "",
-        inventory: "",
-        minCount: "",
-        maxCount: "",
-        meta: "",
     });
 
     const [error, setError] = useState({
@@ -39,12 +33,6 @@ function AddNewProducts() {
         description: "",
         shopId: "",
         cityId: "",
-        price: "",
-        tax: "",
-        inventory: "",
-        minCount: "",
-        maxCount: "",
-        meta: "",
     });
 
     const handleSubmit = async (event) => {
@@ -66,7 +54,7 @@ function AddNewProducts() {
         if (valid) {
             setUpdating(true);
             try {
-                await createNewProduct(cityId, shopId, input);
+                await createSellerAccount(shopId, input);
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -100,7 +88,7 @@ function AddNewProducts() {
         });
 
         document.title =
-            process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
+            process.env.REACT_APP_REGION_NAME + " " + t("sendSellerRequest");
     }, []);
 
     const onDescriptionChange = (newContent) => {
@@ -156,48 +144,6 @@ function AddNewProducts() {
                     return t("pleaseEnterDescription");
                 } else if (value.length > 65535) {
                     return t("characterLimitReacehd");
-                } else {
-                    return "";
-                }
-
-            case "price":
-                if (!value) {
-                    return t("pleaseEnterPrice");
-                } else {
-                    return "";
-                }
-
-            case "tax":
-                if (!value) {
-                    return t("pleaseEnterTax");
-                } else {
-                    return "";
-                }
-
-            case "inventory":
-                if (!value) {
-                    return t("pleaseEnterInventory");
-                } else {
-                    return "";
-                }
-
-            case "minCount":
-                if (!value) {
-                    return t("pleaseEnterMinCount");
-                } else {
-                    return "";
-                }
-
-            case "maxCount":
-                if (!value) {
-                    return t("pleaseEnterMaxCount");
-                } else {
-                    return "";
-                }
-
-            case "meta":
-                if (!value) {
-                    return t("pleaseEnterMeta");
                 } else {
                     return "";
                 }
@@ -275,15 +221,16 @@ function AddNewProducts() {
                         }}
                         className="text-gray-900 text-lg mb-4 font-medium title-font"
                     >
-                        {t("addNewProductTitle")}
+                        {t("sendRequest")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
+
                     <div className="relative mb-4">
                         <label
                             htmlFor="title"
                             className="block text-sm font-medium text-gray-600"
                         >
-                            {t("productName")} *
+                            {t("title")} *
                         </label>
                         <input
                             type="text"
@@ -374,176 +321,6 @@ function AddNewProducts() {
                         </div>
                     )}
 
-                    <div className="relative mb-4 grid grid-cols-2 gap-4">
-                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("originalPrice")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="originalPrice"
-                                name="originalPrice"
-                                value={input.originalPrice}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterOriginalPrice")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.title ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.sellingAllert}
-                            </div>
-                        </div>
-                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("tax")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="tax"
-                                name="tax"
-                                value={input.tax}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterDiscountedPrice")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.tax ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.tax}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4 grid grid-cols-2 gap-4">
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("minCount")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="minCount"
-                                name="minCount"
-                                value={input.minCount}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterFastSellingAlert")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.minCount ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.minCount}
-                            </div>
-                        </div>
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("maxCount")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="maxCount"
-                                name="maxCount"
-                                value={input.maxCount}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterFastSellingAlert")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.maxCount ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.maxCount}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("inventory")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="inventory"
-                            name="inventory"
-                            value={input.inventory}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterTotalNumber")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.inventory ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.inventory}
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("meta")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="stockLeft"
-                            name="stockLeft"
-                            value={input.stockLeft}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterFastSellingAlert")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.title ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.sellingAllert}
-                        </div>
-                    </div>
-
                     <div className="relative mb-4">
                         <label
                             htmlFor="description"
@@ -558,7 +335,7 @@ function AddNewProducts() {
                             ref={editor}
                             value={input.description}
                             onChange={(newContent) => onDescriptionChange(newContent)}
-                            onBlur={(range, source, editor) => {
+                            onBlur={(editor) => {
                                 validateInput({
                                     target: {
                                         name: "description",
@@ -590,7 +367,7 @@ function AddNewProducts() {
                             disabled={updating || isSuccess}
                             className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
-                            {t("saveChanges")}
+                            {t("sendRequest")}
                             {updating && (
                                 <svg
                                     aria-hidden="true"
@@ -623,4 +400,4 @@ function AddNewProducts() {
     );
 }
 
-export default AddNewProducts;
+export default SellerRequestPage;

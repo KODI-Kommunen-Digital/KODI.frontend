@@ -19,7 +19,7 @@ const CustomerScreen = () => {
     return (
         <section className="bg-gray-300 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 py-2 bg-gray-300 min-h-screen flex flex-col justify-center items-center">
+            <div className="container w-auto px-5 py-5 bg-gray-300 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
                     <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 -m-4">
                         <div className="p-4 w-full">
@@ -48,11 +48,11 @@ const CustomerScreen = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 w-full">
+                        {/* <div className="p-4 w-full">
                             <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
-                                <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">{t("cart")}</h2>
-                                <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-4">{t("shoppingCart")}</h1>
-                                <p className="leading-relaxed mb-4">{t("seeShoppingCart")}</p>
+                                <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">{t("orders")}</h2>
+                                <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-4">{t("yourOrders")}</h1>
+                                <p className="leading-relaxed mb-4">{t("viewYourOrder")}</p>
                                 <a onClick={() => {
                                     navigateTo("/CustomerScreen/ShoppingCart");
                                 }}
@@ -72,7 +72,7 @@ const CustomerScreen = () => {
                                     </span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="p-4 w-full">
                             <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">

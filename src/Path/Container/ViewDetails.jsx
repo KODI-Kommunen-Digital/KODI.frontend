@@ -31,64 +31,62 @@ const MyOrders = () => {
             <SideBar />
             <div className="container w-auto px-5 py-2 bg-gray-300 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
-                    <div className="flex -m-4">
-                        <div className="p-4 w-full">
-                            <div className="h-full bg-gray-100 bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
-                                <div className="flex flex-col md:flex-row">
-                                    <div className="w-full bg-cover">
-                                        <img
-                                            className="w-full h-full object-cover rounded-lg"
-                                            src={
-                                                products.image
-                                                    ? process.env.REACT_APP_BUCKET_HOST + products.image
-                                                    : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
-                                            }
-                                            alt="avatar"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col p-4 md:w-1/2 space-y-6">
-                                        <div>
-                                            <h1 className="mb-2 text-2xl font-bold leading-tight text-center">
-                                                {products.productName}
-                                            </h1>
-                                        </div>
-                                        <div>
-                                            <table className="min-w-full divide-y divide-gray-200">
-                                                <thead>
-                                                    <tr>
-                                                        <th
-                                                            className="px-6 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                                            <div className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
-                                                                <span className="mr-2">{t("count")}</span>
-                                                            </div>
-                                                        </th>
-                                                        <th
-                                                            className="px-6 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                                            <div className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
-                                                                <span className="mr-2">{t("amount")}</span>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200">
-                                                    <tr>
-                                                        <td
-                                                            className="px-6 py-4 whitespace-no-wrap text-md leading-5">
-                                                            <p>{products.numberOfOrders}</p>
-                                                        </td>
-                                                        <td
-                                                            className="px-6 py-4 whitespace-no-wrap text-md leading-5">
-                                                            <p>€ {products.price}</p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+
+                    <div className="bg-white mt-10 lg:mt-4 p-0 space-y-0 overflow-x-auto rounded-xl">
+                        <div className="flex flex-col md:flex-row">
+                            <div className="w-full md:w-1/2 bg-cover">
+                                <img
+                                    className="w-full h-full object-cover"
+                                    src={
+                                        products.image
+                                            ? process.env.REACT_APP_BUCKET_HOST + products.image
+                                            : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
+                                    }
+                                    alt="avatar"
+                                />
+                            </div>
+                            <div className="flex flex-col p-4 w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <h1 className="mb-2 text-2xl font-bold leading-tight text-center md:text-left">
+                                        {products.productName}
+                                    </h1>
+                                </div>
+                                <div>
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead>
+                                            <tr>
+                                                <th className="px-6 py-3 bg-gray-100 text-center leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                                    <div className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
+                                                        <span className="mr-2">{t("count")}</span>
+                                                    </div>
+                                                </th>
+                                                <th className="px-6 py-3 bg-gray-100 text-center leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                                    <div className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
+                                                        <span className="mr-2">{t("amount")}</span>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-gray-100 divide-y divide-gray-200">
+                                            <tr>
+                                                <td className="px-6 py-3 bg-gray-100 text-center leading-4 font-medium uppercase tracking-wider">
+                                                    <div className="px-6 py-4 whitespace-no-wrap text-md leading-5">
+                                                        <span className="mr-2">{products.numberOfOrders}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-3 bg-gray-100 text-center leading-4 font-medium uppercase tracking-wider">
+                                                    <div className="px-6 py-4 whitespace-no-wrap text-md leading-5">
+                                                        <span className="mr-2">€ {products.price}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section >
