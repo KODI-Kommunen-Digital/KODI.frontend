@@ -54,7 +54,7 @@ function SellerRequestPage() {
         if (valid) {
             setUpdating(true);
             try {
-                await createSellerAccount(shopId, input);
+                await createSellerAccount(input);
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -91,29 +91,43 @@ function SellerRequestPage() {
             process.env.REACT_APP_REGION_NAME + " " + t("sendSellerRequest");
     }, []);
 
+    const [description, setDescription] = useState("");
     const onDescriptionChange = (newContent) => {
-        let descriptionHTML = newContent;
-        const hasNumberedList = /<ol>(.*?)<\/ol>/gis.test(newContent);
-        const hasBulletList = /<ul>(.*?)<\/ul>/gis.test(newContent);
-
-        if (hasNumberedList || hasBulletList) {
-            const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
-            descriptionHTML = newContent.replace(regex, (match) => {
-                const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
-                const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
-                const plainTextListItems = listItems.map((item, index) => {
-                    const listItemContent = item.replace(/<\/?li>/gi, "");
-                    return isNumberedList
-                        ? `${index + 1}. ${listItemContent}`
-                        : `- ${listItemContent}`;
-                });
-                return plainTextListItems.join("\n");
-            });
+        const hasNumberedList = newContent.includes("<ol>");
+        const hasBulletList = newContent.includes("<ul>");
+        let descriptions = [];
+        let listType = "";
+        if (hasNumberedList) {
+            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+            const matches = newContent.match(regex);
+            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+            descriptions = descriptions.map(
+                (description, index) => `${index + 1}. ${description}`
+            );
+            listType = "ol";
+        } else if (hasBulletList) {
+            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+            const matches = newContent.match(regex);
+            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+            descriptions = descriptions.map((description) => `- ${description}`);
+            listType = "ul";
+        } else {
+            // No list tags found, treat the input as plain text
+            setInput((prev) => ({
+                ...prev,
+                description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+            }));
+            setDescription(newContent);
+            return;
         }
+        const listHTML = `<${listType}>${descriptions
+            .map((description) => `<li>${description}</li>`)
+            .join("")}</${listType}>`;
         setInput((prev) => ({
             ...prev,
-            description: descriptionHTML,
+            description: listHTML,
         }));
+        setDescription(newContent);
     };
 
     const getErrorMessage = (name, value) => {
@@ -178,7 +192,6 @@ function SellerRequestPage() {
         setInput((prev) => ({
             ...prev,
             cityId: cityId,
-            villageId: 0,
         }));
         validateInput(e);
 
@@ -333,9 +346,9 @@ function SellerRequestPage() {
                             id="description"
                             name="description"
                             ref={editor}
-                            value={input.description}
+                            value={description}
                             onChange={(newContent) => onDescriptionChange(newContent)}
-                            onBlur={(editor) => {
+                            onBlur={(range, source, editor) => {
                                 validateInput({
                                     target: {
                                         name: "description",

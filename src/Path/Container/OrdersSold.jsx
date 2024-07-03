@@ -10,7 +10,7 @@ const OrdersSold = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [ordersSold, setOrdersSold] = useState([]);
-    const [pageNo, setPageNo] = useState(1);
+    const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
 
     // Calculate Total Revenue
@@ -45,7 +45,7 @@ const OrdersSold = () => {
 
     const fetchOrdersSold = useCallback(() => {
         getOrdersSold({
-            pageNo,
+            pageNumber,
             pageSize,
         }).then((response) => {
             setOrdersSold(response.data.data);
@@ -53,12 +53,12 @@ const OrdersSold = () => {
     }, []);
 
     useEffect(() => {
-        if (pageNo === 1) {
+        if (pageNumber === 1) {
             fetchOrdersSold();
         } else {
             fetchOrdersSold();
         }
-    }, [fetchOrdersSold, pageNo]);
+    }, [fetchOrdersSold, pageNumber]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -68,16 +68,16 @@ const OrdersSold = () => {
     };
 
     return (
-        <section className="bg-gray-300 body-font relative h-screen">
+        <section className="bg-slate-600 body-font relative h-screen">
             <SideBar />
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-300 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
                 <div className="h-full">
                     {/* {ordersSold && ordersSold.length > 0 ? ( */}
                     <>
                         <SellerStatistics totalRevenue={totalRevenue} topProductNameByQuantity={topProductNameByQuantity} totalQuantitySold={totalQuantitySold} averagePricePerQuantity={averagePricePerQuantity} />
 
-                        <div className="bg-white mt-10 lg:mt-4 p-0 space-y-0 shadow-xl overflow-x-auto">
+                        <div className="bg-white mt-10 p-0 space-y-0 shadow-xl overflow-x-auto">
                             <h2 className="text-gray-900 text-lg p-6 font-medium title-font">
                                 {t("productDetails")}
                             </h2>
@@ -194,10 +194,10 @@ const OrdersSold = () => {
                         </div>
 
                         <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                            {pageNo !== 1 ? (
+                            {pageNumber !== 1 ? (
                                 <span
                                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                    onClick={() => setPageNo(pageNo - 1)}
+                                    onClick={() => setPageNo(pageNumber - 1)}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
                                     {"<"}{" "}
@@ -209,13 +209,13 @@ const OrdersSold = () => {
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
-                                {t("page")} {pageNo}
+                                {t("page")} {pageNumber}
                             </span>
 
                             {ordersSold.length >= pageSize && (
                                 <span
                                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                    onClick={() => setPageNo(pageNo + 1)}
+                                    onClick={() => setPageNo(pageNumber + 1)}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
                                     {">"}

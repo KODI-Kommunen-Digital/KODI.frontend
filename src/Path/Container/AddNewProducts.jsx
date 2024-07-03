@@ -103,29 +103,43 @@ function AddNewProducts() {
             process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
     }, []);
 
+    const [description, setDescription] = useState("");
     const onDescriptionChange = (newContent) => {
-        let descriptionHTML = newContent;
-        const hasNumberedList = /<ol>(.*?)<\/ol>/gis.test(newContent);
-        const hasBulletList = /<ul>(.*?)<\/ul>/gis.test(newContent);
-
-        if (hasNumberedList || hasBulletList) {
-            const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
-            descriptionHTML = newContent.replace(regex, (match) => {
-                const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
-                const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
-                const plainTextListItems = listItems.map((item, index) => {
-                    const listItemContent = item.replace(/<\/?li>/gi, "");
-                    return isNumberedList
-                        ? `${index + 1}. ${listItemContent}`
-                        : `- ${listItemContent}`;
-                });
-                return plainTextListItems.join("\n");
-            });
+        const hasNumberedList = newContent.includes("<ol>");
+        const hasBulletList = newContent.includes("<ul>");
+        let descriptions = [];
+        let listType = "";
+        if (hasNumberedList) {
+            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+            const matches = newContent.match(regex);
+            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+            descriptions = descriptions.map(
+                (description, index) => `${index + 1}. ${description}`
+            );
+            listType = "ol";
+        } else if (hasBulletList) {
+            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+            const matches = newContent.match(regex);
+            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+            descriptions = descriptions.map((description) => `- ${description}`);
+            listType = "ul";
+        } else {
+            // No list tags found, treat the input as plain text
+            setInput((prev) => ({
+                ...prev,
+                description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+            }));
+            setDescription(newContent);
+            return;
         }
+        const listHTML = `<${listType}>${descriptions
+            .map((description) => `<li>${description}</li>`)
+            .join("")}</${listType}>`;
         setInput((prev) => ({
             ...prev,
-            description: descriptionHTML,
+            description: listHTML,
         }));
+        setDescription(newContent);
     };
 
     const getErrorMessage = (name, value) => {
@@ -232,7 +246,6 @@ function AddNewProducts() {
         setInput((prev) => ({
             ...prev,
             cityId: cityId,
-            villageId: 0,
         }));
         validateInput(e);
 
@@ -384,9 +397,9 @@ function AddNewProducts() {
                             </label>
                             <input
                                 type="text"
-                                id="originalPrice"
-                                name="originalPrice"
-                                value={input.originalPrice}
+                                id="price"
+                                name="price"
+                                value={input.price}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 required
@@ -525,9 +538,9 @@ function AddNewProducts() {
                         </label>
                         <input
                             type="text"
-                            id="stockLeft"
-                            name="stockLeft"
-                            value={input.stockLeft}
+                            id="meta"
+                            name="meta"
+                            value={input.meta}
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
@@ -556,7 +569,7 @@ function AddNewProducts() {
                             id="description"
                             name="description"
                             ref={editor}
-                            value={input.description}
+                            value={description}
                             onChange={(newContent) => onDescriptionChange(newContent)}
                             onBlur={(range, source, editor) => {
                                 validateInput({

@@ -1,9 +1,9 @@
 import { containerInstance } from "../api/axiosInstance";
-// import { getUserId } from "./usersApi";
+import { getUserId } from "./usersApi";
 const axios = containerInstance;
 
-export async function createSellerAccount() {
-    return axios.get(`/v1/seller`);
+export async function createSellerAccount(params) {
+    return axios.post(`/v1/seller`, params);
 }
 
 export async function getShopsInACity(cityId) {
@@ -19,5 +19,17 @@ export async function getOrdersSold(params) {
 }
 
 export async function createNewProduct(cityId, storeId, params) {
-    return axios.post(`/v1/cities/${cityId}/store/${storeId}/product`, { params });
+    return axios.post(`/v1/cities/${cityId}/store/${storeId}/product`, params);
+}
+
+export async function getMyOrders() {
+    return axios.get(`/v1/users/${getUserId()}/orders`);
+}
+
+export async function getOrderDetails(orderId) {
+    return axios.get(`/v1/users/${getUserId()}/order/${orderId}`);
+}
+
+export async function getPaymentDetails(cardId, params) {
+    return axios.get(`/v1/users/${getUserId()}/card/${cardId}`, params);
 }

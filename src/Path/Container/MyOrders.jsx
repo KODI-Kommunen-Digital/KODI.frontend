@@ -1,35 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../../Components/SideBar";
-import { ProductsTest } from "../../Constants/productsForSale";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getUserForums } from "../../Services/forumsApi";
+import { getMyOrders } from "../../Services/containerApi";
 import RegionColors from "../../Components/RegionColors";
 
 const MyOrders = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
-    const [forums, setForums] = useState([]);
+    const [myOrders, setMyOrders] = useState([]);
     const [pageNo, setPageNo] = useState(1);
     const pageSize = 9;
 
-    const fetchForums = useCallback(() => {
-        getUserForums({
+    const fetchMyOrders = useCallback(() => {
+        getMyOrders({
             pageNo,
             pageSize,
         }).then((response) => {
-            setForums(response.data.data);
+            setMyOrders(response.data.data);
         });
     }, []);
 
     useEffect(() => {
-        if (pageNo === 1) {
-            fetchForums();
-        } else {
-            fetchForums();
-        }
-    }, [fetchForums, pageNo]);
+        fetchMyOrders();
+    }, [fetchMyOrders, pageNo]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -92,7 +87,7 @@ const MyOrders = () => {
                             </thead>
 
                             <tbody>
-                                {ProductsTest.map((products, index) => {
+                                {myOrders.map((myOrder, index) => {
                                     return (
                                         <tr
                                             key={index}
@@ -105,15 +100,15 @@ const MyOrders = () => {
                                                 <img
                                                     className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                     src={
-                                                        products.image
+                                                        myOrder.image
                                                             ? process.env.REACT_APP_BUCKET_HOST +
-                                                            products.image
+                                                            myOrder.image
                                                             : process.env.REACT_APP_BUCKET_HOST +
                                                             "admin/DefaultForum.jpeg"
                                                     }
                                                     onClick={() =>
                                                         navigateTo(
-                                                            `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
+                                                            `/Forum?forumId=${myOrder.forumId}&cityId=${myOrder.cityId}`
                                                         )
                                                     }
                                                     alt="avatar"
@@ -124,11 +119,11 @@ const MyOrders = () => {
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                         onClick={() =>
                                                             navigateTo(
-                                                                `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
+                                                                `/Forum?forumId=${myOrder.forumId}&cityId=${myOrder.cityId}`
                                                             )
                                                         }
                                                     >
-                                                        {products.productName}
+                                                        {myOrder.products}
                                                     </div>
                                                 </div>
                                             </th>
@@ -137,20 +132,20 @@ const MyOrders = () => {
                                                 className="px-6 py-4 text-center font-bold"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {products.price}
+                                                {myOrder.amount}
                                             </td>
 
                                             <td
                                                 className="px-6 py-4 text-center font-bold text-blue-600"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {products.numberOfOrders}
+                                                {myOrder.createdAt}
                                             </td>
 
                                             <td className="px-6 py-4 text-center">
                                                 <a
                                                     onClick={() => {
-                                                        navigateTo("/CustomerScreen/OrderDetails");
+                                                        navigateTo(`/CustomerScreen/OrderDetails?orderId=${myOrder.id}`);
                                                     }}
                                                     className={`flex items-center ${RegionColors.darkTextColor} py-2 px-6 gap-2 rounded inline-flex cursor-pointer`}
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -195,7 +190,7 @@ const MyOrders = () => {
                             {t("page")} {pageNo}
                         </span>
 
-                        {forums.length >= pageSize && (
+                        {myOrders.length >= pageSize && (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                 onClick={() => setPageNo(pageNo + 1)}

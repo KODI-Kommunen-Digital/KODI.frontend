@@ -1,16 +1,53 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../../Components/SideBar";
-import { ProductsTest } from "../../Constants/productsForSale";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import RegionColors from "../../Components/RegionColors";
+import { getOrderDetails } from "../../Services/containerApi";
 
 const OrderDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
+    const [, setMyOrders] = useState([]);
 
-    const total = ProductsTest.reduce((acc, product) => {
+    const myOrders = [
+        {
+            id: 1,
+            createdAt: "2024-03-01T04:30:00.000Z",
+            updatedAt: "2024-03-01T04:30:00.000Z",
+            deletedAt: "2024-03-01T04:30:00.000Z",
+            title: "This is product1",
+            description: "This is a seller",
+            price: 1,
+            tax: 1,
+            shopId: 1,
+            meta: "This is a seller",
+            isActive: "This is in stock",
+            archived: "archived",
+            sellerId: 1,
+            categoryId: 1,
+            subCategoryId: 1,
+            productImages: [
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Mangos_-_single_and_halved.jpg/330px-Mangos_-_single_and_halved.jpg"
+            ]
+        }
+    ];
+
+    const fetchMyOrders = useCallback(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+
+        getOrderDetails(orderId).then((response) => {
+            setMyOrders(response.data.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        fetchMyOrders();
+    }, [fetchMyOrders]);
+
+    const total = myOrders.reduce((acc, product) => {
         const price = parseFloat(product.price) || 0;
         const tax = parseFloat(product.tax) || 0;
         acc.price += price;
@@ -31,16 +68,13 @@ const OrderDetails = () => {
                         <h1 className="mb-10 text-center text-2xl font-bold">{t("myOrders")}</h1>
                         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
                             <div className="rounded-lg md:w-2/3">
-                                {ProductsTest.map((product, index) => (
+                                {myOrders.map((product, index) => (
                                     <div key={index} className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
-                                        <img src={
-                                            product?.avatar
-                                                ? product.avatar
-                                                : CONTAINERIMAGE
-                                        } className="w-full rounded-lg sm:w-40" />
+                                        <img src={product.productImages && product.productImages.length > 0 ? product.productImages[0] : CONTAINERIMAGE}
+                                            className="w-full rounded-lg sm:w-40" />
                                         <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
                                             <div className="mt-5">
-                                                <h2 className="text-lg font-bold text-gray-900">{product.productName}</h2>
+                                                <h2 className="text-lg font-bold text-gray-900">{product.title}</h2>
                                                 <p className={`mt-1 text-md font-bold text-red-600`}>€ {product.price}</p>
                                                 <p className="mt-1 text-xs text-gray-700">{product.createdAt}</p>
                                             </div>
@@ -71,14 +105,6 @@ const OrderDetails = () => {
                                         <p className="text-sm text-gray-700 text-end">{t("includingVAT")}</p>
                                     </div>
                                 </div>
-                                {/* <a
-                                    className={`relative mt-6 w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 ${RegionColors.darkBorderColor} rounded-full shadow-md group cursor-pointer`}>
-                                    <span className={`absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full ${RegionColors.darkBgColor} group-hover:translate-x-0 ease`}>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                                    </span>
-                                    <span className={`absolute flex items-center justify-center w-full h-full ${RegionColors.darkTextColor} transition-all duration-300 transform group-hover:translate-x-full ease`}>{t("checkout")}</span>
-                                    <span className="relative invisible">{t("checkout")}</span>
-                                </a> */}
                             </div>
                         </div>
                     </div>
