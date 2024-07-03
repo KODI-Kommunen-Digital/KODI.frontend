@@ -108,7 +108,7 @@ const IFrameListing = () => {
         getCategory().then((response) => {
             const catList = {};
             response?.data?.data
-                .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+                .filter(cat => !hiddenCategories.includes(cat.id))
                 .forEach((cat) => {
                     catList[cat.id] = cat.name;
                 });
@@ -193,7 +193,7 @@ const IFrameListing = () => {
                 const listings = response.data.data;
 
                 const filteredListings = listings.filter(
-                    listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+                    listing => !hiddenCategories.includes(listing.categoryId)
                 );
 
                 setListings(filteredListings);

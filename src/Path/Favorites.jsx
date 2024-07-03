@@ -46,7 +46,7 @@ const Favorites = () => {
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data
-        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id)) // Filter out hidden categories
+        .filter(cat => !hiddenCategories.includes(cat.id)) // Filter out hidden categories
         .forEach((cat) => {
           catList[cat.id] = cat.name;
         });

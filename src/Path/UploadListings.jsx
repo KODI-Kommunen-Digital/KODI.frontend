@@ -499,7 +499,7 @@ function UploadListings() {
       const categories = response?.data?.data || [];
 
       const filteredCategories = categories.filter(
-        category => !hiddenCategories.hiddenCategories.includes(category.id)
+        category => !hiddenCategories.includes(category.id)
       );
 
       setCategories(filteredCategories);

@@ -77,7 +77,7 @@ const HomePage = () => {
       const listings = response.data.data;
 
       const filteredListings = listings.filter(
-        listing => !hiddenCategories.hiddenCategories.includes(listing.categoryId)
+        listing => !hiddenCategories.includes(listing.categoryId)
       );
 
       setListings(filteredListings);

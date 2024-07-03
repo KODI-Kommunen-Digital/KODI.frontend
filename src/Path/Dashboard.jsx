@@ -73,7 +73,7 @@ const Dashboard = () => {
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data
-        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+        .filter(cat => !hiddenCategories.includes(cat.id))
         .forEach((cat) => {
           catList[cat.id] = cat.name;
         });
@@ -440,7 +440,7 @@ const Dashboard = () => {
                         scope="row"
                         className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
                         onClick={() => {
-                          if (!hiddenCategories.hiddenCategories.includes(listing.categoryId)) {
+                          if (!hiddenCategories.includes(listing.categoryId)) {
                             goToListingPage(listing);
                           }
                         }}

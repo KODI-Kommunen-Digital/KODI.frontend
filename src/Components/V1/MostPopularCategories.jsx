@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { categoryIcons } from '../../Constants/categoryIcons'
 import "../../index.css";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
+
 const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
 
     MostPopularCategories.propTypes = {
@@ -10,10 +12,12 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
         goToAllListingsPage: PropTypes.func.isRequired,
     };
 
+    const visibleListings = listingsCount.filter(listing => !hiddenCategories.includes(listing.categoryId));
+
     return (
         <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 flex flex-col most-popular-category">
             <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-4 relative mb-4 justify-center place-items-center">
-                {listingsCount.map((listing) => {
+                {visibleListings.map((listing) => {
                     const categoryIcon = categoryIcons[listing.categoryId] || { categoryName: "unknownCategory", className: "h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-xl" }
 
                     return (
@@ -29,7 +33,7 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 448 512"
-                                    className="h-8 w-40 mr-1"
+                                    className="h-8 w-40 items-center justify-center m-auto text-center"
                                 >
                                     <path d={categoryIcon.svgIcon} />
                                 </svg>

@@ -1,3 +1,1 @@
-export const hiddenCategories = {
-    "hiddenCategories": [25]
-};
+export const hiddenCategories = [25]

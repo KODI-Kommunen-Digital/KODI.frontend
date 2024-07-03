@@ -156,7 +156,7 @@ const Listing = () => {
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data
-        .filter(cat => !hiddenCategories.hiddenCategories.includes(cat.id))
+        .filter(cat => !hiddenCategories.includes(cat.id))
         .forEach((cat) => {
           catList[cat.id] = cat.name;
         });
