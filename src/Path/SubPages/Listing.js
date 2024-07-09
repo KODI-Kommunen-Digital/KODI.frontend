@@ -178,9 +178,8 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      if (accessToken || refreshToken) {
-        setIsLoggedIn(true);
-      }
+      const isLoggedIn = accessToken || refreshToken
+      setIsLoggedIn(isLoggedIn);
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
           setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
