@@ -25,6 +25,7 @@ import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import { listingSource } from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 const Description = (props) => {
   const [desc, setDesc] = useState();
@@ -53,6 +54,7 @@ const Description = (props) => {
       return match;
     });
   };
+
   useEffect(() => {
     if (process.env.REACT_APP_SHOW_ADVERTISMENT === "True") {
       const linkedContent = linkify(props.content);
@@ -153,9 +155,11 @@ const Listing = () => {
     setTerminalView(terminalViewParam === "true");
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.includes(cat.id))
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
   }, []);
@@ -174,9 +178,8 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      if (accessToken || refreshToken) {
-        setIsLoggedIn(true);
-      }
+      const isLoggedIn = accessToken || refreshToken
+      setIsLoggedIn(isLoggedIn);
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
           setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
@@ -190,34 +193,16 @@ const Listing = () => {
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
             setTimeout(() => {
-
-              getProfile(cityUserId).then((currentUserResult) => {
-                const params = { cityId, cityUser: true };
-
-                if (params.cityId && params.cityUser) {
-                  getProfile(cityUserId, params).then((res) => {
-                    const user = res.data.data;
-                    setUser(user);
-                    if (
-                      listingsResponse.data.data.statusId !== statusByName.Active &&
-                      currentUserId !== user.id &&
-                      currentUserResult.data.data.roleId !== 1
-                    ) {
-                      navigateTo("/Error");
-                    }
-                  });
-                } else {
-                  getProfile(currentUserId).then((res) => {
-                    const user = res.data.data;
-                    setUser(user);
-                    if (
-                      listingsResponse.data.data.statusId !== statusByName.Active &&
-                      currentUserId !== user.id &&
-                      currentUserResult.data.data.roleId !== 1
-                    ) {
-                      navigateTo("/Error");
-                    }
-                  });
+              const params = { cityId, cityUser: true };
+              getProfile(cityUserId, params).then((currentUserResult) => {
+                const user = currentUserResult.data.data;
+                setUser(user);
+                if (
+                  listingsResponse.data.data.statusId !== statusByName.Active &&
+                  currentUserId !== user.id &&
+                  currentUserResult.data.data.roleId !== 1
+                ) {
+                  navigateTo("/Error");
                 }
               });
 
@@ -607,19 +592,13 @@ const Listing = () => {
                       className="rounded-t-lg h-32 overflow-hidden">
                       <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' />
                     </div>
-                    <div onClick={() =>
-                      navigateTo(
-                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                      )
-                    }
-                      className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                    <div
+                      onClick={() => navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")}
+                      className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden flex items-center justify-center"
+                    >
                       <img
-                        className="object-cover object-center h-32"
-                        src={
-                          user?.image
-                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
-                            : PROFILEIMAGE
-                        }
+                        className="object-cover object-center h-full w-full"
+                        src={user?.image ? process.env.REACT_APP_BUCKET_HOST + user?.image : PROFILEIMAGE}
                         alt={user?.lastname}
                       />
                     </div>

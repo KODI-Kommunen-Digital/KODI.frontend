@@ -18,6 +18,7 @@ import { getCities } from "../Services/cities";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import { role } from "../Constants/role";
@@ -286,14 +287,12 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            const minIterations = Math.min(cityIdsArray.length);
             let allPromises = []
-            for (let index = 0; index < minIterations; index++) {
-              const img = imageArray[index];
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+            for (let img of imageArray) {
               imageForm.append("image", img);
-              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
+            }
+            for (let index = 0; index < currentListingId.length; index++) {
+              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
             }
             await Promise.all(allPromises)
           } else if (pdf) {
@@ -376,7 +375,13 @@ function UploadListings() {
     }
     var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
-      setCategories(response?.data?.data || []);
+      const categories = response?.data?.data || [];
+
+      const filteredCategories = categories.filter(
+        category => !hiddenCategories.includes(category.id)
+      );
+
+      setCategories(filteredCategories);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
@@ -396,7 +401,7 @@ function UploadListings() {
       setListingId(parseInt(listingId));
       setNewListing(false);
       getListingsById(cityIds, listingId).then((listingsResponse) => {
-        let listingData = listingsResponse.data.data;
+        const listingData = listingsResponse.data.data;
         listingData.cityIds = cityIds;
         setListingInput(listingData);
         setStartDate(listingData.startDate);
@@ -511,6 +516,7 @@ function UploadListings() {
         }
 
       case "cityIds":
+
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -580,6 +586,7 @@ function UploadListings() {
           return t("pleaseEnterValidPhoneNumber");
         }
         return "";
+
       default:
         return "";
     }
