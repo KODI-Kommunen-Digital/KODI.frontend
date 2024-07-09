@@ -71,9 +71,11 @@ const Dashboard = () => {
     }
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
+      response?.data?.data
+        .filter(cat => !hiddenCategories.includes(cat.id))
+        .forEach((cat) => {
+          catList[cat.id] = cat.name;
+        });
       setCategories(catList);
     });
     getProfile().then((response) => {
@@ -460,7 +462,11 @@ const Dashboard = () => {
                       <th
                         scope="row"
                         className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
-                        onClick={() => goToListingPage(listing)}
+                        onClick={() => {
+                          if (!hiddenCategories.includes(listing.categoryId)) {
+                            goToListingPage(listing);
+                          }
+                        }}
                       >
                         {listing.pdf ? (
                           <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
