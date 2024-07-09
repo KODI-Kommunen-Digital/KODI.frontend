@@ -31,7 +31,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           listing.sourceId === listingSource.USER_ENTRY ||
           listing.showExternal === 0
         ) {
-          navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+          navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
         } else if (
           (listing.sourceId === listingSource.SCRAPER &&
             listing.showExternal === 1) ||

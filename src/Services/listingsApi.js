@@ -7,7 +7,7 @@ export async function getAllListings() {
 }
 
 export async function getListings(params) {
-	// params.showExternalListings = "true";
+	params.showExternalListings = "true";
 	return axios.get(`/listings`, { params });
 }
 

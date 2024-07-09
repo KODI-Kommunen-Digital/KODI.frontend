@@ -55,28 +55,22 @@ function UserProfile({ user }) {
   };
   return (
     <div
-      className="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
+      className="w-full max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
       <div onClick={() =>
         navigateTo(
           user ? `/ViewProfile/${user.username}` : "/ViewProfile"
         )
       }
-        className="rounded-t-lg h-32 overflow-hidden">
-        <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' />
+        className={`rounded-t-lg h-32 ${RegionColors.lightBgColor} overflow-hidden`}>
+        {/* <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' /> */}
       </div>
-      <div onClick={() =>
-        navigateTo(
-          user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-        )
-      }
-        className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+      <div
+        onClick={() => navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")}
+        className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden flex items-center justify-center"
+      >
         <img
-          className="object-cover object-center h-32"
-          src={
-            user?.image
-              ? process.env.REACT_APP_BUCKET_HOST + user?.image
-              : PROFILEIMAGE
-          }
+          className="object-cover object-center h-full w-full"
+          src={user?.image ? process.env.REACT_APP_BUCKET_HOST + user?.image : PROFILEIMAGE}
           alt={user?.lastname}
         />
       </div>
