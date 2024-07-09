@@ -842,5 +842,7 @@
     "inventory": "Inventory",
     "minCount": "Minimum Count",
     "maxCount": "Maximum Count",
-    "meta": "Meta"
+    "meta": "Meta",
+    "pleaseSelectCard": "Please select a card",
+    "currently_no_payments": "Currently there is no items to display ! Please select a card"
 }

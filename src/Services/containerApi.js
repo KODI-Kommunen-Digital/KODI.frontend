@@ -31,5 +31,13 @@ export async function getOrderDetails(orderId) {
 }
 
 export async function getPaymentDetails(cardId, params) {
-    return axios.get(`/v1/users/${getUserId()}/card/${cardId}`, params);
+    return axios.get(`/v1/users/${getUserId()}/card/${cardId}/transactions`, params);
+}
+
+export async function getCards() {
+    return axios.get(`/v1/users/${getUserId()}/cards`);
+}
+
+export async function associateCard(cardId) {
+    return axios.post(`/v1/users/${getUserId()}/card/${cardId}/associate`);
 }

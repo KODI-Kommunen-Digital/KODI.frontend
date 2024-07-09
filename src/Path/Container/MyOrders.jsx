@@ -10,12 +10,12 @@ const MyOrders = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [myOrders, setMyOrders] = useState([]);
-    const [pageNo, setPageNo] = useState(1);
+    const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
 
     const fetchMyOrders = useCallback(() => {
         getMyOrders({
-            pageNo,
+            pageNumber,
             pageSize,
         }).then((response) => {
             setMyOrders(response.data.data);
@@ -24,7 +24,7 @@ const MyOrders = () => {
 
     useEffect(() => {
         fetchMyOrders();
-    }, [fetchMyOrders, pageNo]);
+    }, [fetchMyOrders, pageNumber]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -172,10 +172,10 @@ const MyOrders = () => {
                     </div>
 
                     <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                        {pageNo !== 1 ? (
+                        {pageNumber !== 1 ? (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                onClick={() => setPageNo(pageNo - 1)}
+                                onClick={() => setPageNo(pageNumber - 1)}
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
                                 {"<"}{" "}
@@ -187,13 +187,13 @@ const MyOrders = () => {
                             className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                             style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                            {t("page")} {pageNo}
+                            {t("page")} {pageNumber}
                         </span>
 
                         {myOrders.length >= pageSize && (
                             <span
                                 className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                onClick={() => setPageNo(pageNo + 1)}
+                                onClick={() => setPageNo(pageNumber + 1)}
                                 style={{ fontFamily: "Poppins, sans-serif" }}
                             >
                                 {">"}

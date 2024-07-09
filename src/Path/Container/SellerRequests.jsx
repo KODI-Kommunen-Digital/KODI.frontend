@@ -11,12 +11,12 @@ const SellerRequests = () => {
     const [sellerRequests, setSellerRequests] = useState([]);
     const [text, setText] = useState("");
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [pageNo, setPageNo] = useState(1);
+    const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
 
     const fetchSellerRequests = useCallback(() => {
         getSellerRequests({
-            pageNo,
+            pageNumber,
             pageSize,
         }).then((response) => {
             console.log(response.data.data)
@@ -26,7 +26,7 @@ const SellerRequests = () => {
 
     useEffect(() => {
         fetchSellerRequests();
-    }, [fetchSellerRequests, pageNo]);
+    }, [fetchSellerRequests, pageNumber]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -238,10 +238,10 @@ const SellerRequests = () => {
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                                {pageNo !== 1 ? (
+                                {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNo(pageNo - 1)}
+                                        onClick={() => setPageNo(pageNumber - 1)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -253,13 +253,13 @@ const SellerRequests = () => {
                                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                    {t("page")} {pageNo}
+                                    {t("page")} {pageNumber}
                                 </span>
 
                                 {sellerRequests.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNo(pageNo + 1)}
+                                        onClick={() => setPageNo(pageNumber + 1)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
