@@ -397,14 +397,12 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            const minIterations = Math.min(cityIdsArray.length);
             let allPromises = []
-            for (let index = 0; index < minIterations; index++) {
-              const img = imageArray[index];
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+            for (let img of imageArray) {
               imageForm.append("image", img);
-              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
+            }
+            for (let index = 0; index < currentListingId.length; index++) {
+              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
             }
             await Promise.all(allPromises)
           } else if (pdf) {
