@@ -847,5 +847,6 @@
     "SellerScreen": "Seller Screen",
     "cardId": "Card Id",
     "currently_no_payments": "Currently there is no items to display ! Please select a card",
-    "noOfViews": "Number of views"
+    "noOfViews": "Number of views",
+    "alreadyHaveAccount": "You already have an account here"
 }

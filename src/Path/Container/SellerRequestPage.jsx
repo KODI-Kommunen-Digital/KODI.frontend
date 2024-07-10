@@ -54,7 +54,8 @@ function SellerRequestPage() {
         if (valid) {
             setUpdating(true);
             try {
-                await createSellerAccount(input);
+                const { cityId, ...inputWithoutCityId } = input;
+                await createSellerAccount(inputWithoutCityId);
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -66,7 +67,11 @@ function SellerRequestPage() {
                     navigate("/Dashboard");
                 }, 5000);
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response && error.response.status === 409) {
+                    setErrorMessage(t("alreadyHaveAccount"));
+                } else {
+                    setErrorMessage(t("changesNotSaved"));
+                }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {

@@ -30,7 +30,6 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        maxCount: "",
         meta: "",
     });
 
@@ -43,7 +42,6 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        maxCount: "",
         meta: "",
     });
 
@@ -66,7 +64,9 @@ function AddNewProducts() {
         if (valid) {
             setUpdating(true);
             try {
-                await createNewProduct(cityId, shopId, input);
+                // await createNewProduct(cityId, shopId, input);
+                const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
+                await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -202,12 +202,12 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "maxCount":
-                if (!value) {
-                    return t("pleaseEnterMaxCount");
-                } else {
-                    return "";
-                }
+            // case "maxCount":
+            //     if (!value) {
+            //         return t("pleaseEnterMaxCount");
+            //     } else {
+            //         return "";
+            //     }
 
             case "meta":
                 if (!value) {
@@ -472,12 +472,12 @@ function AddNewProducts() {
                                 {error.minCount}
                             </div>
                         </div>
-                        <div className="relative mb-4">
+                        {/* <div className="relative mb-4">
                             <label
                                 htmlFor="place"
                                 className="block text-sm font-medium text-gray-600"
                             >
-                                {t("maxCount")} *
+                                {t("maxCount")}
                             </label>
                             <input
                                 type="text"
@@ -486,7 +486,6 @@ function AddNewProducts() {
                                 value={input.maxCount}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
-                                required
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterFastSellingAlert")}
                             />
@@ -498,34 +497,34 @@ function AddNewProducts() {
                             >
                                 {error.maxCount}
                             </div>
-                        </div>
-                    </div>
+                        </div> */}
 
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("inventory")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="inventory"
-                            name="inventory"
-                            value={input.inventory}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterTotalNumber")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.inventory ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.inventory}
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="place"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("inventory")} *
+                            </label>
+                            <input
+                                type="text"
+                                id="inventory"
+                                name="inventory"
+                                value={input.inventory}
+                                onChange={onInputChange}
+                                onBlur={validateInput}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterTotalNumber")}
+                            />
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.inventory ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.inventory}
+                            </div>
                         </div>
                     </div>
 
