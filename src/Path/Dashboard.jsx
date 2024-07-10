@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
-import { getUserListings, getProfile } from "../Services/usersApi";
+import { getProfile } from "../Services/usersApi";
 import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
+  getMyListing,
   updateListingsData,
   deleteListing,
   getListingsBySearch,
@@ -69,13 +70,20 @@ const Dashboard = () => {
     if (!accessToken && !refreshToken) {
       window.location.href = "/login";
     }
+    // getCategory().then((response) => {
+    //   const catList = {};
+    //   response?.data?.data
+    //     .filter(cat => !hiddenCategories.includes(cat.id))
+    //     .forEach((cat) => {
+    //       catList[cat.id] = cat.name;
+    //     });
+    //   setCategories(catList);
+    // });
     getCategory().then((response) => {
       const catList = {};
-      response?.data?.data
-        .filter(cat => !hiddenCategories.includes(cat.id))
-        .forEach((cat) => {
-          catList[cat.id] = cat.name;
-        });
+      response?.data?.data.forEach((cat) => {
+        catList[cat.id] = cat.name;
+      });
       setCategories(catList);
     });
     getProfile().then((response) => {
@@ -131,7 +139,13 @@ const Dashboard = () => {
       });
     }
     if (viewAllListings === false) {
-      getUserListings({
+      // getUserListings({
+      //   statusId: selectedStatus,
+      //   pageNo,
+      // }).then((response) => {
+      //   setListings(response.data.data);
+      // });
+      getMyListing({
         statusId: selectedStatus,
         pageNo,
       }).then((response) => {
@@ -408,7 +422,7 @@ const Dashboard = () => {
                     className="px-6 sm:px-6 py-3"
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "20%",
+                      width: "16.67%",
                     }}
                   >
                     {t("listings")}
@@ -426,6 +440,13 @@ const Dashboard = () => {
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("date_of_creation")}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-center"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("noOfViews")}
                   </th>
                   <th
                     scope="col"
@@ -514,6 +535,12 @@ const Dashboard = () => {
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         {new Date(listing.createdAt).toLocaleString("de")}
+                      </td>
+                      <td
+                        className="px-6 py-4 text-blue-600 text-center"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                      >
+                        {listing.viewCount}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <a

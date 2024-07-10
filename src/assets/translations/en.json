@@ -742,5 +742,6 @@
     "step2": "<strong>Step 2:</strong> An email will be sent to the email you provided",
     "step3": "<strong>Step 3:</strong> Please verify the email by going to your inbox and clicking the confirmation link",
     "step4": "<strong>Step 4:</strong> Your account is verified, and you can log in with your login credentials",
-    "thankYou": "Thank you!!"
+    "thankYou": "Thank you!!",
+    "noOfViews": "Number of views"
 }
