@@ -107,7 +107,7 @@ const PaymentStatus = () => {
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "33.33%",
                                                 }}
                                             >
                                                 {t("cardId")}
@@ -117,7 +117,7 @@ const PaymentStatus = () => {
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "33.33%",
                                                 }}
                                             >
                                                 {t("amount")}
@@ -127,21 +127,10 @@ const PaymentStatus = () => {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "33.33%",
                                                 }}
                                             >
                                                 {t("orderDate")}
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("status")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -174,7 +163,7 @@ const PaymentStatus = () => {
                                                         {new Date(payment.createdAt).toLocaleDateString()}
                                                     </td>
 
-                                                    <td className="px-6 py-4 text-center">
+                                                    {/* <td className="px-6 py-4 text-center">
                                                         {payment.Status === 1 && (
                                                             <div className="inline-flex items-center rounded-full bg-blue-600 py-2 px-3 text-xs text-white">
                                                                 {t("complete")}
@@ -190,7 +179,7 @@ const PaymentStatus = () => {
                                                                 {t("pending")}
                                                             </div>
                                                         )}
-                                                    </td>
+                                                    </td> */}
                                                 </tr>
                                             );
                                         })}

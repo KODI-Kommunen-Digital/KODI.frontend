@@ -844,5 +844,7 @@
     "maxCount": "Maximum Count",
     "meta": "Meta",
     "pleaseSelectCard": "Please select a card",
+    "SellerScreen": "Seller Screen",
+    "cardId": "Card Id",
     "currently_no_payments": "Currently there is no items to display ! Please select a card"
 }

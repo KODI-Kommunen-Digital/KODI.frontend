@@ -60,11 +60,11 @@ const OrderDetails = () => {
     const grandTotal = totalPrice + totalTax;
 
     return (
-        <section className="bg-gray-300 body-font relative h-screen">
+        <section className="bg-slate-600 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-300 min-h-screen flex flex-col">
+            <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
                 <div className="h-full">
-                    <div className="bg-gray-300 mt-20 p-0 space-y-10 overflow-x-auto">
+                    <div className="bg-slate-600 mt-20 p-0 space-y-10 overflow-x-auto">
                         <h1 className="mb-10 text-center text-2xl font-bold">{t("myOrders")}</h1>
                         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
                             <div className="rounded-lg md:w-2/3">
@@ -76,7 +76,8 @@ const OrderDetails = () => {
                                             <div className="mt-5">
                                                 <h2 className="text-lg font-bold text-gray-900">{product.title}</h2>
                                                 <p className={`mt-1 text-md font-bold text-red-600`}>€ {product.price}</p>
-                                                <p className="mt-1 text-xs text-gray-700">{product.createdAt}</p>
+                                                <p className="mt-1 text-xs text-gray-700">
+                                                    {new Date(product.createdAt).toLocaleDateString()}</p>
                                             </div>
                                             <div className="mt-5">
                                                 <h2 className={`text-lg font-bold ${RegionColors.darkTextColor}`}>{product.description}</h2>

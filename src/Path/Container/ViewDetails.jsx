@@ -27,9 +27,9 @@ const MyOrders = () => {
     };
 
     return (
-        <section className="bg-gray-300 body-font relative h-screen">
+        <section className="bg-slate-600 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 py-2 bg-gray-300 min-h-screen flex flex-col justify-center items-center">
+            <div className="container w-auto px-5 py-2 bg-slate-600 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
 
                     <div className="bg-white mt-10 lg:mt-4 p-0 space-y-0 overflow-x-auto rounded-xl">

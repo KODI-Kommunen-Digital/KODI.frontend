@@ -139,7 +139,7 @@ const MyOrders = () => {
                                                 className="px-6 py-4 text-center font-bold text-blue-600"
                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                             >
-                                                {myOrder.createdAt}
+                                                {new Date(myOrder.createdAt).toLocaleDateString()}
                                             </td>
 
                                             <td className="px-6 py-4 text-center">
