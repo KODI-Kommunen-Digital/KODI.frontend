@@ -755,5 +755,6 @@
     "step2": "Schritt 2: Es wird Ihnen eine E-Mail gesendet an die Mail, die Sie eingegeben haben",
     "step3": "Schritt 3: Bitte verifizieren Sie die Mail, indem Sie in Ihr Postfach gehen und den Bestätigungslink drücken",
     "step4": "Schritt 4: Ihr Account ist verifiziert und Sie können sich mit Ihren Login-Daten einloggen",
-    "thankYou": "Danke!!"
+    "thankYou": "Danke!!",
+    "noOfViews": "Anzahl der Aufrufe"
 }
