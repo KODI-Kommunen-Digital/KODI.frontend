@@ -49,7 +49,7 @@ export async function updateProfile(newProfileObj) {
 export async function getUserListings(params = {}, userId) {
 	if (!userId) userId = getUserId();
 	return axiosInstance.get(`/users/${userId}/listings`, { params });
-}
+} // instead we use getMyListing now
 
 export async function deleteAccount() {
 	return axiosInstance.delete(`/users/${getUserId()}`);
