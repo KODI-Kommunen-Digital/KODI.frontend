@@ -63,6 +63,7 @@ import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
 import OwnerScreen from "./Path/Container/OwnerScreen";
+import StoreDetails from "./Path/Container/StoreDetails";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -274,6 +275,12 @@ const App = () => {
               <Route
                 path="/CustomerScreen/GetCard"
                 element={<GetCard />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/StoreDetails"
+                element={<StoreDetails />}
                 exact
               />
 
