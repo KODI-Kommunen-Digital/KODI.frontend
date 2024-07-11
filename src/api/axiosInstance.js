@@ -128,4 +128,5 @@ const containerInstance = createInstance(process.env.REACT_APP_API_CONTAINER_URL
 const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
 const appointmentInstance = createInstance(process.env.REACT_APP_API_APPOINTMENT_URL);
 
-export { instance,containerInstance, forumInstance, appointmentInstance };
+
+export { instance, forumInstance, appointmentInstance, containerInstance };

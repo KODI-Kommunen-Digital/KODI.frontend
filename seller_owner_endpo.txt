@@ -1,0 +1,219 @@
+-------------------------------
+- SELLER screen
+-------------------------------
+
+
+ - Request to become a seller POST /v1/seller
+{
+  "status": "success",
+  "data": "Seller created successfully"
+}
+-------------------------------
+
+
+- Screen to get the list of their request /v1/seller/1/sellerRequests
+
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "createdAt": "2024-03-20T12:30:35.000Z",
+      "updatedAt": "2024-03-20T12:30:35.000Z",
+      "deletedAt": null,
+      "userId": 1,
+      "shopId": 1,
+      "title": "Hi this is test",
+      "description": "Hi this is description of seller request",
+      "status": 0
+    }
+  ],
+  "count": 1
+}
+
+
+-------------------------------
+- Screen to list the orders sold by them /v1/seller/orderSold
+
+{
+  "status": "success",
+  "data": [
+    {
+      "orderId": 1,
+      "cartId": 1,
+      "cart_items": {
+        "quantity": 2,
+        "productId": 15,
+        "cartItemId": 1,
+        "totalPrice": 198,
+        "productName": "Product 5",
+        "pricePerQuantity": 99
+      }
+    }
+  ]
+}
+-------------------------------
+
+ - Screen to create a new product to a store - POST /v1/cities/{cityId}/store/{storeId}/product
+
+
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "createdAt": "2024-03-01T04:30:00.000Z",
+    "updatedAt": "2024-03-01T04:30:00.000Z",
+    "deletedAt": "2024-03-01T04:30:00.000Z",
+    "title": "This is product1",
+    "description": "This is a seller",
+    "price": 1,
+    "tax": 1,
+    "inventory": 1,
+    "minCount": 1,
+    "maxCount": 1,
+    "shopId": 1,
+    "meta": "This is a seller",
+    "isActive": "This is in stock",
+    "archived": "archived",
+    "sellerId": 1,
+    "deletedBy": 1
+  }
+}
+
+
+
+
+
+
+
+
+
+
+-------------------------------
+- Customer screen
+-------------------------------
+
+
+
+    - Screen to display the orders for a customer - GET /v1/users/{id}/orders
+
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "createdAt": "2024-03-01T04:30:00.000Z",
+      "updatedAt": "2024-03-01T04:30:00.000Z",
+      "deletedAt": "2024-03-01T04:30:00.000Z",
+      "products": "Shelf 1",
+      "shopId": 1,
+      "amount": 1,
+      "userId": null,
+      "paymentId": null,
+      "discount": 1
+    }
+  ],
+  "count": 1
+}
+-------------------------------
+
+
+    - Screens associated with viewing the details of an order - GET /v1/cities/{cityId}/store/{storeId}/orders/{orderId}
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "createdAt": "2024-03-01T04:30:00.000Z",
+    "updatedAt": "2024-03-01T04:30:00.000Z",
+    "deletedAt": "2024-03-01T04:30:00.000Z",
+    "products": 2,
+    "shopId": 2,
+    "amount": 2,
+    "userId": 2,
+    "cartId": 2,
+    "paymentId": 2,
+    "discount": 2
+  }
+}
+
+-------------------------------
+
+    - Screens to view the cart of a user - GET /v1/users/{id}/cart
+
+CART IS NOT IN USER ,IT IS IN STORE   -GET /cities/{cityId}/store/{storeId}/user/{id}/cart
+
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "createdAt": "2024-03-01T04:30:00.000Z",
+      "updatedAt": "2024-03-01T04:30:00.000Z",
+      "deletedAt": "2024-03-01T04:30:00.000Z",
+      "cartId": "Shelf 1",
+      "productId": 1,
+      "quantity": 1,
+      "product": {
+        "id": 1,
+        "createdAt": "2024-03-01T04:30:00.000Z",
+        "updatedAt": "2024-03-01T04:30:00.000Z",
+        "deletedAt": "2024-03-01T04:30:00.000Z",
+        "title": "This is product1",
+        "description": "This is a seller",
+        "price": 1,
+        "tax": 1,
+        "inventory": 1,
+        "minCount": 1,
+        "maxCount": 1,
+        "shopId": 1,
+        "meta": "This is a seller",
+        "isActive": "This is in stock",
+        "archived": "archived",
+        "sellerId": 1,
+        "deletedBy": 1
+      },
+      "productImages": [
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Mangos_-_single_and_halved.jpg/330px-Mangos_-_single_and_halved.jpg"
+      ]
+    }
+  ],
+  "count": 1
+}
+
+-------------------------------
+
+    - Screen to view all the transactions made by the user - GET /v1/users/{id}/card/{cardId}/transactions
+
+
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "createdAt": "2024-03-01T04:30:00.000Z",
+      "updatedAt": "2024-03-01T04:30:00.000Z",
+      "deletedAt": "2024-03-01T04:30:00.000Z",
+      "cardId": 2,
+      "amount": 2,
+      "type": 2
+    }
+  ]
+}
+-------------------------------
+    - Screen to associate a card with a user - POST /v1/users/{id}/card/{cardId}/associate
+
+
+{
+  "status": "success",
+  "data": "associated"
+}
+-------------------------------
+
+
+
+
+
+
+
+
+

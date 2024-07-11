@@ -62,12 +62,25 @@ import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserC
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
+import SellerScreen from "./Path/Container/SellerScreen";
+import SellerRequests from "./Path/Container/SellerRequests";
+import SellerRequestPage from "./Path/Container/SellerRequestPage";
+import OrdersSold from "./Path/Container/OrdersSold";
+import AddNewProducts from "./Path/Container/AddNewProducts";
+import CustomerScreen from "./Path/Container/CustomerScreen";
+import MyOrders from "./Path/Container/MyOrders";
+import ViewDetails from "./Path/Container/ViewDetails";
+import OrderDetails from "./Path/Container/OrderDetails.jsx";
+import PaymentStatus from "./Path/Container/PaymentStatus";
+import GetCard from "./Path/Container/GetCard";
+
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isAppointmentEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || '1';
 
@@ -205,6 +218,77 @@ const App = () => {
                 path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
                 element={<BookingErrorConfirmation />}
               />
+            </React.Fragment>
+          )}
+
+          {isContainerEnabled && (
+            <React.Fragment>
+              <Route
+                path="/SellerScreen"
+                element={<SellerScreen />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen"
+                element={<CustomerScreen />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/SellerRequestPage"
+                element={<SellerRequestPage />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/SellerRequests"
+                element={<SellerRequests />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/OrdersSold"
+                element={<OrdersSold />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/AddNewProducts"
+                element={<AddNewProducts />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/MyOrders"
+                element={<MyOrders />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/MyOrders/ViewDetails"
+                element={<ViewDetails />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/OrderDetails"
+                element={<OrderDetails />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/PaymentStatus"
+                element={<PaymentStatus />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/GetCard"
+                element={<GetCard />}
+                exact
+              />
+
             </React.Fragment>
           )}
 
