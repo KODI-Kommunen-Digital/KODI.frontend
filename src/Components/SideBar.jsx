@@ -468,7 +468,7 @@ function SideBar() {
                         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                         onClick={() => {
                           localStorage.setItem("selectedItem", t("addNewProduct"));
-                          navigateTo("/AddNewProducts");
+                          navigateTo("/OwnerScreen");
                         }}
                       >
                         <svg

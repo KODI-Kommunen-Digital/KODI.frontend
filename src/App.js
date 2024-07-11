@@ -62,6 +62,7 @@ import ViewDetails from "./Path/Container/ViewDetails";
 import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
+import OwnerScreen from "./Path/Container/OwnerScreen";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -204,6 +205,12 @@ const App = () => {
 
           {isContainerEnabled && (
             <React.Fragment>
+              <Route
+                path="/OwnerScreen"
+                element={<OwnerScreen />}
+                exact
+              />
+
               <Route
                 path="/SellerScreen"
                 element={<SellerScreen />}
