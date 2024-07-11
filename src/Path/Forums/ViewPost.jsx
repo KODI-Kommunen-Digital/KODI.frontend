@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
 import UserProfile from "../../Components/UserProfile";
@@ -14,11 +14,12 @@ import {
 } from "../../Services/forumsApi";
 import { getProfile, getUserId } from "../../Services/usersApi";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
+import RegionColors from "../../Components/RegionColors";
 
 const Description = ({ content }) => {
   return (
     <p
-      className="leading-relaxed text-md font-medium my-6 text-gray-900"
+      className="leading-relaxed text-md font-medium my-6 text-slate-800"
       dangerouslySetInnerHTML={{ __html: content }}
     ></p>
   );
@@ -140,14 +141,14 @@ const ViewPost = () => {
           // Update existing replies without duplicates
           comment.replies = comment.replies
             ? [
-                ...comment.replies,
-                ...response.data.data.filter(
-                  (reply) =>
-                    !comment.replies.find(
-                      (existingReply) => existingReply.id === reply.id
-                    )
-                ),
-              ]
+              ...comment.replies,
+              ...response.data.data.filter(
+                (reply) =>
+                  !comment.replies.find(
+                    (existingReply) => existingReply.id === reply.id
+                  )
+              ),
+            ]
             : [...response.data.data];
           console.log("parentId:", parentId);
           setComments([...comments]);
@@ -274,10 +275,10 @@ const ViewPost = () => {
       <div className="mx-auto w-full grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:grid-cols-3 lg:pt-24 lg:pb-4">
         <div className="grid grid-cols-1 gap-4 col-span-2">
           <div className="lg:w-full md:w-full h-full">
-            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-xl w-full">
+            <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
-                  <h1 className="text-gray-900 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
+                  <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                     <span
                       className="inline-block max-w-full break-words"
                       style={{
@@ -302,7 +303,7 @@ const ViewPost = () => {
                         </span>
                       </a>
 
-                      <a className="text-blue-400 font-semibold text-base cursor-pointer">
+                      <a className={`${RegionColors.lightTextColor} font-semibold text-base cursor-pointer`}>
                         <span
                           className="ml-0"
                           style={{ fontFamily: "Poppins, sans-serif" }}
@@ -328,7 +329,7 @@ const ViewPost = () => {
                       <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                     </svg>
                     <p
-                      className=" flex leading-relaxed text-base text-blue-400"
+                      className={`${RegionColors.lightTextColor} flex leading-relaxed text-base`}
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -387,7 +388,7 @@ const ViewPost = () => {
                             {t("cancel")}
                           </button>
                           <button
-                            className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                             onClick={handleReportPost}
                           >
                             {t("send")}
@@ -412,7 +413,7 @@ const ViewPost = () => {
                   }
                 `}
               </style>
-              <div className="h-full overflow-hidden px-0 py-0 shadow-xl galaxy-fold">
+              <div className="h-full overflow-hidden px-0 py-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] galaxy-fold">
                 <div className="relative h-full">
                   <img
                     alt="listing"
@@ -421,7 +422,7 @@ const ViewPost = () => {
                       forumPost.image
                         ? process.env.REACT_APP_BUCKET_HOST + forumPost.image
                         : process.env.REACT_APP_BUCKET_HOST +
-                          "admin/DefaultForum.jpeg"
+                        "admin/DefaultForum.jpeg"
                     }
                   />
                 </div>
@@ -430,7 +431,7 @@ const ViewPost = () => {
           </div>
           <div className="overflow-hidden sm:p-0 mt-[2rem] px-0 py-0">
             <h1
-              className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-gray-900"
+              className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl dark:text-slate-800"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {t("description")}
@@ -443,7 +444,7 @@ const ViewPost = () => {
               <textarea
                 id="comment"
                 rows="2"
-                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
+                className="px-0 w-full text-sm text-slate-800 border-0 focus:ring-0 focus:outline-none"
                 placeholder={t("writeComment")}
                 value={newComment}
                 onChange={(event) => setNewComment(event.target.value)}
@@ -452,7 +453,7 @@ const ViewPost = () => {
             <div className="space-x-2 gap-4 md:gap-2 flex">
               <div
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm text-center font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent 
-                bg-blue-400 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-300' : 'bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} text-base font-semibold text-white  cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => postComment()}
               >
@@ -476,7 +477,7 @@ const ViewPost = () => {
 
               <a
                 className={`hidden md:block mt-2 px-4 py-2 w-40 text-sm font-medium text-center focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent  
-                bg-blue-800 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                ${RegionColors.darkBgColor} text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={toggleComments}
               >
@@ -520,7 +521,7 @@ const ViewPost = () => {
                               src={
                                 comment.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    comment.image
+                                  comment.image
                                   : PROFILEIMAGE
                               }
                             />
@@ -601,8 +602,8 @@ const ViewPost = () => {
                             </svg>
                             {!comment.showReplies
                               ? t("showReplyCount", {
-                                  count: comment.childrenCount,
-                                })
+                                count: comment.childrenCount,
+                              })
                               : t("hideReplies")}
                           </button>
                         )}
@@ -610,7 +611,7 @@ const ViewPost = () => {
                       {comment.showReplyBox && (
                         <div className="mt-4 mb-2">
                           <textarea
-                            className="w-full px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full px-4 py-2 text-sm text-slate-800 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
                             rows="2"
                             placeholder={t("writeReply")}
                             value={comment.newReply}
@@ -619,7 +620,7 @@ const ViewPost = () => {
                             }
                           ></textarea>
                           <button
-                            className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+                            className={`mt-2 px-4 py-2 text-sm font-medium text-white ${RegionColors.darkBgColor} rounded hover:bg-blue-700 focus:outline-none focus:bg-blue-700`}
                             type="button"
                             onClick={() => {
                               postComment(comment.id);
@@ -639,13 +640,13 @@ const ViewPost = () => {
                           >
                             <div className="flex justify-between items-center mb-2">
                               <div className="flex items-center">
-                                <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+                                <p className="inline-flex items-center mr-3 text-sm text-slate-800">
                                   <img
                                     className="mr-2 w-6 h-6 object-cover rounded-full"
                                     src={
                                       reply.image
                                         ? process.env.REACT_APP_BUCKET_HOST +
-                                          reply.image
+                                        reply.image
                                         : PROFILEIMAGE
                                     }
                                   />
@@ -683,7 +684,7 @@ const ViewPost = () => {
                 {showMoreComments && (
                   <button
                     type="button"
-                    className={`mt-2 px-2 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+                    className={`mt-2 px-2 py-2 w-40 text-sm font-medium focus:bg-blue-700 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} text-white cursor-pointer`}
                     onClick={handleShowMoreComments}
                   >
                     {t("showMoreComments")}
@@ -697,7 +698,7 @@ const ViewPost = () => {
         {userSocial && userSocial.length > 0 ? (
           <UserProfile user={postOwner} createdAt={createdAt} />
         ) : (
-          <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-56 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-xl dark:bg-white">
+          <div className="w-full md:ml-[6rem] lg:ml-[0rem] ml-[1rem] h-56 bg-white rounded-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-white shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] dark:bg-white">
             <div>
               <div className="items-center mx-2 py-2 px-2 my-2 gap-4 grid grid-cols-1 md:grid-cols-1">
                 <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center md:items-center">
@@ -725,7 +726,7 @@ const ViewPost = () => {
                         )
                       }
                       type="submit"
-                      className="rounded-xl bg-white border border-blue-400 text-blue-400 py-2 px-4 text-sm cursor-pointer hidden md:block"
+                      className={`rounded-xl bg-white border ${RegionColors.lightBorderColor} ${RegionColors.lightTextColor} py-2 px-4 text-sm cursor-pointer hidden md:block`}
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -745,7 +746,7 @@ const ViewPost = () => {
                     {user?.firstname + " " + user?.lastname}
                   </h2>
                   <p
-                    className="leading-relaxed text-base font-bold dark:text-gray-900"
+                    className="leading-relaxed text-base font-bold dark:text-slate-800"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}

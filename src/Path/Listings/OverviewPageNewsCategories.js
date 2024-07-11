@@ -40,8 +40,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								NEWSFLASH
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                NEWSFLASH
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -58,8 +58,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								ALERTS
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                ALERTS
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -76,8 +76,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								POLITICS
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                POLITICS
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -94,8 +94,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								ECONOMY
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                ECONOMY
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -112,8 +112,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								SPORTS
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                SPORTS
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -130,8 +130,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								TOPIC OF THE DAY
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                TOPIC OF THE DAY
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -148,8 +148,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								LOCAL
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                LOCAL
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>
@@ -166,8 +166,8 @@ function OverviewPageNewsCategories() {
                             />
                         </a>
                         <div className="mt-4">
-                            <h2 className="text-gray-900 title-font text-lg font-medium text-center">
-								CLUB NEWS
+                            <h2 className="text-slate-800 title-font text-lg font-medium text-center">
+                                CLUB NEWS
                             </h2>
                         </div>
                         <div className="my-4 bg-gray-200 h-[1px]"></div>

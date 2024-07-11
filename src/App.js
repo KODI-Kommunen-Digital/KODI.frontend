@@ -9,17 +9,20 @@ import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
+import Summary from "./Path/AppointmentBooking/Summary";
+import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
+import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
+import HomePageV1 from "./Path/V1/HomePage";
+import HomePageV2 from "./Path/V2/HomePage";
+import AllListingsV1 from "./Path/V1/AllListings";
+import AllListingsV2 from "./Path/V2/AllListings";
 
-
-import HomePage from "./Path/HomePage";
 import Favorites from "./Path/Favorites";
-
 import Listing from "./Path/SubPages/Listing";
-import AllListings from "./Path/SubPages/AllListings";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
@@ -34,19 +37,15 @@ import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
 import AccountSettings from "./Path/AccountSettings";
 import AllDevices from "./Path/AllDevices";
-
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
 import HeidiLogo from "./assets/HEIDI_Logo.png";
 import "./i18n";
-
 import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
 import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
-import IFrame from "./Path/Listings/IFrame.jsx";
-import IFrameListing from './Path/Listings/IFrameListing.jsx'
-import Modal from 'react-modal';
+
 import Store_detail from "./Components/Store_detail.jsx";
 import Product_store from "./Components/Product_store.jsx";
 import Shelf_store from "./Components/Shelf_store.jsx";
@@ -55,11 +54,23 @@ import Order_store from "./Components/Order_store.jsx";
 import Order_Product_store from "./Components/Order_Product_store.jsx";
 import Product_detail_store from "./Components/Product_detail_store.jsx";
 import Shelf_create_store from "./Components/Shelf_create_store.jsx";
-Modal.setAppElement('#root');
+
+import IFrame from "./Path/Listings/IFrame";
+import IFrameListing from "./Path/Listings/IFrameListing.jsx";
+import MyAppointments from "./Path/AppointmentBooking/MyAppointments";
+import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserCreated";
+import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
+import MyBookings from "./Path/AppointmentBooking/MyBookings";
+
+import Modal from "react-modal";
+Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const isAppointmentEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
+  const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || '1';
+
   useEffect(() => {
     const link =
       document.querySelector("link[rel*='icon']") ||
@@ -69,13 +80,14 @@ const App = () => {
     link.href = HeidiLogo;
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
+
   return (
     <BrowserRouter>
       <div>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={frontendVersion === '1' ? <HomePageV1 /> : <HomePageV2 />} />
           <Route path="/Listing" element={<Listing />} exact />
-          <Route path="/AllListings" element={<AllListings />} />
+          <Route path="/AllListings" element={frontendVersion === '1' ? <AllListingsV1 /> : <AllListingsV2 />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
@@ -94,6 +106,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
+
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
@@ -130,6 +143,7 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+
           {isForumEnabled && (
             <React.Fragment>
               <Route path="/Forum/ViewPost" element={<ViewPost />} />
@@ -155,6 +169,45 @@ const App = () => {
               <Route path="/CitizenService/AllForums" element={<AllForums />} />
             </React.Fragment>
           )}
+
+          {isAppointmentEnabled && (
+            <React.Fragment>
+              <Route
+                path="/AppointmentBooking/MyAppointments"
+                element={<MyAppointments />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/MyBookings"
+                element={<MyBookings />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/AppointmentsUserCreated"
+                element={<AppointmentsUserCreated />}
+                exact
+              />
+              <Route
+                path="/Listings/BookAppointments"
+                element={<BookMyAppointments />}
+                exact
+              />
+              <Route
+                path="/AppointmentBooking/BookAppointments/Summary"
+                element={<Summary />}
+              />
+              <Route
+                path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+                element={<BookingSuccessConfirmation />}
+              />
+
+              <Route
+                path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+                element={<BookingErrorConfirmation />}
+              />
+            </React.Fragment>
+          )}
+
         </Routes>
       </div>
     </BrowserRouter>

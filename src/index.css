@@ -55,10 +55,7 @@
 }
 
 .loading-wheel {
-    border: 8px solid #60a5fa;
-    /* You can customize the color */
     border-top: 8px solid #fff;
-    /* You can customize the color */
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -75,8 +72,34 @@
     font-size: small;
 }
 
-/*Override Material-tailwind style */
 .base-bg-slate-600 {
     --tw-bg-opacity: 1;
     background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+}
+
+.category-animation {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+@layer components {
+    .scrollbar::-webkit-scrollbar {
+        width: 15px;
+        height: 15px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        /* border-radius: 100vh; */
+        background: #ffffff;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background: #f1f5f9;
+        border-radius: 15px;
+        border: 3px solid #ffffff;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #1e293b;
+    }
 }

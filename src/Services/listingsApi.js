@@ -11,6 +11,11 @@ export async function getListings(params) {
 	return axios.get(`/listings`, { params });
 }
 
+export async function getMyListing(params) {
+	params.showExternalListings = "true";
+	return axios.get(`/users/myListings`, { params });
+}
+
 export async function getListingsByCity(cityId, params) {
 	return axios.get(`/cities/${cityId}/listings`, { params });
 }

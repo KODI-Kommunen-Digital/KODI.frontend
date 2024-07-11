@@ -5,7 +5,7 @@ function ContactInfo() {
 		<section className="bg-slate-300 body-font relative">
 			<div className="container px-5 py-5 mx-auto flex sm:flex-nowrap flex-wrap bg-slate-600">
 				<div className="lg:w-4/5 md:w-1/3 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 p-6 mr-2">
-					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 className="text-slate-800 text-lg mb-4 font-medium title-font">
 						Information
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
@@ -28,7 +28,7 @@ function ContactInfo() {
 								<select
 									id="currency"
 									name="currency"
-									className="bg-gray-50 border font-sans border-gray-300 text-gray-900 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+									className="bg-gray-50 border font-sans border-gray-300 text-slate-800 sm:text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
 								>
 									<option>Germany</option>
 									<option>Spain</option>

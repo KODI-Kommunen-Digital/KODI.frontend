@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
-import { getUserListings, getProfile } from "../Services/usersApi";
+import { getProfile } from "../Services/usersApi";
+import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
+  getMyListing,
   updateListingsData,
   deleteListing,
   getListingsBySearch,
@@ -14,7 +16,10 @@ import { status, statusByName } from "../Constants/status";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
+import PdfThumbnail from "../Components/PdfThumbnail";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { getCities } from "../Services/cities";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Dashboard = () => {
   window.scrollTo(0, 0);
@@ -66,9 +71,18 @@ const Dashboard = () => {
     if (!accessToken && !refreshToken) {
       window.location.href = "/login";
     }
+    // getCategory().then((response) => {
+    //   const catList = {};
+    //   response?.data?.data
+    //     .filter(cat => !hiddenCategories.includes(cat.id))
+    //     .forEach((cat) => {
+    //       catList[cat.id] = cat.name;
+    //     });
+    //   setCategories(catList);
+    // });
     getCategory().then((response) => {
       const catList = {};
-      response?.data.data.forEach((cat) => {
+      response?.data?.data.forEach((cat) => {
         catList[cat.id] = cat.name;
       });
       setCategories(catList);
@@ -82,25 +96,6 @@ const Dashboard = () => {
     });
 
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
-
-    // if (viewAllListings === true) {
-    //   getListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
-    // if (viewAllListings === false) {
-    //   getUserListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {
@@ -123,7 +118,13 @@ const Dashboard = () => {
       });
     }
     if (viewAllListings === false) {
-      getUserListings({
+      // getUserListings({
+      //   statusId: selectedStatus,
+      //   pageNo,
+      // }).then((response) => {
+      //   setListings(response.data.data);
+      // });
+      getMyListing({
         statusId: selectedStatus,
         pageNo,
       }).then((response) => {
@@ -185,13 +186,17 @@ const Dashboard = () => {
       .catch((error) => console.log(error));
   }
 
-  // Navigate to Edit Listings page Starts
   function goToEditListingsPage(listing) {
-    navigateTo(
-      `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
-    );
+    if (listing.categoryId === 18) {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+      );
+    } else {
+      navigateTo(
+        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+      );
+    }
   }
-
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
@@ -204,19 +209,26 @@ const Dashboard = () => {
   }, [fetchListings]);
 
   function handleDelete(listing) {
-    deleteListing(listing.cityId, listing.id)
-      .then((res) => {
-        setListings(
-          listings.filter(
-            (l) => l.cityId !== listing.cityId || l.id !== listing.id
-          )
-        );
-        setShowConfirmationModal({ visible: false });
+    try {
+      if (listing.appointmentId) {
+        deleteAppointments(listing.cityId, listing.id, listing.appointmentId);
+      }
+      deleteListing(listing.cityId, listing.id)
+        .then((res) => {
+          setListings(
+            listings.filter(
+              (l) => l.cityId !== listing.cityId || l.id !== listing.id
+            )
+          );
+          setShowConfirmationModal({ visible: false });
 
-        fetchUpdatedListings();
-        window.location.reload();
-      })
-      .catch((error) => console.log(error));
+          fetchUpdatedListings();
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function deleteListingOnClick(listing) {
@@ -229,11 +241,12 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    if (listing.appointmentId) {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
+    } else {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    }
   }
-
-  // Navigate to Edit Listings page Starts
-
   const handleSearch = async (searchQuery, statusName) => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -386,7 +399,7 @@ const Dashboard = () => {
                     className="px-6 sm:px-6 py-3"
                     style={{
                       fontFamily: "Poppins, sans-serif",
-                      width: "20%",
+                      width: "16.67%",
                     }}
                   >
                     {t("listings")}
@@ -404,6 +417,13 @@ const Dashboard = () => {
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("date_of_creation")}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-center"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("noOfViews")}
                   </th>
                   <th
                     scope="col"
@@ -439,21 +459,38 @@ const Dashboard = () => {
                     >
                       <th
                         scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
-                        onClick={() => goToListingPage(listing)}
-                      >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            listing.sourceId === 1
-                              ? listing.logo
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                listing.logo
-                                : LISTINGSIMAGE
-                              : listing.logo || LISTINGSIMAGE
+                        className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                        onClick={() => {
+                          if (!hiddenCategories.includes(listing.categoryId)) {
+                            goToListingPage(listing);
                           }
-                          alt="avatar"
-                        />
+                        }}
+                      >
+                        {listing.pdf ? (
+                          <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
+                            <PdfThumbnail
+                              pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+                            />
+                          </div>
+                        ) : listing.logo ? (
+                          <img
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={
+                              listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
+                            }
+                            onError={(e) => {
+                              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                            }}
+                            alt="avatar"
+                          />
+                        ) : (
+                          <img
+                            alt="Listing"
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
+                          />
+                        )}
+
                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                           <div
                             className="font-normal text-gray-500 truncate"
@@ -475,6 +512,12 @@ const Dashboard = () => {
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
                         {new Date(listing.createdAt).toLocaleString("de")}
+                      </td>
+                      <td
+                        className="px-6 py-4 text-blue-600 text-center"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                      >
+                        {listing.viewCount}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <a
@@ -506,7 +549,7 @@ const Dashboard = () => {
                               >
                                 &#8203;
                               </span>
-                              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                   <div className="sm:flex sm:items-start">
                                     <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -527,7 +570,7 @@ const Dashboard = () => {
                                       </svg>
                                     </div>
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                      <h3 className="text-lg leading-6 font-medium text-slate-800">
                                         {t("areyousure")}
                                       </h3>
                                       <div className="mt-2">
@@ -542,7 +585,7 @@ const Dashboard = () => {
                                   <button
                                     onClick={showConfirmationModal.onConfirm}
                                     type="button"
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                                   >
                                     {t("delete")}
                                   </button>

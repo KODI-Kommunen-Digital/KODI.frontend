@@ -5,6 +5,7 @@ import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { listingSource } from "../Constants/listingSource";
+import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 
 function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   const { t } = useTranslation();
@@ -30,10 +31,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           listing.sourceId === listingSource.USER_ENTRY ||
           listing.showExternal === 0
         ) {
-          navigateTo(
-            `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""
-            }`
-          );
+          navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
         } else if (
           (listing.sourceId === listingSource.SCRAPER &&
             listing.showExternal === 1) ||
@@ -44,11 +42,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           window.location.href = listing.website;
         }
       }}
-      className={`w-full shadow-lg rounded-lg cursor-pointer ${iFrame ? 'h-80' : 'h-96'
-        }`}
+      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-shadow duration-300 ease-in-out"
     >
-      <div className={`block relative rounded overflow-hidden ${iFrame ? 'h-48' : 'h-64'
-        }`}>
+      <div className="block relative h-64 rounded-t-lg overflow-hidden">
         {listing.pdf ? (
           <PdfThumbnail
             pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
@@ -63,7 +59,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 : listing.logo
             }
             onError={(e) => {
-              e.target.src = LISTINGSIMAGE; // Set default image if loading fails
+              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
             }}
           />
         ) : (
@@ -74,69 +70,81 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           />
         )}
       </div>
-      <div className="mt-5 px-2">
-        <h2
-          className="text-blue-800 title-font text-lg font-bold text-center font-sans truncate"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
-          {listing.title}
-        </h2>
-      </div>
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
 
-      {listing.id && listing.categoryId === 3 ? (
-        <div
-          className="text-center items-center"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
-          <p
-            className={`text-gray-900 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate ${iFrame ? 'my-0' : 'my-4'
-              }`}
+      <div className="px-2 border-t-8 border-slate-500">
+        <div className="mt-5 px-2">
+          <h2
+            className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
-            {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-              "de-DE"
-            )}{" "}
-            (
-            {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
-              "de-DE",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Europe/Berlin",
-              }
-            )}
-            )
-            {listing.endDate && (
-              <>
-                <span className="text-blue-400"> {t("To")} </span>
-                {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                  "de-DE"
-                )}{" "}
-                (
-                {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
-                  "de-DE",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Europe/Berlin",
-                  }
-                )}
-                )
-              </>
-            )}
-          </p>
+            {listing.title}
+          </h2>
         </div>
-      ) : (
-        <p
-          className={`text-gray-900 p-2 h-[1.8rem] title-font text-sm font-semibold text-center font-sans truncate ${iFrame ? 'my-0' : 'my-4'
-            }`}
-          style={{ fontFamily: "Poppins, sans-serif" }}
-          dangerouslySetInnerHTML={{
-            __html: listing.description,
-          }}
-        />
-      )}
+
+        {listing.id && listing.categoryId === 3 ? (
+          <div
+            className="text-start items-start"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <p
+              className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-center font-semibold truncate"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
+                "de-DE"
+              )}{" "}
+              (
+              {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                "de-DE",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  timeZone: "Europe/Berlin",
+                }
+              )}
+              )
+              {listing.endDate && (
+                <>
+                  <span className="text-slate-500"> {t("To")} </span>
+                  {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+                    "de-DE"
+                  )}{" "}
+                  (
+                  {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                    "de-DE",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: "Europe/Berlin",
+                    }
+                  )}
+                  )
+                </>
+              )}
+            </p>
+          </div>
+        ) : (
+          <p
+            className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            dangerouslySetInnerHTML={{
+              __html: listing.description,
+            }}
+          />
+        )}
+      </div>
+
+      <div className="px-2">
+        <div className="my-2 px-2">
+          <h2
+            className="flex text-slate-500 title-font text-start text-sm font-semibold text-center font-special truncate"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            {new Date(listing.createdAt).toLocaleDateString('en-GB')}
+          </h2>
+        </div>
+      </div>
+
     </div>
   );
 }

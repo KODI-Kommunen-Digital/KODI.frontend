@@ -123,7 +123,7 @@ const PasswordForgot = () => {
 						src={HeidiLogo}
 						alt="Your Company"
 					/>
-					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 						{t("create_new_password")}
 					</h3>
 				</div>
@@ -142,7 +142,7 @@ const PasswordForgot = () => {
 								type="password"
 								autoComplete="current-password"
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterPassword")}
 							></input>
 							{error.password && <span className="err">{error.password}</span>}
@@ -158,7 +158,7 @@ const PasswordForgot = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseConfirmPassword")}
 							></input>
 							{error.confirmPassword && (

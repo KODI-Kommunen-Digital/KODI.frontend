@@ -18,6 +18,7 @@ import { getCities } from "../Services/cities";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import { role } from "../Constants/role";
@@ -84,14 +85,14 @@ function UploadListings() {
       if (file.type.startsWith("image/")) {
         setImage(e.dataTransfer.files);
         setLocalImageOrPdf(true);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
       } else if (file.type === "application/pdf") {
         setPdf(file);
         setLocalImageOrPdf(true);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -116,7 +117,7 @@ function UploadListings() {
       } else if (file.type === "application/pdf") {
         setLocalImageOrPdf(true);
         setPdf(file);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -148,7 +149,7 @@ function UploadListings() {
 
   function handleRemoveImage() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removeImage: true,
         logo: null,
@@ -163,14 +164,14 @@ function UploadListings() {
 
   function handleRemovePDF() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removePdf: true,
         pdf: null,
       }));
     }
     setPdf(null);
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       hasAttachment: false,
     }));
@@ -182,7 +183,7 @@ function UploadListings() {
   const [cityIds, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
-  const [input, setInput] = useState({
+  const [listingInput, setListingInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
     cityIds: [],
@@ -223,7 +224,7 @@ function UploadListings() {
 
     let valid = true;
     for (let key in error) {
-      const errorMessage = getErrorMessage(key, input[key]);
+      const errorMessage = getErrorMessage(key, listingInput[key]);
       const newError = { ...error, [key]: errorMessage };
       setError(newError);
       if (errorMessage) {
@@ -237,7 +238,7 @@ function UploadListings() {
       try {
         console.log("selectedCities before submission:", selectedCities);
         const dataToSubmit = {
-          ...input,
+          ...listingInput,
           cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
         };
 
@@ -246,7 +247,7 @@ function UploadListings() {
         // Post or update listing data
         const response = await (newListing
           ? postListingsData(dataToSubmit)
-          : updateListingsData(dataToSubmit, listingId));
+          : updateListingsData(cityIds, dataToSubmit, listingId));
 
         let currentListingId = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
@@ -263,7 +264,7 @@ function UploadListings() {
         }
 
         // Handle image removal and upload
-        if (input.removeImage) {
+        if (listingInput.removeImage) {
           if (image.length === 0) {
             await deleteListingImage(cityIds, listingId);
           } else {
@@ -286,14 +287,12 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            const minIterations = Math.min(cityIdsArray.length);
             let allPromises = []
-            for (let index = 0; index < minIterations; index++) {
-              const img = imageArray[index];
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+            for (let img of imageArray) {
               imageForm.append("image", img);
-              allPromises.push(uploadListingImage(imageForm, cityId, listingId))
+            }
+            for (let index = 0; index < currentListingId.length; index++) {
+              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
             }
             await Promise.all(allPromises)
           } else if (pdf) {
@@ -310,7 +309,31 @@ function UploadListings() {
           }
         }
 
-        // Set success message based on admin status and new listing
+        if (!newListing && listingInput.appointmentId) {
+          try {
+            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
+          } catch (error) {
+            console.error('Error updating appointment:', error);
+          }
+        } else if (appointmentAdded) {
+          const minIterations = Math.min(cityIdsArray.length);
+          let allAppointmentPromises = []
+          for (let index = 0; index < minIterations; index++) {
+            const cityId = cityIdsArray[index];
+            const listingId = currentListingId[index];
+
+            try {
+              // await createAppointments(cityId, listingId, filteredAppointmentInput);
+              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+            } catch (error) {
+              console.error('Error posting appointment:', error);
+            }
+          }
+
+
+          await Promise.all(allAppointmentPromises);
+        }
+
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
@@ -350,9 +373,15 @@ function UploadListings() {
     if (!accessToken && !refreshToken) {
       navigateTo("/login");
     }
-    var cityIds = searchParams.get("cityIds");
+    var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
-      setCategories(response?.data?.data || []);
+      const categories = response?.data?.data || [];
+
+      const filteredCategories = categories.filter(
+        category => !hiddenCategories.includes(category.id)
+      );
+
+      setCategories(filteredCategories);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
@@ -361,7 +390,7 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     });
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
     setCityId(cityIds);
     var listingId = searchParams.get("listingId");
@@ -372,9 +401,9 @@ function UploadListings() {
       setListingId(parseInt(listingId));
       setNewListing(false);
       getListingsById(cityIds, listingId).then((listingsResponse) => {
-        let listingData = listingsResponse.data.data;
+        const listingData = listingsResponse.data.data;
         listingData.cityIds = cityIds;
-        setInput(listingData);
+        setListingInput(listingData);
         setStartDate(listingData.startDate);
         setEndDate(listingData.endDate);
         setDescription(listingData.description);
@@ -419,14 +448,14 @@ function UploadListings() {
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: checked,
         timeless: checked,
         expiryDate: checked ? null : getDefaultEndDate(),
       }));
     } else {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -465,7 +494,7 @@ function UploadListings() {
         return plainTextListItems.join("\n");
       });
     }
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       description: descriptionHTML,
     }));
@@ -487,6 +516,7 @@ function UploadListings() {
         }
 
       case "cityIds":
+
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -501,7 +531,7 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -517,15 +547,15 @@ function UploadListings() {
         }
 
       case "startDate":
-        if (!value && parseInt(input.categoryId) == 3) {
+        if (!value && parseInt(listingInput.categoryId) == 3) {
           return t("pleaseEnterStartDate");
         } else {
           return "";
         }
 
       case "endDate":
-        if (parseInt(input.categoryId) === 3) {
-          if (value && new Date(input.startDate) > new Date(value)) {
+        if (parseInt(listingInput.categoryId) === 3) {
+          if (value && new Date(listingInput.startDate) > new Date(value)) {
             return t("endDateBeforeStartDate");
           } else {
             return "";
@@ -544,11 +574,19 @@ function UploadListings() {
         }
 
       case "expiryDate":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseEnterExpiryDate");
         } else {
           return "";
         }
+
+      case "phone":
+        const phoneRegex = /^\d+$/;
+        if (!value.match(phoneRegex)) {
+          return t("pleaseEnterValidPhoneNumber");
+        }
+        return "";
+
       default:
         return "";
     }
@@ -570,7 +608,7 @@ function UploadListings() {
         const cityIds = citiesData[0].id;
         const cityName = citiesData[0].name;
         setSelectedCities([{ id: cityIds, name: cityName }]);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           cityIds: [cityIds],
           villageId: 0,
@@ -601,7 +639,7 @@ function UploadListings() {
         setCityId(selectedCityId);
         const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
         setSelectedCities(updatedSelectedCities);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           cityIds: updatedSelectedCities.map(city => city.id),
           villageId: 0,
@@ -616,7 +654,7 @@ function UploadListings() {
       if (selectedCity) {
         setCityId(selectedCityId);
         setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           cityIds: [selectedCityId],
           villageId: 0,
@@ -630,7 +668,7 @@ function UploadListings() {
   const removeCity = (cityIds) => {
     const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
     setSelectedCities(updatedSelectedCities);
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       cityIds: updatedSelectedCities.map(city => city.id),
       villageId: 0,
@@ -663,7 +701,7 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     }
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
     validateInput(event);
 
@@ -677,7 +715,7 @@ function UploadListings() {
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
     setSubcategoryId(subcategoryId);
-    setInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
     validateInput(event);
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("subcategoryId", subcategoryId);
@@ -727,7 +765,7 @@ function UploadListings() {
               type="text"
               id="title"
               name="title"
-              value={input.title}
+              value={listingInput.title}
               onChange={onInputChange}
               onBlur={validateInput}
               required
@@ -744,7 +782,7 @@ function UploadListings() {
             </div>
           </div>
 
-          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' ? (
+          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' && newListing ? (
             cities.length > 1 && (
               <div className="relative mb-4">
                 <label
@@ -756,7 +794,7 @@ function UploadListings() {
                 <select
                   id="cityIds"
                   name="cityIds"
-                  value=""
+                  value={cityIds || 0}
                   onChange={onCityChange}
                   disabled={!newListing}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
@@ -914,7 +952,7 @@ function UploadListings() {
           {categoryId == 1 && (
             <div className="relative mb-4">
               <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
-                {input.disableDates ? (
+                {listingInput.disableDates ? (
                   <label
                     htmlFor="dropdown"
                     className="text-gray-600 text-md mb-4 font-medium title-font"
@@ -944,15 +982,15 @@ function UploadListings() {
                         id="expiryDate"
                         name="expiryDate"
                         value={
-                          input.expiryDate
-                            ? formatDateTime(input.expiryDate)
+                          listingInput.expiryDate
+                            ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
                         onChange={onInputChange}
                         onBlur={validateInput}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder="Expiry Date"
-                        disabled={input.disableDates}
+                        disabled={listingInput.disableDates}
                       />
                       <div
                         className="h-[24px] text-red-600"
@@ -972,7 +1010,7 @@ function UploadListings() {
                   type="checkbox"
                   id="disableDates"
                   name="disableDates"
-                  checked={input.disableDates}
+                  checked={listingInput.disableDates}
                   onChange={onInputChange}
                   className="mt-0"
                 />
@@ -1010,7 +1048,7 @@ function UploadListings() {
                     id="startDate"
                     name="startDate"
                     value={
-                      input.startDate ? formatDateTime(input.startDate) : null
+                      listingInput.startDate ? formatDateTime(listingInput.startDate) : null
                     }
                     onChange={onInputChange}
                     onBlur={validateInput}
@@ -1047,7 +1085,7 @@ function UploadListings() {
                     type="datetime-local"
                     id="endDate"
                     name="endDate"
-                    value={input.endDate ? formatDateTime(input.endDate) : null}
+                    value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
                     onChange={onInputChange}
                     onBlur={validateInput}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1078,7 +1116,7 @@ function UploadListings() {
                 type="text"
                 id="address"
                 name="address"
-                value={input.address}
+                value={listingInput.address}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -1100,7 +1138,7 @@ function UploadListings() {
                   type="text"
                   id="originalPrice"
                   name="originalPrice"
-                  value={input.originalPrice}
+                  value={listingInput.originalPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -1119,7 +1157,7 @@ function UploadListings() {
                   type="text"
                   id="discountedPrice"
                   name="discountedPrice"
-                  value={input.discountedPrice}
+                  value={listingInput.discountedPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -1132,7 +1170,7 @@ function UploadListings() {
 
           <div className="relative mb-4">
             <label
-              htmlFor="place"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
@@ -1141,12 +1179,20 @@ function UploadListings() {
               type="text"
               id="phone"
               name="phone"
-              value={input.phone}
+              value={listingInput.phone}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("pleaseEnterPhone")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.phone ? "visible" : "hidden",
+              }}
+            >
+              {error.phone}
+            </div>
           </div>
 
           <div className="relative mb-4">
@@ -1160,7 +1206,7 @@ function UploadListings() {
               type="email"
               id="email"
               name="email"
-              value={input.email}
+              value={listingInput.email}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1187,7 +1233,7 @@ function UploadListings() {
               type="text"
               id="website"
               name="website"
-              value={input.website}
+              value={listingInput.website}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1207,7 +1253,7 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              // value={input.description}
+              // value={listingInput.description}
               value={description}
               onChange={(newContent) => onDescriptionChange(newContent)}
               onBlur={(range, source, editor) => {
