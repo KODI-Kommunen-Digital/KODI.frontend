@@ -121,9 +121,12 @@ const createInstance = (baseURL) => {
 	// Return the created axios instance
 	return instance;
 };
-
+console.log(process.env.PORT)
 // Create instances for different API endpoints using the createInstance function and export them
-const instance = createInstance(process.env.REACT_APP_API_BASE_URL);
-const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
+const instance = createInstance('http://localhost:3001/');
+const instance1 = createInstance('http://localhost:3005/');
 
-export { instance, forumInstance };
+const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
+const appointmentInstance = createInstance(process.env.REACT_APP_API_APPOINTMENT_URL);
+
+export { instance, instance1,forumInstance, appointmentInstance };

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -11,6 +12,8 @@ import ImprintPage from "./Path/ImprintPage";
 import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
+
+
 
 import HomePage from "./Path/HomePage";
 import Favorites from "./Path/Favorites";
@@ -44,6 +47,14 @@ import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame.jsx";
 import IFrameListing from './Path/Listings/IFrameListing.jsx'
 import Modal from 'react-modal';
+import Store_detail from "./Components/Store_detail.jsx";
+import Product_store from "./Components/Product_store.jsx";
+import Shelf_store from "./Components/Shelf_store.jsx";
+import Seller_store from "./Components/Seller_store.jsx";
+import Order_store from "./Components/Order_store.jsx";
+import Order_Product_store from "./Components/Order_Product_store.jsx";
+import Product_detail_store from "./Components/Product_detail_store.jsx";
+import Shelf_create_store from "./Components/Shelf_create_store.jsx";
 Modal.setAppElement('#root');
 
 const App = () => {
@@ -86,6 +97,19 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+          <Route path="/storedetail" element={<Store_detail />} />
+          <Route path="/store1/product" element={<Product_store />} />
+          <Route path="/store1/product/product_detail" element={<Product_detail_store />} />
+
+          <Route path="/store1/shelf" element={<Shelf_store />} />
+          <Route path="/store1/shelfcreate" element={<Shelf_create_store/>} />
+
+          <Route path="/store1/seller" element={<Seller_store />} />
+          <Route path="/store1/order" element={<Order_store />} />
+          <Route path="/store1/order/product" element={<Order_Product_store />} />
+
+
+
           {
             inFrame && (
               <React.Fragment>
