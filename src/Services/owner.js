@@ -1,5 +1,5 @@
-import { instance1 } from "../api/axiosInstance";
-const axios = instance1;
+import { containerInstance } from "../api/axiosInstance";
+const axios = containerInstance;
 
 export async function getStoreById(cityId,storeId) {
 	return axios.get(`/v1/cities/${cityId}/store/${storeId}`);

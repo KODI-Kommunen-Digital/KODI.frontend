@@ -124,7 +124,8 @@ const createInstance = (baseURL) => {
 console.log(process.env.PORT)
 // Create instances for different API endpoints using the createInstance function and export them
 const instance = createInstance(process.env.REACT_APP_API_BASE_URL);
+const containerInstance = createInstance(process.env.REACT_APP_API_CONTAINER_URL);
 const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
 const appointmentInstance = createInstance(process.env.REACT_APP_API_APPOINTMENT_URL);
 
-export { instance, forumInstance, appointmentInstance };
+export { instance,containerInstance, forumInstance, appointmentInstance };
