@@ -86,6 +86,9 @@ const Description = (props) => {
       } catch (error) {
         console.log("Error", error);
       }
+    } else {
+      const linkedContent = linkify(props.content);
+      setDesc(linkedContent);
     }
   }, [props.cityId, props.content]);
 
