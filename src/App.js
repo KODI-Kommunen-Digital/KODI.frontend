@@ -61,6 +61,7 @@ import MyOrders from "./Path/Container/MyOrders";
 import ViewDetails from "./Path/Container/ViewDetails";
 import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
+import GetCard from "./Path/Container/GetCard";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -260,6 +261,12 @@ const App = () => {
               <Route
                 path="/CustomerScreen/PaymentStatus"
                 element={<PaymentStatus />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/GetCard"
+                element={<GetCard />}
                 exact
               />
 

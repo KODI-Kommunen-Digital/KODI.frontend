@@ -6,11 +6,10 @@ import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getProfile } from "../../Services/usersApi";
-import { getCities } from "../../Services/cities";
 import Alert from "../../Components/Alert";
-import { createNewProduct, getShopsInACity } from "../../Services/containerApi";
+import { associateCard, getCards } from "../../Services/containerApi";
 
-function AddNewProducts() {
+function GetCard() {
     const { t } = useTranslation();
 
     const editor = useRef(null);
@@ -23,7 +22,7 @@ function AddNewProducts() {
 
     const [input, setInput] = useState({
         shopId: 0,
-        cityId: 0,
+        cardId: 0,
         title: "",
         description: "",
         price: "",
@@ -37,7 +36,7 @@ function AddNewProducts() {
         title: "",
         description: "",
         shopId: "",
-        cityId: "",
+        cardId: "",
         price: "",
         tax: "",
         inventory: "",
@@ -64,9 +63,7 @@ function AddNewProducts() {
         if (valid) {
             setUpdating(true);
             try {
-                // await createNewProduct(cityId, shopId, input);
-                const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
-                await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+                await associateCard(cardId);
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -95,8 +92,8 @@ function AddNewProducts() {
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });
-        getCities().then((citiesResponse) => {
-            setCities(citiesResponse.data.data);
+        getCards().then((response) => {
+            setCards(response.data.data);
         });
 
         document.title =
@@ -158,9 +155,9 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "cityId":
+            case "cardId":
                 if (!parseInt(value)) {
-                    return t("pleaseSelectCity");
+                    return t("pleaseSelectCard");
                 } else {
                     return "";
                 }
@@ -177,8 +174,6 @@ function AddNewProducts() {
             case "price":
                 if (!value) {
                     return t("pleaseEnterPrice");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -186,8 +181,6 @@ function AddNewProducts() {
             case "tax":
                 if (!value) {
                     return t("pleaseEnterTax");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -195,8 +188,6 @@ function AddNewProducts() {
             case "inventory":
                 if (!value) {
                     return t("pleaseEnterInventory");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -204,21 +195,23 @@ function AddNewProducts() {
             case "minCount":
                 if (!value) {
                     return t("pleaseEnterMinCount");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
+
+            // case "maxCount":
+            //     if (!value) {
+            //         return t("pleaseEnterMaxCount");
+            //     } else {
+            //         return "";
+            //     }
 
             case "meta":
                 if (!value) {
                     return t("pleaseEnterMeta");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
-
 
             default:
                 return "";
@@ -242,24 +235,24 @@ function AddNewProducts() {
         });
     };
 
-    const [cityId, setCityId] = useState(0);
-    const [cities, setCities] = useState([]);
-    async function onCityChange(e) {
-        const cityId = e.target.value;
-        setCityId(cityId);
+    const [cards, setCards] = useState(0);
+    const [cardId, setCardId] = useState(0);
+    async function onCardSelect(e) {
+        const cardId = e.target.value;
+        setCardId(cardId);
         setInput((prev) => ({
             ...prev,
-            cityId: cityId,
+            cardId: cardId,
         }));
         validateInput(e);
 
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("cityId", cityId);
+        urlParams.set("cardId", cardId);
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getShopsInACity(cityId);
+            const response = await (cardId);
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
@@ -332,15 +325,15 @@ function AddNewProducts() {
                         </label>
                         <select
                             type="text"
-                            id="cityId"
-                            name="cityId"
-                            value={cityId || 0}
-                            onChange={onCityChange}
+                            id="cardId"
+                            name="cardId"
+                            value={cardId || 0}
+                            onChange={onCardSelect}
                             autoComplete="country-name"
                             className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
                             <option value={0}>{t("select")}</option>
-                            {cities.map((city) => (
+                            {cards.map((city) => (
                                 <option key={Number(city.id)} value={Number(city.id)}>
                                     {city.name}
                                 </option>
@@ -349,14 +342,14 @@ function AddNewProducts() {
                         <div
                             className="h-[24px] text-red-600"
                             style={{
-                                visibility: error.cityId ? "visible" : "hidden",
+                                visibility: error.cardId ? "visible" : "hidden",
                             }}
                         >
-                            {error.cityId}
+                            {error.cardId}
                         </div>
                     </div>
 
-                    {cityId !== 0 && (
+                    {cardId !== 0 && (
                         <div className="relative mb-4">
                             <label
                                 htmlFor="title"
@@ -639,4 +632,4 @@ function AddNewProducts() {
     );
 }
 
-export default AddNewProducts;
+export default GetCard;
