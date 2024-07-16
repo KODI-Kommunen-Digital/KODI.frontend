@@ -848,5 +848,13 @@
     "cardId": "Card Id",
     "currently_no_payments": "Currently there is no items to display ! Please select a card",
     "noOfViews": "Number of views",
-    "alreadyHaveAccount": "You already have an account here"
+    "alreadyHaveAccount": "You already have an account here",
+    "goToStoreDetails": "You can see the stores details by clicking here",
+    "products": "Products",
+    "shelves": "Shelves",
+    "allSellers": "All Sellers",
+    "productsDescription": "See all of your products, just by clicking here",
+    "shelvesDescription": "See all of the shelves, just by clicking here",
+    "allSellersDescription": "See all of details of all sellers, just by clicking here",
+    "ordersDescription": "See summary of all your orders, just by clicking here"
 }
