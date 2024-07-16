@@ -209,6 +209,8 @@ function UploadListings() {
     hasAttachment: false,
   });
 
+  console.log(listingInput)
+
   const [error, setError] = useState({
     categoryId: "",
     subcategoryId: "",
@@ -253,7 +255,6 @@ function UploadListings() {
       },
     }],
   });
-  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -1155,7 +1156,7 @@ function UploadListings() {
           {categoryId == 1 && (
             <div className="relative mb-0">
               <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
-                {listingInput.disableDates ? (
+                {listingInput.disableDates || listingInput.expiryDate === null ? (
                   <label
                     htmlFor="dropdown"
                     className="text-gray-600 text-md mb-4 font-medium title-font"
@@ -1213,7 +1214,7 @@ function UploadListings() {
                   type="checkbox"
                   id="disableDates"
                   name="disableDates"
-                  checked={listingInput.disableDates}
+                  checked={listingInput.disableDates || listingInput.expiryDate === null}
                   onChange={onInputChange}
                   className="mt-0"
                 />
