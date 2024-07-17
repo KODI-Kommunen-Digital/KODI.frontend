@@ -32,7 +32,7 @@ function FormImage(props) {
             alt="uploaded"
           />
           <button
-            className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+            className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
             onClick={() => updateListing(index)}
           >
             {t("removeFile")}

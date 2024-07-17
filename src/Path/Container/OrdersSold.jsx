@@ -68,10 +68,10 @@ const OrdersSold = () => {
     };
 
     return (
-        <section className="bg-slate-600 body-font relative h-screen">
+        <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
                     {/* {ordersSold && ordersSold.length > 0 ? ( */}
                     <>

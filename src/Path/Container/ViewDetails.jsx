@@ -27,9 +27,9 @@ const MyOrders = () => {
     };
 
     return (
-        <section className="bg-slate-600 body-font relative h-screen">
+        <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 py-2 bg-slate-600 min-h-screen flex flex-col justify-center items-center">
+            <div className="container w-auto px-5 py-2 bg-gray-800 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
 
                     <div className="bg-white mt-10 lg:mt-4 p-0 space-y-0 overflow-x-auto rounded-xl">
@@ -76,7 +76,7 @@ const MyOrders = () => {
                                                 </td>
                                                 <td className="px-6 py-3 bg-gray-100 text-center leading-4 font-medium uppercase tracking-wider">
                                                     <div className="px-6 py-4 whitespace-no-wrap text-md leading-5">
-                                                        <span className="mr-2">€ {products.price}</span>
+                                                        <span className="mr-2 font-bold text-green-600">€ {products.price}</span>
                                                     </div>
                                                 </td>
                                             </tr>

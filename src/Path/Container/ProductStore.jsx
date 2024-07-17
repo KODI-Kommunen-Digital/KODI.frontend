@@ -1,21 +1,39 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import "../../index.css";
-import { getSellerRequests, getStores } from "../../Services/containerApi";
+import { FaEye } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { getProducts, getStores } from "../../Services/containerApi";
+import { useTranslation } from 'react-i18next';
+import { status, statusByName } from "../../Constants/status";
+import RegionColors from "../../Components/RegionColors";
 
-const SellerRequests = () => {
-    window.scrollTo(0, 0);
+function ProductStore() {
     const { t } = useTranslation();
-    const [sellerRequests, setSellerRequests] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
-    const [text, setText] = useState("");
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const pageSize = 9;
+    const [products, setProducts] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState(null);
     const [storeId, setStoreId] = useState();
+    const [cityId, setCityId] = useState();
     const [stores, setStores] = useState([]);
-    const status = 1;
+
+    const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
+        if (cityId && storeId) {
+            getProducts(cityId, storeId, pageNumber).then((response) => {
+                setProducts(response.data.data);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (storeId) {
+            const selectedStore = stores.find(store => store.id === parseInt(storeId));
+            const cityId = selectedStore.cityId;
+            if (selectedStore) {
+                fetchProducts(cityId, storeId, pageNumber);
+            }
+        }
+    }, [fetchProducts]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -27,27 +45,17 @@ const SellerRequests = () => {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchSellerRequests = useCallback((cityId, storeId) => {
-        if (storeId) {
-            getSellerRequests(cityId, storeId, {
-                params: {
-                    status,
-                    pageNumber,
-                    pageSize,
-                },
-            }).then((response) => {
-                setSellerRequests(response.data.data);
-            });
+    function getStatusClass(statusId) {
+        if (status[statusId] === "Active") {
+            return "bg-green-400";
         }
-    }, []);
-
-    useEffect(() => {
-        if (storeId) {
-            const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore.cityId;
-            fetchSellerRequests(cityId, storeId);
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
         }
-    }, [fetchSellerRequests]);
+        if (status[statusId] === "Pending") {
+            return "bg-yellow-400";
+        }
+    }
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -55,6 +63,7 @@ const SellerRequests = () => {
 
         if (selectedStore) {
             const cityId = selectedStore.cityId;
+            setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1); // Reset page number when a new store is selected
 
@@ -62,21 +71,12 @@ const SellerRequests = () => {
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchSellerRequests(cityId, storeId, 1); // Reset to first page
+            fetchProducts(cityId, storeId, 1); // Reset to first page
         }
     };
 
-    const handleTextChange = (event) => {
-        setText(event.target.value);
-    };
-
-    const openPopup = () => {
-        setIsPopupOpen(true);
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setText("");
+    const handleViewDetailsClick = (cityId, storeId, productId) => {
+        navigate(`/OwnerScreen/ProductDetailsStore?cityId=${cityId}&storeId=${storeId}&productId=${productId}`);
     };
 
     const navigate = useNavigate();
@@ -89,6 +89,62 @@ const SellerRequests = () => {
     return (
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
+
+            <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
+                <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+                    <div className="w-full">
+                        <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
+                            <div className="hidden lg:block">
+                                <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(null)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("allListings")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("active")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("pending")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("inactive")}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="-my-2 -mr-2 lg:hidden">
+                                <select
+                                    className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    value={selectedStatus || ""}
+                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                >
+                                    <option value="">{t("allListings")}</option>
+                                    <option value={statusByName.Active}>{t("active")}</option>
+                                    <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
                 <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
                     <select
@@ -107,22 +163,21 @@ const SellerRequests = () => {
                                 regionName: process.env.REACT_APP_REGION_NAME,
                             })}
                         </option>
-                        {stores.map((card) => (
-                            <option className="font-sans" value={card.id} key={card.id}>
-                                {card.name}
+                        {stores.map((store) => (
+                            <option className="font-sans" value={store.id} key={store.id}>
+                                {store.name}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
-
-                    {sellerRequests && sellerRequests.length > 0 ? (
+                    {storeId && products && products.length > 0 ? (
                         <>
-                            <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
+                            <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
+                                <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th
@@ -130,48 +185,81 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "14.3%",
                                                 }}
                                             >
-                                                {t("productName")}
+                                                {t("title")}
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 sm:px-3 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "14.3%",
+                                                }}
+                                            >
+                                                {t("category")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "14.3%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "14.3%",
                                                 }}
                                             >
-                                                {t("description")}
+                                                {t("price")}
                                             </th>
-
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "14.3%",
+                                                }}
+                                            >
+                                                {t("tax")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "14.3%",
                                                 }}
                                             >
                                                 {t("action")}
                                             </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "14.3%",
+                                                }}
+                                            >
+                                                {t("viewDetails")}
+                                            </th>
+
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        {sellerRequests.map((products, index) => (
-                                            <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                        {products.map((product, index) => (
+                                            <tr
+                                                key={index}
+                                                className="bg-white border-b hover:bg-gray-50"
+                                            >
                                                 <th
                                                     scope="row"
                                                     className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
@@ -179,93 +267,81 @@ const SellerRequests = () => {
                                                     <img
                                                         className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                         src={
-                                                            products.image
-                                                                ? process.env.REACT_APP_BUCKET_HOST + products.image
-                                                                : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
-                                                        }
-                                                        onClick={() =>
-                                                            navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
+                                                            product.image
+                                                                ? process.env.REACT_APP_BUCKET_HOST +
+                                                                product.image
+                                                                : process.env.REACT_APP_BUCKET_HOST +
+                                                                "admin/DefaultForum.jpeg"
                                                         }
                                                         alt="avatar"
                                                     />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
+                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
-                                                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={() =>
-                                                                navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
-                                                            }
+                                                            className="font-normal text-gray-500 truncate"
+                                                            style={{ fontFamily: 'Poppins, sans-serif' }}
                                                         >
-                                                            {products.title}
+                                                            {product.title}
                                                         </div>
                                                     </div>
                                                 </th>
 
                                                 <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    className={`px-6 py-4 text-center font-bold text-blue-600`}
+                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {new Date(products.createdAt).toLocaleString('de')}
+                                                    {product.categoryId}
                                                 </td>
 
                                                 <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    className="px-6 py-4 text-center font-bold text-blue-600"
+                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {products.description}
+                                                    {new Date(product.createdAt).toLocaleString('de')}
                                                 </td>
 
-                                                <td className="px-6 py-4 text-center font-bold">
-                                                    <div className="flex justify-center items-center">
-                                                        <a
-                                                            className={`font-medium text-red-600 px-2 cursor-pointer`}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={openPopup}
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                height="1em"
-                                                                viewBox="0 0 640 512"
-                                                                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
-                                                            >
-                                                                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                                                            </svg>
-                                                        </a>
+                                                <td
+                                                    className="px-6 py-4 text-center font-bold text-green-600"
+                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                >
+                                                    {product.price}
+                                                </td>
+
+                                                <td
+                                                    className={`px-6 py-4 text-center font-bold text-red-600`}
+                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                >
+                                                    {product.tax}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                                                product.isActive
+                                                            )} mr-2`}
+                                                        ></div>
+
+                                                        <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                                            {t(status[product.isActive].toLowerCase())}
+                                                        </h1>
                                                     </div>
                                                 </td>
 
-                                                {isPopupOpen && (
-                                                    <div className="fixed w-full px-4 sm:px-6 inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
-                                                        <div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-                                                            <h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
-                                                                {t("reason")}
-                                                            </h2>
-                                                            <textarea
-                                                                className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
-                                                                rows="4"
-                                                                value={text}
-                                                                onChange={handleTextChange}
-                                                            />
-                                                            <div className="text-center justify-center mt-4">
-                                                                <button
-                                                                    className="mt-3 mb-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                                                    onClick={closePopup}
-                                                                >
-                                                                    {t("cancel")}
-                                                                </button>
-                                                                <button
-                                                                    className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                                                // onClick={handleReportPost}
-                                                                >
-                                                                    {t("send")}
-                                                                </button>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className="relative group inline-block"
+                                                            onClick={() => handleViewDetailsClick(cityId, storeId, product.id)}
+                                                        >
+                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                {t("viewDetails")}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                )}
+                                                </td>
                                             </tr>
                                         ))}
-
                                     </tbody>
                                 </table>
                             </div>
@@ -289,7 +365,7 @@ const SellerRequests = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {sellerRequests.length >= pageSize && (
+                                {products.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}
@@ -387,12 +463,12 @@ const SellerRequests = () => {
                                     <circle cx="113" cy="113" fill="none" r="109" stroke="#6E6E96" strokeWidth="8" />
                                 </svg>
                                 <div className="tracking-widest mt-4">
-                                    <span className="text-gray-500 text-xl">{t("currently_no_items")}</span>
+                                    <span className="text-gray-500 text-xl">{t("currently_no_products")}</span>
                                 </div>
                             </center>
                             <center className="mt-6">
                                 <a
-                                    onClick={() => navigateTo("/SellerScreen")}
+                                    onClick={() => navigateTo("/OwnerScreen/StoreDetails")}
                                     className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-black group-hover:-translate-x-0 ease">
@@ -423,6 +499,7 @@ const SellerRequests = () => {
             </div>
         </section>
     );
-};
+}
 
-export default SellerRequests;
+// eslint-disable-next-line camelcase
+export default ProductStore;

@@ -154,7 +154,7 @@ function SideBar() {
 
         <div className="overflow-y-auto">
           <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
             onClick={handleListingSegmentClick}
           >
             <svg
@@ -180,7 +180,7 @@ function SideBar() {
           {isListingExpanded && (
             <div className="ml-4">
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={() => {
                   navigateTo("/Dashboard");
                   window.location.reload();
@@ -198,7 +198,7 @@ function SideBar() {
                 </span>
               </div>
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={() => {
                   localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   navigateTo("/UploadListings");
@@ -221,7 +221,7 @@ function SideBar() {
               </div>
               {userRole === role.Admin && (
                 <div
-                  className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                  className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                   onClick={() => {
                     navigateTo("/DashboardAdmin");
                     window.location.reload();
@@ -249,7 +249,7 @@ function SideBar() {
           {isForumEnabled === "True" && (
             <>
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={handleForumSegmentClick}
               >
                 <svg
@@ -277,7 +277,7 @@ function SideBar() {
                   {isForumEnabled && (
                     <div className="ml-4">
                       <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                         onClick={() => {
                           localStorage.setItem("selectedItem", t("createGroup"));
                           navigateTo("/CreateGroup");
@@ -299,7 +299,7 @@ function SideBar() {
                       </div>
 
                       <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                         onClick={() => {
                           navigateTo("/MyGroups");
                         }}
@@ -329,7 +329,7 @@ function SideBar() {
           {isBookingEnabled === "True" && (
             <>
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={handleBookingSegmentClick}
               >
                 <svg
@@ -359,7 +359,7 @@ function SideBar() {
                     <div className="ml-4">
                       <div>
                         <div
-                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
                             localStorage.setItem("selectedItem", t("myBooking"));
                             navigateTo("/AppointmentBooking/AppointmentsUserCreated");
@@ -383,7 +383,7 @@ function SideBar() {
 
                       <div>
                         <div
-                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
                             localStorage.setItem("selectedItem", t("myBooking"));
                             navigateTo("/AppointmentBooking/MyBookings");
@@ -415,7 +415,7 @@ function SideBar() {
           {isContainerEnabled === "True" && (
             <>
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={handleContainerSegmentClick}
               >
                 <svg
@@ -443,7 +443,7 @@ function SideBar() {
                   {isContainerEnabled && (
                     <div className="ml-4">
                       <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                         onClick={() => {
                           localStorage.setItem("selectedItem", t("myProducts"));
                           navigateTo("/SellerScreen");
@@ -465,7 +465,7 @@ function SideBar() {
                       </div>
 
                       <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                         onClick={() => {
                           localStorage.setItem("selectedItem", t("addNewProduct"));
                           navigateTo("/OwnerScreen");
@@ -487,7 +487,7 @@ function SideBar() {
                       </div>
 
                       <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                         onClick={() => {
                           localStorage.setItem("selectedItem", t("myOrders"));
                           navigateTo("/CustomerScreen");
@@ -516,7 +516,7 @@ function SideBar() {
 
           <div className="fixed sidebarNotFixed bottom-2 w-[280px]">
             <div
-              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/profilePage")}
             >
               <svg
@@ -534,7 +534,7 @@ function SideBar() {
               </span>
             </div>
             <div
-              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/AccountSettings")}
             >
               <svg
@@ -556,7 +556,7 @@ function SideBar() {
 
             {loggedIn && (
               <div
-                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                 onClick={handleLogout}
               >
                 <svg

@@ -1,5 +1,5 @@
 import React from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SideBar from "../../Components/SideBar";
 import "../../index.css";
 import { useTranslation } from "react-i18next";
@@ -13,22 +13,27 @@ const SellerScreen = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
 
-    // const navigate = useNavigate();
-    // const navigateTo = (path) => {
-    //     if (path) {
-    //         navigate(path);
-    //     }
-    // };
+    const navigate = useNavigate();
+    const navigateTo = (path) => {
+        if (path) {
+            navigate(path);
+        }
+    };
 
     return (
-        <section className="bg-red-50 body-font relative h-screen">
+        <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 py-5 bg-red-50 min-h-screen flex flex-col justify-center items-center">
+            <div className="container w-auto px-5 py-5 bg-gray-800 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
-                    <div className="h-full bg-red-50">
+                    <div className="h-full bg-gray-800">
                         <div className="mx-auto lg:px-20" >
-                            <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 h-full pb-40'>
-                                <div className="border-r border-purple-600 m-4 lg:pl-0">
+                            <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 h-full pb-40'
+                            >
+                                <div className="border-r border-purple-600 m-4 lg:pl-0"
+                                    onClick={() => {
+                                        navigateTo("/OwnerScreen/ProductStore");
+                                    }}
+                                >
                                     <div className=" py-10 pb-3 h-full relative bg-purple-100 group hover:bg-purple-200 cursor-pointer transition ease-out duration-300">
                                         <div>
                                             <img src={PRODUCTSIMAGE} />
@@ -40,7 +45,11 @@ const SellerScreen = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="border-r border-purple-600 m-4 lg:pl-0">
+                                <div className="border-r border-purple-600 m-4 lg:pl-0"
+                                    onClick={() => {
+                                        navigateTo("/OwnerScreen/Shelves");
+                                    }}
+                                >
                                     <div className=" py-10  pb-3 h-full relative bg-indigo-100 group hover:bg-indigo-200 cursor-pointer transition ease-out duration-300">
                                         <div>
                                             <img src={SHELFIMAGE} />
@@ -52,7 +61,11 @@ const SellerScreen = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="border-r border-purple-600 m-4 lg:pl-0">
+                                <div className="border-r border-purple-600 m-4 lg:pl-0"
+                                    onClick={() => {
+                                        navigateTo("/OwnerScreen/AllSellers");
+                                    }}
+                                >
                                     <div className=" py-10 pb-3 h-full relative bg-red-100 group hover:bg-red-200 cursor-pointer transition ease-out duration-300">
                                         <div>
                                             <img src={SELLERSIMAGE} />
@@ -64,7 +77,11 @@ const SellerScreen = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="border-r border-purple-600 m-4 lg:pl-0">
+                                <div className="border-r border-purple-600 m-4 lg:pl-0"
+                                    onClick={() => {
+                                        navigateTo("/OwnerScreen/AllOrders");
+                                    }}
+                                >
                                     <div className=" py-10 pb-3 h-full relative bg-emerald-100 group hover:bg-emerald-200 cursor-pointer transition ease-out duration-300">
                                         <div>
                                             <img src={ORDERSIMAGE} />

@@ -856,5 +856,9 @@
     "productsDescription": "See all of your products, just by clicking here",
     "shelvesDescription": "See all of the shelves, just by clicking here",
     "allSellersDescription": "See all of details of all sellers, just by clicking here",
-    "ordersDescription": "See summary of all your orders, just by clicking here"
+    "ordersDescription": "See summary of all your orders, just by clicking here",
+    "currently_no_products": "Currently there is no items to display ! Please select shop from dropdown above",
+    "currently_no_shelves": "Currently there is no items to display ! Please select shop from dropdown above",
+    "currently_no_sellers": "Currently there is no items to display ! Please select shop from dropdown above",
+    "currently_no_orders": "Currently there is no items to display ! Please select shop from dropdown above"
 }

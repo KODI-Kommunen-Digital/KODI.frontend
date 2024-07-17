@@ -34,9 +34,9 @@ const MyOrders = () => {
     };
 
     return (
-        <section className="bg-slate-600 body-font relative h-screen">
+        <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
                     {myOrders && myOrders.length > 0 ? (
                         <>
@@ -204,7 +204,7 @@ const MyOrders = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-100 mt-4 h-[30rem] flex flex-col justify-center items-center">
+                        <div className="bg-gray-100 mt-0 h-[30rem] flex flex-col justify-center items-center">
                             <center>
                                 <svg
                                     className="emoji-404"
