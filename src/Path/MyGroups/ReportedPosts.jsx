@@ -77,10 +77,10 @@ const ReportedPosts = () => {
 	};
 
 	return (
-		<section className="bg-slate-600 body-font relative h-screen">
+		<section className="bg-gray-800 body-font relative h-screen">
 			<SideBar />
 			<ForumNavbar cityId={cityId} forumId={forumId} />
-			<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+			<div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
 				<div className="h-full">
 					<div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
 						<table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 dark:text-gray-400 p-6 space-y-10 rounded-lg">

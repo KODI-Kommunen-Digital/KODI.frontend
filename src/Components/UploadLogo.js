@@ -19,7 +19,7 @@ function PhotoUploadArea() {
                 <div className="relative">
                     <img src={photo} alt="uploaded" className="w-full h-64 object-cover" />
                     <button
-                        className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full mt-4"
+                        className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded w-full mt-4"
                         onClick={handleRemove}
                     >
                         {t("remove")}
@@ -29,7 +29,7 @@ function PhotoUploadArea() {
                 <div className="text-center">
                     <label
                         htmlFor="file-input"
-                        className="w-full cursor-pointer bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                        className="w-full cursor-pointer bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
                     >
                         {t("upload")}
                     </label>

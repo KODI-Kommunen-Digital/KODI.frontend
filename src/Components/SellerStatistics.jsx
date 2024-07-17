@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantitySold, averagePricePerQuantity }) => {
     const { t } = useTranslation();
     return (
-        <section className="text-slate-800 body-font bg-slate-600">
-            <div className="bg-gray-600 mt-4 space-y-0 overflow-x-auto">
+        <section className="text-slate-800 body-font bg-gray-800">
+            <div className="bg-gray-800 mt-4 space-y-0 overflow-x-auto">
                 <div className="w-full text-sm text-left lg:mt-[0rem] mt-[0rem] text-gray-500 p-0 space-y-10 rounded-xl">
                     <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-4 lg:gap-0 mt-5">
                         <a className=" bg-white flex flex-col p-5 border-b-4 lg:border-b-0 lg:border-r-4 border-blue-600">

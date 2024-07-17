@@ -3,7 +3,7 @@ import React from "react";
 function ContactInfo() {
 	return (
 		<section className="bg-slate-300 body-font relative">
-			<div className="container px-5 py-5 mx-auto flex sm:flex-nowrap flex-wrap bg-slate-600">
+			<div className="container px-5 py-5 mx-auto flex sm:flex-nowrap flex-wrap bg-gray-800">
 				<div className="lg:w-4/5 md:w-1/3 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 p-6 mr-2">
 					<h2 className="text-slate-800 text-lg mb-4 font-medium title-font">
 						Information

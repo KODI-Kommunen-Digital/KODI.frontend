@@ -62,6 +62,13 @@ import ViewDetails from "./Path/Container/ViewDetails";
 import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
+import OwnerScreen from "./Path/Container/OwnerScreen";
+import StoreDetails from "./Path/Container/StoreDetails";
+import ProductStore from "./Path/Container/ProductStore";
+import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
+import Shelves from "./Path/Container/Shelves";
+import AllSellers from "./Path/Container/AllSellers";
+import AllOrders from "./Path/Container/AllOrders";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -205,6 +212,12 @@ const App = () => {
           {isContainerEnabled && (
             <React.Fragment>
               <Route
+                path="/OwnerScreen"
+                element={<OwnerScreen />}
+                exact
+              />
+
+              <Route
                 path="/SellerScreen"
                 element={<SellerScreen />}
                 exact
@@ -267,6 +280,42 @@ const App = () => {
               <Route
                 path="/CustomerScreen/GetCard"
                 element={<GetCard />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/StoreDetails"
+                element={<StoreDetails />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/ProductStore"
+                element={<ProductStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/ProductDetailsStore"
+                element={<ProductDetailsStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/Shelves"
+                element={<Shelves />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllSellers"
+                element={<AllSellers />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllOrders"
+                element={<AllOrders />}
                 exact
               />
 

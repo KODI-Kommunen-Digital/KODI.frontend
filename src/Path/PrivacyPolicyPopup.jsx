@@ -98,21 +98,21 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 						<div className="grid grid-cols-1 gap-2 justify-center">
 							<button
 								onClick={handleClose}
-								className="w-full mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								className="w-full mt-4 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("acceptAll")}
 							</button>
 							<button
 								onClick={handleClose}
-								className="w-full mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								className="w-full mt-4 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("acceptessential")}
 							</button>
 							<button
 								onClick={handleOpenSecondPopup}
-								className="w-full mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								className="w-full mt-4 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("individualprivicy")}
@@ -162,21 +162,21 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 justify-center">
 							<button
 								onClick={handleClose}
-								className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded bg-black disabled:opacity-60"
+								className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 mt-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("acceptAll")}
 							</button>
 							<button
 								onClick={handleClose}
-								className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded bg-black disabled:opacity-60"
+								className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 mt-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("acceptessential")}
 							</button>
 							<button
 								onClick={handleReturn}
-								className="w-full mt-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+								className="w-full mt-4 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
 								id="finalbutton"
 							>
 								{t("return")}
