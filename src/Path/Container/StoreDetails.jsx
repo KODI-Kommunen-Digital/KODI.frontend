@@ -93,6 +93,22 @@ const SellerScreen = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="border-r border-purple-600 m-4 lg:pl-0"
+                                    onClick={() => {
+                                        navigateTo("/OwnerScreen/AllProductRequests");
+                                    }}
+                                >
+                                    <div className=" py-10 pb-3 h-full relative bg-emerald-100 group hover:bg-emerald-200 cursor-pointer transition ease-out duration-300">
+                                        <div>
+                                            <img src={ORDERSIMAGE} />
+                                        </div>
+                                        <div className="px-7 mt-20">
+                                            <h1 className="text-3xl font-bold group-hover:text-emerald-300 transition ease-out duration-300">05.</h1>
+                                            <h2 className="text-1xl mt-4 font-bold">{t("orders")}</h2>
+                                            <p className="mt-2 opacity-60 group-hover:opacity-70 ">{t("ordersDescription")}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

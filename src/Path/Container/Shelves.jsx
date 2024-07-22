@@ -181,7 +181,7 @@ function Shelves() {
                                                         className="px-6 py-4 text-center font-bold"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
-                                                        {shelve.productId}
+                                                        {shelve.product?shelve.product.title: " "}
                                                     </td>
 
                                                     <td

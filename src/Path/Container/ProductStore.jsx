@@ -33,7 +33,7 @@ function ProductStore() {
                 fetchProducts(cityId, storeId, pageNumber);
             }
         }
-    }, [fetchProducts]);
+    }, [fetchProducts,pageNumber,storeId,stores]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -267,9 +267,9 @@ function ProductStore() {
                                                     <img
                                                         className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                         src={
-                                                            product.image
+                                                            product.productImages[0]
                                                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                                                product.image
+                                                                product.productImages[0]
                                                                 : process.env.REACT_APP_BUCKET_HOST +
                                                                 "admin/DefaultForum.jpeg"
                                                         }
