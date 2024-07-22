@@ -55,8 +55,8 @@ export async function updateStoreById(cityId, storeId, params) {
     return axios.patch(`/v1/cities/${cityId}/store/${storeId}`, params,);
 }
 
-export async function getShelves(cityId, storeId) {
-    return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelves`);
+export async function getShelves(cityId, storeId,pageNo) {
+    return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelves?pageNumber=${pageNo}&pageSize=9`);
 }
 
 export async function createShelf(cityId, storeId, params) {
@@ -94,4 +94,8 @@ export async function getProductRequest(cityId, storeId, pageNumber, status) {
 
 export async function deleteSeller(sellerId) {
     return axios.delete(`/v1/owners/deleteSeller/${sellerId}`);
+}
+
+export async function getProductRequests(storeId, pageNumber, status) {
+    return axios.get(`/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
