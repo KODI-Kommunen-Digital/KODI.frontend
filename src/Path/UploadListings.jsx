@@ -112,11 +112,10 @@ function UploadListings() {
       }
 
       if (file.type.startsWith("image/")) {
-        setOnlyImage(true);
         setLocalImageOrPdf(true);
         setImage(e.target.files);
       } else if (file.type === "application/pdf") {
-        if (onlyImage) {
+        if (image.length > 0) {
           alert(t("imagePdfAlert"));
           return;
         }
@@ -134,7 +133,7 @@ function UploadListings() {
   const handleMultipleInputChange = (event) => {
     const newFiles = Array.from(event.target.files);
 
-    if (onlyImage) {
+    if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
 
       if (validImages.length > 0) {
@@ -153,7 +152,6 @@ function UploadListings() {
             hasAttachment: true,
           }));
         } else if (file.type.startsWith("image/")) {
-          setOnlyImage(true);
           setLocalImages((prevImages) => [...prevImages, file]);
           setImage((prevImages) => [...prevImages, file]);
         }
@@ -164,7 +162,7 @@ function UploadListings() {
   const handleUpdateMultipleInputChange = (e) => {
     const newFiles = Array.from(e.target.files);
 
-    if (onlyImage) {
+    if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
 
       if (validImages.length > 0) {
@@ -183,7 +181,6 @@ function UploadListings() {
             hasAttachment: true,
           }));
         } else if (file.type.startsWith("image/")) {
-          setOnlyImage(true);
           setLocalImages((prevImages) => [...prevImages, file]);
           setImage((prevImages) => [...prevImages, file]);
         }
