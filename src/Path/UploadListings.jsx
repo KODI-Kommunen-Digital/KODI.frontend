@@ -102,29 +102,43 @@ function UploadListings() {
 
   function handleInputChange(e) {
     e.preventDefault();
-    const file = e.target.files[0];
-    if (file) {
-      const MAX_IMAGE_SIZE_MB = 20;
+    const files = e.target.files;
+    const MAX_IMAGE_SIZE_MB = 20;
+    let hasImage = false;
+    let hasPdf = false;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
         return;
       }
 
       if (file.type.startsWith("image/")) {
-        setLocalImageOrPdf(true);
-        setImage(e.target.files);
+        hasImage = true;
       } else if (file.type === "application/pdf") {
-        if (image.length > 0) {
-          alert(t("imagePdfAlert"));
-          return;
-        }
-        setLocalImageOrPdf(true);
-        setPdf(file);
-        setListingInput((prev) => ({
-          ...prev,
-          hasAttachment: true,
-        }));
+        hasPdf = true;
       }
+    }
+
+    if (hasImage && hasPdf) {
+      alert(t("imagePdfAlert"));
+      return;
+    }
+
+    if (hasImage) {
+      setLocalImageOrPdf(true);
+      setImage(files);
+    }
+
+    if (hasPdf) {
+      setLocalImageOrPdf(true);
+      setPdf(files[0]); // Assuming only one PDF file is allowed
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: true,
+      }));
     }
   }
 
@@ -134,8 +148,11 @@ function UploadListings() {
 
     if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/") && file.type !== "application/pdf");
 
-      if (validImages.length > 0) {
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else if (validImages.length > 0) {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
       } else {
@@ -163,9 +180,12 @@ function UploadListings() {
 
     if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/") && file.type !== "application/pdf");
 
-      if (validImages.length > 0) {
-        setLocalImageOrPdf(true);
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else if (validImages.length > 0) {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
       } else {
         alert(t("imagePdfAlert"));
@@ -292,7 +312,6 @@ function UploadListings() {
       },
     }],
   });
-  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
