@@ -22,7 +22,6 @@
     "below": "Unterdießen",
     "cancel": "Abbrechen",
     "carpoolingPublicTransport": "Mitfahrbank / ÖPNV",
-    "appointmentBooking": "Terminbuchung",
     "category": "Kategorie",
     "add": "Hinzufügen",
     "change": "Ändern",
@@ -756,5 +755,7 @@
     "step3": "Schritt 3: Bitte verifizieren Sie die Mail, indem Sie in Ihr Postfach gehen und den Bestätigungslink drücken",
     "step4": "Schritt 4: Ihr Account ist verifiziert und Sie können sich mit Ihren Login-Daten einloggen",
     "thankYou": "Danke!!",
-    "noOfViews": "Anzahl der Aufrufe"
+    "noOfViews": "Anzahl der Aufrufe",
+    "imagePdfWarning": "Sie können entweder Bilder oder PDF hochladen, aber nicht beides",
+    "imagePdfAlert": "Sie können keine PDF-Datei hochladen, wenn bereits ein Bild hochgeladen wurde"
 }

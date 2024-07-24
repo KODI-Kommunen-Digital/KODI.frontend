@@ -44,8 +44,7 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  // const [, setStartDate] = useState([]);
-  // const [, setEndDate] = useState([]);
+  const [onlyImage, setOnlyImage] = useState(false);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -113,9 +112,14 @@ function UploadListings() {
       }
 
       if (file.type.startsWith("image/")) {
+        setOnlyImage(true);
         setLocalImageOrPdf(true);
         setImage(e.target.files);
       } else if (file.type === "application/pdf") {
+        if (onlyImage) {
+          alert(t("imagePdfAlert"));
+          return;
+        }
         setLocalImageOrPdf(true);
         setPdf(file);
         setListingInput((prev) => ({
@@ -128,23 +132,62 @@ function UploadListings() {
 
   const [localImages, setLocalImages] = useState([]);
   const handleMultipleInputChange = (event) => {
-    const newImages = Array.from(event.target.files);
-    setLocalImages((prevImages) => [...prevImages, ...newImages]);
-    setImage([...image, ...newImages]);
+    const newFiles = Array.from(event.target.files);
+
+    if (onlyImage) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+
+      if (validImages.length > 0) {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
+        setImage((prevImages) => [...prevImages, ...validImages]);
+      } else {
+        alert(t("imagePdfAlert"));
+      }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setOnlyImage(true);
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
+    }
   };
 
   const handleUpdateMultipleInputChange = (e) => {
-    const newFiles = e.target.files;
+    const newFiles = Array.from(e.target.files);
 
-    if (newFiles.length > 0) {
-      const validImages = Array.from(newFiles).filter((file) =>
-        file.type.startsWith("image/")
-      );
+    if (onlyImage) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
 
       if (validImages.length > 0) {
         setLocalImageOrPdf(true);
         setImage((prevImages) => [...prevImages, ...validImages]);
+      } else {
+        alert(t("imagePdfAlert"));
       }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setOnlyImage(true);
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
     }
   };
 
@@ -1638,6 +1681,12 @@ function UploadListings() {
                   </div>
                 </div>
               )}
+            </div>
+
+            <div
+              className="h-[24px] text-red-600"
+            >
+              {t("imagePdfWarning")}
             </div>
           </div>
         </div>
