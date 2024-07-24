@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
-import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getProducts, getStores } from "../../Services/containerApi";
-import { useTranslation } from 'react-i18next';
+import { getProductRequests, getStores } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
+import { useTranslation } from 'react-i18next';
+import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
 
-function ProductStore() {
+function AllProductRequests() {
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
-    const [products, setProducts] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
+    const [productRequests, setProductRequests] = useState([]);
     const [storeId, setStoreId] = useState();
-    const [cityId, setCityId] = useState();
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
+    const [cityId, setCityId] = useState();
 
-    const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
+
+    const fetchProductRequests = useCallback((cityId, storeId, pageNumber) => {
         if (cityId && storeId) {
-            getProducts(cityId, storeId, pageNumber).then((response) => {
-                setProducts(response.data.data);
+            getProductRequests(cityId, storeId, pageNumber).then((response) => {
+                setProductRequests(response.data.data);
             });
         }
     }, []);
@@ -30,10 +31,10 @@ function ProductStore() {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore.cityId;
             if (selectedStore) {
-                fetchProducts(cityId, storeId, pageNumber);
+                fetchProductRequests(cityId, storeId, pageNumber);
             }
         }
-    }, [fetchProducts]);
+    }, [fetchProductRequests]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -44,15 +45,6 @@ function ProductStore() {
     useEffect(() => {
         fetchStores();
     }, [fetchStores]);
-
-    function getStatusClass(statusId) {
-        if (status[statusId] === "Active") {
-            return "bg-green-400";
-        }
-        if (status[statusId] === "Pending") {
-            return "bg-yellow-400";
-        }
-    }
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -68,12 +60,8 @@ function ProductStore() {
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProducts(cityId, storeId, 1); // Reset to first page
+            fetchProductRequests(cityId, storeId, 1); // Reset to first page
         }
-    };
-
-    const handleViewDetailsClick = (cityId, storeId, productId) => {
-        navigate(`/OwnerScreen/ProductDetailsStore?cityId=${cityId}&storeId=${storeId}&productId=${productId}`);
     };
 
     const navigate = useNavigate();
@@ -83,6 +71,18 @@ function ProductStore() {
         }
     };
 
+    function getStatusClass(statusId) {
+        if (status[statusId] === "Active") {
+            return "bg-green-400";
+        }
+        if (status[statusId] === "Pending") {
+            return "bg-yellow-400";
+        }
+    }
+
+    const handleViewDetailsClick = (cityId, storeId, productId) => {
+        navigate(`/OwnerScreen/ProductDetailsStore?cityId=${cityId}&storeId=${storeId}&productId=${productId}`);
+    };
     return (
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
@@ -95,17 +95,17 @@ function ProductStore() {
                                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {t("active")}
-                                    </div>
-                                    <div
-                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
                                         onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("pending")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("active")}
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@ function ProductStore() {
 
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
-                    {storeId && products && products.length > 0 ? (
+                    {storeId && productRequests && productRequests.length > 0 ? (
                         <>
                             <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
                                 <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
@@ -236,7 +236,7 @@ function ProductStore() {
                                     </thead>
 
                                     <tbody>
-                                        {products.map((product, index) => (
+                                        {productRequests.map((product, index) => (
                                             <tr
                                                 key={index}
                                                 className="bg-white border-b hover:bg-gray-50"
@@ -248,7 +248,7 @@ function ProductStore() {
                                                     <img
                                                         className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                         src={
-                                                            product.image
+                                                            product.productImages
                                                                 ? process.env.REACT_APP_BUCKET_HOST +
                                                                 product.productImages[0]
                                                                 : process.env.REACT_APP_BUCKET_HOST +
@@ -298,12 +298,12 @@ function ProductStore() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                product.isActive
+                                                                product.selectedStatus
                                                             )} mr-2`}
                                                         ></div>
 
                                                         <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(status[product.isActive].toLowerCase())}
+                                                            {t(status[product.selectedStatus].toLowerCase())}
                                                         </h1>
                                                     </div>
                                                 </td>
@@ -346,7 +346,7 @@ function ProductStore() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && (
+                                {productRequests.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}
@@ -482,4 +482,4 @@ function ProductStore() {
     );
 }
 
-export default ProductStore;
+export default AllProductRequests;

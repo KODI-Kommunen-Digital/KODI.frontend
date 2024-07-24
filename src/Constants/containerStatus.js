@@ -1,13 +1,15 @@
-const containerStatus = {
+const status = {
+    0: "Pending",
     1: "Active",
     2: "Inactive",
-    0: "Pending",
+    3: "ChangeRequested",
 };
 
 const statusByName = {
+    Pending: 0,
     Active: 1,
     Inactive: 2,
-    Pending: 0,
+    ChangeRequested: 3,
 };
 
-module.exports = { containerStatus, statusByName };
+module.exports = { status, statusByName };

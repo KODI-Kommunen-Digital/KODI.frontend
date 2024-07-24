@@ -39,7 +39,8 @@ const ProductDetailsStore = () => {
                             <>
                                 <div className="md:flex-1 px-4">
                                     <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
-                                        <img className="w-full h-full object-cover" src={product.productImages && product.productImages.length > 0 ? product.productImages[0] : CONTAINERIMAGE} />
+                                        <img className="w-full h-full object-cover" src={product.productImages && product.productImages.length > 0 ? process.env.REACT_APP_BUCKET_HOST +
+                                            product.productImages[0] : CONTAINERIMAGE} />
                                     </div>
                                 </div>
                                 <div className="md:flex-1 px-4">

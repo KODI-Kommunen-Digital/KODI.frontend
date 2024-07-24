@@ -13,9 +13,11 @@ function Shelves() {
     const [stores, setStores] = useState([]);
 
     const fetchAll = useCallback((cityId, storeId, pageNumber) => {
-        getShelves(cityId, storeId, pageNumber).then((response) => {
-            setShelves(response.data.data);
-        });
+        if (cityId && storeId) {
+            getShelves(cityId, storeId, pageNumber).then((response) => {
+                setShelves(response.data.data);
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -123,7 +125,7 @@ function Shelves() {
                                                     width: "25%",
                                                 }}
                                             >
-                                                {t("productId")}
+                                                {t("product")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -181,7 +183,15 @@ function Shelves() {
                                                         className="px-6 py-4 text-center font-bold"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
-                                                        {shelve.productId}
+                                                        {shelve.product ? (
+                                                            <div key={shelve.product.id} className="font-bold text-red-600 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                                {shelve.product.title}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="font-bold text-red-600 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                                {t("noProduct")}
+                                                            </div>
+                                                        )}
                                                     </td>
 
                                                     <td

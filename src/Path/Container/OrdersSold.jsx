@@ -156,7 +156,7 @@ const OrdersSold = () => {
                                                     />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
                                                         <div
-                                                            className="font-medium text-gray-500 cursor-pointer text-center truncate"
+                                                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
                                                             style={{ fontFamily: "Poppins, sans-serif" }}
                                                             onClick={() =>
                                                                 navigateTo(
@@ -175,7 +175,7 @@ const OrdersSold = () => {
                                                     {products.quantity}
                                                 </td>
                                                 <td
-                                                    className="px-6 py-4 text-center font-bold"
+                                                    className="px-6 py-4 text-center font-bold text-red-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
                                                     € {products.pricePerQuantity}
