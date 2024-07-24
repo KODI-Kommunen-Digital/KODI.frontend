@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
 import { getSellers, getStores } from "../../Services/containerApi";
-import { containerStatus, statusByName } from "../../Constants/containerStatus";
+import { status, statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 
 function AllSellers() {
@@ -11,12 +11,12 @@ function AllSellers() {
     const pageSize = 9;
     const [sellers, setSellers] = useState([]);
     const [storeId, setStoreId] = useState();
-    const [status, setStatus] = useState(statusByName.Active);
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
 
-    const fetchProducts = useCallback((cityId, storeId, pageNumber, status) => {
+    const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
         if (cityId && storeId) {
-            getSellers(cityId, storeId, pageNumber, status).then((response) => {
+            getSellers(cityId, storeId, pageNumber).then((response) => {
                 setSellers(response.data.data);
             });
         }
@@ -27,7 +27,7 @@ function AllSellers() {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore?.cityId;
             if (selectedStore) {
-                fetchProducts(cityId, storeId, pageNumber, status);
+                fetchProducts(cityId, storeId, pageNumber);
             }
         }
     }, [fetchProducts]);
@@ -67,13 +67,10 @@ function AllSellers() {
     };
 
     function getStatusClass(statusId) {
-        if (containerStatus[statusId] === "Active") {
+        if (status[statusId] === "Active") {
             return "bg-green-400";
         }
-        if (containerStatus[statusId] === "Inactive") {
-            return "bg-red-400";
-        }
-        if (containerStatus[statusId] === "Pending") {
+        if (status[statusId] === "Pending") {
             return "bg-yellow-400";
         }
     }
@@ -90,24 +87,17 @@ function AllSellers() {
                                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setStatus(statusByName.Active)}
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("active")}
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setStatus(statusByName.Pending)}
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("pending")}
-                                    </div>
-                                    <div
-                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setStatus(statusByName.Inactive)}
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {t("inactive")}
                                     </div>
                                 </div>
                             </div>
@@ -115,13 +105,12 @@ function AllSellers() {
                             <div className="-my-2 -mr-2 lg:hidden">
                                 <select
                                     className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
-                                    onChange={(e) => setStatus(e.target.value)}
-                                    value={status || ""}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    value={selectedStatus || ""}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
-                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
                                 </select>
                             </div>
                         </div>
@@ -169,27 +158,17 @@ function AllSellers() {
                                                 className="px-6 sm:px-6 py-3"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("title")}
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-3 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
-                                                }}
-                                            >
-                                                {t("category")}
-                                            </th>
-                                            <th
-                                                scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
@@ -199,27 +178,17 @@ function AllSellers() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("price")}
+                                                {t("description")}
                                             </th>
                                             <th
                                                 scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
-                                                }}
-                                            >
-                                                {t("tax")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.6%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("action")}
@@ -251,20 +220,13 @@ function AllSellers() {
                                                     />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
-                                                            className="font-normal text-gray-500 truncate"
+                                                            className="font-bold text-gray-500 truncate"
                                                             style={{ fontFamily: 'Poppins, sans-serif' }}
                                                         >
                                                             {seller.title}
                                                         </div>
                                                     </div>
                                                 </th>
-
-                                                <td
-                                                    className={`px-6 py-4 text-center font-bold text-blue-600`}
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {seller.categoryId}
-                                                </td>
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
@@ -274,17 +236,10 @@ function AllSellers() {
                                                 </td>
 
                                                 <td
-                                                    className="px-6 py-4 text-center font-bold text-green-600"
+                                                    className="px-6 py-4 text-center font-bold text-blue-600 truncate"
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {seller.price}
-                                                </td>
-
-                                                <td
-                                                    className={`px-6 py-4 text-center font-bold text-red-600`}
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {seller.tax}
+                                                    {seller.description}
                                                 </td>
 
                                                 <td className="px-6 py-4">
@@ -296,7 +251,7 @@ function AllSellers() {
                                                         ></div>
 
                                                         <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(containerStatus[seller.status].toLowerCase())}
+                                                            {t(status[seller.status].toLowerCase())}
                                                         </h1>
                                                     </div>
                                                 </td>

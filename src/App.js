@@ -69,6 +69,7 @@ import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
 import Shelves from "./Path/Container/Shelves";
 import AllSellers from "./Path/Container/AllSellers";
 import AllOrders from "./Path/Container/AllOrders";
+import AllProductRequests from "./Path/Container/AllProductRequests";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -316,6 +317,12 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllOrders"
                 element={<AllOrders />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllProductRequests"
+                element={<AllProductRequests />}
                 exact
               />
 

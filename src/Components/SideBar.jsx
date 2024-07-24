@@ -482,7 +482,7 @@ function SideBar() {
                           className="text-[15px] ml-4 text-gray-200 font-bold"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {t("addNewProduct")}
+                          {t("ownerScreen")}
                         </span>
                       </div>
 
@@ -504,7 +504,7 @@ function SideBar() {
                           className="text-[15px] ml-4 text-gray-200 font-bold"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {t("myOrders")}
+                          {t("customerScreen")}
                         </span>
                       </div>
                     </div>
