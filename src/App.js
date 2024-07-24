@@ -58,8 +58,8 @@ import OrdersSold from "./Path/Container/OrdersSold";
 import AddNewProducts from "./Path/Container/AddNewProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
-import ViewDetails from "./Path/Container/ViewDetails";
-import OrderDetails from "./Path/Container/OrderDetails.jsx";
+// import ViewDetails from "./Path/Container/ViewDetails";
+// import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
 import OwnerScreen from "./Path/Container/OwnerScreen";
@@ -260,17 +260,17 @@ const App = () => {
                 exact
               />
 
-              <Route
+              {/* <Route
                 path="/CustomerScreen/MyOrders/ViewDetails"
                 element={<ViewDetails />}
                 exact
-              />
+              /> */}
 
-              <Route
+              {/* <Route
                 path="/CustomerScreen/OrderDetails"
                 element={<OrderDetails />}
                 exact
-              />
+              /> */}
 
               <Route
                 path="/CustomerScreen/PaymentStatus"

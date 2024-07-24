@@ -27,7 +27,7 @@ const SellerScreen = () => {
             <div className="container w-auto px-5 py-5 bg-gray-800 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
                     <div className="h-full bg-gray-800">
-                        <div className="mx-auto lg:px-20" >
+                        <div className="mx-auto lg:px-0" >
                             <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 h-full pb-40'
                             >
                                 <div className="border-r border-purple-600 m-4 lg:pl-0"
@@ -35,7 +35,7 @@ const SellerScreen = () => {
                                         navigateTo("/OwnerScreen/ProductStore");
                                     }}
                                 >
-                                    <div className=" py-10 pb-3 h-full relative bg-purple-100 group hover:bg-purple-200 cursor-pointer transition ease-out duration-300">
+                                    <div className="py-10 pb-3 h-full relative bg-purple-100 group hover:bg-purple-200 cursor-pointer transition ease-out duration-300">
                                         <div>
                                             <img src={PRODUCTSIMAGE} />
                                         </div>
@@ -51,8 +51,8 @@ const SellerScreen = () => {
                                         navigateTo("/OwnerScreen/Shelves");
                                     }}
                                 >
-                                    <div className=" py-10  pb-3 h-full relative bg-blue-100 group hover:bg-blue-200 cursor-pointer transition ease-out duration-300">
-                                        <div>
+                                    <div className="py-10 pb-3 h-full relative bg-blue-100 group hover:bg-blue-200 cursor-pointer transition ease-out duration-300">
+                                        <div className="w-full flex justify-center">
                                             <img src={SHELFIMAGE} />
                                         </div>
                                         <div className="px-7 mt-20">
@@ -68,7 +68,7 @@ const SellerScreen = () => {
                                     }}
                                 >
                                     <div className=" py-10 pb-3 h-full relative bg-red-100 group hover:bg-red-200 cursor-pointer transition ease-out duration-300">
-                                        <div>
+                                        <div className="w-full flex justify-center">
                                             <img src={SELLERSIMAGE} />
                                         </div>
                                         <div className="px-7 mt-20">
@@ -84,7 +84,7 @@ const SellerScreen = () => {
                                     }}
                                 >
                                     <div className=" py-10 pb-3 h-full relative bg-emerald-100 group hover:bg-emerald-200 cursor-pointer transition ease-out duration-300">
-                                        <div>
+                                        <div className="w-full flex justify-center">
                                             <img src={ORDERSIMAGE} />
                                         </div>
                                         <div className="px-7 mt-20">
@@ -100,7 +100,7 @@ const SellerScreen = () => {
                                     }}
                                 >
                                     <div className=" py-10 pb-3 h-full relative bg-yellow-100 group hover:bg-yellow-200 cursor-pointer transition ease-out duration-300">
-                                        <div>
+                                        <div className="w-full flex justify-center">
                                             <img src={PRODUCTREQ} />
                                         </div>
                                         <div className="px-7 mt-20">

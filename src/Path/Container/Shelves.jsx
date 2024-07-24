@@ -22,7 +22,7 @@ function Shelves() {
 
     useEffect(() => {
         fetchAll();
-    }, [fetchAll, pageNumber]);
+    }, [fetchAll, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {

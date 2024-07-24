@@ -30,7 +30,7 @@ function AllSellers() {
                 fetchProducts(cityId, storeId, pageNumber);
             }
         }
-    }, [fetchProducts]);
+    }, [fetchProducts, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -70,8 +70,8 @@ function AllSellers() {
         if (status[statusId] === "Active") {
             return "bg-green-400";
         }
-        if (status[statusId] === "Pending") {
-            return "bg-yellow-400";
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
         }
     }
 
@@ -94,10 +94,10 @@ function AllSellers() {
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("pending")}
+                                        {t("inactive")}
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@ function AllSellers() {
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
-                                    <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
                                 </select>
                             </div>
                         </div>

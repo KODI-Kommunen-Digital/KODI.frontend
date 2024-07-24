@@ -10,6 +10,10 @@ export async function getShopsInACity(cityId) {
     return axios.get(`/v1/cities/${cityId}/store`);
 }
 
+export async function getUserRoleContainer() {
+    return axios.get(`/v1/users/${getUserId()}`);
+}
+
 export async function getSellerRequests(cityId, storeId, params) {
     return axios.get(`/v1/seller/requests?cityId=${cityId}&storeId=${storeId}`, params);
 }
@@ -89,11 +93,6 @@ export async function getProductById(cityId, storeId, productId) {
 
 export async function getOrderById(cityId, storeId, orderId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/orders/${orderId}`);
-}
-
-export async function getProductRequest(cityId, storeId, pageNumber, status) {
-    return axios.get(`/v1/cities/${cityId}/store/${storeId}/productRequest?pageNumber=${pageNumber}&pageSize=9&status=${status}`);
-
 }
 
 export async function deleteSeller(sellerId) {

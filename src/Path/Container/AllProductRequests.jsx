@@ -34,7 +34,7 @@ function AllProductRequests() {
                 fetchProductRequests(cityId, storeId, pageNumber);
             }
         }
-    }, [fetchProductRequests]);
+    }, [fetchProductRequests, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -75,8 +75,14 @@ function AllProductRequests() {
         if (status[statusId] === "Active") {
             return "bg-green-400";
         }
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
+        }
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
+        }
+        if (status[statusId] === "ChangeRequested") {
+            return "bg-blue-400";
         }
     }
 
@@ -95,6 +101,13 @@ function AllProductRequests() {
                                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("active")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
                                         onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
@@ -102,10 +115,17 @@ function AllProductRequests() {
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("active")}
+                                        {t("inactive")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("changeRequested")}
                                     </div>
                                 </div>
                             </div>
@@ -119,6 +139,8 @@ function AllProductRequests() {
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
+                                    <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option>
                                 </select>
                             </div>
                         </div>

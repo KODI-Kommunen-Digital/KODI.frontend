@@ -28,7 +28,7 @@ function AllSellers() {
                 fetchProducts(cityId, storeId, pageNumber);
             }
         }
-    }, [fetchProducts]);
+    }, [fetchProducts, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
