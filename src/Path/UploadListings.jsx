@@ -44,7 +44,6 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  // const [onlyImage, setOnlyImage] = useState(false);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
