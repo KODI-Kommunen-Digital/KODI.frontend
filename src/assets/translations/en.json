@@ -743,5 +743,7 @@
     "step3": "<strong>Step 3:</strong> Please verify the email by going to your inbox and clicking the confirmation link",
     "step4": "<strong>Step 4:</strong> Your account is verified, and you can log in with your login credentials",
     "thankYou": "Thank you!!",
-    "noOfViews": "Number of views"
+    "noOfViews": "Number of views",
+    "imagePdfWarning": "You can eaither upload Images or PDF, but you cannot do both",
+    "imagePdfAlert": "You cannot upload a PDF file when an image has already been uploaded"
 }

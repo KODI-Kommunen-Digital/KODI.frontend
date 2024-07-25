@@ -44,8 +44,6 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  // const [, setStartDate] = useState([]);
-  // const [, setEndDate] = useState([]);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -104,47 +102,108 @@ function UploadListings() {
 
   function handleInputChange(e) {
     e.preventDefault();
-    const file = e.target.files[0];
-    if (file) {
-      const MAX_IMAGE_SIZE_MB = 20;
+    const files = e.target.files;
+    const MAX_IMAGE_SIZE_MB = 20;
+    let hasImage = false;
+    let hasPdf = false;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
         return;
       }
 
       if (file.type.startsWith("image/")) {
-        setLocalImageOrPdf(true);
-        setImage(e.target.files);
+        hasImage = true;
       } else if (file.type === "application/pdf") {
-        setLocalImageOrPdf(true);
-        setPdf(file);
-        setListingInput((prev) => ({
-          ...prev,
-          hasAttachment: true,
-        }));
+        hasPdf = true;
       }
+    }
+
+    if (hasImage && hasPdf) {
+      alert(t("imagePdfAlert"));
+      return;
+    }
+
+    if (hasImage) {
+      setLocalImageOrPdf(true);
+      setImage(files);
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: false,
+      }));
+    }
+
+    if (hasPdf) {
+      setLocalImageOrPdf(true);
+      setPdf(files[0]); // Assuming only one PDF file is allowed
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: true,
+      }));
     }
   }
 
   const [localImages, setLocalImages] = useState([]);
   const handleMultipleInputChange = (event) => {
-    const newImages = Array.from(event.target.files);
-    setLocalImages((prevImages) => [...prevImages, ...newImages]);
-    setImage([...image, ...newImages]);
+    const newFiles = Array.from(event.target.files);
+
+    if (image.length > 0) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
+        setImage((prevImages) => [...prevImages, ...validImages]);
+      }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
+    }
   };
 
   const handleUpdateMultipleInputChange = (e) => {
-    const newFiles = e.target.files;
+    const newFiles = Array.from(e.target.files);
 
-    if (newFiles.length > 0) {
-      const validImages = Array.from(newFiles).filter((file) =>
-        file.type.startsWith("image/")
-      );
+    if (image.length > 0) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-      if (validImages.length > 0) {
-        setLocalImageOrPdf(true);
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
       }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
     }
   };
 
@@ -253,7 +312,6 @@ function UploadListings() {
       },
     }],
   });
-  console.log(appointmentInput)
 
   const [appointmentError, setAppointmentError] = useState({
     name: "",
@@ -1638,6 +1696,12 @@ function UploadListings() {
                   </div>
                 </div>
               )}
+            </div>
+
+            <div
+              className="h-[24px] text-red-600"
+            >
+              {t("imagePdfWarning")}
             </div>
           </div>
         </div>
