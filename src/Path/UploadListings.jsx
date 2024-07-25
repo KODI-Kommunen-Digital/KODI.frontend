@@ -130,6 +130,10 @@ function UploadListings() {
     if (hasImage) {
       setLocalImageOrPdf(true);
       setImage(files);
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: false,
+      }));
     }
 
     if (hasPdf) {
@@ -148,15 +152,13 @@ function UploadListings() {
 
     if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/") && file.type !== "application/pdf");
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
-      } else if (validImages.length > 0) {
+      } else {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
-      } else {
-        alert(t("imagePdfAlert"));
       }
     } else {
       newFiles.forEach(file => {
@@ -180,15 +182,13 @@ function UploadListings() {
 
     if (image.length > 0) {
       const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/") && file.type !== "application/pdf");
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
-      } else if (validImages.length > 0) {
+      } else {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
-      } else {
-        alert(t("imagePdfAlert"));
       }
     } else {
       newFiles.forEach(file => {
