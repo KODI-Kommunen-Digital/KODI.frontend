@@ -13,7 +13,6 @@ import PRODUCTREQ from "../../assets/productRequests.png";
 const SellerScreen = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
-
     const navigate = useNavigate();
     const navigateTo = (path) => {
         if (path) {

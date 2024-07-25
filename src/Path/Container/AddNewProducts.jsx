@@ -12,7 +12,6 @@ import { createNewProduct, getShopsInACity } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
-
     const editor = useRef(null);
     const [updating, setUpdating] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");

@@ -112,7 +112,7 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        const roles = roleResponse.data.roles;
+        const roles = roleResponse.data.data;
         if (roles.includes(101)) {
           setIsOwner(true);
         }

@@ -8,6 +8,7 @@ import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
 
 function AllProductRequests() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
@@ -18,9 +19,9 @@ function AllProductRequests() {
     const [cityId, setCityId] = useState();
 
 
-    const fetchProductRequests = useCallback((cityId, storeId, pageNumber) => {
-        if (cityId && storeId) {
-            getProductRequests(cityId, storeId, pageNumber).then((response) => {
+    const fetchProductRequests = useCallback((storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            getProductRequests(storeId, pageNumber, selectedStatus).then((response) => {
                 setProductRequests(response.data.data);
             });
         }
@@ -29,12 +30,11 @@ function AllProductRequests() {
     useEffect(() => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore.cityId;
             if (selectedStore) {
-                fetchProductRequests(cityId, storeId, pageNumber);
+                fetchProductRequests(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProductRequests, storeId, pageNumber]);
+    }, [fetchProductRequests, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -320,12 +320,12 @@ function AllProductRequests() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                product.selectedStatus
+                                                                product.status
                                                             )} mr-2`}
                                                         ></div>
 
                                                         <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(status[product.selectedStatus].toLowerCase())}
+                                                            {t(status[product.status].toLowerCase())}
                                                         </h1>
                                                     </div>
                                                 </td>

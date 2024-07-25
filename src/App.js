@@ -58,8 +58,6 @@ import OrdersSold from "./Path/Container/OrdersSold";
 import AddNewProducts from "./Path/Container/AddNewProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
-// import ViewDetails from "./Path/Container/ViewDetails";
-// import OrderDetails from "./Path/Container/OrderDetails.jsx";
 import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
 import OwnerScreen from "./Path/Container/OwnerScreen";
@@ -70,6 +68,7 @@ import Shelves from "./Path/Container/Shelves";
 import AllSellers from "./Path/Container/AllSellers";
 import AllOrders from "./Path/Container/AllOrders";
 import AllProductRequests from "./Path/Container/AllProductRequests";
+import CreateShelves from "./Path/Container/CreateShelves";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -260,18 +259,6 @@ const App = () => {
                 exact
               />
 
-              {/* <Route
-                path="/CustomerScreen/MyOrders/ViewDetails"
-                element={<ViewDetails />}
-                exact
-              /> */}
-
-              {/* <Route
-                path="/CustomerScreen/OrderDetails"
-                element={<OrderDetails />}
-                exact
-              /> */}
-
               <Route
                 path="/CustomerScreen/PaymentStatus"
                 element={<PaymentStatus />}
@@ -323,6 +310,12 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllProductRequests"
                 element={<AllProductRequests />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/CreateShelves"
+                element={<CreateShelves />}
                 exact
               />
 

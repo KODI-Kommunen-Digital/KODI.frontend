@@ -867,5 +867,21 @@
     "currently_no_orders": "Currently there is no items to display ! Please select shop from dropdown above",
     "ownerScreen": "Owner Screen",
     "customerScreen": "Customer Screen",
-    "changeRequested": "ChangeRequested"
+    "changeRequested": "ChangeRequested",
+    "createShelves": "Create Shelves",
+    "createNewShelves": "You can see add a new shelf by clicking here",
+    "storeDetails": "Store Details",
+    "shelfUpdatedAdmin": "Your shelf is uploaded and active. Redirecting to dashboard in 5 seconds.",
+    "shelfCreated": "Your shelf was created succesfully. It is under review by Admin and will be updated soon. Redirecting to dashboard in 5 seconds.",
+    "addNewShelfTitle": "Add new shelf",
+    "shelfName": "Shelf Name",
+    "pleaseSelectProduct": "Please select a product!",
+    "cardUpdated": "Card linked",
+    "pleaseAddPinNumber": "Please add a pin number",
+    "pleaseAddCard": "Please add card number",
+    "enterCardNumber": "Enter your card number",
+    "cardNumber": "Card Number",
+    "PINNumber": "PIN Number",
+    "pleaseEnterPINNumber": "Please enter your PIN number",
+    "linkYourCard": "Link Your Card"
 }

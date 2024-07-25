@@ -5,6 +5,7 @@ import { getOrders, getStores } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 
 function AllSellers() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;

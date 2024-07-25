@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Alert from "../../Components/Alert";
-import { createSellerAccount, getShopsInACity } from "../../Services/containerApi";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/cities";
+import Alert from "../../Components/Alert";
+import { createShelf, getShopsInACity, getProductsForShelf } from "../../Services/containerApi";
 
-function SellerRequestPage() {
+function CreateShelves() {
     const { t } = useTranslation();
     const editor = useRef(null);
     const [updating, setUpdating] = useState(false);
@@ -23,6 +23,7 @@ function SellerRequestPage() {
     const [input, setInput] = useState({
         shopId: 0,
         cityId: 0,
+        productId: 0,
         title: "",
         description: "",
     });
@@ -32,6 +33,7 @@ function SellerRequestPage() {
         description: "",
         shopId: "",
         cityId: "",
+        productId: "",
     });
 
     const handleSubmit = async (event) => {
@@ -53,10 +55,10 @@ function SellerRequestPage() {
         if (valid) {
             setUpdating(true);
             try {
-                const { cityId, ...inputWithoutCityId } = input;
-                await createSellerAccount(inputWithoutCityId);
+                const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
+                await createShelf(cityId, shopId, inputWithoutCityIdShopId);
 
-                const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
+                const successMessage = isAdmin ? t("shelfUpdatedAdmin") : t("shelfCreated");
                 setSuccessMessage(successMessage);
                 setErrorMessage(false);
                 setIsSuccess(true);
@@ -66,11 +68,7 @@ function SellerRequestPage() {
                     navigate("/Dashboard");
                 }, 5000);
             } catch (error) {
-                if (error.response && error.response.status === 409) {
-                    setErrorMessage(t("alreadyHaveAccount"));
-                } else {
-                    setErrorMessage(t("changesNotSaved"));
-                }
+                setErrorMessage(t("changesNotSaved"));
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -92,7 +90,7 @@ function SellerRequestPage() {
         });
 
         document.title =
-            process.env.REACT_APP_REGION_NAME + " " + t("sendSellerRequest");
+            process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
     }, []);
 
     const [description, setDescription] = useState("");
@@ -157,6 +155,13 @@ function SellerRequestPage() {
                     return "";
                 }
 
+            case "productId":
+                if (!parseInt(value)) {
+                    return t("pleaseSelectProduct");
+                } else {
+                    return "";
+                }
+
             case "description":
                 if (!value) {
                     return t("pleaseEnterDescription");
@@ -165,7 +170,6 @@ function SellerRequestPage() {
                 } else {
                     return "";
                 }
-
             default:
                 return "";
         }
@@ -224,6 +228,27 @@ function SellerRequestPage() {
         urlParams.set("shopId", shopId);
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
+
+        try {
+            const response = await getProductsForShelf(shopId);
+            setProducts(response?.data?.data || []);
+        } catch (error) {
+            console.error("Error fetching shops:", error);
+        }
+    };
+
+    const [productId, setProductId] = useState(0);
+    const [products, setProducts] = useState([]);
+    const handleProductChange = async (event) => {
+        const productId = event.target.value;
+        setProductId(productId);
+        setInput((prevInput) => ({ ...prevInput, productId }));
+        validateInput(event);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("productId", productId);
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.history.replaceState({}, "", newUrl);
     };
 
     return (
@@ -238,16 +263,15 @@ function SellerRequestPage() {
                         }}
                         className="text-gray-900 text-lg mb-4 font-medium title-font"
                     >
-                        {t("sendRequest")}
+                        {t("addNewShelfTitle")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
-
                     <div className="relative mb-4">
                         <label
                             htmlFor="title"
                             className="block text-sm font-medium text-gray-600"
                         >
-                            {t("title")} *
+                            {t("shelfName")} *
                         </label>
                         <input
                             type="text"
@@ -338,6 +362,41 @@ function SellerRequestPage() {
                         </div>
                     )}
 
+                    {shopId !== 0 && (
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="title"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("product")} *
+                            </label>
+                            <select
+                                type="text"
+                                id="productId"
+                                name="productId"
+                                value={productId || 0}
+                                onChange={handleProductChange}
+                                autoComplete="country-name"
+                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            >
+                                <option value={0}>{t("select")}</option>
+                                {products.map((product) => (
+                                    <option key={Number(product.id)} value={Number(product.id)}>
+                                        {product.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.productId ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.productId}
+                            </div>
+                        </div>
+                    )}
+
                     <div className="relative mb-4">
                         <label
                             htmlFor="description"
@@ -384,7 +443,7 @@ function SellerRequestPage() {
                             disabled={updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
-                            {t("sendRequest")}
+                            {t("saveChanges")}
                             {updating && (
                                 <svg
                                     aria-hidden="true"
@@ -417,4 +476,4 @@ function SellerRequestPage() {
     );
 }
 
-export default SellerRequestPage;
+export default CreateShelves;

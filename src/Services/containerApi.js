@@ -42,8 +42,8 @@ export async function getCards() {
     return axios.get(`/v1/users/${getUserId()}/cards`);
 }
 
-export async function associateCard(cardId) {
-    return axios.post(`/v1/users/${getUserId()}/card/${cardId}/associate`);
+export async function associateCard(cardId, cardLinkingData) {
+    return axios.post(`/v1/users/${getUserId()}/card/${cardId}`, cardLinkingData);
 }
 
 // OWNER APIs Start
@@ -71,16 +71,20 @@ export async function getShelfById(cityId, storeId, shelfId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelve/${shelfId}`);
 }
 
-export async function getSellers(cityId, storeId, pageNumber, status) {
-    return axios.get(`/v1/owners/getSellers?cityId=${cityId}&storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+export async function getSellers(storeId, pageNumber, status) {
+    return axios.get(`/v1/owners/getSellers?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
 
-export async function getProducts(cityId, storeId, pageNumber) {
-    return axios.get(`/v1/cities/${cityId}/store/${storeId}/products?pageNumber=${pageNumber}&pageSize=9`);
+export async function getProductsForShelf(storeId) {
+    return axios.get(`/v1/owners/products?storeId=${storeId}`);
 }
 
-export async function getProductRequests(cityId, storeId, pageNumber, status) {
-    return axios.get(`/v1/owners/productRequests?cityId=${cityId}&storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+export async function getProducts(storeId, pageNumber, status) {
+    return axios.get(`/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+}
+
+export async function getProductRequests(storeId, pageNumber, status) {
+    return axios.get(`/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
 
 export async function getOrders(cityId, storeId, pageNumber) {

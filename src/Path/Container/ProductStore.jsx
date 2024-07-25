@@ -8,6 +8,7 @@ import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 
 function ProductStore() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
@@ -17,9 +18,9 @@ function ProductStore() {
     const [cityId, setCityId] = useState();
     const [stores, setStores] = useState([]);
 
-    const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
-        if (cityId && storeId) {
-            getProducts(cityId, storeId, pageNumber).then((response) => {
+    const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            getProducts(storeId, pageNumber, selectedStatus).then((response) => {
                 setProducts(response.data.data);
             });
         }
@@ -28,12 +29,12 @@ function ProductStore() {
     useEffect(() => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore.cityId;
+            // const cityId = selectedStore.cityId;
             if (selectedStore) {
-                fetchProducts(cityId, storeId, pageNumber);
+                fetchProducts(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProducts, storeId, pageNumber]);
+    }, [fetchProducts, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -49,8 +50,8 @@ function ProductStore() {
         if (status[statusId] === "Active") {
             return "bg-green-400";
         }
-        if (status[statusId] === "Inactive") {
-            return "bg-red-400";
+        if (status[statusId] === "Pending") {
+            return "bg-yellow-400";
         }
     }
 
@@ -102,10 +103,10 @@ function ProductStore() {
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("inactive")}
+                                        {t("pending")}
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +119,7 @@ function ProductStore() {
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
-                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
+                                    <option value={statusByName.Pending}>{t("pending")}</option>
                                 </select>
                             </div>
                         </div>

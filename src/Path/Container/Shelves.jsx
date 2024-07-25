@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getShelves, getStores } from "../../Services/containerApi";
 
 function Shelves() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
