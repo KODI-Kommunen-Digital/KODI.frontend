@@ -1,47 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { getProfile } from "../../Services/usersApi";
 import Alert from "../../Components/Alert";
-import { associateCard, getCards } from "../../Services/containerApi";
+import { associateCard } from "../../Services/containerApi";
 
 function GetCard() {
     const { t } = useTranslation();
-
-    const editor = useRef(null);
     const [updating, setUpdating] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
 
     const [input, setInput] = useState({
-        shopId: 0,
-        cardId: 0,
-        title: "",
-        description: "",
-        price: "",
-        tax: "",
-        inventory: "",
-        minCount: "",
-        meta: "",
+        cardNumber: "",
+        pinNumber: "",
     });
 
     const [error, setError] = useState({
-        title: "",
-        description: "",
-        shopId: "",
-        cardId: "",
-        price: "",
-        tax: "",
-        inventory: "",
-        minCount: "",
-        meta: "",
+        cardNumber: "",
+        pinNumber: "",
     });
 
     const handleSubmit = async (event) => {
@@ -63,16 +44,17 @@ function GetCard() {
         if (valid) {
             setUpdating(true);
             try {
-                await associateCard(cardId);
+                const { cardNumber, ...dataToSubmit } = input;
+                await associateCard(cardNumber, dataToSubmit);
 
-                const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
+                const successMessage = t("cardUpdated");
                 setSuccessMessage(successMessage);
                 setErrorMessage(false);
                 setIsSuccess(true);
 
                 setTimeout(() => {
                     setSuccessMessage(false);
-                    navigate("/Dashboard");
+                    navigate("/CustomerScreen");
                 }, 5000);
             } catch (error) {
                 setErrorMessage(t("changesNotSaved"));
@@ -88,127 +70,24 @@ function GetCard() {
         }
     };
 
-    useEffect(() => {
-        getProfile().then((response) => {
-            setIsAdmin(response.data.data.roleId === 1);
-        });
-        getCards().then((response) => {
-            setCards(response.data.data);
-        });
-
-        document.title =
-            process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
-    }, []);
-
-    const [description, setDescription] = useState("");
-    const onDescriptionChange = (newContent) => {
-        const hasNumberedList = newContent.includes("<ol>");
-        const hasBulletList = newContent.includes("<ul>");
-        let descriptions = [];
-        let listType = "";
-        if (hasNumberedList) {
-            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-            const matches = newContent.match(regex);
-            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-            descriptions = descriptions.map(
-                (description, index) => `${index + 1}. ${description}`
-            );
-            listType = "ol";
-        } else if (hasBulletList) {
-            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-            const matches = newContent.match(regex);
-            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-            descriptions = descriptions.map((description) => `- ${description}`);
-            listType = "ul";
-        } else {
-            // No list tags found, treat the input as plain text
-            setInput((prev) => ({
-                ...prev,
-                description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
-            }));
-            setDescription(newContent);
-            return;
-        }
-        const listHTML = `<${listType}>${descriptions
-            .map((description) => `<li>${description}</li>`)
-            .join("")}</${listType}>`;
-        setInput((prev) => ({
-            ...prev,
-            description: listHTML,
-        }));
-        setDescription(newContent);
-    };
 
     const getErrorMessage = (name, value) => {
         switch (name) {
-            case "title":
+
+            case "cardNumber":
                 if (!value) {
-                    return t("pleaseEnterTitle");
+                    return t("pleaseAddCard");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
 
-            case "shopId":
+            case "pinNumber":
                 if (!value) {
-                    return t("pleaseSelectShop");
-                } else {
-                    return "";
-                }
-
-            case "cardId":
-                if (!parseInt(value)) {
-                    return t("pleaseSelectCard");
-                } else {
-                    return "";
-                }
-
-            case "description":
-                if (!value) {
-                    return t("pleaseEnterDescription");
-                } else if (value.length > 65535) {
-                    return t("characterLimitReacehd");
-                } else {
-                    return "";
-                }
-
-            case "price":
-                if (!value) {
-                    return t("pleaseEnterPrice");
-                } else {
-                    return "";
-                }
-
-            case "tax":
-                if (!value) {
-                    return t("pleaseEnterTax");
-                } else {
-                    return "";
-                }
-
-            case "inventory":
-                if (!value) {
-                    return t("pleaseEnterInventory");
-                } else {
-                    return "";
-                }
-
-            case "minCount":
-                if (!value) {
-                    return t("pleaseEnterMinCount");
-                } else {
-                    return "";
-                }
-
-            // case "maxCount":
-            //     if (!value) {
-            //         return t("pleaseEnterMaxCount");
-            //     } else {
-            //         return "";
-            //     }
-
-            case "meta":
-                if (!value) {
-                    return t("pleaseEnterMeta");
+                    return t("pleaseAddPinNumber");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -235,44 +114,6 @@ function GetCard() {
         });
     };
 
-    const [cards, setCards] = useState(0);
-    const [cardId, setCardId] = useState(0);
-    async function onCardSelect(e) {
-        const cardId = e.target.value;
-        setCardId(cardId);
-        setInput((prev) => ({
-            ...prev,
-            cardId: cardId,
-        }));
-        validateInput(e);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("cardId", cardId);
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-
-        try {
-            const response = await (cardId);
-            setShops(response?.data?.data || []);
-        } catch (error) {
-            console.error("Error fetching shops:", error);
-        }
-    }
-
-    const [shopId, setShopId] = useState(0);
-    const [shops, setShops] = useState([]);
-    const handleShopChange = async (event) => {
-        const shopId = event.target.value;
-        setShopId(shopId);
-        setInput((prevInput) => ({ ...prevInput, shopId }));
-        validateInput(event);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("shopId", shopId);
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-    };
-
     return (
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
@@ -285,306 +126,63 @@ function GetCard() {
                         }}
                         className="text-gray-900 text-lg mb-4 font-medium title-font"
                     >
-                        {t("addNewProductTitle")}
+                        {t("linkYourCard")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
+
                     <div className="relative mb-4">
                         <label
-                            htmlFor="title"
+                            htmlFor="cardNumber"
                             className="block text-sm font-medium text-gray-600"
                         >
-                            {t("productName")} *
+                            {t("cardNumber")} *
                         </label>
                         <input
                             type="text"
-                            id="title"
-                            name="title"
-                            value={input.title}
+                            id="cardNumber"
+                            name="cardNumber"
+                            value={input.cardNumber}
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
                             className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("enterTitle")}
+                            placeholder={t("enterCardNumber")}
                         />
                         <div
                             className="h-[24px] text-red-600"
                             style={{
-                                visibility: error.title ? "visible" : "hidden",
+                                visibility: error.cardNumber ? "visible" : "hidden",
                             }}
                         >
-                            {error.title}
+                            {error.cardNumber}
                         </div>
                     </div>
 
                     <div className="relative mb-4">
                         <label
-                            htmlFor="title"
+                            htmlFor="pinNumber"
                             className="block text-sm font-medium text-gray-600"
                         >
-                            {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-                        </label>
-                        <select
-                            type="text"
-                            id="cardId"
-                            name="cardId"
-                            value={cardId || 0}
-                            onChange={onCardSelect}
-                            autoComplete="country-name"
-                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                        >
-                            <option value={0}>{t("select")}</option>
-                            {cards.map((city) => (
-                                <option key={Number(city.id)} value={Number(city.id)}>
-                                    {city.name}
-                                </option>
-                            ))}
-                        </select>
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.cardId ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.cardId}
-                        </div>
-                    </div>
-
-                    {cardId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("shop")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="shopId"
-                                name="shopId"
-                                value={shopId || 0}
-                                onChange={handleShopChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {shops.map((shop) => (
-                                    <option key={Number(shop.id)} value={Number(shop.id)}>
-                                        {shop.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.shopId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.shopId}
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="relative mb-4 grid grid-cols-2 gap-4">
-                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("originalPrice")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="price"
-                                name="price"
-                                value={input.price}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterOriginalPrice")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.title ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.sellingAllert}
-                            </div>
-                        </div>
-                        <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("tax")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="tax"
-                                name="tax"
-                                value={input.tax}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterDiscountedPrice")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.tax ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.tax}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4 grid grid-cols-2 gap-4">
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("minCount")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="minCount"
-                                name="minCount"
-                                value={input.minCount}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterFastSellingAlert")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.minCount ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.minCount}
-                            </div>
-                        </div>
-                        {/* <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("maxCount")}
-                            </label>
-                            <input
-                                type="text"
-                                id="maxCount"
-                                name="maxCount"
-                                value={input.maxCount}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterFastSellingAlert")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.maxCount ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.maxCount}
-                            </div>
-                        </div> */}
-
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("inventory")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="inventory"
-                                name="inventory"
-                                value={input.inventory}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterTotalNumber")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.inventory ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.inventory}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("meta")} *
+                            {t("PINNumber")} *
                         </label>
                         <input
                             type="text"
-                            id="meta"
-                            name="meta"
-                            value={input.meta}
+                            id="pinNumber"
+                            name="pinNumber"
+                            value={input.pinNumber}
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterFastSellingAlert")}
+                            placeholder={t("pleaseEnterPINNumber")}
                         />
                         <div
                             className="h-[24px] text-red-600"
                             style={{
-                                visibility: error.title ? "visible" : "hidden",
+                                visibility: error.pinNumber ? "visible" : "hidden",
                             }}
                         >
-                            {error.sellingAllert}
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="description"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("description")} *
-                        </label>
-                        <ReactQuill
-                            type="text"
-                            id="description"
-                            name="description"
-                            ref={editor}
-                            value={description}
-                            onChange={(newContent) => onDescriptionChange(newContent)}
-                            onBlur={(range, source, editor) => {
-                                validateInput({
-                                    target: {
-                                        name: "description",
-                                        value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-                                    },
-                                });
-                            }}
-                            placeholder={t("writeSomethingHere")}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.description ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.description}
+                            {error.pinNumber}
                         </div>
                     </div>
                 </div>

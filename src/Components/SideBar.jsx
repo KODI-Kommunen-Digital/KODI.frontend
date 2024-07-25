@@ -5,6 +5,7 @@ import "./sidebar.css";
 import { useTranslation } from "react-i18next";
 import { getProfile, logout } from "../Services/usersApi";
 import { role } from "../Constants/role";
+import { getUserRoleContainer } from "../Services/containerApi";
 
 function SideBar() {
   const { t } = useTranslation();
@@ -100,16 +101,27 @@ function SideBar() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userRole, setUserRole] = useState(role.User);
+  const [isOwner, setIsOwner] = useState(true); // make it false by default
+
   useEffect(() => {
-    getProfile()
-      .then((response) => {
-        setFirstname(response.data.data.firstname);
-        setLastname(response.data.data.lastname);
-        setUserRole(response.data.data.roleId);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const fetchData = async () => {
+      try {
+        const [profileResponse, roleResponse] = await Promise.all([getProfile(), getUserRoleContainer()]);
+
+        setFirstname(profileResponse.data.data.firstname);
+        setLastname(profileResponse.data.data.lastname);
+        setUserRole(profileResponse.data.data.roleId);
+
+        const roles = roleResponse.data.data;
+        if (roles.includes(101)) {
+          setIsOwner(true);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -464,27 +476,29 @@ function SideBar() {
                         </span>
                       </div>
 
-                      <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                        onClick={() => {
-                          localStorage.setItem("selectedItem", t("addNewProduct"));
-                          navigateTo("/OwnerScreen");
-                        }}
-                      >
-                        <svg
-                          className="h-6 w-10 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 496 512"
+                      {isOwner && (
+                        <div
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
+                          onClick={() => {
+                            localStorage.setItem("selectedItem", t("addNewProduct"));
+                            navigateTo("/OwnerScreen");
+                          }}
                         >
-                          <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                        </svg>
-                        <span
-                          className="text-[15px] ml-4 text-gray-200 font-bold"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("ownerScreen")}
-                        </span>
-                      </div>
+                          <svg
+                            className="h-6 w-10 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 496 512"
+                          >
+                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                          </svg>
+                          <span
+                            className="text-[15px] ml-4 text-gray-200 font-bold"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("ownerScreen")}
+                          </span>
+                        </div>
+                      )}
 
                       <div
                         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"

@@ -41,8 +41,6 @@ const OrdersSold = () => {
         }
     });
 
-
-
     const fetchOrdersSold = useCallback(() => {
         getOrdersSold({
             pageNumber,

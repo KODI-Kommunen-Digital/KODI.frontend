@@ -8,6 +8,7 @@ import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
 
 function AllProductRequests() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
@@ -18,9 +19,9 @@ function AllProductRequests() {
     const [cityId, setCityId] = useState();
 
 
-    const fetchProductRequests = useCallback((cityId, storeId, pageNumber) => {
-        if (cityId && storeId) {
-            getProductRequests(cityId, storeId, pageNumber).then((response) => {
+    const fetchProductRequests = useCallback((storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            getProductRequests(storeId, pageNumber, selectedStatus).then((response) => {
                 setProductRequests(response.data.data);
             });
         }
@@ -29,12 +30,11 @@ function AllProductRequests() {
     useEffect(() => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore.cityId;
             if (selectedStore) {
-                fetchProductRequests(cityId, storeId, pageNumber);
+                fetchProductRequests(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProductRequests]);
+    }, [fetchProductRequests, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -75,8 +75,14 @@ function AllProductRequests() {
         if (status[statusId] === "Active") {
             return "bg-green-400";
         }
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
+        }
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
+        }
+        if (status[statusId] === "ChangeRequested") {
+            return "bg-blue-400";
         }
     }
 
@@ -95,6 +101,13 @@ function AllProductRequests() {
                                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("active")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
                                         onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
@@ -102,10 +115,17 @@ function AllProductRequests() {
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("active")}
+                                        {t("inactive")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("changeRequested")}
                                     </div>
                                 </div>
                             </div>
@@ -119,6 +139,8 @@ function AllProductRequests() {
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
+                                    <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option>
                                 </select>
                             </div>
                         </div>
@@ -298,12 +320,12 @@ function AllProductRequests() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                product.selectedStatus
+                                                                product.status
                                                             )} mr-2`}
                                                         ></div>
 
                                                         <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(status[product.selectedStatus].toLowerCase())}
+                                                            {t(status[product.status].toLowerCase())}
                                                         </h1>
                                                     </div>
                                                 </td>

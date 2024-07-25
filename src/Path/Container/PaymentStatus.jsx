@@ -86,7 +86,7 @@ const PaymentStatus = () => {
                         </option>
                         {cards.map((card) => (
                             <option className="font-sans" value={card.id} key={card.id}>
-                                {card.name}
+                                {card.id}
                             </option>
                         ))}
                     </select>

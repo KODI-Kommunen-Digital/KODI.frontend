@@ -6,6 +6,7 @@ import { status, statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 
 function AllSellers() {
+    window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
@@ -14,9 +15,9 @@ function AllSellers() {
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
 
-    const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
-        if (cityId && storeId) {
-            getSellers(cityId, storeId, pageNumber).then((response) => {
+    const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            getSellers(storeId, pageNumber, selectedStatus).then((response) => {
                 setSellers(response.data.data);
             });
         }
@@ -25,12 +26,11 @@ function AllSellers() {
     useEffect(() => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore?.cityId;
             if (selectedStore) {
-                fetchProducts(cityId, storeId, pageNumber);
+                fetchProducts(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProducts]);
+    }, [fetchProducts, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -73,6 +73,9 @@ function AllSellers() {
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
         }
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
+        }
     }
 
     return (
@@ -99,6 +102,13 @@ function AllSellers() {
                                     >
                                         {t("pending")}
                                     </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("inactive")}
+                                    </div>
                                 </div>
                             </div>
 
@@ -111,6 +121,7 @@ function AllSellers() {
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
                                 </select>
                             </div>
                         </div>

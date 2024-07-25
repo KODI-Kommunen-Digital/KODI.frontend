@@ -27,7 +27,7 @@ const SellerRequests = () => {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchSellerRequests = useCallback((cityId, storeId) => {
+    const fetchSellerRequests = useCallback((cityId, storeId, pageNumber) => {
         if (storeId) {
             getSellerRequests(cityId, storeId, {
                 params: {
@@ -45,9 +45,9 @@ const SellerRequests = () => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore.cityId;
-            fetchSellerRequests(cityId, storeId);
+            fetchSellerRequests(cityId, storeId, pageNumber);
         }
-    }, [fetchSellerRequests]);
+    }, [fetchSellerRequests, storeId, pageNumber]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
