@@ -1,31 +1,21 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
+import { useLocation } from 'react-router-dom';
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
-import { getProductById } from "../../Services/containerApi";
 
-const ProductDetailsStore = () => {
+const AllProductRequestsDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [product, setProduct] = useState(null);
 
-    const fetchProducts = useCallback((cityId, storeId, productId) => {
-        getProductById(cityId, storeId, productId).then((response) => {
-            setProduct(response.data.data);
-        });
-    }, []);
+    const location = useLocation();
+    const { productDetails } = location.state || {};
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cityId = parseInt(urlParams.get("cityId"));
-        const storeId = parseInt(urlParams.get("storeId"));
-        const productId = parseInt(urlParams.get("productId"));
-
-        if (cityId && storeId && productId) {
-            fetchProducts(cityId, storeId, productId);
-        }
-    }, [fetchProducts]);
+        setProduct(productDetails);
+    }, [productDetails]);
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">
@@ -45,9 +35,8 @@ const ProductDetailsStore = () => {
                                 <div className="md:flex mb-6">
                                     <div className="px-4 md:w-1/2">
                                         <img className="w-full h-full object-cover" src={product.productImages && product.productImages.length > 0 ? process.env.REACT_APP_BUCKET_HOST +
-                                            product.productImages[0] : CONTAINERIMAGE} />
+                                            product.productImages[0] : CONTAINERIMAGE} alt={product.title} />
                                     </div>
-
                                     <div className="px-4 md:w-1/2">
                                         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{product.title}</h2>
                                         <p className="font-bold text-blue-600 text-sm mb-4">
@@ -55,29 +44,29 @@ const ProductDetailsStore = () => {
                                         </p>
                                         <div className="flex mb-4">
                                             <div className="mr-4">
-                                                <span className="font-bold text-gray-700 dark:text-gray-300">{t("price")} : </span>
+                                                <span className="font-bold text-gray-300 ">{t("price")} : </span>
                                                 <span className="font-bold text-green-600">€ {product.price}</span>
                                             </div>
                                             <div>
-                                                <span className="font-bold text-gray-700 dark:text-gray-300">{t("tax")} : </span>
-                                                <span className="font-bold text-red-600">{(product.tax * 100).toFixed(2)}%</span>
+                                                <span className="font-bold text-gray-300 ">{t("count")} : </span>
+                                                <span className="font-bold text-red-600">€ {product.count}</span>
                                             </div>
                                         </div>
                                         <div className="flex mb-4">
                                             <div className="mr-4">
-                                                <span className="font-bold text-gray-700 dark:text-gray-300">{t("minCount")} : </span>
-                                                <span className="text-gray-600 dark:text-gray-300">{product.minCount}</span>
+                                                <span className="font-bold text-gray-300">{t("threshold")} : </span>
+                                                <span className="font-bold text-gray-200">{product.threshold}</span>
                                             </div>
                                             <div>
-                                                <span className="font-bold text-gray-700 dark:text-gray-300">{t("maxCount")} : </span>
-                                                <span className="text-gray-600 dark:text-gray-300">{product.maxCount}</span>
+                                                <span className="font-bold text-gray-300">{t("productId")} : </span>
+                                                <span className="font-bold text-gray-200 ">{product.productId}</span>
                                             </div>
                                         </div>
                                         <div>
-                                            <span className="font-bold text-gray-700 dark:text-gray-300">{t("description")} : </span>
-                                            <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
+                                            <span className="font-bold text-gray-300 ">{t("description")} : </span>
+                                            <span className="font-bold text-gray-200 ">
                                                 {product.description}
-                                            </p>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -91,4 +80,4 @@ const ProductDetailsStore = () => {
     );
 };
 
-export default ProductDetailsStore;
+export default AllProductRequestsDetails;

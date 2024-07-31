@@ -113,7 +113,7 @@ function ProductStore() {
 
                             <div className="-my-2 -mr-2 lg:hidden">
                                 <select
-                                    className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                                    className="text-white bg-black font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center border-none focus:outline-none"
                                     onChange={(e) => setSelectedStatus(e.target.value)}
                                     value={selectedStatus || ""}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -220,7 +220,7 @@ function ProductStore() {
                                                     width: "14.3%",
                                                 }}
                                             >
-                                                {t("action")}
+                                                {t("status")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -292,7 +292,7 @@ function ProductStore() {
                                                     className={`px-6 py-4 text-center font-bold text-red-600`}
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.tax}
+                                                    {(product.tax * 100).toFixed(2)}%
                                                 </td>
 
                                                 <td className="px-6 py-4">

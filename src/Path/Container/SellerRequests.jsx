@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getSellerRequests, getStores } from "../../Services/containerApi";
+import { status, statusByName } from "../../Constants/containerStatus";
 
 const SellerRequests = () => {
     window.scrollTo(0, 0);
@@ -15,7 +16,7 @@ const SellerRequests = () => {
     const pageSize = 9;
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
-    const status = 1;
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -27,11 +28,10 @@ const SellerRequests = () => {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchSellerRequests = useCallback((cityId, storeId, pageNumber) => {
+    const fetchSellerRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
         if (storeId) {
-            getSellerRequests(cityId, storeId, {
+            getSellerRequests(cityId, storeId, selectedStatus, {
                 params: {
-                    status,
                     pageNumber,
                     pageSize,
                 },
@@ -45,9 +45,9 @@ const SellerRequests = () => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore.cityId;
-            fetchSellerRequests(cityId, storeId, pageNumber);
+            fetchSellerRequests(cityId, storeId, pageNumber, selectedStatus);
         }
-    }, [fetchSellerRequests, storeId, pageNumber]);
+    }, [fetchSellerRequests, storeId, pageNumber, selectedStatus]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -86,9 +86,65 @@ const SellerRequests = () => {
         }
     };
 
+    function getStatusClass(statusId) {
+        if (status[statusId] === "Active") {
+            return "bg-green-400";
+        }
+        if (status[statusId] === "Pending") {
+            return "bg-yellow-400";
+        }
+    }
+
     return (
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
+            <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
+                <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+                    <div className="w-full">
+                        <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
+                            <div className="hidden lg:block">
+                                <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("active")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("pending")}
+                                    </div>
+                                    <div
+                                        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("inactive")}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="-my-2 -mr-2 lg:hidden">
+                                <select
+                                    className="text-white bg-black font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center border-none focus:outline-none"
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    value={selectedStatus || ""}
+                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                >
+                                    <option value={statusByName.Active}>{t("active")}</option>
+                                    <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
                 <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
                     <select
@@ -130,7 +186,7 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "20%",
                                                 }}
                                             >
                                                 {t("productName")}
@@ -140,7 +196,7 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "20%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
@@ -150,7 +206,7 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "20%",
                                                 }}
                                             >
                                                 {t("description")}
@@ -161,10 +217,21 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
+                                                    width: "20%",
                                                 }}
                                             >
                                                 {t("action")}
+                                            </th>
+
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-6 py-3 text-center "
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "20%",
+                                                }}
+                                            >
+                                                {t("status")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -263,6 +330,20 @@ const SellerRequests = () => {
                                                         </div>
                                                     </div>
                                                 )}
+
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                                                products.status
+                                                            )} mr-2`}
+                                                        ></div>
+
+                                                        <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                                            {t(status[products.status].toLowerCase())}
+                                                        </h1>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         ))}
 

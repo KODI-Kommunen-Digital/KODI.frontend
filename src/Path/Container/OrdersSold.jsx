@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getOrdersSold } from "../../Services/containerApi";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
 const OrdersSold = () => {
     window.scrollTo(0, 0);
@@ -12,6 +13,76 @@ const OrdersSold = () => {
     const [ordersSold, setOrdersSold] = useState([]);
     const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
+    const [orderStartDate, setOrderStartDate] = useState('');
+    const [orderEndDate, setOrderEndDate] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const generateCalendar = (year, month) => {
+        const firstDayOfMonth = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDayOfWeek = firstDayOfMonth.getDay();
+
+        const calendarDays = [];
+
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            calendarDays.push(<div key={`empty-${i}`}></div>);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const currentDate = new Date();
+            const isToday = year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate();
+            const isSelectedDate =
+                orderStartDate === `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` ||
+                orderEndDate === `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            calendarDays.push(
+                <div
+                    key={day}
+                    className={`text-sm font-bold h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none ${isSelectedDate ? 'bg-black text-white' : isToday ? 'bg-red-600 text-white' : ''}`}
+                    onClick={() => handleDateSelect(year, month, day)}
+                >
+                    {day}
+                </div>
+            );
+        }
+
+        return calendarDays;
+    };
+
+    const handleDateSelect = (year, month, day) => {
+        const selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        setOrderStartDate(selectedDate);
+        setOrderEndDate(selectedDate);
+    };
+
+    const handlePrevMonth = () => {
+        setCurrentMonth(prev => {
+            const newMonth = prev - 1;
+            if (newMonth < 0) {
+                setCurrentYear(prevYear => prevYear - 1);
+                return 11;
+            }
+            return newMonth;
+        });
+    };
+
+    const handleNextMonth = () => {
+        setCurrentMonth(prev => {
+            const newMonth = prev + 1;
+            if (newMonth > 11) {
+                setCurrentYear(prevYear => prevYear + 1);
+                return 0;
+            }
+            return newMonth;
+        });
+    };
 
     // Calculate Total Revenue
     const totalRevenue = ordersSold.reduce((total, product) => {
@@ -42,21 +113,30 @@ const OrdersSold = () => {
     });
 
     const fetchOrdersSold = useCallback(() => {
-        getOrdersSold({
-            pageNumber,
-            pageSize,
-        }).then((response) => {
-            setOrdersSold(response.data.data);
-        });
-    }, []);
+        if (orderStartDate && orderEndDate) {
+            getOrdersSold({
+                orderStartDate,
+                orderEndDate,
+                pageNumber,
+                pageSize,
+            }).then((response) => {
+                if (response.data.status === "error") {
+                    setErrorMessage("Failed. " + t("selectAnotherDate"));
+                } else {
+                    setOrdersSold(response.data.data);
+                }
+            }).catch((error) => {
+                setErrorMessage("Failed. " + (error.message));
+            });
+        }
+    }, [orderStartDate, orderEndDate, pageNumber, pageSize]);
+
 
     useEffect(() => {
-        if (pageNumber === 1) {
-            fetchOrdersSold();
-        } else {
+        if (orderStartDate && orderEndDate) {
             fetchOrdersSold();
         }
-    }, [fetchOrdersSold, pageNumber]);
+    }, [orderStartDate, orderEndDate, fetchOrdersSold]);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -71,244 +151,184 @@ const OrdersSold = () => {
 
             <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
-                    {/* {ordersSold && ordersSold.length > 0 ? ( */}
-                    <>
-                        <SellerStatistics totalRevenue={totalRevenue} topProductNameByQuantity={topProductNameByQuantity} totalQuantitySold={totalQuantitySold} averagePricePerQuantity={averagePricePerQuantity} />
 
-                        <div className="bg-white mt-10 p-0 space-y-0 shadow-xl overflow-x-auto">
-                            <h2 className="text-gray-900 text-lg p-6 font-medium title-font">
-                                {t("productDetails")}
-                            </h2>
-                            <table className="w-full text-sm text-left lg:mt-[0rem] mt-[0rem] text-gray-500 p-6 space-y-10 rounded-lg">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            className="px-6 sm:px-6 py-3"
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                                width: "20%",
-                                            }}
-                                        >
-                                            {t("productName")}
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="px-6 sm:px-6 py-3 text-center "
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                                width: "20%",
-                                            }}
-                                        >
-                                            {t("stockSold")}
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="px-6 sm:px-6 py-3 text-center"
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                                width: "25%",
-                                            }}
-                                        >
-                                            {t("price")}
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="px-6 sm:px-6 py-3 text-center"
-                                            style={{
-                                                fontFamily: "Poppins, sans-serif",
-                                                width: "25%",
-                                            }}
-                                        >
-                                            {t("totalIncome")}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {ordersSold.map((item, index) => {
-                                        const products = item.cart_items;
-                                        return (
-                                            <tr
-                                                key={index}
-                                                className="bg-white border-b hover:bg-gray-50"
+                    {ordersSold && ordersSold.length > 0 ? (
+                        <>
+                            <SellerStatistics totalRevenue={totalRevenue} topProductNameByQuantity={topProductNameByQuantity} totalQuantitySold={totalQuantitySold} averagePricePerQuantity={averagePricePerQuantity} />
+
+                            <div className="bg-white mt-10 p-0 space-y-0 shadow-xl overflow-x-auto">
+                                <h2 className="text-gray-900 text-lg p-6 font-medium title-font">
+                                    {t("productDetails")}
+                                </h2>
+                                <table className="w-full text-sm text-left lg:mt-[0rem] mt-[0rem] text-gray-500 p-6 space-y-10 rounded-lg">
+                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-6 py-3"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "20%",
+                                                }}
                                             >
-                                                <th
-                                                    scope="row"
-                                                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                {t("productName")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-6 py-3 text-center "
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "20%",
+                                                }}
+                                            >
+                                                {t("stockSold")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "25%",
+                                                }}
+                                            >
+                                                {t("price")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "25%",
+                                                }}
+                                            >
+                                                {t("totalIncome")}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {ordersSold.map((item, index) => {
+                                            const products = item.cart_items;
+                                            return (
+                                                <tr
+                                                    key={index}
+                                                    className="bg-white border-b hover:bg-gray-50"
                                                 >
-                                                    <img
-                                                        className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                        src={
-                                                            products.image
-                                                                ? process.env.REACT_APP_BUCKET_HOST +
+                                                    <th
+                                                        scope="row"
+                                                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                    >
+                                                        <img
+                                                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                                                            src={
                                                                 products.image
-                                                                : process.env.REACT_APP_BUCKET_HOST +
-                                                                "admin/DefaultForum.jpeg"
-                                                        }
-                                                        onClick={() =>
-                                                            navigateTo(
-                                                                `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
-                                                            )
-                                                        }
-                                                        alt="avatar"
-                                                    />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                        <div
-                                                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                    ? process.env.REACT_APP_BUCKET_HOST +
+                                                                    products.image
+                                                                    : process.env.REACT_APP_BUCKET_HOST +
+                                                                    "admin/DefaultForum.jpeg"
+                                                            }
                                                             onClick={() =>
                                                                 navigateTo(
                                                                     `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
                                                                 )
                                                             }
-                                                        >
-                                                            {products.productName}
+                                                            alt="avatar"
+                                                        />
+                                                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
+                                                            <div
+                                                                className="font-bold text-gray-500 cursor-pointer text-center truncate"
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                onClick={() =>
+                                                                    navigateTo(
+                                                                        `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
+                                                                    )
+                                                                }
+                                                            >
+                                                                {products.productName}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </th>
-                                                <td
-                                                    className={`px-6 py-4 text-center font-bold text-blue-600`}
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {products.quantity}
-                                                </td>
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-red-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    € {products.pricePerQuantity}
-                                                </td>
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-green-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    € {products.totalPrice}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                                                    </th>
+                                                    <td
+                                                        className={`px-6 py-4 text-center font-bold text-blue-600`}
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {products.quantity}
+                                                    </td>
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-red-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        € {products.pricePerQuantity}
+                                                    </td>
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-green-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        € {products.totalPrice}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                        <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                            {pageNumber !== 1 ? (
+                            <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
+                                {pageNumber !== 1 ? (
+                                    <span
+                                        className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+                                        onClick={() => setPageNo(pageNumber - 1)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {"<"}{" "}
+                                    </span>
+                                ) : (
+                                    <span />
+                                )}
                                 <span
                                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                    onClick={() => setPageNo(pageNumber - 1)}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                    {"<"}{" "}
+                                    {t("page")} {pageNumber}
                                 </span>
-                            ) : (
-                                <span />
-                            )}
-                            <span
-                                className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                                {t("page")} {pageNumber}
-                            </span>
 
-                            {ordersSold.length >= pageSize && (
-                                <span
-                                    className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                    onClick={() => setPageNo(pageNumber + 1)}
-                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                >
-                                    {">"}
-                                </span>
-                            )}
-                        </div>
-                    </>
-                    {/* ) : (
-                        <div className="bg-gray-100 mt-10 h-[30rem] flex flex-col justify-center items-center">
+                                {ordersSold.length >= pageSize && (
+                                    <span
+                                        className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+                                        onClick={() => setPageNo(pageNumber + 1)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {">"}
+                                    </span>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="bg-gray-100 mt-0 h-[40rem] flex flex-col justify-center items-center">
+                            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4">
+                                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+                                    <div className="flex items-center justify-between px-6 py-3 bg-black">
+
+                                        <GrFormPrevious
+                                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all text-white"
+                                            onClick={handlePrevMonth}
+                                        />
+
+                                        <h2 className="text-white">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
+
+                                        <GrFormNext
+                                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all text-white"
+                                            onClick={handleNextMonth}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-7 gap-2 p-4 bg-zinc-100" id="calendar">
+                                        {generateCalendar(currentYear, currentMonth)}
+                                    </div>
+                                </div>
+                            </div>
+
                             <center>
-                                <svg
-                                    className="emoji-404"
-                                    enableBackground="new 0 0 226 249.135"
-                                    height="249.135"
-                                    id="Layer_1"
-                                    overflow="visible"
-                                    version="1.1"
-                                    viewBox="0 0 226 249.135"
-                                    width="226"
-                                    xmlSpace="preserve"
-                                >
-                                    <circle cx="113" cy="113" fill="#FFE585" r="109" />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.29"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="88.866"
-                                        x2="136.866"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.17"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="154.732"
-                                        x2="168.732"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.17"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="69.732"
-                                        x2="58.732"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <circle cx="68.732" cy="93" fill="#6E6E96" r="9" />
-                                    <path
-                                        d="M115.568,5.947c-1.026,0-2.049,0.017-3.069,0.045  c54.425,1.551,98.069,46.155,98.069,100.955c0,55.781-45.219,101-101,101c-55.781,0-101-45.219-101-101  c0-8.786,1.124-17.309,3.232-25.436c-3.393,10.536-5.232,21.771-5.232,33.436c0,60.199,48.801,109,109,109s109-48.801,109-109  S175.768,5.947,115.568,5.947z"
-                                        enableBackground="new    "
-                                        fill="#FF9900"
-                                        opacity="0.24"
-                                    />
-                                    <circle cx="156.398" cy="93" fill="#6E6E96" r="9" />
-                                    <ellipse
-                                        cx="67.732"
-                                        cy="140.894"
-                                        enableBackground="new    "
-                                        fill="#FF0000"
-                                        opacity="0.18"
-                                        rx="17.372"
-                                        ry="8.106"
-                                    />
-                                    <ellipse
-                                        cx="154.88"
-                                        cy="140.894"
-                                        enableBackground="new    "
-                                        fill="#FF0000"
-                                        opacity="0.18"
-                                        rx="17.371"
-                                        ry="8.106"
-                                    />
-                                    <path
-                                        d="M13,118.5C13,61.338,59.338,15,116.5,15c55.922,0,101.477,44.353,103.427,99.797  c0.044-1.261,0.073-2.525,0.073-3.797C220,50.802,171.199,2,111,2S2,50.802,2,111c0,50.111,33.818,92.318,79.876,105.06  C41.743,201.814,13,163.518,13,118.5z"
-                                        fill="#FFEFB5"
-                                    />
-                                    <circle cx="113" cy="113" fill="none" r="109" stroke="#6E6E96" strokeWidth="8" />
-                                </svg>
                                 <div className="tracking-widest mt-4">
-                                    <span className="text-gray-500 text-xl">{t("currently_no_items")}</span>
+                                    <span className="text-gray-500 text-xl">{errorMessage ? t("selectAnotherDate") : t("selectDate")}</span>
                                 </div>
                             </center>
                             <center className="mt-6">
@@ -339,10 +359,10 @@ const OrdersSold = () => {
                                 </a>
                             </center>
                         </div>
-                    )} */}
+                    )}
                 </div>
             </div>
-        </section>
+        </section >
     );
 };
 

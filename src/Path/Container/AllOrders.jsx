@@ -159,60 +159,47 @@ function AllSellers() {
 
                                     <tbody>
                                         {orders.map((order, index) => (
-                                            <tr
-                                                key={index}
-                                                className="bg-white border-b hover:bg-gray-50"
-                                            >
-                                                <th
-                                                    scope="row"
-                                                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
-                                                >
-                                                    <img
-                                                        className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                        src={
-                                                            order.image
-                                                                ? process.env.REACT_APP_BUCKET_HOST +
-                                                                order.image
-                                                                : process.env.REACT_APP_BUCKET_HOST +
-                                                                "admin/DefaultForum.jpeg"
-                                                        }
-                                                        alt="avatar"
-                                                    />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
-                                                        {order.products.map(productItem => (
-                                                            <div key={productItem.product.id} className="font-bold text-gray-500 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                                {productItem.product.title}
+                                            <React.Fragment key={index}>
+                                                {order.products.map((productItem, productIndex) => (
+                                                    <tr key={`${index}-${productIndex}`} className="bg-white border-b hover:bg-gray-50">
+                                                        <th
+                                                            scope="row"
+                                                            className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                        >
+                                                            <img
+                                                                className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                                                                src={
+                                                                    productItem.product.productImages && productItem.product.productImages[0]
+                                                                        ? productItem.product.productImages[0]
+                                                                        : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
+                                                                }
+                                                                alt="avatar"
+                                                            />
+                                                            <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
+                                                                <div className="font-bold text-gray-500 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                                    {productItem.product.title}
+                                                                </div>
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                </th>
+                                                        </th>
 
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-gray-500"
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {order.amount}
-                                                </td>
+                                                        <td className="px-6 py-4 text-center font-bold text-gray-500" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                            € {order.amount.toFixed(2)}
+                                                        </td>
 
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {new Date(order.createdAt).toLocaleString('de')}
-                                                </td>
+                                                        <td className="px-6 py-4 text-center font-bold text-blue-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                            {new Date(order.createdAt).toLocaleString('de')}
+                                                        </td>
 
-                                                {order.products.map(productItem => (
-                                                    <td key={productItem.product.id} className="px-6 py-4 text-center font-bold text-green-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                        € {productItem.product.price}
-                                                    </td>
+                                                        <td className="px-6 py-4 text-center font-bold text-green-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                            € {productItem.product.price.toFixed(2)}
+                                                        </td>
+
+                                                        <td className="px-6 py-4 text-center font-bold text-red-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                                            {(productItem.product.tax * 100).toFixed(2)}%
+                                                        </td>
+                                                    </tr>
                                                 ))}
-
-                                                {order.products.map(productItem => (
-                                                    <td key={productItem.product.id} className="px-6 py-4 text-center font-bold text-red-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                        € {productItem.product.tax}
-                                                    </td>
-                                                ))}
-                                            </tr>
+                                            </React.Fragment>
                                         ))}
                                     </tbody>
                                 </table>

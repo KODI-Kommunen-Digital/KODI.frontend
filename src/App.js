@@ -65,10 +65,13 @@ import StoreDetails from "./Path/Container/StoreDetails";
 import ProductStore from "./Path/Container/ProductStore";
 import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
 import Shelves from "./Path/Container/Shelves";
-import AllSellers from "./Path/Container/AllSellers";
 import AllOrders from "./Path/Container/AllOrders";
 import AllProductRequests from "./Path/Container/AllProductRequests";
 import CreateShelves from "./Path/Container/CreateShelves";
+import SellerRequestsApproval from "./Path/Container/SellerRequestsApproval";
+import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
+import OrderDetails from "./Path/Container/OrderDetails";
+import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -272,6 +275,12 @@ const App = () => {
               />
 
               <Route
+                path="/CustomerScreen/OrderDetails"
+                element={<OrderDetails />}
+                exact
+              />
+
+              <Route
                 path="/OwnerScreen/StoreDetails"
                 element={<StoreDetails />}
                 exact
@@ -290,14 +299,20 @@ const App = () => {
               />
 
               <Route
-                path="/OwnerScreen/Shelves"
-                element={<Shelves />}
+                path="/OwnerScreen/AllProductRequestsDetails"
+                element={<AllProductRequestsDetails />}
                 exact
               />
 
               <Route
-                path="/OwnerScreen/AllSellers"
-                element={<AllSellers />}
+                path="/OwnerScreen/SellerDetailsStore"
+                element={<SellerDetailsStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/Shelves"
+                element={<Shelves />}
                 exact
               />
 
@@ -316,6 +331,12 @@ const App = () => {
               <Route
                 path="/OwnerScreen/CreateShelves"
                 element={<CreateShelves />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/SellerRequestsApproval"
+                element={<SellerRequestsApproval />}
                 exact
               />
 

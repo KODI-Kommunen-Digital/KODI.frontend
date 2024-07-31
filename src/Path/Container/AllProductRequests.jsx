@@ -16,7 +16,6 @@ function AllProductRequests() {
     const [storeId, setStoreId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
-    const [cityId, setCityId] = useState();
 
 
     const fetchProductRequests = useCallback((storeId, pageNumber, selectedStatus) => {
@@ -52,15 +51,14 @@ function AllProductRequests() {
 
         if (selectedStore) {
             const cityId = selectedStore.cityId;
-            setCityId(cityId);
             setStoreId(storeId);
-            setPageNumber(1); // Reset page number when a new store is selected
+            setPageNumber(1);
 
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProductRequests(cityId, storeId, 1); // Reset to first page
+            fetchProductRequests(cityId, storeId, 1);
         }
     };
 
@@ -86,9 +84,10 @@ function AllProductRequests() {
         }
     }
 
-    const handleViewDetailsClick = (cityId, storeId, productId) => {
-        navigate(`/OwnerScreen/ProductDetailsStore?cityId=${cityId}&storeId=${storeId}&productId=${productId}`);
+    const handleViewDetailsClick = (product) => {
+        navigate('/OwnerScreen/AllProductRequestsDetails', { state: { productDetails: product } });
     };
+
     return (
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
@@ -132,7 +131,7 @@ function AllProductRequests() {
 
                             <div className="-my-2 -mr-2 lg:hidden">
                                 <select
-                                    className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                                    className="text-white bg-black font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center border-none focus:outline-none"
                                     onChange={(e) => setSelectedStatus(e.target.value)}
                                     value={selectedStatus || ""}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -201,7 +200,7 @@ function AllProductRequests() {
                                                     width: "14.3%",
                                                 }}
                                             >
-                                                {t("category")}
+                                                {t("description")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -231,7 +230,7 @@ function AllProductRequests() {
                                                     width: "14.3%",
                                                 }}
                                             >
-                                                {t("tax")}
+                                                {t("count")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -292,7 +291,7 @@ function AllProductRequests() {
                                                     className={`px-6 py-4 text-center font-bold text-blue-600`}
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.categoryId}
+                                                    {product.description}
                                                 </td>
 
                                                 <td
@@ -313,7 +312,7 @@ function AllProductRequests() {
                                                     className={`px-6 py-4 text-center font-bold text-red-600`}
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.tax}
+                                                    {product.count}
                                                 </td>
 
                                                 <td className="px-6 py-4">
@@ -334,7 +333,7 @@ function AllProductRequests() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className="relative group inline-block"
-                                                            onClick={() => handleViewDetailsClick(cityId, storeId, product.id)}
+                                                            onClick={() => handleViewDetailsClick(product)}
                                                         >
                                                             <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
                                                             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">

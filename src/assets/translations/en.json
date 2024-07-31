@@ -1,7 +1,7 @@
 {
     "+add_social_media": "+ Add your social media",
     "aboutMe": "About Me",
-    "acceptConditionMessage": "Ich akzeptiere die Datenschutzerkläung* und die allgemeinen Geschäftsbedingungen*",
+    "acceptConditionMessage": "I accept the data protection declaration* and the general terms and conditions*",
     "account": "Account",
     "Account_Settings": "Account Settings",
     "accountPresent": "Already have an account? ",
@@ -883,5 +883,8 @@
     "cardNumber": "Card Number",
     "PINNumber": "PIN Number",
     "pleaseEnterPINNumber": "Please enter your PIN number",
-    "linkYourCard": "Link Your Card"
+    "linkYourCard": "Link Your Card",
+    "selectDate": "Please select a date to proceed",
+    "selectAnotherDate": "No order found for this date, please select another date",
+    "orderId": "Order Id"
 }

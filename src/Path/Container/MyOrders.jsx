@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getMyOrders } from "../../Services/containerApi";
 import RegionColors from "../../Components/RegionColors";
+import { FaEye } from 'react-icons/fa';
 
 const MyOrders = () => {
     window.scrollTo(0, 0);
@@ -125,7 +126,11 @@ const MyOrders = () => {
                                                                     )
                                                                 }
                                                             >
-                                                                {myOrder.products}
+                                                                {myOrder.products.map((product) => (
+                                                                    <div key={product.id}>
+                                                                        {product.product.title}
+                                                                    </div>
+                                                                ))}
                                                             </div>
                                                         </div>
                                                     </th>
@@ -144,27 +149,20 @@ const MyOrders = () => {
                                                         {new Date(myOrder.createdAt).toLocaleDateString()}
                                                     </td>
 
-                                                    <td className="px-6 py-4 text-center">
-                                                        <a
-                                                            onClick={() => {
-                                                                navigateTo(`/CustomerScreen/OrderDetails?orderId=${myOrder.id}`);
-                                                            }}
-                                                            className={`flex items-center ${RegionColors.darkTextColor} py-2 px-6 gap-2 rounded inline-flex cursor-pointer`}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            <span>{t("clickHere")}</span>
-                                                            <svg
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth="2"
-                                                                viewBox="0 0 24 24"
-                                                                className="w-6 h-6 ml-2"
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className="relative group inline-block"
+                                                                onClick={() => {
+                                                                    navigateTo(`/CustomerScreen/OrderDetails?orderId=${myOrder.id}`);
+                                                                }}
                                                             >
-                                                                <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                                            </svg>
-                                                        </a>
+                                                                <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                    {t("viewDetails")}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );

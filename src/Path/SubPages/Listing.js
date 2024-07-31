@@ -637,7 +637,7 @@ const Listing = () => {
                   </div>
                 }
 
-                {/* {isLoggedIn ? (
+                {isLoggedIn ? (
                   input.id && input.categoryId === 18 && (
                     <a
                       onClick={() =>
@@ -664,7 +664,7 @@ const Listing = () => {
                       </p>
                     </div>
                   )
-                )} */}
+                )}
               </div>
             </div>
           </div>
