@@ -1710,6 +1710,9 @@ function UploadListings() {
       <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6">
           <div className="py-2 mt-1 px-2">
+            <p className="pb-2">
+              {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
+            </p>
             <button
               type="button"
               onClick={handleSubmit}
