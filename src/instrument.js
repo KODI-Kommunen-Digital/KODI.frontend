@@ -57,8 +57,8 @@ function sendToWebhook(error) {
 
 // Add a global error handler to catch unhandled errors
 Sentry.addEventProcessor((event) => {
-    if (event.exception) {
-        sendToWebhook(event.exception.values[0].value); // Send the first error
+    if (event.exception && process.env.REACT_APP_ENV === 'production') {
+        sendToWebhook(event.exception.values[0].value); // Send the first error only if the environment is production
     }
     return event;
 });
