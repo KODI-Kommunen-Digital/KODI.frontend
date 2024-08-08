@@ -72,6 +72,7 @@ import SellerRequestsApproval from "./Path/Container/SellerRequestsApproval";
 import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
+import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -337,6 +338,12 @@ const App = () => {
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
                 element={<SellerRequestsApproval />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/OrderDetailsStore"
+                element={<OrderDetailsStore />}
                 exact
               />
 

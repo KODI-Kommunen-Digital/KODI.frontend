@@ -67,8 +67,22 @@ export async function createShelf(cityId, storeId, params) {
     return axios.post(`/v1/cities/${cityId}/store/${storeId}/shelves`, params,);
 }
 
-export async function updateSeller(cityId, sellerId, status) {
-    return axios.post(`/v1/owners/updateSeller/${sellerId}/?cityId=${cityId}&status=${status}`);
+export async function updateSeller(cityId, sellerId, status, title, description) {
+    try {
+        const response = await axios.patch(`/v1/owners/updateSeller/${sellerId}`, {
+            title,
+            description,
+            status,
+        }, {
+            params: {
+                cityId, sellerId
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating seller:', error);
+        throw error;
+    }
 }
 
 export async function getShelfById(cityId, storeId, shelfId) {
