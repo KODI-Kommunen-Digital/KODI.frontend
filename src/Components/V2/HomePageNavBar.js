@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../../Services/usersApi";
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { getCities } from "../../Services/cities";
 
 export default function HomePageNavBar() {
@@ -83,27 +83,24 @@ export default function HomePageNavBar() {
   }
 
   const onCityChange = (e) => {
-    const selectedCityId = e.target.value;
+    const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
     const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedCity = cities.find(
-      (city) => city.id.toString() === selectedCityId
-    );
 
-    if (selectedCity) {
-      localStorage.setItem("selectedCity", selectedCity.name);
-      if (selectedCategoryId) {
-        window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-      } else {
-        window.location.href = `?cityId=${selectedCityId}`;
-      }
+    if (selectedCityId === 0) {
+      setCityId(0);
+      window.location.href = '/';
     } else {
-      localStorage.setItem("selectedCity", t("allCities"));
-      if (selectedCategoryId) {
-        window.location.href = `?categoryId=${selectedCategoryId}`;
-      } else {
-        urlParams.delete("cityId");
-        setCityId(0);
+      const selectedCity = cities.find(
+        (city) => city.id === selectedCityId
+      );
+
+      if (selectedCity) {
+        setCityId(selectedCityId);
+        if (selectedCategoryId) {
+          window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
+        } else {
+          window.location.href = `?cityId=${selectedCityId}`;
+        }
       }
     }
   };
@@ -125,7 +122,6 @@ export default function HomePageNavBar() {
                   src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                   alt="HEDI- Heimat Digital"
                   onClick={() => {
-                    window.localStorage.removeItem("selectedCity");
                     navigateTo("/");
                     window.location.reload();
                   }}
@@ -339,9 +335,9 @@ export default function HomePageNavBar() {
   );
 }
 
-HomePageNavBar.propTypes = {
-  cities: PropTypes.array.isRequired,
-  onCityChange: PropTypes.func.isRequired,
-  cityId: PropTypes.number.isRequired,
-  categoryId: PropTypes.number.isRequired,
-};
+// HomePageNavBar.propTypes = {
+//   cities: PropTypes.array.isRequired,
+//   onCityChange: PropTypes.func.isRequired,
+//   cityId: PropTypes.number.isRequired,
+//   categoryId: PropTypes.number.isRequired,
+// };
