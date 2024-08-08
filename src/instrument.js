@@ -56,7 +56,7 @@ function sendToWebhook(error) {
 }
 
 // Add a global error handler to catch unhandled errors
-Sentry.getCurrentHub().addGlobalEventProcessor(event => {
+Sentry.addEventProcessor((event) => {
     if (event.exception) {
         sendToWebhook(event.exception.values[0].value); // Send the first error
     }
