@@ -481,7 +481,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
   return (
     <div className="flex flex-col justify-center">
       <button
-        className="w-full bg-black mb-4 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+        className="w-full bg-black mb-4 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
         onClick={() => {
           setShowModal(true)
           setEditAppointmentTime(true)
@@ -810,7 +810,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <button
                         onClick={handleDoneButtonClick}
-                        className="w-full bg-black hover:bg-slate-600 text-white py-2 px-4 mt-4 ext-white font-bold py-2 px-4 rounded-xl"
+                        className="w-full bg-black hover:bg-gray-800 text-white py-2 px-4 mt-4 ext-white font-bold py-2 px-4 rounded-xl"
                       >
                         {t("done")}
                       </button>
@@ -853,7 +853,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
       <div className="py-2 mt-1 px-2">
         <button
           onClick={handleAddService}
-          className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+          className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
         >
           {t("addAnotherService")}
         </button>

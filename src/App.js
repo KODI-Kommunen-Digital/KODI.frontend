@@ -51,12 +51,36 @@ import AppointmentsUserCreated from "./Path/AppointmentBooking/AppointmentsUserC
 import BookMyAppointments from "./Path/AppointmentBooking/BookMyAppointments";
 import MyBookings from "./Path/AppointmentBooking/MyBookings";
 
+import SellerScreen from "./Path/Container/SellerScreen";
+import SellerRequests from "./Path/Container/SellerRequests";
+import SellerRequestPage from "./Path/Container/SellerRequestPage";
+import OrdersSold from "./Path/Container/OrdersSold";
+import AddNewProducts from "./Path/Container/AddNewProducts";
+import CustomerScreen from "./Path/Container/CustomerScreen";
+import MyOrders from "./Path/Container/MyOrders";
+import PaymentStatus from "./Path/Container/PaymentStatus";
+import GetCard from "./Path/Container/GetCard";
+import OwnerScreen from "./Path/Container/OwnerScreen";
+import StoreDetails from "./Path/Container/StoreDetails";
+import ProductStore from "./Path/Container/ProductStore";
+import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
+import Shelves from "./Path/Container/Shelves";
+import AllOrders from "./Path/Container/AllOrders";
+import AllProductRequests from "./Path/Container/AllProductRequests";
+import CreateShelves from "./Path/Container/CreateShelves";
+import SellerRequestsApproval from "./Path/Container/SellerRequestsApproval";
+import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
+import OrderDetails from "./Path/Container/OrderDetails";
+import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
+import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
+
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isAppointmentEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || '1';
 
@@ -186,6 +210,143 @@ const App = () => {
                 path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
                 element={<BookingErrorConfirmation />}
               />
+            </React.Fragment>
+          )}
+
+          {isContainerEnabled && (
+            <React.Fragment>
+              <Route
+                path="/OwnerScreen"
+                element={<OwnerScreen />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen"
+                element={<SellerScreen />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen"
+                element={<CustomerScreen />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/SellerRequestPage"
+                element={<SellerRequestPage />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/SellerRequests"
+                element={<SellerRequests />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/OrdersSold"
+                element={<OrdersSold />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/AddNewProducts"
+                element={<AddNewProducts />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/MyOrders"
+                element={<MyOrders />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/PaymentStatus"
+                element={<PaymentStatus />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/GetCard"
+                element={<GetCard />}
+                exact
+              />
+
+              <Route
+                path="/CustomerScreen/OrderDetails"
+                element={<OrderDetails />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/StoreDetails"
+                element={<StoreDetails />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/ProductStore"
+                element={<ProductStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/ProductDetailsStore"
+                element={<ProductDetailsStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllProductRequestsDetails"
+                element={<AllProductRequestsDetails />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/SellerDetailsStore"
+                element={<SellerDetailsStore />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/Shelves"
+                element={<Shelves />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllOrders"
+                element={<AllOrders />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AllProductRequests"
+                element={<AllProductRequests />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/CreateShelves"
+                element={<CreateShelves />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/SellerRequestsApproval"
+                element={<SellerRequestsApproval />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/OrderDetailsStore"
+                element={<OrderDetailsStore />}
+                exact
+              />
+
             </React.Fragment>
           )}
 

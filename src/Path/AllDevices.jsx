@@ -85,10 +85,10 @@ const AllDevices = () => {
 	}
 
 	return (
-		<section className="bg-slate-600 body-font relative h-screen">
+		<section className="bg-gray-800 body-font relative h-screen">
 			<SideBar />
 			<>
-				<div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+				<div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
 					<div className="bg-white mt-4 p-6">
 						<h2
 							className="text-slate-800 text-lg mb-4 font-medium title-font"
@@ -102,7 +102,7 @@ const AllDevices = () => {
 							<div className="text-center">
 								<img
 									alt="devices"
-									className="object-cover object-center h-48 w-full bg-white"
+									className="object-cover object-center h-48 w-80 bg-white"
 									src={DEVICEIMAGE}
 								/>
 							</div>

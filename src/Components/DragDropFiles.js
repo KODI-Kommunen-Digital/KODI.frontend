@@ -28,12 +28,12 @@ const DragDropFiles = () => {
                 </div>
                 <div className="flex justify-center actions mt-4 space-x-20">
                     <button
-                        className="w-96 mt-8 cursor-pointer bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                        className="w-96 mt-8 cursor-pointer bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
                         onClick={() => setFiles(null)}
                     >
-						Remove Image
+                        Remove Image
                     </button>
-                    {/* <button class="w-96 mt-8 cursor-pointer bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded" onClick={handleUpload}>Upload another image</button> */}
+                    {/* <button class="w-96 mt-8 cursor-pointer bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded" onClick={handleUpload}>Upload another image</button> */}
                 </div>
             </div>
         );
@@ -72,10 +72,10 @@ const DragDropFiles = () => {
                             ref={inputRef}
                         />
                         <button
-                            className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                            className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
                             onClick={() => inputRef.current.click()}
                         >
-							Choose file
+                            Choose file
                         </button>
                     </div>
                 </div>
