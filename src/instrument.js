@@ -7,8 +7,23 @@ import {
     useNavigationType,
 } from "react-router-dom";
 
-console.log('Initializing Sentry with DSN:', process.env.REACT_APP_SENTRY_DSN);
-console.log('Sentry Environment:', process.env.REACT_APP_SENTRY_ENV);
+const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
+const sentryEnv = process.env.REACT_APP_SENTRY_ENV;
+const webhookUrl = process.env.REACT_APP_WEBHOOK;
+const ENV = process.env.REACT_APP_ENVIRONMENT;
+const app = process.env.REACT_APP_NAME;
+const appName = process.env.REACT_APP_NAME;;
+
+if (!sentryDsn) {
+    console.error('REACT_APP_SENTRY_DSN environment variable not defined.');
+}
+
+if (!sentryEnv) {
+    console.error('REACT_APP_SENTRY_ENV environment variable not defined.');
+}
+
+console.log('Initializing Sentry with DSN:', sentryDsn);
+console.log('Sentry Environment:', sentryEnv);
 
 Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -28,25 +43,37 @@ Sentry.init({
     // Session Replay
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
-    environment: process.env.REACT_APP_SENTRY_ENV
+    environment: sentryEnv
 });
 
 // Function to send error to Discord webhook
 function sendToWebhook(error) {
-    const webhookUrl = process.env.REACT_APP_WEBHOOK;
     if (webhookUrl) {
+        const time = new Date().toISOString();
+        const sentryUrl = `https://sentry.io/organizations/${appName}/issues/?query=${error.eventId}`; // Replace YOUR_ORG and YOUR_PROJECT with your Sentry org and project
+
+        const payload = {
+            content: `There was an uncaught exception in your ${app} Frontend at ${time}`,
+            embeds: [
+                {
+                    title: error.message || "Error",
+                    description: error.stack || "No stack trace available",
+                    color: 16515072,
+                    url: sentryUrl,
+                },
+            ],
+        };
+
         fetch(webhookUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                content: `Error occurred: ${error.message}`,
-            }),
+            body: JSON.stringify(payload),
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to send error to webhook');
+                    throw new Error(`Failed to send error to webhook: ${response.statusText}`);
                 }
             })
             .catch(err => console.error('Error sending error to webhook:', err));
@@ -57,8 +84,14 @@ function sendToWebhook(error) {
 
 // Add a global error handler to catch unhandled errors
 Sentry.addEventProcessor((event) => {
-    if (event.exception && process.env.REACT_APP_ENV === 'production') {
-        sendToWebhook(event.exception.values[0].value); // Send the first error only if the environment is production
+    if (event.exception && ENV === 'production') {
+        const error = event.exception.values?.[0];
+        if (error) {
+            sendToWebhook({
+                message: error.value,
+                eventId: event.event_id,
+            });
+        }
     }
     return event;
 });
