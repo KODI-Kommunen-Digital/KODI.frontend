@@ -27,7 +27,7 @@ function OverviewPage() {
 			<SideBar />
 			<div className="container w-auto px-5 py-2 bg-slate-600 h-full">
 				<div className="bg-white mt-4 p-6 space-y-10">
-					<h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+					<h2 className="text-slate-800 text-lg mb-4 font-medium title-font">
 						Please select the entry type:
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
@@ -37,7 +37,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "News");
 								goToListingsPage(1);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-cyan-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -57,7 +57,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Road Works / Traffic");
 								goToListingsPage(2);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-red-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -77,7 +77,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Events");
 								goToListingsPage(3);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-yellow-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -97,7 +97,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Clubs");
 								goToListingsPage(4);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-green-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -117,7 +117,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Regional Products");
 								goToListingsPage(5);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-violet-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -137,7 +137,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Offer / Search");
 								goToListingsPage(6);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-orange-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -157,7 +157,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "New Citizen Info");
 								goToListingsPage(7);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-stone-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -177,7 +177,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Defect Report");
 								goToListingsPage(8);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-red-600 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -198,7 +198,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Lost And Found");
 								goToListingsPage(9);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-gray-600 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -218,7 +218,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Company Portraits");
 								goToListingsPage(10);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-pink-400 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg
@@ -241,9 +241,9 @@ function OverviewPage() {
 									"Carpooling And Public Transport"
 								);
 							}}
-							className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white h-40 sm:w-48 w-40 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
-							<div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-xl">
+							<div className="h-20 w-20 bg-lime-600 flex items-center justify-center rounded-full m-auto shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 448 512"
@@ -261,7 +261,7 @@ function OverviewPage() {
 								localStorage.setItem("selectedItem", "Offers");
 								goToListingsPage(12);
 							}}
-							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-xl rounded-lg mt-10 cursor-pointer"
+							className="p-4 justify-center bg-white sm:h-40 h-44 sm:w-48 w-32 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg mt-10 cursor-pointer"
 						>
 							<div className="h-20 w-20 bg-sky-600 flex items-center justify-center rounded-full m-auto shadow-2xl">
 								<svg

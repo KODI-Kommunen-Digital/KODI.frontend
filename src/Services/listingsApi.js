@@ -11,6 +11,11 @@ export async function getListings(params) {
 	return axios.get(`/listings`, { params });
 }
 
+export async function getMyListing(params) {
+	params.showExternalListings = "true";
+	return axios.get(`/users/myListings`, { params });
+}
+
 export async function getListingsByCity(cityId, params) {
 	return axios.get(`/cities/${cityId}/listings`, { params });
 }
@@ -19,8 +24,12 @@ export async function getListingsById(cityId, listingsId) {
 	return axios.get(`/cities/${cityId}/listings/${listingsId}`);
 }
 
-export async function postListingsData(cityId, newListingsDataObj) {
-	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
+// export async function postListingsData(cityId, newListingsDataObj) {
+// 	return axios.post(`/cities/${cityId}/listings`, newListingsDataObj);
+// }
+
+export async function postListingsData(newListingsDataObj) {
+	return axios.post(`/listings`, newListingsDataObj);
 }
 
 export async function getListingsBySearch(params) {

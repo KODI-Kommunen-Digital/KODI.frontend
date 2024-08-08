@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
+import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
@@ -112,10 +112,6 @@ const Register = () => {
 				case "username":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterUsername");
-					} else if (value.length < 6) {
-						stateObj[name] = t("userNameTooShort");
-					} else if (value.length > 15) {
-						stateObj[name] = t("userNameTooLong");
 					} else if (
 						value[0] === value[0].toUpperCase() ||
 						/\s/.test(value) ||
@@ -124,11 +120,17 @@ const Register = () => {
 						/[&='+,;<>.]/.test(value)
 					) {
 						stateObj[name] = t("userNameValidation");
+					} else if (value.length < 6) {
+						stateObj[name] = t("userNameTooShort");
+					} else if (value.length > 15) {
+						stateObj[name] = t("userNameTooLong");
 					}
 					break;
 				case "email":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterEmailAddress");
+					} else if (!/\S+@\S+\.\S+/.test(value)) {
+						stateObj[name] = t("invalidEmailAddress");
 					}
 					break;
 				case "password":
@@ -140,9 +142,8 @@ const Register = () => {
 						stateObj[name] = t("passwordValidation");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
-					} else if (value.includes(input.username)) {
-						stateObj[name] = t("passwordContainsUsername");
-					} else {
+					}
+					else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
 							: error.confirmPassword;
@@ -182,10 +183,11 @@ const Register = () => {
 					<img
 						onClick={() => navigate("/")}
 						className="mx-auto h-20 w-auto cursor-pointer"
+						// src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 						src={HeidiLogo}
 						alt="HEDI- Heimat Digital"
 					/>
-					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 						{t("createAccount")}
 					</h3>
 				</div>
@@ -206,7 +208,7 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterFirstName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
 								<label htmlFor="lastname" className="sr-only">
 									{t("lastName")}
@@ -220,7 +222,7 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterLastName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
 							</span>
 						</div>
@@ -237,7 +239,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterUsername") + "*"}
 							></input>
 							{error.username && <span className="err">{error.username}</span>}
@@ -255,7 +257,7 @@ const Register = () => {
 								onBlur={validateInput}
 								autoComplete="email"
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterEmailAddress") + "*"}
 							></input>
 							{error.email && <span className="err">{error.email}</span>}
@@ -271,7 +273,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseEnterPassword") + "*"}
 							></input>
 							{error.password && <span className="err">{error.password}</span>}
@@ -287,7 +289,7 @@ const Register = () => {
 								onChange={onInputChange}
 								onBlur={validateInput}
 								required
-								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+								className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								placeholder={t("pleaseConfirmPassword") + "*"}
 							></input>
 							{error.confirmPassword && (
@@ -307,7 +309,7 @@ const Register = () => {
 							/>
 							<label
 								htmlFor="remember-me"
-								className="ml-2 block text-sm text-gray-900"
+								className="ml-2 block text-sm text-slate-800"
 							>
 								{t("i_hereby_accept_the")}
 								<a

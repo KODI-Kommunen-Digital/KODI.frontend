@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { verifyEmail } from "../Services/usersApi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HomePageNavBar from "../Components/HomePageNavBar";
+import HomePageNavBar from "../Components/V2/HomePageNavBar";
 import Footer from "../Components/Footer";
+import RegionColors from "../Components/RegionColors";
 
 const VerifyEmail = () => {
 	const { t } = useTranslation();
@@ -22,11 +23,17 @@ const VerifyEmail = () => {
 	const [token, setToken] = useState("");
 	const [userId, setUserId] = useState(0);
 	useEffect(() => {
-		const url = window.location;
-		const params = new URLSearchParams(url.search);
-		setToken(params.get("token"));
-		setUserId(params.get("userId"));
-		setMakeVerifyEmailCall(true);
+		const params = new URLSearchParams(window.location.search);
+		const urlToken = params.get("token");
+		const urlUserId = params.get("userId");
+
+		if (!urlToken || !urlUserId) {
+			navigate('/login');
+		} else {
+			setToken(urlToken);
+			setUserId(urlUserId);
+			setMakeVerifyEmailCall(true);
+		}
 	}, []);
 
 	const [count, setCount] = useState(10);
@@ -102,7 +109,7 @@ const VerifyEmail = () => {
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
 							>
 								{t("goback")}
 							</button>
@@ -135,7 +142,7 @@ const VerifyEmail = () => {
 							<button
 								type="submit"
 								onClick={() => navigateTo("/login")}
-								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+								className={`w-full rounded-xl sm:w-80 mt-10 mx-auto ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer font-sans`}
 							>
 								{t("goback")}
 							</button>

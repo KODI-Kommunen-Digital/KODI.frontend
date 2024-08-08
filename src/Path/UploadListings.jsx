@@ -15,13 +15,14 @@ import {
 } from "../Services/listingsApi";
 import { getProfile } from "../Services/usersApi";
 import { getCities } from "../Services/cities";
-import { getVillages } from "../Services/villages";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
-import { role } from "../Constants/role";
+import ServiceAndTime from "../Components/ServiceAndTime";
+import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -30,22 +31,19 @@ function UploadListings() {
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  //Drag and Drop starts
+  // Drag and Drop starts
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
-  const [dragging, setDragging] = useState(false);
+  const [appointmentAdded, setAppointmentAdded] = useState(false);
+  const [, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const imgaeBucketURL = process.env.REACT_APP_BUCKET_HOST;
 
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [startDate, setStartDate] = useState([]);
-  const [endDate, setEndDate] = useState([]);
-  const [expiryDate, setExpiryDate] = useState([]);
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -85,10 +83,15 @@ function UploadListings() {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
-        setImage(e.target.files);
+        setImage(e.dataTransfer.files);
+        setLocalImageOrPdf(true);
+        setListingInput((prev) => ({
+          ...prev,
+          hasAttachment: true,
+        }));
       } else if (file.type === "application/pdf") {
         setPdf(file);
-        setInput((prev) => ({
+        setListingInput((prev) => ({
           ...prev,
           hasAttachment: true,
         }));
@@ -99,53 +102,114 @@ function UploadListings() {
 
   function handleInputChange(e) {
     e.preventDefault();
-    const file = e.target.files[0];
-    if (file) {
-      const MAX_IMAGE_SIZE_MB = 20;
+    const files = e.target.files;
+    const MAX_IMAGE_SIZE_MB = 20;
+    let hasImage = false;
+    let hasPdf = false;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
         return;
       }
 
       if (file.type.startsWith("image/")) {
-        setLocalImageOrPdf(true);
-        setImage(e.target.files);
+        hasImage = true;
       } else if (file.type === "application/pdf") {
-        setLocalImageOrPdf(true);
-        setPdf(file);
-        setInput((prev) => ({
-          ...prev,
-          hasAttachment: true,
-        }));
+        hasPdf = true;
       }
+    }
+
+    if (hasImage && hasPdf) {
+      alert(t("imagePdfAlert"));
+      return;
+    }
+
+    if (hasImage) {
+      setLocalImageOrPdf(true);
+      setImage(files);
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: false,
+      }));
+    }
+
+    if (hasPdf) {
+      setLocalImageOrPdf(true);
+      setPdf(files[0]); // Assuming only one PDF file is allowed
+      setListingInput((prev) => ({
+        ...prev,
+        hasAttachment: true,
+      }));
     }
   }
 
   const [localImages, setLocalImages] = useState([]);
   const handleMultipleInputChange = (event) => {
-    const newImages = Array.from(event.target.files);
-    setLocalImages((prevImages) => [...prevImages, ...newImages]);
-    setImage([...image, ...newImages]);
+    const newFiles = Array.from(event.target.files);
+
+    if (image.length > 0) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
+        setImage((prevImages) => [...prevImages, ...validImages]);
+      }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
+    }
   };
 
   const handleUpdateMultipleInputChange = (e) => {
-    const newFiles = e.target.files;
+    const newFiles = Array.from(e.target.files);
 
-    if (newFiles.length > 0) {
-      const validImages = Array.from(newFiles).filter((file) =>
-        file.type.startsWith("image/")
-      );
+    if (image.length > 0) {
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-      if (validImages.length > 0) {
-        setLocalImageOrPdf(true);
+      if (invalidFiles.length > 0) {
+        alert(t("imagePdfAlert"));
+      } else {
+        setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
       }
+    } else {
+      newFiles.forEach(file => {
+        if (file.type === "application/pdf") {
+          setLocalImageOrPdf(true);
+          setPdf(file);
+          setListingInput((prev) => ({
+            ...prev,
+            hasAttachment: true,
+          }));
+        } else if (file.type.startsWith("image/")) {
+          setLocalImages((prevImages) => [...prevImages, file]);
+          setImage((prevImages) => [...prevImages, file]);
+        }
+      });
     }
   };
 
   function handleRemoveImage() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removeImage: true,
         logo: null,
@@ -160,27 +224,29 @@ function UploadListings() {
 
   function handleRemovePDF() {
     if (listingId) {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         removePdf: true,
         pdf: null,
       }));
     }
     setPdf(null);
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       hasAttachment: false,
     }));
   }
 
-  //Drag and Drop ends
+  // Drag and Drop ends
 
   //Sending data to backend starts
-  const [val, setVal] = useState([{ socialMedia: "", selected: "" }]);
-  const [input, setInput] = useState({
+  const [cityIds, setCityId] = useState(0);
+  const [cities, setCities] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [listingInput, setListingInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
-    cityId: 0,
+    cityIds: [],
     statusId: 1,
     title: "",
     place: "",
@@ -207,36 +273,168 @@ function UploadListings() {
     subcategoryId: "",
     title: "",
     description: "",
-    cityId: "",
+    cityIds: "",
+    cityAlreadySelected: "",
     startDate: "",
     endDate: "",
   });
 
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const initialTimeSlot = { startTime: "00:00", endTime: "00:00" };
+
+  const [appointmentInput, setAppointmentInput] = useState({
+    title: "",
+    description: "",
+    startDate: new Date().toISOString().slice(0, 16) + ":00",
+
+    metadata: {
+      holidays: [],
+      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+      maxBookingPerSlot: 5,
+    },
+    services: [{
+      name: "",
+      duration: "",
+      // durationUnit: "minutes",
+      slotSameAsAppointment: false,
+      metadata: {
+        holidays: [],
+        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+        maxBookingPerSlot: 5,
+      },
+    }],
+  });
+
+  const [appointmentError, setAppointmentError] = useState({
+    name: "",
+    duration: "",
+    endTime: "",
+    startTime: "",
+    metadata: {
+      holidays: "",
+      openingDates: "",
+      maxBookingPerSlot: "",
+    },
+  });
+
   const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Function to trim .000Z part from startDate
+    const trimStartDate = (startDate) => {
+      if (startDate.endsWith(".000Z")) {
+        return startDate.slice(0, -5); // Remove the last 5 characters (.000Z)
+      }
+      return startDate; // Return as is if .000Z is not found
+    };
+
+    // Validate time slots function
+    const validateTimeSlots = () => {
+      for (let service of appointmentInput.services) {
+        const { duration, metadata: { openingDates } } = service;
+        const durationInMinutes = parseInt(duration, 10);
+
+        for (let day in openingDates) {
+          for (let slot of openingDates[day]) {
+            const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+            const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+
+            // Skip validation if both startTime and endTime are 00:00
+            if (slot.startTime === "00:00" && slot.endTime === "00:00") {
+              continue;
+            }
+
+            const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+
+            if (slotDuration < durationInMinutes) {
+              return t("slotDurationMismatch", {
+                day,
+                duration,
+                startTime: slot.startTime,
+                endTime: slot.endTime
+              });
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    // Validate time slots if appointment is added
+    if (appointmentAdded) {
+      const errorMessage = validateTimeSlots();
+      if (errorMessage) {
+        setErrorMessage(errorMessage);
+        return;
+      }
+    }
+    event.preventDefault();  // Prevent default form submission
+
+    // Validate other form errors
     let valid = true;
     for (let key in error) {
-      var errorMessage = getErrorMessage(key, input[key]);
-      var newError = error;
-      newError[key] = errorMessage;
+      const errorMessage = getErrorMessage(key, listingInput[key]);
+      const newError = { ...error, [key]: errorMessage };
       setError(newError);
       if (errorMessage) {
         valid = false;
       }
     }
+
     if (valid) {
       setUpdating(true);
-      event.preventDefault();
+
       try {
-        let response = await (newListing
-          ? postListingsData(cityId, input)
-          : updateListingsData(cityId, input, listingId));
-        if (newListing) {
-          setListingId(response.data.id);
+        const dataToSubmit = {
+          ...listingInput,
+          cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
+        };
+        // Post or update listing data
+        const response = await (newListing
+          ? postListingsData(dataToSubmit)
+          : updateListingsData(cityIds, dataToSubmit, listingId));
+
+        let currentListingId = [];
+        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          currentListingId = response.data.data.map(item => item.listingId);
         }
 
-        if (input.removeImage) {
+        let cityIdsArray = [];
+        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          cityIdsArray = response.data.data.map(item => item.cityId);
+        }
+
+        // Filter opening dates for appointmentInput and services before submitting
+        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
+        const filteredServices = appointmentInput.services.map(service => ({
+          ...service,
+          metadata: {
+            ...service.metadata,
+            openingDates: filterOpeningDates(service.metadata.openingDates),
+          },
+        }));
+
+        const filteredAppointmentInput = {
+          ...appointmentInput,
+          startDate: trimStartDate(appointmentInput.startDate), // Trim .000Z part from startDate
+          metadata: {
+            ...appointmentInput.metadata,
+            openingDates: filteredOpeningDates,
+          },
+          services: filteredServices,
+        };
+
+        if (listingInput.removeImage) {
           if (image.length === 0) {
-            await deleteListingImage(cityId, listingId);
+            await deleteListingImage(cityIds, listingId);
           } else {
             if (!localImageOrPdf) {
               const imageForm = new FormData();
@@ -246,7 +444,7 @@ function UploadListings() {
 
               await uploadListingImage(
                 imageForm,
-                cityId,
+                cityIds,
                 response.data.id || listingId
               );
             }
@@ -254,50 +452,91 @@ function UploadListings() {
         }
 
         if (localImageOrPdf) {
-          if (image) {
-            // Upload image if it exists
+          if (image && image.length > 0) {
+            const imageArray = Array.from(image);
             const imageForm = new FormData();
-            for (let i = 0; i < image.length; i++) {
-              imageForm.append("image", image[i]);
+            let allPromises = []
+            for (let img of imageArray) {
+              imageForm.append("image", img);
             }
-
-            await uploadListingImage(
-              imageForm,
-              cityId,
-              response.data.id || listingId
-            );
+            for (let index = 0; index < currentListingId.length; index++) {
+              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+            }
+            await Promise.all(allPromises)
           } else if (pdf) {
-            // Upload PDF if it exists
+            let allPromises = []
             const pdfForm = new FormData();
-            pdfForm.append("pdf", pdf);
-            await uploadListingPDF(
-              pdfForm,
-              cityId,
-              response.data.id || listingId
-            );
+            const minIterations = Math.min(cityIdsArray.length);
+            for (let index = 0; index < minIterations; index++) {
+              const cityId = cityIdsArray[index];
+              const listingId = currentListingId[index];
+              pdfForm.append("pdf", pdf);
+              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
+            }
+            await Promise.all(allPromises)
           }
+        }
+
+        if (!newListing && listingInput.appointmentId) {
+          try {
+            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
+          } catch (error) {
+            console.error('Error updating appointment:', error);
+          }
+        } else if (appointmentAdded) {
+          const minIterations = Math.min(cityIdsArray.length);
+          let allAppointmentPromises = []
+          for (let index = 0; index < minIterations; index++) {
+            const cityId = cityIdsArray[index];
+            const listingId = currentListingId[index];
+
+            try {
+              // await createAppointments(cityId, listingId, filteredAppointmentInput);
+              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+            } catch (error) {
+              console.error('Error posting appointment:', error);
+            }
+          }
+
+
+          await Promise.all(allAppointmentPromises);
         }
 
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
-          : setSuccessMessage(t("listingUpdated"));
-        setErrorMessage(false);
+          : newListing
+            ? setSuccessMessage(t("listingCreated"))
+            : setSuccessMessage(t("listingUpdated"));
+
         setIsSuccess(true);
         setTimeout(() => {
           setSuccessMessage(false);
           navigate("/Dashboard");
         }, 5000);
       } catch (error) {
+        console.error("Error during submission:", error);
         setErrorMessage(t("changesNotSaved"));
-        setSuccessMessage(false);
         setTimeout(() => setErrorMessage(false), 5000);
+      } finally {
+        setUpdating(false);
       }
-      setUpdating(false);
     } else {
       setErrorMessage(t("invalidData"));
-      setSuccessMessage(false);
       setTimeout(() => setErrorMessage(false), 5000);
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/Dashboard');
+  };
+
+  const filterOpeningDates = (openingDates) => {
+    return Object.keys(openingDates).reduce((acc, day) => {
+      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+        acc[day] = openingDates[day];
+      }
+      return acc;
+    }, {});
   };
 
   useEffect(() => {
@@ -311,13 +550,15 @@ function UploadListings() {
     if (!accessToken && !refreshToken) {
       navigateTo("/login");
     }
-    var cityId = searchParams.get("cityId");
+    var cityIds = searchParams.get("cityId");
     getCategory().then((response) => {
-      const catList = {};
-      response?.data.data.forEach((cat) => {
-        catList[cat.id] = cat.name;
-      });
-      setCategories(catList);
+      const categories = response?.data?.data || [];
+
+      const filteredCategories = categories.filter(
+        category => !hiddenCategories.includes(category.id)
+      );
+
+      setCategories(filteredCategories);
     });
     getNewsSubCategory().then((response) => {
       const subcatList = {};
@@ -326,36 +567,80 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     });
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
+    setAppointmentInput(prevAppointmentInput => ({
+      ...prevAppointmentInput,
+      title: listingInput.title,
+      description: listingInput.description,
+    }));
     setSubcategoryId(null);
-    setCityId(cityId);
+    setCityId(cityIds);
     var listingId = searchParams.get("listingId");
     getProfile().then((response) => {
-      setIsAdmin(response.data.data.roleId === role.Admin);
+      setIsAdmin(response.data.data.roleId === 1);
     });
-    if (listingId && cityId) {
+    if (listingId && cityIds) {
       setListingId(parseInt(listingId));
       setNewListing(false);
-      getVillages(cityId).then((response) => setVillages(response.data.data));
-      getListingsById(cityId, listingId).then((listingsResponse) => {
-        let listingData = listingsResponse.data.data;
-        // if (listingData.startDate)
-        // 	listingData.startDate = listingData.startDate.slice(0, 10);
-        // if (listingData.endDate)
-        // 	listingData.endDate = listingData.endDate.slice(0, 10);
-        listingData.cityId = cityId;
-        setInput(listingData);
-        setStartDate(listingData.startDate);
-        setEndDate(listingData.endDate);
+      // getVillages(cityId).then((response) => setVillages(response.data.data));
+      getListingsById(cityIds, listingId).then((listingsResponse) => {
+        const listingData = listingsResponse.data.data;
+        listingData.cityIds = cityIds;
+        setListingInput(listingData);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
+
+        const appointmentId = listingData.appointmentId;
+        const listingId = listingData.id
+        if (appointmentId) {
+          getAppointments(cityIds, listingId, appointmentId).then((appointmentResponse) => {
+            const appointmentData = appointmentResponse.data.data;
+            appointmentData.metadata = JSON.parse(appointmentData.metadata);
+
+            daysOfWeek.forEach((day) => {
+              if (!appointmentData.metadata.openingDates[day]) {
+                appointmentData.metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+              }
+            });
+
+            setAppointmentInput(appointmentData);
+            // console.log(appointmentData)
+
+            getAppointmentServices(cityIds, listingId, appointmentId)
+              .then((servicesResponse) => {
+
+                console.log(servicesResponse.data.data)
+                const servicesData = servicesResponse.data.data.map((item) => {
+                  const metadata = JSON.parse(item.metadata);
+
+                  // Ensure all days of the week have at least one time slot
+                  daysOfWeek.forEach((day) => {
+                    if (!metadata.openingDates[day]) {
+                      metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                    }
+                  });
+
+                  return { ...item, metadata };
+                });
+                setAppointmentInput(prevState => ({
+                  ...prevState,
+                  services: servicesData
+                }));
+              })
+              .catch((error) => {
+                console.error("Error fetching appointment services:", error);
+              });
+          }).catch((error) => {
+            console.error("Error fetching appointment details:", error);
+          });
+        }
+
         if (listingData.logo && listingData.otherlogos) {
           const temp = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
             .map((img) => img.logo);
           setImage(temp);
-          console.log(temp);
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -389,17 +674,24 @@ function UploadListings() {
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: checked,
         timeless: checked,
         expiryDate: checked ? null : getDefaultEndDate(),
       }));
     } else {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         [name]: value,
       }));
+
+      if (name !== "email") {
+        setAppointmentInput((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
     }
 
     validateInput(e);
@@ -435,11 +727,21 @@ function UploadListings() {
         return plainTextListItems.join("\n");
       });
     }
-    setInput((prev) => ({
+    setListingInput((prev) => ({
+      ...prev,
+      description: descriptionHTML,
+    }));
+
+    setAppointmentInput((prev) => ({
       ...prev,
       description: descriptionHTML,
     }));
     setDescription(newContent);
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const getErrorMessage = (name, value) => {
@@ -451,7 +753,8 @@ function UploadListings() {
           return "";
         }
 
-      case "cityId":
+      case "cityIds":
+
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -466,7 +769,7 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -482,15 +785,15 @@ function UploadListings() {
         }
 
       case "startDate":
-        if (!value && parseInt(input.categoryId) == 3) {
+        if (!value && parseInt(listingInput.categoryId) == 3) {
           return t("pleaseEnterStartDate");
         } else {
           return "";
         }
 
       case "endDate":
-        if (parseInt(input.categoryId) === 3) {
-          if (value && new Date(input.startDate) > new Date(value)) {
+        if (parseInt(listingInput.categoryId) === 3) {
+          if (value && new Date(listingInput.startDate) > new Date(value)) {
             return t("endDateBeforeStartDate");
           } else {
             return "";
@@ -499,54 +802,146 @@ function UploadListings() {
           return "";
         }
 
+      case "email":
+        if (name === "email") {
+          if (value) {
+            if (!isValidEmail(value)) {
+              return "Please enter a valid email address";
+            }
+          }
+        }
+
       case "expiryDate":
-        if (!value && parseInt(input.categoryId) == 1) {
+        if (!value && parseInt(listingInput.categoryId) == 1) {
           return t("pleaseEnterExpiryDate");
         } else {
           return "";
         }
+
+      case "name":
+        if (!parseInt(value)) {
+          return t("pleaseSelectServiceName");
+        } else {
+          return "";
+        }
+
+      case "duration":
+        if (!parseInt(value)) {
+          return t("pleaseSelectDuration");
+        } else {
+          return "";
+        }
+
+      case "phone":
+        const phoneRegex = /^\d+$/;
+        if (!value.match(phoneRegex)) {
+          return t("pleaseEnterValidPhoneNumber");
+        }
+        return "";
+
       default:
         return "";
     }
   };
 
   const validateInput = (e) => {
-    let { name, value } = e.target;
-    var errorMessage = getErrorMessage(name, value);
-    setError((prevState) => {
-      return { ...prevState, [name]: errorMessage };
-    });
+    if (e && e.target) {
+      const { name, value } = e.target;
+      const errorMessage = getErrorMessage(name, value);
+      setError((prevState) => ({
+        ...prevState,
+        [name]: errorMessage
+      }));
+    }
   };
 
   useEffect(() => {
     getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
+      const citiesData = citiesResponse.data.data;
+      setCities(citiesData);
+      if (citiesData.length === 1) {
+        const cityIds = citiesData[0].id;
+        const cityName = citiesData[0].name;
+        setSelectedCities([{ id: cityIds, name: cityName }]);
+        setListingInput((prev) => ({
+          ...prev,
+          cityIds: [cityIds],
+          villageId: 0,
+        }));
+      }
     });
   }, []);
 
-  useEffect(() => {
-    setInput((prevState) => ({
-      ...prevState,
-      selected: val.map((item) => item.selected),
-    }));
-  }, [val]);
+  const onCityChange = async (e) => {
+    const selectedCityId = parseInt(e.target.value);
 
-  // const [date, setDate] = useState();
-  const [cityId, setCityId] = useState(0);
-  const [villages, setVillages] = useState([]);
-  const [cities, setCities] = useState([]);
-  async function onCityChange(e) {
-    const cityId = e.target.value;
-    setCityId(cityId);
-    setInput((prev) => ({
+    if (process.env.REACT_APP_MULTIPLECITYSELECTION === 'True') {
+      if (selectedCities.some(city => city.id === selectedCityId)) {
+        setError((prevState) => ({
+          ...prevState,
+          cityAlreadySelected: t("cityAlreadySelected"),
+        }));
+        return;
+      } else {
+        setError((prevState) => ({
+          ...prevState,
+          cityAlreadySelected: "",
+        }));
+      }
+
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      if (selectedCity) {
+        setCityId(selectedCityId);
+        const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
+        setSelectedCities(updatedSelectedCities);
+        setListingInput((prev) => ({
+          ...prev,
+          cityIds: updatedSelectedCities.map(city => city.id),
+          villageId: 0,
+        }));
+      }
+
+      if (selectedCities.length === 0 || cities.length > 1) {
+        validateInput(e);
+      }
+    } else {
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      if (selectedCity) {
+        setCityId(selectedCityId);
+        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
+        setListingInput((prev) => ({
+          ...prev,
+          cityIds: [selectedCityId],
+          villageId: 0,
+        }));
+      }
+      if (parseInt(cityIds))
+        validateInput(e);
+    }
+  };
+
+  const removeCity = (cityIds) => {
+    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
+    setSelectedCities(updatedSelectedCities);
+    setListingInput((prev) => ({
       ...prev,
-      cityId: cityId,
+      cityIds: updatedSelectedCities.map(city => city.id),
       villageId: 0,
     }));
-    if (parseInt(cityId))
-      getVillages(cityId).then((response) => setVillages(response.data.data));
-    validateInput(e);
-  }
+
+    if (updatedSelectedCities.length === 0 && cities.length > 1) {
+      setError(prevState => ({
+        ...prevState,
+        cityIds: t("pleaseSelectCity"),
+      }));
+    } else {
+      setError(prevState => ({
+        ...prevState,
+        cityIds: "", // Reset the cityIds error when there are selected cities again
+      }));
+    }
+  };
+
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
@@ -561,7 +956,10 @@ function UploadListings() {
       });
       setSubCategories(subcatList);
     }
-    setInput((prevInput) => ({ ...prevInput, categoryId }));
+    if (categoryId == 18) {
+      setAppointmentAdded(true)
+    }
+    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
     validateInput(event);
 
@@ -575,7 +973,7 @@ function UploadListings() {
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
     setSubcategoryId(subcategoryId);
-    setInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
     validateInput(event);
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("subcategoryId", subcategoryId);
@@ -614,7 +1012,7 @@ function UploadListings() {
             {t("uploadPost")}
             <div className="my-4 bg-gray-600 h-[1px]"></div>
           </h2>
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
@@ -625,7 +1023,7 @@ function UploadListings() {
               type="text"
               id="title"
               name="title"
-              value={input.title}
+              value={listingInput.title}
               onChange={onInputChange}
               onBlur={validateInput}
               required
@@ -642,68 +1040,92 @@ function UploadListings() {
             </div>
           </div>
 
-          <div className="relative mb-4">
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-            </label>
-            <select
-              type="text"
-              id="cityId"
-              name="cityId"
-              value={cityId || 0}
-              onChange={onCityChange}
-              autoComplete="country-name"
-              disabled={!newListing}
-              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-            >
-              <option value={0}>{t("select")}</option>
-              {cities.map((city) => (
-                <option key={Number(city.id)} value={Number(city.id)}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-            <div
-              className="h-[24px] text-red-600"
-              style={{
-                visibility: error.cityId ? "visible" : "hidden",
-              }}
-            >
-              {error.cityId}
-            </div>
-          </div>
+          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' && newListing ? (
+            cities.length > 1 && (
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+                </label>
+                <select
+                  id="cityIds"
+                  name="cityIds"
+                  value={cityIds || 0}
+                  onChange={onCityChange}
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value="">{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
 
-          {villages.length > 0 && parseInt(cityId) ? (
-            <div className="relative mb-4">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-600"
-              >
-                {t("village")}
-              </label>
-              <select
-                type="villageId"
-                id="villageId"
-                name="villageId"
-                value={input.villageId || 0}
-                onChange={onInputChange}
-                onBlur={validateInput}
-                autoComplete="country-name"
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-              >
-                <option value={0}>{t("select")}</option>
-                {villages.map((village) => (
-                  <option key={Number(village.id)} value={Number(village.id)}>
-                    {village.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <div className="flex flex-wrap mt-0">
+                  {selectedCities.map((city) => (
+                    <div key={city.id} className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300">
+                      <span>{city.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeCity(city.id)}
+                        className="text-red-600 ml-2"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility: (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected ? "visible" : "hidden",
+                  }}
+                >
+                  {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
+                </div>
+              </div>
+            )
           ) : (
-            <span />
+            cities.length > 1 && (
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+                </label>
+                <select
+                  type="text"
+                  id="cityIds"
+                  name="cityIds"
+                  value={cityIds || 0}
+                  onChange={onCityChange}
+                  autoComplete="country-name"
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value={0}>{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={Number(city.id)} value={Number(city.id)}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility: selectedCities.length === 0 && error.cityIds ? "visible" : "hidden",
+                  }}
+                >
+                  {error.cityIds}
+                </div>
+              </div>
+            )
           )}
 
           <div className="relative mb-4">
@@ -726,10 +1148,10 @@ function UploadListings() {
               <option className="font-sans" value={0} key={0}>
                 {t("chooseOneCategory")}
               </option>
-              {Object.keys(categories).map((key) => {
+              {categories.map((category) => {
                 return (
-                  <option className="font-sans" value={key} key={key}>
-                    {t(categories[key])} {t(categoryDescription(key))}
+                  <option className="font-sans" value={category.id} key={category.id}>
+                    {t(category.name)} {t(categoryDescription(category.id))}
                   </option>
                 );
               })}
@@ -744,8 +1166,11 @@ function UploadListings() {
             </div>
           </div>
 
+          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
+            appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
+
           {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <label
                 htmlFor="subcategoryId"
                 className="block text-sm font-medium text-gray-600"
@@ -761,7 +1186,7 @@ function UploadListings() {
                 onBlur={validateInput}
                 required
                 // disabled={!newListing}
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
               >
                 <option className="font-sans" value={0} key={0}>
                   {t("chooseOneSubCategory")}
@@ -786,9 +1211,9 @@ function UploadListings() {
           )}
 
           {categoryId == 1 && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <div className="items-stretch py-0 grid grid-cols-1 md:grid-cols-1 gap-4">
-                {input.disableDates ? (
+                {listingInput.disableDates ? (
                   <label
                     htmlFor="dropdown"
                     className="text-gray-600 text-md mb-4 font-medium title-font"
@@ -818,15 +1243,15 @@ function UploadListings() {
                         id="expiryDate"
                         name="expiryDate"
                         value={
-                          input.expiryDate
-                            ? formatDateTime(input.expiryDate)
+                          listingInput.expiryDate
+                            ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
                         onChange={onInputChange}
                         onBlur={validateInput}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder="Expiry Date"
-                        disabled={input.disableDates}
+                        disabled={listingInput.disableDates}
                       />
                       <div
                         className="h-[24px] text-red-600"
@@ -846,7 +1271,7 @@ function UploadListings() {
                   type="checkbox"
                   id="disableDates"
                   name="disableDates"
-                  checked={input.disableDates}
+                  checked={listingInput.disableDates}
                   onChange={onInputChange}
                   className="mt-0"
                 />
@@ -861,7 +1286,7 @@ function UploadListings() {
           )}
 
           {categoryId == 3 && (
-            <div className="relative mb-4">
+            <div className="relative mb-0">
               <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
                   <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
@@ -884,7 +1309,7 @@ function UploadListings() {
                     id="startDate"
                     name="startDate"
                     value={
-                      input.startDate ? formatDateTime(input.startDate) : null
+                      listingInput.startDate ? formatDateTime(listingInput.startDate) : null
                     }
                     onChange={onInputChange}
                     onBlur={validateInput}
@@ -921,7 +1346,7 @@ function UploadListings() {
                     type="datetime-local"
                     id="endDate"
                     name="endDate"
-                    value={input.endDate ? formatDateTime(input.endDate) : null}
+                    value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
                     onChange={onInputChange}
                     onBlur={validateInput}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -940,7 +1365,7 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="col-span-6">
+          <div className="relative mb-4">
             <label
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
@@ -952,7 +1377,7 @@ function UploadListings() {
                 type="text"
                 id="address"
                 name="address"
-                value={input.address}
+                value={listingInput.address}
                 onChange={onInputChange}
                 onBlur={validateInput}
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -962,7 +1387,7 @@ function UploadListings() {
           </div>
 
           {(categoryId == 12 || categoryId == 5) && (
-            <div className="relative mb-4 grid grid-cols-2 gap-4">
+            <div className="relative mb-0 grid grid-cols-2 gap-4">
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
                   htmlFor="place"
@@ -974,7 +1399,7 @@ function UploadListings() {
                   type="text"
                   id="originalPrice"
                   name="originalPrice"
-                  value={input.originalPrice}
+                  value={listingInput.originalPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -993,7 +1418,7 @@ function UploadListings() {
                   type="text"
                   id="discountedPrice"
                   name="discountedPrice"
-                  value={input.discountedPrice}
+                  value={listingInput.discountedPrice}
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
@@ -1004,9 +1429,9 @@ function UploadListings() {
             </div>
           )}
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
-              htmlFor="place"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
@@ -1015,15 +1440,23 @@ function UploadListings() {
               type="text"
               id="phone"
               name="phone"
-              value={input.phone}
+              value={listingInput.phone}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("pleaseEnterPhone")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.phone ? "visible" : "hidden",
+              }}
+            >
+              {error.phone}
+            </div>
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
@@ -1034,16 +1467,23 @@ function UploadListings() {
               type="email"
               id="email"
               name="email"
-              value={input.email}
+              value={listingInput.email}
               onChange={onInputChange}
               onBlur={validateInput}
-              required
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("emailExample")}
             />
+            <div
+              className="h-[24px] text-red-600"
+              style={{
+                visibility: error.email ? "visible" : "hidden",
+              }}
+            >
+              {error.email}
+            </div>
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
@@ -1054,7 +1494,7 @@ function UploadListings() {
               type="text"
               id="website"
               name="website"
-              value={input.website}
+              value={listingInput.website}
               onChange={onInputChange}
               onBlur={validateInput}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1062,7 +1502,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-600"
@@ -1074,7 +1514,8 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              value={input.description}
+              // value={input.description}
+              value={description}
               onChange={(newContent) => onDescriptionChange(newContent)}
               onBlur={(range, source, editor) => {
                 validateInput({
@@ -1238,7 +1679,7 @@ function UploadListings() {
                   <p className="mt-1 text-sm text-gray-600">
                     {t("dragAndDropImageOrPDF")}
                   </p>
-                  <div className="relative mb-4 mt-8">
+                  <div className="relative mb-0 mt-8">
                     <label
                       className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
                     >
@@ -1256,6 +1697,12 @@ function UploadListings() {
                 </div>
               )}
             </div>
+
+            <div
+              className="h-[24px] text-red-600"
+            >
+              {t("imagePdfWarning")}
+            </div>
           </div>
         </div>
       </div>
@@ -1263,6 +1710,9 @@ function UploadListings() {
       <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6">
           <div className="py-2 mt-1 px-2">
+            <p className="pb-2">
+              {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
+            </p>
             <button
               type="button"
               onClick={handleSubmit}
@@ -1289,8 +1739,18 @@ function UploadListings() {
                 </svg>
               )}
             </button>
+
+            {!newListing && (
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                {t("cancel")}
+              </button>
+            )}
           </div>
-          <div>
+          <div className="py-2 mt-1 px-2">
             {successMessage && (
               <Alert type={"success"} message={successMessage} />
             )}

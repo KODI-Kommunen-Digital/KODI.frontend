@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import HomePageNavBar from "../../Components/HomePageNavBar";
+import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
@@ -15,6 +15,7 @@ import {
 	cancelMemberRequest
 } from "../../Services/forumsApi";
 import POSTSLOGO from "../../assets/POSTSLOGO.jpg";
+import RegionColors from "../../Components/RegionColors";
 
 const Forum = () => {
 	window.scrollTo(0, 0);
@@ -169,18 +170,15 @@ const Forum = () => {
 			<HomePageNavBar />
 			{isValidForum ? (
 				<div>
-					<div className="container-fluid py-0 mr-0 ml-0 mt-20 w-full flex flex-col">
+					<div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
 						<div className="w-full mr-0 ml-0">
-							<div className="h-96 overflow-hidden px-0 py-1">
-								<div className="relative h-96">
+							<div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+								<div className="relative h-[30rem]">
 									<img
-										alt="forumImage"
+										alt="ecommerce"
 										className="object-cover object-center h-full w-full"
-										src={
-											process.env.REACT_APP_BUCKET_HOST + (forum.image
-												? forum.image
-												: "admin/DefaultForum.jpeg")
-										}
+										src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+										loading="lazy"
 									/>
 									<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
 										<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
@@ -196,7 +194,7 @@ const Forum = () => {
 						{forum.isPrivate && !memberStatus ? (
 							<a
 								onClick={requestId ? handleLeaveRequest : handleFollowRequest}
-								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
+								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
 							>
 								{requestId ? t("cancelRequest") : t("follow")}
 							</a>
@@ -206,7 +204,7 @@ const Forum = () => {
 									<div>
 										<a
 											onClick={handleFollowRequest}
-											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 										>
 											{t("follow")}
 										</a>
@@ -230,7 +228,7 @@ const Forum = () => {
 									<div>
 										<a
 											onClick={handleDeleteGroup}
-											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 										>
 											{t("deleteGroup")}
 										</a>
@@ -264,7 +262,7 @@ const Forum = () => {
 													>
 														&#8203;
 													</span>
-													<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+													<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 														<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 															<div className="sm:flex sm:items-start">
 																<div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -285,7 +283,7 @@ const Forum = () => {
 																	</svg>
 																</div>
 																<div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-																	<h3 className="text-lg leading-6 font-medium text-gray-900">
+																	<h3 className="text-lg leading-6 font-medium text-slate-800">
 																		{t("areyousure")}
 																	</h3>
 																	<div className="mt-2">
@@ -301,7 +299,7 @@ const Forum = () => {
 															<button
 																onClick={showConfirmationModal.onConfirm}
 																type="button"
-																className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+																className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 															>
 																{t("delete")}
 															</button>
@@ -323,7 +321,7 @@ const Forum = () => {
 									<div>
 										<a
 											onClick={handleLeaveGroup}
-											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 										>
 											{t("leaveGroup")}
 										</a>
@@ -353,7 +351,7 @@ const Forum = () => {
 													`/MyGroups/GroupMembers?forumId=${forumId}&cityId=${cityId}`
 												)
 											}
-											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-400 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
+											className={`hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-300' : 'bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold text-white cursor-pointer`}
 										>
 											{t("groupMembers")}
 										</a>
@@ -377,8 +375,7 @@ const Forum = () => {
 													`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
 												)
 											}
-											className="hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
-										>
+											className={`hidden lg:block mx-4 md:mx-8 mb-2 md:mb-0 w-20 md:w-60 font-sans items-center justify-center whitespace-nowrap rounded-xl border border-transparent ${RegionColors.darkBgColor} ${RegionColors.lightHoverShadowColor} px-8 py-2 text-base font-semibold text-white cursor-pointer`}>
 											{t("createPost")}
 										</a>
 										<svg
@@ -387,7 +384,7 @@ const Forum = () => {
 													`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
 												)
 											}
-											className="block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 text-blue-800 cursor-pointer"
+											className={`block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 ${RegionColors.darkBgColor} cursor-pointer`}
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
 											viewBox="0 0 24 24"
@@ -406,12 +403,12 @@ const Forum = () => {
 					<div className="max-w-2xl lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-7xl">
 						<div className="overflow-hidden sm:p-0 mt-[0rem] px-0 py-0">
 							<h1
-								className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+								className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl"
 								style={{ fontFamily: "Poppins, sans-serif" }}
 							>
 								{t("description")}
 							</h1>
-							<h1 className="leading-relaxed text-md font-medium my-6 text-gray-900">
+							<h1 className="leading-relaxed text-md font-medium my-6 text-slate-800">
 								{forum.description}
 							</h1>
 						</div>
@@ -429,7 +426,7 @@ const Forum = () => {
 						<div>
 							{forumPosts && forumPosts.length > 0 ? (
 								<div className="max-w-full lg:px-10 md:px-5 sm:px-0 px-2 py-6 lg:max-w-full">
-									<h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-gray-900">
+									<h1 className="text-lg font-bold leading-tight tracking-tight text-slate-800 md:text-2xl text-slate-800">
 										{t("groupPosts")}
 									</h1>
 									<div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
@@ -459,7 +456,7 @@ const Forum = () => {
 														</a>
 														<div className="my-5 px-2">
 															<h2
-																className="text-gray-900 title-font text-lg font-bold text-center font-sans truncate"
+																className="text-slate-800 title-font text-lg font-bold text-center font-sans truncate"
 																style={{ fontFamily: "Poppins, sans-serif" }}
 															>
 																{forumPost.title}
@@ -469,10 +466,10 @@ const Forum = () => {
 												))}
 										</div>
 									</div>
-									<div className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer">
+									<div className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600 hover:bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700 hover:bg-lime-300' : 'bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold cursor-pointer`}>
 										{pageNo !== 1 ? (
 											<span
-												className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+												className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
 												style={{ fontFamily: "Poppins, sans-serif" }}
 												onClick={() => setPageNo(pageNo - 1)}
 											>
@@ -489,7 +486,7 @@ const Forum = () => {
 										</span>
 										{forumPosts.length >= pageSize && (
 											<span
-												className="text-lg px-3 hover:bg-blue-400 cursor-pointer rounded-lg"
+												className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer rounded-lg`}
 												style={{ fontFamily: "Poppins, sans-serif" }}
 												onClick={() => setPageNo(pageNo + 1)}
 											>
@@ -510,7 +507,7 @@ const Forum = () => {
 											{t("to_upload_new_post")}
 										</span>
 										<a
-											className="m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer text-blue-400"
+											className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightHoverTextShadowColor}`}
 											onClick={() => {
 												navigateTo(
 													`/UploadPosts?forumId=${forumId}&cityId=${cityId}`

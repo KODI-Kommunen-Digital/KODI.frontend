@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
+import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
@@ -24,6 +24,11 @@ const LoginPage = () => {
 	const [loginLoading, setLoginLoading] = useState("");
 	const [forgotPasswordLoading, setForgotPasswordLoading] = useState("");
 	const navigate = useNavigate();
+	const navigateTo = (path) => {
+		if (path) {
+			navigate(path);
+		}
+	};
 
 	const routeChangeToUpload = useCallback(() => {
 		const path = `/UploadListings`;
@@ -135,10 +140,12 @@ const LoginPage = () => {
 			setRememberMe(false);
 
 			if (window.sessionStorage.getItem("path")) {
-				navigate(window.sessionStorage.getItem("path"));
-				sessionStorage.removeItem("path");
+				// navigate(window.sessionStorage.getItem("path"));
+				// sessionStorage.removeItem("path");
+				navigateTo("/");
 			} else if (window.sessionStorage.getItem("redirectTo")) {
-				navigate(window.sessionStorage.getItem("redirectTo"));
+				// navigate(window.sessionStorage.getItem("redirectTo"));
+				navigateTo("/");
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
 				routeChangeToUpload();
@@ -205,17 +212,18 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className="i">
+		<div>
 			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div>
 						<img
 							onClick={() => navigate("/")}
 							className="mx-auto h-20 w-auto cursor-pointer"
+							// src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 							src={HeidiLogo}
 							alt="HEDI- Heimat Digital"
 						/>
-						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-800">
 							{t("signIntoAccount")}
 						</h2>
 					</div>
@@ -236,7 +244,7 @@ const LoginPage = () => {
 									onChange={(e) => setUser(e.target.value)}
 									onKeyDown={handleKeyDown}
 									required
-									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("usernameOrEmail") + "*"}
 								/>
 							</div>
@@ -252,7 +260,7 @@ const LoginPage = () => {
 									onChange={handlePasswordChange}
 									onKeyDown={handleKeyDown}
 									required
-									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className=" block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
 								/>
 								<button
@@ -279,7 +287,7 @@ const LoginPage = () => {
 								/>
 								<label
 									htmlFor="remember-me"
-									className="ml-2 block text-sm text-gray-900"
+									className="ml-2 block text-sm text-slate-800"
 								>
 									{t("rememberMe")}
 								</label>
@@ -369,7 +377,7 @@ const LoginPage = () => {
 								{t("notMember")}
 								<span
 									onClick={routeChangeToRegister}
-									className="font-medium cursor-pointer text-black hover:text-blue-400"
+									className="font-medium cursor-pointer text-black hover:text-slate-400"
 								>
 									{" "}
 									{t("clickToRegister")}
@@ -391,40 +399,22 @@ const LoginPage = () => {
 										<div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
 											<div className="modal-content py-4 text-left px-6">
 												<div>
-													<h2 className="font-bold text-xl text-center mb-4">
-														Anleitung
+													<h2 className="font-bold text-xl text-center mb-6">
+														{t("anleitung")}
 													</h2>
-													<h3 className="font-bold text-lg text-center mb-4">
-														Registrieren in der App
+													<h3 className="font-bold text-lg text-center mb-6">
+														{t("subtitle")}
 													</h3>
-													<p className="mb-6">
-														<strong>Schritt 1:</strong> Nutzername und Passwort
-														festlegen{" "}
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 2:</strong> Es wird Ihnen eine
-														E-Mail gesendet an die Mail, die Sie eingegeben
-														haben
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 3:</strong> Bitte verifizieren Sie
-														die Mail, indem Sie in Ihr Postfach gehen und den
-														Bestätigungslink drücken
-													</p>
-													<p className="mb-6">
-														<strong>Schritt 4:</strong> Ihr Account ist
-														verifiziert und Sie können sich mit Ihren
-														Login-Daten einloggen
-													</p>
-													<p className="mb-6">
-														Wir wünschen Ihnen viel Spaß beim Benutzen der App!
-													</p>
-													<p className="mb-6">
-														<strong>Danke!!</strong>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step1") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step2") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step3") }}></p>
+													<p className="mb-6" dangerouslySetInnerHTML={{ __html: t("step4") }}></p>
+													<p className="font-bold text-lg text-center mb-6">
+														<strong>{t("thankYou")}</strong>
 													</p>
 												</div>
 
-												<div className="mt-4 text-center">
+												<div className="mt-6 text-center">
 													<button
 														onClick={closeModal}
 														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
@@ -453,7 +443,7 @@ const LoginPage = () => {
 									value={userReset}
 									onChange={(e) => setUserReset(e.target.value)}
 									required
-									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-gray-900 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="mt-1 mb-1 relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={forgotPassword ? t("usernameOrEmail") : t("pleaseEnterEmailAddress") + "*"}
 								/>
 								<div className="flex gap-2">

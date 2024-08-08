@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-function SearchBar({ onSearch, searchBarClassName }) {
-  const [searchQuery, setSearchTerm] = useState("");
+function SearchBar({ onSearch, searchBarClassName, searchQuery }) {
+  const [searchTerm, setSearchTerm] = useState(searchQuery);
+
+  useEffect(() => {
+    setSearchTerm(searchQuery);
+  }, [searchQuery]);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -10,7 +14,7 @@ function SearchBar({ onSearch, searchBarClassName }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSearch(searchQuery);
+    onSearch(searchTerm);
   };
 
   return (
@@ -20,11 +24,11 @@ function SearchBar({ onSearch, searchBarClassName }) {
     >
       <input
         type="search"
-        value={searchQuery}
+        value={searchTerm}
         onChange={handleChange}
         name="search"
         placeholder="Search"
-        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
+        className="bg-white border-2 border-gray-500 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
         style={{ fontFamily: "Poppins, sans-serif" }}
       />
       <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
@@ -45,7 +49,8 @@ function SearchBar({ onSearch, searchBarClassName }) {
 
 SearchBar.propTypes = {
   onSearch: PropTypes.func.isRequired,
-  searchBarClassName: PropTypes.func.isRequired,
+  searchBarClassName: PropTypes.string.isRequired,
+  searchQuery: PropTypes.string.isRequired,
 };
 
 export default SearchBar;
