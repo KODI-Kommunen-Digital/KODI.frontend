@@ -102,7 +102,7 @@ const AllDevices = () => {
 							<div className="text-center">
 								<img
 									alt="devices"
-									className="object-cover object-center h-48 w-full bg-white"
+									className="object-cover object-center h-48 w-80 bg-white"
 									src={DEVICEIMAGE}
 								/>
 							</div>
