@@ -3,6 +3,8 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
 import { getOrders, getStores } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
+import RegionColors from "../../Components/RegionColors";
+import { FaEye } from 'react-icons/fa';
 
 function AllSellers() {
     window.scrollTo(0, 0);
@@ -20,6 +22,10 @@ function AllSellers() {
             });
         }
     }, []);
+
+    const handleViewDetails = (order) => {
+        navigate('/OwnerScreen/OrderDetailsStore', { state: { orderDetails: order } });
+    };
 
     useEffect(() => {
         if (storeId) {
@@ -106,13 +112,23 @@ function AllSellers() {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "20%",
                                                 }}
                                             >
-                                                {t("title")}
+                                                {t("order")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 sm:px-3 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "20%",
+                                                }}
+                                            >
+                                                {t("user")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -136,70 +152,59 @@ function AllSellers() {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 py-3 text-center"
+                                                className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("price")}
+                                                {t("discount")}
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 py-3 text-center"
+                                                className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("tax")}
+                                                {t("viewDetails")}
                                             </th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        {orders.map((order, index) => (
-                                            <React.Fragment key={index}>
-                                                {order.products.map((productItem, productIndex) => (
-                                                    <tr key={`${index}-${productIndex}`} className="bg-white border-b hover:bg-gray-50">
-                                                        <th
-                                                            scope="row"
-                                                            className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                        {orders.map((order) => (
+                                            <tr key={order.id} className="bg-white border-b hover:bg-gray-50">
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                    {order.id.toString().padStart(3, '0')}
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                                                    {order.user.username}
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                    € {order.amount.toFixed(2)}
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                                                    {new Date(order.createdAt).toLocaleString('de')}
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                    € {order.discount.toFixed(2)}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className="relative group inline-block"
+                                                            onClick={() => handleViewDetails(order)}
                                                         >
-                                                            <img
-                                                                className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                                src={
-                                                                    productItem.product.productImages && productItem.product.productImages[0]
-                                                                        ? productItem.product.productImages[0]
-                                                                        : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
-                                                                }
-                                                                alt="avatar"
-                                                            />
-                                                            <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
-                                                                <div className="font-bold text-gray-500 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                                    {productItem.product.title}
-                                                                </div>
+                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                {t("viewDetails")}
                                                             </div>
-                                                        </th>
-
-                                                        <td className="px-6 py-4 text-center font-bold text-gray-500" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                            € {order.amount.toFixed(2)}
-                                                        </td>
-
-                                                        <td className="px-6 py-4 text-center font-bold text-blue-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                            {new Date(order.createdAt).toLocaleString('de')}
-                                                        </td>
-
-                                                        <td className="px-6 py-4 text-center font-bold text-green-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                            € {productItem.product.price.toFixed(2)}
-                                                        </td>
-
-                                                        <td className="px-6 py-4 text-center font-bold text-red-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                                            {(productItem.product.tax * 100).toFixed(2)}%
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </React.Fragment>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         ))}
                                     </tbody>
                                 </table>

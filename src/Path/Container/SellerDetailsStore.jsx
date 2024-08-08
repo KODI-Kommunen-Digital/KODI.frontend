@@ -28,8 +28,7 @@ const SellerDetailsStore = () => {
 
         if (seller) {
             try {
-                await updateSeller(cityId, seller.id, newStatus);
-                // Optionally, update the seller state with the new status
+                await updateSeller(cityId, seller.id, newStatus, seller.title, seller.description);
                 setSeller((prevSeller) => ({
                     ...prevSeller,
                     status: newStatus,

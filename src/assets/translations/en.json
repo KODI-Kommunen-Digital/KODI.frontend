@@ -886,5 +886,6 @@
     "linkYourCard": "Link Your Card",
     "selectDate": "Please select a date to proceed",
     "selectAnotherDate": "No order found for this date, please select another date",
-    "orderId": "Order Id"
+    "orderId": "Order Id",
+    "discount": "Discount"
 }
