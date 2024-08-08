@@ -756,5 +756,6 @@
     "thankYou": "Danke!!",
     "noOfViews": "Anzahl der Aufrufe",
     "imagePdfWarning": "Sie können entweder Bilder oder PDF hochladen, aber nicht beides",
-    "imagePdfAlert": "Sie können keine PDF-Datei hochladen, wenn bereits ein Bild hochgeladen wurde"
+    "imagePdfAlert": "Sie können keine PDF-Datei hochladen, wenn bereits ein Bild hochgeladen wurde",
+    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent" : "Mit dem Upload bestätige ich die Nutzungsbedingungen, insbesondere, dass ich die Rechte habe, die Inhalte zu veröffentlichen."
 }

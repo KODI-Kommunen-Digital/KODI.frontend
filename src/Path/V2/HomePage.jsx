@@ -38,6 +38,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -134,31 +135,16 @@ const HomePage = () => {
     }
   };
 
-  function getTheListings(categoryId, event) {
+  const clearSearchResults = () => {
+    setListings([]); // Clear the listings to remove the search results
+    setSearchQuery(""); // Clear the search query
+  };
+
+  const getTheListings = (newCategoryId, event) => {
     event.preventDefault();
-
-    const selectedCategoryId = categoryId;
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedCityId = urlParams.get("cityId");
-
-    if (selectedCategoryId && selectedCityId) {
-      localStorage.setItem("selectedCategory", selectedCategoryId.name);
-      window.location.href = `?categoryId=${selectedCategoryId}&cityId=${selectedCityId}`;
-    } else if (selectedCategoryId) {
-      localStorage.setItem("selectedCategory", selectedCategoryId.name);
-      window.location.href = `?categoryId=${selectedCategoryId}`;
-    } else if (selectedCityId) {
-      window.location.href = `?cityId=${selectedCityId}`;
-    } else {
-      localStorage.setItem("selectedCategory", t("allCategories"));
-      localStorage.setItem("selectedCity", t("allCities"));
-      urlParams.delete("cityId");
-      urlParams.delete("categoryId");
-      setCityId(0);
-      setCategoryId("all");
-      window.location.href = `?`;
-    }
-  }
+    setCategoryId(newCategoryId);
+    clearSearchResults();
+  };
 
   window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
 
@@ -202,6 +188,7 @@ const HomePage = () => {
 
   const handleSearch = async (searchQuery) => {
     console.log("Search term:", searchQuery);
+    setSearchQuery(searchQuery);
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -325,7 +312,7 @@ const HomePage = () => {
                 </select> */}
               </div>
 
-              <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+              <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
             </div>
           </div>
 

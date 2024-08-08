@@ -745,5 +745,6 @@
     "thankYou": "Thank you!!",
     "noOfViews": "Number of views",
     "imagePdfWarning": "You can eaither upload Images or PDF, but you cannot do both",
-    "imagePdfAlert": "You cannot upload a PDF file when an image has already been uploaded"
+    "imagePdfAlert": "You cannot upload a PDF file when an image has already been uploaded",
+    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent" :"By uploading I confirm the terms of use, in particular that I have the rights to publish the content."
 }
