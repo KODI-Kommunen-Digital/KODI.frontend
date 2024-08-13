@@ -262,11 +262,13 @@ const LoginPage = () => {
 									required
 									className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 									placeholder={t("pleaseEnterPassword") + "*"}
+									style={{ paddingRight: '3rem' }}
 								/>
 								<button
 									type="button"
 									className="absolute right-0 mr-3 flex font-bold items-center text-sm leading-5 text-gray-500 hover:text-gray-700 focus:outline-none"
 									onClick={toggleShowPassword}
+									style={{ zIndex: 20 }}
 								>
 									{showPassword ?
 										<svg className="h-6 text-black" fill="none" xmlns="http://www.w3.org/2000/svg"
