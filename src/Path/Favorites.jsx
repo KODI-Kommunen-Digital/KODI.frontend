@@ -18,9 +18,7 @@ import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Favorites = () => {
   window.scrollTo(0, 0);
-  const pageSize = 12;
-
-
+  const pageSize = window.innerWidth <= 768 ? 8 : 12;
   const { t } = useTranslation();
   const [cityId, setCityId] = useState(null);
   const [cities, setCities] = useState([]);
@@ -219,8 +217,8 @@ const Favorites = () => {
           <div className="mt-5 mb-20 p-6">
             <div>
               {favListings && favListings.length > 0 ? (
-                <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-                  <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
+                <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
+                  <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
                     {favListings &&
                       favListings.map((favListing, index) => (
                         <ListingsCard listing={favListing} key={index} />
