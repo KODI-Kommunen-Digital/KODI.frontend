@@ -170,31 +170,26 @@ export default function HomePageNavBar() {
             </div>
 
             <div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
-              <a
-                className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
-                onClick={() => {
-                  if (isLoggedIn) {
-                    navigateTo("/Favorite");
-                  } else {
-                    window.sessionStorage.setItem("redirectTo", "/Favorite");
-                    navigateTo("/login");
-                  }
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-5 h-5"
+              {isLoggedIn && (
+                <a
+                  className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
+                  onClick={() => { navigateTo("/Favorite"); }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeWidth="2"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  ></path>
-                </svg>
-              </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeWidth="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    ></path>
+                  </svg>
+                </a>
+              )}
               <a
                 onClick={handleLoginLogout}
                 className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
@@ -259,34 +254,26 @@ export default function HomePageNavBar() {
             <div className="divide-y-2 divide-gray-50 rounded-xl bg-black">
               <div className="space-y-6 py-6 px-5">
                 <div className="mr-2 flex justify-between">
-                  <a
-                    className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
-                    onClick={() => {
-                      if (isLoggedIn) {
-                        navigateTo("/Favorite");
-                      } else {
-                        window.sessionStorage.setItem(
-                          "redirectTo",
-                          "/Favorite"
-                        );
-                        navigateTo("/login");
-                      }
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="w-5 h-5"
+                  {isLoggedIn && (
+                    <a
+                      className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
+                      onClick={() => { navigateTo("/Favorite"); }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeWidth="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      ></path>
-                    </svg>
-                  </a>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeWidth="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        ></path>
+                      </svg>
+                    </a>
+                  )}
                   <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-white">
                     <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
