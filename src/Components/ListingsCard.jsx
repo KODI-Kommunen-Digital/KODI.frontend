@@ -87,7 +87,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             <p
-              className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-center font-semibold truncate"
+              className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(

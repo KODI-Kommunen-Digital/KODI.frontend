@@ -64,7 +64,9 @@ const HomePage = () => {
     if (accessToken || refreshToken) {
       setIsLoggedIn(true);
     }
-    const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+
+    const pageSize = window.innerWidth <= 768 ? 8 : 12;
+    const params = { pageSize, statusId: 1, pageNo: 1 };
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
       params.cityId = cityId;
@@ -191,8 +193,8 @@ const HomePage = () => {
                   {t("homePageHeading")}
                 </h1>
 
-                <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
-                  <div className="relative w-full px-4 mb-4 mt-1 md:w-80">
+                <div className="flex flex-col md:flex-row justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
+                  <div className="relative w-full md:px-4 px-0 md:mb-4 mb-0 mt-1 md:w-80">
                     <select
                       id="city"
                       name="city"
@@ -229,7 +231,7 @@ const HomePage = () => {
                   />
                 </div>
 
-                <div className="flex flex-col mt-4 md:gap-0 gap-2 cursor-pointer">
+                <div className="flex flex-row mt-4 px-5 py-2 gap-4 cursor-pointer">
                   <div
                     className="flex mt-3 w-36 h-10 bg-black text-white rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
                     onClick={() => {
@@ -303,7 +305,7 @@ const HomePage = () => {
       </div>
 
       <h2
-        className="font-sans font-bold text-gray-900 mb-20 text-3xl md:text-4xl mt-20 lg:text-5xl title-font text-center"
+        className="font-sans font-bold text-gray-900 lg:px-10 md:px-5 px-2 py-5 lg:mb-10 lg:mt-10 mt-5 mb-5 text-2xl md:text-4xl lg:text-5xl title-font text-center"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
         {t("mostPopularCategories")}
@@ -312,11 +314,11 @@ const HomePage = () => {
       <MostPopularCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} />
 
       {process.env.REACT_APP_REGION_NAME === "WALDI" && (
-        <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+        <div className="bg-white lg:px-10 md:px-5 px-2 py-5 space-y-10 flex flex-col">
           <button
             type="submit"
             onClick={() => goToCitizensPage()}
-            className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+            className="w-full rounded-xl sm:w-80 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("mehr")}
@@ -325,13 +327,13 @@ const HomePage = () => {
       )}
 
       <h2
-        className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
+        className="font-sans font-bold text-gray-900 lg:px-10 md:px-5 px-2 py-5 lg:mb-10 lg:mt-10 mt-5 mb-5 text-2xl md:text-4xl lg:text-5xl title-font text-center"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
         {t("discoverMorePlaces")}
       </h2>
 
-      <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
+      <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
           {cities.map((city) => {
             if (city.id !== Number(cityId)) {
@@ -363,7 +365,7 @@ const HomePage = () => {
                     />
                     <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
                       <h1
-                        className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4"
+                        className="text-xl pb-5 md:text-2xl font-sans font-bold mb-0 ml-4"
                         style={{
                           fontFamily: "Poppins, sans-serif",
                         }}
@@ -380,35 +382,38 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
+      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
       <h2
         id="listingsSection"
-        className="text-gray-900 mb-20 text-3xl md:text-4xl lg:text-5xl mt-20 title-font text-center font-sans font-bold"
+        className="font-sans font-bold text-gray-900 lg:px-10 md:px-5 px-2 py-5 lg:mb-10 lg:mt-10 mt-5 mb-5 text-2xl md:text-4xl lg:text-5xl title-font text-center"
         style={{ fontFamily: "Poppins, sans-serif" }}
       >
         {t("recentListings")}
       </h2>
 
       {listings && listings.length > 0 ? (
-        <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-          <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+        <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
+          <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
             {listings &&
               listings.map((listing, index) => (
                 <ListingsCard listing={listing} key={index} />
               ))}
           </div>
-          <button
-            type="submit"
-            onClick={() => {
-              localStorage.setItem("selectedItem", t("chooseOneCategory"));
-              navigateTo("/AllListings");
-            }}
-            className="w-full rounded-xl sm:w-80 mt-10 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            {t("viewMore")}
-          </button>
+
+          <div className="bg-white lg:px-10 md:px-5 px-2 py-5 space-y-10 flex flex-col">
+            <button
+              type="submit"
+              onClick={() => {
+                localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                navigateTo("/AllListings");
+              }}
+              className="w-full rounded-xl sm:w-80 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("viewMore")}
+            </button>
+          </div>
         </div>
       ) : (
         <div>
@@ -443,11 +448,11 @@ const HomePage = () => {
         </div>
       )}
 
-      <div className="my-4 bg-gray-200 h-[1px]"></div>
+      {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
-      <div className="bg-white lg:px-10 md:px-5 sm:px-0 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+      <div className="bg-white lg:px-10 md:px-5 py-5 mt-5 mb-5 space-y-10 flex flex-col">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-0 justify-center gap-4 place-items-center">
+          <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
             <div className="relative h-96 rounded overflow-hidden w-auto">
               <img
                 alt="ecommerce"
@@ -456,7 +461,7 @@ const HomePage = () => {
               />
               <div className="p-6">
                 <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-2xl mt-5 title-font text-start font-bold font-sans"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}
@@ -474,7 +479,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+          <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
             <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
               <img
                 alt="ecommerce"
@@ -483,7 +488,7 @@ const HomePage = () => {
               />
               <div className="p-6">
                 <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-2xl mt-5 title-font text-start font-bold font-sans"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}
@@ -501,7 +506,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="pb-10 w-full mb-4 bg-gray-100 rounded-xl cursor-pointer">
+          <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
             <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
               <img
                 alt="ecommerce"
@@ -510,7 +515,7 @@ const HomePage = () => {
               />
               <div className="p-6">
                 <h2
-                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-3xl mt-5 title-font text-start font-bold font-sans"
+                  className="text-gray-900 mb-5 text-2xl md:text-2xl lg:text-2xl mt-5 title-font text-start font-bold font-sans"
                   style={{
                     fontFamily: "Poppins, sans-serif",
                   }}

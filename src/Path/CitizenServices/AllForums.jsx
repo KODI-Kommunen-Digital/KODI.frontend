@@ -16,9 +16,8 @@ import RegionColors from "../../Components/RegionColors";
 
 const AllForums = () => {
   window.scrollTo(0, 0);
-  const pageSize = 12;
+  const pageSize = window.innerWidth <= 768 ? 8 : 12;
   const { t } = useTranslation();
-
   const [cityId, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
   const [forums, setForums] = useState([]);
