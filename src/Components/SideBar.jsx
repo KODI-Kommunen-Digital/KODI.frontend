@@ -511,10 +511,11 @@ function SideBar() {
                   )}
                 </>
               )}
+              <div className="my-2 bg-gray-600 h-[1px]"></div>
             </>
           )}
 
-          <div className="fixed bottom-2 w-[280px]">
+          <div className="bottom-2 w-[280px]">
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
               onClick={() => navigateTo("/profilePage")}
@@ -533,6 +534,7 @@ function SideBar() {
                 {firstname + " " + lastname}
               </span>
             </div>
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
 
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
@@ -575,6 +577,8 @@ function SideBar() {
                 </span>
               </div>
             )}
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
+
           </div>
         </div>
       </div>
