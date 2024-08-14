@@ -888,7 +888,10 @@
     "selectAnotherDate": "No order found for this date, please select another date",
     "orderId": "Order Id",
     "discount": "Discount",
-    "imagePdfWarning": "You can either upload Images or PDF, but you cannot do both",
+    "imagePdfWarning": "You can either upload Images here or PDF, but you cannot do both",
+    "imageWarning": "You can only upload Images, but you cannot upload PDF here",
     "imagePdfAlert": "You cannot upload a PDF file when an image has already been uploaded",
-    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "By uploading I confirm the terms of use, in particular that I have the rights to publish the content."
+    "PdfAlert": "You cannot upload a PDF, you can only upload Image here",
+    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "By uploading I confirm the terms of use, in particular that I have the rights to publish the content.",
+    "addImageHere": "Add Image Here"
 }

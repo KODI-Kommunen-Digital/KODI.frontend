@@ -26,6 +26,20 @@ export async function createNewProduct(cityId, storeId, params) {
     return axios.post(`/v1/cities/${cityId}/store/${storeId}/product`, params);
 }
 
+export async function uploadImage(formData, cityId, storeId, productId) {
+    return axios.post(`/v1/cities/${cityId}/store/${storeId}/imageUpload/${productId}`, formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
+}
+
+export async function deleteImage(cityId, storeId, productId) {
+    return axios.delete(`/v1/cities/${cityId}/store/${storeId}/product/${productId}/imageDelete`);
+}
+
 export async function getMyOrders() {
     return axios.get(`/v1/users/${getUserId()}/orders`);
 }
