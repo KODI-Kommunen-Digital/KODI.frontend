@@ -106,15 +106,20 @@ function SideBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileResponse, roleResponse] = await Promise.all([getProfile(), getUserRoleContainer()]);
-
+        const profileResponse = await getProfile();
         setFirstname(profileResponse.data.data.firstname);
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        const roles = roleResponse.data.data;
-        if (roles.includes(101)) {
-          setIsOwner(true);
+        if (isContainerEnabled) {
+          const roleResponse = await getUserRoleContainer();
+          const roles = roleResponse.data.data;
+
+          if (roles.includes('101')) {
+            setIsOwner(true);
+          } else {
+            setIsOwner(false);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -122,7 +127,7 @@ function SideBar() {
     };
 
     fetchData();
-  }, []);
+  }, [isContainerEnabled]);
 
   return (
     <div>
