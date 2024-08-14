@@ -21,7 +21,7 @@ import RegionColors from "../../Components/RegionColors";
 
 const AllListings = () => {
   window.scrollTo(0, 0);
-  const pageSize = 12;
+  const pageSize = window.innerWidth <= 768 ? 8 : 12;
   const { t } = useTranslation();
   const [cityId, setCityId] = useState("");
   const [cities, setCities] = useState([]);
@@ -405,8 +405,8 @@ const AllListings = () => {
         ) : (
           <div>
             {listings && listings.length > 0 ? (
-              <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
-                <div className="relative place-items-center bg-white mt-4 mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-10 justify-start">
+              <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
+                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
                   {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard

@@ -30,8 +30,7 @@ const Forum = () => {
 	const [requestId, setRequestId] = useState(0);
 	const [memberStatus, setMemberStatus] = useState(false);
 	const [isOnlyMember, setIsOnlyMember] = useState(false);
-	const pageSize = 12;
-
+	const pageSize = window.innerWidth <= 768 ? 8 : 12;
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
 		if (path) {
