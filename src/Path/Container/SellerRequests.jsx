@@ -168,7 +168,7 @@ const SellerRequests = () => {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "25%",
@@ -215,31 +215,9 @@ const SellerRequests = () => {
                                             <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                                 <th
                                                     scope="row"
-                                                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                    className="px-6 py-4 text-center font-bold text-gray-900 truncate"
                                                 >
-                                                    <img
-                                                        className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                        src={
-                                                            products.image
-                                                                ? process.env.REACT_APP_BUCKET_HOST + products.image
-                                                                : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
-                                                        }
-                                                        onClick={() =>
-                                                            navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
-                                                        }
-                                                        alt="avatar"
-                                                    />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                        <div
-                                                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={() =>
-                                                                navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
-                                                            }
-                                                        >
-                                                            {products.title}
-                                                        </div>
-                                                    </div>
+                                                    {products.title}
                                                 </th>
 
                                                 <td
@@ -252,8 +230,8 @@ const SellerRequests = () => {
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600 truncate"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    dangerouslySetInnerHTML={{ __html: products.description }}
                                                 >
-                                                    {products.description}
                                                 </td>
 
                                                 <td className="px-6 py-4">
