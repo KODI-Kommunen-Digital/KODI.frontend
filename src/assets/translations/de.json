@@ -513,7 +513,9 @@
     "userNameValidation": "Der Benutzername sollte nur Kleinbuchstaben oder Unterstriche und mindestens 6 Zeichen enthalten. Der Benutzername sollte mit einem Kleinbuchstaben beginnen. Sie sollten diese Sonderzeichen nicht verwenden & = ' + , ; <> .",
     "userNameTooShort": "Benutzername ist zu kurz",
     "userNameTooLong": "Benutzername ist zu lang",
-    "passwordValidation": "Das Passwort sollte mindestens 8 Zeichen lang sein und darf kein Leerzeichen enthalten",
+    "firstNameTooLong": "Der Vorname ist zu lang und sollte maximal 40 Zeichen enthalten",
+    "lastNameTooLong": "Lastname is too ong, it should only contain maximum of 40 charracters",
+    "passwordValidation": "Der Nachname ist zu lang, er sollte nur maximal 40 Zeichen enthalten",
     "passwordContainsUsername": "Das Passwort sollte keinen Benutzernamen enthalten",
     "sessionExpired": "Deine Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
     "pageNotFound": "Seite nicht gefunden!",
@@ -757,5 +759,5 @@
     "noOfViews": "Anzahl der Aufrufe",
     "imagePdfWarning": "Sie können entweder Bilder oder PDF hochladen, aber nicht beides",
     "imagePdfAlert": "Sie können keine PDF-Datei hochladen, wenn bereits ein Bild hochgeladen wurde",
-    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent" : "Mit dem Upload bestätige ich die Nutzungsbedingungen, insbesondere, dass ich die Rechte habe, die Inhalte zu veröffentlichen."
+    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "Mit dem Upload bestätige ich die Nutzungsbedingungen, insbesondere, dass ich die Rechte habe, die Inhalte zu veröffentlichen."
 }

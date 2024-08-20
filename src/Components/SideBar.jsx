@@ -530,10 +530,11 @@ function SideBar() {
                   )}
                 </>
               )}
+              <div className="my-2 bg-gray-600 h-[1px]"></div>
             </>
           )}
 
-          <div className="fixed sidebarNotFixed bottom-2 w-[280px]">
+          <div className="bottom-2 w-[280px]">
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/profilePage")}
@@ -546,12 +547,14 @@ function SideBar() {
                 <path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z" />
               </svg>
               <span
-                className="text-[15px] ml-4 text-gray-200 font-bold"
+                className="text-[15px] ml-4 text-gray-200 font-bold truncate flex-1 text-start"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {firstname + " " + lastname}
               </span>
             </div>
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
+
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/AccountSettings")}
@@ -593,6 +596,8 @@ function SideBar() {
                 </span>
               </div>
             )}
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
+
           </div>
         </div>
       </div>
