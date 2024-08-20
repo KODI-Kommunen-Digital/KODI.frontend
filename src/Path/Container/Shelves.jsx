@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
-import { getShelves, getStores } from "../../Services/containerApi";
+import { getAllShelves, getStores } from "../../Services/containerApi";
 
 function Shelves() {
     window.scrollTo(0, 0);
@@ -15,7 +15,7 @@ function Shelves() {
 
     const fetchAll = useCallback((cityId, storeId, pageNumber) => {
         if (cityId && storeId) {
-            getShelves(cityId, storeId, pageNumber).then((response) => {
+            getAllShelves(cityId, storeId, pageNumber).then((response) => {
                 setShelves(response.data.data);
             });
         }

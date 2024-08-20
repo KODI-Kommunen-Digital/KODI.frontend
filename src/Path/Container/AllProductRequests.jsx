@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getProductRequests, getStores } from "../../Services/containerApi";
+import { getProductRequests, updateProductRequests, getStores, getShelves } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
@@ -14,8 +14,10 @@ function AllProductRequests() {
     const pageSize = 9;
     const [productRequests, setProductRequests] = useState([]);
     const [storeId, setStoreId] = useState();
+    const [shelfId, setShelfId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
+    const [shelves, setShelves] = useState([]);
 
 
     const fetchProductRequests = useCallback((storeId, pageNumber, selectedStatus) => {
@@ -45,6 +47,18 @@ function AllProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
+    const fetchShelves = useCallback((cityId, storeId) => {
+        if (cityId && storeId) {
+            getShelves(cityId, storeId).then((response) => {
+                setShelves(response.data.data);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchShelves();
+    }, [fetchShelves, storeId]);
+
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
@@ -59,8 +73,35 @@ function AllProductRequests() {
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
             fetchProductRequests(cityId, storeId, 1);
+            fetchShelves(cityId, storeId);
         }
     };
+
+    const handleShelfChange = async (event) => {
+        const shelfId = event.target.value;
+        const selectedShelf = shelves.find(shelf => shelf.id === parseInt(shelfId));
+
+        if (selectedShelf) {
+            setShelfId(shelfId);
+        }
+    };
+
+    function handleChangeInStatus(newStatusId, product) {
+        const accepted = newStatusId === 1;
+        const shelfIds = product.shelfIds || [];
+
+        updateProductRequests(storeId, product.id, shelfIds, accepted)
+            .then((res) => {
+                const tempListings = [...productRequests];
+                const productIndex = tempListings.indexOf(product);
+                if (productIndex !== -1) {
+                    tempListings[productIndex].statusId = newStatusId;
+                    setProductRequests(tempListings);
+                }
+                window.location.reload();
+            })
+            .catch((error) => console.log(error));
+    }
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -114,14 +155,14 @@ function AllProductRequests() {
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("inactive")}
                                     </div>
                                     <div
                                         className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => setSelectedStatus(statusByName.ChangeRequested)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("changeRequested")}
@@ -194,26 +235,6 @@ function AllProductRequests() {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-3 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
-                                                }}
-                                            >
-                                                {t("description")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
-                                                }}
-                                            >
-                                                {t("date_of_creation")}
-                                            </th>
-                                            <th
-                                                scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
@@ -231,6 +252,17 @@ function AllProductRequests() {
                                                 }}
                                             >
                                                 {t("count")}
+                                            </th>
+
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "14.3%",
+                                                }}
+                                            >
+                                                {t("selectShelf")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -288,20 +320,6 @@ function AllProductRequests() {
                                                 </th>
 
                                                 <td
-                                                    className={`px-6 py-4 text-center font-bold text-blue-600`}
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {product.description}
-                                                </td>
-
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {new Date(product.createdAt).toLocaleString('de')}
-                                                </td>
-
-                                                <td
                                                     className="px-6 py-4 text-center font-bold text-green-600"
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
@@ -317,15 +335,59 @@ function AllProductRequests() {
 
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center justify-center">
+                                                        <select
+                                                            id="stores"
+                                                            name="stores"
+                                                            autoComplete="stores"
+                                                            onChange={handleShelfChange}
+                                                            value={shelfId || 0}
+                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
+                                                            style={{
+                                                                fontFamily: "Poppins, sans-serif",
+                                                            }}
+                                                        >
+                                                            <option className="font-sans" value={0} key={0}>
+                                                                {t("select", {
+                                                                    regionName: process.env.REACT_APP_REGION_NAME,
+                                                                })}
+                                                            </option>
+                                                            {shelves.map((shelf) => (
+                                                                <option className="font-sans" value={shelf.id} key={shelf.id}>
+                                                                    {shelf.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
                                                         <div
                                                             className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
                                                                 product.status
                                                             )} mr-2`}
                                                         ></div>
 
-                                                        <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(status[product.status].toLowerCase())}
-                                                        </h1>
+                                                        <select
+                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
+                                                            onChange={(e) =>
+                                                                handleChangeInStatus(e.target.value, product)
+                                                            }
+                                                            value={product.statusId || 0}
+                                                            style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        >
+                                                            {Object.keys(status).map((state, index) => {
+                                                                return (
+                                                                    <option
+                                                                        className="p-0"
+                                                                        key={index}
+                                                                        value={state}
+                                                                    >
+                                                                        {t(status[state].toLowerCase())}
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
                                                     </div>
                                                 </td>
 

@@ -65,6 +65,10 @@ export async function getStores() {
     return axios.get(`/v1/owners/getStores`);
 }
 
+export async function getShelves(cityId, storeId) {
+    return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelves`);
+}
+
 export async function getStoreById(cityId, storeId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}`);
 }
@@ -73,7 +77,7 @@ export async function updateStoreById(cityId, storeId, params) {
     return axios.patch(`/v1/cities/${cityId}/store/${storeId}`, params,);
 }
 
-export async function getShelves(cityId, storeId, pageNo) {
+export async function getAllShelves(cityId, storeId, pageNo) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelves?pageNumber=${pageNo}&pageSize=9`);
 }
 
@@ -95,6 +99,20 @@ export async function updateSeller(cityId, sellerId, status, title, description)
         return response.data;
     } catch (error) {
         console.error('Error updating seller:', error);
+        throw error;
+    }
+}
+
+export async function updateProductRequests(storeId, requestId, shelfIds, accepted) {
+    try {
+        const response = await axios.patch(`/v1/owners/productRequest/${requestId}`, {
+            storeId,
+            shelfIds,
+            accepted,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating product request:', error);
         throw error;
     }
 }

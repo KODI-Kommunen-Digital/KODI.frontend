@@ -48,45 +48,47 @@ const SellerDetailsStore = () => {
                     <div className="flex flex-col md:flex-row -mx-4">
                         {seller && (
                             <>
-                                <div className="md:flex mb-6">
-                                    <div className="px-4">
-                                        <h2 className="text-2xl font-bold text-white text-center mb-4">
-                                            {seller.title}
-                                        </h2>
-                                        <div className="mb-4">
-                                            <span className="font-bold text-gray-300 ">{t("description")} : </span>
-                                            <span className="font-bold text-gray-200 ">
-                                                {seller.description}
-                                            </span>
-                                        </div>
-                                        <div className="relative w-full text-center">
-                                            <div className="w-full inline-block">
-                                                <button
-                                                    className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
-                                                    type="button"
-                                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                                >
-                                                    {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                                </button>
-                                                {dropdownOpen && (
-                                                    <div className="absolute w-full text-center bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
-                                                        <ul className="py-1">
-                                                            {Object.entries(status).map(([key, value]) => (
-                                                                <li key={key}>
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            handleStatusChange(parseInt(key));
-                                                                            setDropdownOpen(false);
-                                                                        }}
-                                                                        className="text-sm hover:bg-blue-400 text-gray-700 block px-4 py-2 w-full text-left"
-                                                                    >
-                                                                        {value}
-                                                                    </button>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
+                                <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
+                                    <div className="md:flex mb-6">
+                                        <div className="px-4">
+                                            <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
+                                                {seller.title}
+                                            </h2>
+                                            <div className="mb-4">
+                                                <span className="font-bold text-gray-900 ">{t("description")} : </span>
+                                                <span className="font-bold text-gray-900 ">
+                                                    {seller.description}
+                                                </span>
+                                            </div>
+                                            <div className="relative w-full text-center">
+                                                <div className="w-full inline-block">
+                                                    <button
+                                                        className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                                        type="button"
+                                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                    >
+                                                        {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </button>
+                                                    {dropdownOpen && (
+                                                        <div className="absolute w-full text-center bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                                                            <ul className="py-1">
+                                                                {Object.entries(status).map(([key, value]) => (
+                                                                    <li key={key}>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                handleStatusChange(parseInt(key));
+                                                                                setDropdownOpen(false);
+                                                                            }}
+                                                                            className="text-sm hover:bg-blue-400 text-gray-700 block px-4 py-2 w-full text-left"
+                                                                        >
+                                                                            {value}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
