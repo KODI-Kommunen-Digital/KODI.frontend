@@ -126,6 +126,17 @@ const Register = () => {
 						stateObj[name] = t("userNameTooLong");
 					}
 					break;
+				case "firstname":
+					if (value.length > 40) {
+						stateObj[name] = t("firstNameTooLong");
+					}
+					break;
+
+				case "lastname":
+					if (value.length > 40) {
+						stateObj[name] = t("lastNameTooLong");
+					}
+					break;
 				case "email":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterEmailAddress");
@@ -136,14 +147,11 @@ const Register = () => {
 				case "password":
 					if (!value) {
 						stateObj[name] = t("pleaseEnterPassword");
-					} else if (
-						!/^\S{8,}$/.test(value)
-					) {
+					} else if (!/^\S{8,64}$/.test(value)) {  // Condition to check max 64 characters
 						stateObj[name] = t("passwordValidation");
 					} else if (input.confirmPassword && value !== input.confirmPassword) {
 						stateObj.confirmPassword = t("passwordsDoNotMatch");
-					}
-					else {
+					} else {
 						stateObj.confirmPassword = input.confirmPassword
 							? ""
 							: error.confirmPassword;
@@ -194,8 +202,8 @@ const Register = () => {
 				<form className="mt-8 space-y-6" onSubmit={handleSubmit}>
 					<input type="hidden" name="remember" value="true" />
 					<div className="space-y-2 rounded-md shadow-sm">
-						<div>
-							<span className="grid grid-cols-2 gap-2">
+						<div className="grid grid-cols-2 gap-2">
+							<div>
 								<label htmlFor="firstname" className="sr-only">
 									{t("firstName")}
 								</label>
@@ -208,8 +216,11 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterFirstName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
+								{error.firstname && <span className="err">{error.firstname}</span>}
+							</div>
+							<div>
 								<label htmlFor="lastname" className="sr-only">
 									{t("lastName")}
 								</label>
@@ -222,9 +233,10 @@ const Register = () => {
 									onBlur={validateInput}
 									autoComplete="on"
 									placeholder={t("pleaseEnterLastName") + "*"}
-									className="appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
+									className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-slate-800 hover:scale-102 hover:border-sky-800 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-indigo-500 sm:text-sm"
 								></input>
-							</span>
+								{error.lastname && <span className="err">{error.lastname}</span>}
+							</div>
 						</div>
 						<div>
 							<label htmlFor="username" className="sr-only">
