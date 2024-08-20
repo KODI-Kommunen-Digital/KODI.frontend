@@ -433,7 +433,7 @@ const LoginPage = () => {
 												<div className="mt-6 text-center">
 													<button
 														onClick={closeModal}
-														className="hover:bg-slate-600 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
+														className="hover:bg-gray-800 text-white font-bold py-1 px-3 rounded bg-black disabled:opacity-60"
 													>
 														{t("cancel")}
 													</button>

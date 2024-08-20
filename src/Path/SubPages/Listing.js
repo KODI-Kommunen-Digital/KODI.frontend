@@ -92,6 +92,7 @@ const Description = (props) => {
     }
   }, [props.cityId, props.content]);
 
+  // const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
@@ -171,6 +172,8 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
+    const terminalViewParam = searchParams.get("terminalView");
+    setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
@@ -323,6 +326,9 @@ const Listing = () => {
               .then((response) => {
                 setFavoriteId(response.data.id);
                 setSuccessMessage(t("List added to the favorites"));
+                // setHandleClassName(
+                //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                // );
               })
               .catch((err) => console.log("Error", err))
             : console.log("Error");
@@ -547,6 +553,7 @@ const Listing = () => {
                           <CustomCarousel
                             imageList={input.otherlogos}
                             sourceId={input.sourceId}
+                            appointmentId={input.appointmentId}
                           />
                         ) : (
                           <img
