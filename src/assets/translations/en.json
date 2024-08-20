@@ -517,7 +517,7 @@
     "userNameTooShort": "Username is too short",
     "userNameTooLong": "Username is too long",
     "firstNameTooLong": "Firstname is too long, it should only contain maximum of 40 charracters",
-    "lastNameTooLong": "Lastname is too ong, it should only contain maximum of 40 charracters",
+    "lastNameTooLong": "Lastname is too long, it should only contain maximum of 40 charracters",
     "passwordValidation": "Password should contain minimum 8 characters and maximum of 64 charracters and should be without space",
     "passwordContainsUsername": "Password should not contains username",
     "sessionExpired": "Your session has expired. Please login again.",
