@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellerRequests, getStores } from "../../Services/containerApi";
+import { getSellerRequests, getStores, deleteSellerRequest } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 
 const SellerRequests = () => {
@@ -322,7 +322,7 @@ const SellerRequests = () => {
                                                                 </button>
                                                                 <button
                                                                     className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                                                // onClick={handleReportPost}
+                                                                    onClick={deleteSellerRequest(products.id)}
                                                                 >
                                                                     {t("send")}
                                                                 </button>

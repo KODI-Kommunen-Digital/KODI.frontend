@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellers, getStores } from "../../Services/containerApi";
+import { getSellers, getStores, deleteSellerRequest } from "../../Services/containerApi";
 import { statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import { FaEye } from 'react-icons/fa';
@@ -13,8 +13,6 @@ const SellerRequestsApproval = () => {
     const { t } = useTranslation();
     const [sellerRequests, setSellerRequests] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
-    const [text, setText] = useState("");
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const pageSize = 9;
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -65,18 +63,36 @@ const SellerRequestsApproval = () => {
         }
     };
 
-    const handleTextChange = (event) => {
-        setText(event.target.value);
-    };
+    const [showConfirmationModal, setShowConfirmationModal] = useState({
+        visible: false,
+        requestId: null,
+        onConfirm: () => { },
+        onCancel: () => { },
+    });
 
-    const openPopup = () => {
-        setIsPopupOpen(true);
-    };
+    function handleDelete(requestId) {
+        deleteSellerRequest(requestId)
+            .then((res) => {
+                const selectedStore = stores.find(store => store.id === parseInt(storeId));
+                const cityId = selectedStore.cityId;
+                fetchSellerRequests(cityId, storeId, pageNumber, selectedStatus);
 
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setText("");
-    };
+                console.log("Deleted successfully");
+
+                setShowConfirmationModal({ visible: false });
+                window.location.reload();
+            })
+            .catch((error) => console.log(error));
+    }
+
+    function deleteSellerRequestOnClick(requestId) {
+        setShowConfirmationModal({
+            visible: true,
+            requestId,
+            onConfirm: () => handleDelete(requestId),
+            onCancel: () => setShowConfirmationModal({ visible: false }),
+        });
+    }
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -281,7 +297,7 @@ const SellerRequestsApproval = () => {
                                                         <a
                                                             className={`font-medium text-red-600 px-2 cursor-pointer`}
                                                             style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={openPopup}
+                                                            onClick={() => deleteSellerRequestOnClick(sellerRequest.id)}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -295,31 +311,70 @@ const SellerRequestsApproval = () => {
                                                     </div>
                                                 </td>
 
-                                                {isPopupOpen && (
-                                                    <div className="fixed w-full px-4 sm:px-6 inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
-                                                        <div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-                                                            <h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
-                                                                {t("reason")}
-                                                            </h2>
-                                                            <textarea
-                                                                className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
-                                                                rows="4"
-                                                                value={text}
-                                                                onChange={handleTextChange}
-                                                            />
-                                                            <div className="text-center justify-center mt-4">
-                                                                <button
-                                                                    className="mt-3 mb-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                                                    onClick={closePopup}
-                                                                >
-                                                                    {t("cancel")}
-                                                                </button>
-                                                                <button
-                                                                    className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                                                // onClick={handleReportPost}
-                                                                >
-                                                                    {t("send")}
-                                                                </button>
+                                                {showConfirmationModal.visible && (
+                                                    <div className="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto">
+                                                        <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                                            <div
+                                                                className="fixed inset-0 transition-opacity"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <div className="absolute inset-0 bg-gray-500 opacity-100"></div>
+                                                            </div>
+                                                            <span
+                                                                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                                                                aria-hidden="true"
+                                                            >
+                                                                &#8203;
+                                                            </span>
+                                                            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                                                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                                    <div className="sm:flex sm:items-start">
+                                                                        <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                                            <svg
+                                                                                className="h-6 w-6 text-red-700"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor"
+                                                                                aria-hidden="true"
+                                                                            >
+                                                                                <path
+                                                                                    strokeLinecap="round"
+                                                                                    strokeLinejoin="round"
+                                                                                    strokeWidth="2"
+                                                                                    d="M6 18L18 6M6 6l12 12"
+                                                                                />
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                                            <h3 className="text-lg leading-6 font-medium text-slate-800">
+                                                                                {t("areyousure")}
+                                                                            </h3>
+                                                                            <div className="mt-2">
+                                                                                <p className="text-sm text-gray-500">
+                                                                                    {t("doyoureallywanttodeleteListing")}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                                                    <button
+                                                                        onClick={showConfirmationModal.onConfirm}
+                                                                        type="button"
+                                                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                                                    >
+                                                                        {t("delete")}
+                                                                    </button>
+
+                                                                    <button
+                                                                        onClick={showConfirmationModal.onCancel}
+                                                                        type="button"
+                                                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                                                                    >
+                                                                        {t("cancel")}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
