@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellers, getStores, deleteSellerRequest } from "../../Services/containerApi";
+import { getSellers, getStores, updateSeller } from "../../Services/containerApi";
 import { statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import { FaEye } from 'react-icons/fa';
@@ -65,31 +65,32 @@ const SellerRequestsApproval = () => {
 
     const [showConfirmationModal, setShowConfirmationModal] = useState({
         visible: false,
-        requestId: null,
+        sellerId: null,
         onConfirm: () => { },
         onCancel: () => { },
     });
 
-    function handleDelete(requestId) {
-        deleteSellerRequest(requestId)
+    function handleDelete(sellerId, title, description) {
+        const selectedStore = stores.find(store => store.id === parseInt(storeId));
+        const cityId = selectedStore.cityId;
+        const deleteStatus = 2;
+
+        updateSeller(cityId, sellerId, deleteStatus, title, description)
             .then((res) => {
-                const selectedStore = stores.find(store => store.id === parseInt(storeId));
-                const cityId = selectedStore.cityId;
                 fetchSellerRequests(cityId, storeId, pageNumber, selectedStatus);
 
                 console.log("Deleted successfully");
 
                 setShowConfirmationModal({ visible: false });
-                window.location.reload();
             })
             .catch((error) => console.log(error));
     }
 
-    function deleteSellerRequestOnClick(requestId) {
+    function deleteSellerRequestOnClick(sellerId, title, description) {
         setShowConfirmationModal({
             visible: true,
-            requestId,
-            onConfirm: () => handleDelete(requestId),
+            sellerId,
+            onConfirm: () => handleDelete(sellerId, title, description),
             onCancel: () => setShowConfirmationModal({ visible: false }),
         });
     }
@@ -297,7 +298,7 @@ const SellerRequestsApproval = () => {
                                                         <a
                                                             className={`font-medium text-red-600 px-2 cursor-pointer`}
                                                             style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={() => deleteSellerRequestOnClick(sellerRequest.id)}
+                                                            onClick={() => deleteSellerRequestOnClick(sellerRequest.id, sellerRequest.title, sellerRequest.description)}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"

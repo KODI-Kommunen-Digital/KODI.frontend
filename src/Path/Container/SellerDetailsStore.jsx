@@ -50,7 +50,7 @@ const SellerDetailsStore = () => {
                             <>
                                 <div className="md:flex mb-6">
                                     <div className="px-4">
-                                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+                                        <h2 className="text-2xl font-bold text-white text-center mb-4">
                                             {seller.title}
                                         </h2>
                                         <div className="mb-4">

@@ -134,7 +134,3 @@ export async function getOrderById(cityId, storeId, orderId) {
 export async function deleteSeller(sellerId) {
     return axios.delete(`/v1/owners/deleteSeller/${sellerId}`);
 }
-
-export async function deleteSellerRequest(requestId) {
-    return axios.delete(`/v1/owners/productRequest/${requestId}`);
-}
