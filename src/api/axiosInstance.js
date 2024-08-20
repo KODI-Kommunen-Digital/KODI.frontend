@@ -20,7 +20,11 @@ const createInstance = (baseURL) => {
 			window.sessionStorage.removeItem("refreshToken");
 			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
-			alert("Ihre Sitzung ist abgelaufen. Sie wurden abgemeldet.");
+			if (process.env.REACT_APP_LANG === 'en')
+				alert("Your session has expired. You have been logged out.")
+			else {
+				alert("Ihre Sitzung ist abgelaufen. Sie wurden abgemeldet.");
+			}
 			window.location.href = "/login";
 		} catch (error) {
 			return error;
