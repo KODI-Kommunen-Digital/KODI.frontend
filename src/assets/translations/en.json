@@ -891,6 +891,7 @@
     "orderId": "Order Id",
     "imagePdfWarning": "You can either upload Images or PDF, but you cannot do both",
     "imagePdfAlert": "You cannot upload a PDF file when an image has already been uploaded",
+    "maxFileSizeAllert": "Maximum file size is 20 MB",
     "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "By uploading I confirm the terms of use, in particular that I have the rights to publish the content.",
     "discount": "Discount"
 }
