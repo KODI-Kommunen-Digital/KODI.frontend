@@ -101,7 +101,8 @@ function SideBar() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userRole, setUserRole] = useState(role.User);
-  const [isOwner, setIsOwner] = useState(true); // make it false by default
+  const [isOwner, setIsOwner] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,15 +112,16 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        if (isContainerEnabled) {
-          const roleResponse = await getUserRoleContainer();
-          const roles = roleResponse.data.data;
+        const roleResponse = await getUserRoleContainer();
+        const roles = roleResponse.data.data;
 
-          if (roles.includes('101')) {
-            setIsOwner(true);
-          } else {
-            setIsOwner(false);
-          }
+        if (roles.includes(101) && !roles.includes(102)) {
+          setIsOwner(true);
+        } else if (roles.includes(102) && !roles.includes(101)) {
+          setIsSeller(true);
+        } else if (roles.includes(101) && roles.includes(102)) {
+          setIsOwner(true);
+          setIsSeller(true);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -459,29 +461,31 @@ function SideBar() {
                 <>
                   {isContainerEnabled && (
                     <div className="ml-4">
-                      <div
-                        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                        onClick={() => {
-                          localStorage.setItem("selectedItem", t("myProducts"));
-                          navigateTo("/SellerScreen");
-                        }}
-                      >
-                        <svg
-                          className="h-6 w-10 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 496 512"
+                      {((isSeller || userRole === role.Admin)) && (
+                        <div
+                          className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
+                          onClick={() => {
+                            localStorage.setItem("selectedItem", t("myProducts"));
+                            navigateTo("/SellerScreen");
+                          }}
                         >
-                          <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
-                        </svg>
-                        <span
-                          className="text-[15px] ml-4 text-gray-200 font-bold"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("SellerScreen")}
-                        </span>
-                      </div>
+                          <svg
+                            className="h-6 w-10 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 496 512"
+                          >
+                            <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                          </svg>
+                          <span
+                            className="text-[15px] ml-4 text-gray-200 font-bold"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("SellerScreen")}
+                          </span>
+                        </div>
+                      )}
 
-                      {isOwner && (
+                      {(isOwner || (userRole === role.Admin)) && (
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
@@ -530,10 +534,11 @@ function SideBar() {
                   )}
                 </>
               )}
+              <div className="my-2 bg-gray-600 h-[1px]"></div>
             </>
           )}
 
-          <div className="fixed sidebarNotFixed bottom-2 w-[280px]">
+          <div className="bottom-2 w-[280px]">
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/profilePage")}
@@ -546,12 +551,14 @@ function SideBar() {
                 <path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z" />
               </svg>
               <span
-                className="text-[15px] ml-4 text-gray-200 font-bold"
+                className="text-[15px] ml-4 text-gray-200 font-bold truncate flex-1 text-start"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {firstname + " " + lastname}
               </span>
             </div>
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
+
             <div
               className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
               onClick={() => navigateTo("/AccountSettings")}
@@ -593,6 +600,8 @@ function SideBar() {
                 </span>
               </div>
             )}
+            <div className="my-2 bg-gray-600 h-[1px]"></div>
+
           </div>
         </div>
       </div>

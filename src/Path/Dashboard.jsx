@@ -174,11 +174,11 @@ const Dashboard = () => {
   function handleChangeInStatus(newStatusId, listing) {
     updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
       .then((res) => {
-        const tempListings = listings;
-        tempListings[tempListings.indexOf(listing)].statusId = newStatusId;
-        setListings([...tempListings]);
-        // window.location.reload();
-        // fetchListings();
+        // Update the listing status locally without reloading the page
+        const updatedListings = listings.map((item) =>
+          item.id === listing.id ? { ...item, statusId: newStatusId } : item
+        );
+        setListings(updatedListings);
       })
       .catch((error) => console.log(error));
   }
