@@ -17,12 +17,12 @@ function GetCard() {
 
     const [input, setInput] = useState({
         cardNumber: "",
-        pinNumber: "",
+        pinCode: "",
     });
 
     const [error, setError] = useState({
         cardNumber: "",
-        pinNumber: "",
+        pinCode: "",
     });
 
     const handleSubmit = async (event) => {
@@ -83,7 +83,7 @@ function GetCard() {
                     return "";
                 }
 
-            case "pinNumber":
+            case "pinCode":
                 if (!value) {
                     return t("pleaseAddPinNumber");
                 } else if (isNaN(value)) {
@@ -160,16 +160,16 @@ function GetCard() {
 
                     <div className="relative mb-4">
                         <label
-                            htmlFor="pinNumber"
+                            htmlFor="pinCode"
                             className="block text-sm font-medium text-gray-600"
                         >
                             {t("PINNumber")} *
                         </label>
                         <input
                             type="text"
-                            id="pinNumber"
-                            name="pinNumber"
-                            value={input.pinNumber}
+                            id="pinCode"
+                            name="pinCode"
+                            value={input.pinCode}
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
@@ -179,10 +179,10 @@ function GetCard() {
                         <div
                             className="h-[24px] text-red-600"
                             style={{
-                                visibility: error.pinNumber ? "visible" : "hidden",
+                                visibility: error.pinCode ? "visible" : "hidden",
                             }}
                         >
-                            {error.pinNumber}
+                            {error.pinCode}
                         </div>
                     </div>
                 </div>
