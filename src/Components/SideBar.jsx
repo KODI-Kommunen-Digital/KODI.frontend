@@ -101,8 +101,8 @@ function SideBar() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userRole, setUserRole] = useState(role.User);
-  const [isOwner, setIsOwner] = useState(false); // make it false by default
-  const [isSeller, setIsSeller] = useState(false)
+  const [isOwner, setIsOwner] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,7 +112,9 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
+        const roleResponse = await getUserRoleContainer();
         const roles = roleResponse.data.data;
+
         if (roles.includes(101) && !roles.includes(102)) {
           setIsOwner(true);
         } else if (roles.includes(102) && !roles.includes(101)) {
@@ -459,7 +461,7 @@ function SideBar() {
                 <>
                   {isContainerEnabled && (
                     <div className="ml-4">
-                      {(isSeller || (userRole === role.Admin)) && (
+                      {((isSeller || userRole === role.Admin)) && (
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
