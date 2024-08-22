@@ -11,8 +11,6 @@ const SellerRequests = () => {
     const { t } = useTranslation();
     const [sellerRequests, setSellerRequests] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
-    const [text, setText] = useState("");
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const pageSize = 9;
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -66,19 +64,6 @@ const SellerRequests = () => {
         }
     };
 
-    const handleTextChange = (event) => {
-        setText(event.target.value);
-    };
-
-    const openPopup = () => {
-        setIsPopupOpen(true);
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setText("");
-    };
-
     const navigate = useNavigate();
     const navigateTo = (path) => {
         if (path) {
@@ -92,6 +77,9 @@ const SellerRequests = () => {
         }
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
+        }
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
         }
     }
 
@@ -183,20 +171,20 @@ const SellerRequests = () => {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("productName")}
+                                                {t("sellerName")}
                                             </th>
                                             <th
                                                 scope="col"
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
@@ -206,7 +194,7 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("description")}
@@ -217,18 +205,7 @@ const SellerRequests = () => {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
-                                                }}
-                                            >
-                                                {t("action")}
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("status")}
@@ -239,33 +216,10 @@ const SellerRequests = () => {
                                     <tbody>
                                         {sellerRequests.map((products, index) => (
                                             <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                                <th
-                                                    scope="row"
-                                                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
-                                                >
-                                                    <img
-                                                        className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                        src={
-                                                            products.image
-                                                                ? process.env.REACT_APP_BUCKET_HOST + products.image
-                                                                : process.env.REACT_APP_BUCKET_HOST + "admin/DefaultForum.jpeg"
-                                                        }
-                                                        onClick={() =>
-                                                            navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
-                                                        }
-                                                        alt="avatar"
-                                                    />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                        <div
-                                                            className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={() =>
-                                                                navigateTo(`/Forum?forumId=${products.forumId}&cityId=${products.cityId}`)
-                                                            }
-                                                        >
-                                                            {products.title}
-                                                        </div>
-                                                    </div>
+                                                <th className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+
+                                                    {products.title}
                                                 </th>
 
                                                 <td
@@ -277,59 +231,10 @@ const SellerRequests = () => {
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                    dangerouslySetInnerHTML={{ __html: products.description }}
                                                 >
-                                                    {products.description}
                                                 </td>
-
-                                                <td className="px-6 py-4 text-center font-bold">
-                                                    <div className="flex justify-center items-center">
-                                                        <a
-                                                            className={`font-medium text-red-600 px-2 cursor-pointer`}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            onClick={openPopup}
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                height="1em"
-                                                                viewBox="0 0 640 512"
-                                                                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
-                                                            >
-                                                                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                                                            </svg>
-                                                        </a>
-                                                    </div>
-                                                </td>
-
-                                                {isPopupOpen && (
-                                                    <div className="fixed w-full px-4 sm:px-6 inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
-                                                        <div className="bg-white p-6 rounded-lg shadow relative w-full max-w-md max-h-full">
-                                                            <h2 className="text-xl flex justify-center items-center font-medium leading-normal text-neutral-800">
-                                                                {t("reason")}
-                                                            </h2>
-                                                            <textarea
-                                                                className="w-full p-2 border rounded-lg resize-none text-sm text-gray-600"
-                                                                rows="4"
-                                                                value={text}
-                                                                onChange={handleTextChange}
-                                                            />
-                                                            <div className="text-center justify-center mt-4">
-                                                                <button
-                                                                    className="mt-3 mb-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                                                                    onClick={closePopup}
-                                                                >
-                                                                    {t("cancel")}
-                                                                </button>
-                                                                <button
-                                                                    className="w-full mt-3 mb-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                                                // onClick={handleReportPost}
-                                                                >
-                                                                    {t("send")}
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
 
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center justify-center">

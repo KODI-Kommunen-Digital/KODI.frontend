@@ -74,8 +74,8 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
       <div className="px-2 border-t-8 border-slate-500">
         <div className="mt-5 px-2">
           <h2
-            className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
-            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+            style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
           >
             {listing.title}
           </h2>

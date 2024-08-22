@@ -8,7 +8,9 @@ import "react-quill/dist/quill.snow.css";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/cities";
 import Alert from "../../Components/Alert";
-import { createNewProduct, getShopsInACity } from "../../Services/containerApi";
+import FormImage from "../FormImage";
+import { UploadSVG } from "../../assets/icons/upload";
+import { createNewProduct, getShopsInACity, uploadImage, deleteImage } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
@@ -18,6 +20,10 @@ function AddNewProducts() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
+    const [image, setImage] = useState(null);
+    // const [pdf, setPdf] = useState(null);
+    const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
+    const [productId, setProductId] = useState(0);
     const navigate = useNavigate();
 
     const [input, setInput] = useState({
@@ -29,7 +35,7 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        meta: "",
+        // // hasAttachment: false,
     });
 
     const [error, setError] = useState({
@@ -41,7 +47,6 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        meta: "",
     });
 
     const handleSubmit = async (event) => {
@@ -62,10 +67,24 @@ function AddNewProducts() {
 
         if (valid) {
             setUpdating(true);
+
             try {
-                // await createNewProduct(cityId, shopId, input);
                 const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
-                await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+
+                const createProductResponse = await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+
+                const newProductId = parseInt(createProductResponse.data.data.id);
+
+                if (input.removeImage && image.length === 0) {
+                    await deleteImage(cityId, shopId, newProductId);
+                } else if (image && image.length > 0) {
+                    const imageForm = new FormData();
+                    for (let i = 0; i < image.length; i++) {
+                        imageForm.append("image", image[i]);
+                    }
+
+                    await uploadImage(imageForm, cityId, shopId, newProductId);
+                }
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
                 setSuccessMessage(successMessage);
@@ -76,6 +95,7 @@ function AddNewProducts() {
                     setSuccessMessage(false);
                     navigate("/Dashboard");
                 }, 5000);
+
             } catch (error) {
                 setErrorMessage(t("changesNotSaved"));
                 setSuccessMessage(false);
@@ -91,6 +111,8 @@ function AddNewProducts() {
     };
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const cityIds = searchParams.get("cityId");
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });
@@ -98,9 +120,13 @@ function AddNewProducts() {
             setCities(citiesResponse.data.data);
         });
 
+        if (productId && cityIds) {
+            setProductId(parseInt(productId));
+        }
+
         document.title =
             process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
-    }, []);
+    }, [productId]);
 
     const [description, setDescription] = useState("");
     const onDescriptionChange = (newContent) => {
@@ -209,16 +235,6 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "meta":
-                if (!value) {
-                    return t("pleaseEnterMeta");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
-                } else {
-                    return "";
-                }
-
-
             default:
                 return "";
         }
@@ -278,6 +294,184 @@ function AddNewProducts() {
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
+
+    function handleDragEnter(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function handleDragLeave(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            if (file.type.startsWith("image/")) {
+                setImage(e.dataTransfer.files);
+                setLocalImageOrPdf(true);
+                setInput((prev) => ({
+                    ...prev,
+                    // hasAttachment: true,
+                }));
+            }
+            // else if (file.type === "application/pdf") {
+            //     setPdf(file);
+            //     setInput((prev) => ({
+            //         ...prev,
+            //         // hasAttachment: true,
+            //     }));
+            // }
+        }
+    }
+
+    function handleInputChange(e) {
+        e.preventDefault();
+        const files = e.target.files;
+        const MAX_IMAGE_SIZE_MB = 20;
+        let hasImage = false;
+        let hasPdf = false;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+                alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
+                return;
+            }
+
+            if (file.type.startsWith("image/")) {
+                hasImage = true;
+            }
+            else if (file.type === "application/pdf") {
+                hasPdf = true;
+            }
+        }
+
+        if (hasPdf
+        ) {
+            alert(t("PdfAlert"));
+            return;
+        }
+
+        if (hasImage) {
+            setLocalImageOrPdf(true);
+            setImage(files);
+            setInput((prev) => ({
+                ...prev,
+                // hasAttachment: false,
+            }));
+        }
+
+        // if (hasPdf) {
+        //     setLocalImageOrPdf(true);
+        //     setPdf(files[0]); // Assuming only one PDF file is allowed
+        //     setInput((prev) => ({
+        //         ...prev,
+        //         // hasAttachment: true,
+        //     }));
+        // }
+    }
+
+    const [localImages, setLocalImages] = useState([]);
+    const handleMultipleInputChange = (event) => {
+        const newFiles = Array.from(event.target.files);
+
+        if (image.length > 0) {
+            const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+
+            if (invalidFiles.length > 0) {
+                alert(t("imagePdfAlert"));
+            } else {
+                setLocalImages((prevImages) => [...prevImages, ...validImages]);
+                setImage((prevImages) => [...prevImages, ...validImages]);
+            }
+        }
+        // else {
+        //     newFiles.forEach(file => {
+        //         if (file.type === "application/pdf") {
+        //             setLocalImageOrPdf(true);
+        //             setPdf(file);
+        //             setInput((prev) => ({
+        //                 ...prev,
+        //                 // hasAttachment: true,
+        //             }));
+        //         } else if (file.type.startsWith("image/")) {
+        //             setLocalImages((prevImages) => [...prevImages, file]);
+        //             setImage((prevImages) => [...prevImages, file]);
+        //         }
+        //     });
+        // }
+    };
+
+    const handleUpdateMultipleInputChange = (e) => {
+        const newFiles = Array.from(e.target.files);
+
+        if (image.length > 0) {
+            const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+
+            if (invalidFiles.length > 0) {
+                alert(t("imagePdfAlert"));
+            } else {
+                setLocalImages((prevImages) => [...prevImages, ...validImages]);
+                setImage((prevImages) => [...prevImages, ...validImages]);
+            }
+        }
+        // else {
+        //     newFiles.forEach(file => {
+        //         if (file.type === "application/pdf") {
+        //             setLocalImageOrPdf(true);
+        //             setPdf(file);
+        //             setInput((prev) => ({
+        //                 ...prev,
+        //                 // hasAttachment: true,
+        //             }));
+        //         } else if (file.type.startsWith("image/")) {
+        //             setLocalImages((prevImages) => [...prevImages, file]);
+        //             setImage((prevImages) => [...prevImages, file]);
+        //         }
+        //     });
+        // }
+    };
+
+    function handleRemoveImage() {
+        if (shopId) {
+            setInput((prev) => ({
+                ...prev,
+                removeImage: true,
+                logo: null,
+            }));
+        }
+        setImage((prevImages) => {
+            const updatedImages = [...prevImages];
+            return updatedImages;
+        });
+    }
+
+    // function handleRemovePDF() {
+    //     if (shopId) {
+    //         setInput((prev) => ({
+    //             ...prev,
+    //             removePdf: true,
+    //             pdf: null,
+    //         }));
+    //     }
+    //     setPdf(null);
+    //     setInput((prev) => ({
+    //         ...prev,
+    //         // hasAttachment: false,
+    //     }));
+    // }
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">
@@ -356,38 +550,46 @@ function AddNewProducts() {
                     </div>
 
                     {cityId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("shop")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="shopId"
-                                name="shopId"
-                                value={shopId || 0}
-                                onChange={handleShopChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {shops.map((shop) => (
-                                    <option key={Number(shop.id)} value={Number(shop.id)}>
-                                        {shop.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.shopId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.shopId}
-                            </div>
-                        </div>
+                        <>
+                            {shops.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="title"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("shop")} *
+                                    </label>
+                                    <select
+                                        type="text"
+                                        id="shopId"
+                                        name="shopId"
+                                        value={shopId || 0}
+                                        onChange={handleShopChange}
+                                        autoComplete="country-name"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option value={0}>{t("select")}</option>
+                                        {shops.map((shop) => (
+                                            <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                {shop.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.shopId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.shopId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noShopsAvailableForThisCity")}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     <div className="relative mb-4 grid grid-cols-2 gap-4">
@@ -434,7 +636,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 required
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterDiscountedPrice")}
+                                placeholder={t("pleaseEnterTaxPrice")}
                             />
                             <div
                                 className="h-[24px] text-red-600"
@@ -533,34 +735,6 @@ function AddNewProducts() {
 
                     <div className="relative mb-4">
                         <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("meta")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="meta"
-                            name="meta"
-                            value={input.meta}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterFastSellingAlert")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.meta ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.meta}
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
                             htmlFor="description"
                             className="block text-sm font-medium text-gray-600"
                         >
@@ -591,6 +765,171 @@ function AddNewProducts() {
                             }}
                         >
                             {error.description}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="container w-auto px-5 py-2 bg-gray-800">
+                <div className="bg-white mt-4 p-6 space-y-10">
+                    <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
+                        {t("uploadProductImage")}
+                        <div className="my-4 bg-gray-600 h-[1px]"></div>
+                    </h2>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            {t("addImageHere")}
+                        </label>
+                        <div
+                            className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}
+                            onDragEnter={handleDragEnter}
+                            onDragLeave={handleDragLeave}
+                        >
+                            {image && image.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <FormImage
+                                        updateImageList={setImage}
+                                        handleRemoveImage={handleRemoveImage}
+                                        image={image}
+                                        localImageOrPdf={localImageOrPdf}
+                                        localImages={localImages}
+                                    />
+                                    {image.length < 8 && (
+                                        <label
+                                            htmlFor="file-upload"
+                                            className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                                }`}
+                                        >
+                                            <div className="h-full flex items-center justify-center">
+                                                <div className="text-8xl text-black">+</div>
+                                            </div>
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept="image/*,.pdf"
+                                                className="sr-only"
+                                                onChange={handleMultipleInputChange}
+                                                multiple
+                                            />
+                                        </label>
+                                    )}
+                                </div>
+                            ) : image &&
+                                Array.isArray(image) &&
+                                image.length === 1 &&
+                                typeof image[0] === "string" &&
+                                image[0].includes("admin/") ? (
+                                <div>
+                                    <FormImage
+                                        updateImageList={setImage}
+                                        handleRemoveImage={handleRemoveImage}
+                                        handleInputChange={handleInputChange}
+                                        image={image}
+                                        localImageOrPdf={localImageOrPdf}
+                                        localImages={localImages}
+                                    />
+                                    {image.length < 8 && (
+                                        <label
+                                            htmlFor="file-upload"
+                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                                }`}
+                                        >
+                                            <div className="h-full flex items-center justify-center">
+                                                <div className="text-8xl text-black">+</div>
+                                            </div>
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept="image/*,.pdf"
+                                                className="sr-only"
+                                                onChange={handleUpdateMultipleInputChange}
+                                                multiple
+                                            />
+                                        </label>
+                                    )}
+                                </div>
+                            ) : image &&
+                                Array.isArray(image) &&
+                                image.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <FormImage
+                                        updateImageList={setImage}
+                                        handleRemoveImage={handleRemoveImage}
+                                        handleInputChange={handleInputChange}
+                                        image={image}
+                                        localImageOrPdf={localImageOrPdf}
+                                        localImages={localImages}
+                                    />
+                                    {image.length < 8 && (
+                                        <label
+                                            htmlFor="file-upload"
+                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                                }`}
+                                        >
+                                            <div className="h-full flex items-center justify-center">
+                                                <div className="text-8xl text-black">+</div>
+                                            </div>
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept="image/*,.pdf"
+                                                className="sr-only"
+                                                onChange={handleUpdateMultipleInputChange}
+                                                multiple
+                                            />
+                                        </label>
+                                    )}
+                                </div>
+                                // ) : pdf ? (
+                                //     <div className="flex flex-col items-center">
+                                //         <p>
+                                //             <a
+                                //                 target="_blank"
+                                //                 rel="noreferrer"
+                                //                 href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}
+                                //             >
+                                //                 {pdf.name}
+                                //             </a>
+                                //         </p>
+                                //         <button
+                                //             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
+                                //             onClick={handleRemovePDF}
+                                //         >
+                                //             {t("removeFile")}
+                                //         </button>
+                                //     </div>
+                            ) : (
+                                <div className="text-center">
+                                    <UploadSVG />
+                                    <p className="mt-1 text-sm text-gray-600">
+                                        {t("dragAndDropImage")}
+                                    </p>
+                                    <div className="relative mb-0 mt-8">
+                                        <label
+                                            className={`file-upload-btn w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded`}
+                                        >
+                                            <span className="button-label">{t("upload")}</span>
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept="image/*,.pdf"
+                                                className="sr-only"
+                                                onChange={handleInputChange}
+                                                multiple
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div
+                            className="h-[24px] text-red-600"
+                        >
+                            {t("imageWarning")}
                         </div>
                     </div>
                 </div>

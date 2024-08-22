@@ -25,7 +25,7 @@ const OwnerScreen = () => {
                         <div className="p-4 w-full">
                             <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">{t("storeDetails")}</h2>
-                                <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-4">{t("store1")}</h1>
+                                <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-4">{t("stores")}</h1>
                                 <p className="leading-relaxed mb-4">{t("goToStoreDetails")}</p>
                                 <a onClick={() => {
                                     navigateTo("/OwnerScreen/StoreDetails");

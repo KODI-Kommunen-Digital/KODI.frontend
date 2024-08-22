@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
-import { getShelves, getStores } from "../../Services/containerApi";
+import { getAllShelves, getStores } from "../../Services/containerApi";
 
 function Shelves() {
     window.scrollTo(0, 0);
@@ -12,18 +12,19 @@ function Shelves() {
     const [shelves, setShelves] = useState([]);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
+    const [cityId, setCityId] = useState(null);
 
     const fetchAll = useCallback((cityId, storeId, pageNumber) => {
         if (cityId && storeId) {
-            getShelves(cityId, storeId, pageNumber).then((response) => {
+            getAllShelves(cityId, storeId, pageNumber).then((response) => {
                 setShelves(response.data.data);
             });
         }
     }, []);
 
     useEffect(() => {
-        fetchAll();
-    }, [fetchAll, storeId, pageNumber]);
+        fetchAll(cityId, storeId, pageNumber);
+    }, [fetchAll, cityId, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
         getStores().then((response) => {
@@ -48,6 +49,7 @@ function Shelves() {
 
         if (selectedStore) {
             const { cityId } = selectedStore;
+            setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1); // Reset page number when a new store is selected
 
@@ -100,7 +102,7 @@ function Shelves() {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "25%",
@@ -150,34 +152,17 @@ function Shelves() {
                                                 >
                                                     <th
                                                         scope="row"
-                                                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                        className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     >
-                                                        <img
-                                                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                            src={
-                                                                shelve.image
-                                                                    ? process.env.REACT_APP_BUCKET_HOST +
-                                                                    shelve.image
-                                                                    : process.env.REACT_APP_BUCKET_HOST +
-                                                                    "admin/DefaultForum.jpeg"
-                                                            }
-                                                            alt="avatar"
-                                                        />
-                                                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                            <div
-                                                                className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                                            >
-                                                                {shelve.title}
-                                                            </div>
-                                                        </div>
+                                                        {shelve.title}
                                                     </th>
 
                                                     <td
                                                         className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                        dangerouslySetInnerHTML={{ __html: shelve.description }}
                                                     >
-                                                        {shelve.description}
                                                     </td>
 
                                                     <td

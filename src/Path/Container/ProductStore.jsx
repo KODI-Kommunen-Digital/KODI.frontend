@@ -6,6 +6,7 @@ import { getProducts, getStores } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
+import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 
 function ProductStore() {
     window.scrollTo(0, 0);
@@ -29,7 +30,6 @@ function ProductStore() {
     useEffect(() => {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            // const cityId = selectedStore.cityId;
             if (selectedStore) {
                 fetchProducts(storeId, pageNumber, selectedStatus);
             }
@@ -37,8 +37,24 @@ function ProductStore() {
     }, [fetchProducts, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlStoreId = urlParams.get("storeId");
+
         getStores().then((response) => {
-            setStores(response.data.data);
+            const fetchedStores = response.data.data;
+            setStores(fetchedStores);
+
+            if (urlStoreId) {
+                const storeIdNumber = parseInt(urlStoreId, 10);
+                const selectedStore = fetchedStores.find(store => store.id === storeIdNumber);
+
+                if (selectedStore) {
+                    setStoreId(storeIdNumber);
+                    setPageNumber(1);
+
+                    fetchProducts(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
+                }
+            }
         });
     }, []);
 
@@ -69,7 +85,7 @@ function ProductStore() {
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProducts(cityId, storeId, 1); // Reset to first page
+            fetchProducts(cityId, storeId, 1, selectedStatus); // Reset to first page
         }
     };
 
@@ -164,30 +180,20 @@ function ProductStore() {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("title")}
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-3 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
-                                                }}
-                                            >
-                                                {t("category")}
-                                            </th>
-                                            <th
-                                                scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
@@ -197,7 +203,7 @@ function ProductStore() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("price")}
@@ -207,7 +213,7 @@ function ProductStore() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("tax")}
@@ -217,7 +223,7 @@ function ProductStore() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("status")}
@@ -227,7 +233,7 @@ function ProductStore() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "14.3%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("viewDetails")}
@@ -249,13 +255,15 @@ function ProductStore() {
                                                     <img
                                                         className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                         src={
-                                                            product.image
+                                                            product.productImages
                                                                 ? process.env.REACT_APP_BUCKET_HOST +
                                                                 product.productImages[0]
                                                                 : process.env.REACT_APP_BUCKET_HOST +
                                                                 "admin/DefaultForum.jpeg"
                                                         }
-                                                        alt="avatar"
+                                                        onError={(e) => {
+                                                            e.target.src = CONTAINERIMAGE; // Set default image if loading fails
+                                                        }}
                                                     />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
@@ -266,13 +274,6 @@ function ProductStore() {
                                                         </div>
                                                     </div>
                                                 </th>
-
-                                                <td
-                                                    className={`px-6 py-4 text-center font-bold text-blue-600`}
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {product.categoryId}
-                                                </td>
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
@@ -299,7 +300,7 @@ function ProductStore() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                product.isActive
+                                                                product.status
                                                             )} mr-2`}
                                                         ></div>
 
