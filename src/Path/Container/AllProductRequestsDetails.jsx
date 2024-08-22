@@ -4,18 +4,42 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { useLocation } from 'react-router-dom';
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
+import { status, statusByName } from "../../Constants/containerStatus";
+import { updateProductRequests } from "../../Services/containerApi";
 
 const AllProductRequestsDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [product, setProduct] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const location = useLocation();
-    const { productDetails } = location.state || {};
+    const { productDetails, storeId } = location.state || {};
 
     useEffect(() => {
-        setProduct(productDetails);
+        if (productDetails) {
+            setProduct(productDetails);
+            setSelectedStatus(productDetails.status);
+        }
     }, [productDetails]);
+
+    const handleStatusChange = async (newStatus, shelfIds, productId) => {
+        const shelfs = shelfIds || [];
+        setSelectedStatus(newStatus);
+
+        if (product) {
+            try {
+                await updateProductRequests(storeId, productId, shelfs, newStatus)
+                setProduct((prevProduct) => ({
+                    ...prevProduct,
+                    status: newStatus,
+                }));
+            } catch (error) {
+                console.error("Failed to update product status", error);
+            }
+        }
+    };
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">
@@ -65,7 +89,38 @@ const AllProductRequestsDetails = () => {
 
                                             <div className="text-start mb-4">
                                                 <span className="font-bold text-gray-700">{t("description")} : </span>
-                                                <span className="text-gray-600">{product.description}</span>
+                                                <span className="text-gray-600" dangerouslySetInnerHTML={{ __html: product.description }}></span>
+                                            </div>
+
+                                            <div className="relative w-full text-center">
+                                                <div className="w-full inline-block">
+                                                    <button
+                                                        className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                                        type="button"
+                                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                    >
+                                                        {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </button>
+                                                    {dropdownOpen && (
+                                                        <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                                                            <ul className="py-1">
+                                                                {Object.entries(status).map(([key, value]) => (
+                                                                    <li key={key}>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                handleStatusChange(parseInt(key), product.shelfIds, product.id);
+                                                                                setDropdownOpen(false);
+                                                                            }}
+                                                                            className="text-sm hover:bg-blue-400 text-gray-700 block px-4 py-2 w-full text-left"
+                                                                        >
+                                                                            {value}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

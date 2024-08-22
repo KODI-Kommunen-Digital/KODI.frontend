@@ -17,7 +17,7 @@ const SellerRequestsApproval = () => {
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
     const [selectedCityId, setSelectedCityId] = useState();
-    const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -40,14 +40,14 @@ const SellerRequestsApproval = () => {
                 }
             }
         });
-    }, [selectedStatus]);
+    }, []); // Check if no use remove
 
     useEffect(() => {
         fetchStores();
     }, [fetchStores]);
 
     const fetchSellerRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
-        if (storeId) {
+        if (cityId && storeId) {
             getSellers(cityId, storeId, pageNumber, selectedStatus).then((response) => {
                 setSellerRequests(response.data.data);
             });
@@ -212,7 +212,7 @@ const SellerRequestsApproval = () => {
                                                     width: "20%",
                                                 }}
                                             >
-                                                {t("productName")}
+                                                {t("sellerName")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -264,7 +264,8 @@ const SellerRequestsApproval = () => {
                                             <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                                 <th
                                                     scope="row"
-                                                    className="px-6 py-4 text-center font-bold text-gray-900 truncate"
+                                                    className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                 >
                                                     {sellerRequest.title}
                                                 </th>
@@ -278,7 +279,7 @@ const SellerRequestsApproval = () => {
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
                                                 >
                                                 </td>
@@ -291,7 +292,7 @@ const SellerRequestsApproval = () => {
                                                             )} mr-2`}
                                                         ></div>
                                                         <select
-                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
+                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
                                                             onChange={(e) =>
                                                                 handleChangeInStatus(e.target.value, sellerRequest, sellerRequest.id, sellerRequest.title, sellerRequest.description)
                                                             }

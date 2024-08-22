@@ -779,7 +779,7 @@
     "pleaseEnterShelfNumber": "Please enter the shelf number",
     "reallyWantToDelete": "Do you really want to delete this group? This action cannot be reverted.",
     "acceptOrReject": "Accept / Reject",
-    "pleaseEnterFastSellingAlert": "Please enter fast selling alert number",
+    "pleaseEnterFastSellingAlert": "This number will be fast selling allert to the users",
     "pleaseEnterTotalNumber": "Please enter total number of item you want to sell",
     "pleaseEnterOriginalPrice": "Please enter original price",
     "pleaseEnterDiscountedPrice": "Please enter discounted price",
@@ -886,6 +886,7 @@
     "linkYourCard": "Link Your Card",
     "selectDate": "Please select a date to proceed",
     "selectAnotherDate": "No order found for this date, please select another date",
+    "noShopsAvailableForThisCity": "No shops are found for this city, please select another city to continue",
     "orderId": "Order Id",
     "discount": "Discount",
     "imagePdfWarning": "You can either upload Images here or PDF, but you cannot do both",
@@ -895,5 +896,8 @@
     "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "By uploading I confirm the terms of use, in particular that I have the rights to publish the content.",
     "addImageHere": "Add Image Here",
     "viewDetails": "View Details",
-    "stores": "Stores Details"
+    "stores": "Stores Details",
+    "pleaseEnterTaxPrice": "please enter the tax amount for this product",
+    "createdAt": "Created At",
+    "sellerName": "Seller Name"
 }

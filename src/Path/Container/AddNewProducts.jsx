@@ -35,7 +35,6 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        meta: "",
         // // hasAttachment: false,
     });
 
@@ -48,7 +47,6 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        meta: "",
     });
 
     const handleSubmit = async (event) => {
@@ -236,16 +234,6 @@ function AddNewProducts() {
                 } else {
                     return "";
                 }
-
-            case "meta":
-                if (!value) {
-                    return t("pleaseEnterMeta");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
-                } else {
-                    return "";
-                }
-
 
             default:
                 return "";
@@ -562,38 +550,46 @@ function AddNewProducts() {
                     </div>
 
                     {cityId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("shop")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="shopId"
-                                name="shopId"
-                                value={shopId || 0}
-                                onChange={handleShopChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {shops.map((shop) => (
-                                    <option key={Number(shop.id)} value={Number(shop.id)}>
-                                        {shop.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.shopId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.shopId}
-                            </div>
-                        </div>
+                        <>
+                            {shops.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="title"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("shop")} *
+                                    </label>
+                                    <select
+                                        type="text"
+                                        id="shopId"
+                                        name="shopId"
+                                        value={shopId || 0}
+                                        onChange={handleShopChange}
+                                        autoComplete="country-name"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option value={0}>{t("select")}</option>
+                                        {shops.map((shop) => (
+                                            <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                {shop.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.shopId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.shopId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noShopsAvailableForThisCity")}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     <div className="relative mb-4 grid grid-cols-2 gap-4">
@@ -640,7 +636,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 required
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterDiscountedPrice")}
+                                placeholder={t("pleaseEnterTaxPrice")}
                             />
                             <div
                                 className="h-[24px] text-red-600"
@@ -734,34 +730,6 @@ function AddNewProducts() {
                             >
                                 {error.inventory}
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("meta")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="meta"
-                            name="meta"
-                            value={input.meta}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterFastSellingAlert")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.meta ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.meta}
                         </div>
                     </div>
 

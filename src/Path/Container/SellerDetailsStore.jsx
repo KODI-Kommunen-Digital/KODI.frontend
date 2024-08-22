@@ -10,8 +10,11 @@ const SellerDetailsStore = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [seller, setSeller] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
+    const [selectedStatus, setSelectedStatus] = useState(status);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const filteredStatus = status
+        ? Object.fromEntries(Object.entries(status).filter(([key]) => parseInt(key) !== statusByName.ChangeRequested))
+        : status;
 
     const location = useLocation();
     const { sellerDetails, cityId } = location.state || {};
@@ -49,17 +52,17 @@ const SellerDetailsStore = () => {
                         {seller && (
                             <>
                                 <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
-                                    <div className="md:flex mb-6">
+                                    <div className="md:flex">
                                         <div className="px-4">
-                                            <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
+                                            <h2 className="text-xl font-bold text-gray-900 mb-6">
                                                 {seller.title}
                                             </h2>
-                                            <div className="mb-4">
-                                                <span className="font-bold text-gray-900 ">{t("description")} : </span>
-                                                <span className="font-bold text-gray-900 ">
-                                                    {seller.description}
-                                                </span>
+
+                                            <div className="text-center mb-6">
+                                                <span className="font-bold text-gray-700">{t("description")} : </span>
+                                                <span className="text-gray-600" dangerouslySetInnerHTML={{ __html: seller.description }}></span>
                                             </div>
+
                                             <div className="relative w-full text-center">
                                                 <div className="w-full inline-block">
                                                     <button
@@ -67,12 +70,12 @@ const SellerDetailsStore = () => {
                                                         type="button"
                                                         onClick={() => setDropdownOpen(!dropdownOpen)}
                                                     >
-                                                        {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                        {filteredStatus[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                                                     </button>
                                                     {dropdownOpen && (
-                                                        <div className="absolute w-full text-center bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                                                        <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
                                                             <ul className="py-1">
-                                                                {Object.entries(status).map(([key, value]) => (
+                                                                {Object.entries(filteredStatus).map(([key, value]) => (
                                                                     <li key={key}>
                                                                         <button
                                                                             onClick={() => {

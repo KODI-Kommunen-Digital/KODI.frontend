@@ -71,7 +71,9 @@ const OrderDetailsStore = () => {
                                                 </div>
                                                 <div className="text-start mb-4">
                                                     <span className="font-bold text-gray-700">{t("description")} : </span>
-                                                    <span className="text-gray-600">{productItem.product.description}</span>
+                                                    <span className="text-gray-600"
+                                                        dangerouslySetInnerHTML={{ __html: productItem.product.description }}>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

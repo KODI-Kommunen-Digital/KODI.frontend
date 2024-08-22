@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getProductRequests, updateProductRequests, getStores, getShelves } from "../../Services/containerApi";
-import { status, statusByName } from "../../Constants/containerStatus";
+import { getProductRequests, getShelves, getStores } from "../../Services/containerApi";
+import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
@@ -14,15 +14,42 @@ function AllProductRequests() {
     const pageSize = 9;
     const [productRequests, setProductRequests] = useState([]);
     const [storeId, setStoreId] = useState();
-    const [shelfId, setShelfId] = useState();
+    const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
     const [shelves, setShelves] = useState([]);
 
+    const fetchStores = useCallback(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlStoreId = urlParams.get("storeId");
 
-    const fetchProductRequests = useCallback((storeId, pageNumber, selectedStatus) => {
-        if (storeId) {
-            getProductRequests(storeId, pageNumber, selectedStatus).then((response) => {
+        getStores().then((response) => {
+            const fetchedStores = response.data.data;
+            setStores(fetchedStores);
+
+            if (urlStoreId) {
+                const storeIdNumber = parseInt(urlStoreId, 10);
+                const selectedStore = fetchedStores.find(store => store.id === storeIdNumber);
+
+                if (selectedStore) {
+                    setStoreId(storeIdNumber);
+                    const cityId = selectedStore.cityId;
+                    setCityId(cityId)
+                    setPageNumber(1);
+
+                    fetchProductRequests(cityId, storeIdNumber, 1, selectedStatus);
+                }
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        fetchStores();
+    }, [fetchStores]);
+
+    const fetchProductRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
+        if (cityId && storeId) {
+            getProductRequests(cityId, storeId, pageNumber, selectedStatus).then((response) => {
                 setProductRequests(response.data.data);
             });
         }
@@ -32,20 +59,10 @@ function AllProductRequests() {
         if (storeId) {
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             if (selectedStore) {
-                fetchProductRequests(storeId, pageNumber, selectedStatus);
+                fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProductRequests, storeId, pageNumber, selectedStatus]);
-
-    const fetchStores = useCallback(() => {
-        getStores().then((response) => {
-            setStores(response.data.data);
-        });
-    }, []);
-
-    useEffect(() => {
-        fetchStores();
-    }, [fetchStores]);
+    }, [fetchProductRequests, cityId, storeId, pageNumber, selectedStatus]);
 
     const fetchShelves = useCallback((cityId, storeId) => {
         if (cityId && storeId) {
@@ -56,8 +73,8 @@ function AllProductRequests() {
     }, []);
 
     useEffect(() => {
-        fetchShelves();
-    }, [fetchShelves, storeId]);
+        fetchShelves(cityId, storeId);
+    }, [fetchShelves, cityId, storeId]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -65,6 +82,7 @@ function AllProductRequests() {
 
         if (selectedStore) {
             const cityId = selectedStore.cityId;
+            setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1);
 
@@ -72,36 +90,21 @@ function AllProductRequests() {
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProductRequests(cityId, storeId, 1);
+            fetchProductRequests(cityId, storeId, 1, selectedStatus);
             fetchShelves(cityId, storeId);
         }
     };
 
-    const handleShelfChange = async (event) => {
-        const shelfId = event.target.value;
-        const selectedShelf = shelves.find(shelf => shelf.id === parseInt(shelfId));
+    const handleShelfChange = async (productId, shelfId) => {
+        const updatedProductRequests = productRequests.map(product => {
+            if (product.id === productId) {
+                return { ...product, shelfId: shelfId };
+            }
+            return product;
+        });
 
-        if (selectedShelf) {
-            setShelfId(shelfId);
-        }
+        setProductRequests(updatedProductRequests);
     };
-
-    function handleChangeInStatus(newStatusId, product) {
-        const accepted = newStatusId === 1;
-        const shelfIds = product.shelfIds || [];
-
-        updateProductRequests(storeId, product.id, shelfIds, accepted)
-            .then((res) => {
-                const tempListings = [...productRequests];
-                const productIndex = tempListings.indexOf(product);
-                if (productIndex !== -1) {
-                    tempListings[productIndex].statusId = newStatusId;
-                    setProductRequests(tempListings);
-                }
-                window.location.reload();
-            })
-            .catch((error) => console.log(error));
-    }
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -109,21 +112,6 @@ function AllProductRequests() {
             navigate(path);
         }
     };
-
-    function getStatusClass(statusId) {
-        if (status[statusId] === "Active") {
-            return "bg-green-400";
-        }
-        if (status[statusId] === "Inactive") {
-            return "bg-red-400";
-        }
-        if (status[statusId] === "Pending") {
-            return "bg-yellow-400";
-        }
-        if (status[statusId] === "ChangeRequested") {
-            return "bg-blue-400";
-        }
-    }
 
     const handleViewDetailsClick = (product) => {
         navigate('/OwnerScreen/AllProductRequestsDetails', { state: { productDetails: product } });
@@ -225,7 +213,7 @@ function AllProductRequests() {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "14.3%",
@@ -254,7 +242,7 @@ function AllProductRequests() {
                                                 {t("count")}
                                             </th>
 
-                                            <th
+                                            {/* <th
                                                 scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
@@ -263,7 +251,7 @@ function AllProductRequests() {
                                                 }}
                                             >
                                                 {t("selectShelf")}
-                                            </th>
+                                            </th> */}
                                             <th
                                                 scope="col"
                                                 className="px-6 py-3 text-center"
@@ -272,7 +260,7 @@ function AllProductRequests() {
                                                     width: "14.3%",
                                                 }}
                                             >
-                                                {t("action")}
+                                                {t("shelfName")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -311,8 +299,8 @@ function AllProductRequests() {
                                                     />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
-                                                            className="font-normal text-gray-500 truncate"
-                                                            style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                            className="text-gray-500 font-bold truncate"
+                                                            style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                         >
                                                             {product.title}
                                                         </div>
@@ -334,61 +322,20 @@ function AllProductRequests() {
                                                 </td>
 
                                                 <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <select
-                                                            id="stores"
-                                                            name="stores"
-                                                            autoComplete="stores"
-                                                            onChange={handleShelfChange}
-                                                            value={shelfId || 0}
-                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
-                                                            style={{
-                                                                fontFamily: "Poppins, sans-serif",
-                                                            }}
-                                                        >
-                                                            <option className="font-sans" value={0} key={0}>
-                                                                {t("select", {
-                                                                    regionName: process.env.REACT_APP_REGION_NAME,
-                                                                })}
+
+                                                    <select
+                                                        className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
+                                                        onChange={(e) => handleShelfChange(product.id, e.target.value)}
+                                                        value={product.shelfId || ''}
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        <option value="">{t("shelfName")}</option>
+                                                        {shelves.map((shelf) => (
+                                                            <option key={shelf.id} value={shelf.id}>
+                                                                {shelf.title}
                                                             </option>
-                                                            {shelves.map((shelf) => (
-                                                                <option className="font-sans" value={shelf.id} key={shelf.id}>
-                                                                    {shelf.title}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                </td>
-
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                product.status
-                                                            )} mr-2`}
-                                                        ></div>
-
-                                                        <select
-                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
-                                                            onChange={(e) =>
-                                                                handleChangeInStatus(e.target.value, product)
-                                                            }
-                                                            value={product.statusId || 0}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            {Object.keys(status).map((state, index) => {
-                                                                return (
-                                                                    <option
-                                                                        className="p-0"
-                                                                        key={index}
-                                                                        value={state}
-                                                                    >
-                                                                        {t(status[state].toLowerCase())}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </select>
-                                                    </div>
+                                                        ))}
+                                                    </select>
                                                 </td>
 
                                                 <td className="px-6 py-4">

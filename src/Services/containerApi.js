@@ -103,12 +103,12 @@ export async function updateSeller(cityId, sellerId, status, title, description)
     }
 }
 
-export async function updateProductRequests(storeId, requestId, shelfIds, accepted) {
+export async function updateProductRequests(storeId, requestId, shelfIds, status) {
     try {
         const response = await axios.patch(`/v1/owners/productRequest/${requestId}`, {
             storeId,
             shelfIds,
-            accepted,
+            status,
         });
         return response.data;
     } catch (error) {
@@ -121,8 +121,8 @@ export async function getShelfById(cityId, storeId, shelfId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelve/${shelfId}`);
 }
 
-export async function getSellers(cityId, storeId, pageNumber, status) {
-    return axios.get(`/v1/owners/getSellers?cityId=${cityId}&storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+export async function getSellers(cityId, storeId, pageNo, status) {
+    return axios.get(`/v1/owners/getSellers?cityId=${cityId}&storeId=${storeId}&pageNo=${pageNo}&status=${status}&pageSize=9`);
 }
 
 export async function getProductsForShelf(storeId) {
@@ -133,8 +133,8 @@ export async function getProducts(storeId, pageNumber, status) {
     return axios.get(`/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
 
-export async function getProductRequests(storeId, pageNumber, status) {
-    return axios.get(`/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+export async function getProductRequests(cityId, storeId, pageNumber, status) {
+    return axios.get(`/v1/owners/productRequests?cityId=${cityId}&storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
 
 export async function getOrders(cityId, storeId, pageNumber) {

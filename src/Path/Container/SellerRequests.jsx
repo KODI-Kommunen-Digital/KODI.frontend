@@ -78,6 +78,9 @@ const SellerRequests = () => {
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
         }
+        if (status[statusId] === "Inactive") {
+            return "bg-red-400";
+        }
     }
 
     return (
@@ -174,7 +177,7 @@ const SellerRequests = () => {
                                                     width: "25%",
                                                 }}
                                             >
-                                                {t("productName")}
+                                                {t("sellerName")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -213,10 +216,9 @@ const SellerRequests = () => {
                                     <tbody>
                                         {sellerRequests.map((products, index) => (
                                             <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                                <th
-                                                    scope="row"
-                                                    className="px-6 py-4 text-center font-bold text-gray-900 truncate"
-                                                >
+                                                <th className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+
                                                     {products.title}
                                                 </th>
 
@@ -229,7 +231,7 @@ const SellerRequests = () => {
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     dangerouslySetInnerHTML={{ __html: products.description }}
                                                 >
                                                 </td>

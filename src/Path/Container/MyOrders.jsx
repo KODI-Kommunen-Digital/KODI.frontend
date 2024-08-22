@@ -47,7 +47,7 @@ const MyOrders = () => {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "25%",
@@ -98,41 +98,10 @@ const MyOrders = () => {
                                                 >
                                                     <th
                                                         scope="row"
-                                                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                        className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     >
-                                                        <img
-                                                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                            src={
-                                                                myOrder.image
-                                                                    ? process.env.REACT_APP_BUCKET_HOST +
-                                                                    myOrder.image
-                                                                    : process.env.REACT_APP_BUCKET_HOST +
-                                                                    "admin/DefaultForum.jpeg"
-                                                            }
-                                                            onClick={() =>
-                                                                navigateTo(
-                                                                    `/Forum?forumId=${myOrder.forumId}&cityId=${myOrder.cityId}`
-                                                                )
-                                                            }
-                                                            alt="avatar"
-                                                        />
-                                                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                            <div
-                                                                className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                                                onClick={() =>
-                                                                    navigateTo(
-                                                                        `/Forum?forumId=${myOrder.forumId}&cityId=${myOrder.cityId}`
-                                                                    )
-                                                                }
-                                                            >
-                                                                {myOrder.products.map((product) => (
-                                                                    <div key={product.id}>
-                                                                        {product.product.title}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </div>
+                                                        {myOrder.products.map((product) => product.product.title).join(', ')}
                                                     </th>
 
                                                     <td
