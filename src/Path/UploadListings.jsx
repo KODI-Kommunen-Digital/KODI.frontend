@@ -111,8 +111,7 @@ function UploadListings() {
       const file = files[i];
 
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-        alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
-        return;
+        return t("maxFileSizeAllert");
       }
 
       if (file.type.startsWith("image/")) {
@@ -1551,6 +1550,12 @@ function UploadListings() {
             <label className="block text-sm font-medium text-gray-700">
               {t("addFileHere")}
             </label>
+            <div
+              className="h-[24px] text-red-600"
+            >
+              {t("maxFileSizeAllert")}
+            </div>
+
             <div
               className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
               onDrop={handleDrop}
