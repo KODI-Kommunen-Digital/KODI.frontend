@@ -107,8 +107,7 @@ function SideBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileResponse, roleResponse] = await Promise.all([getProfile(), getUserRoleContainer()]);
-
+        const profileResponse = await getProfile();
         setFirstname(profileResponse.data.data.firstname);
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
@@ -128,7 +127,7 @@ function SideBar() {
     };
 
     fetchData();
-  }, []);
+  }, [isContainerEnabled]);
 
   return (
     <div>

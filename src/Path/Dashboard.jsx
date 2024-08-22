@@ -134,11 +134,7 @@ const Dashboard = () => {
   }, [selectedStatus, viewAllListings, pageNo, cityId]);
 
   useEffect(() => {
-    if (pageNo === 1) {
-      fetchListings();
-    } else {
-      fetchListings();
-    }
+    fetchListings();
   }, [fetchListings, pageNo]);
 
   function getStatusClass(statusId) {
@@ -397,7 +393,7 @@ const Dashboard = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3"
+                    className="px-6 sm:px-6 py-3 text-center"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "16.67%",
@@ -643,7 +639,7 @@ const Dashboard = () => {
                           ></div>
                           {viewAllListings ? (
                             <select
-                              className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
+                              className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
                               onChange={(e) =>
                                 handleChangeInStatus(e.target.value, listing)
                               }

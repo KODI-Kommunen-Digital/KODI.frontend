@@ -115,7 +115,7 @@ function AllSellers() {
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("order")}
@@ -125,7 +125,7 @@ function AllSellers() {
                                                 className="px-6 sm:px-3 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("user")}
@@ -135,7 +135,7 @@ function AllSellers() {
                                                 className="px-6 sm:px-3 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("amount")}
@@ -145,7 +145,7 @@ function AllSellers() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
@@ -155,7 +155,7 @@ function AllSellers() {
                                                 className="px-6 sm:px-6 py-3 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("discount")}
@@ -176,19 +176,29 @@ function AllSellers() {
                                     <tbody>
                                         {orders.map((order) => (
                                             <tr key={order.id} className="bg-white border-b hover:bg-gray-50">
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
                                                     {order.id.toString().padStart(3, '0')}
                                                 </td>
-                                                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                                                <td className="px-6 py-4 text-center font-bold text-blue-600"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
                                                     {order.user.username}
                                                 </td>
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
                                                     € {order.amount.toFixed(2)}
                                                 </td>
-                                                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                                                <td className="px-6 py-4 text-center font-bold text-blue-600"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
                                                     {new Date(order.createdAt).toLocaleString('de')}
                                                 </td>
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                >
                                                     € {order.discount.toFixed(2)}
                                                 </td>
                                                 <td className="px-6 py-4">

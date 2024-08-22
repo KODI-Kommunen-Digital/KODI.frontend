@@ -165,7 +165,7 @@ const OrdersSold = () => {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3"
+                                                className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "20%",
@@ -309,14 +309,14 @@ const OrdersSold = () => {
                                     <div className="flex items-center justify-between px-6 py-3 bg-black">
 
                                         <GrFormPrevious
-                                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all text-white"
+                                            className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
                                             onClick={handlePrevMonth}
                                         />
 
                                         <h2 className="text-white">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
 
                                         <GrFormNext
-                                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all text-white"
+                                            className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
                                             onClick={handleNextMonth}
                                         />
                                     </div>
@@ -328,9 +328,19 @@ const OrdersSold = () => {
 
                             <center>
                                 <div className="tracking-widest mt-4">
-                                    <span className="text-gray-500 text-xl">{errorMessage ? t("selectAnotherDate") : t("selectDate")}</span>
+                                    <span
+                                        className={
+                                            ordersSold.length === 0 || errorMessage
+                                                ? "text-red-600 text-xl"
+                                                : "text-gray-500 text-xl"
+                                        }
+                                    >
+                                        {ordersSold.length === 0 || errorMessage ? t("selectAnotherDate") : t("selectDate")}
+                                    </span>
                                 </div>
                             </center>
+
+
                             <center className="mt-6">
                                 <a
                                     onClick={() => navigateTo("/SellerScreen")}

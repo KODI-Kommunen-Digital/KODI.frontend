@@ -122,7 +122,7 @@ const GroupMembers = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3"
+                    className="px-6 sm:px-6 py-3 text-center"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "20%",
