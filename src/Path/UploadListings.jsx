@@ -1664,9 +1664,8 @@ function UploadListings() {
                   <p>
                     <a
                       target="_blank"
-                      href={
-                        localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link
-                      }
+                      rel="noreferrer"
+                      href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}
                     >
                       {pdf.name}
                     </a>

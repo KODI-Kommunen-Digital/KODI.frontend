@@ -91,7 +91,7 @@ function OpenStreetMap() {
                 </ul>
                 <button
                     onClick={handleSearch}
-                    className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 mt-4 rounded"
+                    className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 mt-4 rounded"
                     type="submit"
                 >
                     {t("search")}

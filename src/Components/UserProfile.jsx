@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PROFILEIMAGE from "../assets/ProfilePicture.png";
+import PROFILEIMAGE from "../assets/ProfilePicture.jpeg";
 import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -62,7 +62,6 @@ function UserProfile({ user }) {
         )
       }
         className={`rounded-t-lg h-32 ${RegionColors.lightBgColor} overflow-hidden`}>
-        {/* <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' /> */}
       </div>
       <div
         onClick={() => navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")}
