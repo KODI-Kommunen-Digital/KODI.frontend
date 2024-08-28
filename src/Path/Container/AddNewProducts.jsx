@@ -10,7 +10,7 @@ import { getCities } from "../../Services/cities";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
-import { createNewProduct, getShopsInACity, uploadImage, deleteImage } from "../../Services/containerApi";
+import { createNewProduct, getShopsInACity, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
@@ -25,20 +25,27 @@ function AddNewProducts() {
     const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
     const [productId, setProductId] = useState(0);
     const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
 
     const [input, setInput] = useState({
         shopId: 0,
         cityId: 0,
+        categoryId: 0,
+        subCategoryId: 0,
         title: "",
         description: "",
         price: "",
         tax: "",
         inventory: "",
         minCount: "",
+        // removeImage: false,
         // // hasAttachment: false,
     });
 
     const [error, setError] = useState({
+        categoryId: "",
+        subCategoryId: "",
         title: "",
         description: "",
         shopId: "",
@@ -110,9 +117,48 @@ function AddNewProducts() {
         }
     };
 
+    const [cityId, setCityId] = useState(0);
+    const [cities, setCities] = useState([]);
+    async function onCityChange(e) {
+        const cityId = e.target.value;
+        setCityId(cityId);
+        setInput((prev) => ({
+            ...prev,
+            cityId: cityId,
+        }));
+        validateInput(e);
+
+        // const urlParams = new URLSearchParams(window.location.search);
+        // urlParams.set("cityId", cityId);
+        // const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        // window.history.replaceState({}, "", newUrl);
+
+        try {
+            const response = await getShopsInACity(cityId);
+            setShops(response?.data?.data || []);
+        } catch (error) {
+            console.error("Error fetching shops:", error);
+        }
+    }
+
+    const [shopId, setShopId] = useState(0);
+    const [shops, setShops] = useState([]);
+    const handleShopChange = async (event) => {
+        const shopId = event.target.value;
+        setShopId(shopId);
+        setInput((prevInput) => ({ ...prevInput, shopId }));
+        validateInput(event);
+
+        // const urlParams = new URLSearchParams(window.location.search);
+        // urlParams.set("shopId", shopId);
+        // const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        // window.history.replaceState({}, "", newUrl);
+    };
+
     useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const cityIds = searchParams.get("cityId");
+        // const searchParams = new URLSearchParams(window.location.search);
+        // const cityIds = searchParams.get("cityId");
+        // const shopIds = searchParams.get("shopId");
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });
@@ -120,13 +166,45 @@ function AddNewProducts() {
             setCities(citiesResponse.data.data);
         });
 
-        if (productId && cityIds) {
+        if (productId && cityId) {
             setProductId(parseInt(productId));
         }
 
+        if (cityId && shopId) {
+            getCategory(cityId, shopId).then((response) => {
+                const categories = response?.data?.data || [];
+                setCategories(categories);
+            });
+        }
         document.title =
             process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
-    }, [productId]);
+    }, [productId, cityId, shopId]);
+
+    const [categoryId, setCategoryId] = useState(0);
+    const [subCategoryId, setSubcategoryId] = useState(0);
+
+    const handleCategoryChange = async (event) => {
+        const categoryId = event.target.value;
+        setCategoryId(categoryId);
+        if (categoryId) {
+            const subCats = await getSubCategory(cityId, shopId, categoryId);
+            const subcatList = {};
+            subCats?.data.data.forEach((subCat) => {
+                subcatList[subCat.id] = subCat.name;
+            });
+            setSubCategories(subcatList);
+        }
+        setInput((prevInput) => ({ ...prevInput, categoryId }));
+        setSubcategoryId(null);
+        validateInput(event);
+    };
+
+    const handleSubcategoryChange = (event) => {
+        const subCategoryId = event.target.value;
+        setSubcategoryId(subCategoryId);
+        setInput((prevInput) => ({ ...prevInput, subCategoryId }));
+        validateInput(event);
+    };
 
     const [description, setDescription] = useState("");
     const onDescriptionChange = (newContent) => {
@@ -179,6 +257,20 @@ function AddNewProducts() {
             case "shopId":
                 if (!value) {
                     return t("pleaseSelectShop");
+                } else {
+                    return "";
+                }
+
+            case "categoryId":
+                if (!parseInt(value)) {
+                    return t("pleaseSelectCategory");
+                } else {
+                    return "";
+                }
+
+            case "subCategoryId":
+                if (!value) {
+                    return t("pleaseSelectSubcategory");
                 } else {
                     return "";
                 }
@@ -255,44 +347,6 @@ function AddNewProducts() {
         setError((prevState) => {
             return { ...prevState, [name]: errorMessage };
         });
-    };
-
-    const [cityId, setCityId] = useState(0);
-    const [cities, setCities] = useState([]);
-    async function onCityChange(e) {
-        const cityId = e.target.value;
-        setCityId(cityId);
-        setInput((prev) => ({
-            ...prev,
-            cityId: cityId,
-        }));
-        validateInput(e);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("cityId", cityId);
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-
-        try {
-            const response = await getShopsInACity(cityId);
-            setShops(response?.data?.data || []);
-        } catch (error) {
-            console.error("Error fetching shops:", error);
-        }
-    }
-
-    const [shopId, setShopId] = useState(0);
-    const [shops, setShops] = useState([]);
-    const handleShopChange = async (event) => {
-        const shopId = event.target.value;
-        setShopId(shopId);
-        setInput((prevInput) => ({ ...prevInput, shopId }));
-        validateInput(event);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("shopId", shopId);
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
     };
 
     function handleDragEnter(e) {
@@ -448,8 +502,8 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                removeImage: true,
-                logo: null,
+                // removeImage: true,
+                // logo: null,
             }));
         }
         setImage((prevImages) => {
@@ -592,6 +646,101 @@ function AddNewProducts() {
                         </>
                     )}
 
+                    {shopId !== 0 && (
+                        <>
+                            {categories.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="dropdown"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("category")} *
+                                    </label>
+                                    <select
+                                        type="categoryId"
+                                        id="categoryId"
+                                        name="categoryId"
+                                        value={categoryId || 0}
+                                        onChange={handleCategoryChange}
+                                        required
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option className="font-sans" value={0} key={0}>
+                                            {t("chooseOneCategory")}
+                                        </option>
+                                        {categories.map((category) => {
+                                            return (
+                                                <option className="font-sans" value={category.id} key={category.id}>
+                                                    {t(category.name)}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.categoryId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.categoryId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noCategoriesAvailableForThisCity")}
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {(categoryId !== 0 && Object.keys(subCategories).length > 0) && (
+                        <>
+                            {subCategories.length !== 0 ? (
+                                <div className="relative mb-0">
+                                    <label
+                                        htmlFor="subCategoryId"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("subCategory")} *
+                                    </label>
+                                    <select
+                                        type="subCategoryId"
+                                        id="subCategoryId"
+                                        name="subCategoryId"
+                                        value={subCategoryId || 0}
+                                        onChange={handleSubcategoryChange}
+                                        onBlur={validateInput}
+                                        required
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option className="font-sans" value={0} key={0}>
+                                            {t("chooseOneSubCategory")}
+                                        </option>
+                                        {Object.keys(subCategories).map((key) => {
+                                            return (
+                                                <option className="font-sans" value={key} key={key}>
+                                                    {t(subCategories[key])}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.subCategoryId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.selectedSubCategory}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noSubCategoriesAvailableForThisCity")}
+                                </div>
+                            )}
+                        </>
+                    )}
+
                     <div className="relative mb-4 grid grid-cols-2 gap-4">
                         <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                             <label
@@ -614,10 +763,10 @@ function AddNewProducts() {
                             <div
                                 className="h-[24px] text-red-600"
                                 style={{
-                                    visibility: error.title ? "visible" : "hidden",
+                                    visibility: error.price ? "visible" : "hidden",
                                 }}
                             >
-                                {error.sellingAllert}
+                                {error.price}
                             </div>
                         </div>
                         <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">

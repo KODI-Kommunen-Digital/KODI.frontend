@@ -11,6 +11,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     officialnotification: 16,
     appointmentBooking: 18,
     defectReporter: 19,
+    WorthSeeing: 26,
   };
 
   const categoryById = {
@@ -25,6 +26,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     16: "officialnotification",
     18: "appointmentBooking",
     19: "defectReporter",
+    26: "WorthSeeing",
   };
 
   module.exports = { categoryByName, categoryById };
@@ -47,6 +49,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     freetimeAndTourisms: 17,
     appointmentBooking: 18,
     defectReporter: 19,
+    WorthSeeing: 26,
   };
   const categoryById = {
     1: "news", // Nachricht
@@ -66,6 +69,7 @@ if (process.env.REACT_APP_REGION_NAME === "WALDI") {
     17: "freetimeAndTourisms", // Freizeit und Tourismus
     18: "appointmentBooking",
     19: "defectReporter",
+    26: "WorthSeeing",
   };
   module.exports = { categoryByName, categoryById };
 }

@@ -39,14 +39,20 @@ const OrdersSold = () => {
         for (let day = 1; day <= daysInMonth; day++) {
             const currentDate = new Date();
             const isToday = year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate();
+            const isFutureDate = new Date(year, month, day) > currentDate;
             const isSelectedDate =
                 orderStartDate === `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` ||
                 orderEndDate === `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
             calendarDays.push(
                 <div
                     key={day}
-                    className={`text-sm font-bold h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none ${isSelectedDate ? 'bg-black text-white' : isToday ? 'bg-red-600 text-white' : ''}`}
-                    onClick={() => handleDateSelect(year, month, day)}
+                    className={`text-sm font-bold h-10 w-10 rounded-full grid place-content-center transition-all cursor-pointer select-none 
+                                ${isSelectedDate ? 'bg-black text-white' :
+                            isToday ? 'bg-red-600 text-white' :
+                                isFutureDate ? 'text-slate-400 cursor-not-allowed' :
+                                    'hover:bg-black hover:text-white'}`}
+                    onClick={() => !isFutureDate && handleDateSelect(year, month, day)}
                 >
                     {day}
                 </div>
