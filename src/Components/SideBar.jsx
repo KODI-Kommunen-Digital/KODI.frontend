@@ -115,11 +115,21 @@ function SideBar() {
         const roleResponse = await getUserRoleContainer();
         const roles = roleResponse.data.data;
 
-        if (roles.includes(101) && !roles.includes(102)) {
+        // if (roles.includes(101) && !roles.includes(102)) {
+        //   setIsOwner(true);
+        // } else if (roles.includes(102) && !roles.includes(101)) {
+        //   setIsSeller(true);
+        // } else if (roles.includes(101) && roles.includes(102)) {
+        //   setIsOwner(true);
+        //   setIsSeller(true);
+        // }
+        if (roles.includes(101)) {
           setIsOwner(true);
-        } else if (roles.includes(102) && !roles.includes(101)) {
+        }
+        if (roles.includes(102)) {
           setIsSeller(true);
-        } else if (roles.includes(101) && roles.includes(102)) {
+        }
+        if (roles.includes(101) && roles.includes(102)) {
           setIsOwner(true);
           setIsSeller(true);
         }
