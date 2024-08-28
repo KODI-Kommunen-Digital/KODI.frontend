@@ -1,71 +1,87 @@
-if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-  const categoryByName = {
-    news: 1,
-    events: 3,
-    clubs: 4,
-    searchOffer: 6,
-    companyPortaits: 10,
-    eatOrDrink: 13,
-    rathaus: 14,
-    newsletter: 15,
-    officialnotification: 16,
-    appointmentBooking: 18,
-    defectReporter: 19,
-  };
+const categoryByName = { // Used in AllListings page only
+  news: 1,
+  roadWorksOrTraffic: 2,
+  events: 3,
+  clubs: 4,
+  regionalProducts: 5,
+  offerOrSearch: 6,
+  newCitizenInfo: 7,
+  defectReport: 8,
+  lostAndFound: 9,
+  companyPortraits: 10,
+  carpoolingOrPublicTransport: 11,
+  offers: 12,
+  eatOrDrink: 13,
+  rathaus: 14,
+  newsletter: 15,
+  officialnotification: 16,
+  freetimeAndTourisms: 17,
+  appointmentBooking: 18,
+  defectReporter: 19,
+  applicants: 20,
+  energiedienstleistungen: 21,
+  internetOfThings: 22,
+  kommunaleWärmeplanung: 23,
+  wasserstoff: 24,
+  polls: 25,
+  worthSeeing: 26,
+  dekarbonisierung: 27,
+  erzeugung: 28,
+  handel: 29,
+  fernwärme: 30,
+  smartCity: 31,
+  dynamischerTarif: 32,
+  mobilität: 33,
+  integration: 34,
+  digitaleBürgerservices: 35,
+  tourismus: 36,
+  digitaleStadtplanung: 37,
+  wirtschaftsförderung: 38,
+  abfallwirtschaft: 39,
+  bürgerbeteiligung: 40,
+};
 
-  const categoryById = {
-    1: "news", // Nachricht
-    3: "events", // Veranstaltungen
-    4: "clubs", // Vereine
-    6: "searchOffer", // Ich biete / suche
-    10: "companyPortaits", // Firmenportraits
-    13: "eatOrDrink", // Essen / Trinken
-    14: "rathaus",
-    15: "newsletter",
-    16: "officialnotification",
-    18: "appointmentBooking",
-    19: "defectReporter",
-  };
+const categoryById = {
+  1: "news",
+  2: "roadWorksOrTraffic",
+  3: "events",
+  4: "clubs",
+  5: "regionalProducts",
+  6: "offerOrSearch",
+  7: "newCitizenInfo",
+  8: "defectReport",
+  9: "lostAndFound",
+  10: "companyPortraits",
+  11: "carpoolingOrPublicTransport",
+  12: "offers",
+  13: "eatOrDrink",
+  14: "rathaus",
+  15: "newsletter",
+  16: "officialnotification",
+  17: "freetimeAndTourisms",
+  18: "appointmentBooking",
+  19: "defectReporter",
+  20: "applicants",
+  21: "energiedienstleistungen",
+  22: "internetOfThings",
+  23: "kommunaleWärmeplanung",
+  24: "wasserstoff",
+  25: "polls",
+  26: "worthSeeing",
+  27: "dekarbonisierung",
+  28: "erzeugung",
+  29: "handel",
+  30: "fernwärme",
+  31: "smartCity",
+  32: "dynamischerTarif",
+  33: "mobilität",
+  34: "integration",
+  35: "digitaleBürgerservices",
+  36: "tourismus",
+  37: "digitaleStadtplanung",
+  38: "wirtschaftsförderung",
+  39: "abfallwirtschaft",
+  40: "bürgerbeteiligung",
+};
 
-  module.exports = { categoryByName, categoryById };
-} else {
-  const categoryByName = {
-    news: 1,
-    events: 3,
-    clubs: 4,
-    regionalProducts: 5,
-    offerSearch: 6,
-    newCitizenInfo: 7,
-    lostAndFound: 9,
-    companyPortraits: 10,
-    carpoolingPublicTransport: 11,
-    offers: 12,
-    eatOrDrink: 13,
-    rathaus: 14,
-    newsletter: 15,
-    officialnotification: 16,
-    freetimeAndTourisms: 17,
-    appointmentBooking: 18,
-    defectReporter: 19,
-  };
-  const categoryById = {
-    1: "news", // Nachricht
-    3: "events", // Veranstaltungen
-    4: "clubs", // Vereine
-    5: "regionalProducts", // Regionale Produkte
-    6: "offerSearch", // Ich biete / suche
-    7: "newCitizenInfo", // Neubürgerinfos
-    9: "lostAndFound", // Fundbüro
-    10: "companyPortraits", // Firmenportraits
-    11: "carpoolingPublicTransport", // Mitfahrbank / ÖPNV
-    12: "offers", // Angebote
-    13: "eatOrDrink", // Essen / Trinken
-    14: "rathaus",
-    15: "newsletter",
-    16: "officialnotification",
-    17: "freetimeAndTourisms", // Freizeit und Tourismus
-    18: "appointmentBooking",
-    19: "defectReporter",
-  };
-  module.exports = { categoryByName, categoryById };
-}
+module.exports = { categoryByName, categoryById };

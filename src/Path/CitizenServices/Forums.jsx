@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import { useNavigate } from "react-router-dom";
 import RegionColors from "../Components/RegionColors";
 

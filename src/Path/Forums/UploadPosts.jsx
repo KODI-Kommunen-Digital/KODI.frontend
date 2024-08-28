@@ -14,7 +14,7 @@ import {
 	updateForumPosts,
 } from "../../Services/forumsApi";
 
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormData from "form-data";
 

@@ -14,7 +14,7 @@ import {
   deleteListingImage,
 } from "../Services/listingsApi";
 import { getProfile } from "../Services/usersApi";
-import { getCities } from "../Services/cities";
+import { getCities } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";

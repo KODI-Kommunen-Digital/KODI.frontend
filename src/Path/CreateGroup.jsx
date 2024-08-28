@@ -13,7 +13,7 @@ import {
 	deleteForumImage,
 } from "../Services/forumsApi";
 
-import { getCities } from "../Services/cities";
+import { getCities } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 

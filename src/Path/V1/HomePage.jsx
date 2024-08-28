@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../Components/SearchBar";
 import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
@@ -37,6 +37,7 @@ const HomePage = () => {
     getCities().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
     });
+
     const cityId = parseInt(urlParams.get("cityId"));
     if (cityId) {
       setCityId(cityId);
