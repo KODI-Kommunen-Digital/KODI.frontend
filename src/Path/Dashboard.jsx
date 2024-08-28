@@ -320,34 +320,38 @@ const Dashboard = () => {
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
-        <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+        <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-18">
           <div className="w-full">
             <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === null ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("allListings")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >

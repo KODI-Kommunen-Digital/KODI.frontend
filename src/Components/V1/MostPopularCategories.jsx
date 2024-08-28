@@ -35,8 +35,8 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                     viewBox="0 0 448 512"
                                     className={`h-8 w-40 items-center justify-center m-auto text-center 
                                     ${categoryIcon.categoryName === 'companyPortaits' ? 'ml-1' : ''} 
-                                    ${['offers', 'carpoolingPublicTransport', 'newCitizenInfo', 'lostAndFound'].includes(categoryIcon.categoryName) ? 'mr-1' : ''}
-                                    ${['regionalProducts', 'clubs'].includes(categoryIcon.categoryName) ? 'mr-2' : ''}`}
+                                    ${['offers', 'carpoolingPublicTransport', 'newCitizenInfo', 'News', 'WorthSeeing'].includes(categoryIcon.categoryName) ? 'mr-1' : ''}
+                                    ${['regionalProducts', 'clubs', 'lostAndFound'].includes(categoryIcon.categoryName) ? 'mr-2' : ''}`}
                                 >
                                     <path d={categoryIcon.svgIcon} />
                                 </svg>

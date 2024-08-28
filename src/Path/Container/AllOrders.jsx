@@ -179,27 +179,27 @@ function AllSellers() {
                                                 <td className="px-6 py-4 text-center font-bold text-gray-500"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    {order.id.toString().padStart(3, '0')}
+                                                    {order.id ? order.id.toString().padStart(3, '0') : "-"}
                                                 </td>
                                                 <td className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    {order.user.username}
+                                                    {order.user?.username || "-"}
                                                 </td>
                                                 <td className="px-6 py-4 text-center font-bold text-gray-500"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    € {order.amount.toFixed(2)}
+                                                    {order.amount != null ? `€ ${order.amount.toFixed(2)}` : "-"}
                                                 </td>
                                                 <td className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    {new Date(order.createdAt).toLocaleString('de')}
+                                                    {order.createdAt ? new Date(order.createdAt).toLocaleString('de') : "-"}
                                                 </td>
                                                 <td className="px-6 py-4 text-center font-bold text-gray-500"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    € {order.discount.toFixed(2)}
+                                                    {order.discount != null ? `€ ${order.discount.toFixed(2)}` : "-"}
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center justify-center">

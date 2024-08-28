@@ -36,6 +36,14 @@ export async function uploadImage(formData, cityId, storeId, productId) {
     );
 }
 
+export async function getSubCategory(cityId, storeId, categoryId) {
+    return axios.get(`/v1/cities/${cityId}/store/${storeId}/category/${categoryId}/subcategories`);
+}
+
+export async function getCategory(cityId, storeId) {
+    return axios.get(`/v1/cities/${cityId}/store/${storeId}/categories`);
+}
+
 export async function deleteImage(cityId, storeId, productId) {
     return axios.delete(`/v1/cities/${cityId}/store/${storeId}/product/${productId}/imageDelete`);
 }
