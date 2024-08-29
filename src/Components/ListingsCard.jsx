@@ -82,7 +82,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             }
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+              e.target.src = listing.appointmentId ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
             }}
           />
         ) : (

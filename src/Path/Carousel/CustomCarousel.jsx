@@ -55,7 +55,7 @@ const CustomCarousel = (props) => {
         }
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = props.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+          e.target.src = props.appointmentId ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
         }}
         alt={`image ${activeIndex}`}
         className={`w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain`}
