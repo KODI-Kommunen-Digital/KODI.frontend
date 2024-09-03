@@ -21,9 +21,9 @@ const createInstance = (baseURL) => {
 			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
 			if (process.env.REACT_APP_LANG === 'en') {
-				alert("You have been logged out due to inactivity. Please log in again.");
+				alert("You have been logged out. Please log in again.");
 			} else {
-				alert("Sie wurden aufgrund von Inaktivität abgemeldet. Bitte melden Sie sich erneut an.");
+				alert("Sie wurden abgemeldet. Bitte loggen Sie sich erneut ein.");
 			}
 			window.location.href = "/login";
 		} catch (error) {
