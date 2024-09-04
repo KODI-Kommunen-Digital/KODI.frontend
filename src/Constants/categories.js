@@ -39,6 +39,8 @@ const categoryByName = { // Used in AllListings page only
   wirtschaftsförderung: 38,
   abfallwirtschaft: 39,
   bürgerbeteiligung: 40,
+  highlights: 41,
+  project: 42,
 };
 
 const categoryById = {
@@ -82,6 +84,8 @@ const categoryById = {
   38: "wirtschaftsförderung",
   39: "abfallwirtschaft",
   40: "bürgerbeteiligung",
+  41: "highlights",
+  42: "project",
 };
 
 module.exports = { categoryByName, categoryById };
