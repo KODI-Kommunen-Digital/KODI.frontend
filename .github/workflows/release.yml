@@ -24,26 +24,27 @@ jobs:
       - name: Set Projects to Deploy
         id: set-projects
         run: |
-          if [ "${{ github.event.inputs.projects }}" == "all" ]; then
+          if [[ "${{ github.event.inputs.projects }}" == "all" ]]; then
             echo "ALL_PROJECTS=waldi,smartregionauf,ratingen" >> $GITHUB_ENV
           else
             echo "ALL_PROJECTS=${{ github.event.inputs.projects }}" >> $GITHUB_ENV
+          fi
 
       - name: Filter Projects to Deploy
         if: contains(env.ALL_PROJECTS, matrix.project)
         id: set-vars
         run: |
-          if [ "${{ matrix.project }}" == "waldi" ]; then
+          if [[ "${{ matrix.project }}" == "waldi" ]]; then
             echo "HOST=${{ secrets.WALDI_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.WALDI_USERNAME }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.WALDI_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.WALDI_APPDIR }}/Frontend" >> $GITHUB_ENV
-          elif [ "${{ matrix.project }}" == "smartregionauf" ]; then
+          elif [[ "${{ matrix.project }}" == "smartregionauf" ]]; then
             echo "HOST=${{ secrets.SMART_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.SMART_USERNAME }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.SMART_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.SMART_APPDIR }}/Frontend" >> $GITHUB_ENV
-          elif [ "${{ matrix.project }}" == "ratingen" ]; then
+          elif [[ "${{ matrix.project }}" == "ratingen" ]]; then
             echo "HOST=${{ secrets.RATINGEN_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.RATINGEN_USERNAME }}" >> $GITHUB_ENV
             echo "SSHKEY=${{ secrets.RATINGEN_PASSWORD }}" >> $GITHUB_ENV
