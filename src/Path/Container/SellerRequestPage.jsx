@@ -8,7 +8,7 @@ import "react-quill/dist/quill.snow.css";
 import Alert from "../../Components/Alert";
 import { createSellerAccount, getShopsInACity } from "../../Services/containerApi";
 import { getProfile } from "../../Services/usersApi";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 
 function SellerRequestPage() {
     const { t } = useTranslation();
