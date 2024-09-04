@@ -52,6 +52,7 @@ jobs:
           fi
 
       - name: Copy files via SSH
+        if: contains(env.ALL_PROJECTS, matrix.project)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ env.HOST }}
@@ -62,6 +63,7 @@ jobs:
           target: ${{ env.APPDIR }}
 
       - name: SSH to Server and run commands
+        if: contains(env.ALL_PROJECTS, matrix.project)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.HOST }}
