@@ -16,7 +16,7 @@ function AllSellers() {
     const [stores, setStores] = useState([]);
 
     const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
-        if (cityId && storeId) {
+        if (storeId) {
             getOrders(cityId, storeId, pageNumber).then((response) => {
                 setOrders(response.data.data);
             });
@@ -38,8 +38,24 @@ function AllSellers() {
     }, [fetchProducts, storeId, pageNumber]);
 
     const fetchStores = useCallback(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlStoreId = urlParams.get("storeId");
+
         getStores().then((response) => {
-            setStores(response.data.data);
+            const fetchedStores = response.data.data;
+            setStores(fetchedStores);
+
+            if (urlStoreId) {
+                const storeIdNumber = parseInt(urlStoreId, 10);
+                const selectedStore = fetchedStores.find(store => store.id === storeIdNumber);
+
+                if (selectedStore) {
+                    setStoreId(storeIdNumber);
+                    setPageNumber(1);
+
+                    fetchProducts(selectedStore.cityId, storeIdNumber, 1);
+                }
+            }
         });
     }, []);
 

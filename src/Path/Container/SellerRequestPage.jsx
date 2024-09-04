@@ -304,38 +304,49 @@ function SellerRequestPage() {
                     </div>
 
                     {cityId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("shop")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="shopId"
-                                name="shopId"
-                                value={shopId || 0}
-                                onChange={handleShopChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {shops.map((shop) => (
-                                    <option key={Number(shop.id)} value={Number(shop.id)}>
-                                        {shop.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.shopId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.shopId}
-                            </div>
-                        </div>
+                        <>
+                            {shops.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="title"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("shop")} *
+                                    </label>
+                                    <select
+                                        type="text"
+                                        id="shopId"
+                                        name="shopId"
+                                        value={shopId || 0}
+                                        onChange={handleShopChange}
+                                        autoComplete="country-name"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option value={0}>{t("select")}</option>
+                                        {shops.map((shop) => (
+                                            <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                {shop.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.shopId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.shopId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noShopsAvailableForThisCity")}</strong>
+                                    </span>
+                                </div>
+                            )}
+                        </>
                     )}
 
                     <div className="relative mb-4">
