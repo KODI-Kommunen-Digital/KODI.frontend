@@ -997,10 +997,10 @@ function UploadListings() {
   }
 
   return (
-    <section className="base-bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
