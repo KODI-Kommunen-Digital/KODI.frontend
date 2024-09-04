@@ -363,8 +363,11 @@ function CreateShelves() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-[24px] text-red-600">
-                                    {t("noShopsAvailableForThisCity")}
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noShopsAvailableForThisCity")}</strong>
+                                    </span>
                                 </div>
                             )}
                         </>
@@ -372,7 +375,7 @@ function CreateShelves() {
 
                     {shopId !== 0 && (
                         <>
-                            {shops.length !== 0 ? (
+                            {products.length !== 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -406,8 +409,11 @@ function CreateShelves() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-[24px] text-red-600">
-                                    {t("noProductAvailableForThisShop")}
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noProductAvailableForThisShop")}</strong>
+                                    </span>
                                 </div>
                             )}
                         </>
