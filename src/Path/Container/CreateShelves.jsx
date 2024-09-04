@@ -328,73 +328,89 @@ function CreateShelves() {
                     </div>
 
                     {cityId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("shop")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="shopId"
-                                name="shopId"
-                                value={shopId || 0}
-                                onChange={handleShopChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {shops.map((shop) => (
-                                    <option key={Number(shop.id)} value={Number(shop.id)}>
-                                        {shop.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.shopId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.shopId}
-                            </div>
-                        </div>
+                        <>
+                            {shops.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="title"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("shop")} *
+                                    </label>
+                                    <select
+                                        type="text"
+                                        id="shopId"
+                                        name="shopId"
+                                        value={shopId || 0}
+                                        onChange={handleShopChange}
+                                        autoComplete="country-name"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option value={0}>{t("select")}</option>
+                                        {shops.map((shop) => (
+                                            <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                {shop.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.shopId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.shopId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noShopsAvailableForThisCity")}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     {shopId !== 0 && (
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="title"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("product")} *
-                            </label>
-                            <select
-                                type="text"
-                                id="productId"
-                                name="productId"
-                                value={productId || 0}
-                                onChange={handleProductChange}
-                                autoComplete="country-name"
-                                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                            >
-                                <option value={0}>{t("select")}</option>
-                                {products.map((product) => (
-                                    <option key={Number(product.id)} value={Number(product.id)}>
-                                        {product.title}
-                                    </option>
-                                ))}
-                            </select>
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.productId ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.productId}
-                            </div>
-                        </div>
+                        <>
+                            {shops.length !== 0 ? (
+                                <div className="relative mb-4">
+                                    <label
+                                        htmlFor="title"
+                                        className="block text-sm font-medium text-gray-600"
+                                    >
+                                        {t("product")} *
+                                    </label>
+                                    <select
+                                        type="text"
+                                        id="productId"
+                                        name="productId"
+                                        value={productId || 0}
+                                        onChange={handleProductChange}
+                                        autoComplete="country-name"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option value={0}>{t("select")}</option>
+                                        {products.map((product) => (
+                                            <option key={Number(product.id)} value={Number(product.id)}>
+                                                {product.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{
+                                            visibility: error.productId ? "visible" : "hidden",
+                                        }}
+                                    >
+                                        {error.productId}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="h-[24px] text-red-600">
+                                    {t("noProductAvailableForThisShop")}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     <div className="relative mb-4">

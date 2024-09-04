@@ -16,7 +16,6 @@ function ProductStore() {
     const [products, setProducts] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
-    const [cityId, setCityId] = useState();
     const [stores, setStores] = useState([]);
 
     const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
@@ -76,8 +75,6 @@ function ProductStore() {
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
         if (selectedStore) {
-            const cityId = selectedStore.cityId;
-            setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1); // Reset page number when a new store is selected
 
@@ -85,12 +82,12 @@ function ProductStore() {
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProducts(cityId, storeId, 1, selectedStatus); // Reset to first page
+            fetchProducts(storeId, 1, selectedStatus); // Reset to first page
         }
     };
 
-    const handleViewDetailsClick = (cityId, storeId, productId) => {
-        navigate(`/OwnerScreen/ProductDetailsStore?cityId=${cityId}&storeId=${storeId}&productId=${productId}`);
+    const handleViewDetailsClick = (product) => {
+        navigate('/OwnerScreen/ProductDetailsStore', { state: { productDetails: product } });
     };
 
     const navigate = useNavigate();
@@ -316,7 +313,7 @@ function ProductStore() {
                                                     <div className="flex items-center justify-center">
                                                         <div
                                                             className="relative group inline-block"
-                                                            onClick={() => handleViewDetailsClick(cityId, storeId, product.id)}
+                                                            onClick={() => handleViewDetailsClick(product)}
                                                         >
                                                             <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
                                                             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">

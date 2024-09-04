@@ -151,14 +151,14 @@ function AllProductRequests() {
                                     >
                                         {t("inactive")}
                                     </div>
-                                    <div
+                                    {/* <div
                                         className={`${selectedStatus === statusByName.ChangeRequested ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                                         onClick={() => setSelectedStatus(statusByName.ChangeRequested)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("changeRequested")}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -172,7 +172,7 @@ function AllProductRequests() {
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
                                     <option value={statusByName.Inactive}>{t("inactive")}</option>
-                                    <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option>
+                                    {/* <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option> */}
                                 </select>
                             </div>
                         </div>

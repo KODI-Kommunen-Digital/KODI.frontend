@@ -1,31 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
-import { getProductById } from "../../Services/containerApi";
+import { useLocation } from 'react-router-dom';
 
 const ProductDetailsStore = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [product, setProduct] = useState(null);
 
-    const fetchProducts = useCallback((cityId, storeId, productId) => {
-        getProductById(cityId, storeId, productId).then((response) => {
-            setProduct(response.data.data);
-        });
-    }, []);
+    const location = useLocation();
+    const { productDetails } = location.state || {};
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cityId = parseInt(urlParams.get("cityId"));
-        const storeId = parseInt(urlParams.get("storeId"));
-        const productId = parseInt(urlParams.get("productId"));
-
-        if (cityId && storeId && productId) {
-            fetchProducts(cityId, storeId, productId);
+        if (productDetails) {
+            setProduct(productDetails);
         }
-    }, [fetchProducts]);
+    }, [productDetails]);
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">
