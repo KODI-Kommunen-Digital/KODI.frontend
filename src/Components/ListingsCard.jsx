@@ -20,7 +20,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
 
     let image = listing.logo;
 
-    if (listing.sourceId === listingSource.User) {
+    if (listing.sourceId === listingSource.USER_ENTRY) {
       image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
     }
 
@@ -97,7 +97,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
       <div className="px-2 border-t-8 border-slate-500">
         <div className="mt-5 px-2">
           <h2
-            className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
+            className="text-start font-bold text-slate-800 truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {listing.title}
