@@ -20,7 +20,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
 
     let image = listing.logo;
 
-    if (listing.sourceId === listingSource.User) {
+    if (listing.sourceId === listingSource.USER_ENTRY) {
       image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
     }
 
