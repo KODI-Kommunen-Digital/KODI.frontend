@@ -8,7 +8,7 @@ import {
   sortLatestFirst,
   sortOldestFirst,
 } from "../Services/helper";
-import { getCities } from "../Services/cities";
+import { getCities } from "../Services/citiesApi";
 import Footer from "../Components/Footer";
 import ListingsCard from "../Components/ListingsCard";
 import LoadingPage from "../Components/LoadingPage";

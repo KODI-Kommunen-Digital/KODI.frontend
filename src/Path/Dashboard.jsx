@@ -18,7 +18,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
-import { getCities } from "../Services/cities";
+import { getCities } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Dashboard = () => {

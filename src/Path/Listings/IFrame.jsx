@@ -4,7 +4,7 @@ import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import './HeidiListings.css'

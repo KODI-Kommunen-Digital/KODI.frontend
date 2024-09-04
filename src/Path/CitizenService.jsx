@@ -3,7 +3,7 @@ import HomePageNavBar from "../Components/V2/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../Components/Footer";
-import { getCities, getCitizenServices } from "../Services/cities";
+import { getCities, getCitizenServices } from "../Services/citiesApi";
 import LoadingPage from "../Components/LoadingPage";
 import RegionColors from "../Components/RegionColors";
 
