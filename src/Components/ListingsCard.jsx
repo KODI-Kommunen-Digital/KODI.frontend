@@ -16,6 +16,32 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     }
   };
 
+  const getImage = () => {
+
+    let image = listing.logo;
+
+    console.log("ashgdvsaghdvsahkdhasdgashds  a   " + image)
+
+    if (listing.sourceId === listingSource.USER_ENTRY) {
+      image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
+    }
+
+    // Check if the logo is from the img.ecmaps.de/remote/.jpg? domain
+    const isEcmapsDomain = image?.startsWith('img.ecmaps.de/remote/.jpg?');
+
+    if (isEcmapsDomain) {
+      // Extract the `url` parameter from the logo URL
+      const urlParams = new URLSearchParams(image.split('?')[1]);
+      const extractedUrl = urlParams.get('url');
+
+      if (extractedUrl) {
+        image = decodeURIComponent(extractedUrl);
+      }
+    }
+
+    return image;
+  };
+
   return (
     <div
       onClick={(e) => {
@@ -54,12 +80,11 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             alt="Listing"
             className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
             src={
-              listing.sourceId === 1
-                ? process.env.REACT_APP_BUCKET_HOST + listing.logo
-                : listing.logo
+              getImage()
             }
             onError={(e) => {
-              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+              e.target.onerror = null;
+              e.target.src = listing.appointmentId ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
             }}
           />
         ) : (
@@ -74,7 +99,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
       <div className="px-2 border-t-8 border-slate-500">
         <div className="mt-5 px-2">
           <h2
-            className="text-black title-font text-start text-xl font-semibold text-center font-sans truncate"
+            className="text-start font-bold text-slate-800 truncate"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {listing.title}
