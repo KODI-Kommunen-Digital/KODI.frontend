@@ -32,7 +32,4 @@ jobs:
           password: ${{ secrets.TEST_HOST_1_PASSWORD }}
           port: 22
           script: |
-            cd ${{ secrets.TEST_HOST_1_APPDIR }}/Frontend
-            npm install --production
-            npm run lint .
-            pm2 restart API
+            ./deployscript/testing/frontend.sh
