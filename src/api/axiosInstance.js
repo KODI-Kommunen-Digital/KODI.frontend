@@ -20,6 +20,12 @@ const createInstance = (baseURL) => {
 			window.sessionStorage.removeItem("refreshToken");
 			window.sessionStorage.removeItem("userId");
 			window.sessionStorage.removeItem("selectedItem");
+			if (process.env.REACT_APP_LANG === 'en') {
+				alert("You have been logged out. Please log in again.");
+			} else {
+				alert("Sie wurden abgemeldet. Bitte loggen Sie sich erneut ein.");
+			}
+			window.location.href = "/login";
 		} catch (error) {
 			return error;
 		}
@@ -53,7 +59,11 @@ const createInstance = (baseURL) => {
 		async (error) => {
 			const originalRequest = error.config;
 			if (error.response.status === 401) {
+				console.log(originalRequest.url)
 				// If the response status is 401 (Unauthorized), attempt to refresh the access token
+				if (originalRequest.url.includes('/login')) {
+					return Promise.reject(error);
+				}
 				if (!originalRequest._retry) {
 					originalRequest._retry = true;
 					try {

@@ -22,18 +22,40 @@ const CustomCarousel = (props) => {
         (prevIndex - 1 + sortedImageList.length) % sortedImageList.length
     );
   };
+  const getImage = () => {
+
+    let image = sortedImageList[activeIndex]?.logo;
+
+    if (props.sourceId === source.User) {
+      image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
+    }
+
+    // Check if the logo is from the img.ecmaps.de/remote/.jpg? domain
+    const isEcmapsDomain = image?.startsWith('img.ecmaps.de/remote/.jpg?');
+
+    if (isEcmapsDomain) {
+      // Extract the `url` parameter from the logo URL
+      const urlParams = new URLSearchParams(image.split('?')[1]);
+      const extractedUrl = urlParams.get('url');
+
+      if (extractedUrl) {
+        image = decodeURIComponent(extractedUrl);
+      }
+    }
+
+    return image;
+  };
+
 
   const mainImageComponent = (
     <div className={`aspect-w-16 aspect-h-9 px-0 py-0`}>
       <img
         src={
-          props.sourceId === source.User
-            ? process.env.REACT_APP_BUCKET_HOST +
-            sortedImageList[activeIndex]?.logo // uploaded image
-            : sortedImageList[activeIndex]?.logo // from drive
+          getImage()
         }
         onError={(e) => {
-          e.target.src = props.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+          e.target.onerror = null;
+          e.target.src = props.appointmentId ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
         }}
         alt={`image ${activeIndex}`}
         className={`w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain`}
