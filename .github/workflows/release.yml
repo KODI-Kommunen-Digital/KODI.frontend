@@ -1,0 +1,99 @@
+name: Deploy Draft Release on Production
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Current path
+        run: pwd
+
+      # - name: Copy files via SSH on Waldi Server
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.WALDI_HOST_NAME }}
+      #     username: ${{ secrets.WALDI_USERNAME }}
+      #     password: ${{ secrets.WALDI_PASSWORD }}
+      #     source: "*"
+      #     target: ${{ secrets.WALDI_APPDIR }}
+
+      # - name: SSH to Waldi Server and run commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.WALDI_HOST_NAME }}
+      #     username: ${{ secrets.WALDI_USERNAME }}
+      #     password: ${{ secrets.WALDI_PASSWORD }}
+      #     script: |
+      #       cd ${{ secrets.WALDI_APPDIR }}
+      #       npm install --production
+      #       npm run lint .
+      #       pm2 restart API
+
+      # - name: Copy files via SSH on SmartRegionAuf Server
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SMART_HOST_NAME }}
+      #     username: ${{ secrets.SMART_USERNAME }}
+      #     password: ${{ secrets.SMART_PASSWORD }}
+      #     source: "*"
+      #     target: ${{ secrets.SMART_APPDIR }}
+
+      # - name: SSH to SmartRegionAuf Server and run commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SMART_HOST_NAME }}
+      #     username: ${{ secrets.SMART_USERNAME }}
+      #     password: ${{ secrets.SMART_PASSWORD }}
+      #     script: |
+      #       cd ${{ secrets.SMART_APPDIR }}
+      #       npm install --production
+      #       npm run lint .
+      #       pm2 restart SmaraufBackend
+
+      # - name: Copy files via SSH on Geseke Server
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.GESEKE_HOST_NAME }}
+      #     username: ${{ secrets.GESEKE_USERNAME }}
+      #     key: ${{ secrets.GESEKE_SSHKEY }}
+      #     source: "*"
+      #     target: ${{ secrets.GESEKE_APPDIR }}
+
+      # - name: SSH to Geseke Server and run commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.GESEKE_HOST_NAME }}
+      #     username: ${{ secrets.GESEKE_USERNAME }}
+      #     key: ${{ secrets.GESEKE_SSHKEY }}
+      #     script: |
+      #       cd ${{ secrets.GESEKE_APPDIR }}
+      #       /root/.nvm/versions/node/v18.18.2/bin/npm install --production
+      #       /root/.nvm/versions/node/v18.18.2/bin/npm run lint .
+      #       /root/.nvm/versions/node/v18.18.2/bin/pm2 restart API
+      - name: Copy files via SSH on RATINGEN Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.RATINGEN_HOST_NAME }}
+          username: ${{ secrets.RATINGEN_USERNAME }}
+          password: ${{ secrets.RATINGEN_PASSWORD }}
+          source: "*"
+          target: ${{ secrets.RATINGEN_APPDIR }}
+
+      - name: SSH to RATINGEN Server and run commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.RATINGEN_HOST_NAME }}
+          username: ${{ secrets.RATINGEN_USERNAME }}
+          password: ${{ secrets.RATINGEN_PASSWORD }}
+          script: |
+            cd ${{ secrets.RATINGEN_APPDIR }}/Frontend
+            /root/.nvm/versions/node/v18.18.2/bin/npm install --production
+            /root/.nvm/versions/node/v18.18.2/bin/npm run lint .
+            /root/.nvm/versions/node/v18.18.2/bin/npm run build
+            /root/.nvm/versions/node/v18.18.2/bin/pm2 restart WEB
