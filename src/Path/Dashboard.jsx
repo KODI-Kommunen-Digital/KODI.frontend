@@ -19,6 +19,7 @@ import { getCategory } from "../Services/CategoryApi";
 import { getCities } from "../Services/cities";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
+import { getCities } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Dashboard = () => {

@@ -3,7 +3,7 @@ import STYLEIMAGE from "../assets/styleimage.png";
 import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getCities } from "../Services/cities";
+import { getCities } from "../Services/citiesApi";
 
 function UploadContribution() {
     const { t } = useTranslation();

@@ -9,7 +9,7 @@ import {
   createMemberRequest,
   cancelMemberRequest,
 } from "../../Services/forumsApi";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import { statusByName } from "../../Constants/forumStatus";
 import RegionColors from "../../Components/RegionColors";
