@@ -47,7 +47,7 @@ jobs:
           elif [[ "${{ matrix.project }}" == "ratingen" ]]; then
             echo "HOST=${{ secrets.RATINGEN_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.RATINGEN_USERNAME }}" >> $GITHUB_ENV
-            echo "SSHKEY=${{ secrets.RATINGEN_PASSWORD }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.RATINGEN_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.RATINGEN_APPDIR }}/Frontend" >> $GITHUB_ENV
           fi
 
