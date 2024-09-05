@@ -6,6 +6,7 @@ import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
+import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 
 function AllProductRequests() {
     window.scrollTo(0, 0);
@@ -297,10 +298,11 @@ function AllProductRequests() {
                                                                 ? process.env.REACT_APP_BUCKET_HOST +
                                                                 product.productImages[0]
                                                                 : process.env.REACT_APP_BUCKET_HOST +
-                                                                "admin/DefaultForum.jpeg"
+                                                                "admin/Product/ContainerDefaultImage.jpeg"
                                                         }
-                                                        alt="avatar"
-                                                    />
+                                                        onError={(e) => {
+                                                            e.target.src = CONTAINERIMAGE;
+                                                        }} />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
                                                             className="text-gray-500 font-bold truncate"

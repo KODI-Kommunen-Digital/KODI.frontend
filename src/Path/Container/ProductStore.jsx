@@ -258,7 +258,7 @@ function ProductStore() {
                                                                 ? process.env.REACT_APP_BUCKET_HOST +
                                                                 product.productImages[0]
                                                                 : process.env.REACT_APP_BUCKET_HOST +
-                                                                "admin/DefaultForum.jpeg"
+                                                                "admin/Product/ContainerDefaultImage.jpeg"
                                                         }
                                                         onError={(e) => {
                                                             e.target.src = CONTAINERIMAGE; // Set default image if loading fails

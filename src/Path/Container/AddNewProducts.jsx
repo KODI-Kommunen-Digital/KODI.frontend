@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { getProfile } from "../../Services/usersApi";
-import { getCities } from "../../Services/cities";
+import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";

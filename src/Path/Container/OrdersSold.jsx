@@ -230,7 +230,7 @@ const OrdersSold = () => {
                                                                     ? process.env.REACT_APP_BUCKET_HOST +
                                                                     products.image
                                                                     : process.env.REACT_APP_BUCKET_HOST +
-                                                                    "admin/DefaultForum.jpeg"
+                                                                    "admin/Product/ContainerDefaultImage.jpeg"
                                                             }
                                                             onClick={() =>
                                                                 navigateTo(

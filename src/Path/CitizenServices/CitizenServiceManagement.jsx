@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import { useTranslation } from "react-i18next";
 import Footer from "../../Components/Footer";
-import { getcitizenServiceData, getCities, getCitizenServices } from "../../Services/cities";
+import { getcitizenServiceData, getCities, getCitizenServices } from "../../Services/citiesApi";
 
 const CitizenServiceManagement = () => {
 	window.scrollTo(0, 0);
