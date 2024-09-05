@@ -38,8 +38,15 @@ const ProductDetailsStore = () => {
                                     </p>
                                     <div className="md:flex mb-6">
                                         <div className="px-4 md:w-1/2">
-                                            <img className="w-full h-full object-cover" src={product.productImages && product.productImages.length > 0 ? process.env.REACT_APP_BUCKET_HOST +
-                                                product.productImages[0] : CONTAINERIMAGE} />
+                                            <img className="w-full h-full object-cover"
+                                                src={product.productImages &&
+                                                    product.productImages.length > 0
+                                                    ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0] : process.env.REACT_APP_BUCKET_HOST +
+                                                    "admin/Product/ContainerDefaultImage.jpeg"
+                                                }
+                                                onError={(e) => {
+                                                    e.target.src = CONTAINERIMAGE;
+                                                }} />
                                         </div>
 
                                         <div className="px-4 md:w-1/2">

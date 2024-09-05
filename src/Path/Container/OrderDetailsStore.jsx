@@ -44,9 +44,12 @@ const OrderDetailsStore = () => {
                                                         productItem.product.productImages &&
                                                             productItem.product.productImages.length > 0
                                                             ? productItem.product.productImages[0]
-                                                            : CONTAINERIMAGE
+                                                            : process.env.REACT_APP_BUCKET_HOST +
+                                                            "admin/Product/ContainerDefaultImage.jpeg"
                                                     }
-                                                    alt={productItem.product.title}
+                                                    onError={(e) => {
+                                                        e.target.src = CONTAINERIMAGE;
+                                                    }}
                                                 />
                                             </div>
                                             <div className="px-4">

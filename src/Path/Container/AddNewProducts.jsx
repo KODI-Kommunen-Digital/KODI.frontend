@@ -639,8 +639,11 @@ function AddNewProducts() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-[24px] text-red-600">
-                                    {t("noShopsAvailableForThisCity")}
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noShopsAvailableForThisCity")}</strong>
+                                    </span>
                                 </div>
                             )}
                         </>
@@ -686,8 +689,11 @@ function AddNewProducts() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-[24px] text-red-600">
-                                    {t("noCategoriesAvailableForThisCity")}
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noCategoriesAvailableForThisCity")}</strong>
+                                    </span>
                                 </div>
                             )}
                         </>
@@ -734,8 +740,11 @@ function AddNewProducts() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-[24px] text-red-600">
-                                    {t("noSubCategoriesAvailableForThisCity")}
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                                    role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noSubCategoriesAvailableForThisCity")}</strong>
+                                    </span>
                                 </div>
                             )}
                         </>
