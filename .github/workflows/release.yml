@@ -159,5 +159,4 @@ jobs:
             cd ${{ env.APPDIR }}
             npm install --production
             npm run lint .
-            npm run build
-            pm2 restart ${{ env.PROCESS_NAME  || 'WEB'}}
+            npm run deploy
