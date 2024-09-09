@@ -145,7 +145,7 @@ jobs:
           password: ${{ env.PASSWORD || '' }}
           key: ${{ env.SSHKEY || '' }}
           source: "*"
-          target: ${{ env.APPDIR }}/Frontend
+          target: ${{ env.APPDIR }}
 
       - name: SSH to Server and run commands
         if: contains(env.ALL_PROJECTS, matrix.project)
@@ -157,6 +157,7 @@ jobs:
           key: ${{ env.SSHKEY || '' }}
           script: |
             cd ${{ env.APPDIR }}
+            git pull
             npm install --production
             npm run lint .
             npm run deploy
