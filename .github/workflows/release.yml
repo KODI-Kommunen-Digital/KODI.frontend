@@ -146,7 +146,9 @@ jobs:
           key: ${{ env.SSHKEY || '' }}
           script: |
             cd ${{ env.APPDIR }}
-            git pull
+            git checkout -f main
+            git reset --hard
+            git pull || { echo "Git pull failed"; exit 1; }
             npm install --production
             npm run lint .
             npm run deploy
