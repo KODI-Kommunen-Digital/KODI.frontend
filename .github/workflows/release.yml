@@ -16,7 +16,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ["waldi", "smartregionauf", "ratingen"]
+        project:
+          [
+            "waldi",
+            "smartregionauf",
+            "geseke",
+            "ratingen",
+            "hivada",
+            "coburg",
+            "salzkotten",
+            "troisdorf",
+            "wunsiedel",
+            "hasslachtalMitwitz",
+            "hasslachtalPressig",
+            "hasslachtalSchneckenlohe",
+            "hasslachtalStockheim",
+            "einbeck",
+          ]
 
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +41,7 @@ jobs:
         id: set-projects
         run: |
           if [[ "${{ github.event.inputs.projects }}" == "all" ]]; then
-            echo "ALL_PROJECTS=waldi,smartregionauf,ratingen" >> $GITHUB_ENV
+            echo "ALL_PROJECTS=waldi,smartregionauf,ratingen,geseke,hivada,coburg,salzkotten,troisdorf,wunsiedel,hasslachtalMitwitz,hasslachtalPressig,hasslachtalSchneckenlohe,hasslachtalStockheim,einbeck" >> $GITHUB_ENV
           else
             echo "ALL_PROJECTS=${{ github.event.inputs.projects }}" >> $GITHUB_ENV
           fi
@@ -39,16 +55,85 @@ jobs:
             echo "USERNAME=${{ secrets.WALDI_USERNAME }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.WALDI_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.WALDI_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.WALDI_PROCESS_NAME}}" >> $GITHUB_ENV
           elif [[ "${{ matrix.project }}" == "smartregionauf" ]]; then
             echo "HOST=${{ secrets.SMART_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.SMART_USERNAME }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.SMART_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.SMART_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.SMART_PROCESS_NAME}}" >> $GITHUB_ENV
           elif [[ "${{ matrix.project }}" == "ratingen" ]]; then
             echo "HOST=${{ secrets.RATINGEN_HOST_NAME }}" >> $GITHUB_ENV
             echo "USERNAME=${{ secrets.RATINGEN_USERNAME }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.RATINGEN_PASSWORD }}" >> $GITHUB_ENV
             echo "APPDIR=${{ secrets.RATINGEN_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.RATINGEN_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "geseke" ]]; then
+            echo "HOST=${{ secrets.GESEKE_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.GESEKE_USERNAME }}" >> $GITHUB_ENV
+            echo "SSHKEY=${{ secrets.GESEKE_SSHKEY }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.GESEKE_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.GESEKE_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "hivada" ]]; then
+            echo "HOST=${{ secrets.HIVADA_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.HIVADA_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.HIVADA_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.HIVADA_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.HIVADA_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "coburg" ]]; then
+            echo "HOST=${{ secrets.COBURG_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.COBURG_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.COBURG_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.COBURG_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.COBURG_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "salzkotten" ]]; then
+            echo "HOST=${{ secrets.SALZKOTTEN_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.SALZKOTTEN_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.SALZKOTTEN_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.SALZKOTTEN_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.SALZKOTTEN_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "troisdorf" ]]; then
+            echo "HOST=${{ secrets.TROISDORF_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.TROISDORF_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.TROISDORF_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.TROISDORF_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.TROISDORF_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "wunsiedel" ]]; then
+            echo "HOST=${{ secrets.WUNSIEDEL_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.WUNSIEDEL_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.WUNSIEDEL_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.WUNSIEDEL_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.WUNSIEDEL_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "hasslachtalMitwitz" ]]; then
+            echo "HOST=${{ secrets.MITWITZ_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.MITWITZ_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.MITWITZ_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.MITWITZ_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.MITWITZ_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "hasslachtalPressig" ]]; then
+            echo "HOST=${{ secrets.PRESSIG_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.PRESSIG_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.PRESSIG_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.PRESSIG_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.PRESSIG_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "hasslachtalSchneckenlohe" ]]; then
+            echo "HOST=${{ secrets.SCHNECKENLOHE_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.SCHNECKENLOHE_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.SCHNECKENLOHE_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.SCHNECKENLOHE_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.SCHNECKENLOHE_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "hasslachtalStockheim" ]]; then
+            echo "HOST=${{ secrets.STOCKHEIM_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.STOCKHEIM_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.STOCKHEIM_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.STOCKHEIM_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.STOCKHEIM_PROCESS_NAME}}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.project }}" == "einbeck" ]]; then
+            echo "HOST=${{ secrets.EINBECK_HOST_NAME }}" >> $GITHUB_ENV
+            echo "USERNAME=${{ secrets.EINBECK_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.EINBECK_PASSWORD }}" >> $GITHUB_ENV
+            echo "APPDIR=${{ secrets.EINBECK_APPDIR }}/Frontend" >> $GITHUB_ENV
+            echo "PROCESS_NAME=${{secrets.EINBECK_PROCESS_NAME}}" >> $GITHUB_ENV
           fi
 
       - name: Copy files via SSH
@@ -60,7 +145,7 @@ jobs:
           password: ${{ env.PASSWORD || '' }}
           key: ${{ env.SSHKEY || '' }}
           source: "*"
-          target: ${{ env.APPDIR }}
+          target: ${{ env.APPDIR }}/Frontend
 
       - name: SSH to Server and run commands
         if: contains(env.ALL_PROJECTS, matrix.project)
@@ -74,5 +159,4 @@ jobs:
             cd ${{ env.APPDIR }}
             npm install --production
             npm run lint .
-            npm run build
-            pm2 restart WEB
+            npm run deploy
