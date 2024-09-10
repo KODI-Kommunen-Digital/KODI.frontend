@@ -62,6 +62,8 @@ import PaymentStatus from "./Path/Container/PaymentStatus";
 import GetCard from "./Path/Container/GetCard";
 import OwnerScreen from "./Path/Container/OwnerScreen";
 import StoreDetails from "./Path/Container/StoreDetails";
+import ViewCategories from "./Path/Container/ViewCategories";
+import AddCategoryAndSubCategory from "./Path/Container/AddCategoryAndSubCategory";
 import ProductStore from "./Path/Container/ProductStore";
 import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
 import Shelves from "./Path/Container/Shelves";
@@ -284,6 +286,18 @@ const App = () => {
               <Route
                 path="/OwnerScreen/StoreDetails"
                 element={<StoreDetails />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/ViewCategories"
+                element={<ViewCategories />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AddCategoryAndSubCategory"
+                element={<AddCategoryAndSubCategory />}
                 exact
               />
 

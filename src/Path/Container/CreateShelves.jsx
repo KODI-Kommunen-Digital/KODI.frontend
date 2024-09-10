@@ -55,7 +55,7 @@ function CreateShelves() {
         if (valid) {
             setUpdating(true);
             try {
-                const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
+                const { cityId, ...inputWithoutCityIdShopId } = input;
                 await createShelf(cityId, shopId, inputWithoutCityIdShopId);
 
                 const successMessage = isAdmin ? t("shelfUpdatedAdmin") : t("shelfCreated");
