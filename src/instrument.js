@@ -12,7 +12,7 @@ const sentryEnv = process.env.REACT_APP_SENTRY_ENV;
 const webhookUrl = process.env.REACT_APP_WEBHOOK;
 const ENV = process.env.REACT_APP_ENVIRONMENT;
 const app = process.env.REACT_APP_NAME;
-const appName = process.env.REACT_APP_NAME;;
+const appName = process.env.REACT_APP_NAME;
 
 if (!sentryDsn) {
     console.error('REACT_APP_SENTRY_DSN environment variable not defined.');
@@ -21,9 +21,6 @@ if (!sentryDsn) {
 if (!sentryEnv) {
     console.error('REACT_APP_SENTRY_ENV environment variable not defined.');
 }
-
-console.log('Initializing Sentry with DSN:', sentryDsn);
-console.log('Sentry Environment:', sentryEnv);
 
 Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
