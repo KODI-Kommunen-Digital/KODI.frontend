@@ -45,7 +45,7 @@ const OrderDetailsStore = () => {
                                                             productItem.product.productImages.length > 0
                                                             ? productItem.product.productImages[0]
                                                             : process.env.REACT_APP_BUCKET_HOST +
-                                                            "admin/Product/ContainerDefaultImage.jpeg"
+                                                            "admin/Container/ShoppingCart.png"
                                                     }
                                                     onError={(e) => {
                                                         e.target.src = CONTAINERIMAGE;

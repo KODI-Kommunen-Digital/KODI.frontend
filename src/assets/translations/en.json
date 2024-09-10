@@ -906,5 +906,13 @@
     "sellerName": "Seller Name",
     "noCategoriesAvailableForThisCity": "No categories are found for this shop, please select another city to continue",
     "noSubCategoriesAvailableForThisCity": "No sub-categories are found for this shop, please select another category to continue",
-    "noProductAvailableForThisShop": "No products are found for this shop, please select another shop to continue"
+    "noSubCategoriesAvailableForThisCategory": "No sub-categories are found for this category, please select another category",
+    "noCategoriesAvailableForThisShop": "No categories are found for this shop, please select another shop",
+    "noProductAvailableForThisShop": "No products are found for this shop, please select another shop to continue",
+    "list": "List",
+    "categoriesAndSubcategories": "Categories And Subcategories",
+    "categoriesAndSubcategoriesHere": "You can see all the available categories and subcategories by clicking here",
+    "addCategoryAndSubCategory": "Add Category And SubCategory",
+    "categoryUpdated": "New category updated",
+    "categoryAlreadyAddedError": "Category already added to the store"
 }

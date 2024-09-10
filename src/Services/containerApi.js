@@ -36,12 +36,48 @@ export async function uploadImage(formData, cityId, storeId, productId) {
     );
 }
 
+export async function addSubCategory(storeId, subCategoryId) {
+    return axios.post(`/v1/owners/subCategory`, {
+        storeId,
+        subCategoryId
+    });
+}
+
+export async function addCategory(storeId, categoryId) {
+    return axios.post(`/v1/owners/category`, {
+        storeId,
+        categoryId
+    });
+}
+
+export async function getOwnerSubCategory(categoryId) {
+    return axios.get(`/v1/owners/globalCategory/${categoryId}/subCategories`);
+}
+
+export async function getOwnerCategory() {
+    return axios.get(`/v1/owners/globalCategories`);
+}
+
 export async function getSubCategory(cityId, storeId, categoryId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/category/${categoryId}/subcategories`);
 }
 
 export async function getCategory(cityId, storeId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/categories`);
+}
+
+export async function deleteSubCategory(storeId, subCategoryId) {
+    return axios.delete(`/v1/owners/subCategory`, {
+        storeId,
+        subCategoryId
+    });
+}
+
+export async function deleteCategory(storeId, categoryId) {
+    return axios.delete(`/v1/owners/subCategory`, {
+        storeId,
+        categoryId
+    });
 }
 
 export async function deleteImage(cityId, storeId, productId) {
