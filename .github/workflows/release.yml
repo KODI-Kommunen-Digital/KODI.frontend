@@ -146,6 +146,7 @@ jobs:
           key: ${{ env.SSHKEY || '' }}
           script: |
             cd ${{ env.APPDIR }}
+            git config --global --add safe.directory ${{ env.APPDIR }}
             git checkout -f main
             git reset --hard
             git pull || { echo "Git pull failed"; exit 1; }
