@@ -148,7 +148,6 @@ jobs:
             cd ${{ env.APPDIR }}
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/githubNew
-            git config --global --add safe.directory ${{ env.APPDIR }}
             git checkout -f main
             git reset --hard
             git pull || { echo "Git pull failed"; exit 1; }
