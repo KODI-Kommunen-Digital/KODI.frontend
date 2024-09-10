@@ -195,11 +195,15 @@ function AddNewProducts() {
                 const subcatList = {};
 
                 if (subCats?.data?.data?.length > 0) {
-                    subCats.data.data.forEach((subCat) => {
-                        subcatList[subCat.id] = subCat.name;
-                    });
+                    const subcatList = subCats.data.data.reduce((acc, subCat) => {
+                        acc[subCat.id] = subCat.name;
+                        return acc;
+                    }, {});
+                    setSubCategories(subcatList);
+                } else {
+                    setSubCategories([]); // Set subcategories to an empty array
                 }
-                setSubCategories(subcatList);
+
                 console.log("subCategories " + JSON.stringify(subcatList));
 
             } catch (error) {
@@ -622,7 +626,7 @@ function AddNewProducts() {
 
                     {cityId !== 0 && (
                         <>
-                            {shops.length !== 0 ? (
+                            {shops.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -668,7 +672,7 @@ function AddNewProducts() {
 
                     {shopId !== 0 && (
                         <>
-                            {categories.length !== 0 ? (
+                            {categories.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="dropdown"
@@ -716,52 +720,48 @@ function AddNewProducts() {
                         </>
                     )}
 
-                    {(categoryId !== 0 && Object.keys(subCategories).length > 0) ? (
+                    {categoryId !== 0 && (
                         <>
-                            <div className="relative mb-0">
-                                <label
-                                    htmlFor="subCategoryId"
-                                    className="block text-sm font-medium text-gray-600"
-                                >
-                                    {t("subCategory")} *
-                                </label>
-                                <select
-                                    type="subCategoryId"
-                                    id="subCategoryId"
-                                    name="subCategoryId"
-                                    value={subCategoryId || 0}
-                                    onChange={handleSubcategoryChange}
-                                    onBlur={validateInput}
-                                    required
-                                    className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                >
-                                    <option className="font-sans" value={0} key={0}>
-                                        {t("chooseOneSubCategory")}
-                                    </option>
-                                    {Object.keys(subCategories).map((key) => (
-                                        <option className="font-sans" value={key} key={key}>
-                                            {t(subCategories[key])}
+                            {subCategories.length > 0 ? (
+                                <div className="relative mb-0">
+                                    <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
+                                        {t("subCategory")} *
+                                    </label>
+                                    <select
+                                        type="subCategoryId"
+                                        id="subCategoryId"
+                                        name="subCategoryId"
+                                        value={subCategoryId || 0}
+                                        onChange={handleSubcategoryChange}
+                                        onBlur={validateInput}
+                                        required
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                    >
+                                        <option className="font-sans" value={0} key={0}>
+                                            {t("chooseOneSubCategory")}
                                         </option>
-                                    ))}
-                                </select>
-                                <div
-                                    className="h-[24px] text-red-600"
-                                    style={{
-                                        visibility: error.subCategoryId ? "visible" : "hidden",
-                                    }}
-                                >
-                                    {error.selectedSubCategory}
+                                        {Object.keys(subCategories).map((key) => (
+                                            <option className="font-sans" value={key} key={key}>
+                                                {t(subCategories[key])}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="h-[24px] text-red-600"
+                                        style={{ visibility: error.subCategoryId ? "visible" : "hidden" }}
+                                    >
+                                        {error.selectedSubCategory}
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded" role="alert">
+                                    <span className="block sm:inline">
+                                        <strong className="font-bold">{t("noSubCategoriesAvailableForThisCity")}</strong>
+                                    </span>
+                                </div>
+                            )}
                         </>
-                    ) : (
-                        <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded" role="alert">
-                            <span className="block sm:inline">
-                                <strong className="font-bold">{t("noSubCategoriesAvailableForThisCity")}</strong>
-                            </span>
-                        </div>
                     )}
-
 
                     <div className="relative mb-4 grid grid-cols-2 gap-4">
                         <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
