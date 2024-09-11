@@ -32,25 +32,18 @@ function UserProfile({ user }) {
   };
   useEffect(() => {
     if (user && user.socialMedia) {
-      try {
-        let socialMediaList = JSON.parse(user.socialMedia);
-
-        if (
-          typeof socialMediaList === "object" &&
-          Object.keys(socialMediaList).length === 0
-        ) {
-          socialMediaList = [];
-        }
-
-        const tempUserSocial = {};
-        for (const socialMedia of socialMediaList) {
-          Object.assign(tempUserSocial, socialMedia);
-        }
-        setUserSocial(tempUserSocial);
-      } catch (error) {
-        console.log("Error parsing user.socialMedia:", error);
-        setUserSocial({}); // Fallback to an empty object in case of error
+      let socialMediaList = JSON.parse(user.socialMedia);
+      if (
+        typeof socialMediaList === "object" &&
+        Object.keys(socialMediaList).length === 0
+      ) {
+        socialMediaList = [];
       }
+      const tempUserSocial = {};
+      for (const socialMedia of socialMediaList) {
+        Object.assign(tempUserSocial, socialMedia);
+      }
+      setUserSocial(tempUserSocial);
     }
   }, [user]);
 

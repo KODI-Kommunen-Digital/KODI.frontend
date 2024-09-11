@@ -353,7 +353,7 @@ const Listing = () => {
   useEffect(() => {
     if (user) {
       try {
-        const socialMedia = user.socialMedia
+        const socialMedia = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
           ? JSON.parse(user.socialMedia)
           : {};
         setUserSocial(socialMedia);
@@ -364,6 +364,15 @@ const Listing = () => {
       }
     }
   }, [user]);
+
+  const isValidJSON = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   return (
     <section className="text-slate-800 bg-white body-font">
