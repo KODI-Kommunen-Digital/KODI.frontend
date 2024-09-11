@@ -32,7 +32,7 @@ function UserProfile({ user }) {
   };
   useEffect(() => {
     if (user && user.socialMedia) {
-      let socialMediaList = JSON.parse(user.socialMedia);
+      const socialMediaList = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
       if (
         typeof socialMediaList === "object" &&
         Object.keys(socialMediaList).length === 0
@@ -46,6 +46,15 @@ function UserProfile({ user }) {
       setUserSocial(tempUserSocial);
     }
   }, [user]);
+
+  const isValidJSON = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
