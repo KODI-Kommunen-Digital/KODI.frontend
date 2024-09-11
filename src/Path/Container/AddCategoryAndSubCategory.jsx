@@ -4,7 +4,7 @@ import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import Alert from "../../Components/Alert";
-import { getOwnerCategory, getSubCategory, getStores, addCategory, addSubCategory } from "../../Services/containerApi";
+import { getOwnerCategory, getSubCategory, getOwnerShops, addCategory, addSubCategory } from "../../Services/containerApi";
 
 function AddCategoryAndSubCategory() {
     const { t } = useTranslation();
@@ -21,7 +21,7 @@ function AddCategoryAndSubCategory() {
     const navigate = useNavigate();
 
     const fetchStores = useCallback(() => {
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
         });

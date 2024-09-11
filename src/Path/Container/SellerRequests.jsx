@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellerRequests, getStores } from "../../Services/containerApi";
+import { getSellerRequests, getOwnerShops } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 
 const SellerRequests = () => {
@@ -17,7 +17,7 @@ const SellerRequests = () => {
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
 
     const fetchStores = useCallback(() => {
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             setStores(response.data.data);
         });
     }, []);

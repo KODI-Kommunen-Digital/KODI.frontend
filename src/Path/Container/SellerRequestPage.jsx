@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Alert from "../../Components/Alert";
-import { createSellerAccount, getShopsInACity } from "../../Services/containerApi";
+import { createSellerAccount, getSellerShops } from "../../Services/containerApi";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/citiesApi";
 
@@ -205,7 +205,7 @@ function SellerRequestPage() {
         window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getShopsInACity(cityId);
+            const response = await getSellerShops();
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);

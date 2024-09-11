@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellers, getStores, updateSeller } from "../../Services/containerApi";
+import { getSellers, getOwnerShops, updateSeller } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import { FaEye } from 'react-icons/fa';
@@ -23,7 +23,7 @@ const SellerRequestsApproval = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const urlStoreId = urlParams.get("storeId");
 
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getProducts, getStores } from "../../Services/containerApi";
+import { getProducts, getOwnerShops } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
@@ -39,7 +39,7 @@ function ProductStore() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlStoreId = urlParams.get("storeId");
 
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 

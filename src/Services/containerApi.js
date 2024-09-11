@@ -113,9 +113,9 @@ export async function associateCard(cardId, cardLinkingData) {
 }
 
 // OWNER APIs Start
-export async function getStores() {
-    return axios.get(`/v1/owners/getStores`);
-}
+// export async function getStores() {
+//     return axios.get(`/v1/owners/getStores`);
+// }
 
 export async function getShelves(cityId, storeId) {
     return axios.get(`/v1/cities/${cityId}/store/${storeId}/shelves`);
