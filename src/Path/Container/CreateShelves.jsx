@@ -8,7 +8,7 @@ import "react-quill/dist/quill.snow.css";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
-import { createShelf, getShopsInACity, getProductsForShelf } from "../../Services/containerApi";
+import { createShelf, getOwnerShops, getProductsForShelf } from "../../Services/containerApi";
 
 function CreateShelves() {
     const { t } = useTranslation();
@@ -209,7 +209,7 @@ function CreateShelves() {
         window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getShopsInACity(cityId);
+            const response = await getOwnerShops();
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);

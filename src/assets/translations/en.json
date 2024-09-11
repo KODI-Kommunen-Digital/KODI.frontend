@@ -937,5 +937,8 @@
     "categoriesAndSubcategoriesHere": "You can see all the available categories and subcategories by clicking here",
     "addCategoryAndSubCategory": "Add Category And SubCategory",
     "categoryUpdated": "New category updated",
-    "categoryAlreadyAddedError": "Category already added to the store"
+    "categoryAlreadyAddedError": "Category already added to the store",
+    "barCodeNum": "Barcode Number",
+    "imageNumberAlertContainer": "You can only upload a maximum of 3 images",
+    "imageNumberAlertListings": "You can only upload a maximum of 8 images"
 }
