@@ -762,5 +762,7 @@
     "imagePdfWarning": "Sie können entweder Bilder oder PDF hochladen, aber nicht beides",
     "imagePdfAlert": "Sie können keine PDF-Datei hochladen, wenn bereits ein Bild hochgeladen wurde",
     "maxFileSizeAllert": "Die maximale Dateigröße beträgt 20 MB",
-    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "Mit dem Upload bestätige ich die Nutzungsbedingungen, insbesondere, dass ich die Rechte habe, die Inhalte zu veröffentlichen."
+    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent": "Mit dem Upload bestätige ich die Nutzungsbedingungen, insbesondere, dass ich die Rechte habe, die Inhalte zu veröffentlichen.",
+    "imageNumberAlertContainer": "Sie können maximal 3 Bilder hochladen",
+    "imageNumberAlertListings": "Sie können maximal 8 Bilder hochladen"
 }

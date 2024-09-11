@@ -10,6 +10,14 @@ export async function getShopsInACity(cityId) {
     return axios.get(`/v1/cities/${cityId}/store`);
 }
 
+export async function getOwnerShops() {
+    return axios.get(`/v1/owners/getStores`);
+}
+
+export async function getSellerShops() {
+    return axios.get(`/v1/seller/getStores`);
+}
+
 export async function getUserRoleContainer() {
     return axios.get(`/v1/users/${getUserId()}`);
 }

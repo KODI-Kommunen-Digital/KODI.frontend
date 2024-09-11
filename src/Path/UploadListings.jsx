@@ -156,8 +156,16 @@ function UploadListings() {
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
       } else {
-        setLocalImages((prevImages) => [...prevImages, ...validImages]);
-        setImage((prevImages) => [...prevImages, ...validImages]);
+        // Calculate total number of images
+        const totalImages = image.length + validImages.length;
+
+        // Check if total images exceed the limit of 3
+        if (totalImages > 3) {
+          alert("You can only upload a maximum of 3 images.");
+        } else {
+          setLocalImages((prevImages) => [...prevImages, ...validImages]);
+          setImage((prevImages) => [...prevImages, ...validImages]);
+        }
       }
     } else {
       newFiles.forEach(file => {
@@ -1553,7 +1561,7 @@ function UploadListings() {
             <div
               className="h-[24px] text-red-600"
             >
-              {t("maxFileSizeAllert")}
+              {t("maxFileSizeAllert")} & {t("imageNumberAlertListings")}
             </div>
 
             <div
