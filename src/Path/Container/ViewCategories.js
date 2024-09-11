@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getCategory, getSubCategory, deleteSubCategory, getStores } from "../../Services/containerApi";
+import { getCategory, getSubCategory, deleteSubCategory, getOwnerShops } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 
 function ViewCategories() {
@@ -70,7 +70,7 @@ function ViewCategories() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlStoreId = urlParams.get("storeId");
 
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 
