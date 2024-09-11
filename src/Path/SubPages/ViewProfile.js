@@ -70,7 +70,7 @@ const ViewProfile = () => {
         if (userData) {
           setUser(userData);
           // const parsedSocialMedia = userData.socialMedia
-          const parsedSocialMedia = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
+          const parsedSocialMedia = typeof userData.socialMedia === "string" && isValidJSON(userData.socialMedia)
             ? JSON.parse(userData.socialMedia)
             : [];
           setUserSocial(parsedSocialMedia);
