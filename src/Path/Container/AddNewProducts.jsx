@@ -10,7 +10,7 @@ import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
-import { createNewProduct, getShopsInACity, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
+import { createNewProduct, getSellerShops, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
@@ -39,6 +39,7 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
+        barCodeNum: "",
         // removeImage: false,
         // // hasAttachment: false,
     });
@@ -54,6 +55,7 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
+        barCodeNum: "",
     });
 
     const handleSubmit = async (event) => {
@@ -134,7 +136,7 @@ function AddNewProducts() {
         // window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getShopsInACity(cityId);
+            const response = await getSellerShops();
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
@@ -348,6 +350,15 @@ function AddNewProducts() {
                     return "";
                 }
 
+            case "barCodeNum":
+                if (!value) {
+                    return t("pleaseEnterMinCount");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
+                } else {
+                    return "";
+                }
+
             default:
                 return "";
         }
@@ -460,32 +471,26 @@ function AddNewProducts() {
     const handleMultipleInputChange = (event) => {
         const newFiles = Array.from(event.target.files);
 
-        if (image.length > 0) {
-            const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+        // Filter for only valid images
+        const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+        const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-            if (invalidFiles.length > 0) {
-                alert(t("imagePdfAlert"));
-            } else {
-                setLocalImages((prevImages) => [...prevImages, ...validImages]);
-                setImage((prevImages) => [...prevImages, ...validImages]);
-            }
+        // If there are invalid files (e.g., not images or PDFs), show an alert
+        if (invalidFiles.length > 0) {
+            alert(t("imagePdfAlert"));
+            return;
         }
-        // else {
-        //     newFiles.forEach(file => {
-        //         if (file.type === "application/pdf") {
-        //             setLocalImageOrPdf(true);
-        //             setPdf(file);
-        //             setInput((prev) => ({
-        //                 ...prev,
-        //                 // hasAttachment: true,
-        //             }));
-        //         } else if (file.type.startsWith("image/")) {
-        //             setLocalImages((prevImages) => [...prevImages, file]);
-        //             setImage((prevImages) => [...prevImages, file]);
-        //         }
-        //     });
-        // }
+
+        // Check the total number of images after adding the new files
+        const totalImages = image.length + validImages.length;
+
+        if (totalImages > 3) {
+            alert(t("imageNumberAlert"));
+        } else {
+            // If valid images are under the limit, update the state
+            setLocalImages((prevImages) => [...prevImages, ...validImages]);
+            setImage((prevImages) => [...prevImages, ...validImages]);
+        }
     };
 
     const handleUpdateMultipleInputChange = (e) => {
@@ -848,18 +853,18 @@ function AddNewProducts() {
                                 {error.minCount}
                             </div>
                         </div>
-                        {/* <div className="relative mb-4">
+                        <div className="relative mb-4">
                             <label
                                 htmlFor="place"
                                 className="block text-sm font-medium text-gray-600"
                             >
-                                {t("maxCount")}
+                                {t("barCodeNum")}
                             </label>
                             <input
                                 type="text"
-                                id="maxCount"
-                                name="maxCount"
-                                value={input.maxCount}
+                                id="barCodeNum"
+                                name="barCodeNum"
+                                value={input.barCodeNum}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -868,39 +873,39 @@ function AddNewProducts() {
                             <div
                                 className="h-[24px] text-red-600"
                                 style={{
-                                    visibility: error.maxCount ? "visible" : "hidden",
+                                    visibility: error.barCodeNum ? "visible" : "hidden",
                                 }}
                             >
-                                {error.maxCount}
+                                {error.barCodeNum}
                             </div>
-                        </div> */}
+                        </div>
+                    </div>
 
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("inventory")} *
-                            </label>
-                            <input
-                                type="text"
-                                id="inventory"
-                                name="inventory"
-                                value={input.inventory}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterTotalNumber")}
-                            />
-                            <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.inventory ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.inventory}
-                            </div>
+                    <div className="relative mb-4">
+                        <label
+                            htmlFor="place"
+                            className="block text-sm font-medium text-gray-600"
+                        >
+                            {t("inventory")} *
+                        </label>
+                        <input
+                            type="text"
+                            id="inventory"
+                            name="inventory"
+                            value={input.inventory}
+                            onChange={onInputChange}
+                            onBlur={validateInput}
+                            required
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            placeholder={t("pleaseEnterTotalNumber")}
+                        />
+                        <div
+                            className="h-[24px] text-red-600"
+                            style={{
+                                visibility: error.inventory ? "visible" : "hidden",
+                            }}
+                        >
+                            {error.inventory}
                         </div>
                     </div>
 
@@ -953,6 +958,12 @@ function AddNewProducts() {
                             {t("addImageHere")}
                         </label>
                         <div
+                            className="h-[24px] text-red-600"
+                        >
+                            {t("maxFileSizeAllert")} & {t("imageNumberAlertContainer")}
+                        </div>
+
+                        <div
                             className={`mt-1 flex justify-center rounded-md border-2 border-dashed border-black px-6 pt-5 pb-6 bg-slate-200`}
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
@@ -968,10 +979,10 @@ function AddNewProducts() {
                                         localImageOrPdf={localImageOrPdf}
                                         localImages={localImages}
                                     />
-                                    {image.length < 8 && (
+                                    {image.length < 3 && (
                                         <label
                                             htmlFor="file-upload"
-                                            className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                            className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
                                                 }`}
                                         >
                                             <div className="h-full flex items-center justify-center">
@@ -1002,10 +1013,10 @@ function AddNewProducts() {
                                         localImageOrPdf={localImageOrPdf}
                                         localImages={localImages}
                                     />
-                                    {image.length < 8 && (
+                                    {image.length < 3 && (
                                         <label
                                             htmlFor="file-upload"
-                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
                                                 }`}
                                         >
                                             <div className="h-full flex items-center justify-center">
@@ -1034,10 +1045,10 @@ function AddNewProducts() {
                                         localImageOrPdf={localImageOrPdf}
                                         localImages={localImages}
                                     />
-                                    {image.length < 8 && (
+                                    {image.length < 3 && (
                                         <label
                                             htmlFor="file-upload"
-                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                                            className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
                                                 }`}
                                         >
                                             <div className="h-full flex items-center justify-center">

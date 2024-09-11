@@ -785,5 +785,7 @@
     "abfallwirtschaft": "Abfallwirtschaft",
     "bürgerbeteiligung": "Bürgerbeteiligung",
     "highlights": "Höhepunkte",
-    "project": "Projekt"
+    "project": "Projekt",
+    "imageNumberAlertContainer": "Sie können maximal 3 Bilder hochladen",
+    "imageNumberAlertListings": "Sie können maximal 8 Bilder hochladen"
 }
