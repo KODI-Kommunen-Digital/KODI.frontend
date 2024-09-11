@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getOrders, getStores } from "../../Services/containerApi";
+import { getOrders, getOwnerShops } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import RegionColors from "../../Components/RegionColors";
 import { FaEye } from 'react-icons/fa';
@@ -41,7 +41,7 @@ function AllSellers() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlStoreId = urlParams.get("storeId");
 
-        getStores().then((response) => {
+        getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 
