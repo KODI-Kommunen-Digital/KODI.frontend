@@ -32,7 +32,7 @@ function UserProfile({ user }) {
   };
   useEffect(() => {
     if (user && user.socialMedia) {
-      const socialMediaList = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
+      let socialMediaList = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
       if (
         typeof socialMediaList === "object" &&
         Object.keys(socialMediaList).length === 0
