@@ -103,7 +103,11 @@ const Description = (props) => {
 
 Description.propTypes = {
   content: PropTypes.string.isRequired,
-  cityId: PropTypes.string.isRequired,
+  cityId: PropTypes.string,
+};
+
+Description.defaultProps = {
+  cityId: null, // or some default value
 };
 
 const Listing = () => {
@@ -553,7 +557,7 @@ const Listing = () => {
                           <CustomCarousel
                             imageList={input.otherlogos}
                             sourceId={input.sourceId}
-                            appointmentId={input.appointmentId}
+                            appointmentId={input.appointmentId || null}
                           />
                         ) : (
                           <img
@@ -574,7 +578,7 @@ const Listing = () => {
                   >
                     {t("description")}
                   </h1>
-                  <Description content={description} />
+                  <Description content={description} cityId={cityId} />
                   {sourceId === listingSource.SCRAPER && (
                     <p className="text-slate-800 font-medium">
                       {t("visitWebsite")}{" "}

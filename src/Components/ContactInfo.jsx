@@ -29,14 +29,27 @@ function ContactInfo({ user }) {
   };
   useEffect(() => {
     if (user && user.socialMedia) {
-      const socialMediaList = JSON.parse(user.socialMedia);
-      const tempUserSocial = {};
-      for (const socialMedia of socialMediaList) {
-        Object.assign(tempUserSocial, socialMedia);
+      try {
+        const socialMediaList = JSON.parse(user.socialMedia);
+
+        // If the parsed value is not an array or object, handle it accordingly
+        if (!Array.isArray(socialMediaList)) {
+          console.log("Parsed social media is not an array, handling appropriately.");
+          return; // Handle non-array case (skip further processing)
+        }
+
+        const tempUserSocial = {};
+        for (const socialMedia of socialMediaList) {
+          Object.assign(tempUserSocial, socialMedia);
+        }
+        setUserSocial(tempUserSocial);
+      } catch (error) {
+        console.error("Error parsing user.socialMedia:", error);
+        setUserSocial({}); // Fallback to an empty object in case of error
       }
-      setUserSocial(tempUserSocial);
     }
   }, [user]);
+
   return (
     <div>
       <div className="w-full h-full lg:h-[18rem] md:ml-[6rem] lg:ml-[0rem] ml-[1rem] bg-white rounded-lg md:mt-0 sm:max-w-md xl:p-0 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
@@ -131,6 +144,6 @@ ContactInfo.propTypes = {
     id: PropTypes.number,
     website: PropTypes.string,
   }).isRequired,
-  createdAt: PropTypes.string.isRequired,
+  createdAt: PropTypes.string,
 };
 export default ContactInfo;
