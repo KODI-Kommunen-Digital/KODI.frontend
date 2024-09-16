@@ -57,7 +57,12 @@ function GetCard() {
                     navigate("/CustomerScreen");
                 }, 5000);
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                // Check if error code is 5002 and show the appropriate message
+                if (error.response && error.response.data && error.response.data.errorCode === 5002) {
+                    setErrorMessage(t("alreadyLinked"));
+                } else {
+                    setErrorMessage(t("changesNotSaved"));
+                }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -69,7 +74,6 @@ function GetCard() {
             setTimeout(() => setErrorMessage(false), 5000);
         }
     };
-
 
     const getErrorMessage = (name, value) => {
         switch (name) {
