@@ -941,5 +941,7 @@
     "barCodeNum": "Barcode Number",
     "imageNumberAlertContainer": "You can only upload a maximum of 3 images",
     "imageNumberAlertListings": "You can only upload a maximum of 8 images",
-    "alreadyLinked": "You are already associated with this card, and its active"
+    "alreadyLinked": "You are already associated with this card, and its active",
+    "requestId": "Request Id",
+    "titleTooLong": "Title is too long. It should be maximum of 15 charracters"
 }

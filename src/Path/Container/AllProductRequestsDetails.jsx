@@ -54,7 +54,7 @@ const AllProductRequestsDetails = () => {
                             {product && (
                                 <div key={product.id} className="mb-6 px-4">
                                     <h2 className="text-xl font-bold text-gray-800 mb-2">
-                                        {t("orderId")} : {product.id}
+                                        {t("requestId")} : {product.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
                                         {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}
@@ -82,7 +82,7 @@ const AllProductRequestsDetails = () => {
                                                 </div>
                                                 <div>
                                                     <span className="font-bold text-gray-900 ">{t("count")} : </span>
-                                                    <span className="font-bold text-red-600">€ {product.count}</span>
+                                                    <span className="font-bold text-red-600">{product.count}</span>
                                                 </div>
                                             </div>
                                             <div className="flex mb-4">
