@@ -4,6 +4,7 @@ import { getCategory } from "../../Services/CategoryApi";
 import { useLocation } from 'react-router-dom';
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import { categoryIcons } from "../../Constants/categoryIcons";
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
 
@@ -16,6 +17,8 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const location = useLocation();
+
+    const { trackEvent } = useMatomo();
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -42,6 +45,20 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
         });
     }, []);
 
+    const handleCategoryClick = (categoryId, categoryName, e) => {
+        setSelectedCategory(categoryName);
+        getTheListings(categoryId, e);
+
+        trackEvent({
+            category: 'Category',
+            action: 'Click',
+            name: categoryName,
+            value: categoryId,
+        });
+
+        console.log('Category clicked:', categoryName);
+    };
+
     return (
         <div className="lg:px-20 md:px-0 px-0 py-0 mt-10 mb-0 flex flex-col w-full">
             <div className="flex flex-row relative items-center justify-center">
@@ -51,10 +68,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                             <h2
                                 className={`flex font-bold gap-4 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === "allCategories" ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                 style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
-                                onClick={(e) => {
-                                    setSelectedCategory("allCategories");
-                                    getTheListings(null, e);
-                                }}
+                                onClick={(e) => handleCategoryClick(null, "allCategories", e)}
                             >
                                 <svg
                                     className="h-4 w-8 fill-current"
@@ -74,17 +88,13 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                                 const categoryDetails = categoryIcons[listing.categoryId];
                                 const categoryName = categories[listing.categoryId] || t("unknownCategory");
                                 const categoryIcon = categoryDetails ? categoryDetails.svgIcon : null;
-                                // const categoryClassName = categoryDetails ? categoryDetails.className : "";
 
                                 return (
                                     <h2
                                         className={`flex font-bold gap-2 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === categoryName ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
-                                        onClick={(e) => {
-                                            setSelectedCategory(categoryName);
-                                            getTheListings(listing.categoryId, e);
-                                        }}
+                                        onClick={(e) => handleCategoryClick(listing.categoryId, categoryName, e)}
                                         value={listing.categoryId}
                                     >
                                         {categoryIcon && (
