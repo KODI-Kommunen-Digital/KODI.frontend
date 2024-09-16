@@ -813,7 +813,7 @@
     "payments": "Payments",
     "seeAllApymentStatus": "To view all your payment details by clicking here",
     "card": "Card",
-    "applyCard": "Get Card",
+    "applyCard": "Activate Card",
     "applyForCard": "To apply for your shopping card click here",
     "amount": "Amount",
     "orderDate": "Date Order Placed",
@@ -940,5 +940,6 @@
     "categoryAlreadyAddedError": "Category already added to the store",
     "barCodeNum": "Barcode Number",
     "imageNumberAlertContainer": "You can only upload a maximum of 3 images",
-    "imageNumberAlertListings": "You can only upload a maximum of 8 images"
+    "imageNumberAlertListings": "You can only upload a maximum of 8 images",
+    "alreadyLinked": "You are already associated with this card, and its active"
 }
