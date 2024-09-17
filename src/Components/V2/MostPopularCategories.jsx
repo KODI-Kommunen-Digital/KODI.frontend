@@ -19,9 +19,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     const location = useLocation();
 
     const { trackEvent } = useMatomo();
-    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS
-        ? process.env.REACT_APP_MATOMO_STATUS === 'True'
-        : false;
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
