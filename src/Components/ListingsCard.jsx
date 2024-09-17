@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { listingSource } from "../Constants/listingSource";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   const { t } = useTranslation();
@@ -13,6 +14,51 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   const navigateTo = (path) => {
     if (path) {
       navigate(path);
+    }
+  };
+  const { trackEvent } = useMatomo();
+  const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
+
+  const handleListingClick = () => {
+    // Track the event with Matomo
+    if (matomoStatus) {
+      trackEvent({
+        category: 'Listing',
+        action: 'Click',
+        name: listing.title, // Listing title
+        value: listing.id, // Optional: listing ID
+      });
+    }
+
+    // Browser information
+    const browserInfo = {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+    };
+
+    console.log('Listing clicked:', listing.title);
+    console.log('Browser Info:', browserInfo);
+
+    if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+      window.open(listing.website, '_blank');
+    }
+    else if (iFrame) {
+      navigateTo(
+        `/IframeListing?listingId=${listing.id}&cityId=${listing.cityId}`
+      );
+    } else if (
+      listing.sourceId === listingSource.USER_ENTRY ||
+      listing.showExternal === 0
+    ) {
+      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
+    } else if (
+      (listing.sourceId === listingSource.SCRAPER &&
+        listing.showExternal === 1) ||
+      listing.sourceId === listingSource.INSTAGRAM
+    ) {
+      window.location.href = listing.website; // web scraper and Instagram
+    } else {
+      window.location.href = listing.website;
     }
   };
 
@@ -44,27 +90,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
-          window.open(listing.website, '_blank');
-        }
-        else if (iFrame) {
-          navigateTo(
-            `/IframeListing?listingId=${listing.id}&cityId=${listing.cityId}`
-          );
-        } else if (
-          listing.sourceId === listingSource.USER_ENTRY ||
-          listing.showExternal === 0
-        ) {
-          navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
-        } else if (
-          (listing.sourceId === listingSource.SCRAPER &&
-            listing.showExternal === 1) ||
-          listing.sourceId === listingSource.INSTAGRAM
-        ) {
-          window.location.href = listing.website; // web scraper and Instagram
-        } else {
-          window.location.href = listing.website;
-        }
+        handleListingClick();
       }}
       className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-shadow duration-300 ease-in-out"
     >
