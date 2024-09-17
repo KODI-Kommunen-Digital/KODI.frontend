@@ -17,15 +17,20 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     }
   };
   const { trackEvent } = useMatomo();
+  const matomoStatus = process.env.REACT_APP_MATOMO_STATUS
+    ? process.env.REACT_APP_MATOMO_STATUS === 'True'
+    : false;
 
   const handleListingClick = () => {
     // Track the event with Matomo
-    trackEvent({
-      category: 'Listing',
-      action: 'Click',
-      name: listing.title,  // Listing title
-      value: listing.id,  // Optional: listing ID
-    });
+    if (matomoStatus) {
+      trackEvent({
+        category: 'Listing',
+        action: 'Click',
+        name: listing.title, // Listing title
+        value: listing.id, // Optional: listing ID
+      });
+    }
 
     // Browser information
     const browserInfo = {
