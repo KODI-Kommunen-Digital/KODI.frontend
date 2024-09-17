@@ -29,14 +29,14 @@ const ProductDetailsStore = () => {
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
 
-            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex items-center justify-center">
+            <div className="container w-auto md:px-2 md:py-2 bg-gray-800 md:min-h-screen flex items-center justify-center">
 
-                <div className="h-full bg-white shadow-md bg-opacity-75 px-8 py-16 rounded-lg overflow-hidden text-center relative">
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="h-full bg-gray-200 shadow-md px-2 py-2 md:rounded-lg overflow-hidden text-center relative">
+                    <div className="max-w-6xl bg-white mx-auto px-4 py-4 md:rounded-lg">
                         <div className="flex flex-col md:flex-row -mx-4">
                             {orders && (
                                 <div key={orders.id} className="mb-6 px-4">
-                                    <h2 className="text-xl font-bold text-gray-900  mb-2">
+                                    <h2 className="text-xl font-bold text-slate-900  mb-2">
                                         {t("orderId")} : {orders.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
@@ -44,9 +44,9 @@ const ProductDetailsStore = () => {
                                     </p>
                                     {orders.products && Array.isArray(orders.products) && orders.products.map(productItem => (
                                         <div key={productItem.id} className="md:flex mb-6">
-                                            <div className="px-4">
+                                            <div className="md:px-4 py-4 md:py-0">
                                                 <img
-                                                    className="w-full h-full object-cover"
+                                                    className="object-contain object-center h-full w-full max-h-96"
                                                     src={
                                                         productItem.product.productImages &&
                                                             productItem.product.productImages.length > 0
@@ -59,20 +59,20 @@ const ProductDetailsStore = () => {
                                                     }}
                                                 />
                                             </div>
-                                            <div className="px-4">
-                                                <h2 className="text-2xl font-bold text-gray-900  mb-2">
+                                            <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4">
+                                                <h2 className="text-2xl font-bold text-slate-800  mb-2">
                                                     {productItem.product.title}
                                                 </h2>
                                                 <div className="flex mb-4">
                                                     <div className="mr-4">
-                                                        <span className="font-bold text-gray-700 ">
+                                                        <span className="font-bold text-slate-700 ">
                                                             {t("price")} : </span>
-                                                        <span className="font-bold text-green-600">
+                                                        <span className="font-bold text-slate-600">
                                                             € {productItem.product.price}
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <span className="font-bold text-gray-700 ">
+                                                        <span className="font-bold text-slate-700 ">
                                                             {t("tax")} : </span>
                                                         <span className="font-bold text-red-600">
                                                             {(productItem.product.tax * 100).toFixed(2)}%
@@ -80,8 +80,8 @@ const ProductDetailsStore = () => {
                                                     </div>
                                                 </div>
                                                 <div className="text-start mb-4">
-                                                    <span className="font-bold text-gray-700">{t("description")} : </span>
-                                                    <span className="text-gray-600" dangerouslySetInnerHTML={{ __html: productItem.product.description }}></span>
+                                                    <span className="font-bold text-slate-700">{t("description")} : </span>
+                                                    <span className="text-slate-600" dangerouslySetInnerHTML={{ __html: productItem.product.description }}></span>
                                                 </div>
                                             </div>
                                         </div>
