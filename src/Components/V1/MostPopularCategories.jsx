@@ -15,15 +15,20 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
 
     const visibleListings = listingsCount.filter(listing => !hiddenCategories.includes(listing.categoryId));
     const { trackEvent } = useMatomo();
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS
+        ? process.env.REACT_APP_MATOMO_STATUS === 'True'
+        : false;
 
     const handleCategoryClick = (categoryId, categoryName) => {
         goToAllListingsPage(categoryId);
-        trackEvent({
-            category: 'Category',
-            action: 'Click',
-            name: categoryName,
-            value: categoryId,
-        });
+        if (matomoStatus) {
+            trackEvent({
+                category: 'Category',
+                action: 'Click',
+                name: categoryName,
+                value: categoryId,
+            });
+        }
 
         console.log('Category clicked:', categoryName);
     };

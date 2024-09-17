@@ -19,6 +19,9 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     const location = useLocation();
 
     const { trackEvent } = useMatomo();
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS
+        ? process.env.REACT_APP_MATOMO_STATUS === 'True'
+        : false;
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -49,12 +52,14 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
         setSelectedCategory(categoryName);
         getTheListings(categoryId, e);
 
-        trackEvent({
-            category: 'Category',
-            action: 'Click',
-            name: categoryName,
-            value: categoryId,
-        });
+        if (matomoStatus) {
+            trackEvent({
+                category: 'Category',
+                action: 'Click',
+                name: categoryName,
+                value: categoryId,
+            });
+        }
 
         console.log('Category clicked:', categoryName);
     };
