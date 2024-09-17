@@ -56,12 +56,12 @@ const AccountSettings = () => {
 
 	const validatePhoneNumber = (phoneNumber) => {
 		const phoneRegex = /^[0-9]{8,15}$/;
-		return phoneRegex.test(phoneNumber);
+		// return phoneRegex.test(phoneNumber);
+		return phoneNumber === "" || phoneRegex.test(phoneNumber);
 	};
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
-		console.log(`Changing ${name} to ${value}`); // Debugging line
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
@@ -69,7 +69,6 @@ const AccountSettings = () => {
 
 		if (name === "phoneNumber") {
 			const isValid = validatePhoneNumber(value);
-			console.log(`Phone number validation result: ${isValid}`); // Debugging line
 			if (!isValid) {
 				setError((prev) => ({
 					...prev,
