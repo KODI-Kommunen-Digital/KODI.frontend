@@ -876,7 +876,7 @@
     "shelfUpdatedAdmin": "Your shelf is uploaded and active. Redirecting to dashboard in 5 seconds.",
     "shelfCreated": "Your shelf was created succesfully. It is under review by Admin and will be updated soon. Redirecting to dashboard in 5 seconds.",
     "addNewShelfTitle": "Add new shelf",
-    "shelfName": "Shelf Name",
+    "selectShelf": "Select Shelves",
     "pleaseSelectProduct": "Please select a product!",
     "cardUpdated": "Card linked",
     "pleaseAddPinNumber": "Please add a pin number",
@@ -965,5 +965,13 @@
     "Abfallwirtschaft": "Waste Management",
     "Bürgerbeteiligung": "Citizen Participation",
     "Highlights": "Highlights",
-    "Project": "Project"
+    "Project": "Project",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "approve": "Approve",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "view": "View",
+    "seeAllProducts": "See All Products",
+    "seeAllProductHere": "You can see all product by clicking here"
 }

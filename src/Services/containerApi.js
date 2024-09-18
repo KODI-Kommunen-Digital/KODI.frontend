@@ -155,12 +155,13 @@ export async function updateSeller(cityId, sellerId, status, title, description)
     }
 }
 
-export async function updateProductRequests(storeId, requestId, shelfIds, status) {
+export async function updateProductRequests(storeId, requestId, shelfIds, statusId, maxCount) {
     try {
         const response = await axios.patch(`/v1/owners/productRequest/${requestId}`, {
             storeId,
             shelfIds,
-            status,
+            statusId,
+            maxCount
         });
         return response.data;
     } catch (error) {
@@ -183,6 +184,10 @@ export async function getProductsForShelf(storeId) {
 
 export async function getProducts(storeId, pageNumber, status) {
     return axios.get(`/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
+}
+
+export async function getSellerProducts(storeId, pageNumber, status) {
+    return axios.get(`/v1/seller/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`);
 }
 
 export async function getProductRequests(cityId, storeId, pageNumber, status) {
