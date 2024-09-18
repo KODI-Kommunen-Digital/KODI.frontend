@@ -5,7 +5,7 @@ import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import { useLocation } from 'react-router-dom';
 
-const ProductDetailsStore = () => {
+const AllProductsDetailsPage = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [product, setProduct] = useState(null);
@@ -97,4 +97,4 @@ const ProductDetailsStore = () => {
     );
 };
 
-export default ProductDetailsStore;
+export default AllProductsDetailsPage;

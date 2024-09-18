@@ -1,29 +1,45 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
-import { useNavigate } from 'react-router-dom';
-import { getProductRequests, getOwnerShops } from "../../Services/containerApi";
-import { statusByName } from "../../Constants/containerStatus";
-import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { getSellerProducts, getSellerShops } from "../../Services/containerApi";
+import { useTranslation } from 'react-i18next';
+import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 
-function AllProductRequests() {
+function AllProducts() {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
-    const [productRequests, setProductRequests] = useState([]);
-    const [storeId, setStoreId] = useState();
-    const [cityId, setCityId] = useState();
+    const [products, setProducts] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
+    const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
+
+    const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            getSellerProducts(storeId, pageNumber, selectedStatus).then((response) => {
+                setProducts(response.data.data);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (storeId) {
+            const selectedStore = stores.find(store => store.id === parseInt(storeId));
+            if (selectedStore) {
+                fetchProducts(storeId, pageNumber, selectedStatus);
+            }
+        }
+    }, [fetchProducts, storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const urlStoreId = urlParams.get("storeId");
 
-        getOwnerShops().then((response) => {
+        getSellerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 
@@ -33,11 +49,9 @@ function AllProductRequests() {
 
                 if (selectedStore) {
                     setStoreId(storeIdNumber);
-                    const cityId = selectedStore.cityId;
-                    setCityId(cityId)
                     setPageNumber(1);
 
-                    fetchProductRequests(cityId, storeIdNumber, 1, selectedStatus);
+                    fetchProducts(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
                 }
             }
         });
@@ -47,39 +61,33 @@ function AllProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchProductRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
-        if (cityId && storeId) {
-            getProductRequests(cityId, storeId, pageNumber, selectedStatus).then((response) => {
-                setProductRequests(response.data.data);
-            });
+    function getStatusClass(statusId) {
+        if (status[statusId] === "Active") {
+            return "bg-green-400";
         }
-    }, []);
-
-    useEffect(() => {
-        if (storeId) {
-            const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            if (selectedStore) {
-                fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
-            }
+        if (status[statusId] === "Pending") {
+            return "bg-yellow-400";
         }
-    }, [fetchProductRequests, cityId, storeId, pageNumber, selectedStatus]);
+    }
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
         if (selectedStore) {
-            const cityId = selectedStore.cityId;
-            setCityId(cityId);
             setStoreId(storeId);
-            setPageNumber(1);
+            setPageNumber(1); // Reset page number when a new store is selected
 
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProductRequests(cityId, storeId, 1, selectedStatus);
+            fetchProducts(storeId, 1, selectedStatus); // Reset to first page
         }
+    };
+
+    const handleViewDetailsClick = (product) => {
+        navigate('/SellerScreen/AllProductsDetailsPage', { state: { productDetails: product } });
     };
 
     const navigate = useNavigate();
@@ -87,16 +95,6 @@ function AllProductRequests() {
         if (path) {
             navigate(path);
         }
-    };
-
-    const handleViewDetailsClick = (product) => {
-        navigate('/OwnerScreen/AllProductRequestsDetails', {
-            state: {
-                productDetails: product,
-                storeId: storeId,
-                cityId: cityId // Pass the cityId along with storeId and productDetails
-            }
-        });
     };
 
     return (
@@ -115,7 +113,7 @@ function AllProductRequests() {
                                         onClick={() => setSelectedStatus(statusByName.Active)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("approved")}
+                                        {t("active")}
                                     </div>
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
@@ -125,22 +123,6 @@ function AllProductRequests() {
                                     >
                                         {t("pending")}
                                     </div>
-                                    <div
-                                        className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
-                                            } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {t("rejected")}
-                                    </div>
-                                    {/* <div
-                                        className={`${selectedStatus === statusByName.ChangeRequested ? "bg-gray-700 text-white" : "text-gray-300"
-                                            } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.ChangeRequested)}
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {t("changeRequested")}
-                                    </div> */}
                                 </div>
                             </div>
 
@@ -151,10 +133,8 @@ function AllProductRequests() {
                                     value={selectedStatus || ""}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                    <option value={statusByName.Active}>{t("approved")}</option>
+                                    <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
-                                    <option value={statusByName.Inactive}>{t("rejected")}</option>
-                                    {/* <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option> */}
                                 </select>
                             </div>
                         </div>
@@ -191,7 +171,7 @@ function AllProductRequests() {
 
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
-                    {storeId && productRequests && productRequests.length > 0 ? (
+                    {storeId && products && products.length > 0 ? (
                         <>
                             <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
                                 <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
@@ -202,7 +182,7 @@ function AllProductRequests() {
                                                 className="px-6 sm:px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("title")}
@@ -212,7 +192,17 @@ function AllProductRequests() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "16.66%",
+                                                }}
+                                            >
+                                                {t("date_of_creation")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("price")}
@@ -222,38 +212,27 @@ function AllProductRequests() {
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "16.66%",
                                                 }}
                                             >
-                                                {t("count")}
+                                                {t("tax")}
                                             </th>
-
-                                            {/* <th
-                                                scope="col"
-                                                className="px-6 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("selectShelf")}
-                                            </th> */}
-                                            {/* <th
-                                                scope="col"
-                                                className="px-6 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("shelfName")}
-                                            </th> */}
                                             <th
                                                 scope="col"
                                                 className="px-6 py-3 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
+                                                    width: "16.66%",
+                                                }}
+                                            >
+                                                {t("status")}
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-center"
+                                                style={{
+                                                    fontFamily: "Poppins, sans-serif",
+                                                    width: "16.66%",
                                                 }}
                                             >
                                                 {t("viewDetails")}
@@ -263,7 +242,7 @@ function AllProductRequests() {
                                     </thead>
 
                                     <tbody>
-                                        {productRequests.map((product, index) => (
+                                        {products.map((product, index) => (
                                             <tr
                                                 key={index}
                                                 className="bg-white border-b hover:bg-gray-50"
@@ -282,17 +261,25 @@ function AllProductRequests() {
                                                                 "admin/Container/ShoppingCart.png"
                                                         }
                                                         onError={(e) => {
-                                                            e.target.src = CONTAINERIMAGE;
-                                                        }} />
+                                                            e.target.src = CONTAINERIMAGE; // Set default image if loading fails
+                                                        }}
+                                                    />
                                                     <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                         <div
-                                                            className="text-gray-500 font-bold truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                            className="font-normal text-gray-500 truncate"
+                                                            style={{ fontFamily: 'Poppins, sans-serif' }}
                                                         >
                                                             {product.title}
                                                         </div>
                                                     </div>
                                                 </th>
+
+                                                <td
+                                                    className="px-6 py-4 text-center font-bold text-blue-600"
+                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                >
+                                                    {new Date(product.createdAt).toLocaleString('de')}
+                                                </td>
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-green-600"
@@ -305,25 +292,22 @@ function AllProductRequests() {
                                                     className={`px-6 py-4 text-center font-bold text-red-600`}
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.count}
+                                                    {(product.tax * 100).toFixed(2)}%
                                                 </td>
 
-                                                {/* <td className="px-6 py-4">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                                                product.status
+                                                            )} mr-2`}
+                                                        ></div>
 
-                                                    <select
-                                                        className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                                        onChange={(e) => handleShelfChange(product.id, e.target.value)}
-                                                        value={product.shelfId || ''}
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                                    >
-                                                        <option value="">{t("shelfName")}</option>
-                                                        {shelves.map((shelf) => (
-                                                            <option key={shelf.id} value={shelf.id}>
-                                                                {shelf.title}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </td> */}
+                                                        <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                                            {t(status[product.isActive].toLowerCase())}
+                                                        </h1>
+                                                    </div>
+                                                </td>
 
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center justify-center">
@@ -363,7 +347,7 @@ function AllProductRequests() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {productRequests.length >= pageSize && (
+                                {products.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}
@@ -499,4 +483,4 @@ function AllProductRequests() {
     );
 }
 
-export default AllProductRequests;
+export default AllProducts;

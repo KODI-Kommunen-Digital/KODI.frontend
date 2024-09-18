@@ -919,7 +919,7 @@
     "shelfUpdatedAdmin": "Ihr Regal wurde hochgeladen und ist aktiv. Weiterleitung zum Dashboard in 5 Sekunden.",
     "shelfCreated": "Ihr Regal wurde erfolgreich erstellt. Es wird vom Admin überprüft und bald aktualisiert. Weiterleitung zum Dashboard in 5 Sekunden.",
     "addNewShelfTitle": "Neues Regal hinzufügen",
-    "shelfName": "Regalname",
+    "selectShelf": "Regalname",
     "pleaseSelectProduct": "Bitte wählen Sie ein Produkt!",
     "cardUpdated": "Karte verknüpft",
     "pleaseAddPinNumber": "Bitte fügen Sie eine PIN-Nummer hinzu",
@@ -978,5 +978,13 @@
     "Abfallwirtschaft": "Abfallwirtschaft",
     "Bürgerbeteiligung": "Bürgerbeteiligung",
     "Highlights": "Höhepunkte",
-    "Project": "Projekt"
+    "Project": "Projekt",
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen",
+    "approve": "Genehmigen",
+    "approved": "Genehmigt",
+    "rejected": "Abgelehnt",
+    "view": "Ansehen",
+    "seeAllProducts": "Alle Produkte anzeigen",
+    "seeAllProductHere": "Sie können alle Produkte sehen, indem Sie hier klicken"
 }
