@@ -56,6 +56,7 @@ import SellerRequests from "./Path/Container/SellerRequests";
 import SellerRequestPage from "./Path/Container/SellerRequestPage";
 import OrdersSold from "./Path/Container/OrdersSold";
 import AddNewProducts from "./Path/Container/AddNewProducts";
+import AllProducts from "./Path/Container/AllProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
 import MyOrders from "./Path/Container/MyOrders";
 import PaymentStatus from "./Path/Container/PaymentStatus";
@@ -66,6 +67,7 @@ import ViewCategories from "./Path/Container/ViewCategories";
 import AddCategoryAndSubCategory from "./Path/Container/AddCategoryAndSubCategory";
 import ProductStore from "./Path/Container/ProductStore";
 import ProductDetailsStore from "./Path/Container/ProductDetailsStore";
+import AllProductsDetailsPage from "./Path/Container/AllProductsDetailsPage";
 import Shelves from "./Path/Container/Shelves";
 import AllOrders from "./Path/Container/AllOrders";
 import AllProductRequests from "./Path/Container/AllProductRequests";
@@ -256,6 +258,18 @@ const App = () => {
               <Route
                 path="/SellerScreen/AddNewProducts"
                 element={<AddNewProducts />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/AllProducts"
+                element={<AllProducts />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/AllProductsDetailsPage"
+                element={<AllProductsDetailsPage />}
                 exact
               />
 

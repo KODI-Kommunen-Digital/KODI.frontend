@@ -877,7 +877,7 @@
     "shelfUpdatedAdmin": "Your shelf is uploaded and active. Redirecting to dashboard in 5 seconds.",
     "shelfCreated": "Your shelf was created succesfully. It is under review by Admin and will be updated soon. Redirecting to dashboard in 5 seconds.",
     "addNewShelfTitle": "Add new shelf",
-    "shelfName": "Shelf Name",
+    "selectShelf": "Select Shelves",
     "pleaseSelectProduct": "Please select a product!",
     "cardUpdated": "Card linked",
     "pleaseAddPinNumber": "Please add a pin number",
@@ -920,5 +920,13 @@
     "imageNumberAlertListings": "You can only upload a maximum of 8 images",
     "alreadyLinked": "You are already associated with this card, and its active",
     "requestId": "Request Id",
-    "titleTooLong": "Title is too long. It should be maximum of 15 charracters"
+    "titleTooLong": "Title is too long. It should be maximum of 15 charracters",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "approve": "Approve",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "view": "View",
+    "seeAllProducts": "See All Products",
+    "seeAllProductHere": "You can see all product by clicking here"
 }
