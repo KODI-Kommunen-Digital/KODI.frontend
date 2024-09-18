@@ -727,7 +727,7 @@ function AddNewProducts() {
 
                     {categoryId !== 0 && (
                         <>
-                            {subCategories.length > 0 ? (
+                            {subCategories && Object.keys(subCategories).length > 0 ? (
                                 <div className="relative mb-0">
                                     <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *
