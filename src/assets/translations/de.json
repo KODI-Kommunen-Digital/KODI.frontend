@@ -933,12 +933,12 @@
     "alreadyLinked": "Sie sind bereits mit dieser Karte verbunden, und sie ist aktiv",
     "requestId": "Anfrage-ID",
     "titleTooLong": "Der Titel ist zu lang. Er sollte maximal 15 Zeichen lang sein.",
-    "showMore": "Show more",
-    "showLess": "Show less",
-    "approve": "Approve",
-    "approved": "Approved",
-    "rejected": "Rejected",
-    "view": "View",
-    "seeAllProducts": "See All Products",
-    "seeAllProductHere": "You can see all product by clicking here"
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen",
+    "approve": "Genehmigen",
+    "approved": "Genehmigt",
+    "rejected": "Abgelehnt",
+    "view": "Ansehen",
+    "seeAllProducts": "Alle Produkte anzeigen",
+    "seeAllProductHere": "Sie können alle Produkte sehen, indem Sie hier klicken"
 }
