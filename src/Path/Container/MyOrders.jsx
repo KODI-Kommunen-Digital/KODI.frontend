@@ -11,20 +11,17 @@ const MyOrders = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [myOrders, setMyOrders] = useState([]);
-    const [pageNumber, setPageNo] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
 
-    const fetchMyOrders = useCallback(() => {
-        getMyOrders({
-            pageNumber,
-            pageSize,
-        }).then((response) => {
+    const fetchMyOrders = useCallback((pageNumber) => {
+        getMyOrders(pageNumber).then((response) => {
             setMyOrders(response.data.data);
         });
     }, []);
 
     useEffect(() => {
-        fetchMyOrders();
+        fetchMyOrders(pageNumber);
     }, [fetchMyOrders, pageNumber]);
 
     const navigate = useNavigate();
@@ -144,7 +141,7 @@ const MyOrders = () => {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNo(pageNumber - 1)}
+                                        onClick={() => setPageNumber(pageNumber - 1)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -162,7 +159,7 @@ const MyOrders = () => {
                                 {myOrders.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNo(pageNumber + 1)}
+                                        onClick={() => setPageNumber(pageNumber + 1)}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}

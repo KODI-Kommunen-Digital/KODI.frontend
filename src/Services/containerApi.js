@@ -92,8 +92,8 @@ export async function deleteImage(cityId, storeId, productId) {
     return axios.delete(`/v1/cities/${cityId}/store/${storeId}/product/${productId}/imageDelete`);
 }
 
-export async function getMyOrders() {
-    return axios.get(`/v1/users/${getUserId()}/orders`);
+export async function getMyOrders(pageNumber) {
+    return axios.get(`/v1/users/${getUserId()}/orders?pageNumber=${pageNumber}&pageSize=9`);
 }
 
 export async function getOrderDetails(orderId) {

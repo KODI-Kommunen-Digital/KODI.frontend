@@ -893,7 +893,7 @@
     "SellerScreen": "Verkäuferbildschirm",
     "cardId": "Karten-ID",
     "currently_no_payments": "Derzeit keine Artikel zur Anzeige verfügbar! Bitte wählen Sie eine Karte",
-    "alreadyHaveAccount": "Sie haben bereits ein Konto hier",
+    "alreadyHaveAccount": "Sie haben bereits eine Anfrage gesendet, um Verkäufer dieses Shops zu werden",
     "goToStoreDetails": "Sie können die Geschäftsdaten sehen, indem Sie hier klicken",
     "products": "Produkte",
     "product": "Produkt",
@@ -986,5 +986,7 @@
     "rejected": "Abgelehnt",
     "view": "Ansehen",
     "seeAllProducts": "Alle Produkte anzeigen",
-    "seeAllProductHere": "Sie können alle Produkte sehen, indem Sie hier klicken"
+    "seeAllProductHere": "Sie können alle Produkte sehen, indem Sie hier klicken",
+    "shelfName": "Regalname",
+    "pleaseEnterBarcode": "Bitte geben Sie den Barcode ein"
 }

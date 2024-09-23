@@ -238,7 +238,7 @@ function SellerRequestPage() {
                         }}
                         className="text-gray-900 text-lg mb-4 font-medium title-font"
                     >
-                        {t("sendRequest")}
+                        {t("becomeASeller")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
 
