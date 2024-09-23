@@ -137,7 +137,7 @@ function CreateShelves() {
             case "title":
                 if (!value) {
                     return t("pleaseEnterTitle");
-                } else if (value.length > 15) {
+                } else if (value.length > 25) {
                     return t("titleTooLong");
                 } else {
                     return "";
