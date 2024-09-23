@@ -176,8 +176,6 @@ function AddNewProducts() {
             getCategory(cityId, shopId).then((response) => {
                 const categories = response?.data?.data || [];
                 setCategories(categories);
-
-                console.log("categories " + categories);
             });
         }
         document.title =
@@ -194,20 +192,18 @@ function AddNewProducts() {
         if (categoryId) {
             try {
                 const subCats = await getSubCategory(cityId, shopId, categoryId);
-                const subcatList = {};
 
                 if (subCats?.data?.data?.length > 0) {
                     const subcatList = subCats.data.data.reduce((acc, subCat) => {
                         acc[subCat.id] = subCat.name;
                         return acc;
                     }, {});
+
                     setSubCategories(subcatList);
+                    console.log("subcatList: ", JSON.stringify(subcatList)); // Log the correct object
                 } else {
-                    setSubCategories([]); // Set subcategories to an empty array
+                    setSubCategories([]);
                 }
-
-                console.log("subCategories " + JSON.stringify(subcatList));
-
             } catch (error) {
                 console.error("Error fetching subcategories: ", error);
                 setSubCategories({});
@@ -215,12 +211,7 @@ function AddNewProducts() {
         } else {
             setSubCategories({});
         }
-
-        setInput((prevInput) => ({ ...prevInput, categoryId }));
-        setSubcategoryId(null);
-        validateInput(event);
     };
-
 
     const handleSubcategoryChange = (event) => {
         const subCategoryId = event.target.value;
