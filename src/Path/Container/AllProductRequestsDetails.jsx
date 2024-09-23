@@ -156,23 +156,29 @@ const AllProductRequestsDetails = () => {
                                         </div>
 
                                         <div className="px-4 bg-slate-200 bg-opacity-75 shadow-md py-4">
-                                            {/* Multi-shelf selection with checkboxes */}
                                             <div className="mb-8">
                                                 <label className="font-bold text-slate-900">{t("selectShelf")}</label>
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-2">
                                                     {shelves.slice(0, visibleShelves).map((shelf) => (
-                                                        <div
-                                                            key={shelf.id}
-                                                            className={`cursor-pointer p-4 border border-blue-600 text-blue-600 rounded-lg text-center break-words truncate ${selectedShelves.includes(Number(shelf.id))
-                                                                ? 'bg-green-300' // Selected shelf
-                                                                : 'bg-blue-200' // Non-selected shelf
-                                                                }`}
-                                                            onClick={() => handleShelfSelection(shelf.id)}
-                                                        >
-                                                            {shelf.title}
+                                                        <div className="relative group" key={shelf.id}>
+                                                            <div
+                                                                className={`cursor-pointer p-4 border border-blue-600 text-blue-600 rounded-lg text-center break-words truncate ${selectedShelves.includes(Number(shelf.id))
+                                                                    ? 'bg-green-300' // Selected shelf
+                                                                    : 'bg-blue-200' // Non-selected shelf
+                                                                    }`}
+                                                                onClick={() => handleShelfSelection(shelf.id)}
+                                                            >
+                                                                {shelf.title}
+                                                            </div>
+
+                                                            {/* Tooltip for full name on hover */}
+                                                            <div className="absolute hidden group-hover:block bg-gray-700 text-white text-sm p-2 rounded-lg shadow-md w-max max-w-xs z-10 top-full left-1/2 transform -translate-x-1/2 mt-2">
+                                                                {shelf.title}
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
+
                                                 <div className="flex justify-center mt-4">
                                                     {visibleShelves < shelves.length && (
                                                         <button
