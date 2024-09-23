@@ -39,7 +39,7 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        barCodeNum: "",
+        barcode: "",
         // removeImage: false,
         // // hasAttachment: false,
     });
@@ -55,13 +55,14 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
-        barCodeNum: "",
+        barcode: "",
     });
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let valid = true;
+        console.log("Category ID on submit:", input.categoryId);
 
+        let valid = true;
         const newError = { ...error };
 
         for (const key in error) {
@@ -189,6 +190,11 @@ function AddNewProducts() {
         const categoryId = event.target.value;
         setCategoryId(categoryId);
 
+        setInput((prev) => ({
+            ...prev,
+            categoryId: categoryId,
+        }));
+
         if (categoryId) {
             try {
                 const subCats = await getSubCategory(cityId, shopId, categoryId);
@@ -277,6 +283,7 @@ function AddNewProducts() {
 
             case "categoryId":
                 if (!parseInt(value)) {
+                    console.log("asjhfdvaslhjdvadljahvdjhlasdasdb " + value)
                     return t("pleaseSelectCategory");
                 } else {
                     return "";
@@ -341,11 +348,11 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "barCodeNum":
+            case "barcode":
                 if (!value) {
                     return t("pleaseEnterMinCount");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
+                    // } else if (isNaN(value)) {
+                    //     return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -853,9 +860,9 @@ function AddNewProducts() {
                             </label>
                             <input
                                 type="text"
-                                id="barCodeNum"
-                                name="barCodeNum"
-                                value={input.barCodeNum}
+                                id="barcode"
+                                name="barcode"
+                                value={input.barcode}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -864,10 +871,10 @@ function AddNewProducts() {
                             <div
                                 className="h-[24px] text-red-600"
                                 style={{
-                                    visibility: error.barCodeNum ? "visible" : "hidden",
+                                    visibility: error.barcode ? "visible" : "hidden",
                                 }}
                             >
-                                {error.barCodeNum}
+                                {error.barcode}
                             </div>
                         </div>
                     </div>

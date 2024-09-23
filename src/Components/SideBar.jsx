@@ -113,17 +113,20 @@ function SideBar() {
         setUserRole(profileResponse.data.data.roleId);
 
         const roleResponse = await getUserRoleContainer();
-        const roles = roleResponse.data.data;
+        let roles = roleResponse.data.data;
+        roles = roles.map(Number);
         if (roles.includes(101)) {
           setIsOwner(true);
+        } else {
+          console.log("User is not owner");
         }
+
         if (roles.includes(102)) {
           setIsSeller(true);
+        } else {
+          console.log("User is not seller");
         }
-        if (roles.includes(101) && roles.includes(102)) {
-          setIsOwner(true);
-          setIsSeller(true);
-        }
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
