@@ -113,26 +113,20 @@ function SideBar() {
         setUserRole(profileResponse.data.data.roleId);
 
         const roleResponse = await getUserRoleContainer();
-        const roles = roleResponse.data.data;
-
-        // if (roles.includes(101) && !roles.includes(102)) {
-        //   setIsOwner(true);
-        // } else if (roles.includes(102) && !roles.includes(101)) {
-        //   setIsSeller(true);
-        // } else if (roles.includes(101) && roles.includes(102)) {
-        //   setIsOwner(true);
-        //   setIsSeller(true);
-        // }
+        let roles = roleResponse.data.data;
+        roles = roles.map(Number);
         if (roles.includes(101)) {
           setIsOwner(true);
+        } else {
+          console.log("User is not owner");
         }
+
         if (roles.includes(102)) {
           setIsSeller(true);
+        } else {
+          console.log("User is not seller");
         }
-        if (roles.includes(101) && roles.includes(102)) {
-          setIsOwner(true);
-          setIsSeller(true);
-        }
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -471,7 +465,7 @@ function SideBar() {
                 <>
                   {isContainerEnabled && (
                     <div className="ml-4">
-                      {((isSeller || userRole === role.Admin)) && (
+                      {((isSeller || isOwner)) && (
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
@@ -495,7 +489,7 @@ function SideBar() {
                         </div>
                       )}
 
-                      {(isOwner || (userRole === role.Admin)) && (
+                      {(isOwner) && (
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
                           onClick={() => {
