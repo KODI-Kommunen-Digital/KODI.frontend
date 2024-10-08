@@ -37,7 +37,7 @@ function ChangeImage({ setInput, reloadPage }) {
       {file ? <img src={URL.createObjectURL(file)} alt={"Profile"} /> : ""}
       <button
         onClick={() => inputFile.current.click()}
-        className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+        className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
       >
         {t("change")}
       </button>
@@ -332,7 +332,7 @@ class ProfilePage extends React.Component {
   render() {
     const { t } = this.props;
     return (
-      <div className="bg-slate-600">
+      <div className="bg-gray-800">
         <SideBar />
         {this.state.pageLoading ? (
           <div className="flex h-screen justify-center items-center">
@@ -507,7 +507,7 @@ class ProfilePage extends React.Component {
                         <div className="flex md:flex-col justify-center md:items-center item-center">
                           <button
                             onClick={() => this.setProfile("image", "")}
-                            className="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded content-center w-full sm:w-auto"
+                            className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded content-center w-full sm:w-auto"
                             style={{
                               fontFamily: "Poppins, sans-serif",
                             }}
@@ -566,11 +566,11 @@ class ProfilePage extends React.Component {
               </div>
             </div>
             <SocialMedia setSocialMedia={this.setSocialMedia.bind(this)} />
-            <div className="container w-auto px-5 py-2 bg-slate-600">
+            <div className="container w-auto px-5 py-2 bg-gray-800">
               <div className="bg-white mt-4 p-6">
                 <div className="py-2 mt-1 px-2">
                   <button
-                    className="w-full hover:bg-slate-600 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+                    className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
                     onClick={this.updateChanges}
                     disabled={
                       !this.state.formValid || this.state.updatingProfile

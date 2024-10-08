@@ -69,7 +69,8 @@ const ViewProfile = () => {
         const userData = response.data.data ? response.data.data[0] : null;
         if (userData) {
           setUser(userData);
-          const parsedSocialMedia = userData.socialMedia
+          // const parsedSocialMedia = userData.socialMedia
+          const parsedSocialMedia = typeof userData.socialMedia === "string" && isValidJSON(userData.socialMedia)
             ? JSON.parse(userData.socialMedia)
             : [];
           setUserSocial(parsedSocialMedia);
@@ -104,6 +105,15 @@ const ViewProfile = () => {
       </div>;
     }
   }, []);
+
+  const isValidJSON = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

@@ -131,6 +131,6 @@ ContactInfo.propTypes = {
     id: PropTypes.number,
     website: PropTypes.string,
   }).isRequired,
-  createdAt: PropTypes.string.isRequired,
+  createdAt: PropTypes.string,
 };
 export default ContactInfo;
