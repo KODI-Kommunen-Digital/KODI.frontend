@@ -598,6 +598,13 @@ function UploadListings() {
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
 
+        if (listingData.categoryId === 1 && !listingData.expiryDate) {
+          setListingInput((prevState) => ({
+            ...prevState,
+            disableDates: true,
+          }));
+        }
+
         const appointmentId = listingData.appointmentId;
         const listingId = listingData.id
         if (appointmentId) {
@@ -841,7 +848,9 @@ function UploadListings() {
 
       case "phone":
         const phoneRegex = /^\d+$/;
-        if (!value.match(phoneRegex)) {
+        if (!value) {
+          return ""; // Allow empty phone field
+        } else if (!value.match(phoneRegex)) {
           return t("pleaseEnterValidPhoneNumber");
         }
         return "";
