@@ -16,7 +16,8 @@ const MyOrders = () => {
 
     const fetchMyOrders = useCallback((pageNumber) => {
         getMyOrders(pageNumber).then((response) => {
-            setMyOrders(response.data.data);
+            const sortedOrders = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            setMyOrders(sortedOrders);
         });
     }, []);
 
@@ -105,7 +106,7 @@ const MyOrders = () => {
                                                         className="px-6 py-4 text-center font-bold"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
-                                                        {myOrder.amount}
+                                                        € {myOrder.amount}
                                                     </td>
 
                                                     <td

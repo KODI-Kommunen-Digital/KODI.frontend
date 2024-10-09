@@ -277,7 +277,9 @@ const SellerRequestsApproval = () => {
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    {new Date(sellerRequest.createdAt).toLocaleString('de')}
+                                                    {sellerRequest.createdAt
+                                                        ? new Date(sellerRequest.createdAt).toLocaleString('de')
+                                                        : "-"}
                                                 </td>
 
                                                 <td

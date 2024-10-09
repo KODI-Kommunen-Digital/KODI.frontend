@@ -110,7 +110,7 @@ const PaymentStatus = () => {
                                                     width: "33.33%",
                                                 }}
                                             >
-                                                {t("cardId")}
+                                                {t("orderId")}
                                             </th>
                                             <th
                                                 scope="col"
@@ -153,7 +153,7 @@ const PaymentStatus = () => {
                                                         className="px-6 py-4 text-center font-bold"
                                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                                     >
-                                                        {payment.amount}
+                                                        € {payment.amount}
                                                     </td>
 
                                                     <td

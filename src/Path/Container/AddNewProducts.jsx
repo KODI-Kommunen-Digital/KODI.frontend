@@ -20,7 +20,7 @@ function AddNewProducts() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState([]);
     // const [pdf, setPdf] = useState(null);
     const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
     const [productId, setProductId] = useState(0);
@@ -350,7 +350,7 @@ function AddNewProducts() {
 
             case "barcode":
                 if (!value) {
-                    return t("pleaseEnterMinCount");
+                    return t("pleaseEnterBarcode");
                     // } else if (isNaN(value)) {
                     //     return t("pleaseEnterValidNumber");
                 } else {
@@ -419,11 +419,12 @@ function AddNewProducts() {
 
     function handleInputChange(e) {
         e.preventDefault();
-        const files = e.target.files;
+        const files = Array.from(e.target.files);
         const MAX_IMAGE_SIZE_MB = 20;
-        let hasImage = false;
         let hasPdf = false;
 
+        // Filter for valid images and check file sizes
+        const validImages = [];
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
@@ -433,36 +434,31 @@ function AddNewProducts() {
             }
 
             if (file.type.startsWith("image/")) {
-                hasImage = true;
-            }
-            else if (file.type === "application/pdf") {
+                validImages.push(file);
+            } else if (file.type === "application/pdf") {
                 hasPdf = true;
             }
         }
 
-        if (hasPdf
-        ) {
+        if (hasPdf) {
             alert(t("PdfAlert"));
             return;
         }
 
-        if (hasImage) {
-            setLocalImageOrPdf(true);
-            setImage(files);
-            setInput((prev) => ({
-                ...prev,
-                // hasAttachment: false,
-            }));
+        const totalImages = image ? image.length + validImages.length : validImages.length;
+
+        if (totalImages > 3) {
+            alert(t("productImageNumberAlert"));
+            const allowedFiles = validImages.slice(0, 3 - (image ? image.length : 0));
+            setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+            setImage((prevImages) => [...prevImages, ...allowedFiles]);
+        } else {
+            setLocalImages((prevImages) => [...prevImages, ...validImages]);
+            setImage((prevImages) => [...prevImages, ...validImages]);
         }
 
-        // if (hasPdf) {
-        //     setLocalImageOrPdf(true);
-        //     setPdf(files[0]); // Assuming only one PDF file is allowed
-        //     setInput((prev) => ({
-        //         ...prev,
-        //         // hasAttachment: true,
-        //     }));
-        // }
+        setLocalImageOrPdf(true);
+        e.target.value = null; // Reset input
     }
 
     const [localImages, setLocalImages] = useState([]);
@@ -473,53 +469,53 @@ function AddNewProducts() {
         const validImages = newFiles.filter(file => file.type.startsWith("image/"));
         const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-        // If there are invalid files (e.g., not images or PDFs), show an alert
+        // If there are invalid files (e.g., not images), show an alert
         if (invalidFiles.length > 0) {
             alert(t("imagePdfAlert"));
             return;
         }
 
-        // Check the total number of images after adding the new files
-        const totalImages = image.length + validImages.length;
+        const currentImageCount = image ? image.length : 0;
+        const totalImages = currentImageCount + validImages.length;
 
         if (totalImages > 3) {
-            alert(t("imageNumberAlert"));
+            alert(t("productImageNumberAlert"));
+            const allowedFiles = validImages.slice(0, 3 - currentImageCount);
+            setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+            setImage((prevImages) => [...prevImages, ...allowedFiles]);
         } else {
-            // If valid images are under the limit, update the state
             setLocalImages((prevImages) => [...prevImages, ...validImages]);
             setImage((prevImages) => [...prevImages, ...validImages]);
         }
+
+        event.target.value = null; // Reset input
     };
 
     const handleUpdateMultipleInputChange = (e) => {
         const newFiles = Array.from(e.target.files);
 
-        if (image.length > 0) {
-            const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-            const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+        const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+        const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-            if (invalidFiles.length > 0) {
-                alert(t("imagePdfAlert"));
-            } else {
-                setLocalImages((prevImages) => [...prevImages, ...validImages]);
-                setImage((prevImages) => [...prevImages, ...validImages]);
-            }
+        if (invalidFiles.length > 0) {
+            alert(t("imagePdfAlert"));
+            return;
         }
-        // else {
-        //     newFiles.forEach(file => {
-        //         if (file.type === "application/pdf") {
-        //             setLocalImageOrPdf(true);
-        //             setPdf(file);
-        //             setInput((prev) => ({
-        //                 ...prev,
-        //                 // hasAttachment: true,
-        //             }));
-        //         } else if (file.type.startsWith("image/")) {
-        //             setLocalImages((prevImages) => [...prevImages, file]);
-        //             setImage((prevImages) => [...prevImages, file]);
-        //         }
-        //     });
-        // }
+
+        const currentImageCount = image ? image.length : 0;
+        const totalImages = currentImageCount + validImages.length;
+
+        if (totalImages > 3) {
+            alert(t("productImageNumberAlert"));
+            const allowedFiles = validImages.slice(0, 3 - currentImageCount);
+            setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+            setImage((prevImages) => [...prevImages, ...allowedFiles]);
+        } else {
+            setLocalImages((prevImages) => [...prevImages, ...validImages]);
+            setImage((prevImages) => [...prevImages, ...validImages]);
+        }
+
+        e.target.value = null; // Reset input
     };
 
     function handleRemoveImage() {

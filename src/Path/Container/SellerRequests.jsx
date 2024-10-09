@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellerRequests, getOwnerShops } from "../../Services/containerApi";
+import { getSellerRequests, getSellerShops } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 
 const SellerRequests = () => {
@@ -17,7 +17,7 @@ const SellerRequests = () => {
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
 
     const fetchStores = useCallback(() => {
-        getOwnerShops().then((response) => {
+        getSellerShops().then((response) => {
             setStores(response.data.data);
         });
     }, []);
@@ -229,7 +229,9 @@ const SellerRequests = () => {
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
-                                                    {new Date(products.createdAt).toLocaleString('de')}
+                                                    {products.createdAt
+                                                        ? new Date(products.createdAt).toLocaleString('de')
+                                                        : "-"}
                                                 </td>
 
                                                 <td

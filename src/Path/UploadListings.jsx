@@ -146,6 +146,8 @@ function UploadListings() {
   }
 
   const [localImages, setLocalImages] = useState([]);
+  const MAX_IMAGES = 8;
+
   const handleMultipleInputChange = (event) => {
     const newFiles = Array.from(event.target.files);
 
@@ -161,7 +163,7 @@ function UploadListings() {
 
         // Check if total images exceed the limit of 3
         if (totalImages > 3) {
-          alert("You can only upload a maximum of 3 images.");
+          alert(t("listingImageNumberAlert", { limit: MAX_IMAGES }));
         } else {
           setLocalImages((prevImages) => [...prevImages, ...validImages]);
           setImage((prevImages) => [...prevImages, ...validImages]);
