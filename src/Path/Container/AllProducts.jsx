@@ -285,7 +285,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center font-bold text-green-600"
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.price}
+                                                    € {product.price}
                                                 </td>
 
                                                 <td

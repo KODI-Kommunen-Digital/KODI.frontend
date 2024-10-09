@@ -640,7 +640,7 @@
     "viewPosts": "View Posts",
     "send": "Send",
     "createAppoinment": "Create Appoinment",
-    "uploadListings": "Upload listing",
+    "uploadListings": "Upload Listing",
     "serviceName": "Service Name",
     "duration": "Duration",
     "addServiceName": "Add Service Name",
@@ -814,7 +814,7 @@
     "seeAllApymentStatus": "To view all your payment details by clicking here",
     "card": "Card",
     "applyCard": "Activate Card",
-    "applyForCard": "To activate for your shopping card click here",
+    "applyForCard": "To activate your shopping card click here",
     "amount": "Amount",
     "orderDate": "Date Request Placed",
     "clickHere": "Click here",
@@ -851,7 +851,7 @@
     "cardId": "Card Id",
     "currently_no_payments": "Currently there is no items to display ! Please select a card",
     "noOfViews": "Number of views",
-    "alreadyHaveAccount": "You have already sent a request to become seller of this store",
+    "alreadyRequestSend": "You have already sent a request to become seller of this store",
     "goToStoreDetails": "You can see the stores details by clicking here",
     "products": "Products",
     "product": "Product",
@@ -930,5 +930,8 @@
     "seeAllProducts": "See All Products",
     "seeAllProductHere": "You can see all product by clicking here",
     "shelfName": "Shelf Name",
-    "pleaseEnterBarcode": "Please enter the barcode"
+    "pleaseEnterBarcode": "Please enter the barcode",
+    "alreadySellerOfThisStore": "You are already a seller of this store",
+    "productImageNumberAlert": "You can only upload a maximum of 3 images",
+    "listingImageNumberAlert": "You can only upload a maximum of {{limit}} images"
 }

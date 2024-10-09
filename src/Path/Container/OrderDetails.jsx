@@ -5,7 +5,7 @@ import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import { getOrderDetails } from "../../Services/containerApi";
 
-const ProductDetailsStore = () => {
+const OrderDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [orders, setOrders] = useState(null);
@@ -98,4 +98,4 @@ const ProductDetailsStore = () => {
     );
 };
 
-export default ProductDetailsStore;
+export default OrderDetails;
