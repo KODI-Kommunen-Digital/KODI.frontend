@@ -66,13 +66,19 @@ function SellerRequestPage() {
                     navigate("/Dashboard");
                 }, 5000);
             } catch (error) {
-                if (error.response && error.response.status === 409) {
-                    setErrorMessage(t("alreadyHaveAccount"));
+                if (error.response && error.response.data) {
+                    const { errorCode, message } = error.response.data;
+                    console.log(error.response.data)
+                    if (errorCode === 2010 && message === "Seller request already exists") {
+                        setErrorMessage(t("alreadyRequestSend"));
+                    } else if (errorCode === 409 && message === "Already a seller") {
+                        setErrorMessage(t("alreadySellerOfThisStore"));
+                    } else {
+                        setErrorMessage(t("changesNotSaved"));
+                    }
                 } else {
                     setErrorMessage(t("changesNotSaved"));
                 }
-                setSuccessMessage(false);
-                setTimeout(() => setErrorMessage(false), 5000);
             } finally {
                 setUpdating(false);
             }

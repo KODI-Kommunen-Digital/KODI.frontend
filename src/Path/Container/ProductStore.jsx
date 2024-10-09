@@ -278,14 +278,16 @@ function ProductStore() {
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {new Date(product.createdAt).toLocaleString('de')}
+                                                    {product.createdAt
+                                                        ? new Date(product.createdAt).toLocaleString('de')
+                                                        : "-"}
                                                 </td>
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-green-600"
                                                     style={{ fontFamily: 'Poppins, sans-serif' }}
                                                 >
-                                                    {product.price}
+                                                    € {product.price}
                                                 </td>
 
                                                 <td
