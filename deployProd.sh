@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source .env
+. .env
 react-scripts build
 if [[-n $PM2_PROCESS_NAME]]; then
     pm2 delete $PM2_PROCESS_NAME
