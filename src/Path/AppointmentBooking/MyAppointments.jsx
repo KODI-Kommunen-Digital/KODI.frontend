@@ -80,12 +80,12 @@ const MyAppointments = () => {
                         <>
                             <div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
 
-                                <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
+                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
@@ -95,7 +95,7 @@ const MyAppointments = () => {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
@@ -105,7 +105,7 @@ const MyAppointments = () => {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
@@ -115,7 +115,7 @@ const MyAppointments = () => {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
@@ -126,7 +126,7 @@ const MyAppointments = () => {
 
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
@@ -137,7 +137,7 @@ const MyAppointments = () => {
 
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "16.66%",
