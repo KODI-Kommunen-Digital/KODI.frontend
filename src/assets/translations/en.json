@@ -981,5 +981,7 @@
     "pleaseEnterBarcode": "Please enter the barcode",
     "alreadySellerOfThisStore": "You are already a seller of this store",
     "productImageNumberAlert": "You can only upload a maximum of 3 images",
-    "listingImageNumberAlert": "You can only upload a maximum of {{limit}} images"
+    "listingImageNumberAlert": "You can only upload a maximum of {{limit}} images",
+    "noDataForStore": "No data awailable",
+    "selectAnotherStore": "Please select another store"
 }

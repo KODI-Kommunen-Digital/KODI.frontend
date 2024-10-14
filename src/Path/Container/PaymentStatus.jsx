@@ -26,6 +26,16 @@ const PaymentStatus = () => {
         window.history.replaceState({}, "", newUrl);
     };
 
+    const handleCardClick = (cardId) => {
+        setCardId(cardId);
+        setPageNo(1);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("cardId", cardId);
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
     const fetchCards = useCallback(() => {
         getCards().then((response) => {
             setCards(response.data.data);
@@ -47,7 +57,7 @@ const PaymentStatus = () => {
                 setPaymentStatus(response.data.data);
             });
         }
-    }, []);
+    }, [pageNumber, pageSize]);
 
     useEffect(() => {
         if (cardId) {
@@ -66,45 +76,45 @@ const PaymentStatus = () => {
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
 
-            <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
-                <div className="col-span-6 sm:col-span-1 mt-4 mb-1 px-0 mr-0 w-full md:w-80">
-                    <select
-                        id="cards"
-                        name="cards"
-                        autoComplete="cards"
-                        onChange={handleCardChange}
-                        value={cardId || 0}
-                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
-                        style={{
-                            fontFamily: "Poppins, sans-serif",
-                        }}
-                    >
-                        <option className="font-sans" value={0} key={0}>
-                            {t("select", {
-                                regionName: process.env.REACT_APP_REGION_NAME,
-                            })}
-                        </option>
-                        {cards.map((card) => (
-                            <option className="font-sans" value={card.id} key={card.id}>
-                                {card.id}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div>
-
             <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
 
                     {cardId && paymentStatus && paymentStatus.length > 0 ? (
                         <>
+                            <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
+                                <div className="col-span-6 sm:col-span-1 mt-4 mb-1 px-0 mr-0 w-full md:w-80">
+                                    <select
+                                        id="cards"
+                                        name="cards"
+                                        autoComplete="cards"
+                                        onChange={handleCardChange}
+                                        value={cardId || 0}
+                                        className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+                                        style={{
+                                            fontFamily: "Poppins, sans-serif",
+                                        }}
+                                    >
+                                        <option className="font-sans" value={0} key={0}>
+                                            {t("select", {
+                                                regionName: process.env.REACT_APP_REGION_NAME,
+                                            })}
+                                        </option>
+                                        {cards.map((card) => (
+                                            <option className="font-sans" value={card.id} key={card.id}>
+                                                {card.id}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
                             <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
+                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "33.33%",
@@ -114,7 +124,7 @@ const PaymentStatus = () => {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center"
+                                                className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "33.33%",
@@ -124,7 +134,7 @@ const PaymentStatus = () => {
                                             </th>
                                             <th
                                                 scope="col"
-                                                className="px-6 sm:px-6 py-3 text-center "
+                                                className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
                                                     width: "33.33%",
@@ -162,24 +172,6 @@ const PaymentStatus = () => {
                                                     >
                                                         {new Date(payment.createdAt).toLocaleDateString()}
                                                     </td>
-
-                                                    {/* <td className="px-6 py-4 text-center">
-                                                        {payment.Status === 1 && (
-                                                            <div className="inline-flex items-center rounded-full bg-blue-600 py-2 px-3 text-xs text-white">
-                                                                {t("complete")}
-                                                            </div>
-                                                        )}
-                                                        {payment.Status === 2 && (
-                                                            <div className="inline-flex items-center rounded-full bg-red-200 py-1 px-2 text-red-500">
-                                                                {t("cancelled")}
-                                                            </div>
-                                                        )}
-                                                        {payment.Status === 3 && (
-                                                            <div className="inline-flex items-center rounded-full bg-blue-200 py-1 px-2 text-blue-600">
-                                                                {t("pending")}
-                                                            </div>
-                                                        )}
-                                                    </td> */}
                                                 </tr>
                                             );
                                         })}
@@ -219,97 +211,58 @@ const PaymentStatus = () => {
                         </>
                     ) : (
                         <div className="bg-gray-100 mt-0 h-[30rem] flex flex-col justify-center items-center">
-                            <center>
-                                <svg
-                                    className="emoji-404"
-                                    enableBackground="new 0 0 226 249.135"
-                                    height="249.135"
-                                    id="Layer_1"
-                                    overflow="visible"
-                                    version="1.1"
-                                    viewBox="0 0 226 249.135"
-                                    width="226"
-                                    xmlSpace="preserve"
-                                >
-                                    <circle cx="113" cy="113" fill="#FFE585" r="109" />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.29"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="88.866"
-                                        x2="136.866"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.17"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="154.732"
-                                        x2="168.732"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <line
-                                        enableBackground="new    "
-                                        fill="none"
-                                        opacity="0.17"
-                                        stroke="#6E6E96"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="8"
-                                        x1="69.732"
-                                        x2="58.732"
-                                        y1="245.135"
-                                        y2="245.135"
-                                    />
-                                    <circle cx="68.732" cy="93" fill="#6E6E96" r="9" />
-                                    <path
-                                        d="M115.568,5.947c-1.026,0-2.049,0.017-3.069,0.045  c54.425,1.551,98.069,46.155,98.069,100.955c0,55.781-45.219,101-101,101c-55.781,0-101-45.219-101-101  c0-8.786,1.124-17.309,3.232-25.436c-3.393,10.536-5.232,21.771-5.232,33.436c0,60.199,48.801,109,109,109s109-48.801,109-109  S175.768,5.947,115.568,5.947z"
-                                        enableBackground="new    "
-                                        fill="#FF9900"
-                                        opacity="0.24"
-                                    />
-                                    <circle cx="156.398" cy="93" fill="#6E6E96" r="9" />
-                                    <ellipse
-                                        cx="67.732"
-                                        cy="140.894"
-                                        enableBackground="new    "
-                                        fill="#FF0000"
-                                        opacity="0.18"
-                                        rx="17.372"
-                                        ry="8.106"
-                                    />
-                                    <ellipse
-                                        cx="154.88"
-                                        cy="140.894"
-                                        enableBackground="new    "
-                                        fill="#FF0000"
-                                        opacity="0.18"
-                                        rx="17.371"
-                                        ry="8.106"
-                                    />
-                                    <path
-                                        d="M13,118.5C13,61.338,59.338,15,116.5,15c55.922,0,101.477,44.353,103.427,99.797  c0.044-1.261,0.073-2.525,0.073-3.797C220,50.802,171.199,2,111,2S2,50.802,2,111c0,50.111,33.818,92.318,79.876,105.06  C41.743,201.814,13,163.518,13,118.5z"
-                                        fill="#FFEFB5"
-                                    />
-                                    <circle cx="113" cy="113" fill="none" r="109" stroke="#6E6E96" strokeWidth="8" />
-                                </svg>
-                                <div className="tracking-widest mt-4">
-                                    <span className="text-gray-500 text-xl">{t("currently_no_payments")}</span>
+                            <div className="flex justify-center px-5 py-2 gap-2 w-full">
+                                <div className="w-full">
+                                    {cards.length < 5 ? (
+                                        // Center the card if there's only one card
+                                        <div className="flex justify-center">
+                                            {cards.map((card) => (
+                                                <div key={card.id} className="w-full max-w-xs">
+                                                    {/* Card Selector */}
+                                                    <div
+                                                        className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${cardId === card.id ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}`}
+                                                        onClick={() => handleCardClick(card.id)}
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {card.id}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        // Use grid for multiple cards
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+                                            {cards.map((card) => (
+                                                <div key={card.id} className="w-full">
+                                                    {/* Card Selector */}
+                                                    <div
+                                                        className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${cardId === card.id ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}`}
+                                                        onClick={() => handleCardClick(card.id)}
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {card.id}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                            </center>
+                            </div>
+
+                            {cardId !== 0 && paymentStatus.length === 0 && (
+                                <div className="text-center mt-6">
+                                    <p className="text-gray-500">
+                                        {t("noDataForStore")}
+                                    </p>
+                                    <p className="text-gray-500">
+                                        {t("selectAnotherStore")}
+                                    </p>
+                                </div>
+                            )}
+
                             <center className="mt-6">
                                 <a
-                                    onClick={() => navigateTo("/CustomerScreen")}
+                                    onClick={() => navigateTo("/OwnerScreen/StoreDetails")}
                                     className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-black group-hover:-translate-x-0 ease">
@@ -335,6 +288,7 @@ const PaymentStatus = () => {
                                 </a>
                             </center>
                         </div>
+
                     )}
                 </div>
             </div>
