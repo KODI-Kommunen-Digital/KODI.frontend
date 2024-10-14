@@ -114,7 +114,7 @@ function Shelves() {
                             </div>
 
                             <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
+                                <table className="w-full text-sm text-left text-gray-500 p-6 space-y-10 rounded-lg">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th
