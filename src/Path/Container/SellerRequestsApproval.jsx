@@ -230,27 +230,27 @@ const SellerRequestsApproval = () => {
                                                 className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("sellerName")}
                                             </th>
-                                            <th
+                                            {/* <th
                                                 scope="col"
                                                 className="px-6 py-4 text-center"
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("date_of_creation")}
-                                            </th>
+                                            </th> */}
                                             <th
                                                 scope="col"
                                                 className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
                                                 {t("description")}
@@ -261,10 +261,10 @@ const SellerRequestsApproval = () => {
                                                 className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("action")}
+                                                {t("viewDetails")}
                                             </th>
 
                                             <th
@@ -272,10 +272,10 @@ const SellerRequestsApproval = () => {
                                                 className="px-6 py-4 text-center "
                                                 style={{
                                                     fontFamily: "Poppins, sans-serif",
-                                                    width: "20%",
+                                                    width: "25%",
                                                 }}
                                             >
-                                                {t("viewDetails")}
+                                                {t("action")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -291,20 +291,34 @@ const SellerRequestsApproval = () => {
                                                     {sellerRequest.title}
                                                 </th>
 
-                                                <td
+                                                {/* <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
                                                     {sellerRequest.createdAt
                                                         ? new Date(sellerRequest.createdAt).toLocaleString('de')
                                                         : "-"}
-                                                </td>
+                                                </td> */}
 
                                                 <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600 truncate"
                                                     style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
                                                 >
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className="relative group inline-block"
+                                                            onClick={() => navigateToSellerDetails(sellerRequest)}
+                                                        >
+                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                {t("viewDetails")}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
 
                                                 <td className="px-6 py-4">
@@ -334,20 +348,6 @@ const SellerRequestsApproval = () => {
                                                                 );
                                                             })}
                                                         </select>
-                                                    </div>
-                                                </td>
-
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className="relative group inline-block"
-                                                            onClick={() => navigateToSellerDetails(sellerRequest)}
-                                                        >
-                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
-                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                                {t("viewDetails")}
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>

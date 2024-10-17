@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import { status, statusByName } from "../../Constants/containerStatus";
 import { updateProductRequests, getShelves } from "../../Services/containerApi";
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import Alert from "../../Components/Alert";
 
 const AllProductRequestsDetails = () => {
     window.scrollTo(0, 0);
@@ -18,6 +19,9 @@ const AllProductRequestsDetails = () => {
     const [maxCount, setMaxCount] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [visibleShelves, setVisibleShelves] = useState(4);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const [error, setError] = useState({
         maxCount: "",
@@ -85,21 +89,31 @@ const AllProductRequestsDetails = () => {
         try {
             const status = statusByName.Active;
             await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
-            alert("Product request updated successfully");
+            setSuccessMessage(t("productUpdated"));
+            setErrorMessage('');
+            setTimeout(() => {
+                navigate('/OwnerScreen/AllProductRequests');
+            }, 5000);
         } catch (error) {
-            console.error("Failed to update product request", error);
-            alert("Failed to update the product request");
+            console.error("productUpdateFailed", error);
+            setErrorMessage(t("productUpdateFailed"));
+            setSuccessMessage('');
         }
     };
 
     const handleReject = async () => {
         try {
-            const status = statusByName.Inactive
+            const status = statusByName.Inactive;
             await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
-            alert("Product request updated successfully");
+            setSuccessMessage(t("productUpdated"));
+            setErrorMessage('');
+            setTimeout(() => {
+                navigate('/OwnerScreen/AllProductRequests');
+            }, 5000);
         } catch (error) {
-            console.error("Failed to update product request", error);
-            alert("Failed to update the product request");
+            console.error("productUpdateFailed", error);
+            setErrorMessage(t("productUpdateFailed"));
+            setSuccessMessage('');
         }
     };
 
@@ -259,23 +273,32 @@ const AllProductRequestsDetails = () => {
 
                                     {/* Approve button - Only show if productDetails.status === 0 */}
                                     {product.status === 0 && (
-                                        <div className="relative mb-4 grid grid-cols-2 gap-4">
-                                            <div className="relative w-full text-center">
-                                                <button
-                                                    className="w-full bg-green-800 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
-                                                    onClick={handleApprove}
-                                                >
-                                                    {t("approve")}
-                                                </button>
+                                        <div>
+                                            <div className="relative mb-4 grid grid-cols-2 gap-4">
+                                                <div className="relative w-full text-center">
+                                                    <button
+                                                        className="w-full bg-green-800 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
+                                                        onClick={handleApprove}
+                                                    >
+                                                        {t("approve")}
+                                                    </button>
+                                                </div>
+
+                                                <div className="relative w-full text-center">
+                                                    <button
+                                                        className="w-full bg-red-800 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
+                                                        onClick={handleReject}
+                                                    >
+                                                        {t("reject")}
+                                                    </button>
+                                                </div>
                                             </div>
 
-                                            <div className="relative w-full text-center">
-                                                <button
-                                                    className="w-full bg-red-800 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
-                                                    onClick={handleReject}
-                                                >
-                                                    {t("reject")}
-                                                </button>
+                                            <div className="py-2 mt-1 px-2">
+                                                {successMessage && (
+                                                    <Alert type={"success"} message={successMessage} />
+                                                )}
+                                                {errorMessage && <Alert type={"danger"} message={errorMessage} />}
                                             </div>
                                         </div>
                                     )}
