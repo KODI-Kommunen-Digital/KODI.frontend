@@ -63,7 +63,7 @@ function SellerRequestPage() {
 
                 setTimeout(() => {
                     setSuccessMessage(false);
-                    navigate("/Dashboard");
+                    navigate("/OwnerScreen");
                 }, 5000);
             } catch (error) {
                 if (error.response && error.response.data) {

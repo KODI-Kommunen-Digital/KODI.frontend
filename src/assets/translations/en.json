@@ -981,5 +981,7 @@
     "productImageNumberAlert": "You can only upload a maximum of 3 images",
     "listingImageNumberAlert": "You can only upload a maximum of {{limit}} images",
     "noDataForStore": "No data awailable",
-    "selectAnotherStore": "Please select another store"
+    "selectAnotherStore": "Please select another store",
+    "productUpdated": "Product request updated successfully",
+    "productUpdateFailed": "Failed to update the product request"
 }
