@@ -262,7 +262,7 @@ const PaymentStatus = () => {
 
                             <center className="mt-6">
                                 <a
-                                    onClick={() => navigateTo("/OwnerScreen/StoreDetails")}
+                                    onClick={() => navigateTo("/CustomerScreen")}
                                     className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-black group-hover:-translate-x-0 ease">
