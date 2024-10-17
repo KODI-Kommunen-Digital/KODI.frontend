@@ -103,7 +103,7 @@ function AddNewProducts() {
 
                 setTimeout(() => {
                     setSuccessMessage(false);
-                    navigate("/Dashboard");
+                    navigate("/SellerScreen");
                 }, 5000);
 
             } catch (error) {
@@ -395,26 +395,51 @@ function AddNewProducts() {
     }
 
     function handleDrop(e) {
+        if (updating || isSuccess) return;
+
         e.preventDefault();
         e.stopPropagation();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            if (file.type.startsWith("image/")) {
-                setImage(e.dataTransfer.files);
-                setLocalImageOrPdf(true);
-                setInput((prev) => ({
-                    ...prev,
-                    // hasAttachment: true,
-                }));
+        const files = Array.from(e.dataTransfer.files);
+
+        const MAX_IMAGE_SIZE_MB = 20;
+        let hasPdf = false;
+
+        // Filter for valid images and check file sizes
+        const validImages = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+                alert(`Maximum file size is ${MAX_IMAGE_SIZE_MB} MB`);
+                return;
             }
-            // else if (file.type === "application/pdf") {
-            //     setPdf(file);
-            //     setInput((prev) => ({
-            //         ...prev,
-            //         // hasAttachment: true,
-            //     }));
-            // }
+
+            if (file.type.startsWith("image/")) {
+                validImages.push(file);
+            } else if (file.type === "application/pdf") {
+                hasPdf = true;
+            }
         }
+
+        if (hasPdf) {
+            alert(t("PdfAlert"));
+            return;
+        }
+
+        const currentImageCount = image ? image.length : 0;
+        const totalImages = currentImageCount + validImages.length;
+
+        if (totalImages > 3) {
+            alert(t("productImageNumberAlert"));
+            const allowedFiles = validImages.slice(0, 3 - currentImageCount);
+            setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+            setImage((prevImages) => [...prevImages, ...allowedFiles]);
+        } else {
+            setLocalImages((prevImages) => [...prevImages, ...validImages]);
+            setImage((prevImages) => [...prevImages, ...validImages]);
+        }
+
+        setLocalImageOrPdf(true);
     }
 
     function handleInputChange(e) {
@@ -577,6 +602,7 @@ function AddNewProducts() {
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
+                            disabled={updating || isSuccess}
                             className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
@@ -603,6 +629,7 @@ function AddNewProducts() {
                             name="cityId"
                             value={cityId || 0}
                             onChange={onCityChange}
+                            disabled={updating || isSuccess}
                             autoComplete="country-name"
                             className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
@@ -639,6 +666,7 @@ function AddNewProducts() {
                                         name="shopId"
                                         value={shopId || 0}
                                         onChange={handleShopChange}
+                                        disabled={updating || isSuccess}
                                         autoComplete="country-name"
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
@@ -685,6 +713,7 @@ function AddNewProducts() {
                                         name="categoryId"
                                         value={categoryId || 0}
                                         onChange={handleCategoryChange}
+                                        disabled={updating || isSuccess}
                                         required
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
@@ -733,6 +762,7 @@ function AddNewProducts() {
                                         value={subCategoryId || 0}
                                         onChange={handleSubcategoryChange}
                                         onBlur={validateInput}
+                                        disabled={updating || isSuccess}
                                         required
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
@@ -778,6 +808,7 @@ function AddNewProducts() {
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 required
+                                disabled={updating || isSuccess}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterOriginalPrice")}
                             />
@@ -805,6 +836,7 @@ function AddNewProducts() {
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 required
+                                disabled={updating || isSuccess}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterTaxPrice")}
                             />
@@ -835,6 +867,7 @@ function AddNewProducts() {
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 required
+                                disabled={updating || isSuccess}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterFastSellingAlert")}
                             />
@@ -861,6 +894,7 @@ function AddNewProducts() {
                                 value={input.barcode}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
+                                disabled={updating || isSuccess}
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterBarcode")}
                             />
@@ -889,6 +923,7 @@ function AddNewProducts() {
                             value={input.inventory}
                             onChange={onInputChange}
                             onBlur={validateInput}
+                            disabled={updating || isSuccess}
                             required
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("pleaseEnterTotalNumber")}
@@ -926,6 +961,7 @@ function AddNewProducts() {
                                 });
                             }}
                             placeholder={t("writeSomethingHere")}
+                            readOnly={updating || isSuccess}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         />
                         <div
@@ -989,6 +1025,7 @@ function AddNewProducts() {
                                                 className="sr-only"
                                                 onChange={handleMultipleInputChange}
                                                 multiple
+                                                disabled={updating || isSuccess}
                                             />
                                         </label>
                                     )}
@@ -1023,6 +1060,7 @@ function AddNewProducts() {
                                                 className="sr-only"
                                                 onChange={handleUpdateMultipleInputChange}
                                                 multiple
+                                                disabled={updating || isSuccess}
                                             />
                                         </label>
                                     )}
@@ -1055,6 +1093,7 @@ function AddNewProducts() {
                                                 className="sr-only"
                                                 onChange={handleUpdateMultipleInputChange}
                                                 multiple
+                                                disabled={updating || isSuccess}
                                             />
                                         </label>
                                     )}
@@ -1095,6 +1134,7 @@ function AddNewProducts() {
                                                 className="sr-only"
                                                 onChange={handleInputChange}
                                                 multiple
+                                                disabled={updating || isSuccess}
                                             />
                                         </label>
                                     </div>

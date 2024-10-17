@@ -65,7 +65,7 @@ function CreateShelves() {
 
                 setTimeout(() => {
                     setSuccessMessage(false);
-                    navigate("/Dashboard");
+                    navigate("/OwnerScreen");
                 }, 5000);
             } catch (error) {
                 setErrorMessage(t("changesNotSaved"));

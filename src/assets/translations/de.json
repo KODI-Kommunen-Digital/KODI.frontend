@@ -947,6 +947,7 @@
     "productImageNumberAlert": "Sie können maximal 3 Bilder hochladen",
     "listingImageNumberAlert": "Sie können maximal 8 Bilder hochladen",
     "noDataForStore": "Keine Daten verfügbar",
-    "selectAnotherStore": "Bitte wählen Sie ein anderes Geschäft aus"
-
+    "selectAnotherStore": "Bitte wählen Sie ein anderes Geschäft aus",
+    "productUpdated": "PProduktanfrage erfolgreich aktualisiert",
+    "productUpdateFailed": "Die Produktanforderung konnte nicht aktualisiert werden"
 }
