@@ -94,9 +94,6 @@ const SellerRequests = () => {
         if (status[statusId] === "Pending") {
             return "bg-yellow-400";
         }
-        if (status[statusId] === "Inactive") {
-            return "bg-red-400";
-        }
     }
 
     return (
@@ -124,14 +121,6 @@ const SellerRequests = () => {
                                     >
                                         {t("pending")}
                                     </div>
-                                    <div
-                                        className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
-                                            } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
-                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                    >
-                                        {t("inactive")}
-                                    </div>
                                 </div>
                             </div>
 
@@ -144,7 +133,6 @@ const SellerRequests = () => {
                                 >
                                     <option value={statusByName.Active}>{t("active")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
-                                    <option value={statusByName.Inactive}>{t("inactive")}</option>
                                 </select>
                             </div>
                         </div>
