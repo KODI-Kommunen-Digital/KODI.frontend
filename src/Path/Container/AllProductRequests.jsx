@@ -395,7 +395,7 @@ function AllProductRequests() {
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
-                                        <div className="flex justify-center gap-2 ">
+                                        <div className="flex justify-center gap-2">
                                             {stores.map((store) => (
                                                 <div key={store.id} className="w-full max-w-xs">
                                                     <div

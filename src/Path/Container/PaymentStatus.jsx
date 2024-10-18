@@ -215,7 +215,7 @@ const PaymentStatus = () => {
                                 <div className="w-full">
                                     {cards.length < 5 ? (
                                         // Center the card if there's only one card
-                                        <div className="flex justify-center">
+                                        <div className="flex justify-center gap-2">
                                             {cards.map((card) => (
                                                 <div key={card.id} className="w-full max-w-xs">
                                                     {/* Card Selector */}
