@@ -112,7 +112,7 @@ function AllSellers() {
                     {storeId && orders && orders.length > 0 ? (
                         <>
 
-                            <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
+                            <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
                                 <div className="col-span-6 sm:col-span-1 mt-4 mb-1 px-0 mr-0 w-full md:w-80">
                                     <select
                                         id="stores"
