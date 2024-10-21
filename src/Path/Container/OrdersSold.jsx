@@ -129,7 +129,8 @@ const OrdersSold = () => {
                 if (response.data.status === "error") {
                     setErrorMessage("Failed. " + t("selectAnotherDate"));
                 } else {
-                    setOrdersSold(response.data.data);
+                    const soldOrders = response.data.data;
+                    setOrdersSold(soldOrders);
                 }
             }).catch((error) => {
                 setErrorMessage("Failed. " + (error.message));

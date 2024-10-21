@@ -17,7 +17,8 @@ function Shelves() {
     const fetchAll = useCallback((cityId, storeId, pageNumber) => {
         if (cityId && storeId) {
             getAllShelves(cityId, storeId, pageNumber).then((response) => {
-                setShelves(response.data.data);
+                const shelvesData = response.data.data;
+                setShelves(shelvesData);
             });
         }
     }, []);

@@ -34,7 +34,8 @@ const SellerRequests = () => {
                     pageSize,
                 },
             }).then((response) => {
-                setSellerRequests(response.data.data);
+                const requests = response.data.data;
+                setSellerRequests(requests);
             });
         }
     }, []);

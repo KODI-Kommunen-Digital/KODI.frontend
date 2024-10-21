@@ -48,9 +48,10 @@ function AllProductRequests() {
     }, [fetchStores]);
 
     const fetchProductRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
-        if (cityId && storeId) {
+        if (storeId) {
             getProductRequests(cityId, storeId, pageNumber, selectedStatus).then((response) => {
-                setProductRequests(response.data.data);
+                const allRequests = response.data.data;
+                setProductRequests(allRequests);
             });
         }
     }, []);
@@ -382,7 +383,10 @@ function AllProductRequests() {
                                 {productRequests.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber + 1)}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber + 1);
+                                            fetchProductRequests(cityId, storeId, pageNumber + 1, selectedStatus); // Make sure to fetch with the new page number
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}

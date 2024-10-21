@@ -21,7 +21,8 @@ function AllProducts() {
     const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
         if (storeId) {
             getSellerProducts(storeId, pageNumber, selectedStatus).then((response) => {
-                setProducts(response.data.data);
+                const fetchedProducts = response.data.data;
+                setProducts(fetchedProducts);
             });
         }
     }, []);

@@ -114,7 +114,8 @@ const Dashboard = () => {
       }
 
       getListings(params).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+        setListings(listingsData);
       });
     }
     if (viewAllListings === false) {
@@ -128,7 +129,8 @@ const Dashboard = () => {
         statusId: selectedStatus,
         pageNo,
       }).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+        setListings(listingsData);
       });
     }
   }, [selectedStatus, viewAllListings, pageNo, cityId]);
@@ -267,7 +269,8 @@ const Dashboard = () => {
         ...params,
       });
 
-      setListings(response.data.data);
+      const listingsData = response.data.data;
+      setListings(listingsData);
     } catch (error) {
       console.error("Error:", error);
     }

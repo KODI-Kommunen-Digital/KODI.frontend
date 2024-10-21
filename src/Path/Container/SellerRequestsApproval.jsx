@@ -49,7 +49,8 @@ const SellerRequestsApproval = () => {
     const fetchSellerRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
         if (cityId && storeId) {
             getSellers(cityId, storeId, pageNumber, selectedStatus).then((response) => {
-                setSellerRequests(response.data.data);
+                const requests = response.data.data;
+                setSellerRequests(requests);
             });
         }
     }, []);

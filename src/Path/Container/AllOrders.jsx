@@ -18,7 +18,8 @@ function AllSellers() {
     const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
         if (storeId) {
             getOrders(cityId, storeId, pageNumber).then((response) => {
-                setOrders(response.data.data);
+                const allOrders = response.data.data;
+                setOrders(allOrders);
             });
         }
     }, []);

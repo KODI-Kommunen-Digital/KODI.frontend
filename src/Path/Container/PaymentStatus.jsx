@@ -54,7 +54,8 @@ const PaymentStatus = () => {
                     pageSize,
                 },
             }).then((response) => {
-                setPaymentStatus(response.data.data);
+                const status = response.data.data;
+                setPaymentStatus(status);
             });
         }
     }, [pageNumber, pageSize]);
