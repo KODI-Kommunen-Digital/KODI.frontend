@@ -54,7 +54,8 @@ const PaymentStatus = () => {
                     pageSize,
                 },
             }).then((response) => {
-                setPaymentStatus(response.data.data);
+                const status = response.data.data;
+                setPaymentStatus(status);
             });
         }
     }, [pageNumber, pageSize]);
@@ -210,12 +211,12 @@ const PaymentStatus = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-100 mt-0 h-[30rem] flex flex-col justify-center items-center">
+                        <div className="bg-gray-100 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {cards.length < 5 ? (
                                         // Center the card if there's only one card
-                                        <div className="flex justify-center">
+                                        <div className="flex justify-center gap-2">
                                             {cards.map((card) => (
                                                 <div key={card.id} className="w-full max-w-xs">
                                                     {/* Card Selector */}

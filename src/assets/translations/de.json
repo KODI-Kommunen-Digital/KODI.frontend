@@ -995,5 +995,10 @@
     "noDataForStore": "Keine Daten verfügbar",
     "selectAnotherStore": "Bitte wählen Sie ein anderes Geschäft aus",
     "productUpdated": "PProduktanfrage erfolgreich aktualisiert",
-    "productUpdateFailed": "Die Produktanforderung konnte nicht aktualisiert werden"
+    "productUpdateFailed": "Die Produktanforderung konnte nicht aktualisiert werden",
+    "eaitherSelectAPeriodOrChooseADateFromCalendar": "Wählen Sie entweder einen Zeitraum oder ein Datum aus dem Kalender aus",
+    "today": "Heute",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Dieser Monat",
+    "thisYear": "Dieses Jahr"
 }

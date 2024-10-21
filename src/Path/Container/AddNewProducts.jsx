@@ -270,6 +270,8 @@ function AddNewProducts() {
             case "title":
                 if (!value) {
                     return t("pleaseEnterTitle");
+                } else if (value.length > 25) {
+                    return t("titleTooLong");
                 } else {
                     return "";
                 }
@@ -306,7 +308,7 @@ function AddNewProducts() {
             case "description":
                 if (!value) {
                     return t("pleaseEnterDescription");
-                } else if (value.length > 65535) {
+                } else if (value.length > 255) {
                     return t("characterLimitReacehd");
                 } else {
                     return "";

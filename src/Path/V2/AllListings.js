@@ -57,7 +57,7 @@ const AllListings = () => {
       setCities(response[0].data.data);
 
       const filteredCategories = response[1]?.data?.data.filter(
-        category => !hiddenCategories.includes(category.id)
+        (category) => !hiddenCategories.includes(category.id)
       );
 
       setCategories(filteredCategories || []);
@@ -158,7 +158,7 @@ const AllListings = () => {
       const listings = response.data.data;
 
       const filteredListings = listings.filter(
-        listing => !hiddenCategories.includes(listing.categoryId)
+        (listing) => !hiddenCategories.includes(listing.categoryId)
       );
 
       setListings(filteredListings);
@@ -183,8 +183,8 @@ const AllListings = () => {
   };
 
   const handleOfficialNotificationButton = () => {
-    setCategoryId(16)
-    navigateTo("/AllListings?terminalView=true&categoryId=16")
+    setCategoryId(16);
+    navigateTo("/AllListings?terminalView=true&categoryId=16");
   };
 
   useEffect(() => {
@@ -233,21 +233,21 @@ const AllListings = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const params = { statusId: 1 };
 
-      const cityId = urlParams.get('cityId');
+      const cityId = urlParams.get("cityId");
       if (cityId && parseInt(cityId)) {
         params.cityId = parseInt(cityId);
       }
 
-      const categoryId = urlParams.get('categoryId');
+      const categoryId = urlParams.get("categoryId");
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
       const response = await getListingsBySearch({
         searchQuery,
-        ...params
+        ...params,
       });
-      console.log("API Response:", response.data.data);
-      setListings(response.data.data);
+      const listingsData = response.data.data;
+      setListings(listingsData);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -339,7 +339,11 @@ const AllListings = () => {
                       </option>
                       {categories.map((category) => {
                         return (
-                          <option className="font-sans" value={category.id} key={category.id}>
+                          <option
+                            className="font-sans"
+                            value={category.id}
+                            key={category.id}
+                          >
                             {t(category.name)}
                           </option>
                         );
@@ -366,7 +370,11 @@ const AllListings = () => {
                     </select>
                   </div>
 
-                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
+                  <SearchBar
+                    onSearch={handleSearch}
+                    searchBarClassName="w-full"
+                    searchQuery={searchQuery}
+                  />
                 </div>
               </div>
             </div>
@@ -375,20 +383,27 @@ const AllListings = () => {
       </div>
 
       <div className="mt-5 mb-20 customproview py-6">
-        {terminalViewParam && (<div className="text-center mt-4 mb-4">
-          <a
-            onClick={handleOfficialNotificationButton}
-            className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
-            style={{ fontFamily: "Poppins, sans-serif" }}>
-            <span>
-              {t("officialnotification")}
-            </span>
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-              viewBox="0 0 24 24" className="w-6 h-6 ml-2">
-              <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-            </svg>
-          </a>
-        </div>
+        {terminalViewParam && (
+          <div className="text-center mt-4 mb-4">
+            <a
+              onClick={handleOfficialNotificationButton}
+              className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              <span>{t("officialnotification")}</span>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                className="w-6 h-6 ml-2"
+              >
+                <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
         )}
         <style>
           {`
@@ -453,7 +468,15 @@ const AllListings = () => {
             )}
           </div>
         )}
-        <div className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === 'Salzkotten APP' ? 'bg-yellow-600 hover:bg-yellow-400' : process.env.REACT_APP_NAME === 'FICHTEL' ? 'bg-lime-700 hover:bg-lime-300' : 'bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]'} px-8 py-2 text-base font-semibold cursor-pointer`}>
+        <div
+          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${
+            process.env.REACT_APP_NAME === "Salzkotten APP"
+              ? "bg-yellow-600 hover:bg-yellow-400"
+              : process.env.REACT_APP_NAME === "FICHTEL"
+              ? "bg-lime-700 hover:bg-lime-300"
+              : "bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+          } px-8 py-2 text-base font-semibold cursor-pointer`}
+        >
           {pageNo !== 1 ? (
             <span
               className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
@@ -482,14 +505,12 @@ const AllListings = () => {
           )}
         </div>
       </div>
-      {
-        !isLoading && (
-          <div className="bottom-0 w-full">
-            <Footer />
-          </div>
-        )
-      }
-    </section >
+      {!isLoading && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
+    </section>
   );
 };
 

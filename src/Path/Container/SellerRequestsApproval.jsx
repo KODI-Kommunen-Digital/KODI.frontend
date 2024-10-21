@@ -49,7 +49,8 @@ const SellerRequestsApproval = () => {
     const fetchSellerRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
         if (cityId && storeId) {
             getSellers(cityId, storeId, pageNumber, selectedStatus).then((response) => {
-                setSellerRequests(response.data.data);
+                const requests = response.data.data;
+                setSellerRequests(requests);
             });
         }
     }, []);
@@ -388,7 +389,7 @@ const SellerRequestsApproval = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-100 mt-0 h-[30rem] flex flex-col justify-center items-center">
+                        <div className="bg-gray-100 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
