@@ -19,10 +19,18 @@ const OrdersSold = () => {
 
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [selectedPeriod, setSelectedPeriod] = useState('today');
 
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const periodOptions = [
+        { value: 'today', label: t('today') },
+        { value: 'this-week', label: t('thisWeek') },
+        { value: 'this-month', label: t('thisMonth') },
+        { value: 'this-year', label: t('thisYear') },
     ];
 
     const generateCalendar = (year, month) => {
@@ -66,6 +74,7 @@ const OrdersSold = () => {
         const selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         setOrderStartDate(selectedDate);
         setOrderEndDate(selectedDate);
+        setSelectedPeriod(''); // Clear selected period
     };
 
     const handlePrevMonth = () => {
@@ -90,6 +99,54 @@ const OrdersSold = () => {
         });
     };
 
+    const formatDate = (date) => {
+        return date.toISOString().split('T')[0];
+    };
+
+    const setOrderDatesForPeriod = (period) => {
+        const today = new Date();
+        let startDate, endDate;
+        switch (period) {
+            case 'today': {
+                startDate = formatDate(today);
+                endDate = formatDate(today);
+                break;
+            }
+            case 'this-week': {
+                const firstDayOfWeek = new Date(today);
+                firstDayOfWeek.setDate(firstDayOfWeek.getDate() - firstDayOfWeek.getDay());
+                startDate = formatDate(firstDayOfWeek);
+                endDate = formatDate(today);
+                break;
+            }
+            case 'this-month': {
+                const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                startDate = formatDate(firstDayOfMonth);
+                endDate = formatDate(today);
+                break;
+            }
+            case 'this-year': {
+                const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+                startDate = formatDate(firstDayOfYear);
+                endDate = formatDate(today);
+                break;
+            }
+            default: {
+                startDate = '';
+                endDate = '';
+            }
+        }
+        setOrderStartDate(startDate);
+        setOrderEndDate(endDate);
+    };
+
+    const handlePeriodClick = (periodValue) => {
+        setSelectedPeriod(periodValue);
+        setOrderStartDate('');
+        setOrderEndDate('');
+        setOrderDatesForPeriod(periodValue);
+    };
+
     // Calculate Total Revenue
     const totalRevenue = ordersSold.reduce((total, product) => {
         return total + product.cart_items.totalPrice;
@@ -104,7 +161,7 @@ const OrdersSold = () => {
     const totalProducts = ordersSold.length; // Assuming this is the total number of products
     const averagePricePerQuantity = ordersSold.reduce((total, product) => {
         return total + product.cart_items.pricePerQuantity;
-    }, 0) / totalProducts;
+    }, 0) / totalProducts || 0;
 
     // Find Top Selling Products based on quantity (assuming descending order)
     let topProductNameByQuantity = '';
@@ -136,7 +193,7 @@ const OrdersSold = () => {
                 setErrorMessage("Failed. " + (error.message));
             });
         }
-    }, [orderStartDate, orderEndDate, pageNumber, pageSize]);
+    }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
 
 
     useEffect(() => {
@@ -144,6 +201,10 @@ const OrdersSold = () => {
             fetchOrdersSold();
         }
     }, [orderStartDate, orderEndDate, fetchOrdersSold]);
+
+    useEffect(() => {
+        setOrderDatesForPeriod(selectedPeriod);
+    }, []);
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -153,7 +214,7 @@ const OrdersSold = () => {
     };
 
     return (
-        <section className="bg-gray-800 body-font relative h-screen">
+        <section className="bg-gray-800 body-font relative min-h-screen">
             <SideBar />
 
             <div className="container w-auto px-2 py-2 bg-gray-800 min-h-screen flex flex-col">
@@ -309,7 +370,37 @@ const OrdersSold = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-200 mt-0 h-[40rem] flex flex-col justify-center items-center">
+                        <div className="bg-gray-100 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                            <center>
+                                <div className="tracking-widest mt-4">
+                                    <span
+                                        className={
+                                            ordersSold.length === 0 || errorMessage
+                                                ? "text-green-600 text-xl"
+                                                : "text-gray-500 text-xl"
+                                        }
+                                    >
+                                        {t("eaitherSelectAPeriodOrChooseADateFromCalendar")}
+                                    </span>
+                                </div>
+                            </center>
+
+                            <div className="flex flex-wrap justify-center gap-2 mt-4">
+                                {periodOptions.map((period) => (
+                                    <div
+                                        key={period.value}
+                                        className={`w-full sm:w-auto px-4 py-2 text-center border-2 border-black rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
+                                            ? 'bg-gray-300'
+                                            : 'bg-gray-200 hover:bg-gray-300'
+                                            }`}
+                                        onClick={() => handlePeriodClick(period.value)}
+                                        style={{ fontFamily: 'Poppins, sans-serif' }}
+                                    >
+                                        {period.label}
+                                    </div>
+                                ))}
+                            </div>
+
                             <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4">
                                 <div className="bg-white shadow-lg rounded-lg overflow-hidden">
                                     <div className="flex items-center justify-between px-6 py-3 bg-black">
@@ -347,7 +438,7 @@ const OrdersSold = () => {
                             </center>
 
 
-                            <center className="mt-6">
+                            <center className="mt-6 mb-4">
                                 <a
                                     onClick={() => navigateTo("/SellerScreen")}
                                     className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
