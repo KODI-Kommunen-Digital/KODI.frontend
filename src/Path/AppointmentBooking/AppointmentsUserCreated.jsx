@@ -34,7 +34,6 @@ const AppointmentsUserCreated = () => {
                         });
 
                         setMyAppointments(appointmentsWithListings);
-                        console.log("Appointments with Listings:", response.data.data);
                     }
                 }).catch((error) => {
                     console.error("Error fetching listings:", error);

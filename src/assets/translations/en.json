@@ -985,5 +985,10 @@
     "noDataForStore": "No data awailable",
     "selectAnotherStore": "Please select another store",
     "productUpdated": "Product request updated successfully",
-    "productUpdateFailed": "Failed to update the product request"
+    "productUpdateFailed": "Failed to update the product request",
+    "eaitherSelectAPeriodOrChooseADateFromCalendar": "Eaither select a period or choose a date from the calendar",
+    "today": "Today",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "thisYear": "This year"
 }

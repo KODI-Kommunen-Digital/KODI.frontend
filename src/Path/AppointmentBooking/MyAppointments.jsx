@@ -23,15 +23,18 @@ const MyAppointments = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const appointmentId = urlParams.get('appointmentId');
+
     getOwnerAppointments({
       pageNumber,
       pageSize,
       appointmentId
     }).then((response) => {
-      setOwnerAppointments(response.data.data);
+      const ownerAppointments = response.data.data;
+      setOwnerAppointments(ownerAppointments);
 
       getProfile().then((response) => {
-        setUserId(response.data.data.id);
+        const usersId = response.data.data.id;
+        setUserId(usersId);
       });
     }).catch((error) => {
       console.error("Error fetching services:", error);

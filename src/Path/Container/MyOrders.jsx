@@ -169,7 +169,7 @@ const MyOrders = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-100 mt-0 h-[30rem] flex flex-col justify-center items-center">
+                        <div className="bg-gray-100 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <center>
                                 <svg
                                     className="emoji-404"

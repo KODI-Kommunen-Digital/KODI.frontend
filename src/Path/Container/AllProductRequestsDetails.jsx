@@ -52,7 +52,7 @@ const AllProductRequestsDetails = () => {
     }, [productDetails]);
 
     useEffect(() => {
-        if (cityId && storeId) {
+        if (storeId) {
             getShelves(cityId, storeId).then((response) => {
                 const filteredShelves = response.data.data.filter((shelf) => shelf.productId === null);
                 setShelves(filteredShelves); // Set only shelves where productId is null
