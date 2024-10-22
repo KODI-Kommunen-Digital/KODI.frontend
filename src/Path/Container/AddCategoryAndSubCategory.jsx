@@ -20,7 +20,7 @@ function AddCategoryAndSubCategory() {
     const [stores, setStores] = useState([]);
     const navigate = useNavigate();
 
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -30,7 +30,7 @@ function AddCategoryAndSubCategory() {
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
-                    navigate("/Error");
+                    setIsOwner(false);
                 }
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -41,9 +41,11 @@ function AddCategoryAndSubCategory() {
         fetchUserRole();
     }, [navigate]);
 
-    if (isOwner === false) {
-        navigate("/Error");
-    }
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
 
     const fetchStores = useCallback(() => {
         getOwnerShops().then((response) => {

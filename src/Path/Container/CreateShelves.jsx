@@ -20,7 +20,7 @@ function CreateShelves() {
     const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
 
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -30,7 +30,7 @@ function CreateShelves() {
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
-                    navigate("/Error");
+                    setIsOwner(false);
                 }
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -41,9 +41,11 @@ function CreateShelves() {
         fetchUserRole();
     }, [navigate]);
 
-    if (isOwner === false) {
-        navigate("/Error");
-    }
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -236,7 +238,7 @@ function CreateShelves() {
         window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getOwnerShops();
+            const response = await getOwnerShops({ cityId });
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
