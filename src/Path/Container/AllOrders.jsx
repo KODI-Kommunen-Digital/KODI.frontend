@@ -30,6 +30,7 @@ function AllSellers() {
 
     useEffect(() => {
         if (storeId) {
+            setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore.cityId;
             if (selectedStore) {
