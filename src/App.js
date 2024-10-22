@@ -91,6 +91,7 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const [isOwner, setIsOwner] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const link =
@@ -103,17 +104,30 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const roleResponse = await getUserRoleContainer();
-      let roles = roleResponse.data.data;
-      roles = roles.map(Number);
-      if (roles.includes(101)) {
-        setIsOwner(true);
-      } else {
-        console.log("User is not owner");
+    const checkAuthentication = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          setIsAuthenticated(true);
+
+          const roleResponse = await getUserRoleContainer();
+          let roles = roleResponse.data.data;
+          roles = roles.map(Number);
+          if (roles.includes(101)) {
+            setIsOwner(true);
+          } else {
+            setIsOwner(false);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication or fetching roles", error);
+        setIsAuthenticated(false);
       }
     };
-    fetchUserRole();
+
+    checkAuthentication();
   }, []);
 
   return (
@@ -250,7 +264,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <OwnerScreen />
                   </ProtectedRoute>
                 }
@@ -328,7 +345,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/StoreDetails"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <StoreDetails />
                   </ProtectedRoute>
                 }
@@ -338,7 +358,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ViewCategories"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <ViewCategories />
                   </ProtectedRoute>
                 }
@@ -348,7 +371,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AddCategoryAndSubCategory"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <AddCategoryAndSubCategory />
                   </ProtectedRoute>
                 }
@@ -358,7 +384,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ProductStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <ProductStore />
                   </ProtectedRoute>
                 }
@@ -368,7 +397,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ProductDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <ProductDetailsStore />
                   </ProtectedRoute>
                 }
@@ -378,7 +410,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllProductRequestsDetails"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <AllProductRequestsDetails />
                   </ProtectedRoute>
                 }
@@ -388,7 +423,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/SellerDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <SellerDetailsStore />
                   </ProtectedRoute>
                 }
@@ -398,7 +436,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/Shelves"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <Shelves />
                   </ProtectedRoute>
                 }
@@ -408,7 +449,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllOrders"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <AllOrders />
                   </ProtectedRoute>
                 }
@@ -418,7 +462,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllProductRequests"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <AllProductRequests />
                   </ProtectedRoute>
                 }
@@ -428,7 +475,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/CreateShelves"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <CreateShelves />
                   </ProtectedRoute>
                 }
@@ -438,7 +488,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <SellerRequestsApproval />
                   </ProtectedRoute>
                 }
@@ -448,7 +501,10 @@ const App = () => {
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
+                  <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    isOwner={isOwner}
+                  >
                     <OrderDetailsStore />
                   </ProtectedRoute>
                 }
