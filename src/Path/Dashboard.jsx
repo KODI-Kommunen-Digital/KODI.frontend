@@ -161,6 +161,10 @@ const Dashboard = () => {
     fetchListings();
   }, [fetchListings, pageNo]);
 
+  useEffect(() => {
+    setPageNo(1);
+  }, [selectedStatus, viewAllListings]);
+
   function getStatusClass(statusId) {
     if (status[statusId] === "Active") {
       return "bg-green-400";

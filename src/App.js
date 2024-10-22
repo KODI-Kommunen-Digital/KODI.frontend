@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
@@ -77,16 +77,20 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
+import { getUserRoleContainer } from "./Services/containerApi";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const App = () => {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isAppointmentEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isAppointmentEnabled =
+    process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
   const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
-  const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || '1';
+  const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const link =
@@ -98,13 +102,35 @@ const App = () => {
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
 
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const roleResponse = await getUserRoleContainer();
+      let roles = roleResponse.data.data;
+      roles = roles.map(Number);
+      if (roles.includes(101)) {
+        setIsOwner(true);
+      } else {
+        console.log("User is not owner");
+      }
+    };
+    fetchUserRole();
+  }, []);
+
   return (
     <BrowserRouter>
       <div>
         <Routes>
-          <Route path="/" element={frontendVersion === '1' ? <HomePageV1 /> : <HomePageV2 />} />
+          <Route
+            path="/"
+            element={frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />}
+          />
           <Route path="/Listing" element={<Listing />} exact />
-          <Route path="/AllListings" element={frontendVersion === '1' ? <AllListingsV1 /> : <AllListingsV2 />} />
+          <Route
+            path="/AllListings"
+            element={
+              frontendVersion === "1" ? <AllListingsV1 /> : <AllListingsV2 />
+            }
+          />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
@@ -133,7 +159,9 @@ const App = () => {
               <Route
                 path="/IFrame"
                 element={
-                  <IFrame cityId={process.env.REACT_APP_INFRAME_CITYID || '1'} />
+                  <IFrame
+                    cityId={process.env.REACT_APP_INFRAME_CITYID || "1"}
+                  />
                 }
                 exact
               />
@@ -221,15 +249,15 @@ const App = () => {
             <React.Fragment>
               <Route
                 path="/OwnerScreen"
-                element={<OwnerScreen />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <OwnerScreen />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
-              <Route
-                path="/SellerScreen"
-                element={<SellerScreen />}
-                exact
-              />
+              <Route path="/SellerScreen" element={<SellerScreen />} exact />
 
               <Route
                 path="/CustomerScreen"
@@ -299,85 +327,135 @@ const App = () => {
 
               <Route
                 path="/OwnerScreen/StoreDetails"
-                element={<StoreDetails />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <StoreDetails />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ViewCategories"
-                element={<ViewCategories />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <ViewCategories />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AddCategoryAndSubCategory"
-                element={<AddCategoryAndSubCategory />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <AddCategoryAndSubCategory />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ProductStore"
-                element={<ProductStore />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <ProductStore />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ProductDetailsStore"
-                element={<ProductDetailsStore />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <ProductDetailsStore />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AllProductRequestsDetails"
-                element={<AllProductRequestsDetails />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <AllProductRequestsDetails />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/SellerDetailsStore"
-                element={<SellerDetailsStore />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <SellerDetailsStore />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/Shelves"
-                element={<Shelves />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <Shelves />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AllOrders"
-                element={<AllOrders />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <AllOrders />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AllProductRequests"
-                element={<AllProductRequests />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <AllProductRequests />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/CreateShelves"
-                element={<CreateShelves />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <CreateShelves />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
-                element={<SellerRequestsApproval />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <SellerRequestsApproval />
+                  </ProtectedRoute>
+                }
                 exact
               />
 
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
-                element={<OrderDetailsStore />}
+                element={
+                  <ProtectedRoute isOwner={isOwner}>
+                    <OrderDetailsStore />
+                  </ProtectedRoute>
+                }
                 exact
               />
-
             </React.Fragment>
           )}
-
         </Routes>
       </div>
     </BrowserRouter>
