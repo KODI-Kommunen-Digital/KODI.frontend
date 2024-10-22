@@ -4,7 +4,7 @@ import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import Alert from "../../Components/Alert";
-import { getOwnerCategory, getSubCategory, getOwnerShops, addCategory, addSubCategory } from "../../Services/containerApi";
+import { getOwnerCategory, getSubCategory, getOwnerShops, addCategory, addSubCategory, getUserRoleContainer } from "../../Services/containerApi";
 
 function AddCategoryAndSubCategory() {
     const { t } = useTranslation();
@@ -19,6 +19,31 @@ function AddCategoryAndSubCategory() {
     const [storeId, setStoreId] = useState(0);
     const [stores, setStores] = useState([]);
     const navigate = useNavigate();
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const fetchStores = useCallback(() => {
         getOwnerShops().then((response) => {

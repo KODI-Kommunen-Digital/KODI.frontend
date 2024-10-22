@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
-import { getAllShelves, getOwnerShops } from "../../Services/containerApi";
+import { getAllShelves, getOwnerShops, getUserRoleContainer } from "../../Services/containerApi";
 
 function Shelves() {
     window.scrollTo(0, 0);
@@ -43,6 +43,31 @@ function Shelves() {
             navigate(path);
         }
     };
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;

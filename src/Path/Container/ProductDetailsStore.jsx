@@ -3,7 +3,8 @@ import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getUserRoleContainer } from "../../Services/containerApi";
 
 const ProductDetailsStore = () => {
     window.scrollTo(0, 0);
@@ -18,6 +19,33 @@ const ProductDetailsStore = () => {
             setProduct(productDetails);
         }
     }, [productDetails]);
+
+    const navigate = useNavigate();
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

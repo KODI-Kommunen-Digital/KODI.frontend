@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
@@ -77,8 +77,6 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
-import { getUserRoleContainer } from "./Services/containerApi";
-import ProtectedRoute from "./Components/ProtectedRoute";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -90,8 +88,6 @@ const App = () => {
   const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
-  const [isOwner, setIsOwner] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const link =
@@ -101,33 +97,6 @@ const App = () => {
     link.rel = "shortcut icon";
     link.href = HeidiLogo;
     document.getElementsByTagName("head")[0].appendChild(link);
-  }, []);
-
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          setIsAuthenticated(true);
-
-          const roleResponse = await getUserRoleContainer();
-          let roles = roleResponse.data.data;
-          roles = roles.map(Number);
-          if (roles.includes(101)) {
-            setIsOwner(true);
-          } else {
-            setIsOwner(false);
-          }
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error("Error checking authentication or fetching roles", error);
-        setIsAuthenticated(false);
-      }
-    };
-
-    checkAuthentication();
   }, []);
 
   return (
@@ -261,18 +230,7 @@ const App = () => {
 
           {isContainerEnabled && (
             <React.Fragment>
-              <Route
-                path="/OwnerScreen"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <OwnerScreen />
-                  </ProtectedRoute>
-                }
-                exact
-              />
+              <Route path="/OwnerScreen" element={<OwnerScreen />} exact />
 
               <Route path="/SellerScreen" element={<SellerScreen />} exact />
 
@@ -344,170 +302,75 @@ const App = () => {
 
               <Route
                 path="/OwnerScreen/StoreDetails"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <StoreDetails />
-                  </ProtectedRoute>
-                }
+                element={<StoreDetails />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ViewCategories"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <ViewCategories />
-                  </ProtectedRoute>
-                }
+                element={<ViewCategories />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AddCategoryAndSubCategory"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <AddCategoryAndSubCategory />
-                  </ProtectedRoute>
-                }
+                element={<AddCategoryAndSubCategory />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ProductStore"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <ProductStore />
-                  </ProtectedRoute>
-                }
+                element={<ProductStore />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/ProductDetailsStore"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <ProductDetailsStore />
-                  </ProtectedRoute>
-                }
+                element={<ProductDetailsStore />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AllProductRequestsDetails"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <AllProductRequestsDetails />
-                  </ProtectedRoute>
-                }
+                element={<AllProductRequestsDetails />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/SellerDetailsStore"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <SellerDetailsStore />
-                  </ProtectedRoute>
-                }
+                element={<SellerDetailsStore />}
                 exact
               />
 
-              <Route
-                path="/OwnerScreen/Shelves"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <Shelves />
-                  </ProtectedRoute>
-                }
-                exact
-              />
+              <Route path="/OwnerScreen/Shelves" element={<Shelves />} exact />
 
               <Route
                 path="/OwnerScreen/AllOrders"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <AllOrders />
-                  </ProtectedRoute>
-                }
+                element={<AllOrders />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/AllProductRequests"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <AllProductRequests />
-                  </ProtectedRoute>
-                }
+                element={<AllProductRequests />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/CreateShelves"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <CreateShelves />
-                  </ProtectedRoute>
-                }
+                element={<CreateShelves />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <SellerRequestsApproval />
-                  </ProtectedRoute>
-                }
+                element={<SellerRequestsApproval />}
                 exact
               />
 
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isAuthenticated}
-                    isOwner={isOwner}
-                  >
-                    <OrderDetailsStore />
-                  </ProtectedRoute>
-                }
+                element={<OrderDetailsStore />}
                 exact
               />
             </React.Fragment>
