@@ -17,17 +17,18 @@ const OwnerScreen = () => {
         }
     };
 
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);
+                console.log("roles" + roles)
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
-                    navigate("/Error");
+                    setIsOwner(false);
                 }
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -38,9 +39,11 @@ const OwnerScreen = () => {
         fetchUserRole();
     }, [navigate]);
 
-    if (isOwner === false) {
-        navigate("/Error");
-    }
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

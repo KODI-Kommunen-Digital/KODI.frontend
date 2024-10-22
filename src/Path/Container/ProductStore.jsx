@@ -114,7 +114,7 @@ function ProductStore() {
         }
     };
 
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -124,7 +124,7 @@ function ProductStore() {
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
-                    navigate("/Error");
+                    setIsOwner(false);
                 }
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -135,9 +135,11 @@ function ProductStore() {
         fetchUserRole();
     }, [navigate]);
 
-    if (isOwner === false) {
-        navigate("/Error");
-    }
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

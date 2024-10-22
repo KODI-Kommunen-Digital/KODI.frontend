@@ -137,7 +137,7 @@ function AddNewProducts() {
         // window.history.replaceState({}, "", newUrl);
 
         try {
-            const response = await getSellerShops();
+            const response = await getSellerShops({ cityId });
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);

@@ -44,7 +44,7 @@ function Shelves() {
         }
     };
 
-    const [isOwner, setIsOwner] = useState(false);
+    const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -54,7 +54,7 @@ function Shelves() {
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
-                    navigate("/Error");
+                    setIsOwner(false);
                 }
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -65,9 +65,11 @@ function Shelves() {
         fetchUserRole();
     }, [navigate]);
 
-    if (isOwner === false) {
-        navigate("/Error");
-    }
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
