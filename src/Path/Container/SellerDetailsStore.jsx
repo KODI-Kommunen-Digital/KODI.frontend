@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { useLocation } from 'react-router-dom';
-import { updateSeller } from "../../Services/containerApi";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { updateSeller, getUserRoleContainer } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 
 const SellerDetailsStore = () => {
@@ -18,6 +18,32 @@ const SellerDetailsStore = () => {
 
     const location = useLocation();
     const { sellerDetails, cityId } = location.state || {};
+
+    const navigate = useNavigate();
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     useEffect(() => {
         if (sellerDetails) {

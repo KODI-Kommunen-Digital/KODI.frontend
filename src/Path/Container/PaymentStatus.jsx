@@ -121,7 +121,7 @@ const PaymentStatus = () => {
                                                     width: "33.33%",
                                                 }}
                                             >
-                                                {t("orderId")}
+                                                {t("transactionId")}
                                             </th>
                                             <th
                                                 scope="col"

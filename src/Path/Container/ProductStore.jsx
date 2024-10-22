@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getProducts, getOwnerShops } from "../../Services/containerApi";
+import { getProducts, getOwnerShops, getUserRoleContainer } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
@@ -113,6 +113,31 @@ function ProductStore() {
             navigate(path);
         }
     };
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

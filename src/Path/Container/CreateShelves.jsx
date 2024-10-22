@@ -8,7 +8,7 @@ import "react-quill/dist/quill.snow.css";
 import { getProfile } from "../../Services/usersApi";
 import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
-import { createShelf, getOwnerShops, getProductsForShelf } from "../../Services/containerApi";
+import { createShelf, getOwnerShops, getProductsForShelf, getUserRoleContainer } from "../../Services/containerApi";
 
 function CreateShelves() {
     const { t } = useTranslation();
@@ -19,6 +19,31 @@ function CreateShelves() {
     const [errorMessage, setErrorMessage] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const [input, setInput] = useState({
         shopId: 0,

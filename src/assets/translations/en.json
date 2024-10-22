@@ -990,5 +990,6 @@
     "today": "Today",
     "thisWeek": "This week",
     "thisMonth": "This month",
-    "thisYear": "This year"
+    "thisYear": "This year",
+    "transactionId": "Transaction ID"
 }

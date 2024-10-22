@@ -5,7 +5,7 @@ import "../../index.css";
 import { useLocation, useNavigate } from 'react-router-dom';
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import { status, statusByName } from "../../Constants/containerStatus";
-import { updateProductRequests, getShelves } from "../../Services/containerApi";
+import { updateProductRequests, getShelves, getUserRoleContainer } from "../../Services/containerApi";
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import Alert from "../../Components/Alert";
 
@@ -22,6 +22,31 @@ const AllProductRequestsDetails = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const [error, setError] = useState({
         maxCount: "",
