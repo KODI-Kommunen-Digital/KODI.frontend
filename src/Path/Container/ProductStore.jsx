@@ -29,6 +29,7 @@ function ProductStore() {
 
     useEffect(() => {
         if (storeId) {
+            setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             if (selectedStore) {
                 fetchProducts(storeId, pageNumber, selectedStatus);

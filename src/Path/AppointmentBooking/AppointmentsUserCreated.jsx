@@ -45,11 +45,7 @@ const AppointmentsUserCreated = () => {
     }, [pageNumber]);
 
     useEffect(() => {
-        if (pageNumber === 1) {
-            fetchMyServices();
-        } else {
-            fetchMyServices();
-        }
+        fetchMyServices();
     }, [fetchMyServices, pageNumber]);
 
     const navigate = useNavigate();

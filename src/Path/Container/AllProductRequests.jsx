@@ -58,6 +58,7 @@ function AllProductRequests() {
 
     useEffect(() => {
         if (storeId) {
+            setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             if (selectedStore) {
                 fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
