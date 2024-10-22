@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../../Components/SideBar";
 import "../../index.css";
 import { useTranslation } from "react-i18next";
 import RegionColors from "../../Components/RegionColors";
+import { getUserRoleContainer } from "../../Services/containerApi";
 
 const OwnerScreen = () => {
     window.scrollTo(0, 0);
@@ -15,6 +16,31 @@ const OwnerScreen = () => {
             navigate(path);
         }
     };
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

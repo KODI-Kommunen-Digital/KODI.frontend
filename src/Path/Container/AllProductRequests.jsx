@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getProductRequests, getOwnerShops } from "../../Services/containerApi";
+import { getProductRequests, getOwnerShops, getUserRoleContainer } from "../../Services/containerApi";
 import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
@@ -106,6 +106,31 @@ function AllProductRequests() {
             navigate(path);
         }
     };
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const handleViewDetailsClick = (product) => {
         navigate('/OwnerScreen/AllProductRequestsDetails', {

@@ -3,7 +3,7 @@ import SideBar from "../../Components/SideBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { getSellers, getOwnerShops, updateSeller } from "../../Services/containerApi";
+import { getSellers, getOwnerShops, updateSeller, getUserRoleContainer } from "../../Services/containerApi";
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import { FaEye } from 'react-icons/fa';
@@ -132,6 +132,31 @@ const SellerRequestsApproval = () => {
             navigate(path);
         }
     };
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     const navigateToSellerDetails = (sellerRequest) => {
         navigate('/OwnerScreen/SellerDetailsStore', { state: { sellerDetails: sellerRequest, cityId: selectedCityId } });

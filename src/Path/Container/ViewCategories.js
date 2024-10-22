@@ -6,6 +6,7 @@ import {
   getSubCategory,
   deleteSubCategory,
   getOwnerShops,
+  getUserRoleContainer,
 } from "../../Services/containerApi";
 import { useTranslation } from "react-i18next";
 
@@ -20,6 +21,38 @@ function ViewCategories() {
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [showNoSubCategoriesMessage, setShowNoSubCategoriesMessage] =
     useState(false);
+
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
+
+  const [isOwner, setIsOwner] = useState(false);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const roleResponse = await getUserRoleContainer();
+        let roles = roleResponse.data.data;
+        roles = roles.map(Number);
+        if (roles.includes(101)) {
+          setIsOwner(true);
+        } else {
+          navigate("/Error");
+        }
+      } catch (error) {
+        console.error("Error fetching user roles:", error);
+        navigate("/Error");
+      }
+    };
+
+    fetchUserRole();
+  }, [navigate]);
+
+  if (isOwner === false) {
+    navigate("/Error");
+  }
 
   const fetchCategories = useCallback((cityId, storeId) => {
     if (cityId && storeId) {
@@ -132,13 +165,6 @@ function ViewCategories() {
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.history.replaceState({}, "", newUrl);
       fetchCategories(cityId, storeId);
-    }
-  };
-
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
     }
   };
 

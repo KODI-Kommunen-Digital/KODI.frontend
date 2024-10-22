@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
+import { getUserRoleContainer } from "../../Services/containerApi";
 
 const OrderDetailsStore = () => {
     window.scrollTo(0, 0);
@@ -13,10 +14,37 @@ const OrderDetailsStore = () => {
     const location = useLocation();
     const { orderDetails } = location.state || {};
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         setOrders(orderDetails);
         console.log(orderDetails);
     }, [orderDetails]);
+
+    const [isOwner, setIsOwner] = useState(false);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                if (roles.includes(101)) {
+                    setIsOwner(true);
+                } else {
+                    navigate("/Error");
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    if (isOwner === false) {
+        navigate("/Error");
+    }
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">
