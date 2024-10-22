@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Error from "./Path/Error";
@@ -77,8 +77,8 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
-import { getUserRoleContainer } from "./Services/containerApi";
-import ProtectedRoute from "./Components/ProtectedRoute";
+// import { getUserRoleContainer } from "./Services/containerApi";
+// import ProtectedRoute from "./Components/ProtectedRoute";
 
 import Modal from "react-modal";
 Modal.setAppElement("#root");
@@ -90,7 +90,7 @@ const App = () => {
   const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
-  const [isOwner, setIsOwner] = useState(false);
+  // const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const link =
@@ -102,19 +102,19 @@ const App = () => {
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
 
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      const roleResponse = await getUserRoleContainer();
-      let roles = roleResponse.data.data;
-      roles = roles.map(Number);
-      if (roles.includes(101)) {
-        setIsOwner(true);
-      } else {
-        console.log("User is not owner");
-      }
-    };
-    fetchUserRole();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUserRole = async () => {
+  //     const roleResponse = await getUserRoleContainer();
+  //     let roles = roleResponse.data.data;
+  //     roles = roles.map(Number);
+  //     if (roles.includes(101)) {
+  //       setIsOwner(true);
+  //     } else {
+  //       console.log("User is not owner");
+  //     }
+  //   };
+  //   fetchUserRole();
+  // }, []);
 
   return (
     <BrowserRouter>
@@ -250,9 +250,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <OwnerScreen />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <OwnerScreen />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -328,9 +328,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/StoreDetails"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <StoreDetails />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <StoreDetails />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -338,9 +338,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ViewCategories"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <ViewCategories />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <ViewCategories />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -348,9 +348,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AddCategoryAndSubCategory"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <AddCategoryAndSubCategory />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <AddCategoryAndSubCategory />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -358,9 +358,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ProductStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <ProductStore />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <ProductStore />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -368,9 +368,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/ProductDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <ProductDetailsStore />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <ProductDetailsStore />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -378,9 +378,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllProductRequestsDetails"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <AllProductRequestsDetails />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <AllProductRequestsDetails />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -388,9 +388,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/SellerDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <SellerDetailsStore />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <SellerDetailsStore />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -398,9 +398,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/Shelves"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <Shelves />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <Shelves />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -408,9 +408,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllOrders"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <AllOrders />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <AllOrders />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -418,9 +418,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/AllProductRequests"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <AllProductRequests />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <AllProductRequests />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -428,9 +428,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/CreateShelves"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <CreateShelves />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <CreateShelves />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -438,9 +438,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <SellerRequestsApproval />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <SellerRequestsApproval />
+                  // </ProtectedRoute>
                 }
                 exact
               />
@@ -448,9 +448,9 @@ const App = () => {
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
                 element={
-                  <ProtectedRoute isOwner={isOwner}>
-                    <OrderDetailsStore />
-                  </ProtectedRoute>
+                  // <ProtectedRoute isOwner={isOwner}>
+                  <OrderDetailsStore />
+                  // </ProtectedRoute>
                 }
                 exact
               />
