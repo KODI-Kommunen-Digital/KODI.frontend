@@ -29,7 +29,7 @@ function ViewCategories() {
     }
   };
 
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState(null);
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
@@ -39,7 +39,7 @@ function ViewCategories() {
         if (roles.includes(101)) {
           setIsOwner(true);
         } else {
-          navigate("/Error");
+          setIsOwner(false);
         }
       } catch (error) {
         console.error("Error fetching user roles:", error);
@@ -50,9 +50,11 @@ function ViewCategories() {
     fetchUserRole();
   }, [navigate]);
 
-  if (isOwner === false) {
-    navigate("/Error");
-  }
+  useEffect(() => {
+    if (isOwner === false) {
+      navigate("/Error");
+    }
+  }, [isOwner, navigate]);
 
   const fetchCategories = useCallback((cityId, storeId) => {
     if (cityId && storeId) {
