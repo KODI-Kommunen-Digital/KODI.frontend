@@ -759,7 +759,6 @@ function UploadListings() {
         }
 
       case "cityIds":
-
         if (!parseInt(value)) {
           return t("pleaseSelectCity");
         } else {
@@ -808,12 +807,12 @@ function UploadListings() {
         }
 
       case "email":
-        if (name === "email") {
-          if (value) {
-            if (!isValidEmail(value)) {
-              return "Please enter a valid email address";
-            }
+        if (value) {
+          if (!isValidEmail(value)) {
+            return t("pleaseEnterValidEmail");
           }
+        } else {
+          return "";
         }
 
       case "expiryDate":
