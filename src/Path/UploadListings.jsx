@@ -678,7 +678,6 @@ function UploadListings() {
 
   const onInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     if (type === "checkbox") {
       setListingInput((prev) => ({
         ...prev,
@@ -991,6 +990,13 @@ function UploadListings() {
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
   };
+  const handleInputClick = (e) => {
+    e.target.showPicker(); // Programmatically open the date picker
+  };
+  
+  const preventKeyboardInput = (e) => {
+    e.preventDefault(); // Prevent any keyboard input
+  };
 
   function formatDateTime(dateTime) {
     const date = new Date(dateTime.replace("Z", ""));
@@ -1255,6 +1261,8 @@ function UploadListings() {
                             ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
+                        onClick={handleInputClick} // Open calendar on click
+                        onKeyDown={preventKeyboardInput} // Prevent keyboard input
                         onChange={onInputChange}
                         onBlur={validateInput}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
