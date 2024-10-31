@@ -64,7 +64,7 @@ function AllProductRequests() {
                 fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProductRequests, cityId, storeId, pageNumber, selectedStatus]);
+    }, [fetchProductRequests, cityId, storeId, selectedStatus]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -393,7 +393,9 @@ function AllProductRequests() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber - 1)}
+                                        onClick={() => {setPageNumber(pageNumber - 1);
+                                            fetchProductRequests(cityId, storeId, pageNumber - 1, selectedStatus);}
+                                        }
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
