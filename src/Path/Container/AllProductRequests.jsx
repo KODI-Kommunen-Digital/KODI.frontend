@@ -157,7 +157,9 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        onClick={() => {setSelectedStatus(statusByName.Active);
+                                            setPageNumber(1)
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("approved")}
@@ -165,7 +167,9 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => {setSelectedStatus(statusByName.Pending);
+                                            setPageNumber(1)
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("pending")}
@@ -173,7 +177,9 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Inactive)}
+                                        onClick={() => {setSelectedStatus(statusByName.Inactive);
+                                            setPageNumber(1)
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("rejected")}
