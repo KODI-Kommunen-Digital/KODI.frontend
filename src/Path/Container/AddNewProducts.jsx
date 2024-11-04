@@ -107,7 +107,12 @@ function AddNewProducts() {
                 }, 5000);
 
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response.data.errorCode === 6012) {
+                    setErrorMessage(t("Barcode_already_exists")); // Custom message for this specific error
+                } else {
+                    setErrorMessage(t("changesNotSaved")); // Fallback for other errors
+                }
+                
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -350,14 +355,14 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "barcode":
-                if (!value) {
-                    return t("pleaseEnterBarcode");
-                    // } else if (isNaN(value)) {
-                    //     return t("pleaseEnterValidNumber");
-                } else {
-                    return "";
-                }
+            // case "barcode":
+            //     if (!value) {
+            //         return t("pleaseEnterBarcode");
+            //         // } else if (isNaN(value)) {
+            //         //     return t("pleaseEnterValidNumber");
+            //     } else {
+            //         return "";
+            //     }
 
             default:
                 return "";
