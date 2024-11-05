@@ -1328,6 +1328,8 @@ function UploadListings() {
                     }
                     onChange={onInputChange}
                     onBlur={validateInput}
+                    onClick={handleInputClick} // Open calendar on click
+                    onKeyDown={preventKeyboardInput} // Prevent keyboard input
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder="Start Date"
                   />
@@ -1364,6 +1366,8 @@ function UploadListings() {
                     value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
                     onChange={onInputChange}
                     onBlur={validateInput}
+                    onClick={handleInputClick} // Open calendar on click
+                    onKeyDown={preventKeyboardInput} // Prevent keyboard input
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder="End Date"
                   />
