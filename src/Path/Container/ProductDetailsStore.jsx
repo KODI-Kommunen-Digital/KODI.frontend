@@ -68,7 +68,7 @@ const ProductDetailsStore = () => {
                                     </p>
                                     <div className="md:flex mb-6">
                                         <div className="md:px-4 py-4 md:py-0">
-                                            <img className="object-contain object-center h-full w-full max-h-96"
+                                            <img className="object-cover object-center h-full w-full max-h-96"
                                                 src={product.productImages &&
                                                     product.productImages.length > 0
                                                     ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0] : process.env.REACT_APP_BUCKET_HOST +
@@ -90,7 +90,7 @@ const ProductDetailsStore = () => {
                                                 </div>
                                                 <div>
                                                     <span className="font-bold text-slate-700">{t("tax")} : </span>
-                                                    <span className="font-bold text-red-600">{(product.tax * 100).toFixed(2)}%</span>
+                                                    <span className="font-bold text-red-600">{(product.tax).toFixed(2)}%</span>
                                                 </div>
                                             </div>
                                             <div className="flex mb-4">

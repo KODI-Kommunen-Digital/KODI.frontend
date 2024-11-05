@@ -350,14 +350,12 @@ function AddNewProducts() {
                     return "";
                 }
 
-            case "barcode":
-                if (!value) {
-                    return t("pleaseEnterBarcode");
-                    // } else if (isNaN(value)) {
-                    //     return t("pleaseEnterValidNumber");
-                } else {
-                    return "";
-                }
+            // case "barcode":
+            //     if (isNaN(value)) {
+            //         return t("pleaseEnterBarcode");
+            //     } else {
+            //         return "";
+            //     }
 
             default:
                 return "";
@@ -900,14 +898,14 @@ function AddNewProducts() {
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterBarcode")}
                             />
-                            <div
+                            {/* <div
                                 className="h-[24px] text-red-600"
                                 style={{
                                     visibility: error.barcode ? "visible" : "hidden",
                                 }}
                             >
                                 {error.barcode}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -965,6 +963,10 @@ function AddNewProducts() {
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            style={{
+                                position: "relative",
+                                zIndex: 1000, // Higher than the sidebar
+                            }}
                         />
                         <div
                             className="h-[24px] text-red-600"

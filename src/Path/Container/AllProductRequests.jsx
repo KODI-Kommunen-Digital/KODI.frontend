@@ -90,6 +90,7 @@ function AllProductRequests() {
         if (selectedStore) {
             const cityId = selectedStore.cityId;
             setStoreId(storeId);
+            setCityId(cityId);
             setPageNumber(1); // Reset page number when a new store is selected
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -139,7 +140,7 @@ function AllProductRequests() {
             state: {
                 productDetails: product,
                 storeId: storeId,
-                cityId: cityId // Pass the cityId along with storeId and productDetails
+                cityId: cityId
             }
         });
     };
@@ -238,42 +239,46 @@ function AllProductRequests() {
                                 </div>
                             </div>
 
-                            <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("title")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("price")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("count")}
-                                            </th>
+                            <div className="bg-white mt-4 p-0">
+                                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                    {t("allProductRequests")}
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("title")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("price")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("count")}
+                                                </th>
 
-                                            {/* <th
+                                                {/* <th
                                                 scope="col"
                                                 className="px-6 py-4 text-center"
                                                 style={{
@@ -283,7 +288,7 @@ function AllProductRequests() {
                                             >
                                                 {t("selectShelf")}
                                             </th> */}
-                                            {/* <th
+                                                {/* <th
                                                 scope="col"
                                                 className="px-6 py-4 text-center"
                                                 style={{
@@ -293,67 +298,67 @@ function AllProductRequests() {
                                             >
                                                 {t("shelfName")}
                                             </th> */}
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("viewDetails")}
-                                            </th>
-
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {productRequests.map((product, index) => (
-                                            <tr
-                                                key={index}
-                                                className="bg-white border-b hover:bg-gray-50"
-                                            >
                                                 <th
-                                                    scope="row"
-                                                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
                                                 >
-                                                    <img
-                                                        className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                        src={
-                                                            product.productImages
-                                                                ? process.env.REACT_APP_BUCKET_HOST +
-                                                                product.productImages[0]
-                                                                : process.env.REACT_APP_BUCKET_HOST +
-                                                                "admin/Container/ShoppingCart.png"
-                                                        }
-                                                        onError={(e) => {
-                                                            e.target.src = CONTAINERIMAGE;
-                                                        }} />
-                                                    <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
-                                                        <div
-                                                            className="text-gray-500 font-bold truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                                                        >
-                                                            {product.title}
-                                                        </div>
-                                                    </div>
+                                                    {t("viewDetails")}
                                                 </th>
 
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-green-600"
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                >
-                                                    {product.price}
-                                                </td>
+                                            </tr>
+                                        </thead>
 
-                                                <td
-                                                    className={`px-6 py-4 text-center font-bold text-red-600`}
-                                                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                                        <tbody>
+                                            {productRequests.map((product, index) => (
+                                                <tr
+                                                    key={index}
+                                                    className="bg-white border-b hover:bg-gray-50"
                                                 >
-                                                    {product.count}
-                                                </td>
+                                                    <th
+                                                        scope="row"
+                                                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                    >
+                                                        <img
+                                                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                                                            src={
+                                                                product.productImages
+                                                                    ? process.env.REACT_APP_BUCKET_HOST +
+                                                                    product.productImages[0]
+                                                                    : process.env.REACT_APP_BUCKET_HOST +
+                                                                    "admin/Container/ShoppingCart.png"
+                                                            }
+                                                            onError={(e) => {
+                                                                e.target.src = CONTAINERIMAGE;
+                                                            }} />
+                                                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
+                                                            <div
+                                                                className="text-gray-500 font-bold truncate"
+                                                                style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                            >
+                                                                {product.title}
+                                                            </div>
+                                                        </div>
+                                                    </th>
 
-                                                {/* <td className="px-6 py-4">
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-green-600"
+                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                    >
+                                                        {product.price}
+                                                    </td>
+
+                                                    <td
+                                                        className={`px-6 py-4 text-center font-bold text-red-600`}
+                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                    >
+                                                        {product.count}
+                                                    </td>
+
+                                                    {/* <td className="px-6 py-4">
 
                                                     <select
                                                         className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
@@ -370,23 +375,24 @@ function AllProductRequests() {
                                                     </select>
                                                 </td> */}
 
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className="relative group inline-block"
-                                                            onClick={() => handleViewDetailsClick(product)}
-                                                        >
-                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
-                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                                {t("viewDetails")}
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className="relative group inline-block"
+                                                                onClick={() => handleViewDetailsClick(product)}
+                                                            >
+                                                                <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                    {t("viewDetails")}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

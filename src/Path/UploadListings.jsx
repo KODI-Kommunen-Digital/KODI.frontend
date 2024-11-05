@@ -815,7 +815,7 @@ function UploadListings() {
         if (name === "email") {
           if (value) {
             if (!isValidEmail(value)) {
-              return "Please enter a valid email address";
+              return t("pleaseEnterValidEmail");
             }
           }
         }

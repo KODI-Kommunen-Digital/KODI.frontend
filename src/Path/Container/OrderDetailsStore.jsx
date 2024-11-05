@@ -69,7 +69,7 @@ const OrderDetailsStore = () => {
                                         <div key={productItem.id} className="md:flex mb-6">
                                             <div className="md:px-4 py-4 md:py-0">
                                                 <img
-                                                    className="object-contain object-center h-full w-full max-h-96"
+                                                    className="object-cover object-center h-full w-full max-h-96"
                                                     src={
                                                         productItem.product.productImages &&
                                                             productItem.product.productImages.length > 0
@@ -98,7 +98,7 @@ const OrderDetailsStore = () => {
                                                         <span className="font-bold text-slate-900 ">
                                                             {t("tax")} : </span>
                                                         <span className="font-bold text-red-600">
-                                                            {(productItem.product.tax * 100).toFixed(2)}%
+                                                            {(productItem.product.tax).toFixed(2)}%
                                                         </span>
                                                     </div>
                                                 </div>

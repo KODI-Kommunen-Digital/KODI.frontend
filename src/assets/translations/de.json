@@ -896,6 +896,7 @@
     "shelfCreated": "Ihr Regal wurde erfolgreich erstellt. Es wird vom Admin überprüft und bald aktualisiert. Weiterleitung zum Dashboard in 5 Sekunden.",
     "addNewShelfTitle": "Neues Regal hinzufügen",
     "selectShelf": "Regalname",
+    "selectedShelf": "Ausgewählte Regale",
     "pleaseSelectProduct": "Bitte wählen Sie ein Produkt!",
     "cardUpdated": "Karte verknüpft",
     "pleaseAddPinNumber": "Bitte fügen Sie eine PIN-Nummer hinzu",
@@ -955,5 +956,6 @@
     "thisWeek": "Diese Woche",
     "thisMonth": "Dieser Monat",
     "thisYear": "Dieses Jahr",
-    "transactionId": "Transaktions-ID"
+    "transactionId": "Transaktions-ID",
+    "pleaseSelectAtLeastOneShelf": "Bitte wählen Sie mindestens ein Regal aus, um fortzufahren"
 }
