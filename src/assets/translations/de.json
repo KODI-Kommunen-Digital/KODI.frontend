@@ -1001,5 +1001,6 @@
     "thisWeek": "Diese Woche",
     "thisMonth": "Dieser Monat",
     "thisYear": "Dieses Jahr",
-    "transactionId": "Transaktions-ID"
+    "transactionId": "Transaktions-ID",
+    "Barcode_already_exists":"Der Barcode ist bereits vorhanden"
 }
