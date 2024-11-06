@@ -69,7 +69,7 @@ const OrderDetailsStore = () => {
                                         <div key={productItem.id} className="md:flex mb-6">
                                             <div className="md:px-4 py-4 md:py-0">
                                                 <img
-                                                    className="object-cover object-center h-full w-full max-h-96"
+                                                    className="object-cover object-center h-full w-full max-h-96 max-w-96"
                                                     src={
                                                         productItem.product.productImages &&
                                                             productItem.product.productImages.length > 0

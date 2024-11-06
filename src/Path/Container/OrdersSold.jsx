@@ -148,18 +148,19 @@ const OrdersSold = () => {
     };
 
     const totalRevenue = ordersSold.reduce((total, product) => {
-        console.log("product" + product)
         return total + (product.totalPrice || 0);
     }, 0);
 
     const totalQuantitySold = ordersSold.reduce((total, product) => {
-        return total + (product.totalQuantity || 0);
+        return total + (parseInt(product.totalQuantity, 10) || 0);
     }, 0);
 
     const totalProducts = ordersSold.length;
-    const averagePricePerQuantity = ordersSold.reduce((total, product) => {
-        return total + (product.pricePerQuantity || 0);
-    }, 0) / (totalProducts || 1);
+    const averagePricePerQuantity = (
+        ordersSold.reduce((total, product) => {
+            return total + (product.pricePerQuantity || 0);
+        }, 0) / (totalProducts || 1)
+    ).toFixed(2);
 
     let topProductNameByQuantity = '';
     let maxQuantity = -1;

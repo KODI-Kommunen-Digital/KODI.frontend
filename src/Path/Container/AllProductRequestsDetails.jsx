@@ -69,11 +69,10 @@ const AllProductRequestsDetails = () => {
     };
 
     const location = useLocation();
-    const { cityId, storeId, productDetails } = location.state || {};
+    const { productsMap, cityId, storeId, productDetails } = location.state || {};
 
     useEffect(() => {
         if (productDetails) {
-            console.log("productDetails" + productDetails.productId)
             setProduct(productDetails);
             setSelectedStatus(productDetails.status);
             setMaxCount(productDetails.maxCount || '');
@@ -206,14 +205,16 @@ const AllProductRequestsDetails = () => {
                                     <div className="md:flex mb-6">
                                         <div className="md:px-4 py-4 md:py-0">
                                             <img
-                                                className="object-cover object-center h-full w-full max-h-96"
-                                                src={product.productImages && product.productImages.length > 0
-                                                    ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0]
-                                                    : process.env.REACT_APP_BUCKET_HOST + "admin/Container/ShoppingCart.png"}
+                                                className="object-cover object-center h-full w-full max-h-96 max-w-96"
+                                                src={
+                                                    productsMap[product.productId]?.productImages &&
+                                                        productsMap[product.productId].productImages.length > 0
+                                                        ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
+                                                        : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
+                                                }
                                                 onError={(e) => {
                                                     e.target.src = CONTAINERIMAGE;
                                                 }}
-                                                alt="product"
                                             />
                                         </div>
 

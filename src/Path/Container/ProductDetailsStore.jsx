@@ -68,7 +68,7 @@ const ProductDetailsStore = () => {
                                     </p>
                                     <div className="md:flex mb-6">
                                         <div className="md:px-4 py-4 md:py-0">
-                                            <img className="object-cover object-center h-full w-full max-h-96"
+                                            <img className="object-cover object-center h-full w-full max-h-96 max-w-96"
                                                 src={product.productImages &&
                                                     product.productImages.length > 0
                                                     ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0] : process.env.REACT_APP_BUCKET_HOST +

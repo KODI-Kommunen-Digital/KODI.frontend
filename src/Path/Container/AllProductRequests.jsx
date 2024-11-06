@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getProductRequests, getOwnerShops, getUserRoleContainer } from "../../Services/containerApi";
+import { getProductRequests, getOwnerShops, getUserRoleContainer, getProductById } from "../../Services/containerApi";
 import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
@@ -18,6 +18,7 @@ function AllProductRequests() {
     const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
+    const [productsMap, setProductsMap] = useState({});
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -47,12 +48,30 @@ function AllProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchProductRequests = useCallback((cityId, storeId, pageNumber, selectedStatus) => {
+    const fetchProductRequests = useCallback(async (cityId, storeId, pageNumber, selectedStatus) => {
         if (storeId) {
-            getProductRequests(cityId, storeId, pageNumber, selectedStatus).then((response) => {
+            try {
+                const response = await getProductRequests(cityId, storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
-            });
+
+                allRequests.forEach(async (product) => {
+                    try {
+                        const productDetailsResponse = await getProductById(cityId, storeId, product.productId);
+                        const productDetails = productDetailsResponse.data.data;
+
+                        // Store each product’s details in productsMap, keyed by productId
+                        setProductsMap(prevProductsMap => ({
+                            ...prevProductsMap,
+                            [product.productId]: productDetails
+                        }));
+                    } catch (error) {
+                        console.error(`Error fetching product details for product ID ${product.productId}:`, error);
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching product requests:", error);
+            }
         }
     }, []);
 
@@ -91,7 +110,7 @@ function AllProductRequests() {
             const cityId = selectedStore.cityId;
             setStoreId(storeId);
             setCityId(cityId);
-            setPageNumber(1); // Reset page number when a new store is selected
+            setPageNumber(1);
 
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
@@ -140,7 +159,8 @@ function AllProductRequests() {
             state: {
                 productDetails: product,
                 storeId: storeId,
-                cityId: cityId
+                cityId: cityId,
+                productsMap: productsMap
             }
         });
     };
@@ -325,15 +345,15 @@ function AllProductRequests() {
                                                         <img
                                                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                             src={
-                                                                product.productImages
-                                                                    ? process.env.REACT_APP_BUCKET_HOST +
-                                                                    product.productImages[0]
-                                                                    : process.env.REACT_APP_BUCKET_HOST +
-                                                                    "admin/Container/ShoppingCart.png"
+                                                                productsMap[product.productId]?.productImages &&
+                                                                    productsMap[product.productId].productImages.length > 0
+                                                                    ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
+                                                                    : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
                                                             }
                                                             onError={(e) => {
                                                                 e.target.src = CONTAINERIMAGE;
-                                                            }} />
+                                                            }}
+                                                        />
                                                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                             <div
                                                                 className="text-gray-500 font-bold truncate"

@@ -171,7 +171,7 @@
     "please_wait": "Bitte warte...du wirst in Kürze weitergeleitet.",
     "pleaseConfirmPassword": "Bitte bestätige dein neues Passwort",
     "pleaseEnterDescription": "Bitte geben Sie eine Beschreibung ein",
-    "characterLimitReacehd": "Zeichenlimit erreicht!",
+    "characterLimitReached": "Zeichenlimit erreicht!",
     "pleaseEnterEmailAddress": "Bitte E-Mail Adresse eingeben",
     "emailExample": "deineemail@gmail.com",
     "pleaseEnterEndDate": "Bitte füge ein Enddatum ein",
@@ -957,5 +957,6 @@
     "thisMonth": "Dieser Monat",
     "thisYear": "Dieses Jahr",
     "transactionId": "Transaktions-ID",
-    "pleaseSelectAtLeastOneShelf": "Bitte wählen Sie mindestens ein Regal aus, um fortzufahren"
+    "pleaseSelectAtLeastOneShelf": "Bitte wählen Sie mindestens ein Regal aus, um fortzufahren",
+    "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte größer sein als der Bestand"
 }
