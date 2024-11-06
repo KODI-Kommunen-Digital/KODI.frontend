@@ -168,118 +168,123 @@ function AllSellers() {
                                 </div>
                             </div>
 
-                            <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
-                                                }}
-                                            >
-                                                {t("order")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 sm:px-3 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
-                                                }}
-                                            >
-                                                {t("user")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 sm:px-3 py-3 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
-                                                }}
-                                            >
-                                                {t("amount")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
-                                                }}
-                                            >
-                                                {t("date_of_creation")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "16.66%",
-                                                }}
-                                            >
-                                                {t("discount")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("viewDetails")}
-                                            </th>
-                                        </tr>
-                                    </thead>
+                            <div className="bg-white mt-4 p-0">
+                                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                    {t("allOrders")}
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "16.66%",
+                                                    }}
+                                                >
+                                                    {t("order")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 sm:px-3 py-3 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "16.66%",
+                                                    }}
+                                                >
+                                                    {t("user")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 sm:px-3 py-3 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "16.66%",
+                                                    }}
+                                                >
+                                                    {t("amount")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "16.66%",
+                                                    }}
+                                                >
+                                                    {t("date_of_creation")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "16.66%",
+                                                    }}
+                                                >
+                                                    {t("discount")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("viewDetails")}
+                                                </th>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody>
-                                        {orders.map((order) => (
-                                            <tr key={order.id} className="bg-white border-b hover:bg-gray-50">
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {order.id ? order.id.toString().padStart(3, '0') : "-"}
-                                                </td>
-                                                <td className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {order.user?.username || "-"}
-                                                </td>
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {order.amount != null ? `€ ${order.amount.toFixed(2)}` : "-"}
-                                                </td>
-                                                <td className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {order.createdAt ? new Date(order.createdAt).toLocaleString('de') : "-"}
-                                                </td>
-                                                <td className="px-6 py-4 text-center font-bold text-gray-500"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                >
-                                                    {order.discount != null ? `€ ${order.discount.toFixed(2)}` : "-"}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className="relative group inline-block"
-                                                            onClick={() => handleViewDetails(order)}
-                                                        >
-                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
-                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                                {t("viewDetails")}
+                                        <tbody>
+                                            {orders.map((order) => (
+                                                <tr key={order.id} className="bg-white border-b hover:bg-gray-50">
+                                                    <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {order.id ? order.id.toString().padStart(3, '0') : "-"}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center font-bold text-blue-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {order.user?.username || "-"}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {order.amount != null ? `€ ${order.amount.toFixed(2)}` : "-"}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center font-bold text-blue-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {order.createdAt ? new Date(order.createdAt).toLocaleString('de') : "-"}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center font-bold text-gray-500"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {order.discount != null ? `€ ${order.discount.toFixed(2)}` : "-"}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className="relative group inline-block"
+                                                                onClick={() => handleViewDetails(order)}
+                                                            >
+                                                                <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                    {t("viewDetails")}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

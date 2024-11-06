@@ -52,6 +52,7 @@ const AllProductRequestsDetails = () => {
 
     const [error, setError] = useState({
         maxCount: "",
+        shelfSelection: ""
     });
 
     const validateInput = (name, value) => {
@@ -68,7 +69,7 @@ const AllProductRequestsDetails = () => {
     };
 
     const location = useLocation();
-    const { productDetails, storeId, cityId } = location.state || {};
+    const { productsMap, cityId, storeId, productDetails } = location.state || {};
 
     useEffect(() => {
         if (productDetails) {
@@ -81,11 +82,24 @@ const AllProductRequestsDetails = () => {
     useEffect(() => {
         if (storeId) {
             getShelves(cityId, storeId).then((response) => {
-                const filteredShelves = response.data.data.filter((shelf) => shelf.productId === null);
-                setShelves(filteredShelves); // Set only shelves where productId is null
+                const filteredShelves = response.data.data.filter((shelf) => {
+                    if (product?.status === 1 || product?.status === 2) {
+                        return shelf.productId !== null && (shelf.productId === product.productId || shelf.productId === null);
+                    }
+                    return shelf.productId === null || shelf.product?.id === product.productId;
+                });
+
+                setShelves(filteredShelves);
+
+                const defaultSelectedShelves = filteredShelves
+                    .filter((shelf) => shelf.product?.id === product.productId)
+                    .map((shelf) => shelf.id);
+
+                setSelectedShelves(defaultSelectedShelves);
             });
         }
-    }, [cityId, storeId]);
+    }, [cityId, storeId, product]);
+
 
     const handleStatusChange = (newStatus) => {
         setSelectedStatus(newStatus);
@@ -108,14 +122,20 @@ const AllProductRequestsDetails = () => {
 
     const handleApprove = async () => {
         const maxCountError = validateInput("maxCount", maxCount);
-        if (maxCountError) {
-            setError((prevState) => ({ ...prevState, maxCount: maxCountError }));
+        const shelfSelectionError = selectedShelves.length === 0 ? t("pleaseSelectAtLeastOneShelf") : "";
+        setError((prevState) => ({
+            ...prevState,
+            maxCount: maxCountError,
+            shelfSelection: shelfSelectionError
+        }));
+
+        if (maxCountError || shelfSelectionError) {
             return;
         }
-        setError('');
+
         try {
             const status = statusByName.Active;
-            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, product.productId, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -131,7 +151,7 @@ const AllProductRequestsDetails = () => {
     const handleReject = async () => {
         try {
             const status = statusByName.Inactive;
-            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, product.productId, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -161,9 +181,9 @@ const AllProductRequestsDetails = () => {
                     <div className="max-w-6xl bg-white mx-auto px-4 py-4 md:rounded-lg">
                         <div className="flex flex-col md:flex-row -mx-4">
                             {product && (
-                                <div key={product.id} className="mb-6 px-4">
+                                <div key={product.productId} className="mb-6 px-4">
                                     <h2 className="text-xl font-bold text-slate-800 mb-2">
-                                        {t("requestId")} : {product.id}
+                                        {t("requestId")} : {product.productId}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
                                         {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}
@@ -185,126 +205,134 @@ const AllProductRequestsDetails = () => {
                                     <div className="md:flex mb-6">
                                         <div className="md:px-4 py-4 md:py-0">
                                             <img
-                                                className="object-contain object-center h-full w-full max-h-96"
-                                                src={product.productImages && product.productImages.length > 0
-                                                    ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0]
-                                                    : process.env.REACT_APP_BUCKET_HOST + "admin/Container/ShoppingCart.png"}
+                                                className="object-cover object-center h-full w-full max-h-96 max-w-96"
+                                                src={
+                                                    productsMap[product.productId]?.productImages &&
+                                                        productsMap[product.productId].productImages.length > 0
+                                                        ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
+                                                        : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
+                                                }
                                                 onError={(e) => {
                                                     e.target.src = CONTAINERIMAGE;
                                                 }}
-                                                alt="product"
                                             />
                                         </div>
 
-                                        <div className="px-4 bg-slate-200 bg-opacity-75 shadow-md py-4">
-                                            <div className="mb-8">
-                                                <label className="font-bold text-slate-900">{t("selectShelf")}</label>
-                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-2">
-                                                    {shelves.slice(0, visibleShelves).map((shelf) => (
-                                                        <div className="relative group" key={shelf.id}>
-                                                            <div
-                                                                className={`cursor-pointer p-4 border border-blue-600 text-blue-600 rounded-lg text-center break-words truncate ${selectedShelves.includes(Number(shelf.id))
-                                                                    ? 'bg-green-300' // Selected shelf
-                                                                    : 'bg-blue-200' // Non-selected shelf
-                                                                    }`}
-                                                                onClick={() => handleShelfSelection(shelf.id)}
+                                        {product.status !== 2 && (
+                                            <div className="p-4 bg-slate-200 bg-opacity-75 shadow-md">
+                                                <div className="mb-8">
+                                                    <label className="font-bold text-slate-900">
+                                                        {product?.status === 1 || product?.status === 2 ? t("selectedShelf") : t("selectShelf")}
+                                                    </label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 mt-2">
+                                                        {shelves.slice(0, visibleShelves).map((shelf) => (
+                                                            <div className="relative group" key={shelf.id}>
+                                                                <div
+                                                                    className={`cursor-pointer p-4 border rounded-lg text-center break-words truncate ${selectedShelves.includes(Number(shelf.id))
+                                                                        ? 'bg-green-200 border-green-600 text-green-600' // Selected shelf
+                                                                        : 'bg-blue-200 border-blue-600 text-blue-600' // Non-selected shelf
+                                                                        }`}
+                                                                    onClick={() => handleShelfSelection(shelf.id)}
+                                                                >
+                                                                    {shelf.title}
+                                                                </div>
+
+                                                                {/* Tooltip for full name on hover */}
+                                                                <div className="absolute hidden group-hover:block bg-gray-700 text-white text-sm p-2 rounded-lg shadow-md w-max max-w-xs z-10 top-full left-1/2 transform -translate-x-1/2 mt-2">
+                                                                    {shelf.title}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <div className="h-[24px] text-red-600">
+                                                        {error.shelfSelection}
+                                                    </div>
+
+                                                    <div className="flex justify-center mt-4">
+                                                        {visibleShelves < shelves.length && (
+                                                            <button
+                                                                type="button"
+                                                                className="flex items-center text-blue-600 hover:text-blue-400"
+                                                                onClick={showMoreShelves}
                                                             >
-                                                                {shelf.title}
-                                                            </div>
-
-                                                            {/* Tooltip for full name on hover */}
-                                                            <div className="absolute hidden group-hover:block bg-gray-700 text-white text-sm p-2 rounded-lg shadow-md w-max max-w-xs z-10 top-full left-1/2 transform -translate-x-1/2 mt-2">
-                                                                {shelf.title}
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                                                <span>{t("showMore")}</span>
+                                                                <FaArrowDown className="ml-1" />
+                                                            </button>
+                                                        )}
+                                                        {visibleShelves > 4 && (
+                                                            <button
+                                                                type="button"
+                                                                className="flex items-center text-blue-600 hover:text-blue-400 ml-4"
+                                                                onClick={showLessShelves}
+                                                            >
+                                                                <span>{t("showLess")}</span>
+                                                                <FaArrowUp className="ml-1" />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 </div>
 
-                                                <div className="flex justify-center mt-4">
-                                                    {visibleShelves < shelves.length && (
-                                                        <button
-                                                            type="button"
-                                                            className="flex items-center text-blue-600 hover:text-blue-400"
-                                                            onClick={showMoreShelves}
-                                                        >
-                                                            <span>{t("showMore")}</span>
-                                                            <FaArrowDown className="ml-1" />
-                                                        </button>
-                                                    )}
-                                                    {visibleShelves > 4 && (
-                                                        <button
-                                                            type="button"
-                                                            className="flex items-center text-blue-600 hover:text-blue-400 ml-4"
-                                                            onClick={showLessShelves}
-                                                        >
-                                                            <span>{t("showLess")}</span>
-                                                            <FaArrowUp className="ml-1" />
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* Max count input */}
-                                            <div className="mb-8">
-                                                <label className="font-bold text-slate-900">{t("maxCount")}</label>
-                                                <input
-                                                    type="number"
-                                                    className="border font-sans border-blue-600 text-blue-600 sm:text-sm rounded-xl p-2.5 w-full"
-                                                    value={maxCount === 0 ? '' : maxCount}
-                                                    onChange={handleMaxCountChange}
-                                                    onBlur={handleMaxCountChange}
-                                                />
-                                                <div
-                                                    className="h-[24px] text-red-600"
-                                                    style={{
-                                                        visibility: error.maxCount ? "visible" : "hidden",
-                                                    }}
-                                                >
-                                                    {error.maxCount}
-                                                </div>
-                                            </div>
-
-                                            {/* Status dropdown */}
-                                            {product.status === 0 && (
-                                                <div className="relative w-full text-center">
-                                                    <button
-                                                        className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
-                                                        type="button"
-                                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                {/* Max count input */}
+                                                <div className="mb-8">
+                                                    <label className="font-bold text-slate-900">{t("maxCount")}</label>
+                                                    <input
+                                                        type="number"
+                                                        className="border font-sans border-blue-600 text-blue-600 sm:text-sm rounded-xl p-2.5 w-full"
+                                                        value={maxCount === 0 ? '' : maxCount}
+                                                        onChange={handleMaxCountChange}
+                                                        onBlur={handleMaxCountChange}
+                                                    />
+                                                    <div
+                                                        className="h-[24px] text-red-600"
+                                                        style={{
+                                                            visibility: error.maxCount ? "visible" : "hidden",
+                                                        }}
                                                     >
-                                                        {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                                    </button>
-                                                    {dropdownOpen && (
-                                                        <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
-                                                            <ul className="py-1">
-                                                                {Object.entries(status).map(([key, value]) => (
-                                                                    <li key={key}>
-                                                                        <button
-                                                                            onClick={() => {
-                                                                                handleStatusChange(parseInt(key));
-                                                                                setDropdownOpen(false);
-                                                                            }}
-                                                                            className="text-sm hover:bg-blue-400 text-slate-700 block px-4 py-2 w-full text-left"
-                                                                        >
-                                                                            {value}
-                                                                        </button>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    )}
+                                                        {error.maxCount}
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
+
+                                                {/* Status dropdown */}
+                                                {product.status === 0 && (
+                                                    <div className="relative w-full text-center">
+                                                        <button
+                                                            className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                                            type="button"
+                                                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                        >
+                                                            {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                        </button>
+                                                        {dropdownOpen && (
+                                                            <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                                                                <ul className="py-1">
+                                                                    {Object.entries(status).map(([key, value]) => (
+                                                                        <li key={key}>
+                                                                            <button
+                                                                                onClick={() => {
+                                                                                    handleStatusChange(parseInt(key));
+                                                                                    setDropdownOpen(false);
+                                                                                }}
+                                                                                className="text-sm hover:bg-blue-400 text-slate-700 block px-4 py-2 w-full text-left"
+                                                                            >
+                                                                                {value}
+                                                                            </button>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Approve button - Only show if productDetails.status === 0 */}
                                     {product.status === 0 && (
                                         <div>
                                             <div className="relative mb-4 grid grid-cols-2 gap-4">
                                                 <div className="relative w-full text-center">
                                                     <button
-                                                        className="w-full bg-green-800 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
+                                                        className="w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
                                                         onClick={handleApprove}
                                                     >
                                                         {t("approve")}
@@ -313,7 +341,7 @@ const AllProductRequestsDetails = () => {
 
                                                 <div className="relative w-full text-center">
                                                     <button
-                                                        className="w-full bg-red-800 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
+                                                        className="w-full bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"
                                                         onClick={handleReject}
                                                     >
                                                         {t("reject")}

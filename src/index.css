@@ -102,4 +102,16 @@
     .scrollbar::-webkit-scrollbar-thumb:hover {
         background: #1e293b;
     }
+
+    .ql-container {
+        position: relative;
+    }
+    
+    .ql-tooltip {
+        position: fixed !important; /* Center the pop-up relative to the viewport */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important; /* Center the pop-up */
+        z-index: 1000 !important; /* Ensure it appears above other content, including sidebar */
+    }
 }
