@@ -147,31 +147,29 @@ const OrdersSold = () => {
         setOrderDatesForPeriod(periodValue);
     };
 
-    // Calculate Total Revenue
     const totalRevenue = ordersSold.reduce((total, product) => {
-        return total + product.cart_items.totalPrice;
+        return total + (product.totalPrice || 0);
     }, 0);
 
-    // Calculate Total Quantity Sold
     const totalQuantitySold = ordersSold.reduce((total, product) => {
-        return total + product.cart_items.quantity;
+        return total + (parseInt(product.totalQuantity, 10) || 0);
     }, 0);
 
-    // Calculate Average Price Per Quantity
-    const totalProducts = ordersSold.length; // Assuming this is the total number of products
-    const averagePricePerQuantity = ordersSold.reduce((total, product) => {
-        return total + product.cart_items.pricePerQuantity;
-    }, 0) / totalProducts || 0;
+    const totalProducts = ordersSold.length;
+    const averagePricePerQuantity = (
+        ordersSold.reduce((total, product) => {
+            return total + (product.pricePerQuantity || 0);
+        }, 0) / (totalProducts || 1)
+    ).toFixed(2);
 
-    // Find Top Selling Products based on quantity (assuming descending order)
     let topProductNameByQuantity = '';
     let maxQuantity = -1;
 
-    ordersSold.forEach(order => {
-        const quantity = order.cart_items.quantity;
+    ordersSold.forEach(product => {
+        const quantity = product.totalQuantity || 0;
         if (quantity > maxQuantity) {
             maxQuantity = quantity;
-            topProductNameByQuantity = order.cart_items.productName;
+            topProductNameByQuantity = product.productName;
         }
     });
 
@@ -225,117 +223,93 @@ const OrdersSold = () => {
                             <div className="h-full bg-gray-200 shadow-md px-2 py-2 md:rounded-lg overflow-hidden text-center relative">
                                 <SellerStatistics totalRevenue={totalRevenue} topProductNameByQuantity={topProductNameByQuantity} totalQuantitySold={totalQuantitySold} averagePricePerQuantity={averagePricePerQuantity} />
 
-                                <div className="bg-white mt-4 p-0 space-y-0 shadow-xl overflow-x-auto">
-                                    <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
-                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                            <tr>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center"
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
-                                                    }}
-                                                >
-                                                    {t("productName")}
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center "
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
-                                                    }}
-                                                >
-                                                    {t("stockSold")}
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center"
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
-                                                    }}
-                                                >
-                                                    {t("price")}
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center"
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
-                                                    }}
-                                                >
-                                                    {t("totalIncome")}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {ordersSold.map((item, index) => {
-                                                const products = item.cart_items;
-                                                return (
-                                                    <tr
-                                                        key={index}
-                                                        className="bg-white border-b hover:bg-gray-50"
+                                <div className="bg-white mt-4 p-0">
+                                    <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                        {t("ordersSold")}
+                                    </h2>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
+                                            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                                <tr>
+                                                    <th
+                                                        scope="col"
+                                                        className="px-6 py-4 text-center"
+                                                        style={{
+                                                            fontFamily: "Poppins, sans-serif",
+                                                            width: "20%",
+                                                        }}
                                                     >
-                                                        <th
-                                                            scope="row"
-                                                            className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                                                        {t("productName")}
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        className="px-6 py-4 text-center "
+                                                        style={{
+                                                            fontFamily: "Poppins, sans-serif",
+                                                            width: "20%",
+                                                        }}
+                                                    >
+                                                        {t("stockSold")}
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        className="px-6 py-4 text-center"
+                                                        style={{
+                                                            fontFamily: "Poppins, sans-serif",
+                                                            width: "25%",
+                                                        }}
+                                                    >
+                                                        {t("price")}
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        className="px-6 py-4 text-center"
+                                                        style={{
+                                                            fontFamily: "Poppins, sans-serif",
+                                                            width: "25%",
+                                                        }}
+                                                    >
+                                                        {t("totalIncome")}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {ordersSold.map((item, index) => {
+                                                    return (
+                                                        <tr
+                                                            key={index}
+                                                            className="bg-white border-b hover:bg-gray-50"
                                                         >
-                                                            <img
-                                                                className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                                                                src={
-                                                                    products.image
-                                                                        ? process.env.REACT_APP_BUCKET_HOST +
-                                                                        products.image
-                                                                        : process.env.REACT_APP_BUCKET_HOST +
-                                                                        "admin/Container/ShoppingCart.png"
-                                                                }
-                                                                onClick={() =>
-                                                                    navigateTo(
-                                                                        `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
-                                                                    )
-                                                                }
-                                                                alt="avatar"
-                                                            />
-                                                            <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                                                                <div
-                                                                    className="font-bold text-gray-500 cursor-pointer text-center truncate"
-                                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                                    onClick={() =>
-                                                                        navigateTo(
-                                                                            `/Forum?forumId=${products.forumId}&cityId=${products.cityId}`
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    {products.productName}
-                                                                </div>
-                                                            </div>
-                                                        </th>
-                                                        <td
-                                                            className={`px-6 py-4 text-center font-bold text-blue-600`}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            {products.quantity}
-                                                        </td>
-                                                        <td
-                                                            className="px-6 py-4 text-center font-bold text-red-600"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            € {products.pricePerQuantity}
-                                                        </td>
-                                                        <td
-                                                            className="px-6 py-4 text-center font-bold text-green-600"
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            € {products.totalPrice}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
+                                                            <td
+                                                                className="px-6 py-4 text-center text-gray-500 font-bold truncate"
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                            >
+                                                                {item.productName}
+                                                            </td>
+                                                            <td
+                                                                className="px-6 py-4 text-center font-bold text-blue-600"
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                            >
+                                                                {item.totalQuantity}
+                                                            </td>
+                                                            <td
+                                                                className="px-6 py-4 text-center font-bold text-red-600"
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                            >
+                                                                € {item.pricePerQuantity}
+                                                            </td>
+                                                            <td
+                                                                className="px-6 py-4 text-center font-bold text-green-600"
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                            >
+                                                                € {item.totalPrice}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 

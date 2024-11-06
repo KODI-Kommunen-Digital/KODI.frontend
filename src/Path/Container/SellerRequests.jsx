@@ -142,7 +142,7 @@ const SellerRequests = () => {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
 
                     {sellerRequests && sellerRequests.length > 0 ? (
@@ -174,97 +174,102 @@ const SellerRequests = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("sellerName")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("date_of_creation")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("description")}
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("status")}
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {sellerRequests.map((products, index) => (
-                                            <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                                <th className="px-6 py-4 text-center font-bold text-gray-500 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-
-                                                    {products.title}
+                            <div className="bg-white mt-4 p-0">
+                                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                    {t("sellerRequestsHeading")}
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left space-y-10 text-gray-500 p-6 rounded-lg">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("sellerName")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("date_of_creation")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("description")}
                                                 </th>
 
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600"
-                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
                                                 >
-                                                    {products.createdAt
-                                                        ? new Date(products.createdAt).toLocaleString('de')
-                                                        : "-"}
-                                                </td>
-
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                                                    dangerouslySetInnerHTML={{ __html: products.description }}
-                                                >
-                                                </td>
-
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                products.status
-                                                            )} mr-2`}
-                                                        ></div>
-
-                                                        <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                            {t(status[products.status].toLowerCase())}
-                                                        </h1>
-                                                    </div>
-                                                </td>
+                                                    {t("status")}
+                                                </th>
                                             </tr>
-                                        ))}
+                                        </thead>
 
-                                    </tbody>
-                                </table>
+                                        <tbody>
+                                            {sellerRequests.map((products, index) => (
+                                                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                                    <th className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+
+                                                        {products.title}
+                                                    </th>
+
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-blue-600"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    >
+                                                        {products.createdAt
+                                                            ? new Date(products.createdAt).toLocaleString('de')
+                                                            : "-"}
+                                                    </td>
+
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-blue-600 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                        dangerouslySetInnerHTML={{ __html: products.description }}
+                                                    >
+                                                    </td>
+
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                                                    products.status
+                                                                )} mr-2`}
+                                                            ></div>
+
+                                                            <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                                                {t(status[products.status].toLowerCase())}
+                                                            </h1>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

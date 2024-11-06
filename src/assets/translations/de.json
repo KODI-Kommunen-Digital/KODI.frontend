@@ -173,7 +173,7 @@
     "please_wait": "Bitte warte...du wirst in Kürze weitergeleitet.",
     "pleaseConfirmPassword": "Bitte bestätige dein neues Passwort",
     "pleaseEnterDescription": "Bitte geben Sie eine Beschreibung ein",
-    "characterLimitReacehd": "Zeichenlimit erreicht!",
+    "characterLimitReached": "Zeichenlimit erreicht!",
     "pleaseEnterEmailAddress": "Bitte E-Mail Adresse eingeben",
     "emailExample": "deineemail@gmail.com",
     "pleaseEnterEndDate": "Bitte füge ein Enddatum ein",
@@ -920,6 +920,7 @@
     "shelfCreated": "Ihr Regal wurde erfolgreich erstellt. Es wird vom Admin überprüft und bald aktualisiert. Weiterleitung zum Dashboard in 5 Sekunden.",
     "addNewShelfTitle": "Neues Regal hinzufügen",
     "selectShelf": "Regalname",
+    "selectedShelf": "Ausgewählte Regale",
     "pleaseSelectProduct": "Bitte wählen Sie ein Produkt!",
     "cardUpdated": "Karte verknüpft",
     "pleaseAddPinNumber": "Bitte fügen Sie eine PIN-Nummer hinzu",
@@ -1002,5 +1003,11 @@
     "thisMonth": "Dieser Monat",
     "thisYear": "Dieses Jahr",
     "transactionId": "Transaktions-ID",
-    "Barcode_already_exists":"Der Barcode ist bereits vorhanden"
+    "Barcode_already_exists":"Der Barcode ist bereits vorhanden",
+    "sellerRequestsHeading": "Verkäuferanfragen",
+    "productStore": "Produktgeschäft",
+    "allOrders": "Alle Bestellungen",
+    "allProductRequests": "Alle Produktanfragen",
+    "pleaseSelectAtLeastOneShelf": "Bitte wählen Sie mindestens ein Regal aus, um fortzufahren",
+    "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte größer sein als der Bestand"
 }
