@@ -175,7 +175,7 @@
     "please_wait": "Please wait. It wont take much long",
     "pleaseConfirmPassword": "Please confirm your new password",
     "pleaseEnterDescription": "Please enter a description",
-    "characterLimitReacehd": "Character limit reached!",
+    "characterLimitReached": "Character limit reached!",
     "pleaseEnterEmailAddress": "Please enter email address",
     "emailExample": "youremail@gmail.com",
     "pleaseEnterEndDate": "Please enter the end date",
@@ -881,6 +881,7 @@
     "shelfCreated": "Your shelf was created succesfully. It is under review by Admin and will be updated soon. Redirecting to dashboard in 5 seconds.",
     "addNewShelfTitle": "Add new shelf",
     "selectShelf": "Select Shelves",
+    "selectedShelf": "Selected Shelves",
     "pleaseSelectProduct": "Please select a product!",
     "cardUpdated": "Card linked",
     "pleaseAddPinNumber": "Please add a pin number",
@@ -991,5 +992,13 @@
     "thisWeek": "This week",
     "thisMonth": "This month",
     "thisYear": "This year",
-    "transactionId": "Transaction ID"
+    "transactionId": "Transaction ID",
+    "Barcode_already_exists":"Barcode already exists",
+    "sellerRequestsHeading": "Seller Requests",
+    "productStore": "Product Store",
+    "allOrders": "All Orders",
+    "allProductRequests": "All Product Requests",
+    "pleaseSelectAtLeastOneShelf": "Please select atleast one shelf to proceed",
+    "minCountShouldBeGreaterThanInventory": "Minimum count should be greater than Inventory"
+
 }

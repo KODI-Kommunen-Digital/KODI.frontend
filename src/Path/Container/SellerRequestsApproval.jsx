@@ -217,7 +217,7 @@ const SellerRequestsApproval = () => {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
 
                     {sellerRequests && sellerRequests.length > 0 ? (
@@ -250,21 +250,25 @@ const SellerRequestsApproval = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("sellerName")}
-                                            </th>
-                                            {/* <th
+                            <div className="bg-white mt-4 p-0">
+                                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                    {t("sellerRequestsHeading")}
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("sellerName")}
+                                                </th>
+                                                {/* <th
                                                 scope="col"
                                                 className="px-6 py-4 text-center"
                                                 style={{
@@ -274,53 +278,53 @@ const SellerRequestsApproval = () => {
                                             >
                                                 {t("date_of_creation")}
                                             </th> */}
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("description")}
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("viewDetails")}
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("action")}
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {sellerRequests.map((sellerRequest, index) => (
-                                            <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                                 <th
-                                                    scope="row"
-                                                    className="px-6 py-4 text-center font-bold text-gray-500 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
                                                 >
-                                                    {sellerRequest.title}
+                                                    {t("description")}
                                                 </th>
 
-                                                {/* <td
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("viewDetails")}
+                                                </th>
+
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "25%",
+                                                    }}
+                                                >
+                                                    {t("action")}
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {sellerRequests.map((sellerRequest, index) => (
+                                                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                                    <th
+                                                        scope="row"
+                                                        className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                    >
+                                                        {sellerRequest.title}
+                                                    </th>
+
+                                                    {/* <td
                                                     className="px-6 py-4 text-center font-bold text-blue-600"
                                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                                 >
@@ -329,61 +333,62 @@ const SellerRequestsApproval = () => {
                                                         : "-"}
                                                 </td> */}
 
-                                                <td
-                                                    className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                    style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                                                    dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
-                                                >
-                                                </td>
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-blue-600 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                        dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
+                                                    >
+                                                    </td>
 
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className="relative group inline-block"
-                                                            onClick={() => navigateToSellerDetails(sellerRequest)}
-                                                        >
-                                                            <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
-                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                                {t("viewDetails")}
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className="relative group inline-block"
+                                                                onClick={() => navigateToSellerDetails(sellerRequest)}
+                                                            >
+                                                                <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                    {t("viewDetails")}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </td>
+                                                    </td>
 
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-center">
-                                                        <div
-                                                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                sellerRequest.status
-                                                            )} mr-2`}
-                                                        ></div>
-                                                        <select
-                                                            className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                                            onChange={(e) =>
-                                                                handleChangeInStatus(e.target.value, sellerRequest, sellerRequest.id, sellerRequest.title, sellerRequest.description)
-                                                            }
-                                                            value={sellerRequest.status || 0}
-                                                            style={{ fontFamily: "Poppins, sans-serif" }}
-                                                        >
-                                                            {Object.keys(status).map((state, index) => {
-                                                                return (
-                                                                    <option
-                                                                        className="p-0"
-                                                                        key={index}
-                                                                        value={state}
-                                                                    >
-                                                                        {t(status[state].toLowerCase())}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center justify-center">
+                                                            <div
+                                                                className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                                                    sellerRequest.status
+                                                                )} mr-2`}
+                                                            ></div>
+                                                            <select
+                                                                className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
+                                                                onChange={(e) =>
+                                                                    handleChangeInStatus(e.target.value, sellerRequest, sellerRequest.id, sellerRequest.title, sellerRequest.description)
+                                                                }
+                                                                value={sellerRequest.status || 0}
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                            >
+                                                                {Object.keys(status).map((state, index) => {
+                                                                    return (
+                                                                        <option
+                                                                            className="p-0"
+                                                                            key={index}
+                                                                            value={state}
+                                                                        >
+                                                                            {t(status[state].toLowerCase())}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

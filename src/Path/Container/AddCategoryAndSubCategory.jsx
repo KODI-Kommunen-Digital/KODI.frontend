@@ -4,7 +4,7 @@ import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import Alert from "../../Components/Alert";
-import { getOwnerCategory, getSubCategory, getOwnerShops, addCategory, addSubCategory, getUserRoleContainer } from "../../Services/containerApi";
+import { getOwnerCategory, getOwnerSubCategory, getOwnerShops, addCategory, addSubCategory, getUserRoleContainer } from "../../Services/containerApi";
 
 function AddCategoryAndSubCategory() {
     const { t } = useTranslation();
@@ -88,7 +88,7 @@ function AddCategoryAndSubCategory() {
 
         if (categoryId !== 0) {
             try {
-                const response = await getSubCategory(1, storeId, categoryId); // Adjust cityId here
+                const response = await getOwnerSubCategory(categoryId);
                 setSubCategories(response.data.data || []);
             } catch (error) {
                 setErrorMessage(t("subcategoryFetchError"));

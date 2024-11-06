@@ -116,55 +116,14 @@ const GroupMembers = () => {
       {isAdmin && <ForumNavbar cityId={cityId} forumId={forumId} />}
       <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
         <div className="h-full">
-          <div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-            <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "20%",
-                    }}
-                  >
-                    {t("members")}
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "20%",
-                    }}
-                  >
-                    {t("date_of_joining")}
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "20%",
-                    }}
-                  >
-                    {t("admin")}
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "20%",
-                    }}
-                  >
-                    {t("remove")}
-                  </th>
-
-                  {isAdmin && (
+          <div className="bg-white mt-4 p-0">
+            <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+              {t("groupMembers")}
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -173,121 +132,167 @@ const GroupMembers = () => {
                         width: "20%",
                       }}
                     >
-                      {t("action")}
+                      {t("members")}
                     </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {members.map((member, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-50"
+
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "20%",
+                      }}
                     >
+                      {t("date_of_joining")}
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "20%",
+                      }}
+                    >
+                      {t("admin")}
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "20%",
+                      }}
+                    >
+                      {t("remove")}
+                    </th>
+
+                    {isAdmin && (
                       <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
-                      >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            member.image
-                              ? process.env.REACT_APP_BUCKET_HOST + member.image
-                              : GROUPIMAGE
-                          }
-                          alt="avatar"
-                        />
-                        <div className="pl-0 sm:pl-3 overflow-hidden max-w">
-                          <div
-                            className="font-bold text-gray-500 truncate"
-                            onClick={() =>
-                              navigateTo(`/ViewProfile/${member.username}`)
-                            }
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {member.firstname} {member.lastname} (@
-                            {member.username})
-                          </div>
-                        </div>
-                      </th>
-
-                      <td
+                        scope="col"
                         className="px-6 py-4 text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {new Date(member.joinedAt).toLocaleString("de")}
-                      </td>
-
-                      <td
-                        className="px-6 py-4 font-bold text-center"
                         style={{
                           fontFamily: "Poppins, sans-serif",
-                          color: member.isAdmin === 1 ? "green" : "red",
+                          width: "20%",
                         }}
                       >
-                        {member.isAdmin === 1 ? t("admin") : t("member")}
-                      </td>
+                        {t("action")}
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {members.map((member, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50"
+                      >
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                        >
+                          <img
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={
+                              member.image
+                                ? process.env.REACT_APP_BUCKET_HOST + member.image
+                                : GROUPIMAGE
+                            }
+                            alt="avatar"
+                          />
+                          <div className="pl-0 sm:pl-3 overflow-hidden max-w">
+                            <div
+                              className="font-bold text-gray-500 truncate"
+                              onClick={() =>
+                                navigateTo(`/ViewProfile/${member.username}`)
+                              }
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {member.firstname} {member.lastname} (@
+                              {member.username})
+                            </div>
+                          </div>
+                        </th>
 
-                      {isAdmin ? (
-                        <td className="px-6 py-4 text-center">
-                          <a
-                            className="text-blue-600 font-bold hover:underline cursor-pointer text-center pr-0"
-                            onClick={() => removeMemberOnClick(member)}
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {member.userId === currentUserId
-                              ? t("exit")
-                              : t("remove")}
-                          </a>
+                        <td
+                          className="px-6 py-4 text-center"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {new Date(member.joinedAt).toLocaleString("de")}
                         </td>
-                      ) : (
-                        <td className="px-6 py-4 text-center">
-                          <a
-                            className={`font-bold text-blue-600 ${member.userId === currentUserId
-                              ? "hover:underline"
-                              : ""
-                              } cursor-pointer text-center pr-0`}
-                            onClick={() => {
-                              member.userId === currentUserId &&
-                                removeMemberOnClick(member);
-                            }}
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {member.userId === currentUserId ? (
-                              t("exit")
-                            ) : (
-                              <div className="font-bold text-gray-500">
-                                {t("onlyAdmins")}
-                              </div>
-                            )}
-                          </a>
-                        </td>
-                      )}
 
-                      {isAdmin && (
-                        <td className="px-6 py-4 text-center">
-                          <button
-                            className={`font-bold hover:underline cursor-pointer text-center ${member.isAdmin === 1
-                              ? "text-red-500"
-                              : "text-green-500"
-                              }`}
-                            style={{
-                              fontFamily: "Poppins, sans-serif",
-                            }}
-                            onClick={() => handleAdminToggle(member)}
-                          >
-                            {member.isAdmin === 1
-                              ? t("removeAdmin")
-                              : t("makeAdmin")}
-                          </button>
+                        <td
+                          className="px-6 py-4 font-bold text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            color: member.isAdmin === 1 ? "green" : "red",
+                          }}
+                        >
+                          {member.isAdmin === 1 ? t("admin") : t("member")}
                         </td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+
+                        {isAdmin ? (
+                          <td className="px-6 py-4 text-center">
+                            <a
+                              className="text-blue-600 font-bold hover:underline cursor-pointer text-center pr-0"
+                              onClick={() => removeMemberOnClick(member)}
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {member.userId === currentUserId
+                                ? t("exit")
+                                : t("remove")}
+                            </a>
+                          </td>
+                        ) : (
+                          <td className="px-6 py-4 text-center">
+                            <a
+                              className={`font-bold text-blue-600 ${member.userId === currentUserId
+                                ? "hover:underline"
+                                : ""
+                                } cursor-pointer text-center pr-0`}
+                              onClick={() => {
+                                member.userId === currentUserId &&
+                                  removeMemberOnClick(member);
+                              }}
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {member.userId === currentUserId ? (
+                                t("exit")
+                              ) : (
+                                <div className="font-bold text-gray-500">
+                                  {t("onlyAdmins")}
+                                </div>
+                              )}
+                            </a>
+                          </td>
+                        )}
+
+                        {isAdmin && (
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              className={`font-bold hover:underline cursor-pointer text-center ${member.isAdmin === 1
+                                ? "text-red-500"
+                                : "text-green-500"
+                                }`}
+                              style={{
+                                fontFamily: "Poppins, sans-serif",
+                              }}
+                              onClick={() => handleAdminToggle(member)}
+                            >
+                              {member.isAdmin === 1
+                                ? t("removeAdmin")
+                                : t("makeAdmin")}
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-left cursor-pointer">

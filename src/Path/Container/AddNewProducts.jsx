@@ -107,7 +107,12 @@ function AddNewProducts() {
                 }, 5000);
 
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response.data.errorCode === 6012) {
+                    setErrorMessage(t("Barcode_already_exists")); // Custom message for this specific error
+                } else {
+                    setErrorMessage(t("changesNotSaved")); // Fallback for other errors
+                }
+
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -275,45 +280,38 @@ function AddNewProducts() {
                 } else {
                     return "";
                 }
-
             case "shopId":
                 if (!value) {
                     return t("pleaseSelectShop");
                 } else {
                     return "";
                 }
-
             case "categoryId":
                 if (!parseInt(value)) {
-                    console.log("asjhfdvaslhjdvadljahvdjhlasdasdb " + value)
                     return t("pleaseSelectCategory");
                 } else {
                     return "";
                 }
-
             case "subCategoryId":
                 if (!value) {
                     return t("pleaseSelectSubcategory");
                 } else {
                     return "";
                 }
-
             case "cityId":
                 if (!parseInt(value)) {
                     return t("pleaseSelectCity");
                 } else {
                     return "";
                 }
-
             case "description":
                 if (!value) {
                     return t("pleaseEnterDescription");
                 } else if (value.length > 255) {
-                    return t("characterLimitReacehd");
+                    return t("characterLimitReached");
                 } else {
                     return "";
                 }
-
             case "price":
                 if (!value) {
                     return t("pleaseEnterPrice");
@@ -322,7 +320,6 @@ function AddNewProducts() {
                 } else {
                     return "";
                 }
-
             case "tax":
                 if (!value) {
                     return t("pleaseEnterTax");
@@ -331,7 +328,6 @@ function AddNewProducts() {
                 } else {
                     return "";
                 }
-
             case "inventory":
                 if (!value) {
                     return t("pleaseEnterInventory");
@@ -342,22 +338,24 @@ function AddNewProducts() {
                 }
 
             case "minCount":
-                if (!value) {
-                    return t("pleaseEnterMinCount");
-                } else if (isNaN(value)) {
-                    return t("pleaseEnterValidNumber");
+                if (name === "inventory" && (!value || isNaN(value))) {
+                    return t("pleaseEnterValidInventory");
+                } else if (name === "minCount" && (!value || isNaN(value))) {
+                    return t("pleaseEnterValidMinCount");
+                } else if (parseInt(input.minCount) <= parseInt(input.inventory)) {
+                    return t("minCountShouldBeGreaterThanInventory");
                 } else {
                     return "";
                 }
 
-            case "barcode":
-                if (!value) {
-                    return t("pleaseEnterBarcode");
-                    // } else if (isNaN(value)) {
-                    //     return t("pleaseEnterValidNumber");
-                } else {
-                    return "";
-                }
+            // case "barcode":
+            //     if (!value) {
+            //         return t("pleaseEnterBarcode");
+            //         // } else if (isNaN(value)) {
+            //         //     return t("pleaseEnterValidNumber");
+            //     } else {
+            //         return "";
+            //     }
 
             default:
                 return "";
@@ -375,10 +373,15 @@ function AddNewProducts() {
 
     const validateInput = (e) => {
         const { name, value } = e.target;
-        const errorMessage = getErrorMessage(name, value);
-        setError((prevState) => {
-            return { ...prevState, [name]: errorMessage };
-        });
+        const newErrors = { ...error };
+
+        if (name === "inventory" || name === "minCount") {
+            newErrors.inventory = getErrorMessage("inventory", input.inventory);
+            newErrors.minCount = getErrorMessage("minCount", input.minCount);
+        } else {
+            newErrors[name] = getErrorMessage(name, value);
+        }
+
     };
 
     function handleDragEnter(e) {
@@ -900,14 +903,14 @@ function AddNewProducts() {
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterBarcode")}
                             />
-                            <div
+                            {/* <div
                                 className="h-[24px] text-red-600"
                                 style={{
                                     visibility: error.barcode ? "visible" : "hidden",
                                 }}
                             >
                                 {error.barcode}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -965,6 +968,10 @@ function AddNewProducts() {
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            style={{
+                                position: "relative",
+                                zIndex: 1000, // Higher than the sidebar
+                            }}
                         />
                         <div
                             className="h-[24px] text-red-600"

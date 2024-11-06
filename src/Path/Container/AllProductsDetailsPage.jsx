@@ -60,7 +60,7 @@ const AllProductsDetailsPage = () => {
                                                 </div>
                                                 <div>
                                                     <span className="font-bold text-slate-700">{t("tax")} : </span>
-                                                    <span className="font-bold text-red-600">{(product.tax * 100).toFixed(2)}%</span>
+                                                    <span className="font-bold text-red-600">{(product.tax).toFixed(2)}%</span>
                                                 </div>
                                             </div>
                                             <div className="flex mb-4">

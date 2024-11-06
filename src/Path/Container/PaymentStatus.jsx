@@ -77,7 +77,7 @@ const PaymentStatus = () => {
         <section className="bg-gray-800 body-font relative h-screen">
             <SideBar />
 
-            <div className="container w-auto px-5 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
                 <div className="h-full">
 
                     {cardId && paymentStatus && paymentStatus.length > 0 ? (
@@ -109,75 +109,80 @@ const PaymentStatus = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                                <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "33.33%",
-                                                }}
-                                            >
-                                                {t("transactionId")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "33.33%",
-                                                }}
-                                            >
-                                                {t("amount")}
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center "
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "33.33%",
-                                                }}
-                                            >
-                                                {t("orderDate")}
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {paymentStatus.map((payment, index) => {
-                                            return (
-                                                <tr
-                                                    key={index}
-                                                    className="bg-white border-b hover:bg-gray-50"
+                            <div className="bg-white mt-4 p-0">
+                                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                    {t("paymentStatus")}
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "33.33%",
+                                                    }}
                                                 >
-                                                    <td
-                                                        className="px-6 py-4 text-center font-bold"
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                                    >
-                                                        {payment.id}
-                                                    </td>
+                                                    {t("transactionId")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "33.33%",
+                                                    }}
+                                                >
+                                                    {t("amount")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "33.33%",
+                                                    }}
+                                                >
+                                                    {t("orderDate")}
+                                                </th>
+                                            </tr>
+                                        </thead>
 
-                                                    <td
-                                                        className="px-6 py-4 text-center font-bold"
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                        <tbody>
+                                            {paymentStatus.map((payment, index) => {
+                                                return (
+                                                    <tr
+                                                        key={index}
+                                                        className="bg-white border-b hover:bg-gray-50"
                                                     >
-                                                        € {payment.amount}
-                                                    </td>
+                                                        <td
+                                                            className="px-6 py-4 text-center font-bold"
+                                                            style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        >
+                                                            {payment.id}
+                                                        </td>
 
-                                                    <td
-                                                        className="px-6 py-4 text-center font-bold text-blue-600"
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
-                                                    >
-                                                        {new Date(payment.createdAt).toLocaleDateString()}
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
+                                                        <td
+                                                            className="px-6 py-4 text-center font-bold"
+                                                            style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        >
+                                                            € {payment.amount}
+                                                        </td>
+
+                                                        <td
+                                                            className="px-6 py-4 text-center font-bold text-blue-600"
+                                                            style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        >
+                                                            {new Date(payment.createdAt).toLocaleDateString()}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

@@ -1002,7 +1002,7 @@ function UploadListings() {
   const handleInputClick = (e) => {
     e.target.showPicker(); // Programmatically open the date picker
   };
-  
+
   const preventKeyboardInput = (e) => {
     e.preventDefault(); // Prevent any keyboard input
   };
