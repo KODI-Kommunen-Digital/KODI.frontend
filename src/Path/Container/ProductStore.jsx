@@ -35,7 +35,7 @@ function ProductStore() {
                 fetchProducts(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProducts, storeId, pageNumber, selectedStatus]);
+    }, [fetchProducts, storeId, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -154,7 +154,9 @@ function ProductStore() {
                                     <div
                                         className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        onClick={() => {setSelectedStatus(statusByName.Active);
+                                            setPageNumber(1);
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("active")}
@@ -162,7 +164,9 @@ function ProductStore() {
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => {setSelectedStatus(statusByName.Pending);
+                                            setPageNumber(1);
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("pending")}
@@ -383,7 +387,10 @@ function ProductStore() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber - 1)}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber - 1);
+                                            fetchProducts(storeId, pageNumber - 1, selectedStatus);
+                                          }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -401,7 +408,10 @@ function ProductStore() {
                                 {products.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber + 1)}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber + 1);
+                                            fetchProducts(storeId, pageNumber + 1, selectedStatus);
+                                          }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
