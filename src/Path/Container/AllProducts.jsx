@@ -313,7 +313,7 @@ function AllProducts() {
                                                         className={`px-6 py-4 text-center font-bold text-red-600`}
                                                         style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        {(product.tax).toFixed(2)}%
+                                                        {(product.tax != null ? product.tax : 0).toFixed(2)}%
                                                     </td>
 
                                                     <td className="px-6 py-4">

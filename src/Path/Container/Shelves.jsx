@@ -207,12 +207,20 @@ function Shelves() {
                                                             {shelve.title}
                                                         </th>
 
-                                                        <td
-                                                            className="px-6 py-4 text-center font-bold text-blue-600 truncate"
-                                                            style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                                                            dangerouslySetInnerHTML={{ __html: shelve.description }}
-                                                        >
-                                                        </td>
+                                                        <div className="px-6 py-4">
+                                                            <td
+                                                                className="text-center font-bold text-blue-600 line-clamp-3"
+                                                                style={{
+                                                                    fontFamily: "Poppins, sans-serif",
+                                                                    maxWidth: "200px",
+                                                                    overflow: "hidden",
+                                                                    textOverflow: "ellipsis",
+                                                                    whiteSpace: "pre-wrap"
+                                                                }}
+                                                                dangerouslySetInnerHTML={{ __html: shelve.description }}
+                                                            >
+                                                            </td>
+                                                        </div>
 
                                                         <td
                                                             className="px-6 py-4 text-center font-bold"

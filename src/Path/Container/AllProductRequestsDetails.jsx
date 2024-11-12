@@ -135,7 +135,7 @@ const AllProductRequestsDetails = () => {
 
         try {
             const status = statusByName.Active;
-            await updateProductRequests(storeId, product.productId, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -151,7 +151,7 @@ const AllProductRequestsDetails = () => {
     const handleReject = async () => {
         try {
             const status = statusByName.Inactive;
-            await updateProductRequests(storeId, product.productId, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -181,9 +181,9 @@ const AllProductRequestsDetails = () => {
                     <div className="max-w-6xl bg-white mx-auto px-4 py-4 md:rounded-lg">
                         <div className="flex flex-col md:flex-row -mx-4">
                             {product && (
-                                <div key={product.productId} className="mb-6 px-4">
+                                <div key={product.id} className="mb-6 px-4">
                                     <h2 className="text-xl font-bold text-slate-800 mb-2">
-                                        {t("requestId")} : {product.productId}
+                                        {t("requestId")} : {product.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
                                         {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}
@@ -202,20 +202,23 @@ const AllProductRequestsDetails = () => {
                                         </div>
                                     </div>
 
-                                    <div className="md:flex mb-6">
-                                        <div className="md:px-4 py-4 md:py-0">
-                                            <img
-                                                className="object-cover object-center h-full w-full max-h-96 max-w-96"
-                                                src={
-                                                    productsMap[product.productId]?.productImages &&
-                                                        productsMap[product.productId].productImages.length > 0
-                                                        ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
-                                                        : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
-                                                }
-                                                onError={(e) => {
-                                                    e.target.src = CONTAINERIMAGE;
-                                                }}
-                                            />
+                                    {/* <div className="md:flex mb-6"> */}
+                                    <div className="mb-4">
+                                        <div className="flex justify-center items-center">
+                                            <div className="py-4">
+                                                <img
+                                                    className="object-cover text-center h-full w-full max-h-96 max-w-96"
+                                                    src={
+                                                        productsMap[product.productId]?.productImages &&
+                                                            productsMap[product.productId].productImages.length > 0
+                                                            ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
+                                                            : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
+                                                    }
+                                                    onError={(e) => {
+                                                        e.target.src = CONTAINERIMAGE;
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
 
                                         {product.status !== 2 && (
@@ -328,8 +331,8 @@ const AllProductRequestsDetails = () => {
                                     </div>
 
                                     {product.status === 0 && (
-                                        <div>
-                                            <div className="relative mb-4 grid grid-cols-2 gap-4">
+                                        <div className="mb-4">
+                                            <div className="relative py-4 grid grid-cols-2 gap-4">
                                                 <div className="relative w-full text-center">
                                                     <button
                                                         className="w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-60"

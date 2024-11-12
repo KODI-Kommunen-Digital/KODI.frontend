@@ -348,7 +348,7 @@ function AllProductRequests() {
                                                                 productsMap[product.productId]?.productImages &&
                                                                     productsMap[product.productId].productImages.length > 0
                                                                     ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
-                                                                    : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
+                                                                    : CONTAINERIMAGE
                                                             }
                                                             onError={(e) => {
                                                                 e.target.src = CONTAINERIMAGE;
