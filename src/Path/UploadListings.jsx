@@ -23,6 +23,8 @@ import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
 import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -789,35 +791,34 @@ function UploadListings() {
         }
 
       case "startDate":
-        if (!value && parseInt(listingInput.categoryId) == 3) {
+        if (!value && parseInt(listingInput.categoryId) === 3) {
           return t("pleaseEnterStartDate");
-        } else {
-          return "";
         }
+        return "";
 
       case "endDate":
-        if (parseInt(listingInput.categoryId) === 3) {
-          if (value && new Date(listingInput.startDate) > new Date(value)) {
-            return t("endDateBeforeStartDate");
-          } else {
-            return "";
-          }
-        } else {
-          return "";
+        if (!value && parseInt(listingInput.categoryId) === 3) {
+          return t("pleaseEnterEndDate");
         }
+        if (listingInput.startDate && new Date(listingInput.startDate) > new Date(value)) {
+          return t("endDateBeforeStartDate");
+        }
+        return "";
+
+      case "expiryDate":
+        if (!value && parseInt(listingInput.categoryId) === 1) {
+          return t("pleaseEnterExpiryDate");
+        }
+        if (value && new Date(value) < new Date()) {
+          return t("expiryDateInPast");
+        }
+        return "";
 
       case "email":
         if (value) {
           if (!isValidEmail(value)) {
             return t("pleaseEnterValidEmail");
           }
-        } else {
-          return "";
-        }
-
-      case "expiryDate":
-        if (!value && parseInt(listingInput.categoryId) == 1) {
-          return t("pleaseEnterExpiryDate");
         } else {
           return "";
         }
@@ -856,8 +857,44 @@ function UploadListings() {
       const errorMessage = getErrorMessage(name, value);
       setError((prevState) => ({
         ...prevState,
-        [name]: errorMessage
+        [name]: errorMessage,
       }));
+
+      // Validate startDate and endDate relationship
+      if (name === "startDate" || name === "endDate") {
+        const startDate = new Date(listingInput.startDate);
+        const endDate = new Date(listingInput.endDate);
+
+        if (startDate && endDate && startDate > endDate) {
+          setError((prevState) => ({
+            ...prevState,
+            endDate: t("endDateBeforeStartDate"),
+          }));
+        } else {
+          setError((prevState) => ({
+            ...prevState,
+            endDate: "",
+          }));
+        }
+      }
+
+      // Validate expiryDate if it's required to be in the future
+      if (name === "expiryDate") {
+        const expiryDate = new Date(listingInput.expiryDate);
+        const now = new Date();
+
+        if (expiryDate && expiryDate < now) {
+          setError((prevState) => ({
+            ...prevState,
+            expiryDate: t("expiryDateInPast"),
+          }));
+        } else {
+          setError((prevState) => ({
+            ...prevState,
+            expiryDate: "",
+          }));
+        }
+      }
     }
   };
 
@@ -992,7 +1029,7 @@ function UploadListings() {
   const handleInputClick = (e) => {
     e.target.showPicker(); // Programmatically open the date picker
   };
-  
+
   const preventKeyboardInput = (e) => {
     e.preventDefault(); // Prevent any keyboard input
   };
@@ -1251,22 +1288,15 @@ function UploadListings() {
                       >
                         {t("expiryDate")} *
                       </label>
-                      <input
-                        type="datetime-local"
+                      <Flatpickr
                         id="expiryDate"
                         name="expiryDate"
-                        value={
-                          listingInput.expiryDate
-                            ? formatDateTime(listingInput.expiryDate)
-                            : getDefaultEndDate()
-                        }
-                        onClick={handleInputClick} // Open calendar on click
-                        onKeyDown={preventKeyboardInput} // Prevent keyboard input
-                        onChange={onInputChange}
-                        onBlur={validateInput}
+                        value={listingInput.expiryDate}
+                        options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                        onChange={(date) => setListingInput(prev => ({ ...prev, expiryDate: date[0] }))}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder="Expiry Date"
-                        disabled={listingInput.disableDates}
+                        placeholder={t("expiryDate")}
+                        onBlur={validateInput}
                       />
                       <div
                         className="h-[24px] text-red-600"
@@ -1319,19 +1349,15 @@ function UploadListings() {
                   >
                     {t("eventStartDate")} *
                   </label>
-                  <input
-                    type="datetime-local"
+                  <Flatpickr
                     id="startDate"
                     name="startDate"
-                    value={
-                      listingInput.startDate ? formatDateTime(listingInput.startDate) : null
-                    }
-                    onChange={onInputChange}
-                    onBlur={validateInput}
-                    onClick={handleInputClick} // Open calendar on click
-                    onKeyDown={preventKeyboardInput} // Prevent keyboard input
+                    value={listingInput.startDate}
+                    options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                    onChange={(date) => setListingInput(prev => ({ ...prev, startDate: date[0] }))}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder="Start Date"
+                    placeholder={t("eventStartDate")}
+                    onBlur={validateInput}
                   />
                   <div
                     className="h-[24px] text-red-600"
@@ -1359,17 +1385,15 @@ function UploadListings() {
                   >
                     {t("eventEndDate")}
                   </label>
-                  <input
-                    type="datetime-local"
+                  <Flatpickr
                     id="endDate"
                     name="endDate"
-                    value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
-                    onChange={onInputChange}
-                    onBlur={validateInput}
-                    onClick={handleInputClick} // Open calendar on click
-                    onKeyDown={preventKeyboardInput} // Prevent keyboard input
+                    value={listingInput.endDate}
+                    options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                    onChange={(date) => setListingInput(prev => ({ ...prev, endDate: date[0] }))}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder="End Date"
+                    placeholder={t("eventEndDate")}
+                    onBlur={validateInput}
                   />
                   <div
                     className="h-[24px] text-red-600"
