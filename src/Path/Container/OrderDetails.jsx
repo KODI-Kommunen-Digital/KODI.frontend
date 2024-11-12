@@ -75,7 +75,7 @@ const OrderDetails = () => {
                                                         <span className="font-bold text-slate-700 ">
                                                             {t("tax")} : </span>
                                                         <span className="font-bold text-red-600">
-                                                            {(productItem.product.tax).toFixed(2)}%
+                                                            {(productItem.product.tax != null ? productItem.product.tax : 0).toFixed(2)}%
                                                         </span>
                                                     </div>
                                                 </div>

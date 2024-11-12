@@ -845,7 +845,7 @@
     "pleaseEnterMinCount": "Please enter a minimum count needed",
     "pleaseEnterMaxCount": "Please enter a maximum count needed",
     "pleaseEnterMeta": "Please enter a metadata",
-    "inventory": "Inventory",
+    "inventory": "Max Inventory",
     "minCount": "Minimum Count",
     "maxCount": "Maximum Count",
     "meta": "Meta",
@@ -999,6 +999,7 @@
     "allOrders": "All Orders",
     "allProductRequests": "All Product Requests",
     "pleaseSelectAtLeastOneShelf": "Please select atleast one shelf to proceed",
-    "minCountShouldBeGreaterThanInventory": "Minimum count should be greater than Inventory"
+    "minCountShouldBeGreaterThanInventory": "Minimum count should be lesser than Inventory",
+    "pleaseEnterValidMinCount": "Please enter a minimum count"
 
 }

@@ -90,17 +90,17 @@ const ProductDetailsStore = () => {
                                                 </div>
                                                 <div>
                                                     <span className="font-bold text-slate-700">{t("tax")} : </span>
-                                                    <span className="font-bold text-red-600">{(product.tax).toFixed(2)}%</span>
+                                                    <span className="font-bold text-red-600">{(product.tax != null ? product.tax : 0).toFixed(2)}%</span>
                                                 </div>
                                             </div>
                                             <div className="flex mb-4">
-                                                {product?.minCount && (
+                                                {product?.minCount != null && product.minCount !== 0 && (
                                                     <div className="mr-4">
                                                         <span className="font-bold text-slate-700 ">{t("minCount")} : </span>
                                                         <span className="text-slate-600 ">{product.minCount}</span>
                                                     </div>
                                                 )}
-                                                {product?.maxCount && (
+                                                {product?.maxCount != null && product.maxCount !== 0 && (
                                                     <div>
                                                         <span className="font-bold text-slate-700 ">{t("maxCount")} : </span>
                                                         <span className="text-slate-600 ">{product.maxCount}</span>
