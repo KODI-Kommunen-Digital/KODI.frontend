@@ -25,6 +25,7 @@ import ServiceAndTime from "../Components/ServiceAndTime";
 import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
+import { format } from 'date-fns';
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -815,10 +816,10 @@ function UploadListings() {
         return "";
 
       case "email":
-        if (value) {
-          if (!isValidEmail(value)) {
-            return t("pleaseEnterValidEmail");
-          }
+        if (!value) {
+          return "";
+        } else if (!isValidEmail(value)) {
+          return t("pleaseEnterValidEmail");
         } else {
           return "";
         }
@@ -1291,9 +1292,16 @@ function UploadListings() {
                       <Flatpickr
                         id="expiryDate"
                         name="expiryDate"
-                        value={listingInput.expiryDate}
+                        value={
+                          listingInput.expiryDate
+                            ? formatDateTime(listingInput.expiryDate)
+                            : getDefaultEndDate()
+                        }
                         options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
-                        onChange={(date) => setListingInput(prev => ({ ...prev, expiryDate: date[0] }))}
+                        onChange={(date) => {
+                          const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                          setListingInput(prev => ({ ...prev, expiryDate: formattedDate }));
+                        }}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("expiryDate")}
                         onBlur={validateInput}
@@ -1354,7 +1362,10 @@ function UploadListings() {
                     name="startDate"
                     value={listingInput.startDate}
                     options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
-                    onChange={(date) => setListingInput(prev => ({ ...prev, startDate: date[0] }))}
+                    onChange={(date) => {
+                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                      setListingInput(prev => ({ ...prev, startDate: formattedDate }));
+                    }}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventStartDate")}
                     onBlur={validateInput}
@@ -1390,7 +1401,10 @@ function UploadListings() {
                     name="endDate"
                     value={listingInput.endDate}
                     options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
-                    onChange={(date) => setListingInput(prev => ({ ...prev, endDate: date[0] }))}
+                    onChange={(date) => {
+                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                      setListingInput(prev => ({ ...prev, endDate: formattedDate }));
+                    }}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventEndDate")}
                     onBlur={validateInput}
