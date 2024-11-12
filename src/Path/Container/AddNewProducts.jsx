@@ -60,8 +60,6 @@ function AddNewProducts() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Category ID on submit:", input.categoryId);
-
         let valid = true;
         const newError = { ...error };
 
@@ -225,9 +223,14 @@ function AddNewProducts() {
     };
 
     const handleSubcategoryChange = (event) => {
+        console.log("Event triggered for subcategory change", event); // Log entire event
         const subCategoryId = event.target.value;
+        console.log("SUBCategory ID on submit:", subCategoryId);
         setSubcategoryId(subCategoryId);
-        setInput((prevInput) => ({ ...prevInput, subCategoryId }));
+        setInput((prev) => ({
+            ...prev,
+            subCategoryId: subCategoryId,
+        }));
         validateInput(event);
     };
 
@@ -293,7 +296,7 @@ function AddNewProducts() {
                     return "";
                 }
             case "subCategoryId":
-                if (!value) {
+                if (!parseInt(value)) {
                     return t("pleaseSelectSubcategory");
                 } else {
                     return "";
@@ -342,7 +345,7 @@ function AddNewProducts() {
                     return t("pleaseEnterValidInventory");
                 } else if (name === "minCount" && (!value || isNaN(value))) {
                     return t("pleaseEnterValidMinCount");
-                } else if (parseInt(input.minCount) <= parseInt(input.inventory)) {
+                } else if (parseInt(input.inventory) <= parseInt(input.minCount)) {
                     return t("minCountShouldBeGreaterThanInventory");
                 } else {
                     return "";
@@ -378,10 +381,13 @@ function AddNewProducts() {
         if (name === "inventory" || name === "minCount") {
             newErrors.inventory = getErrorMessage("inventory", input.inventory);
             newErrors.minCount = getErrorMessage("minCount", input.minCount);
+        } else if (name === "subCategoryId") {
+            newErrors.subCategoryId = getErrorMessage("subCategoryId", value);
         } else {
             newErrors[name] = getErrorMessage(name, value);
         }
 
+        setError(newErrors);
     };
 
     function handleDragEnter(e) {
@@ -784,7 +790,7 @@ function AddNewProducts() {
                                         className="h-[24px] text-red-600"
                                         style={{ visibility: error.subCategoryId ? "visible" : "hidden" }}
                                     >
-                                        {error.selectedSubCategory}
+                                        {error.subCategoryId}
                                     </div>
                                 </div>
                             ) : (
@@ -997,7 +1003,7 @@ function AddNewProducts() {
                             {t("addImageHere")}
                         </label>
                         <div
-                            className="h-[24px] text-red-600"
+                            className="h-[24px] text-green-600"
                         >
                             {t("maxFileSizeAllert")} & {t("imageNumberAlertContainer")}
                         </div>
@@ -1152,7 +1158,7 @@ function AddNewProducts() {
                         </div>
 
                         <div
-                            className="h-[24px] text-red-600"
+                            className="h-[24px] text-green-600"
                         >
                             {t("imageWarning")}
                         </div>

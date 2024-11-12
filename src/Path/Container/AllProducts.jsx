@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
-import { FaEye } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaEye } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { getSellerProducts, getSellerShops } from "../../Services/containerApi";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
@@ -20,26 +20,22 @@ function AllProducts() {
 
   const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
     if (storeId) {
-      getSellerProducts(storeId, pageNumber, selectedStatus).then(
-        (response) => {
-          const fetchedProducts = response.data.data;
-          setProducts(fetchedProducts);
-        }
-      );
+      getSellerProducts(storeId, pageNumber, selectedStatus).then((response) => {
+        const fetchedProducts = response.data.data;
+        setProducts(fetchedProducts);
+      });
     }
   }, []);
 
   useEffect(() => {
     if (storeId) {
       setPageNumber(1);
-      const selectedStore = stores.find(
-        (store) => store.id === parseInt(storeId)
-      );
+      const selectedStore = stores.find(store => store.id === parseInt(storeId));
       if (selectedStore) {
         fetchProducts(storeId, pageNumber, selectedStatus);
       }
     }
-  }, [fetchProducts, storeId, selectedStatus]);
+  }, [fetchProducts, storeId, pageNumber, selectedStatus]);
 
   const fetchStores = useCallback(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -51,9 +47,7 @@ function AllProducts() {
 
       if (urlStoreId) {
         const storeIdNumber = parseInt(urlStoreId, 10);
-        const selectedStore = fetchedStores.find(
-          (store) => store.id === storeIdNumber
-        );
+        const selectedStore = fetchedStores.find(store => store.id === storeIdNumber);
 
         if (selectedStore) {
           setStoreId(storeIdNumber);
@@ -80,9 +74,7 @@ function AllProducts() {
 
   const handleStoreChange = async (event) => {
     const storeId = event.target.value;
-    const selectedStore = stores.find(
-      (store) => store.id === parseInt(storeId)
-    );
+    const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
     if (selectedStore) {
       setStoreId(storeId);
@@ -97,9 +89,7 @@ function AllProducts() {
   };
 
   const handleStoreClick = (storeId) => {
-    const selectedStore = stores.find(
-      (store) => store.id === parseInt(storeId)
-    );
+    const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
     if (selectedStore) {
       setStoreId(storeId);
@@ -114,9 +104,7 @@ function AllProducts() {
   };
 
   const handleViewDetailsClick = (product) => {
-    navigate("/SellerScreen/AllProductsDetailsPage", {
-      state: { productDetails: product }
-    });
+    navigate('/SellerScreen/AllProductsDetailsPage', { state: { productDetails: product } });
   };
 
   const navigate = useNavigate();
@@ -137,29 +125,17 @@ function AllProducts() {
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Active
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                    onClick={() => {
-                      setSelectedStatus(statusByName.Active);
-                      setPageNumber(1);
-                    }}
+                    className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Pending
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                    onClick={() => {
-                      setSelectedStatus(statusByName.Pending);
-                      setPageNumber(1);
-                    }}
+                    className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
@@ -197,20 +173,16 @@ function AllProducts() {
                     value={storeId || 0}
                     className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
                     style={{
-                      fontFamily: "Poppins, sans-serif"
+                      fontFamily: "Poppins, sans-serif",
                     }}
                   >
                     <option className="font-sans" value={0} key={0}>
                       {t("select", {
-                        regionName: process.env.REACT_APP_REGION_NAME
+                        regionName: process.env.REACT_APP_REGION_NAME,
                       })}
                     </option>
                     {stores.map((store) => (
-                      <option
-                        className="font-sans"
-                        value={store.id}
-                        key={store.id}
-                      >
+                      <option className="font-sans" value={store.id} key={store.id}>
                         {store.name}
                       </option>
                     ))}
@@ -218,170 +190,171 @@ function AllProducts() {
                 </div>
               </div>
 
-              <div className="bg-white mt-4 p-0 space-y-10 overflow-x-auto">
-                <table className="w-full text-sm text-left text-gray-500 p-6 space-y-10 rounded-lg">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 sm:px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("title")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("date_of_creation")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("price")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("tax")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("status")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          width: "16.66%"
-                        }}
-                      >
-                        {t("viewDetails")}
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {products.map((product, index) => (
-                      <tr
-                        key={index}
-                        className="bg-white border-b hover:bg-gray-50"
-                      >
+              <div className="bg-white mt-4 p-0">
+                <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+                  {t("allProducts")}
+                </h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left text-gray-500 p-6 space-y-10 rounded-lg">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                      <tr>
                         <th
-                          scope="row"
-                          className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                          scope="col"
+                          className="px-6 sm:px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
                         >
-                          <img
-                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                            src={
-                              product.productImages
-                                ? process.env.REACT_APP_BUCKET_HOST +
-                                  product.productImages[0]
-                                : process.env.REACT_APP_BUCKET_HOST +
-                                  "admin/Container/ShoppingCart.png"
-                            }
-                            onError={(e) => {
-                              e.target.src = CONTAINERIMAGE; // Set default image if loading fails
-                            }}
-                          />
-                          <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
-                            <div
-                              className="font-normal text-gray-500 truncate"
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {product.title}
-                            </div>
-                          </div>
+                          {t("title")}
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
+                        >
+                          {t("date_of_creation")}
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
+                        >
+                          {t("price")}
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
+                        >
+                          {t("tax")}
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
+                        >
+                          {t("status")}
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            width: "16.66%",
+                          }}
+                        >
+                          {t("viewDetails")}
                         </th>
 
-                        <td
-                          className="px-6 py-4 text-center font-bold text-blue-600"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {products.map((product, index) => (
+                        <tr
+                          key={index}
+                          className="bg-white border-b hover:bg-gray-50"
                         >
-                          {new Date(product.createdAt).toLocaleString("de")}
-                        </td>
-
-                        <td
-                          className="px-6 py-4 text-center font-bold text-green-600"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          € {product.price}
-                        </td>
-
-                        <td
-                          className={`px-6 py-4 text-center font-bold text-red-600`}
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {(product.tax * 100).toFixed(2)}%
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-center">
-                            <div
-                              className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                product.status
-                              )} mr-2`}
-                            ></div>
-
-                            <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                              {t(status[product.isActive].toLowerCase())}
-                            </h1>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-center">
-                            <div
-                              className="relative group inline-block"
-                              onClick={() => handleViewDetailsClick(product)}
-                            >
-                              <FaEye
-                                className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`}
-                              />
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                {t("viewDetails")}
+                          <th
+                            scope="row"
+                            className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap cursor-pointer"
+                          >
+                            <img
+                              className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              src={
+                                product.productImages
+                                  ? process.env.REACT_APP_BUCKET_HOST +
+                                  product.productImages[0]
+                                  : process.env.REACT_APP_BUCKET_HOST +
+                                  "admin/Container/ShoppingCart.png"
+                              }
+                              onError={(e) => {
+                                e.target.src = CONTAINERIMAGE; // Set default image if loading fails
+                              }}
+                            />
+                            <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
+                              <div
+                                className="font-normal text-gray-500 truncate"
+                                style={{ fontFamily: 'Poppins, sans-serif' }}
+                              >
+                                {product.title}
                               </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          </th>
+
+                          <td
+                            className="px-6 py-4 text-center font-bold text-blue-600"
+                            style={{ fontFamily: 'Poppins, sans-serif' }}
+                          >
+                            {new Date(product.createdAt).toLocaleString('de')}
+                          </td>
+
+                          <td
+                            className="px-6 py-4 text-center font-bold text-green-600"
+                            style={{ fontFamily: 'Poppins, sans-serif' }}
+                          >
+                            € {product.price}
+                          </td>
+
+                          <td
+                            className={`px-6 py-4 text-center font-bold text-red-600`}
+                            style={{ fontFamily: 'Poppins, sans-serif' }}
+                          >
+                            {(product.tax != null ? product.tax : 0).toFixed(2)}%
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-center">
+                              <div
+                                className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                  product.status
+                                )} mr-2`}
+                              ></div>
+
+                              <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                {t(status[product.isActive].toLowerCase())}
+                              </h1>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-center">
+                              <div
+                                className="relative group inline-block"
+                                onClick={() => handleViewDetailsClick(product)}
+                              >
+                                <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  {t("viewDetails")}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
                 {pageNumber !== 1 ? (
                   <span
                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                    onClick={() => {
-                      setPageNumber(pageNumber - 1);
-                      fetchProducts(storeId, pageNumber - 1, selectedStatus);
-                    }}
+                    onClick={() => setPageNumber(pageNumber - 1)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {"<"}{" "}
@@ -399,10 +372,7 @@ function AllProducts() {
                 {products.length >= pageSize && (
                   <span
                     className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                    onClick={() => {
-                      setPageNumber(pageNumber + 1);
-                      fetchProducts(storeId, pageNumber + 1, selectedStatus);
-                    }}
+                    onClick={() => setPageNumber(pageNumber + 1)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {">"}
@@ -419,11 +389,7 @@ function AllProducts() {
                       {stores.map((store) => (
                         <div key={store.id} className="w-full max-w-xs">
                           <div
-                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${
-                              storeId === store.id
-                                ? "bg-gray-300"
-                                : "bg-gray-200 hover:bg-gray-300"
-                            }`}
+                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${storeId === store.id ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}`}
                             onClick={() => handleStoreClick(store.id)}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                           >
@@ -437,11 +403,7 @@ function AllProducts() {
                       {stores.map((store) => (
                         <div key={store.id} className="w-full">
                           <div
-                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${
-                              storeId === store.id
-                                ? "bg-gray-300"
-                                : "bg-gray-200 hover:bg-gray-300"
-                            }`}
+                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${storeId === store.id ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}`}
                             onClick={() => handleStoreClick(store.id)}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                           >
@@ -456,8 +418,12 @@ function AllProducts() {
 
               {storeId && products.length === 0 && (
                 <div className="text-center mt-6">
-                  <p className="text-gray-500">{t("noDataForStore")}</p>
-                  <p className="text-gray-500">{t("selectAnotherStore")}</p>
+                  <p className="text-gray-500">
+                    {t("noDataForStore")}
+                  </p>
+                  <p className="text-gray-500">
+                    {t("selectAnotherStore")}
+                  </p>
                 </div>
               )}
 

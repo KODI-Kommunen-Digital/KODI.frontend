@@ -71,7 +71,7 @@ function SellerRequestPage() {
                     console.log(error.response.data)
                     if (errorCode === 2010 && message === "Seller request already exists") {
                         setErrorMessage(t("alreadyRequestSend"));
-                    } else if (errorCode === 409 && message === "Already a seller") {
+                    } else if (errorCode === 9001 && message === "You are already a seller of this store") {
                         setErrorMessage(t("alreadySellerOfThisStore"));
                     } else {
                         setErrorMessage(t("changesNotSaved"));

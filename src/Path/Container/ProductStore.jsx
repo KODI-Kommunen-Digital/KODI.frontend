@@ -29,7 +29,7 @@ function ProductStore() {
 
     useEffect(() => {
         if (storeId) {
-            setPageNumber(1);
+            // setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             if (selectedStore) {
                 fetchProducts(storeId, pageNumber, selectedStatus);
@@ -346,7 +346,7 @@ function ProductStore() {
                                                         className={`px-6 py-4 text-center font-bold text-red-600`}
                                                         style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        {(product.tax).toFixed(2)}%
+                                                        {(product.tax != null ? product.tax : 0).toFixed(2)}%
                                                     </td>
 
                                                     <td className="px-6 py-4">

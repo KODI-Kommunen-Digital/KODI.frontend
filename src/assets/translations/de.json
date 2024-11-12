@@ -885,7 +885,7 @@
     "pleaseEnterMinCount": "Bitte geben Sie die minimale benötigte Anzahl ein",
     "pleaseEnterMaxCount": "Bitte geben Sie die maximale benötigte Anzahl ein",
     "pleaseEnterMeta": "Bitte geben Sie Metadaten ein",
-    "inventory": "Bestand",
+    "inventory": "Maximaler Lagerbestand",
     "minCount": "Mindestanzahl",
     "maxCount": "Maximalanzahl",
     "meta": "Meta",
@@ -1009,5 +1009,6 @@
     "allOrders": "Alle Bestellungen",
     "allProductRequests": "Alle Produktanfragen",
     "pleaseSelectAtLeastOneShelf": "Bitte wählen Sie mindestens ein Regal aus, um fortzufahren",
-    "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte größer sein als der Bestand"
+    "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte unter dem Inventar liegen",
+    "pleaseEnterValidMinCount": "Bitte geben Sie eine Mindestanzahl ein"
 }
