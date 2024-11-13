@@ -330,14 +330,6 @@ function UploadListings() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Function to trim .000Z part from startDate
-    const trimStartDate = (startDate) => {
-      if (startDate.endsWith(".000Z")) {
-        return startDate.slice(0, -5); // Remove the last 5 characters (.000Z)
-      }
-      return startDate; // Return as is if .000Z is not found
-    };
-
     // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
@@ -370,7 +362,6 @@ function UploadListings() {
       return null;
     };
 
-    // Validate time slots if appointment is added
     if (appointmentAdded) {
       const errorMessage = validateTimeSlots();
       if (errorMessage) {
@@ -378,18 +369,19 @@ function UploadListings() {
         return;
       }
     }
-    event.preventDefault();  // Prevent default form submission
 
-    // Validate other form errors
     let valid = true;
-    for (let key in error) {
+    const newError = { ...error };
+
+    for (const key in error) {
       const errorMessage = getErrorMessage(key, listingInput[key]);
-      const newError = { ...error, [key]: errorMessage };
-      setError(newError);
+      newError[key] = errorMessage;
       if (errorMessage) {
         valid = false;
       }
     }
+
+    setError(newError);
 
     if (valid) {
       setUpdating(true);
@@ -524,6 +516,7 @@ function UploadListings() {
       }
     } else {
       setErrorMessage(t("invalidData"));
+      setSuccessMessage(false);
       setTimeout(() => setErrorMessage(false), 5000);
     }
   };
@@ -584,7 +577,6 @@ function UploadListings() {
     if (listingId && cityIds) {
       setListingId(parseInt(listingId));
       setNewListing(false);
-      // getVillages(cityId).then((response) => setVillages(response.data.data));
       getListingsById(cityIds, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
         listingData.cityIds = cityIds;
@@ -1026,13 +1018,6 @@ function UploadListings() {
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
-  };
-  const handleInputClick = (e) => {
-    e.target.showPicker(); // Programmatically open the date picker
-  };
-
-  const preventKeyboardInput = (e) => {
-    e.preventDefault(); // Prevent any keyboard input
   };
 
   function formatDateTime(dateTime) {
