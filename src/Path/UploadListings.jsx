@@ -330,6 +330,13 @@ function UploadListings() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const trimStartDate = (startDate) => {
+      if (startDate.endsWith(".000Z")) {
+        return startDate.slice(0, -5);
+      }
+      return startDate;
+    };
+
     // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
