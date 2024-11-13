@@ -786,13 +786,12 @@ function UploadListings() {
       case "startDate":
         if (!value && parseInt(listingInput.categoryId) === 3) {
           return t("pleaseEnterStartDate");
+        } else if (value) {
+          return "";
         }
         return "";
 
       case "endDate":
-        if (!value && parseInt(listingInput.categoryId) === 3) {
-          return t("pleaseEnterEndDate");
-        }
         if (listingInput.startDate && new Date(listingInput.startDate) > new Date(value)) {
           return t("endDateBeforeStartDate");
         }
@@ -853,10 +852,10 @@ function UploadListings() {
         [name]: errorMessage,
       }));
 
-      // Validate startDate and endDate relationship
+      const inputDate = new Date(value);
       if (name === "startDate" || name === "endDate") {
-        const startDate = new Date(listingInput.startDate);
-        const endDate = new Date(listingInput.endDate);
+        const startDate = name === "startDate" ? inputDate : new Date(listingInput.startDate);
+        const endDate = name === "endDate" ? inputDate : new Date(listingInput.endDate);
 
         if (startDate && endDate && startDate > endDate) {
           setError((prevState) => ({
@@ -1282,10 +1281,11 @@ function UploadListings() {
                             ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
-                        options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                        options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
                         onChange={(date) => {
                           const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
                           setListingInput(prev => ({ ...prev, expiryDate: formattedDate }));
+                          validateInput({ target: { name: "expiryDate", value: formattedDate } });
                         }}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("expiryDate")}
@@ -1346,10 +1346,11 @@ function UploadListings() {
                     id="startDate"
                     name="startDate"
                     value={listingInput.startDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
                     onChange={(date) => {
                       const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
                       setListingInput(prev => ({ ...prev, startDate: formattedDate }));
+                      validateInput({ target: { name: "startDate", value: formattedDate } });
                     }}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventStartDate")}
@@ -1385,10 +1386,11 @@ function UploadListings() {
                     id="endDate"
                     name="endDate"
                     value={listingInput.endDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i" }}
+                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
                     onChange={(date) => {
                       const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
                       setListingInput(prev => ({ ...prev, endDate: formattedDate }));
+                      validateInput({ target: { name: "endDate", value: formattedDate } });
                     }}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventEndDate")}
