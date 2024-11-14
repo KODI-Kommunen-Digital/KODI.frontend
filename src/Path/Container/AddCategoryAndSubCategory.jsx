@@ -209,7 +209,7 @@ function AddCategoryAndSubCategory() {
                     {/* Subcategory dropdown, visible only when a category is selected */}
                     {categoryId !== 0 && (
                         <>
-                            {subCategories.length !== 0 ? (
+                            {subCategories && Object.keys(subCategories).length > 0 ? (
                                 <div className="relative mb-4">
                                     <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *

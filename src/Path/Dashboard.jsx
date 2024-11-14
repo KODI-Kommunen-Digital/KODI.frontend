@@ -94,8 +94,30 @@ const Dashboard = () => {
         setViewAllListings(false);
       }
     });
+    if (window.location.pathname === "/Dashboard") {
+      setViewAllListings(false);
+    } else {
+      setViewAllListings(true);
+    }
 
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
+    // if (viewAllListings === true) {
+    //   getListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
+    // if (viewAllListings === false) {
+    //   getUserListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {
@@ -244,10 +266,12 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    if (listing.appointmentId) {
-      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
-    } else {
+    if (listing.sourceId === 1 || listing.showExternal === 0) {
       navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    } else if (listing.website) {
+      window.location.href = listing.website;
+    } else {
+      navigateTo(`/error`);
     }
   }
   const handleSearch = async (searchQuery, statusName) => {

@@ -1021,10 +1021,10 @@ function UploadListings() {
   }
 
   return (
-    <section className="base-bg-gray-800 body-font relative">
+    <section className="bg-slate-600 body-font relative">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-gray-800">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
@@ -1569,7 +1569,7 @@ function UploadListings() {
         </div>
       </div>
 
-      <div className="container w-auto px-5 py-2 base-bg-gray-800">
+      <div className="container w-auto px-5 py-2 base-bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
             {t("uploadLogo")}
@@ -1701,7 +1701,7 @@ function UploadListings() {
                     </a>
                   </p>
                   <button
-                    className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
+                    className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
                     onClick={handleRemovePDF}
                   >
                     {t("removeFile")}
@@ -1715,7 +1715,7 @@ function UploadListings() {
                   </p>
                   <div className="relative mb-0 mt-8">
                     <label
-                      className={`file-upload-btn w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded`}
+                      className={`file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded`}
                     >
                       <span className="button-label">{t("upload")}</span>
                       <input
@@ -1741,7 +1741,7 @@ function UploadListings() {
         </div>
       </div>
 
-      <div className="container w-auto px-5 py-2 bg-gray-800">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6">
           <div className="py-2 mt-1 px-2">
             <p className="pb-2">
@@ -1751,7 +1751,7 @@ function UploadListings() {
               type="button"
               onClick={handleSubmit}
               disabled={updating || isSuccess}
-              className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+              className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}
               {updating && (
