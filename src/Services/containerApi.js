@@ -237,7 +237,7 @@ export async function getSellerProducts(storeId, pageNumber, status) {
 
 export async function getProductRequests(cityId, storeId, pageNumber, status) {
   return axios.get(
-    `/v1/owners/productRequests?cityId=${cityId}&storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`
+    `/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9`
   );
 }
 
