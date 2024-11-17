@@ -1004,12 +1004,13 @@
     "thisMonth": "Dieser Monat",
     "thisYear": "Dieses Jahr",
     "transactionId": "Transaktions-ID",
-    "Barcode_already_exists": "Der Barcode ist bereits vorhanden",
+    "duplicate_barcode": "Duplizierter Barcode",
     "sellerRequestsHeading": "Verkäuferanfragen",
     "productStore": "Produktgeschäft",
     "allOrders": "Alle Bestellungen",
     "allProductRequests": "Alle Produktanfragen",
     "pleaseSelectAtLeastOneShelf": "Bitte wähle mindestens ein Regal aus, um fortzufahren",
     "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte unter dem Inventar liegen",
-    "pleaseEnterValidMinCount": "Bitte gib eine Mindestanzahl ein"
+    "pleaseEnterValidMinCount": "Bitte gib eine Mindestanzahl ein",
+    "duplicate_product_name":"Duplizierter Produktname"
 }
