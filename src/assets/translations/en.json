@@ -1001,6 +1001,7 @@
     "pleaseSelectAtLeastOneShelf": "Please select atleast one shelf to proceed",
     "minCountShouldBeGreaterThanInventory": "Minimum count should be lesser than Inventory",
     "pleaseEnterValidMinCount": "Please enter a minimum count",
-    "duplicate_product_name":"Duplicate product name"
+    "duplicate_product_name":"Duplicate product name",
+    "duplicate_shelf_name":"Duplicate shelf name"
 
 }
