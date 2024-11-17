@@ -1005,14 +1005,26 @@ function AddNewProducts() {
             >
               {t("description")} *
             </label>
+            <div className="h-[24px] text-green-600">
+              {t("max_chara_255")}
+            </div>
             <ReactQuill
               type="text"
               id="description"
               name="description"
               ref={editor}
               value={description}
-              onChange={(newContent) => onDescriptionChange(newContent)}
-              onBlur={(range, source, editor) => {
+              // onChange={(newContent) => onDescriptionChange(newContent)}
+              // onBlur={(range, source, editor) => {
+              //   validateInput({
+              //     target: {
+              //       name: "description",
+              //       value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, "")
+              //     }
+              //   });
+              // }}
+              onChange={(newContent, range, source, editor) => {
+                onDescriptionChange(newContent);
                 validateInput({
                   target: {
                     name: "description",
@@ -1020,6 +1032,7 @@ function AddNewProducts() {
                   }
                 });
               }}
+              
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"

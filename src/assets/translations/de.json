@@ -1013,5 +1013,6 @@
     "minCountShouldBeGreaterThanInventory": "Die Mindestanzahl sollte unter dem Inventar liegen",
     "pleaseEnterValidMinCount": "Bitte gib eine Mindestanzahl ein",
     "duplicate_product_name":"Duplizierter Produktname",
-    "duplicate_shelf_name":"Doppelter Regalname"
+    "duplicate_shelf_name":"Doppelter Regalname",
+    "max_chara_255":"Bitte geben Sie nicht mehr als 255 Zeichen ein"
 }
