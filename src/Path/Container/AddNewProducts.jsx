@@ -454,6 +454,11 @@ function AddNewProducts() {
     const currentImageCount = image ? image.length : 0;
     const totalImages = currentImageCount + validImages.length;
 
+    localimage(totalImages,validImages,currentImageCount)
+
+    setLocalImageOrPdf(true);
+  }
+  function localimage(totalImages,validImages,currentImageCount){
     if (totalImages > 3) {
       alert(t("productImageNumberAlert"));
       const allowedFiles = validImages.slice(0, 3 - currentImageCount);
@@ -463,10 +468,7 @@ function AddNewProducts() {
       setLocalImages((prevImages) => [...prevImages, ...validImages]);
       setImage((prevImages) => [...prevImages, ...validImages]);
     }
-
-    setLocalImageOrPdf(true);
-  }
-
+  } 
   function handleInputChange(e) {
     e.preventDefault();
     const files = Array.from(e.target.files);
@@ -494,58 +496,51 @@ function AddNewProducts() {
       alert(t("PdfAlert"));
       return;
     }
-
+    const currentImageCount = image ? image.length : 0;
     const totalImages = image
       ? image.length + validImages.length
       : validImages.length;
 
-    if (totalImages > 3) {
-      alert(t("productImageNumberAlert"));
-      const allowedFiles = validImages.slice(0, 3 - (image ? image.length : 0));
-      setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
-      setImage((prevImages) => [...prevImages, ...allowedFiles]);
-    } else {
-      setLocalImages((prevImages) => [...prevImages, ...validImages]);
-      setImage((prevImages) => [...prevImages, ...validImages]);
-    }
+      localimage(totalImages,validImages,currentImageCount)
+    
 
     setLocalImageOrPdf(true);
     e.target.value = null; // Reset input
   }
 
   const [localImages, setLocalImages] = useState([]);
-  const handleMultipleInputChange = (event) => {
-    const newFiles = Array.from(event.target.files);
+  // const handleMultipleInputChange = (event) => {
+  //   const newFiles = Array.from(event.target.files);
 
-    // Filter for only valid images
-    const validImages = newFiles.filter((file) =>
-      file.type.startsWith("image/")
-    );
-    const invalidFiles = newFiles.filter(
-      (file) => !file.type.startsWith("image/")
-    );
+  //   // Filter for only valid images
+  //   const validImages = newFiles.filter((file) =>
+  //     file.type.startsWith("image/")
+  //   );
+  //   const invalidFiles = newFiles.filter(
+  //     (file) => !file.type.startsWith("image/")
+  //   );
 
-    // If there are invalid files (e.g., not images), show an alert
-    if (invalidFiles.length > 0) {
-      alert(t("imagePdfAlert"));
-      return;
-    }
+  //   // If there are invalid files (e.g., not images), show an alert
+  //   if (invalidFiles.length > 0) {
+  //     alert(t("imagePdfAlert"));
+  //     return;
+  //   }
 
-    const currentImageCount = image ? image.length : 0;
-    const totalImages = currentImageCount + validImages.length;
+  //   const currentImageCount = image ? image.length : 0;
+  //   const totalImages = currentImageCount + validImages.length;
 
-    if (totalImages > 3) {
-      alert(t("productImageNumberAlert"));
-      const allowedFiles = validImages.slice(0, 3 - currentImageCount);
-      setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
-      setImage((prevImages) => [...prevImages, ...allowedFiles]);
-    } else {
-      setLocalImages((prevImages) => [...prevImages, ...validImages]);
-      setImage((prevImages) => [...prevImages, ...validImages]);
-    }
+  //   if (totalImages > 3) {
+  //     alert(t("productImageNumberAlert"));
+  //     const allowedFiles = validImages.slice(0, 3 - currentImageCount);
+  //     setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+  //     setImage((prevImages) => [...prevImages, ...allowedFiles]);
+  //   } else {
+  //     setLocalImages((prevImages) => [...prevImages, ...validImages]);
+  //     setImage((prevImages) => [...prevImages, ...validImages]);
+  //   }
 
-    event.target.value = null; // Reset input
-  };
+  //   event.target.value = null; // Reset input
+  // };
 
   const handleUpdateMultipleInputChange = (e) => {
     const newFiles = Array.from(e.target.files);
@@ -1099,7 +1094,7 @@ function AddNewProducts() {
                         type="file"
                         accept="image/*,.pdf"
                         className="sr-only"
-                        onChange={handleMultipleInputChange}
+                        onChange={handleUpdateMultipleInputChange}
                         multiple
                         disabled={updating || isSuccess}
                       />
