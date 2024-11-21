@@ -95,7 +95,11 @@ function CreateShelves() {
                     navigate("/OwnerScreen");
                 }, 5000);
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response.data.errorCode === 1034) {
+                    setErrorMessage(t("duplicate_shelf_name")); // Custom message for this specific error
+                  }  else {
+                    setErrorMessage(t("changesNotSaved")); // Fallback for other errors
+                  }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {

@@ -993,13 +993,16 @@
     "thisMonth": "This month",
     "thisYear": "This year",
     "transactionId": "Transaction ID",
-    "Barcode_already_exists":"Barcode already exists",
+    "duplicate_barcode":"Duplicate Barcode",
     "sellerRequestsHeading": "Seller Requests",
     "productStore": "Product Store",
     "allOrders": "All Orders",
     "allProductRequests": "All Product Requests",
     "pleaseSelectAtLeastOneShelf": "Please select atleast one shelf to proceed",
     "minCountShouldBeGreaterThanInventory": "Minimum count should be lesser than Inventory",
-    "pleaseEnterValidMinCount": "Please enter a minimum count"
+    "pleaseEnterValidMinCount": "Please enter a minimum count",
+    "duplicate_product_name":"Duplicate product name",
+    "duplicate_shelf_name":"Duplicate shelf name",
+    "max_chara_255":"Please enter no more than 255 characters"
 
 }
