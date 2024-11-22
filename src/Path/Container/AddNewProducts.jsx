@@ -10,7 +10,7 @@ import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
-import { createNewProduct, getSellerShops, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
+import { createNewProduct, getShopsInACity, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
@@ -27,6 +27,9 @@ function AddNewProducts() {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [categoryLoading, setCategoryLoading] = useState(false);
+    const [subCategoryLoading, setSubCategoryLoading] = useState(false);
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -129,16 +132,15 @@ function AddNewProducts() {
         }));
         validateInput(e);
 
-        // const urlParams = new URLSearchParams(window.location.search);
-        // urlParams.set("cityId", cityId);
-        // const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        // window.history.replaceState({}, "", newUrl);
+        setLoading(true);
 
         try {
-            const response = await getSellerShops({ cityId });
+            const response = await getShopsInACity(cityId);
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -149,17 +151,9 @@ function AddNewProducts() {
         setShopId(shopId);
         setInput((prevInput) => ({ ...prevInput, shopId }));
         validateInput(event);
-
-        // const urlParams = new URLSearchParams(window.location.search);
-        // urlParams.set("shopId", shopId);
-        // const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        // window.history.replaceState({}, "", newUrl);
     };
 
     useEffect(() => {
-        // const searchParams = new URLSearchParams(window.location.search);
-        // const cityIds = searchParams.get("cityId");
-        // const shopIds = searchParams.get("shopId");
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });
@@ -172,9 +166,12 @@ function AddNewProducts() {
         }
 
         if (cityId && shopId) {
+            setCategoryLoading(true);
             getCategory(cityId, shopId).then((response) => {
                 const categories = response?.data?.data || [];
                 setCategories(categories);
+            }).finally(() => {
+                setCategoryLoading(false);
             });
         }
         document.title =
@@ -194,6 +191,7 @@ function AddNewProducts() {
         }));
 
         if (categoryId) {
+            setSubCategoryLoading(true);
             try {
                 const subCats = await getSubCategory(cityId, shopId, categoryId);
 
@@ -211,6 +209,8 @@ function AddNewProducts() {
             } catch (error) {
                 console.error("Error fetching subcategories: ", error);
                 setSubCategories({});
+            } finally {
+                setSubCategoryLoading(false);
             }
         } else {
             setSubCategories({});
@@ -650,7 +650,11 @@ function AddNewProducts() {
 
                     {cityId !== 0 && (
                         <>
-                            {shops.length > 0 ? (
+                            {loading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : shops.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -697,7 +701,11 @@ function AddNewProducts() {
 
                     {shopId !== 0 && (
                         <>
-                            {categories.length > 0 ? (
+                            {categoryLoading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : categories.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="dropdown"
@@ -748,7 +756,11 @@ function AddNewProducts() {
 
                     {categoryId !== 0 && (
                         <>
-                            {subCategories && Object.keys(subCategories).length > 0 ? (
+                            {subCategoryLoading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : subCategories && Object.keys(subCategories).length > 0 ? (
                                 <div className="relative mb-0">
                                     <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *

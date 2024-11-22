@@ -19,6 +19,8 @@ function CreateShelves() {
     const [errorMessage, setErrorMessage] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [productLoading, setProductLoading] = useState(false);
 
     const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
@@ -236,12 +238,14 @@ function CreateShelves() {
         urlParams.set("cityId", cityId);
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
-
+        setLoading(true);
         try {
             const response = await getOwnerShops({ cityId });
             setShops(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -257,12 +261,14 @@ function CreateShelves() {
         urlParams.set("shopId", shopId);
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
-
+        setProductLoading(true);
         try {
             const response = await getProductsForShelf(shopId);
             setProducts(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching shops:", error);
+        } finally {
+            setProductLoading(false);
         }
     };
 
@@ -358,7 +364,11 @@ function CreateShelves() {
 
                     {cityId !== 0 && (
                         <>
-                            {shops.length !== 0 ? (
+                            {loading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : shops.length !== 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -404,7 +414,11 @@ function CreateShelves() {
 
                     {shopId !== 0 && (
                         <>
-                            {products.length !== 0 ? (
+                            {productLoading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : products.length !== 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
