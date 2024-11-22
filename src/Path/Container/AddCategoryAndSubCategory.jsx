@@ -19,6 +19,8 @@ function AddCategoryAndSubCategory() {
     const [storeId, setStoreId] = useState(0);
     const [stores, setStores] = useState([]);
     const navigate = useNavigate();
+    const [categoryLoading, setCategoryLoading] = useState(false);
+    const [subCategoryLoading, setSubCategoryLoading] = useState(false);
 
     const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
@@ -61,11 +63,14 @@ function AddCategoryAndSubCategory() {
     useEffect(() => {
         if (storeId) {
             const fetchCategories = async () => {
+                setCategoryLoading(true);
                 try {
                     const response = await getOwnerCategory();
                     setCategories(response.data.data || []);
                 } catch (error) {
                     setErrorMessage(t("categoryFetchError"));
+                } finally {
+                    setCategoryLoading(false);
                 }
             };
             fetchCategories();
@@ -87,11 +92,14 @@ function AddCategoryAndSubCategory() {
         setSubcategoryId(0);
 
         if (categoryId !== 0) {
+            setSubCategoryLoading(true);
             try {
                 const response = await getOwnerSubCategory(categoryId);
                 setSubCategories(response.data.data || []);
             } catch (error) {
                 setErrorMessage(t("subcategoryFetchError"));
+            } finally {
+                setSubCategoryLoading(false);
             }
         }
     };
@@ -175,7 +183,11 @@ function AddCategoryAndSubCategory() {
                     {/* Category dropdown, visible only when a shop is selected */}
                     {storeId !== 0 && (
                         <>
-                            {categories.length !== 0 ? (
+                            {categoryLoading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : categories.length !== 0 ? (
                                 <div className="relative mb-4">
                                     <label htmlFor="categoryId" className="block text-sm font-medium text-gray-600">
                                         {t("category")} *
@@ -209,7 +221,11 @@ function AddCategoryAndSubCategory() {
                     {/* Subcategory dropdown, visible only when a category is selected */}
                     {categoryId !== 0 && (
                         <>
-                            {subCategories && Object.keys(subCategories).length > 0 ? (
+                            {subCategoryLoading ? (
+                                <div className="flex justify-center my-4">
+                                    <span className="text-gray-600">{t("loading")}</span>
+                                </div>
+                            ) : subCategories.length !== 0 ? (
                                 <div className="relative mb-4">
                                     <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *
