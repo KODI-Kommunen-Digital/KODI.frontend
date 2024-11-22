@@ -51,7 +51,7 @@ function AllProductRequests() {
     const fetchProductRequests = useCallback(async (cityId, storeId, pageNumber, selectedStatus) => {
         if (storeId) {
             try {
-                const response = await getProductRequests(cityId, storeId, pageNumber, selectedStatus);
+                const response = await getProductRequests(storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
 
