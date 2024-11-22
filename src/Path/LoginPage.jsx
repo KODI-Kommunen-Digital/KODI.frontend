@@ -6,6 +6,7 @@ import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
+import { getCards } from "../Services/containerApi";
 
 const LoginPage = () => {
 	const { t } = useTranslation();
@@ -101,78 +102,79 @@ const LoginPage = () => {
 		event.preventDefault();
 		setLoginLoading(true);
 		try {
-			const response = await login({
-				username: user,
-				password: pwd,
-			});
+			const response = await login({ username: user, password: pwd });
 			setLoginLoading(false);
+
+			const accessToken = response.data.data.accessToken;
+			const refreshToken = response.data.data.refreshToken;
+			const userId = response.data.data.userId;
+			const cityUsers = response.data.data.cityUsers;
+
 			if (rememberMe) {
-				window.localStorage.setItem(
-					"accessToken",
-					response.data.data.accessToken
-				);
-				window.localStorage.setItem(
-					"refreshToken",
-					response.data.data.refreshToken
-				);
-				window.localStorage.setItem("userId", response.data.data.userId);
-				window.localStorage.setItem(
-					"cityUsers",
-					JSON.stringify(response.data.data.cityUsers)
-				);
+				window.localStorage.setItem("accessToken", accessToken);
+				window.localStorage.setItem("refreshToken", refreshToken);
+				window.localStorage.setItem("userId", userId);
+				window.localStorage.setItem("cityUsers", JSON.stringify(cityUsers));
 			} else {
-				window.sessionStorage.setItem(
-					"accessToken",
-					response.data.data.accessToken
-				);
-				window.sessionStorage.setItem(
-					"refreshToken",
-					response.data.data.refreshToken
-				);
-				window.sessionStorage.setItem("userId", response.data.data.userId);
-				window.localStorage.setItem(
-					"cityUsers",
-					JSON.stringify(response.data.data.cityUsers)
-				);
+				window.sessionStorage.setItem("accessToken", accessToken);
+				window.sessionStorage.setItem("refreshToken", refreshToken);
+				window.sessionStorage.setItem("userId", userId);
+				window.sessionStorage.setItem("cityUsers", JSON.stringify(cityUsers));
 			}
+
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
 
-			if (window.sessionStorage.getItem("path")) {
-				// navigate(window.sessionStorage.getItem("path"));
-				// sessionStorage.removeItem("path");
-				navigateTo("/");
-			} else if (window.sessionStorage.getItem("redirectTo")) {
-				// navigate(window.sessionStorage.getItem("redirectTo"));
-				navigateTo("/");
+			if (process.env.REACT_APP_REGION_NAME === "AUF") {
+				try {
+					const cardResponse = await getCards();
+					if (cardResponse.data.data.length > 0) {
+						navigateTo("/");
+					} else {
+						navigateTo("/CustomerScreen/GetCard");
+					}
+				} catch (cardError) {
+					if (cardError.response && cardError.response.data.errorCode === 5011) {
+						navigateTo("/CustomerScreen/GetCard");
+					} else {
+						console.error("Error fetching card information:", cardError);
+						setAlertInfo(true);
+						setAlertType("danger");
+						setAlertMessage(t("somethingWrong"));
+					}
+				}
 			} else {
-				localStorage.setItem("selectedItem", t("chooseOneCategory"));
-				routeChangeToUpload();
+				navigateTo("/");
 			}
 		} catch (err) {
 			setLoginLoading(false);
 			setAlertInfo(true);
 			setAlertType("danger");
-			if (err.response.data.errorCode === errorCodes.EMPTY_PAYLOAD) {
-				setAlertMessage(t("usernamePasswordNotPresent"));
-			} else if (err.response.data.errorCode === errorCodes.MISSING_USERNAME) {
-				setAlertMessage(t("usernameNotPresent"));
-			} else if (err.response.data.errorCode === errorCodes.MISSING_PASSWORD) {
-				setAlertMessage(t("passwordNotPresent"));
-			} else if (
-				err.response.data.errorCode === errorCodes.INVALID_USERNAME ||
-				err.response.data.errorCode === errorCodes.INVALID_PASSWORD ||
-				err.response.data.errorCode === errorCodes.INVALID_CREDENTIALS
-			) {
-				setAlertMessage(t("checkUsernameOrPassword"));
-			} else if (
-				err.response.data.errorCode === errorCodes.EMAIL_NOT_VERIFIED
-			) {
-				setMailNotRecieved(true);
-				setAlertMessage(t("emailNotVerified"));
-			} else {
-				setAlertMessage(t("somethingWrong"));
+			const errorCode = err.response?.data?.errorCode;
+
+			switch (errorCode) {
+				case errorCodes.EMPTY_PAYLOAD:
+					setAlertMessage(t("usernamePasswordNotPresent"));
+					break;
+				case errorCodes.MISSING_USERNAME:
+					setAlertMessage(t("usernameNotPresent"));
+					break;
+				case errorCodes.MISSING_PASSWORD:
+					setAlertMessage(t("passwordNotPresent"));
+					break;
+				case errorCodes.INVALID_USERNAME:
+				case errorCodes.INVALID_PASSWORD:
+				case errorCodes.INVALID_CREDENTIALS:
+					setAlertMessage(t("checkUsernameOrPassword"));
+					break;
+				case errorCodes.EMAIL_NOT_VERIFIED:
+					setMailNotRecieved(true);
+					setAlertMessage(t("emailNotVerified"));
+					break;
+				default:
+					setAlertMessage(t("somethingWrong"));
+					break;
 			}
 		}
 	};

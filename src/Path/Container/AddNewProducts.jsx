@@ -10,14 +10,7 @@ import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
-import {
-  createNewProduct,
-  getSellerShops,
-  uploadImage,
-  deleteImage,
-  getCategory,
-  getSubCategory
-} from "../../Services/containerApi";
+import { createNewProduct, getSellerShops, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
 
 function AddNewProducts() {
   const { t } = useTranslation();
@@ -46,7 +39,7 @@ function AddNewProducts() {
     tax: "",
     inventory: "",
     minCount: "",
-    barcode: ""
+    barcode: "",
     // removeImage: false,
     // // hasAttachment: false,
   });
@@ -62,7 +55,7 @@ function AddNewProducts() {
     tax: "",
     inventory: "",
     minCount: "",
-    barcode: ""
+    barcode: "",
   });
 
   const handleSubmit = async (event) => {
@@ -86,11 +79,7 @@ function AddNewProducts() {
       try {
         const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
 
-        const createProductResponse = await createNewProduct(
-          cityId,
-          shopId,
-          inputWithoutCityIdShopId
-        );
+        const createProductResponse = await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
 
         const newProductId = parseInt(createProductResponse.data.data.id);
 
@@ -105,9 +94,7 @@ function AddNewProducts() {
           await uploadImage(imageForm, cityId, shopId, newProductId);
         }
 
-        const successMessage = isAdmin
-          ? t("sellerUpdatedAdmin")
-          : t("sellerUpdated");
+        const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
         setSuccessMessage(successMessage);
         setErrorMessage(false);
         setIsSuccess(true);
@@ -116,15 +103,9 @@ function AddNewProducts() {
           setSuccessMessage(false);
           navigate("/SellerScreen");
         }, 5000);
-      } catch (error) {
-        if (error.response.data.errorCode === 6012) {
-          setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
-        } else if (error.response.data.errorCode === 7002) {
-          setErrorMessage(t("duplicate_product_name")); // Custom message for this specific error
-        } else {
-          setErrorMessage(t("changesNotSaved")); // Fallback for other errors
-        }
 
+      } catch (error) {
+        setErrorMessage(t("changesNotSaved"));
         setSuccessMessage(false);
         setTimeout(() => setErrorMessage(false), 5000);
       } finally {
@@ -144,7 +125,7 @@ function AddNewProducts() {
     setCityId(cityId);
     setInput((prev) => ({
       ...prev,
-      cityId
+      cityId: cityId,
     }));
     validateInput(e);
 
@@ -209,7 +190,7 @@ function AddNewProducts() {
 
     setInput((prev) => ({
       ...prev,
-      categoryId
+      categoryId: categoryId,
     }));
 
     if (categoryId) {
@@ -243,7 +224,7 @@ function AddNewProducts() {
     setSubcategoryId(subCategoryId);
     setInput((prev) => ({
       ...prev,
-      subCategoryId
+      subCategoryId: subCategoryId,
     }));
     validateInput(event);
   };
@@ -272,7 +253,7 @@ function AddNewProducts() {
       // No list tags found, treat the input as plain text
       setInput((prev) => ({
         ...prev,
-        description: newContent.replace(/(<br>|<\/?p>)/gi, "") // Remove <br> and <p> tags
+        description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
       }));
       setDescription(newContent);
       return;
@@ -282,7 +263,7 @@ function AddNewProducts() {
       .join("")}</${listType}>`;
     setInput((prev) => ({
       ...prev,
-      description: listHTML
+      description: listHTML,
     }));
     setDescription(newContent);
   };
@@ -355,25 +336,17 @@ function AddNewProducts() {
         }
 
       case "minCount":
-        if (name === "inventory" && (!value || isNaN(value))) {
-          return t("pleaseEnterValidInventory");
-        } else if (name === "minCount" && (!value || isNaN(value))) {
+        if (name === "minCount" && (!value || isNaN(value))) {
           return t("pleaseEnterValidMinCount");
-        } else if (parseInt(input.inventory) <= parseInt(input.minCount)) {
-          return t("minCountShouldBeGreaterThanInventory");
+        } else if (name === "inventory" && (!value || isNaN(value))) {
+          return t("pleaseEnterValidInventory");
+        } else if (
+          parseInt(input.minCount) >= parseInt(input.inventory)
+        ) {
+          return t("minCountShouldBeLessThanInventory");
         } else {
           return "";
         }
-
-      // case "barcode":
-      //     if (!value) {
-      //         return t("pleaseEnterBarcode");
-      //         // } else if (isNaN(value)) {
-      //         //     return t("pleaseEnterValidNumber");
-      //     } else {
-      //         return "";
-      //     }
-
       default:
         return "";
     }
@@ -383,7 +356,7 @@ function AddNewProducts() {
     const { name, value } = e.target;
     setInput((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     validateInput(e);
   };
@@ -454,11 +427,6 @@ function AddNewProducts() {
     const currentImageCount = image ? image.length : 0;
     const totalImages = currentImageCount + validImages.length;
 
-    localimage(totalImages,validImages,currentImageCount)
-
-    setLocalImageOrPdf(true);
-  }
-  function localimage(totalImages,validImages,currentImageCount){
     if (totalImages > 3) {
       alert(t("productImageNumberAlert"));
       const allowedFiles = validImages.slice(0, 3 - currentImageCount);
@@ -468,7 +436,10 @@ function AddNewProducts() {
       setLocalImages((prevImages) => [...prevImages, ...validImages]);
       setImage((prevImages) => [...prevImages, ...validImages]);
     }
-  } 
+
+    setLocalImageOrPdf(true);
+  }
+
   function handleInputChange(e) {
     e.preventDefault();
     const files = Array.from(e.target.files);
@@ -496,61 +467,58 @@ function AddNewProducts() {
       alert(t("PdfAlert"));
       return;
     }
-    const currentImageCount = image ? image.length : 0;
-    const totalImages = image
-      ? image.length + validImages.length
-      : validImages.length;
 
-      localimage(totalImages,validImages,currentImageCount)
-    
+    const totalImages = image ? image.length + validImages.length : validImages.length;
+
+    if (totalImages > 3) {
+      alert(t("productImageNumberAlert"));
+      const allowedFiles = validImages.slice(0, 3 - (image ? image.length : 0));
+      setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+      setImage((prevImages) => [...prevImages, ...allowedFiles]);
+    } else {
+      setLocalImages((prevImages) => [...prevImages, ...validImages]);
+      setImage((prevImages) => [...prevImages, ...validImages]);
+    }
 
     setLocalImageOrPdf(true);
     e.target.value = null; // Reset input
   }
 
   const [localImages, setLocalImages] = useState([]);
-  // const handleMultipleInputChange = (event) => {
-  //   const newFiles = Array.from(event.target.files);
+  const handleMultipleInputChange = (event) => {
+    const newFiles = Array.from(event.target.files);
 
-  //   // Filter for only valid images
-  //   const validImages = newFiles.filter((file) =>
-  //     file.type.startsWith("image/")
-  //   );
-  //   const invalidFiles = newFiles.filter(
-  //     (file) => !file.type.startsWith("image/")
-  //   );
+    // Filter for only valid images
+    const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+    const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
-  //   // If there are invalid files (e.g., not images), show an alert
-  //   if (invalidFiles.length > 0) {
-  //     alert(t("imagePdfAlert"));
-  //     return;
-  //   }
+    // If there are invalid files (e.g., not images), show an alert
+    if (invalidFiles.length > 0) {
+      alert(t("imagePdfAlert"));
+      return;
+    }
 
-  //   const currentImageCount = image ? image.length : 0;
-  //   const totalImages = currentImageCount + validImages.length;
+    const currentImageCount = image ? image.length : 0;
+    const totalImages = currentImageCount + validImages.length;
 
-  //   if (totalImages > 3) {
-  //     alert(t("productImageNumberAlert"));
-  //     const allowedFiles = validImages.slice(0, 3 - currentImageCount);
-  //     setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
-  //     setImage((prevImages) => [...prevImages, ...allowedFiles]);
-  //   } else {
-  //     setLocalImages((prevImages) => [...prevImages, ...validImages]);
-  //     setImage((prevImages) => [...prevImages, ...validImages]);
-  //   }
+    if (totalImages > 3) {
+      alert(t("productImageNumberAlert"));
+      const allowedFiles = validImages.slice(0, 3 - currentImageCount);
+      setLocalImages((prevImages) => [...prevImages, ...allowedFiles]);
+      setImage((prevImages) => [...prevImages, ...allowedFiles]);
+    } else {
+      setLocalImages((prevImages) => [...prevImages, ...validImages]);
+      setImage((prevImages) => [...prevImages, ...validImages]);
+    }
 
-  //   event.target.value = null; // Reset input
-  // };
+    event.target.value = null; // Reset input
+  };
 
   const handleUpdateMultipleInputChange = (e) => {
     const newFiles = Array.from(e.target.files);
 
-    const validImages = newFiles.filter((file) =>
-      file.type.startsWith("image/")
-    );
-    const invalidFiles = newFiles.filter(
-      (file) => !file.type.startsWith("image/")
-    );
+    const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+    const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
 
     if (invalidFiles.length > 0) {
       alert(t("imagePdfAlert"));
@@ -576,7 +544,7 @@ function AddNewProducts() {
   function handleRemoveImage() {
     if (shopId) {
       setInput((prev) => ({
-        ...prev
+        ...prev,
         // removeImage: true,
         // logo: null,
       }));
@@ -610,7 +578,7 @@ function AddNewProducts() {
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
-              fontFamily: "Poppins, sans-serif"
+              fontFamily: "Poppins, sans-serif",
             }}
             className="text-gray-900 text-lg mb-4 font-medium title-font"
           >
@@ -639,7 +607,7 @@ function AddNewProducts() {
             <div
               className="h-[24px] text-red-600"
               style={{
-                visibility: error.title ? "visible" : "hidden"
+                visibility: error.title ? "visible" : "hidden",
               }}
             >
               {error.title}
@@ -651,10 +619,7 @@ function AddNewProducts() {
               htmlFor="title"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                ? t("cluster")
-                : t("city")}{" "}
-              *
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <select
               type="text"
@@ -676,7 +641,7 @@ function AddNewProducts() {
             <div
               className="h-[24px] text-red-600"
               style={{
-                visibility: error.cityId ? "visible" : "hidden"
+                visibility: error.cityId ? "visible" : "hidden",
               }}
             >
               {error.cityId}
@@ -713,21 +678,17 @@ function AddNewProducts() {
                   <div
                     className="h-[24px] text-red-600"
                     style={{
-                      visibility: error.shopId ? "visible" : "hidden"
+                      visibility: error.shopId ? "visible" : "hidden",
                     }}
                   >
                     {error.shopId}
                   </div>
                 </div>
               ) : (
-                <div
-                  className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
-                  role="alert"
-                >
+                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                  role="alert">
                   <span className="block sm:inline">
-                    <strong className="font-bold">
-                      {t("noShopsAvailableForThisCity")}
-                    </strong>
+                    <strong className="font-bold">{t("noShopsAvailableForThisCity")}</strong>
                   </span>
                 </div>
               )}
@@ -759,11 +720,7 @@ function AddNewProducts() {
                     </option>
                     {categories.map((category) => {
                       return (
-                        <option
-                          className="font-sans"
-                          value={category.id}
-                          key={category.id}
-                        >
+                        <option className="font-sans" value={category.id} key={category.id}>
                           {t(category.name)}
                         </option>
                       );
@@ -772,21 +729,17 @@ function AddNewProducts() {
                   <div
                     className="h-[24px] text-red-600"
                     style={{
-                      visibility: error.categoryId ? "visible" : "hidden"
+                      visibility: error.categoryId ? "visible" : "hidden",
                     }}
                   >
                     {error.categoryId}
                   </div>
                 </div>
               ) : (
-                <div
-                  className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
-                  role="alert"
-                >
+                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
+                  role="alert">
                   <span className="block sm:inline">
-                    <strong className="font-bold">
-                      {t("noCategoriesAvailableForThisCity")}
-                    </strong>
+                    <strong className="font-bold">{t("noCategoriesAvailableForThisCity")}</strong>
                   </span>
                 </div>
               )}
@@ -797,10 +750,7 @@ function AddNewProducts() {
             <>
               {subCategories && Object.keys(subCategories).length > 0 ? (
                 <div className="relative mb-0">
-                  <label
-                    htmlFor="subCategoryId"
-                    className="block text-sm font-medium text-gray-600"
-                  >
+                  <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
                     {t("subCategory")} *
                   </label>
                   <select
@@ -825,22 +775,15 @@ function AddNewProducts() {
                   </select>
                   <div
                     className="h-[24px] text-red-600"
-                    style={{
-                      visibility: error.subCategoryId ? "visible" : "hidden"
-                    }}
+                    style={{ visibility: error.subCategoryId ? "visible" : "hidden" }}
                   >
                     {error.subCategoryId}
                   </div>
                 </div>
               ) : (
-                <div
-                  className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded"
-                  role="alert"
-                >
+                <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded" role="alert">
                   <span className="block sm:inline">
-                    <strong className="font-bold">
-                      {t("noSubCategoriesAvailableForThisCity")}
-                    </strong>
+                    <strong className="font-bold">{t("noSubCategoriesAvailableForThisCity")}</strong>
                   </span>
                 </div>
               )}
@@ -870,7 +813,7 @@ function AddNewProducts() {
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: error.price ? "visible" : "hidden"
+                  visibility: error.price ? "visible" : "hidden",
                 }}
               >
                 {error.price}
@@ -898,7 +841,7 @@ function AddNewProducts() {
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: error.tax ? "visible" : "hidden"
+                  visibility: error.tax ? "visible" : "hidden",
                 }}
               >
                 {error.tax}
@@ -929,7 +872,7 @@ function AddNewProducts() {
               <div
                 className="h-[24px] text-red-600"
                 style={{
-                  visibility: error.minCount ? "visible" : "hidden"
+                  visibility: error.minCount ? "visible" : "hidden",
                 }}
               >
                 {error.minCount}
@@ -969,7 +912,7 @@ function AddNewProducts() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {t("inventory")} *
+              {t("maxInventory")} *
             </label>
             <input
               type="text"
@@ -986,7 +929,7 @@ function AddNewProducts() {
             <div
               className="h-[24px] text-red-600"
               style={{
-                visibility: error.inventory ? "visible" : "hidden"
+                visibility: error.inventory ? "visible" : "hidden",
               }}
             >
               {error.inventory}
@@ -1000,46 +943,33 @@ function AddNewProducts() {
             >
               {t("description")} *
             </label>
-            <div className="h-[24px] text-green-600">
-              {t("max_chara_255")}
-            </div>
             <ReactQuill
               type="text"
               id="description"
               name="description"
               ref={editor}
               value={description}
-              // onChange={(newContent) => onDescriptionChange(newContent)}
-              // onBlur={(range, source, editor) => {
-              //   validateInput({
-              //     target: {
-              //       name: "description",
-              //       value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, "")
-              //     }
-              //   });
-              // }}
-              onChange={(newContent, range, source, editor) => {
-                onDescriptionChange(newContent);
+              onChange={(newContent) => onDescriptionChange(newContent)}
+              onBlur={(range, source, editor) => {
                 validateInput({
                   target: {
                     name: "description",
-                    value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, "")
-                  }
+                    value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
+                  },
                 });
               }}
-              
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               style={{
                 position: "relative",
-                zIndex: 1000 // Higher than the sidebar
+                zIndex: 1000, // Higher than the sidebar
               }}
             />
             <div
               className="h-[24px] text-red-600"
               style={{
-                visibility: error.description ? "visible" : "hidden"
+                visibility: error.description ? "visible" : "hidden",
               }}
             >
               {error.description}
@@ -1059,7 +989,9 @@ function AddNewProducts() {
             <label className="block text-sm font-medium text-gray-700">
               {t("addImageHere")}
             </label>
-            <div className="h-[24px] text-green-600">
+            <div
+              className="h-[24px] text-green-600"
+            >
               {t("maxFileSizeAllert")} & {t("imageNumberAlertContainer")}
             </div>
 
@@ -1082,9 +1014,8 @@ function AddNewProducts() {
                   {image.length < 3 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 3 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1094,7 +1025,7 @@ function AddNewProducts() {
                         type="file"
                         accept="image/*,.pdf"
                         className="sr-only"
-                        onChange={handleUpdateMultipleInputChange}
+                        onChange={handleMultipleInputChange}
                         multiple
                         disabled={updating || isSuccess}
                       />
@@ -1118,9 +1049,8 @@ function AddNewProducts() {
                   {image.length < 3 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 3 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1137,7 +1067,9 @@ function AddNewProducts() {
                     </label>
                   )}
                 </div>
-              ) : image && Array.isArray(image) && image.length > 0 ? (
+              ) : image &&
+                Array.isArray(image) &&
+                image.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
@@ -1150,9 +1082,8 @@ function AddNewProducts() {
                   {image.length < 3 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 3 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 3 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1169,7 +1100,6 @@ function AddNewProducts() {
                     </label>
                   )}
                 </div>
-              ) : (
                 // ) : pdf ? (
                 //     <div className="flex flex-col items-center">
                 //         <p>
@@ -1188,6 +1118,7 @@ function AddNewProducts() {
                 //             {t("removeFile")}
                 //         </button>
                 //     </div>
+              ) : (
                 <div className="text-center">
                   <UploadSVG />
                   <p className="mt-1 text-sm text-gray-600">
@@ -1213,7 +1144,11 @@ function AddNewProducts() {
               )}
             </div>
 
-            <div className="h-[24px] text-green-600">{t("imageWarning")}</div>
+            <div
+              className="h-[24px] text-green-600"
+            >
+              {t("imageWarning")}
+            </div>
           </div>
         </div>
       </div>
