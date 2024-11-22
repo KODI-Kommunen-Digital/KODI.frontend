@@ -14,6 +14,11 @@ function GetCard() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+    const navigateTo = (path) => {
+        if (path) {
+            navigate(path);
+        }
+    };
 
     const [input, setInput] = useState({
         cardNumber: "",
@@ -124,15 +129,47 @@ function GetCard() {
 
             <div className="container w-auto px-5 py-2 bg-gray-800">
                 <div className="bg-white mt-4 p-6 space-y-10">
-                    <h2
-                        style={{
-                            fontFamily: "Poppins, sans-serif",
-                        }}
-                        className="text-gray-900 text-lg mb-4 font-medium title-font"
-                    >
-                        {t("linkYourCard")}
+                    <div>
+                        <div className="flex justify-between items-center">
+                            <h2
+                                style={{
+                                    fontFamily: "Poppins, sans-serif",
+                                }}
+                                className="text-gray-900 text-lg font-medium title-font"
+                            >
+                                {t("linkYourCard")}
+                            </h2>
+
+                            <div className="text-xs font-medium text-center float-left cursor-pointer">
+                                <a
+                                    onClick={() => navigateTo("/")}
+                                    className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                                >
+                                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-black group-hover:-translate-x-0 ease">
+                                        <svg
+                                            className="w-6 h-6 transform rotate-180"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                            ></path>
+                                        </svg>
+                                    </span>
+                                    <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:-translate-x-full ease">
+                                        {t("goBack")}
+                                    </span>
+                                    <span className="relative invisible">{t("goBack")}</span>
+                                </a>
+                            </div>
+                        </div>
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
-                    </h2>
+                    </div>
 
                     <div className="relative mb-4">
                         <label
