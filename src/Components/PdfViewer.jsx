@@ -102,6 +102,6 @@ const PDFDisplay = (url) => {
       </div>
     </div>
   );
-};
+}
 
 export default PDFDisplay;

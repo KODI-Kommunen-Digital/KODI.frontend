@@ -46,7 +46,8 @@ const Forum = () => {
 			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 			window.history.replaceState({}, "", newUrl);
 			getForumPosts(cityId, forumId, params).then((response) => {
-				setForumPosts(response.data.data);
+				const posts = response.data.data;
+				setForumPosts(posts);
 			});
 		}
 	}, [pageNo]);

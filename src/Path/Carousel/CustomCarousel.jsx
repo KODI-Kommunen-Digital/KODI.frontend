@@ -120,7 +120,7 @@ CustomCarousel.propTypes = {
     })
   ).isRequired,
   sourceId: PropTypes.number.isRequired,
-  appointmentId: PropTypes.number.isRequired,
+  appointmentId: PropTypes.number,
 };
 
 export default CustomCarousel;

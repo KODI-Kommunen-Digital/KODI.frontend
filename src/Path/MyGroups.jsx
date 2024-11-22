@@ -25,10 +25,9 @@ const MyGroups = () => {
       const sortedForums = response.data.data.sort((a, b) => {
         return new Date(b.JoinedAt) - new Date(a.JoinedAt);
       });
-      console.log(sortedForums);
       setForums(sortedForums);
     });
-  }, [pageNo]);
+  }, []);
 
   useEffect(() => {
     if (pageNo === 1) {
@@ -84,173 +83,194 @@ const MyGroups = () => {
   }
 
   return (
-    <section className="bg-slate-600 body-font relative h-screen">
+    <section className="bg-gray-800 body-font relative h-screen">
       <SideBar />
-      <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+      <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
         <div className="h-full">
-          <div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-            <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("groupName")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("members")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center "
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("date_of_creation")}
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center "
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("role")}
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("privacy")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3 text-center "
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.66%",
-                    }}
-                  >
-                    {t("action")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {forums.map((forum, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-50"
+          <div className="bg-white mt-4 p-0">
+            <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+              {t("myGroups")}
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
                     >
-                      <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                      {t("groupName")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
+                    >
+                      {t("members")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center "
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
+                    >
+                      {t("date_of_creation")}
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center "
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
+                    >
+                      {t("role")}
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
+                    >
+                      {t("privacy")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center "
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.66%",
+                      }}
+                    >
+                      {t("action")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {forums.map((forum, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50"
                       >
-                        <img
-                          className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                          src={
-                            forum.image
-                              ? process.env.REACT_APP_BUCKET_HOST + forum.image
-                              : process.env.REACT_APP_BUCKET_HOST +
-                              "admin/DefaultForum.jpeg"
-                          }
-                          onClick={() =>
-                            navigateTo(
-                              `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
-                            )
-                          }
-                          alt="avatar"
-                        />
-                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                          <div
-                            className="font-medium text-gray-500 cursor-pointer text-center truncate"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                        >
+                          <img
+                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            src={
+                              forum.image
+                                ? process.env.REACT_APP_BUCKET_HOST + forum.image
+                                : process.env.REACT_APP_BUCKET_HOST +
+                                "admin/DefaultForum.jpeg"
+                            }
                             onClick={() =>
                               navigateTo(
                                 `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
                               )
                             }
-                          >
-                            {forum.forumName}
+                            alt="avatar"
+                          />
+                          <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
+                            <div
+                              className="font-bold text-gray-500 cursor-pointer text-center truncate"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                              onClick={() =>
+                                navigateTo(
+                                  `/Forum?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                                )
+                              }
+                            >
+                              {forum.forumName}
+                            </div>
                           </div>
-                        </div>
-                      </th>
+                        </th>
 
-                      <td
-                        className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() =>
-                          navigateTo(
-                            `/MyGroups/GroupMembers?forumId=${forum.forumId}&cityId=${forum.cityId}`
-                          )
-                        }
-                      >
-                        {t("members")}
-                      </td>
+                        <td
+                          className="font-bold text-blue-600 hover:underline cursor-pointer text-center"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                          onClick={() =>
+                            navigateTo(
+                              `/MyGroups/GroupMembers?forumId=${forum.forumId}&cityId=${forum.cityId}`
+                            )
+                          }
+                        >
+                          {t("members")}
+                        </td>
 
-                      <td
-                        className="px-6 py-4  text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {new Date(forum.JoinedAt).toLocaleString("de")}
-                      </td>
+                        <td
+                          className="px-6 py-4 text-center font-bold text-blue-600"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {new Date(forum.JoinedAt).toLocaleString("de")}
+                        </td>
 
-                      <td
-                        className="px-6 py-4  text-center"
-                        style={{
-                          fontFamily: "Poppins, sans-serif",
-                          color: forum.isAdmin === 1 ? "green" : "red",
-                        }}
-                      >
-                        {forum.isAdmin === 1 ? t("admin") : t("member")}
-                      </td>
-                      <td
-                        className="px-6 py-4  text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {forum.isPrivate === 1
-                          ? t("privateGroup")
-                          : t("publicGroup")}
-                      </td>
-                      <td className="px-6 py-4  text-center">
+                        <td
+                          className="px-6 py-4 font-bold text-center"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            color: forum.isAdmin === 1 ? "green" : "red",
+                          }}
+                        >
+                          {forum.isAdmin === 1 ? t("admin") : t("member")}
+                        </td>
+                        <td
+                          className="px-6 py-4  text-center"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {forum.isPrivate === 1
+                            ? t("privateGroup")
+                            : t("publicGroup")}
+                        </td>
+
                         {forum.isAdmin ? (
-                          <div>
-                            <a
-                              className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
-                              onClick={() => goToEditForums(forum)}
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {t("edit")}
-                            </a>
-                            <a
-                              className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
-                              onClick={() => deleteForumOnClick(forum)}
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {t("delete")}
-                            </a>
-                          </div>
+                          <td className="px-6 py-4 text-center font-bold">
+                            <div className="flex justify-center items-center">
+                              <a
+                                className={`font-medium text-green-600 px-2 cursor-pointer`}
+                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                onClick={() => goToEditForums(forum)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="1em"
+                                  viewBox="0 0 640 512"
+                                  className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                >
+                                  <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                </svg>
+                              </a>
+
+                              <a
+                                className={`font-medium text-red-600 px-2 cursor-pointer`}
+                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                onClick={() => deleteForumOnClick(forum)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="1em"
+                                  viewBox="0 0 640 512"
+                                  className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                >
+                                  <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                </svg>
+                              </a>
+                            </div>
+                          </td>
                         ) : (
                           <div className="text-gray-500">{t("onlyAdmins")}</div>
                         )}
@@ -322,12 +342,12 @@ const MyGroups = () => {
                             </div>
                           </div>
                         )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">

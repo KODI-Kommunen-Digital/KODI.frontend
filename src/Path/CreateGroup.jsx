@@ -296,10 +296,10 @@ function CreateGroup() {
 	}
 
 	return (
-		<section class="bg-slate-600 body-font relative h-screen">
+		<section class="bg-gray-800 body-font relative h-screen">
 			<SideBar />
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
+			<div class="container w-auto px-5 py-2 bg-gray-800">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2
 						style={{
@@ -310,18 +310,18 @@ function CreateGroup() {
 						{t("createGroup")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
-					<div class="relative mb-4">
+					<div className="relative mb-4">
 						<label
-							for="forumName"
-							class="block text-sm font-medium text-gray-600"
+							htmlFor="title"
+							className="block text-sm font-medium text-gray-600"
 						>
-							{t("forumName")} *
+							{t("title")} *
 						</label>
 						<input
 							type="text"
-							id="forumName"
-							name="forumName"
-							value={input.forumName}
+							id="title"
+							name="title"
+							value={input.title}
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
@@ -343,7 +343,7 @@ function CreateGroup() {
 							for="forumName"
 							class="block text-sm font-medium text-gray-600"
 						>
-							{t("city")} *
+							{process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
 						</label>
 						<select
 							type="text"
@@ -443,7 +443,7 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-slate-600">
+			<div class="container w-auto px-5 py-2 bg-gray-800">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
@@ -473,7 +473,7 @@ function CreateGroup() {
 										alt="uploaded"
 									/>
 									<button
-										className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+										className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
 										onClick={handleRemoveImage1}
 									>
 										{t("remove")}
@@ -497,7 +497,7 @@ function CreateGroup() {
 										{t("dragAndDropImage")}
 									</p>
 									<div class="relative mb-4 mt-8">
-										<label className="file-upload-btn w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
+										<label className="file-upload-btn w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
 											<span className="button-label">{t("upload")}</span>
 											<input
 												id="image1-upload"
@@ -514,14 +514,14 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div className="container w-auto px-5 py-2 bg-slate-600">
+			<div className="container w-auto px-5 py-2 bg-gray-800">
 				<div className="bg-white mt-4 p-6">
 					<div className="py-2 mt-1 px-2">
 						<button
 							type="button"
 							onClick={handleSubmit}
 							disabled={updating}
-							class="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+							class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
 							{t("saveChanges")}
 						</button>

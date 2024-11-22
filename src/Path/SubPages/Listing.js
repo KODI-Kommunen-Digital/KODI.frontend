@@ -92,6 +92,7 @@ const Description = (props) => {
     }
   }, [props.cityId, props.content]);
 
+  // const linkedContent = linkify(content);
   return (
     <p
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
@@ -102,7 +103,11 @@ const Description = (props) => {
 
 Description.propTypes = {
   content: PropTypes.string.isRequired,
-  cityId: PropTypes.string.isRequired,
+  cityId: PropTypes.string,
+};
+
+Description.defaultProps = {
+  cityId: null, // or some default value
 };
 
 const Listing = () => {
@@ -171,6 +176,8 @@ const Listing = () => {
     const searchParams = new URLSearchParams(window.location.search);
     setIsLoading(true);
     const params = { statusId: 1 };
+    const terminalViewParam = searchParams.get("terminalView");
+    setTerminalView(terminalViewParam === "true");
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
@@ -323,6 +330,9 @@ const Listing = () => {
               .then((response) => {
                 setFavoriteId(response.data.id);
                 setSuccessMessage(t("List added to the favorites"));
+                // setHandleClassName(
+                //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                // );
               })
               .catch((err) => console.log("Error", err))
             : console.log("Error");
@@ -343,7 +353,7 @@ const Listing = () => {
   useEffect(() => {
     if (user) {
       try {
-        const socialMedia = user.socialMedia
+        const socialMedia = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
           ? JSON.parse(user.socialMedia)
           : {};
         setUserSocial(socialMedia);
@@ -354,6 +364,15 @@ const Listing = () => {
       }
     }
   }, [user]);
+
+  const isValidJSON = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   return (
     <section className="text-slate-800 bg-white body-font">
@@ -547,6 +566,7 @@ const Listing = () => {
                           <CustomCarousel
                             imageList={input.otherlogos}
                             sourceId={input.sourceId}
+                            appointmentId={input.appointmentId || null}
                           />
                         ) : (
                           <img
@@ -567,7 +587,7 @@ const Listing = () => {
                   >
                     {t("description")}
                   </h1>
-                  <Description content={description} />
+                  <Description content={description} cityId={cityId} />
                   {sourceId === listingSource.SCRAPER && (
                     <p className="text-slate-800 font-medium">
                       {t("visitWebsite")}{" "}

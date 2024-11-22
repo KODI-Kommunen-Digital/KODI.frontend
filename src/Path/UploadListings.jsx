@@ -149,6 +149,8 @@ function UploadListings() {
   }
 
   const [localImages, setLocalImages] = useState([]);
+  const MAX_IMAGES = 8;
+
   const handleMultipleInputChange = (event) => {
     const newFiles = Array.from(event.target.files);
 
@@ -159,8 +161,16 @@ function UploadListings() {
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
       } else {
-        setLocalImages((prevImages) => [...prevImages, ...validImages]);
-        setImage((prevImages) => [...prevImages, ...validImages]);
+        // Calculate total number of images
+        const totalImages = image.length + validImages.length;
+
+        // Check if total images exceed the limit of 3
+        if (totalImages > 3) {
+          alert(t("listingImageNumberAlert", { limit: MAX_IMAGES }));
+        } else {
+          setLocalImages((prevImages) => [...prevImages, ...validImages]);
+          setImage((prevImages) => [...prevImages, ...validImages]);
+        }
       }
     } else {
       newFiles.forEach(file => {
@@ -1040,10 +1050,10 @@ function UploadListings() {
   }
 
   return (
-    <section className="base-bg-slate-600 body-font relative">
+    <section className="bg-slate-600 body-font relative">
       <SideBar />
 
-      <div className="container w-auto px-5 py-2 base-bg-slate-600">
+      <div className="container w-auto px-5 py-2 bg-slate-600">
         <div className="bg-white mt-4 p-6 space-y-10">
           <h2
             style={{
@@ -1605,7 +1615,7 @@ function UploadListings() {
             <div
               className="h-[24px] text-red-600"
             >
-              {t("maxFileSizeAllert")}
+              {t("maxFileSizeAllert")} & {t("imageNumberAlertListings")}
             </div>
 
             <div
@@ -1716,9 +1726,8 @@ function UploadListings() {
                   <p>
                     <a
                       target="_blank"
-                      href={
-                        localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link
-                      }
+                      rel="noreferrer"
+                      href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}
                     >
                       {pdf.name}
                     </a>

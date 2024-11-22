@@ -63,18 +63,18 @@ const MemberRequests = () => {
   };
 
   return (
-    <section className="bg-slate-600 body-font relative h-screen">
+    <section className="bg-gray-800 body-font relative h-screen">
       <SideBar />
       <ForumNavbar cityId={cityId} forumId={forumId} />
-      <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+      <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
         <div className="h-full">
           <div className="bg-white mt-10 p-0 space-y-10 overflow-x-auto">
-            <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500 p-6 space-y-10 rounded-lg">
+            <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3"
+                    className="px-6 py-4 text-center"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "33.3%",
@@ -85,7 +85,7 @@ const MemberRequests = () => {
 
                   <th
                     scope="col"
-                    className="px-6 sm:px-6 py-3 text-center"
+                    className="px-6 py-4 text-center"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                       width: "33.3%",
@@ -96,14 +96,14 @@ const MemberRequests = () => {
 
                   <th
                     scope="col"
-                    className="px-6 py-3 text-center"
+                    className="px-6 py-4 text-center"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("accept")}
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-center"
+                    className="px-6 py-4 text-center"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("remove")}
@@ -147,7 +147,7 @@ const MemberRequests = () => {
                         </th>
 
                         <td
-                          className="px-6 py-4 text-center"
+                          className="px-6 py-4 text-center font-bold text-blue-600"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
                           {new Date(member.createdAt).toLocaleString("de")}
@@ -156,8 +156,8 @@ const MemberRequests = () => {
                         <td className="px-6 py-4 text-center">
                           <a
                             className={`font-medium ${isLoading
-                                ? "text-gray-400 cursor-not-allowed"
-                                : "text-blue-600 hover:underline cursor-pointer"
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-blue-600 hover:underline cursor-pointer"
                               } px-2 dark:text-blue-500`}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                             onClick={() => handleAccept(member)}

@@ -94,8 +94,30 @@ const Dashboard = () => {
         setViewAllListings(false);
       }
     });
+    if (window.location.pathname === "/Dashboard") {
+      setViewAllListings(false);
+    } else {
+      setViewAllListings(true);
+    }
 
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
+    // if (viewAllListings === true) {
+    //   getListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
+    // if (viewAllListings === false) {
+    //   getUserListings({
+    //     statusId: selectedStatus,
+    //     pageNo,
+    //     cityId,
+    //   }).then((response) => {
+    //     setListings(response.data.data);
+    //   });
+    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {
@@ -114,7 +136,8 @@ const Dashboard = () => {
       }
 
       getListings(params).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+        setListings(listingsData);
       });
     }
     if (viewAllListings === false) {
@@ -128,18 +151,19 @@ const Dashboard = () => {
         statusId: selectedStatus,
         pageNo,
       }).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+        setListings(listingsData);
       });
     }
   }, [selectedStatus, viewAllListings, pageNo, cityId]);
 
   useEffect(() => {
-    if (pageNo === 1) {
-      fetchListings();
-    } else {
-      fetchListings();
-    }
+    fetchListings();
   }, [fetchListings, pageNo]);
+
+  useEffect(() => {
+    setPageNo(1);
+  }, [selectedStatus, viewAllListings]);
 
   function getStatusClass(statusId) {
     if (status[statusId] === "Active") {
@@ -242,10 +266,12 @@ const Dashboard = () => {
   }
 
   function goToListingPage(listing) {
-    if (listing.appointmentId) {
-      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&appointmentId=${listing.appointmentId}`);
-    } else {
+    if (listing.sourceId === 1 || listing.showExternal === 0) {
       navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+    } else if (listing.website) {
+      window.location.href = listing.website;
+    } else {
+      navigateTo(`/error`);
     }
   }
   const handleSearch = async (searchQuery, statusName) => {
@@ -271,7 +297,8 @@ const Dashboard = () => {
         ...params,
       });
 
-      setListings(response.data.data);
+      const listingsData = response.data.data;
+      setListings(listingsData);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -296,38 +323,42 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="bg-slate-600 body-font relative h-screen">
+    <section className="bg-gray-800 body-font relative h-screen">
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
-        <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-16">
+        <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-18">
           <div className="w-full">
             <div className="w-full h-full flex items-center lg:py-2 py-5 justify-end xl:justify-center lg:justify-center border-gray-100 md:space-x-10">
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === null ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("allListings")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
                   </div>
                   <div
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer"
+                    className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
@@ -338,7 +369,7 @@ const Dashboard = () => {
 
               <div className="-my-2 -mr-2 lg:hidden">
                 <select
-                  className="text-gray-300 rounded-md p-4 text-sm font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                  className="text-white bg-black font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center border-none focus:outline-none"
                   onChange={(e) => setSelectedStatus(e.target.value)}
                   value={selectedStatus || ""}
                   style={{ fontFamily: "Poppins, sans-serif" }}
@@ -389,152 +420,174 @@ const Dashboard = () => {
       </div>
 
 
-      <div className="container w-auto px-0 lg:px-5 py-2 bg-slate-600 min-h-screen flex flex-col">
+      <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
         <div className="h-full">
-          <div className="bg-white mt-0 p-0 space-y-10 overflow-x-auto">
-            <table className="w-full text-sm text-left lg:mt-[2rem] mt-[2rem] text-gray-500  p-6 space-y-10 rounded-lg">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-6 py-3"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      width: "16.67%",
-                    }}
-                  >
-                    {t("listings")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 sm:px-3 py-3 hidden lg:table-cell text-center"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("category")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 hidden lg:table-cell text-center"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("date_of_creation")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-center"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("noOfViews")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-center"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("action")}
-                  </th>
-                  {viewAllListings && (
+          <div className="bg-white mt-4 p-0">
+            <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+              {t("listings")}
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-center"
+                      className="px-6 py-4 text-center"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        width: "16.67%",
+                      }}
+                    >
+                      {t("listings")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 sm:px-3 py-3 hidden lg:table-cell text-center"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
-                      {t("username")}
+                      {t("category")}
                     </th>
-                  )}
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-center"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("status")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {listings.map((listing, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-50"
+                    <th
+                      scope="col"
+                      className="px-6 py-3 hidden lg:table-cell text-center"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
                     >
+                      {t("date_of_creation")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t("noOfViews")}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t("action")}
+                    </th>
+                    {viewAllListings && (
                       <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
-                        onClick={() => {
-                          if (!hiddenCategories.includes(listing.categoryId)) {
-                            goToListingPage(listing);
-                          }
-                        }}
+                        scope="col"
+                        className="px-6 py-4 text-center"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {listing.pdf ? (
-                          <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
-                            <PdfThumbnail
-                              pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
-                            />
-                          </div>
-                        ) : listing.logo ? (
-                          <img
-                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                            src={
-                              listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
-                            }
-                            onError={(e) => {
-                              e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
-                            }}
-                            alt="avatar"
-                          />
-                        ) : (
-                          <img
-                            alt="Listing"
-                            className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                            src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
-                          />
-                        )}
-
-                        <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
-                          <div
-                            className="font-normal text-gray-500 truncate"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {listing.title}
-                          </div>
-                        </div>
+                        {t("username")}
                       </th>
+                    )}
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t("status")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listings.map((listing, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50"
+                      >
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                          onClick={() => {
+                            if (!hiddenCategories.includes(listing.categoryId)) {
+                              goToListingPage(listing);
+                            }
+                          }}
+                        >
+                          {listing.pdf ? (
+                            <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
+                              <PdfThumbnail
+                                pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+                              />
+                            </div>
+                          ) : listing.logo ? (
+                            <img
+                              className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              src={
+                                listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
+                              }
+                              onError={(e) => {
+                                e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                              }}
+                              alt="avatar"
+                            />
+                          ) : (
+                            <img
+                              alt="Listing"
+                              className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
+                            />
+                          )}
 
-                      <td
-                        className="px-6 py-4 hidden lg:table-cell text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {t(categories[listing.categoryId])}
-                      </td>
-                      <td
-                        className="px-6 py-4 hidden lg:table-cell text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {new Date(listing.createdAt).toLocaleString("de")}
-                      </td>
-                      <td
-                        className="px-6 py-4 text-blue-600 text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {listing.viewCount}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <a
-                          className="font-medium text-blue-600 hover:underline cursor-pointer pr-2"
-                          onClick={() => goToEditListingsPage(listing)}
+                          <div className="pl-0 sm:pl-3 overflow-hidden max-w-[20rem] sm:max-w-[10rem]">
+                            <div
+                              className="text-gray-500 font-bold truncate"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {listing.title}
+                            </div>
+                          </div>
+                        </th>
+
+                        <td
+                          className="px-6 py-4 hidden lg:table-cell text-center"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {t("edit")}
-                        </a>
-                        <a
-                          className="font-medium text-blue-600 hover:underline cursor-pointer text-center"
-                          onClick={() => deleteListingOnClick(listing)}
+                          {t(categories[listing.categoryId])}
+                        </td>
+                        <td
+                          className="px-6 py-4 hidden lg:table-cell text-center font-bold text-blue-600"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {t("delete")}
-                        </a>
+                          {new Date(listing.createdAt).toLocaleString("de")}
+                        </td>
+                        <td
+                          className="px-6 py-4 font-bold text-blue-600 text-center"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {listing.viewCount}
+                        </td>
+                        <td className="px-6 py-4 text-center font-bold">
+                          <div className="flex justify-center items-center">
+                            <a
+                              className={`font-medium text-green-600 px-2 cursor-pointer`}
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                              onClick={() => goToEditListingsPage(listing)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 640 512"
+                                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                              >
+                                <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                              </svg>
+                            </a>
+
+                            <a
+                              className={`font-medium text-red-600 px-2 cursor-pointer`}
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                              onClick={() => deleteListingOnClick(listing)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 640 512"
+                                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                              >
+                                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                              </svg>
+                            </a>
+                          </div>
+                        </td>
                         {showConfirmationModal.visible && (
                           <div className="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto">
                             <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -603,58 +656,60 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-                      </td>
-                      {viewAllListings && (
-                        <td className="px-6 py-4 text-center">
-                          <a
-                            className="font-medium text-blue-600 hover:underline cursor-pointer"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                            href={"/ViewProfile/" + listing.username}
-                          >
-                            {listing.username}
-                          </a>
+                        {
+                          viewAllListings && (
+                            <td className="px-6 py-4 text-center">
+                              <a
+                                className="font-medium text-blue-600 hover:underline cursor-pointer"
+                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                href={"/ViewProfile/" + listing.username}
+                              >
+                                {listing.username}
+                              </a>
+                            </td>
+                          )
+                        }
+                        <td className="px-6 py-4">
+                          <div className="flex items-center justify-center">
+                            <div
+                              className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                listing.statusId
+                              )} mr-2`}
+                            ></div>
+                            {viewAllListings ? (
+                              <select
+                                className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
+                                onChange={(e) =>
+                                  handleChangeInStatus(e.target.value, listing)
+                                }
+                                value={listing.statusId || 0}
+                                style={{ fontFamily: "Poppins, sans-serif" }}
+                              >
+                                {Object.keys(status).map((state, index) => {
+                                  return (
+                                    <option
+                                      className="p-0"
+                                      key={index}
+                                      value={state}
+                                    >
+                                      {t(status[state].toLowerCase())}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            ) : (
+                              <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
+                                {t(status[listing.statusId].toLowerCase())}
+                              </h1>
+                            )}
+                          </div>
                         </td>
-                      )}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-center">
-                          <div
-                            className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                              listing.statusId
-                            )} mr-2`}
-                          ></div>
-                          {viewAllListings ? (
-                            <select
-                              className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5"
-                              onChange={(e) =>
-                                handleChangeInStatus(e.target.value, listing)
-                              }
-                              value={listing.statusId || 0}
-                              style={{ fontFamily: "Poppins, sans-serif" }}
-                            >
-                              {Object.keys(status).map((state, index) => {
-                                return (
-                                  <option
-                                    className="p-0"
-                                    key={index}
-                                    value={state}
-                                  >
-                                    {t(status[state].toLowerCase())}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          ) : (
-                            <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                              {t(status[listing.statusId].toLowerCase())}
-                            </h1>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
             {pageNo !== 1 ? (
@@ -695,7 +750,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 
