@@ -336,12 +336,14 @@ function AddNewProducts() {
                 }
 
             case "minCount":
-                if (name === "inventory" && (!value || isNaN(value))) {
-                    return t("pleaseEnterValidInventory");
-                } else if (name === "minCount" && (!value || isNaN(value))) {
+                if (name === "minCount" && (!value || isNaN(value))) {
                     return t("pleaseEnterValidMinCount");
-                } else if (parseInt(input.inventory) <= parseInt(input.minCount)) {
-                    return t("minCountShouldBeGreaterThanInventory");
+                } else if (name === "inventory" && (!value || isNaN(value))) {
+                    return t("pleaseEnterValidInventory");
+                } else if (
+                    parseInt(input.minCount) >= parseInt(input.inventory)
+                ) {
+                    return t("minCountShouldBeLessThanInventory");
                 } else {
                     return "";
                 }
@@ -910,7 +912,7 @@ function AddNewProducts() {
                             htmlFor="place"
                             className="block text-sm font-medium text-gray-600"
                         >
-                            {t("inventory")} *
+                            {t("maxInventory")} *
                         </label>
                         <input
                             type="text"

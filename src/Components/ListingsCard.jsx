@@ -42,9 +42,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
           window.location.href = listing.website;
         }
       }}
-      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-shadow duration-300 ease-in-out"
+      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
     >
-      <div className="block relative h-64 rounded-t-lg overflow-hidden">
+      <div className="relative h-full w-full overflow-hidden rounded-lg">
         {listing.pdf ? (
           <PdfThumbnail
             pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
@@ -52,7 +52,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         ) : listing.logo ? (
           <img
             alt="Listing"
-            className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+            className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
             src={
               listing.sourceId === 1
                 ? process.env.REACT_APP_BUCKET_HOST + listing.logo
@@ -65,86 +65,83 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         ) : (
           <img
             alt="Listing"
-            className="object-cover object-center w-full h-full block hover:scale-125 transition-all duration-1000"
+            className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
             src={LISTINGSIMAGE}
           />
         )}
-      </div>
 
-      <div className="px-2 border-t-8 border-slate-500">
-        <div className="mt-5 px-2">
-          <h2
-            className="text-start font-bold text-slate-800 truncate"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            {listing.title}
-          </h2>
-        </div>
-
-        {listing.id && listing.categoryId === 3 ? (
-          <div
-            className="text-start items-start"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            <p
-              className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+        <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%)' }}>
+          <div className="mt-5 px-2">
+            <h2
+              className="text-start text-lg md:text-2xl font-bold text-white truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
-              {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-                "de-DE"
-              )}{" "}
-              (
-              {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
-                "de-DE",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  timeZone: "Europe/Berlin",
-                }
-              )}
-              )
-              {listing.endDate && (
-                <>
-                  <span className="text-slate-500"> {t("To")} </span>
-                  {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                    "de-DE"
-                  )}{" "}
-                  (
-                  {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
-                    "de-DE",
-                    {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      timeZone: "Europe/Berlin",
-                    }
-                  )}
-                  )
-                </>
-              )}
-            </p>
+              {listing.title}
+            </h2>
           </div>
-        ) : (
-          <p
-            className="text-slate-500 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-            dangerouslySetInnerHTML={{
-              __html: listing.description,
-            }}
-          />
-        )}
-      </div>
 
-      <div className="px-2">
-        <div className="my-2 px-2">
-          <h2
-            className="flex text-slate-500 title-font text-start text-sm font-semibold text-center font-special truncate"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            {new Date(listing.createdAt).toLocaleDateString('en-GB')}
-          </h2>
+          {listing.id && listing.categoryId === 3 ? (
+            <div
+              className="text-start items-start"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              <p
+                className="text-white p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
+                  "de-DE"
+                )}{" "}
+                (
+                {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                  "de-DE",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZone: "Europe/Berlin",
+                  }
+                )}
+                )
+                {listing.endDate && (
+                  <>
+                    <span className="text-white"> {t("To")} </span>
+                    {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
+                      "de-DE"
+                    )}{" "}
+                    (
+                    {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                      "de-DE",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        timeZone: "Europe/Berlin",
+                      }
+                    )}
+                    )
+                  </>
+                )}
+              </p>
+            </div>
+          ) : (
+            <p
+              className="text-white p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+              dangerouslySetInnerHTML={{
+                __html: listing.description,
+              }}
+            />
+          )}
+
+          <div className="my-2 px-2">
+            <h2
+              className="flex text-white title-font text-start text-sm font-semibold text-center font-special truncate"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {new Date(listing.createdAt).toLocaleDateString('en-GB')}
+            </h2>
+          </div>
         </div>
       </div>
-
     </div>
   );
 }
