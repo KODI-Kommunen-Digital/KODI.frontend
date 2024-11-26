@@ -80,7 +80,7 @@ const AllProductRequestsDetails = () => {
     }, [productDetails]);
 
     useEffect(() => {
-        if (storeId) {
+        if (storeId && product) {
             getShelves(cityId, storeId).then((response) => {
                 const filteredShelves = response.data.data.filter((shelf) => {
                     if (product?.status === 1 || product?.status === 2) {
