@@ -84,9 +84,15 @@ const AllProductRequestsDetails = () => {
             getShelves(cityId, storeId).then((response) => {
                 const filteredShelves = response.data.data.filter((shelf) => {
                     if (product?.status === 1 || product?.status === 2) {
-                        return shelf.productId !== null && (shelf.productId === product.productId || shelf.productId === null);
+                        return (
+                            shelf.productId !== null &&
+                            (shelf.productId === product.productId || shelf.product === null)
+                        );
                     }
-                    return shelf.productId === null || shelf.product?.id === product.productId;
+                    return (
+                        shelf.product === null ||
+                        (shelf.product && shelf.product.id === product.productId)
+                    );
                 });
 
                 setShelves(filteredShelves);
@@ -178,7 +184,7 @@ const AllProductRequestsDetails = () => {
 
             <div className="container w-auto md:px-2 md:py-2 bg-gray-800 md:min-h-screen flex items-center justify-center">
                 <div className="h-full bg-gray-200 shadow-md px-2 py-2 md:rounded-lg overflow-hidden text-center relative">
-                    <div className="max-w-6xl bg-white mx-auto px-4 py-4 md:rounded-lg">
+                    <div className="max-w-6xl bg-white mx-auto px-4 py-4 md:rounded-lg ">
                         <div className="flex flex-col md:flex-row -mx-4">
                             {product && (
                                 <div key={product.id} className="mb-6 px-4">
