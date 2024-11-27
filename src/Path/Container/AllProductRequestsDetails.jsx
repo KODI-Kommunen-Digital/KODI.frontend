@@ -69,7 +69,7 @@ const AllProductRequestsDetails = () => {
     };
 
     const location = useLocation();
-    const { productsMap, cityId, storeId, productDetails } = location.state || {};
+    const { cityId, storeId, productDetails } = location.state || {};
 
     useEffect(() => {
         if (productDetails) {
@@ -83,12 +83,15 @@ const AllProductRequestsDetails = () => {
         if (storeId && product) {
             getShelves(cityId, storeId).then((response) => {
                 const filteredShelves = response.data.data.filter((shelf) => {
+                    console.log("product" + product.productId)
                     if (product?.status === 1 || product?.status === 2) {
+                        console.log("status" + product.status)
                         return (
                             shelf.productId !== null &&
-                            (shelf.productId === product.productId || shelf.product === null)
+                            (shelf.productId === product.productId)
                         );
                     }
+                    console.log("product1" + product.productId)
                     return (
                         shelf.product === null ||
                         (shelf.product && shelf.product.id === product.productId)
@@ -214,12 +217,9 @@ const AllProductRequestsDetails = () => {
                                             <div className="py-4">
                                                 <img
                                                     className="object-cover text-center h-full w-full max-h-96 max-w-96"
-                                                    src={
-                                                        productsMap[product.productId]?.productImages &&
-                                                            productsMap[product.productId].productImages.length > 0
-                                                            ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
-                                                            : `${process.env.REACT_APP_BUCKET_HOST}admin/Container/ShoppingCart.png`
-                                                    }
+                                                    src={product.productImages && product.productImages.length > 0
+                                                        ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0]
+                                                        : process.env.REACT_APP_BUCKET_HOST + "admin/Container/ShoppingCart.png"}
                                                     onError={(e) => {
                                                         e.target.src = CONTAINERIMAGE;
                                                     }}

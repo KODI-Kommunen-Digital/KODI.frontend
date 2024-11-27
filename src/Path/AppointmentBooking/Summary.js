@@ -7,8 +7,9 @@ import { createBookings } from "../../Services/appointmentBookingApi";
 const Summary = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
-  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
-  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
+  const version = process.env.REACT_APP_FORNTENDVERSION || "1";
+  const HomePageNavBar =
+    require(`../../Components/V${version}/HomePageNavBar`).default;
   const { state } = useLocation();
   const [updating, setUpdating] = useState(false);
   const bookingData = state.bookingData;
@@ -27,6 +28,16 @@ const Summary = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
+    const accessToken =
+      window.localStorage.getItem("accessToken") ||
+      window.sessionStorage.getItem("accessToken");
+    const refreshToken =
+      window.localStorage.getItem("refreshToken") ||
+      window.sessionStorage.getItem("refreshToken");
+    if (!accessToken && !refreshToken) {
+      navigate("/login");
+    }
+
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
@@ -40,11 +51,18 @@ const Summary = () => {
 
     try {
       setUpdating(true);
-      const response = await createBookings(cityId, listingId, appointmentId, bookingData);
+      const response = await createBookings(
+        cityId,
+        listingId,
+        appointmentId,
+        bookingData
+      );
       console.log("Booking created:", response);
       setIsSuccess(true); // Set isSuccess to true upon successful submission
       setUpdating(false);
-      navigate("/AppointmentBooking/BookAppointments/BookingSuccessConfirmation");
+      navigate(
+        "/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+      );
     } catch (error) {
       console.error("Error creating booking:", error);
       setIsSuccess(false); // Set isSuccess to false upon failed submission
@@ -52,6 +70,8 @@ const Summary = () => {
       setUpdating(false);
     }
   };
+
+  console.log(bookingData);
 
   return (
     <section className="bg-zinc-100 body-font relative">
@@ -68,7 +88,9 @@ const Summary = () => {
           <div className="lg:w-full border-2 border-slate-800 rounded-xl w-full h-full">
             <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
               <p className="font-sans font-bold text-slate-800  mb-4 md:mb-1 text-md title-font">
-                {bookingData.guestDetails.firstname + " " + bookingData.guestDetails.lastname}
+                {bookingData.guestDetails.firstname +
+                  " " +
+                  bookingData.guestDetails.lastname}
               </p>
               <p className="font-sans font-semibold text-black mb-4 md:mb-1 text-sm title-font">
                 {bookingData.guestDetails.email}
@@ -82,7 +104,10 @@ const Summary = () => {
 
         {/* Friends Details */}
         {bookingData.friends.map((friend, index) => (
-          <div key={index} className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center">
+          <div
+            key={index}
+            className="max-w-2xl gap-y-4 py-5 px-4 lg:max-w-7xl mx-auto flex flex-col items-center"
+          >
             <div className="lg:w-full border-2 border-slate-800 rounded-xl w-full h-full">
               <div className="bg-white md:grid md:gap-6 rounded-xl p-8 flex flex-col shadow-xl w-full">
                 <p className="font-sans font-bold text-slate-800  mb-4 md:mb-1 text-md title-font">
@@ -101,11 +126,27 @@ const Summary = () => {
             <a
               onClick={handleSubmit}
               disabled={updating || isSuccess}
-              className="bg-slate-800 relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-slate-800 rounded-full shadow-md group cursor-pointer">
+              className="bg-slate-800 relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-slate-800 rounded-full shadow-md group cursor-pointer"
+            >
               <span className="absolute inset-0 flex items-center justify-center w-full h-full text-slate-800 duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  ></path>
+                </svg>
               </span>
-              <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">{t("confirm")}</span>
+              <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                {t("confirm")}
+              </span>
               <span className="relative invisible">
                 {t("confirm")}
 
@@ -132,19 +173,33 @@ const Summary = () => {
 
             <a
               onClick={() =>
-                navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`)
+                navigateTo(
+                  `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}&appointmentId=${appointmentId}`
+                )
               }
               disabled={updating}
-              className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-slate-800 transition duration-300 ease-out border-2 border-slate-800 rounded-full shadow-md group cursor-pointer">
+              className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-slate-800 transition duration-300 ease-out border-2 border-slate-800 rounded-full shadow-md group cursor-pointer"
+            >
               <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-slate-800 group-hover:-translate-x-0 ease">
-                <svg className="w-6 h-6 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                <svg
+                  className="w-6 h-6 transform rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  ></path>
                 </svg>
               </span>
-              <span className="absolute flex items-center justify-center w-full h-full text-slate-800 transition-all duration-300 transform group-hover:-translate-x-full ease">{t("goBack")}</span>
-              <span className="relative invisible">
+              <span className="absolute flex items-center justify-center w-full h-full text-slate-800 transition-all duration-300 transform group-hover:-translate-x-full ease">
                 {t("goBack")}
               </span>
+              <span className="relative invisible">{t("goBack")}</span>
             </a>
           </div>
         </div>

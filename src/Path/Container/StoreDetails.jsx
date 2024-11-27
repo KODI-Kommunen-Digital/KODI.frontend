@@ -20,16 +20,23 @@ const SellerScreen = () => {
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
-                const roleResponse = await getUserRoleContainer();
-                let roles = roleResponse.data.data;
-                roles = roles.map(Number);
-                if (roles.includes(101)) {
-                    setIsOwner(true);
-                } else {
-                    setIsOwner(false);
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
                 }
-            } catch (error) {
-                console.error("Error fetching user roles:", error);
+
+                const roleResponse = await getUserRoleContainer();
+                const roles = roleResponse.data.data.map(Number);
+
+                setIsOwner(roles.includes(101));
+            } catch {
                 navigate("/Error");
             }
         };

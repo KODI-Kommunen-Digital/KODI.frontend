@@ -4,11 +4,13 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 import { getOrderDetails } from "../../Services/containerApi";
+import { useNavigate } from "react-router-dom";
 
 const OrderDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [orders, setOrders] = useState(null);
+    const navigate = useNavigate();
 
     const fetchProducts = useCallback((orderId) => {
         getOrderDetails(orderId).then((response) => {
@@ -19,6 +21,15 @@ const OrderDetails = () => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+        }
         const orderId = parseInt(urlParams.get("orderId"));
         if (orderId) {
             fetchProducts(orderId);
