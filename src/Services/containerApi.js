@@ -225,19 +225,19 @@ export async function getProductsForShelf(storeId) {
 
 export async function getProducts(storeId, pageNumber, status) {
   return axios.get(
-    `/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sortDesc=true&sort=createdAt`
+    `/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 
 export async function getSellerProducts(storeId, pageNumber, status) {
   return axios.get(
-    `/v1/seller/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sortDesc=true&sort=createdAt`
+    `/v1/seller/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 
 export async function getProductRequests(storeId, pageNumber, status) {
   return axios.get(
-    `/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sortDesc=true&sort=createdAt`
+    `/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 

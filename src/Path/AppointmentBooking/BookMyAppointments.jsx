@@ -153,6 +153,16 @@ function BookMyAppointments() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+        }
+
         const bookingId = searchParams.get("bookingId");
         getCategory().then((response) => {
             const catList = {};

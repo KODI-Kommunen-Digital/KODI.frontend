@@ -45,19 +45,31 @@ function Shelves() {
     };
 
     const [isOwner, setIsOwner] = useState(null);
+
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
+
                 const roleResponse = await getUserRoleContainer();
-                let roles = roleResponse.data.data;
-                roles = roles.map(Number);
+                const roles = roleResponse.data.data.map(Number);
+
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
                     setIsOwner(false);
                 }
             } catch (error) {
-                console.error("Error fetching user roles:", error);
                 navigate("/Error");
             }
         };

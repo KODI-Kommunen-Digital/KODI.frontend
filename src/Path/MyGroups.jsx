@@ -30,6 +30,16 @@ const MyGroups = () => {
   }, []);
 
   useEffect(() => {
+    const accessToken =
+      window.localStorage.getItem("accessToken") ||
+      window.sessionStorage.getItem("accessToken");
+    const refreshToken =
+      window.localStorage.getItem("refreshToken") ||
+      window.sessionStorage.getItem("refreshToken");
+    if (!accessToken && !refreshToken) {
+      navigate("/login");
+    }
+
     if (pageNo === 1) {
       fetchForums();
     } else {

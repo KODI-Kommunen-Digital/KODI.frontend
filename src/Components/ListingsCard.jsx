@@ -86,7 +86,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               <p
-                className="text-white p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+                className="text-white my-2 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
@@ -124,7 +124,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             </div>
           ) : (
             <p
-              className="text-white p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
+              className="text-white my-2 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
               dangerouslySetInnerHTML={{
                 __html: listing.description,
@@ -132,14 +132,14 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             />
           )}
 
-          <div className="my-2 px-2">
+          {/* <div className="my-2 px-2">
             <h2
               className="flex text-white title-font text-start text-sm font-semibold text-center font-special truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {new Date(listing.createdAt).toLocaleDateString('en-GB')}
             </h2>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

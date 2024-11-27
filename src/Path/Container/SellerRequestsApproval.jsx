@@ -137,6 +137,17 @@ const SellerRequestsApproval = () => {
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);

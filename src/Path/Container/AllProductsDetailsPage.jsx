@@ -3,17 +3,28 @@ import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import "../../index.css";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AllProductsDetailsPage = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [product, setProduct] = useState(null);
-
+    const navigate = useNavigate();
     const location = useLocation();
     const { productDetails } = location.state || {};
 
     useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+            return;
+        }
         if (productDetails) {
             setProduct(productDetails);
         }

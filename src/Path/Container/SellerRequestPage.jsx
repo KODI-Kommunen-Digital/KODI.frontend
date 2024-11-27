@@ -91,6 +91,18 @@ function SellerRequestPage() {
     };
 
     useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+            return;
+        }
+
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });

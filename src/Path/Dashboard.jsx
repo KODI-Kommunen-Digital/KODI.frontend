@@ -94,8 +94,6 @@ const Dashboard = () => {
         setViewAllListings(false);
       }
     });
-
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("dashboard");
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {

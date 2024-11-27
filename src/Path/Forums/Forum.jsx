@@ -37,6 +37,7 @@ const Forum = () => {
 			navigate(path);
 		}
 	};
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
 		if (cityId && forumId) {
@@ -71,6 +72,15 @@ const Forum = () => {
 				});
 			}
 			try {
+				const accessToken =
+					window.localStorage.getItem("accessToken") ||
+					window.sessionStorage.getItem("accessToken");
+				const refreshToken =
+					window.localStorage.getItem("refreshToken") ||
+					window.sessionStorage.getItem("refreshToken");
+
+				setIsLoggedIn(!!accessToken || !!refreshToken);
+
 				const response = await getUserForumsMembership(cityIdParam, forumIdParam);
 				const isMember = response.data.isMember;
 				setMemberStatus(isMember);
@@ -191,7 +201,15 @@ const Forum = () => {
 					</div>
 
 					<div className="text-center justify-between lg:px-10 md:px-5 sm:px-0 px-4 md:py-6 py-4 bg-gray-50">
-						{forum.isPrivate && !memberStatus ? (
+						{!isLoggedIn ? (
+							<div className="w-full items-center text-center justify-center">
+								<p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+									style={{ fontFamily: "Poppins, sans-serif" }}
+									onClick={() => navigateTo("/login")}>
+									{t("pleaseLogin")}
+								</p>
+							</div>
+						) : forum.isPrivate && !memberStatus ? (
 							<a
 								onClick={requestId ? handleLeaveRequest : handleFollowRequest}
 								className={`mx-8 mb-2 w-60 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-red-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer`}
