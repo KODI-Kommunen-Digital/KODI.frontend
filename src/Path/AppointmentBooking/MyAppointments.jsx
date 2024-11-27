@@ -22,6 +22,16 @@ const MyAppointments = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
+    const accessToken =
+      window.localStorage.getItem("accessToken") ||
+      window.sessionStorage.getItem("accessToken");
+    const refreshToken =
+      window.localStorage.getItem("refreshToken") ||
+      window.sessionStorage.getItem("refreshToken");
+    if (!accessToken && !refreshToken) {
+      navigate("/login");
+    }
+
     const appointmentId = urlParams.get('appointmentId');
 
     getOwnerAppointments({

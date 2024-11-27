@@ -106,12 +106,27 @@ function AllSellers() {
     };
 
     const [isOwner, setIsOwner] = useState(null);
+
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
+
+                // Proceed to fetch user roles
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);
+
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
@@ -131,6 +146,7 @@ function AllSellers() {
             navigate("/Error");
         }
     }, [isOwner, navigate]);
+
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

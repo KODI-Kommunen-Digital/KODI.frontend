@@ -114,6 +114,15 @@ function CreateGroup() {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		const accessToken =
+			window.localStorage.getItem("accessToken") ||
+			window.sessionStorage.getItem("accessToken");
+		const refreshToken =
+			window.localStorage.getItem("refreshToken") ||
+			window.sessionStorage.getItem("refreshToken");
+		if (!accessToken && !refreshToken) {
+			navigate("/login");
+		}
 		var cityId = searchParams.get("cityId");
 		setCityId(cityId);
 		var forumId = searchParams.get("forumId");

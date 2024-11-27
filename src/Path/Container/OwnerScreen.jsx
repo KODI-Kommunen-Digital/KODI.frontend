@@ -18,13 +18,26 @@ const OwnerScreen = () => {
     };
 
     const [isOwner, setIsOwner] = useState(null);
+
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
+
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);
-                console.log("roles" + roles)
+
                 if (roles.includes(101)) {
                     setIsOwner(true);
                 } else {
@@ -44,6 +57,7 @@ const OwnerScreen = () => {
             navigate("/Error");
         }
     }, [isOwner, navigate]);
+
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

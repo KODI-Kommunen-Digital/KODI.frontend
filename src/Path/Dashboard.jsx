@@ -94,30 +94,6 @@ const Dashboard = () => {
         setViewAllListings(false);
       }
     });
-    if (window.location.pathname === "/Dashboard") {
-      setViewAllListings(false);
-    } else {
-      setViewAllListings(true);
-    }
-
-    // if (viewAllListings === true) {
-    //   getListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
-    // if (viewAllListings === false) {
-    //   getUserListings({
-    //     statusId: selectedStatus,
-    //     pageNo,
-    //     cityId,
-    //   }).then((response) => {
-    //     setListings(response.data.data);
-    //   });
-    // }
   }, [window.location.pathname]);
 
   const fetchListings = useCallback(() => {

@@ -28,6 +28,18 @@ function AllProducts() {
   }, []);
 
   useEffect(() => {
+    const accessToken =
+      window.localStorage.getItem("accessToken") ||
+      window.sessionStorage.getItem("accessToken");
+    const refreshToken =
+      window.localStorage.getItem("refreshToken") ||
+      window.sessionStorage.getItem("refreshToken");
+
+    if (!accessToken && !refreshToken) {
+      navigate("/login");
+      return;
+    }
+
     if (storeId) {
       setPageNumber(1);
       const selectedStore = stores.find(store => store.id === parseInt(storeId));
