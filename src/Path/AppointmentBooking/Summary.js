@@ -71,8 +71,6 @@ const Summary = () => {
     }
   };
 
-  console.log(bookingData);
-
   return (
     <section className="bg-zinc-100 body-font relative">
       <HomePageNavBar />
