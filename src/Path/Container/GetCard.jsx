@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
@@ -29,6 +29,18 @@ function GetCard() {
         cardNumber: "",
         pinCode: "",
     });
+
+    useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+        if (!accessToken && !refreshToken) {
+            window.location.href = "/login";
+        }
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

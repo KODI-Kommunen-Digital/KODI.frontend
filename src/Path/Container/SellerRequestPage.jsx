@@ -64,7 +64,7 @@ function SellerRequestPage() {
 
                 setTimeout(() => {
                     setSuccessMessage(false);
-                    navigate("/OwnerScreen");
+                    navigate("/CustomerScreen");
                 }, 5000);
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -76,6 +76,8 @@ function SellerRequestPage() {
                         setErrorMessage(t("alreadySellerOfThisStore"));
                     } else {
                         setErrorMessage(t("changesNotSaved"));
+                        setSuccessMessage(false);
+                        setTimeout(() => setErrorMessage(false), 5000);
                     }
                 } else {
                     setErrorMessage(t("changesNotSaved"));
@@ -91,6 +93,18 @@ function SellerRequestPage() {
     };
 
     useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+            return;
+        }
+
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });

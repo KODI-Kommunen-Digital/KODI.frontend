@@ -18,7 +18,7 @@ const PaymentStatus = () => {
     const handleCardChange = async (event) => {
         const cardId = event.target.value;
         setCardId(cardId);
-        setPageNo(1); // Reset page number when a new card is selected
+        setPageNo(1);
 
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set("cardId", cardId);
@@ -43,6 +43,18 @@ const PaymentStatus = () => {
     }, []);
 
     useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+            return;
+        }
+
         fetchCards();
     }, [fetchCards]);
 

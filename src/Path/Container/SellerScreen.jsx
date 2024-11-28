@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../../Components/SideBar";
 import "../../index.css";
@@ -15,6 +15,18 @@ const SellerScreen = () => {
             navigate(path);
         }
     };
+
+    useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+        }
+    }, []);
 
     return (
         <section className="bg-gray-800 body-font relative h-screen">

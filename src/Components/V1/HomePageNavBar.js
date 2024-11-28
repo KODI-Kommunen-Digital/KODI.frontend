@@ -35,8 +35,7 @@ export default function HomePageNavBar() {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken }).then(() => {
-      }).finally(() => {
+      logout({ accesToken: accessToken, refreshToken }).finally(() => {
         clearStorage();
       });
     } else {
@@ -113,7 +112,9 @@ export default function HomePageNavBar() {
                   //     navigateTo("/login");
                   //   }
                   // }}
-                  onClick={() => { navigateTo("/Favorite"); }}
+                  onClick={() => {
+                    navigateTo("/Favorite");
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +196,9 @@ export default function HomePageNavBar() {
                   {isLoggedIn && (
                     <a
                       className="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
-                      onClick={() => { navigateTo("/Favorite"); }}
+                      onClick={() => {
+                        navigateTo("/Favorite");
+                      }}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

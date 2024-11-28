@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getUserBookings, deleteUserBooking } from "../../Services/appointmentBookingApi";
 import { getListings } from "../../Services/listingsApi";
+import { useNavigate } from "react-router-dom";
 
 const MyBookings = () => {
   const { t } = useTranslation();
   const [bookings, setUserBookings] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const pageSize = 9;
+  const navigate = useNavigate();
 
   const fetchUserBookings = useCallback(() => {
     getUserBookings({
@@ -42,6 +44,16 @@ const MyBookings = () => {
   }, [pageNumber]);
 
   useEffect(() => {
+    const accessToken =
+      window.localStorage.getItem("accessToken") ||
+      window.sessionStorage.getItem("accessToken");
+    const refreshToken =
+      window.localStorage.getItem("refreshToken") ||
+      window.sessionStorage.getItem("refreshToken");
+    if (!accessToken && !refreshToken) {
+      navigate("/login");
+    }
+
     fetchUserBookings();
   }, [fetchUserBookings, pageNumber]);
 

@@ -195,6 +195,15 @@ const OrdersSold = () => {
 
 
     useEffect(() => {
+        const accessToken =
+            window.localStorage.getItem("accessToken") ||
+            window.sessionStorage.getItem("accessToken");
+        const refreshToken =
+            window.localStorage.getItem("refreshToken") ||
+            window.sessionStorage.getItem("refreshToken");
+        if (!accessToken && !refreshToken) {
+            navigate("/login");
+        }
         if (orderStartDate && orderEndDate) {
             fetchOrdersSold();
         }
@@ -220,7 +229,7 @@ const OrdersSold = () => {
 
                     {ordersSold && ordersSold.length > 0 ? (
                         <>
-                            <div className="h-full bg-gray-200 shadow-md px-2 py-2 md:rounded-lg overflow-hidden text-center relative">
+                            <div>
                                 <SellerStatistics totalRevenue={totalRevenue} topProductNameByQuantity={topProductNameByQuantity} totalQuantitySold={totalQuantitySold} averagePricePerQuantity={averagePricePerQuantity} />
 
                                 <div className="bg-white mt-4 p-0">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { useNavigate } from 'react-router-dom';
-import { getProductRequests, getOwnerShops, getUserRoleContainer, getProductById } from "../../Services/containerApi";
+import { getProductRequests, getOwnerShops, getUserRoleContainer } from "../../Services/containerApi";
 import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
 import { FaEye } from 'react-icons/fa';
@@ -18,7 +18,6 @@ function AllProductRequests() {
     const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
-    const [productsMap, setProductsMap] = useState({});
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -54,21 +53,6 @@ function AllProductRequests() {
                 const response = await getProductRequests(storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
-
-                allRequests.forEach(async (product) => {
-                    try {
-                        const productDetailsResponse = await getProductById(cityId, storeId, product.productId);
-                        const productDetails = productDetailsResponse.data.data;
-
-                        // Store each product’s details in productsMap, keyed by productId
-                        setProductsMap(prevProductsMap => ({
-                            ...prevProductsMap,
-                            [product.productId]: productDetails
-                        }));
-                    } catch (error) {
-                        console.error(`Error fetching product details for product ID ${product.productId}:`, error);
-                    }
-                });
             } catch (error) {
                 console.error("Error fetching product requests:", error);
             }
@@ -131,6 +115,17 @@ function AllProductRequests() {
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);
@@ -159,8 +154,7 @@ function AllProductRequests() {
             state: {
                 productDetails: product,
                 storeId: storeId,
-                cityId: cityId,
-                productsMap: productsMap
+                cityId: cityId
             }
         });
     };
@@ -278,7 +272,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -288,7 +282,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -298,38 +292,28 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("count")}
                                                 </th>
 
-                                                {/* <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("selectShelf")}
-                                            </th> */}
-                                                {/* <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("shelfName")}
-                                            </th> */}
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
+                                                    }}
+                                                >
+                                                    {t("minAge")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -351,10 +335,11 @@ function AllProductRequests() {
                                                         <img
                                                             className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                                                             src={
-                                                                productsMap[product.productId]?.productImages &&
-                                                                    productsMap[product.productId].productImages.length > 0
-                                                                    ? `${process.env.REACT_APP_BUCKET_HOST}${productsMap[product.productId].productImages[0]}`
-                                                                    : CONTAINERIMAGE
+                                                                product.productImages
+                                                                    ? process.env.REACT_APP_BUCKET_HOST +
+                                                                    product.productImages[0]
+                                                                    : process.env.REACT_APP_BUCKET_HOST +
+                                                                    "admin/Container/ShoppingCart.png"
                                                             }
                                                             onError={(e) => {
                                                                 e.target.src = CONTAINERIMAGE;
@@ -384,22 +369,12 @@ function AllProductRequests() {
                                                         {product.count}
                                                     </td>
 
-                                                    {/* <td className="px-6 py-4">
-
-                                                    <select
-                                                        className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                                        onChange={(e) => handleShelfChange(product.id, e.target.value)}
-                                                        value={product.shelfId || ''}
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    <td
+                                                        className={`px-6 py-4 text-center font-bold text-blue-600`}
+                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        <option value="">{t("shelfName")}</option>
-                                                        {shelves.map((shelf) => (
-                                                            <option key={shelf.id} value={shelf.id}>
-                                                                {shelf.title}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </td> */}
+                                                        {product.minAge != null ? product.minAge : 0}
+                                                    </td>
 
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
