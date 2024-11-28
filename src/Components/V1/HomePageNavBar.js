@@ -35,11 +35,9 @@ export default function HomePageNavBar() {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken })
-        .then(() => {})
-        .finally(() => {
-          clearStorage();
-        });
+      logout({ accesToken: accessToken, refreshToken }).finally(() => {
+        clearStorage();
+      });
     } else {
       navigateTo("/login");
     }
