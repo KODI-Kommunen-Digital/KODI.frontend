@@ -43,6 +43,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
+        minAge: "",
         // removeImage: false,
         // // hasAttachment: false,
     });
@@ -59,6 +60,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
+        minAge: "",
     });
 
     const handleSubmit = async (event) => {
@@ -353,6 +355,15 @@ function AddNewProducts() {
                     parseInt(input.minCount) >= parseInt(input.inventory)
                 ) {
                     return t("minCountShouldBeLessThanInventory");
+                } else {
+                    return "";
+                }
+
+            case "minAge":
+                if (!value) {
+                    return t("pleaseEnterAgeLimit");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -928,32 +939,70 @@ function AddNewProducts() {
                         </div>
                     </div>
 
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("maxInventory")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="inventory"
-                            name="inventory"
-                            value={input.inventory}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            disabled={updating || isSuccess}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterTotalNumber")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.inventory ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.inventory}
+                    <div className="relative mb-4 grid grid-cols-2 gap-4">
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="place"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("maxInventory")} *
+                            </label>
+                            <input
+                                type="text"
+                                id="inventory"
+                                name="inventory"
+                                value={input.inventory}
+                                onChange={onInputChange}
+                                onBlur={validateInput}
+                                disabled={updating || isSuccess}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterTotalNumber")}
+                            />
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.inventory ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.inventory}
+                            </div>
+                        </div>
+
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="place"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("minAge")} *
+                            </label>
+                            <input
+                                type="number"
+                                id="minAge"
+                                name="minAge"
+                                value={input.minAge}
+                                onChange={(e) =>
+                                    onInputChange({
+                                        target: {
+                                            name: e.target.name,
+                                            value: parseInt(e.target.value) || "",
+                                        },
+                                    })
+                                }
+                                onBlur={validateInput}
+                                disabled={updating || isSuccess}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterAgeLimit")}
+                            />
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.minAge ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.minAge}
+                            </div>
                         </div>
                     </div>
 

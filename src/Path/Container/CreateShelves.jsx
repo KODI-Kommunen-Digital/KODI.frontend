@@ -198,8 +198,8 @@ function CreateShelves() {
                 }
 
             case "productId":
-                if (!parseInt(value)) {
-                    return t("pleaseSelectProduct");
+                if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -435,7 +435,7 @@ function CreateShelves() {
                                         htmlFor="title"
                                         className="block text-sm font-medium text-gray-600"
                                     >
-                                        {t("product")} *
+                                        {t("product")}
                                     </label>
                                     <select
                                         type="text"
@@ -456,7 +456,7 @@ function CreateShelves() {
                                     <div
                                         className="h-[24px] text-red-600"
                                         style={{
-                                            visibility: error.productId ? "visible" : "hidden",
+                                            visibility: error.productId && productId ? "visible" : "hidden",
                                         }}
                                     >
                                         {error.productId}

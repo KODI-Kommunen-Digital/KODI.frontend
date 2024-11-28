@@ -951,6 +951,8 @@
     "allProductRequests": "All Product Requests",
     "pleaseSelectAtLeastOneShelf": "Please select atleast one shelf to proceed",
     "minCountShouldBeLessThanInventory": "Minimum count should be lesser than Inventory",
-    "pleaseEnterValidMinCount": "Please enter a minimum count"
+    "pleaseEnterValidMinCount": "Please enter a minimum count",
+    "minAge": "Age Limitation",
+    "pleaseEnterAgeLimit": "Please enter the age limit for the product purchase"
 
 }
