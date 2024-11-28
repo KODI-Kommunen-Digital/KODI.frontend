@@ -30,6 +30,7 @@ function AddNewProducts() {
     const [loading, setLoading] = useState(true);
     const [categoryLoading, setCategoryLoading] = useState(false);
     const [subCategoryLoading, setSubCategoryLoading] = useState(false);
+    const CHARACTER_LIMIT = 255;
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -43,6 +44,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
+        minAge: "",
         // removeImage: false,
         // // hasAttachment: false,
     });
@@ -59,6 +61,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
+        minAge: "",
     });
 
     const handleSubmit = async (event) => {
@@ -244,6 +247,23 @@ function AddNewProducts() {
         const hasBulletList = newContent.includes("<ul>");
         let descriptions = [];
         let listType = "";
+
+        const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+        const characterCount = plainText.length;
+
+        if (characterCount > CHARACTER_LIMIT) {
+            setError((prev) => ({
+                ...prev,
+                description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+            }));
+            return;
+        } else {
+            setError((prev) => ({
+                ...prev,
+                description: "",
+            }));
+        }
+
         if (hasNumberedList) {
             const regex = /<li>(.*?)(?=<\/li>|$)/gi;
             const matches = newContent.match(regex);
@@ -259,7 +279,6 @@ function AddNewProducts() {
             descriptions = descriptions.map((description) => `- ${description}`);
             listType = "ul";
         } else {
-            // No list tags found, treat the input as plain text
             setInput((prev) => ({
                 ...prev,
                 description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
@@ -267,9 +286,11 @@ function AddNewProducts() {
             setDescription(newContent);
             return;
         }
+
         const listHTML = `<${listType}>${descriptions
             .map((description) => `<li>${description}</li>`)
             .join("")}</${listType}>`;
+
         setInput((prev) => ({
             ...prev,
             description: listHTML,
@@ -353,6 +374,15 @@ function AddNewProducts() {
                     parseInt(input.minCount) >= parseInt(input.inventory)
                 ) {
                     return t("minCountShouldBeLessThanInventory");
+                } else {
+                    return "";
+                }
+
+            case "minAge":
+                if (!value) {
+                    return t("pleaseEnterAgeLimit");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
                 } else {
                     return "";
                 }
@@ -928,32 +958,70 @@ function AddNewProducts() {
                         </div>
                     </div>
 
-                    <div className="relative mb-4">
-                        <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
-                        >
-                            {t("maxInventory")} *
-                        </label>
-                        <input
-                            type="text"
-                            id="inventory"
-                            name="inventory"
-                            value={input.inventory}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            disabled={updating || isSuccess}
-                            required
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterTotalNumber")}
-                        />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.inventory ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.inventory}
+                    <div className="relative mb-4 grid grid-cols-2 gap-4">
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="place"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("maxInventory")} *
+                            </label>
+                            <input
+                                type="text"
+                                id="inventory"
+                                name="inventory"
+                                value={input.inventory}
+                                onChange={onInputChange}
+                                onBlur={validateInput}
+                                disabled={updating || isSuccess}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterTotalNumber")}
+                            />
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.inventory ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.inventory}
+                            </div>
+                        </div>
+
+                        <div className="relative mb-4">
+                            <label
+                                htmlFor="place"
+                                className="block text-sm font-medium text-gray-600"
+                            >
+                                {t("minAge")} *
+                            </label>
+                            <input
+                                type="number"
+                                id="minAge"
+                                name="minAge"
+                                value={input.minAge}
+                                onChange={(e) =>
+                                    onInputChange({
+                                        target: {
+                                            name: e.target.name,
+                                            value: parseInt(e.target.value) || "",
+                                        },
+                                    })
+                                }
+                                onBlur={validateInput}
+                                disabled={updating || isSuccess}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterAgeLimit")}
+                            />
+                            <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.minAge ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.minAge}
+                            </div>
                         </div>
                     </div>
 
@@ -971,7 +1039,7 @@ function AddNewProducts() {
                             ref={editor}
                             value={description}
                             onChange={(newContent) => onDescriptionChange(newContent)}
-                            onBlur={(range, source, editor) => {
+                            onBlur={(editor) => {
                                 validateInput({
                                     target: {
                                         name: "description",
@@ -987,13 +1055,20 @@ function AddNewProducts() {
                                 zIndex: 1000, // Higher than the sidebar
                             }}
                         />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.description ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.description}
+                        <div className="flex justify-between text-sm mt-1">
+                            <span
+                                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                    ? "h-[24px] text-red-600"
+                                    : "h-[24px] text-gray-500"
+                                    }`}
+                            >
+                                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                            </span>
+                            {error.description && (
+                                <span className="h-[24px] text-red-600">
+                                    {error.description}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>

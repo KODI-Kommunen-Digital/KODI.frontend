@@ -1004,6 +1004,10 @@
     "duplicate_shelf_name":"Duplicate shelf name",
     "max_chara_255":"Please enter no more than 255 characters",
     "minCountShouldBeLessThanInventory": "Minimum count should be lesser than Inventory",
-    "pleaseEnterValidMinCount": "Please enter a minimum count"
+    "pleaseEnterValidMinCount": "Please enter a minimum count",
+    "minAge": "Age Limitation",
+    "pleaseEnterAgeLimit": "Please enter the age limit for the product purchase",
+    "characterLimit": "characters",
+    "noShelvesMessage": "No shelves are present to assign this product"
 
 }
