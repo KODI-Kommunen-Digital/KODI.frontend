@@ -961,5 +961,7 @@
     "minCountShouldBeLessThanInventory": "Die Mindestanzahl sollte unter dem Inventar liegen",
     "pleaseEnterValidMinCount": "Bitte geben Sie eine Mindestanzahl ein",
     "minAge": "Altersbeschränkung",
-    "pleaseEnterAgeLimit": "Bitte geben Sie die Altersgrenze für den Produktkauf ein"
+    "pleaseEnterAgeLimit": "Bitte geben Sie die Altersgrenze für den Produktkauf ein",
+    "characterLimit": "Zeichen",
+    "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen"
 }

@@ -266,7 +266,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -276,7 +276,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -286,38 +286,28 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("count")}
                                                 </th>
 
-                                                {/* <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("selectShelf")}
-                                            </th> */}
-                                                {/* <th
-                                                scope="col"
-                                                className="px-6 py-4 text-center"
-                                                style={{
-                                                    fontFamily: "Poppins, sans-serif",
-                                                    width: "25%",
-                                                }}
-                                            >
-                                                {t("shelfName")}
-                                            </th> */}
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
+                                                    }}
+                                                >
+                                                    {t("minAge")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -373,22 +363,12 @@ function AllProductRequests() {
                                                         {product.count}
                                                     </td>
 
-                                                    {/* <td className="px-6 py-4">
-
-                                                    <select
-                                                        className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                                        onChange={(e) => handleShelfChange(product.id, e.target.value)}
-                                                        value={product.shelfId || ''}
-                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                    <td
+                                                        className={`px-6 py-4 text-center font-bold text-blue-600`}
+                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        <option value="">{t("shelfName")}</option>
-                                                        {shelves.map((shelf) => (
-                                                            <option key={shelf.id} value={shelf.id}>
-                                                                {shelf.title}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </td> */}
+                                                        {product.minAge != null ? product.minAge : 0}
+                                                    </td>
 
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">

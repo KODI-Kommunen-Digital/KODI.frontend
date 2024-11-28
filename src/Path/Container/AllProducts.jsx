@@ -215,7 +215,7 @@ function AllProducts() {
                                                     className="px-6 sm:px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -225,7 +225,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("date_of_creation")}
@@ -235,7 +235,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -245,7 +245,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("tax")}
@@ -255,7 +255,17 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
+                                                    }}
+                                                >
+                                                    {t("minAge")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("status")}
@@ -265,7 +275,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "16.66%",
+                                                        width: "14.28%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -328,11 +338,18 @@ function AllProducts() {
                                                         {(product.tax != null ? product.tax : 0).toFixed(2)}%
                                                     </td>
 
+                                                    <td
+                                                        className={`px-6 py-4 text-center font-bold text-blue-600`}
+                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                    >
+                                                        {product.minAge != null ? product.minAge : 0}
+                                                    </td>
+
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
                                                             <div
                                                                 className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                    product.status
+                                                                    product.isActive
                                                                 )} mr-2`}
                                                             ></div>
 
