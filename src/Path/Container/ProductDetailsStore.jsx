@@ -62,7 +62,7 @@ const ProductDetailsStore = () => {
     }, [isOwner, navigate]);
 
     return (
-        <section className="bg-gray-800 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-screen">
             <SideBar />
 
             <div className="container w-auto md:px-2 md:py-2 bg-gray-800 md:min-h-screen flex items-center justify-center">

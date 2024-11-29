@@ -51,9 +51,9 @@ const SellerScreen = () => {
     }, [isOwner, navigate]);
 
     return (
-        <section className="bg-gray-800 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-5 py-5 bg-gray-800 min-h-screen flex flex-col justify-center items-center">
+            <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
                     <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 -m-4">
                         <div className="border-r-4 border-purple-600 m-4 lg:pl-0 rounded-t-xl rounded-b-xl"
