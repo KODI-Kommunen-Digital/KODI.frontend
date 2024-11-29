@@ -353,7 +353,7 @@ const OrdersSold = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-100 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <center>
                                 <div className="tracking-widest mt-4">
                                     <span
@@ -424,9 +424,9 @@ const OrdersSold = () => {
                             <center className="mt-6 mb-4">
                                 <a
                                     onClick={() => navigateTo("/SellerScreen")}
-                                    className="bg-white relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                                    className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out bg-indigo-700 border-2 border-indigo-600 rounded-full shadow-md group cursor-pointer"
                                 >
-                                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-black group-hover:-translate-x-0 ease">
+                                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-indigo-700 group-hover:-translate-x-0 ease">
                                         <svg
                                             className="w-6 h-6 transform rotate-180"
                                             fill="none"
@@ -442,7 +442,7 @@ const OrdersSold = () => {
                                             ></path>
                                         </svg>
                                     </span>
-                                    <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:-translate-x-full ease">
+                                    <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:-translate-x-full ease">
                                         {t("goBack")}
                                     </span>
                                     <span className="relative invisible">{t("goBack")}</span>

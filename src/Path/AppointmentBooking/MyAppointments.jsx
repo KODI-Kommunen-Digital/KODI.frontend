@@ -84,9 +84,9 @@ const MyAppointments = () => {
     }
 
     return (
-        <section className="bg-gray-800 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
                     {appointments && appointments.length > 0 ? (
                         <>

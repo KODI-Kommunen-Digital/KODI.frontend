@@ -305,7 +305,7 @@ function CreateGroup() {
 	}
 
 	return (
-		<section class="bg-gray-800 body-font relative h-screen">
+		<section class="bg-gray-900 body-font relative h-screen">
 			<SideBar />
 
 			<div class="container w-auto px-5 py-2 bg-gray-800">

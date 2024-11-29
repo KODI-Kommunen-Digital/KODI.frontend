@@ -297,7 +297,7 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="bg-gray-800 body-font relative h-screen">
+    <section className="bg-gray-900 body-font relative h-screen">
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -394,7 +394,7 @@ const Dashboard = () => {
       </div>
 
 
-      <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+      <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
         <div className="h-full">
           <div className="bg-white mt-4 p-0">
             <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
