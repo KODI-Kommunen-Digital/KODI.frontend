@@ -99,9 +99,9 @@ const AppointmentsUserCreated = () => {
     }
 
     return (
-        <section className="bg-gray-800 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-screen">
             <SideBar />
-            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-800 min-h-screen flex flex-col">
+            <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
                     <div className="bg-white mt-4 p-0">
                         <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
