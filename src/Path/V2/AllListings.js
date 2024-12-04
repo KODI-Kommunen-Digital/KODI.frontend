@@ -172,7 +172,7 @@ const AllListings = () => {
 
   const handleSortOptionChange = (event) => {
     setSelectedSortOption(event.target.value);
-    clearSearchResults();
+    // clearSearchResults();
   };
 
   const navigate = useNavigate();
