@@ -201,6 +201,7 @@ function UploadListings() {
       } else {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
+        setLocalImageOrPdf(true);
       }
     } else {
       newFiles.forEach(file => {
@@ -418,7 +419,7 @@ function UploadListings() {
           currentListingId = response.data.data.map(item => item.listingId);
         }
         else{
-          currentListingId = response.data.id;
+          currentListingId = Array.isArray(response.data.id) ? response.data.id : [response.data.id];
         }
 
         let cityIdsArray = [];
