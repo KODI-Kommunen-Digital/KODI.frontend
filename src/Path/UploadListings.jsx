@@ -426,7 +426,7 @@ function UploadListings() {
           cityIdsArray = response.data.data.map(item => item.cityId);
         }
         else{
-          cityIdsArray=cityIds
+          cityIdsArray = [Number(cityIds)];
         }
 
         // Filter opening dates for appointmentInput and services before submitting
