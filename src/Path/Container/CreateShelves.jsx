@@ -63,7 +63,7 @@ function CreateShelves() {
     const [input, setInput] = useState({
         shopId: 0,
         cityId: 0,
-        productId: 0,
+        productId: null,
         title: "",
         description: "",
     });
@@ -73,7 +73,7 @@ function CreateShelves() {
         description: "",
         shopId: "",
         cityId: "",
-        productId: "",
+        productId: null,
     });
 
     const handleSubmit = async (event) => {

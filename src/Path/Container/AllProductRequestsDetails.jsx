@@ -12,7 +12,7 @@ import Alert from "../../Components/Alert";
 const AllProductRequestsDetails = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
-    const [product, setProduct] = useState(null);
+    const [productRequest, setProductRequest] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
     const [shelves, setShelves] = useState([]);
     const [selectedShelves, setSelectedShelves] = useState([]);
@@ -73,41 +73,41 @@ const AllProductRequestsDetails = () => {
 
     useEffect(() => {
         if (productDetails) {
-            setProduct(productDetails);
+            setProductRequest(productDetails);
             setSelectedStatus(productDetails.status);
             setMaxCount(productDetails.maxCount || '');
         }
     }, [productDetails]);
 
     useEffect(() => {
-        if (storeId && product) {
+        if (storeId && productRequest) {
             getShelves(cityId, storeId).then((response) => {
                 const filteredShelves = response.data.data.filter((shelf) => {
-                    console.log("product" + product.productId)
-                    if (product?.status === 1 || product?.status === 2) {
-                        console.log("status" + product.status)
+                   
+                    if (productRequest?.status === 1 || productRequest?.status === 2) {
+                        
                         return (
                             shelf.productId !== null &&
-                            (shelf.productId === product.productId)
+                            (shelf.productId === productRequest.productId)
                         );
                     }
-                    console.log("product1" + product.productId)
+                    
                     return (
                         shelf.product === null ||
-                        (shelf.product && shelf.product.id === product.productId)
+                        (shelf.product && shelf.product.id === productRequest.productId)
                     );
                 });
 
                 setShelves(filteredShelves);
 
                 const defaultSelectedShelves = filteredShelves
-                    .filter((shelf) => shelf.product?.id === product.productId)
+                    .filter((shelf) => shelf.product?.id === productRequest.productId)
                     .map((shelf) => shelf.id);
 
                 setSelectedShelves(defaultSelectedShelves);
             });
         }
-    }, [cityId, storeId, product]);
+    }, [cityId, storeId, productRequest]);
 
 
     const handleStatusChange = (newStatus) => {
@@ -144,7 +144,7 @@ const AllProductRequestsDetails = () => {
 
         try {
             const status = statusByName.Active;
-            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, productRequest.id, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -160,7 +160,7 @@ const AllProductRequestsDetails = () => {
     const handleReject = async () => {
         try {
             const status = statusByName.Inactive;
-            await updateProductRequests(storeId, product.id, selectedShelves, status, maxCount);
+            await updateProductRequests(storeId, productRequest.id, selectedShelves, status, maxCount);
             setSuccessMessage(t("productUpdated"));
             setErrorMessage('');
             setTimeout(() => {
@@ -188,16 +188,16 @@ const AllProductRequestsDetails = () => {
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
                     <div className="bg-white mt-4 p-0">
-                        {product && (
-                            <div key={product.id} className="mb-6 p-4">
+                        {productRequest && (
+                            <div key={productRequest.id} className="mb-6 p-4">
 
                                 <div className="w-full my-4">
                                     <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
                                         <div className="relative h-[30rem]">
                                             <img className="object-cover object-center h-full w-full"
-                                                src={product.productImages &&
-                                                    product.productImages.length > 0
-                                                    ? process.env.REACT_APP_BUCKET_HOST + product.productImages[0] : process.env.REACT_APP_BUCKET_HOST +
+                                                src={productRequest.productImages &&
+                                                    productRequest.productImages.length > 0
+                                                    ? process.env.REACT_APP_BUCKET_HOST + productRequest.productImages[0] : process.env.REACT_APP_BUCKET_HOST +
                                                     "admin/Container/ShoppingCart.png"}
                                                 onError={(e) => {
                                                     e.target.src = CONTAINERIMAGE;
@@ -208,38 +208,38 @@ const AllProductRequestsDetails = () => {
 
                                 <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4 my-4">
                                     <h2 className="text-xl font-bold text-slate-800 mb-2">
-                                        {t("requestId")} : {product.id}
+                                        {t("requestId")} : {productRequest.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-2">
-                                        {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}
+                                        {t("orderDate")} : {new Date(productRequest.createdAt).toLocaleDateString()}
                                     </p>
-                                    <h2 className="text-2xl font-bold text-slate-800 mb-2">{product.title}</h2>
+                                    <h2 className="text-2xl font-bold text-slate-800 mb-2">{productRequest.title}</h2>
                                     <div className="flex flex-col mb-4">
                                         <div className="flex items-center space-x-4">
                                             <div>
                                                 <span className="font-bold text-slate-700">{t("price")} : </span>
-                                                <span className="font-bold text-green-600">€ {product.price}</span>
+                                                <span className="font-bold text-green-600">€ {productRequest.price}</span>
                                             </div>
                                             <div>
                                                 <span className="font-bold text-slate-700">{t("count")} : </span>
-                                                <span className="font-bold text-red-600">{product.count}</span>
+                                                <span className="font-bold text-red-600">{productRequest.count}</span>
                                             </div>
                                             <div>
                                                 <span className="font-bold text-slate-700">{t("minAge")} : </span>
-                                                <span className="font-bold text-blue-600">{product.minAge != null ? product.minAge : 0}</span>
+                                                <span className="font-bold text-blue-600">{productRequest.minAge != null ? productRequest.minAge : 0}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="my-4">
-                                    {product.status !== 2 && (
+                                    {productRequest.status !== 2 && (
                                         <div className="p-4 bg-gray-200 bg-opacity-75 shadow-md">
                                             <div className="mb-8">
                                                 {shelves.length > 0 ? (
                                                     <>
                                                         <label className="font-bold text-slate-700">
-                                                            {product?.status === 1 || product?.status === 2 ? t("selectedShelf") : t("selectShelf")}
+                                                            {productRequest?.status === 1 || productRequest?.status === 2 ? t("selectedShelf") : t("selectShelf")}
                                                         </label>
                                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 mt-2">
                                                             {shelves.slice(0, visibleShelves).map((shelf) => (
@@ -322,7 +322,7 @@ const AllProductRequestsDetails = () => {
                                             </div>
 
                                             {/* Status dropdown */}
-                                            {product.status === 0 && (
+                                            {productRequest.status === 0 && (
                                                 <div className="relative w-full text-center">
                                                     <button
                                                         className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
@@ -356,7 +356,7 @@ const AllProductRequestsDetails = () => {
                                     )}
                                 </div>
 
-                                {product.status === 0 && (
+                                {productRequest.status === 0 && (
                                     <div className="my-4">
                                         <div className="relative py-4 grid grid-cols-2 gap-4">
                                             <div className="relative w-full text-center">

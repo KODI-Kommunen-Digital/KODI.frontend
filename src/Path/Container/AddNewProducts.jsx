@@ -44,7 +44,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
-        minAge: "",
+        minAge: null,
         // removeImage: false,
         // // hasAttachment: false,
     });
@@ -61,7 +61,7 @@ function AddNewProducts() {
         inventory: "",
         minCount: "",
         barcode: "",
-        minAge: "",
+        minAge: null,
     });
 
     const handleSubmit = async (event) => {
@@ -379,12 +379,10 @@ function AddNewProducts() {
                 }
 
             case "minAge":
-                if (!value) {
-                    return t("pleaseEnterAgeLimit");
-                } else if (isNaN(value)) {
+                 if (isNaN(value)) {
                     return t("pleaseEnterValidNumber");
                 } else {
-                    return "";
+                    return null;
                 }
             default:
                 return "";
@@ -993,7 +991,7 @@ function AddNewProducts() {
                                 htmlFor="place"
                                 className="block text-sm font-medium text-gray-600"
                             >
-                                {t("minAge")} *
+                                {t("minAge")} 
                             </label>
                             <input
                                 type="number"
