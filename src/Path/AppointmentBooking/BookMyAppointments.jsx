@@ -663,7 +663,7 @@ function BookMyAppointments() {
                 ))}
               </select>
               <div
-                className="h-[24px] text-red-600"
+                className="mt-2 text-sm text-red-600"
                 style={{
                   visibility: bookingError.service ? "visible" : "hidden",
                 }}
@@ -700,7 +700,7 @@ function BookMyAppointments() {
                 <option value="8">8</option>
               </select>
               <div
-                className="h-[24px] text-red-600"
+                className="mt-2 text-sm text-red-600"
                 style={{
                   visibility: bookingError.numberOfPeople ? "visible" : "hidden",
                 }}
@@ -804,10 +804,10 @@ function BookMyAppointments() {
                 {!selectedServiceId ? (
                   <p className="h-[40px] text-emerald-500 text-center">{t("selectServiceMsg")}</p>
                 ) : new Date(selectDate.toDate()).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) ? (
-                  <p className="h-[24px] text-red-600 text-center">{t("pastDate")}</p>
+                  <p className="mt-2 text-sm text-red-600 text-center">{t("pastDate")}</p>
                 ) : (
                   timeSlots.length === 0 ? (
-                    <p className="h-[24px] text-red-600 text-center">{t("noSlotsAvailable")}</p>
+                    <p className="mt-2 text-sm text-red-600 text-center">{t("noSlotsAvailable")}</p>
                   ) : (
                     timeSlots.map((slot, index) => (
                       <div key={index} className="time-selection-container overflow-y-auto max-h-[200px]">
@@ -946,7 +946,7 @@ function BookMyAppointments() {
                           required
                         />
                         <div
-                          className="h-[24px] text-red-600 text-start"
+                          className="mt-2 text-sm text-red-600 text-start"
                           style={{
                             visibility: bookingError[`firstname${index}`] ? "visible" : "hidden",
                           }}
@@ -972,7 +972,7 @@ function BookMyAppointments() {
                           required
                         />
                         <div
-                          className="h-[24px] text-red-600 text-start"
+                          className="mt-2 text-sm text-red-600 text-start"
                           style={{
                             visibility: bookingError[`lastname${index}`] ? "visible" : "hidden",
                           }}
@@ -998,7 +998,7 @@ function BookMyAppointments() {
                       required
                     />
                     <div
-                      className="h-[24px] text-red-600 text-start"
+                      className="mt-2 text-sm text-red-600 text-start"
                       style={{
                         visibility: bookingError[`email${index}`] ? "visible" : "hidden",
                       }}

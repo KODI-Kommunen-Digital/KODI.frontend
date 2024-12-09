@@ -35,6 +35,7 @@ function AddNewProducts() {
     const [newProduct, setNewProduct] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
     const CHARACTER_LIMIT = 255;
+    const [originalData, setOriginalData] = useState({});
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -50,9 +51,6 @@ function AddNewProducts() {
         maxCount: "",
         barcode: "",
         minAge: "",
-        removeImage: false,
-        hasImage: false,
-        hasAttachment: false,
     });
 
     const [error, setError] = useState({
@@ -70,6 +68,16 @@ function AddNewProducts() {
         barcode: "",
         minAge: "",
     });
+
+    const getChangedFields = () => {
+        const changedFields = {};
+        for (const key in input) {
+            if (originalData[key] !== input[key]) {
+                changedFields[key] = input[key];
+            }
+        }
+        return changedFields;
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -90,14 +98,25 @@ function AddNewProducts() {
             setUpdating(true);
 
             try {
-                const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
+                const { cityId, shopId } = input;
+                const { inventory } = input;
+                const originalInventory = originalData.inventory || 0;
+                const inventoryDifference = inventory - originalInventory;
+                const payload = {
+                    ...getChangedFields(),
+                    inventory: inventoryDifference,
+                };
 
-                // const createProductResponse = await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+                // Remove fields that are not allowed by the API
+                // delete payload.cityId;
+                // delete payload.shopId;
+                // delete payload.maxCount;
+
                 const createProductResponse = newProduct
-                    ? await createNewProduct(cityId, shopId, inputWithoutCityIdShopId)
-                    : await updateProduct(cityId, shopId, productId, inputWithoutCityIdShopId);
+                    ? await createNewProduct(parseInt(input.cityId, 10), parseInt(input.shopId, 10), payload)
+                    : await updateProduct(parseInt(input.cityId, 10), parseInt(input.shopId, 10), productId, payload);
 
-                const newProductId = parseInt(createProductResponse.data.data.id);
+                const newProductId = parseInt(createProductResponse.data.data.id, 10);
 
                 if (input.removeImage && image.length === 0) {
                     await deleteImage(cityId, shopId, newProductId);
@@ -107,7 +126,7 @@ function AddNewProducts() {
                         imageForm.append("image", image[i]);
                     }
 
-                    await uploadImage(imageForm, cityId, shopId, newProductId);
+                    await uploadImage(imageForm, cityId, shopId, newProductId || productId);
                 }
 
                 const successMessage = isAdmin ? t("sellerUpdatedAdmin") : t("sellerUpdated");
@@ -236,6 +255,12 @@ function AddNewProducts() {
                     cityId: cityIdFromParams,
                     shopId: shopIdFromParams,
                 }));
+                setOriginalData({
+                    ...productData,
+                    cityId: cityIdFromParams,
+                    shopId: shopIdFromParams,
+                    inventory: productData.inventory,
+                }); // for only sending the required or updated fields
                 if (categoryId) {
                     setSubCategoryLoading(true);
                     getSubCategory(cityIdFromParams, shopIdFromParams, categoryId).then((response) => {
@@ -528,11 +553,9 @@ function AddNewProducts() {
             }
 
             if (file.type.startsWith("image/")) {
-                setImage(e.dataTransfer.files);
                 setLocalImageOrPdf(true);
                 setInput((prev) => ({
                     ...prev,
-                    hasAttachment: true,
                 }));
                 validImages.push(file);
             } else if (file.type === "application/pdf") {
@@ -588,10 +611,9 @@ function AddNewProducts() {
 
         if (hasImage) {
             setLocalImageOrPdf(true);
-            setImage(files);
+            // setImage(files);
             setInput((prev) => ({
                 ...prev,
-                hasAttachment: false,
             }));
         }
 
@@ -677,7 +699,6 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                removeImage: true,
                 logo: null,
             }));
         }
@@ -704,10 +725,20 @@ function AddNewProducts() {
     // }
 
     const handleCancel = () => {
-        navigate('/OwnerScreen/StoreDetails');
+        if (isOwner) {
+            navigate('/OwnerScreen/StoreDetails');
+        } else {
+            navigate('/SellerScreen');
+        }
     };
 
-    console.log("Image state before rendering FormImage:", image);
+    const handleInventoryChange = (newInventory) => {
+        const updatedInventory = Math.max(newInventory, 0);
+        setInput((prev) => ({
+            ...prev,
+            inventory: updatedInventory,
+        }));
+    };
 
     return (
         <section className="bg-gray-900 body-font relative h-screen">
@@ -744,7 +775,7 @@ function AddNewProducts() {
                             placeholder={t("enterTitle")}
                         />
                         <div
-                            className="h-[24px] text-red-600"
+                            className="mt-2 text-sm text-red-600"
                             style={{
                                 visibility: error.title ? "visible" : "hidden",
                             }}
@@ -778,7 +809,7 @@ function AddNewProducts() {
                             ))}
                         </select>
                         <div
-                            className="h-[24px] text-red-600"
+                            className="mt-2 text-sm text-red-600"
                             style={{
                                 visibility: error.cityId ? "visible" : "hidden",
                             }}
@@ -819,7 +850,7 @@ function AddNewProducts() {
                                         ))}
                                     </select>
                                     <div
-                                        className="h-[24px] text-red-600"
+                                        className="mt-2 text-sm text-red-600"
                                         style={{
                                             visibility: error.shopId ? "visible" : "hidden",
                                         }}
@@ -858,7 +889,7 @@ function AddNewProducts() {
                                         name="categoryId"
                                         value={categoryId || 0}
                                         onChange={handleCategoryChange}
-                                        disabled={updating || isSuccess}
+                                        disabled={updating || isSuccess || !newProduct}
                                         required
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
@@ -874,7 +905,7 @@ function AddNewProducts() {
                                         })}
                                     </select>
                                     <div
-                                        className="h-[24px] text-red-600"
+                                        className="mt-2 text-sm text-red-600"
                                         style={{
                                             visibility: error.categoryId ? "visible" : "hidden",
                                         }}
@@ -911,7 +942,7 @@ function AddNewProducts() {
                                         value={subCategoryId || 0}
                                         onChange={handleSubcategoryChange}
                                         onBlur={validateInput}
-                                        disabled={updating || isSuccess}
+                                        disabled={updating || isSuccess || !newProduct}
                                         required
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
@@ -925,7 +956,7 @@ function AddNewProducts() {
                                         ))}
                                     </select>
                                     <div
-                                        className="h-[24px] text-red-600"
+                                        className="mt-2 text-sm text-red-600"
                                         style={{ visibility: error.subCategoryId ? "visible" : "hidden" }}
                                     >
                                         {error.subCategoryId}
@@ -962,7 +993,7 @@ function AddNewProducts() {
                                 placeholder={t("pleaseEnterOriginalPrice")}
                             />
                             <div
-                                className="h-[24px] text-red-600"
+                                className="mt-2 text-sm text-red-600"
                                 style={{
                                     visibility: error.price ? "visible" : "hidden",
                                 }}
@@ -990,7 +1021,7 @@ function AddNewProducts() {
                                 placeholder={t("pleaseEnterTaxPrice")}
                             />
                             <div
-                                className="h-[24px] text-red-600"
+                                className="mt-2 text-sm text-red-600"
                                 style={{
                                     visibility: error.tax ? "visible" : "hidden",
                                 }}
@@ -1021,7 +1052,7 @@ function AddNewProducts() {
                                 placeholder={t("pleaseEnterFastSellingAlert")}
                             />
                             <div
-                                className="h-[24px] text-red-600"
+                                className="mt-2 text-sm text-red-600"
                                 style={{
                                     visibility: error.minCount ? "visible" : "hidden",
                                 }}
@@ -1051,7 +1082,7 @@ function AddNewProducts() {
                                     placeholder={t("pleaseEnterFastSellingAlert")}
                                 />
                                 <div
-                                    className="h-[24px] text-red-600"
+                                    className="mt-2 text-sm text-red-600"
                                     style={{
                                         visibility: error.maxCount ? "visible" : "hidden",
                                     }}
@@ -1068,28 +1099,27 @@ function AddNewProducts() {
                                 htmlFor="place"
                                 className="block text-sm font-medium text-gray-600"
                             >
-                                {t("maxInventory")} *
+                                {t("barCodeNum")}
                             </label>
                             <input
                                 type="text"
-                                id="inventory"
-                                name="inventory"
-                                value={input.inventory}
+                                id="barcode"
+                                name="barcode"
+                                value={input.barcode}
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 disabled={updating || isSuccess}
-                                required
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterTotalNumber")}
+                                placeholder={t("pleaseEnterBarcode")}
                             />
-                            <div
-                                className="h-[24px] text-red-600"
+                            {/* <div
+                                className="mt-2 text-sm text-red-600"
                                 style={{
-                                    visibility: error.inventory ? "visible" : "hidden",
+                                    visibility: error.barcode ? "visible" : "hidden",
                                 }}
                             >
-                                {error.inventory}
-                            </div>
+                                {error.barcode}
+                            </div> */}
                         </div>
 
                         <div className="relative mb-4">
@@ -1119,7 +1149,7 @@ function AddNewProducts() {
                                 placeholder={t("pleaseEnterAgeLimit")}
                             />
                             <div
-                                className="h-[24px] text-red-600"
+                                className="mt-2 text-sm text-red-600"
                                 style={{
                                     visibility: error.minAge ? "visible" : "hidden",
                                 }}
@@ -1129,32 +1159,77 @@ function AddNewProducts() {
                         </div>
                     </div>
 
-                    <div className="relative mb-4">
+                    <div className="relative mb-6">
+                        {/* Label */}
                         <label
-                            htmlFor="place"
-                            className="block text-sm font-medium text-gray-600"
+                            htmlFor="inventory"
+                            className="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            {t("barCodeNum")}
+                            {t("maxInventory")} *
                         </label>
-                        <input
-                            type="text"
-                            id="barcode"
-                            name="barcode"
-                            value={input.barcode}
-                            onChange={onInputChange}
-                            onBlur={validateInput}
-                            disabled={updating || isSuccess}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            placeholder={t("pleaseEnterBarcode")}
-                        />
-                        {/* <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.barcode ? "visible" : "hidden",
-                                }}
+
+                        {/* Input Group */}
+                        <div className="flex items-center gap-2 sm:gap-4">
+                            {/* Decrement Button */}
+                            <button
+                                onClick={() => handleInventoryChange(input.inventory - 1)}
+                                disabled={updating || isSuccess || input.inventory <= 0}
+                                id="decrement-btn"
+                                className="bg-gray-500 text-gray-700 px-2 py-1 rounded-l text-white hover:bg-gray-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
                             >
-                                {error.barcode}
-                            </div> */}
+                                <svg
+                                    className="w-5 h-5 sm:w-6 sm:h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"></path>
+                                </svg>
+                            </button>
+
+                            {/* Inventory Input */}
+                            <input
+                                type="number"
+                                id="inventory"
+                                name="inventory"
+                                value={input.inventory}
+                                onChange={(e) => handleInventoryChange(Number(e.target.value))}
+                                onBlur={validateInput}
+                                disabled={updating || isSuccess}
+                                required
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                placeholder={t("pleaseEnterTotalNumber")}
+                            />
+
+                            {/* Increment Button */}
+                            <button
+                                onClick={() => handleInventoryChange(input.inventory + 1)}
+                                disabled={updating || isSuccess}
+                                id="increment-btn"
+                                className="bg-indigo-500 text-gray-700 px-2 py-1 rounded-r text-white hover:bg-indigo-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
+                            >
+                                <svg
+                                    className="w-5 h-5 sm:w-6 sm:h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v12M6 12h12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Error Message */}
+                        <div
+                            className="mt-2 text-sm sm:text-base text-red-600"
+                            style={{
+                                visibility: error.inventory ? "visible" : "hidden",
+                            }}
+                        >
+                            {error.inventory}
+                        </div>
                     </div>
 
                     <div className="relative mb-4">
@@ -1171,33 +1246,36 @@ function AddNewProducts() {
                             ref={editor}
                             value={description}
                             onChange={(newContent) => onDescriptionChange(newContent)}
-                            onBlur={(editor) => {
-                                validateInput({
-                                    target: {
-                                        name: "description",
-                                        value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-                                    },
-                                });
+                            onBlur={() => {
+                                const quillInstance = editor.current?.getEditor();
+                                if (quillInstance) {
+                                    validateInput({
+                                        target: {
+                                            name: "description",
+                                            value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+                                        },
+                                    });
+                                }
                             }}
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             style={{
                                 position: "relative",
-                                zIndex: 1000, // Higher than the sidebar
+                                zIndex: 1000,
                             }}
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span
                                 className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
-                                    ? "h-[24px] text-red-600"
+                                    ? "mt-2 text-sm text-red-600"
                                     : "h-[24px] text-gray-500"
                                     }`}
                             >
                                 {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
                             </span>
                             {error.description && (
-                                <span className="h-[24px] text-red-600">
+                                <span className="mt-2 text-sm text-red-600">
                                     {error.description}
                                 </span>
                             )}
@@ -1218,7 +1296,7 @@ function AddNewProducts() {
                             {t("addImageHere")}
                         </label>
                         <div
-                            className="h-[24px] text-green-600"
+                            className="mt-2 text-sm text-green-600"
                         >
                             {t("maxFileSizeAllert")} & {t("imageNumberAlertContainer")}
                         </div>
@@ -1230,7 +1308,7 @@ function AddNewProducts() {
                             onDragEnter={handleDragEnter}
                             onDragLeave={handleDragLeave}
                         >
-                            {image && image.length > 0 && newProduct ? (
+                            {image && image.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <FormImage
                                         updateImageList={setImage}
@@ -1328,24 +1406,6 @@ function AddNewProducts() {
                                         </label>
                                     )}
                                 </div>
-                                // ) : pdf ? (
-                                //     <div className="flex flex-col items-center">
-                                //         <p>
-                                //             <a
-                                //                 target="_blank"
-                                //                 rel="noreferrer"
-                                //                 href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}
-                                //             >
-                                //                 {pdf.name}
-                                //             </a>
-                                //         </p>
-                                //         <button
-                                //             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
-                                //             onClick={handleRemovePDF}
-                                //         >
-                                //             {t("removeFile")}
-                                //         </button>
-                                //     </div>
                             ) : (
                                 <div className="text-center">
                                     <UploadSVG />
@@ -1373,7 +1433,7 @@ function AddNewProducts() {
                         </div>
 
                         <div
-                            className="h-[24px] text-green-600"
+                            className="mt-2 text-sm text-green-600"
                         >
                             {t("imageWarning")}
                         </div>

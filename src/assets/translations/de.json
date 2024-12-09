@@ -888,7 +888,7 @@
     "pleaseEnterMaxCount": "Bitte geben Sie die maximale benötigte Anzahl ein",
     "inventory": "Maximaler Lagerbestand",
     "pleaseEnterMeta": "Bitte geben Sie Metadaten ein",
-    "maxInventory": "Maximaler Lagerbestand",
+    "maxInventory": "Lagerbestand",
     "minCount": "Mindestanzahl",
     "maxCount": "Maximalanzahl",
     "meta": "Meta",
