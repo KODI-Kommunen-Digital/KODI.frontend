@@ -17,6 +17,7 @@ function AllProducts() {
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
+    const [cityId, setCityId] = useState();
 
     const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
         if (storeId) {
@@ -63,6 +64,7 @@ function AllProducts() {
 
                 if (selectedStore) {
                     setStoreId(storeIdNumber);
+                    setCityId(selectedStore.cityId);
                     setPageNumber(1);
 
                     fetchProducts(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
@@ -90,6 +92,7 @@ function AllProducts() {
 
         if (selectedStore) {
             setStoreId(storeId);
+            setCityId(selectedStore.cityId);
             setPageNumber(1); // Reset page number when a new store is selected
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -105,6 +108,7 @@ function AllProducts() {
 
         if (selectedStore) {
             setStoreId(storeId);
+            setCityId(selectedStore.cityId);
             setPageNumber(1);
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -124,6 +128,12 @@ function AllProducts() {
         if (path) {
             navigate(path);
         }
+    };
+
+    const goToEditProductsPage = (product) => {
+        navigateTo(
+            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`
+        );
     };
 
     return (
@@ -215,7 +225,7 @@ function AllProducts() {
                                                     className="px-6 sm:px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -225,7 +235,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("date_of_creation")}
@@ -235,7 +245,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -245,7 +255,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("tax")}
@@ -255,7 +265,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("minAge")}
@@ -265,7 +275,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("status")}
@@ -275,7 +285,17 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "14.28%",
+                                                        width: "12.5%",
+                                                    }}
+                                                >
+                                                    {t("action")}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center"
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "12.5%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -356,6 +376,25 @@ function AllProducts() {
                                                             <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
                                                                 {t(status[product.isActive].toLowerCase())}
                                                             </h1>
+                                                        </div>
+                                                    </td>
+
+                                                    <td className="px-6 py-4 text-center font-bold">
+                                                        <div className="flex justify-center items-center">
+                                                            <a
+                                                                className={`font-medium text-green-600 px-2 cursor-pointer`}
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                onClick={() => goToEditProductsPage(product)}
+                                                            >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    height="1em"
+                                                                    viewBox="0 0 640 512"
+                                                                    className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                                                >
+                                                                    <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                                                </svg>
+                                                            </a>
                                                         </div>
                                                     </td>
 

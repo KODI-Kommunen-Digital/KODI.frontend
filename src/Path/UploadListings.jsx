@@ -1561,7 +1561,7 @@ function UploadListings() {
               {t("addFileHere")}
             </label>
             <div
-              className="h-[24px] text-red-600"
+              className="h-[24px] text-green-600"
             >
               {t("maxFileSizeAllert")} & {t("imageNumberAlertListings")}
             </div>
@@ -1713,7 +1713,7 @@ function UploadListings() {
             </div>
 
             <div
-              className="h-[24px] text-red-600"
+              className="h-[24px] text-green-600"
             >
               {t("imagePdfWarning")}
             </div>

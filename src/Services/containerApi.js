@@ -37,6 +37,19 @@ export async function createNewProduct(cityId, storeId, params) {
   return axios.post(`/v1/cities/${cityId}/store/${storeId}/product`, params);
 }
 
+export async function updateProduct(cityId, storeId, productId, params) {
+  return axios.patch(
+    `/v1/cities/${cityId}/store/${storeId}/product/${productId}`,
+    params
+  );
+}
+
+export async function deleteProduct(cityId, storeId, productId) {
+  return axios.delete(
+    `/v1/cities/${cityId}/store/${storeId}/product/${productId}`
+  );
+}
+
 export async function uploadImage(formData, cityId, storeId, productId) {
   return axios.post(
     `/v1/cities/${cityId}/store/${storeId}/imageUpload/${productId}`,

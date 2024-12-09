@@ -65,7 +65,6 @@ const MyBookings = () => {
     });
 
     function handleDelete(booking) {
-        console.log("Appointments with Listings:", booking);
         deleteUserBooking(booking.appointmentId, booking.id)
             .then((res) => {
                 getUserBookings(
