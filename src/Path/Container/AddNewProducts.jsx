@@ -10,7 +10,7 @@ import { getCities } from "../../Services/citiesApi";
 import Alert from "../../Components/Alert";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
-import { createNewProduct, getShopsInACity, uploadImage, deleteImage, getCategory, getSubCategory } from "../../Services/containerApi";
+import { createNewProduct, getProductById, updateProduct, getShopsInACity, uploadImage, deleteImage, getCategory, getSubCategory, getUserRoleContainer } from "../../Services/containerApi";
 
 function AddNewProducts() {
     const { t } = useTranslation();
@@ -27,9 +27,13 @@ function AddNewProducts() {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState(0);
+    const [subCategoryId, setSubcategoryId] = useState(0);
     const [loading, setLoading] = useState(true);
     const [categoryLoading, setCategoryLoading] = useState(false);
     const [subCategoryLoading, setSubCategoryLoading] = useState(false);
+    const [newProduct, setNewProduct] = useState(true);
+    const [isOwner, setIsOwner] = useState(false);
     const CHARACTER_LIMIT = 255;
 
     const [input, setInput] = useState({
@@ -43,10 +47,12 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
+        maxCount: "",
         barcode: "",
         minAge: "",
-        // removeImage: false,
-        // // hasAttachment: false,
+        removeImage: false,
+        hasImage: false,
+        hasAttachment: false,
     });
 
     const [error, setError] = useState({
@@ -60,6 +66,7 @@ function AddNewProducts() {
         tax: "",
         inventory: "",
         minCount: "",
+        maxCount: "",
         barcode: "",
         minAge: "",
     });
@@ -85,7 +92,10 @@ function AddNewProducts() {
             try {
                 const { cityId, shopId, ...inputWithoutCityIdShopId } = input;
 
-                const createProductResponse = await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+                // const createProductResponse = await createNewProduct(cityId, shopId, inputWithoutCityIdShopId);
+                const createProductResponse = newProduct
+                    ? await createNewProduct(cityId, shopId, inputWithoutCityIdShopId)
+                    : await updateProduct(cityId, shopId, productId, inputWithoutCityIdShopId);
 
                 const newProductId = parseInt(createProductResponse.data.data.id);
 
@@ -157,6 +167,7 @@ function AddNewProducts() {
     };
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
         const accessToken =
             window.localStorage.getItem("accessToken") ||
             window.sessionStorage.getItem("accessToken");
@@ -166,6 +177,7 @@ function AddNewProducts() {
         if (!accessToken && !refreshToken) {
             navigate("/login");
         }
+
         getProfile().then((response) => {
             setIsAdmin(response.data.data.roleId === 1);
         });
@@ -173,9 +185,17 @@ function AddNewProducts() {
             setCities(citiesResponse.data.data);
         });
 
-        if (productId && cityId) {
-            setProductId(parseInt(productId));
-        }
+
+
+        getUserRoleContainer().then((roleResponse) => {
+            let roles = roleResponse.data.data;
+            roles = roles.map(Number);
+            if (roles.includes(101)) {
+                setIsOwner(true);
+            } else {
+                console.log("User is not owner");
+            }
+        });
 
         if (cityId && shopId) {
             setCategoryLoading(true);
@@ -186,12 +206,65 @@ function AddNewProducts() {
                 setCategoryLoading(false);
             });
         }
+
+        const productId = searchParams.get("productId");
+        const cityIdFromParams = searchParams.get("cityId");
+        const shopIdFromParams = searchParams.get("storeId");
+        setProductId(productId);
+
+        getShopsInACity(cityIdFromParams).then((shopResponse) => {
+            setShops(shopResponse?.data?.data || []);
+        });
+
+        if (cityIdFromParams) {
+            setCityId(cityIdFromParams);
+            setInput((prev) => ({ ...prev, cityId: cityIdFromParams }));
+        }
+
+        if (shopIdFromParams) {
+            setShopId(parseInt(shopIdFromParams));
+        }
+
+        if (productId && cityIdFromParams && shopIdFromParams) {
+            setNewProduct(false);
+            getProductById(cityIdFromParams, shopIdFromParams, productId).then((productResponse) => {
+                const productData = productResponse.data.data;
+                const categoryId = productData.categoryId;
+                setInput((prev) => ({
+                    ...prev,
+                    ...productData,
+                    cityId: cityIdFromParams,
+                    shopId: shopIdFromParams,
+                }));
+                if (categoryId) {
+                    setSubCategoryLoading(true);
+                    getSubCategory(cityIdFromParams, shopIdFromParams, categoryId).then((response) => {
+                        if (response?.data?.data?.length > 0) {
+                            const subcatList = response.data.data.reduce((acc, subCat) => {
+                                acc[subCat.id] = subCat.name;
+                                return acc;
+                            }, {});
+
+                            setSubCategories(subcatList);
+                        } else {
+                            setSubCategories([]);
+                        }
+                    }).finally(() => {
+                        setSubCategoryLoading(false);
+                    });
+                }
+                setDescription(productData.description);
+                setLoading(false);
+                setShopId(productData.shopId);
+                setCategoryId(productData.categoryId);
+                setSubcategoryId(productData.subCategoryId);
+                setImage(productData.productImages || []);
+            });
+        }
+
         document.title =
             process.env.REACT_APP_REGION_NAME + " " + t("addNewProductTitle");
     }, [productId, cityId, shopId]);
-
-    const [categoryId, setCategoryId] = useState(0);
-    const [subCategoryId, setSubcategoryId] = useState(0);
 
     const handleCategoryChange = async (event) => {
         const categoryId = event.target.value;
@@ -214,7 +287,6 @@ function AddNewProducts() {
                     }, {});
 
                     setSubCategories(subcatList);
-                    console.log("subcatList: ", JSON.stringify(subcatList)); // Log the correct object
                 } else {
                     setSubCategories([]);
                 }
@@ -230,9 +302,7 @@ function AddNewProducts() {
     };
 
     const handleSubcategoryChange = (event) => {
-        console.log("Event triggered for subcategory change", event); // Log entire event
         const subCategoryId = event.target.value;
-        console.log("SUBCategory ID on submit:", subCategoryId);
         setSubcategoryId(subCategoryId);
         setInput((prev) => ({
             ...prev,
@@ -356,6 +426,14 @@ function AddNewProducts() {
                 } else {
                     return "";
                 }
+            case "maxCount":
+                if (!value) {
+                    return t("pleaseEnterMaxCount");
+                } else if (isNaN(value)) {
+                    return t("pleaseEnterValidNumber");
+                } else {
+                    return "";
+                }
             case "inventory":
                 if (!value) {
                     return t("pleaseEnterInventory");
@@ -433,11 +511,9 @@ function AddNewProducts() {
 
     function handleDrop(e) {
         if (updating || isSuccess) return;
-
         e.preventDefault();
         e.stopPropagation();
         const files = Array.from(e.dataTransfer.files);
-
         const MAX_IMAGE_SIZE_MB = 20;
         let hasPdf = false;
 
@@ -452,6 +528,12 @@ function AddNewProducts() {
             }
 
             if (file.type.startsWith("image/")) {
+                setImage(e.dataTransfer.files);
+                setLocalImageOrPdf(true);
+                setInput((prev) => ({
+                    ...prev,
+                    hasAttachment: true,
+                }));
                 validImages.push(file);
             } else if (file.type === "application/pdf") {
                 hasPdf = true;
@@ -483,6 +565,7 @@ function AddNewProducts() {
         e.preventDefault();
         const files = Array.from(e.target.files);
         const MAX_IMAGE_SIZE_MB = 20;
+        let hasImage = false;
         let hasPdf = false;
 
         // Filter for valid images and check file sizes
@@ -496,10 +579,20 @@ function AddNewProducts() {
             }
 
             if (file.type.startsWith("image/")) {
+                hasImage = true;
                 validImages.push(file);
             } else if (file.type === "application/pdf") {
                 hasPdf = true;
             }
+        }
+
+        if (hasImage) {
+            setLocalImageOrPdf(true);
+            setImage(files);
+            setInput((prev) => ({
+                ...prev,
+                hasAttachment: false,
+            }));
         }
 
         if (hasPdf) {
@@ -584,12 +677,13 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                // removeImage: true,
-                // logo: null,
+                removeImage: true,
+                logo: null,
             }));
         }
         setImage((prevImages) => {
             const updatedImages = [...prevImages];
+            // updatedImages.splice(0, 1); // Remove the first image, adjust the index as needed
             return updatedImages;
         });
     }
@@ -608,6 +702,12 @@ function AddNewProducts() {
     //         // hasAttachment: false,
     //     }));
     // }
+
+    const handleCancel = () => {
+        navigate('/OwnerScreen/StoreDetails');
+    };
+
+    console.log("Image state before rendering FormImage:", image);
 
     return (
         <section className="bg-gray-900 body-font relative h-screen">
@@ -666,7 +766,7 @@ function AddNewProducts() {
                             name="cityId"
                             value={cityId || 0}
                             onChange={onCityChange}
-                            disabled={updating || isSuccess}
+                            disabled={updating || isSuccess || !newProduct}
                             autoComplete="country-name"
                             className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
@@ -693,7 +793,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : shops.length > 0 ? (
+                            ) : shops.length > 0 || shopId ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -744,7 +844,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : categories.length > 0 ? (
+                            ) : categories.length > 0 || categoryId ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="dropdown"
@@ -799,7 +899,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : subCategories && Object.keys(subCategories).length > 0 ? (
+                            ) : subCategories && Object.keys(subCategories).length > 0 || subCategoryId ? (
                                 <div className="relative mb-0">
                                     <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *
@@ -929,33 +1029,37 @@ function AddNewProducts() {
                                 {error.minCount}
                             </div>
                         </div>
-                        <div className="relative mb-4">
-                            <label
-                                htmlFor="place"
-                                className="block text-sm font-medium text-gray-600"
-                            >
-                                {t("barCodeNum")}
-                            </label>
-                            <input
-                                type="text"
-                                id="barcode"
-                                name="barcode"
-                                value={input.barcode}
-                                onChange={onInputChange}
-                                onBlur={validateInput}
-                                disabled={updating || isSuccess}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                placeholder={t("pleaseEnterBarcode")}
-                            />
-                            {/* <div
-                                className="h-[24px] text-red-600"
-                                style={{
-                                    visibility: error.barcode ? "visible" : "hidden",
-                                }}
-                            >
-                                {error.barcode}
-                            </div> */}
-                        </div>
+
+                        {(isOwner) && (
+                            <div className="relative mb-4">
+                                <label
+                                    htmlFor="place"
+                                    className="block text-sm font-medium text-gray-600"
+                                >
+                                    {t("maxCount")} *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="maxCount"
+                                    name="maxCount"
+                                    value={input.maxCount}
+                                    onChange={onInputChange}
+                                    onBlur={validateInput}
+                                    required
+                                    disabled={updating || isSuccess}
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    placeholder={t("pleaseEnterFastSellingAlert")}
+                                />
+                                <div
+                                    className="h-[24px] text-red-600"
+                                    style={{
+                                        visibility: error.maxCount ? "visible" : "hidden",
+                                    }}
+                                >
+                                    {error.maxCount}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="relative mb-4 grid grid-cols-2 gap-4">
@@ -1023,6 +1127,34 @@ function AddNewProducts() {
                                 {error.minAge}
                             </div>
                         </div>
+                    </div>
+
+                    <div className="relative mb-4">
+                        <label
+                            htmlFor="place"
+                            className="block text-sm font-medium text-gray-600"
+                        >
+                            {t("barCodeNum")}
+                        </label>
+                        <input
+                            type="text"
+                            id="barcode"
+                            name="barcode"
+                            value={input.barcode}
+                            onChange={onInputChange}
+                            onBlur={validateInput}
+                            disabled={updating || isSuccess}
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            placeholder={t("pleaseEnterBarcode")}
+                        />
+                        {/* <div
+                                className="h-[24px] text-red-600"
+                                style={{
+                                    visibility: error.barcode ? "visible" : "hidden",
+                                }}
+                            >
+                                {error.barcode}
+                            </div> */}
                     </div>
 
                     <div className="relative mb-4">
@@ -1098,7 +1230,7 @@ function AddNewProducts() {
                             onDragEnter={handleDragEnter}
                             onDragLeave={handleDragLeave}
                         >
-                            {image && image.length > 0 ? (
+                            {image && image.length > 0 && newProduct ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <FormImage
                                         updateImageList={setImage}
@@ -1278,6 +1410,16 @@ function AddNewProducts() {
                                 </svg>
                             )}
                         </button>
+
+                        {!newProduct && (
+                            <button
+                                type="button"
+                                onClick={handleCancel}
+                                className="w-full mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                            >
+                                {t("cancel")}
+                            </button>
+                        )}
                     </div>
                     <div>
                         {successMessage && (

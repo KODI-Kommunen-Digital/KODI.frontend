@@ -123,14 +123,14 @@ function CreateGroup() {
 		if (!accessToken && !refreshToken) {
 			navigate("/login");
 		}
-		var cityId = searchParams.get("cityId");
+		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		var forumId = searchParams.get("forumId");
+		const forumId = searchParams.get("forumId");
 		if (forumId && cityId) {
 			setNewGroup(false);
 			setForumId(forumId);
 			getForum(cityId, forumId).then((forumsResponse) => {
-				let forumsData = forumsResponse.data.data;
+				const forumsData = forumsResponse.data.data;
 				forumsData.cityId = cityId;
 				setInput(forumsData);
 				setDescription(forumsData.description);
@@ -162,7 +162,7 @@ function CreateGroup() {
 			event.preventDefault();
 			try {
 				input.isPrivate = input.visibility == "private";
-				var response = newGroup
+				const response = newGroup
 					? await postForumsData(cityId, input)
 					: await updateForumsData(cityId, input, forumId);
 				if (newGroup) {
