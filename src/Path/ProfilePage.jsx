@@ -407,7 +407,7 @@ class ProfilePage extends React.Component {
                         }}
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="mt-2 text-sm text-red-600"
                         style={{
                           visibility: this.state.showError.firstname
                             ? "visible"
@@ -435,7 +435,7 @@ class ProfilePage extends React.Component {
                         onChange={this.handleProfileChange}
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="mt-2 text-sm text-red-600"
                         style={{
                           visibility: this.state.showError.lastname
                             ? "visible"
