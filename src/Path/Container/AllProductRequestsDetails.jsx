@@ -261,7 +261,7 @@ const AllProductRequestsDetails = () => {
                                                                 </div>
                                                             ))}
                                                         </div>
-                                                        <div className="h-[24px] text-red-600">
+                                                        <div className="mt-2 text-sm text-red-600">
                                                             {error.shelfSelection}
                                                         </div>
 
@@ -312,7 +312,7 @@ const AllProductRequestsDetails = () => {
                                                     onBlur={handleMaxCountChange}
                                                 />
                                                 <div
-                                                    className="h-[24px] text-red-600"
+                                                    className="mt-2 text-sm text-red-600"
                                                     style={{
                                                         visibility: error.maxCount ? "visible" : "hidden",
                                                     }}
