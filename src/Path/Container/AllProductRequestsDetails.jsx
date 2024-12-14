@@ -24,17 +24,29 @@ const AllProductRequestsDetails = () => {
     const navigate = useNavigate();
 
     const [isOwner, setIsOwner] = useState(null);
+    const location = useLocation();
+    const { cityId, storeId, productDetails,isSeller} = location.state || {};
+  
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
                 const roleResponse = await getUserRoleContainer();
                 let roles = roleResponse.data.data;
                 roles = roles.map(Number);
-                if (roles.includes(101)) {
-                    setIsOwner(true);
-                } else {
-                    setIsOwner(false);
+                if(isSeller){
+                    if (roles.includes(102)) {
+                        setIsOwner(true);
+                    } else {
+                        setIsOwner(false);
+                    }
+                }else{
+                    if (roles.includes(101)) {
+                        setIsOwner(true);
+                    } else {
+                        setIsOwner(false);
+                    }
                 }
+               
             } catch (error) {
                 console.error("Error fetching user roles:", error);
                 navigate("/Error");
@@ -68,8 +80,8 @@ const AllProductRequestsDetails = () => {
         return "";
     };
 
-    const location = useLocation();
-    const { cityId, storeId, productDetails } = location.state || {};
+    
+   
 
     useEffect(() => {
         if (productDetails) {
@@ -231,7 +243,102 @@ const AllProductRequestsDetails = () => {
                                         </div>
                                     </div>
                                 </div>
+                                {isSeller ?
+                                <div className="my-4">
+                                {productRequest.status === 1 && (
+                                    <div className="p-4 bg-gray-200 bg-opacity-75 shadow-md">
+                                        <div className="mb-8">
+                                            {shelves.length > 0 ? (
+                                                <>
+                                                    <label className="font-bold text-slate-700">
+                                                        { t("selectedShelf")}
+                                                    </label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 mt-2">
+                                                        {shelves.slice(0, visibleShelves).map((shelf) => (
+                                                            <div className="relative group" key={shelf.id}>
+                                                                <div
+                                                                    className={`cursor-pointer p-4 border rounded-lg text-center break-words truncate ${selectedShelves.includes(Number(shelf.id))
+                                                                        ? 'bg-green-200 border-green-600 text-green-600' // Selected shelf
+                                                                        : 'bg-blue-200 border-blue-600 text-blue-600' // Non-selected shelf
+                                                                        }`}
+                                                                    
+                                                                >
+                                                                    {shelf.title}
+                                                                </div>
 
+                                                                {/* Tooltip for full name on hover */}
+                                                                <div className="absolute hidden group-hover:block bg-gray-700 text-white text-sm p-2 rounded-lg shadow-md w-max max-w-xs z-10 top-full left-1/2 transform -translate-x-1/2 mt-2">
+                                                                    {shelf.title}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <div className="mt-2 text-sm text-red-600">
+                                                        {error.shelfSelection}
+                                                    </div>
+
+                                                    <div className="flex justify-center mt-4">
+                                                        {visibleShelves < shelves.length && (
+                                                            <button
+                                                                type="button"
+                                                                className="flex items-center text-blue-600 hover:text-blue-400"
+                                                                onClick={showMoreShelves}
+                                                            >
+                                                                <span>{t("showMore")}</span>
+                                                                <FaArrowDown className="ml-1" />
+                                                            </button>
+                                                        )}
+                                                        {visibleShelves > 4 && (
+                                                            <button
+                                                                type="button"
+                                                                className="flex items-center text-blue-600 hover:text-blue-400 ml-4"
+                                                                onClick={showLessShelves}
+                                                            >
+                                                                <span>{t("showLess")}</span>
+                                                                <FaArrowUp className="ml-1" />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="w-full items-center text-center justify-center">
+                                                    <p
+                                                        className="text-red-600 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-red-600 duration-300 group-hover:translate-x-0 ease"
+                                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                                        
+                                                    >
+                                                        {t("noShelvesMessage")}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Max count input */}
+                                        <div className="mb-8">
+                                            <label className="font-bold text-slate-700">{t("maxCount")}</label>
+                                            <input
+                                                type="number"
+                                                className="border font-sans border-blue-600 text-blue-600 sm:text-sm rounded-xl p-2.5 w-full"
+                                                value={maxCount === 0 ? '' : maxCount}
+                                                disabled
+                                                // onChange={handleMaxCountChange}
+                                                // onBlur={handleMaxCountChange}
+                                            />
+                                            <div
+                                                className="mt-2 text-sm text-red-600"
+                                                style={{
+                                                    visibility: error.maxCount ? "visible" : "hidden",
+                                                }}
+                                            >
+                                                {error.maxCount}
+                                            </div>
+                                        </div>
+
+                                      
+                                        
+                                    </div>
+                                )}
+                            </div>:
                                 <div className="my-4">
                                     {productRequest.status !== 2 && (
                                         <div className="p-4 bg-gray-200 bg-opacity-75 shadow-md">
@@ -355,6 +462,7 @@ const AllProductRequestsDetails = () => {
                                         </div>
                                     )}
                                 </div>
+                                }
 
                                 {productRequest.status === 0 && (
                                     <div className="my-4">
