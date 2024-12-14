@@ -14,6 +14,8 @@ function AllProducts() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [products, setProducts] = useState([]);
+    const [productsCount, setProductsCount] = useState([]);
+
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -24,6 +26,7 @@ function AllProducts() {
             getSellerProducts(storeId, pageNumber, selectedStatus).then((response) => {
                 const fetchedProducts = response.data.data;
                 setProducts(fetchedProducts);
+                setProductsCount(response.data.count)
             });
         }
     }, []);
@@ -446,7 +449,7 @@ function AllProducts() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && (
+                                {products.length >= pageSize && pageNumber * pageSize < productsCount &&(
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         

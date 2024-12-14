@@ -14,6 +14,8 @@ function AllProductRequests() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [productRequests, setProductRequests] = useState([]);
+    const [productRequestsCount, setProductRequestsCount] = useState([]);
+
     const [storeId, setStoreId] = useState();
     const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
@@ -53,6 +55,7 @@ function AllProductRequests() {
                 const response = await getProductRequests(storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
+                setProductRequestsCount(response.data.count)
             } catch (error) {
                 console.error("Error fetching product requests:", error);
             }
@@ -428,7 +431,7 @@ function AllProductRequests() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {productRequests.length >= pageSize && (
+                                {productRequests.length >= pageSize && pageNumber * pageSize < productRequestsCount &&  (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => {
