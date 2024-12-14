@@ -161,8 +161,13 @@ function ProductStore() {
     }, [isOwner, navigate]);
 
     const goToEditProductsPage = (product) => {
-        navigateTo(
-            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`
+        navigate(
+            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
+                state: {
+                    
+                    isOwnerRouter:true
+                }
+            }
         );
     };
 
