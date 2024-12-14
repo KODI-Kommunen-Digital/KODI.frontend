@@ -48,7 +48,7 @@ function AllProducts() {
                 fetchProducts(storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProducts, storeId, pageNumber, selectedStatus]);
+    }, [fetchProducts, storeId, selectedStatus]);
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -131,8 +131,13 @@ function AllProducts() {
     };
 
     const goToEditProductsPage = (product) => {
-        navigateTo(
-            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`
+        navigate(
+            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
+                state: {
+                    
+                    isOwnerRouter:false
+                }
+            }
         );
     };
 
@@ -422,7 +427,11 @@ function AllProducts() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber - 1)}
+                                        
+                                        onClick={() => {
+                                            setPageNumber(pageNumber - 1);
+                                            fetchProducts(storeId, pageNumber - 1, selectedStatus);
+                                          }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -440,7 +449,11 @@ function AllProducts() {
                                 {products.length >= pageSize && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber + 1)}
+                                        
+                                        onClick={() => {
+                                            setPageNumber(pageNumber +1);
+                                            fetchProducts(storeId, pageNumber + 1, selectedStatus);
+                                          }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
