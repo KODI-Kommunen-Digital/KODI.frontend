@@ -49,6 +49,11 @@ export async function deleteProduct(cityId, storeId, productId) {
     `/v1/cities/${cityId}/store/${storeId}/product/${productId}`
   );
 }
+export async function deleteProductRequest(cityId, storeId, productRequestId) {
+  return axios.delete(
+    `/v1/cities/${cityId}/store/${storeId}/productRequest/${productRequestId}`
+  );
+}
 
 export async function uploadImage(formData, cityId, storeId, productId) {
   return axios.post(
@@ -251,6 +256,12 @@ export async function getSellerProducts(storeId, pageNumber, status) {
 export async function getProductRequests(storeId, pageNumber, status) {
   return axios.get(
     `/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
+  );
+}
+
+export async function getProductRequestsSeller(cityId,storeId, pageNumber, status) {
+  return axios.get(
+    `/v1/cities/${cityId}/store/${storeId}/productRequest?pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 
