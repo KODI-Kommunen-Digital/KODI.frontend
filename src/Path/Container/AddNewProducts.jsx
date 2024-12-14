@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
@@ -70,6 +70,8 @@ function AddNewProducts() {
         barcode: "",
         minAge: null,
     });
+    const location = useLocation();
+    const { isOwnerRouter} = location.state || {};
 
     const getChangedFields = () => {
         const changedFields = {};
@@ -108,15 +110,24 @@ function AddNewProducts() {
                     ...getChangedFields(),
                     inventory: inventoryDifference,
                 };
+                // eslint-disable-next-line camelcase
+                const payload_Update = {
+                    ...getChangedFields(),
+                    inventory: inventoryDifference,
+                };
 
                 // Remove fields that are not allowed by the API
-                // delete payload.cityId;
-                // delete payload.shopId;
-                // delete payload.maxCount;
+                 delete payload.cityId;
+                 delete payload.shopId;
+                 delete payload.maxCount;
+                 // eslint-disable-next-line camelcase
+                 delete payload_Update.cityId;
+                 // eslint-disable-next-line camelcase
+                 delete payload_Update.shopId;
 
                 const createProductResponse = newProduct
                     ? await createNewProduct(parseInt(input.cityId, 10), parseInt(input.shopId, 10), payload)
-                    : await updateProduct(parseInt(input.cityId, 10), parseInt(input.shopId, 10), productId, payload);
+                    : await updateProduct(parseInt(input.cityId, 10), parseInt(input.shopId, 10), productId, payload_Update);
 
                 const newProductId = parseInt(createProductResponse.data.data.id, 10);
 
@@ -454,7 +465,7 @@ function AddNewProducts() {
                     return "";
                 }
             case "maxCount":
-                if (!value) {
+                if (!value && isOwnerRouter) {
                     return t("pleaseEnterMaxCount");
                 } else if (isNaN(value)) {
                     return t("pleaseEnterValidNumber");
@@ -1061,7 +1072,7 @@ function AddNewProducts() {
                             </div>
                         </div>
 
-                        {(isOwner) && (
+                        {isOwnerRouter && (
                             <div className="relative mb-4">
                                 <label
                                     htmlFor="place"
