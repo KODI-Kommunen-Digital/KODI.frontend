@@ -11,6 +11,8 @@ const MyOrders = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [myOrders, setMyOrders] = useState([]);
+    const [myOrdersCount, setMyOrdersCount] = useState([]);
+
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
 
@@ -18,6 +20,8 @@ const MyOrders = () => {
         getMyOrders(pageNumber).then((response) => {
             const sortedOrders = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             setMyOrders(sortedOrders);
+            setMyOrdersCount(response.data.count)
+            
         });
     }, []);
 
@@ -172,7 +176,7 @@ const MyOrders = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {myOrders.length >= pageSize && (
+                                {myOrders.length >= pageSize  && pageNumber * pageSize < myOrdersCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}

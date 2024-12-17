@@ -14,6 +14,8 @@ function ProductStore() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [products, setProducts] = useState([]);
+    const [productCount, setProductsCount] = useState([]);
+
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -24,6 +26,7 @@ function ProductStore() {
             getProducts(storeId, pageNumber, selectedStatus).then((response) => {
                 const productStores = response.data.data;
                 setProducts(productStores);
+                setProductsCount(response.data.count)
             });
         }
     }, []);
@@ -161,8 +164,13 @@ function ProductStore() {
     }, [isOwner, navigate]);
 
     const goToEditProductsPage = (product) => {
-        navigateTo(
-            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`
+        navigate(
+            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
+                state: {
+                    
+                    isOwnerRouter:true
+                }
+            }
         );
     };
 
@@ -596,7 +604,7 @@ function ProductStore() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && (
+                                {products.length >= pageSize  && pageNumber * pageSize < productCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => {
