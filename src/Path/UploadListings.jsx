@@ -758,7 +758,7 @@ function UploadListings() {
       descriptions = descriptions.map((description) => `- ${description}`);
       listType = "ul";
     } else {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
       }));
@@ -770,7 +770,7 @@ function UploadListings() {
       .map((description) => `<li>${description}</li>`)
       .join("")}</${listType}>`;
 
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       description: listHTML,
     }));
