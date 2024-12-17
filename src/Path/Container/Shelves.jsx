@@ -10,6 +10,8 @@ function Shelves() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [shelves, setShelves] = useState([]);
+    const [shelvesCount, setShelvesCount] = useState([]);
+
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
     const [cityId, setCityId] = useState(null);
@@ -19,6 +21,8 @@ function Shelves() {
             getAllShelves(cityId, storeId, pageNumber).then((response) => {
                 const shelvesData = response.data.data;
                 setShelves(shelvesData);
+                setShelvesCount(response.data.count)
+
             });
         }
     }, []);
@@ -283,7 +287,7 @@ function Shelves() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {shelves.length >= pageSize && (
+                                {shelves.length >= pageSize && pageNumber * pageSize < shelvesCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}

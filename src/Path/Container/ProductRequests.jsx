@@ -1,57 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
-import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getSellerProducts, getSellerShops } from "../../Services/containerApi";
+import { getProductRequestsSeller, getSellerShops, getUserRoleContainer, deleteProductRequest } from "../../Services/containerApi";
+import { statusByName } from "../../Constants/containerStatus";
 import { useTranslation } from 'react-i18next';
-import { status, statusByName } from "../../Constants/containerStatus";
+import { FaEye } from 'react-icons/fa';
 import RegionColors from "../../Components/RegionColors";
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
 
-function AllProducts() {
+function ProductRequests() {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
-    const [products, setProducts] = useState([]);
-    const [productsCount, setProductsCount] = useState([]);
+    const [productRequests, setProductRequests] = useState([]);
+    const [productRequestsCount, setProductRequestsCount] = useState([]);
 
-    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
-    const [stores, setStores] = useState([]);
     const [cityId, setCityId] = useState();
-
-    const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
-        if (storeId) {
-            getSellerProducts(storeId, pageNumber, selectedStatus).then((response) => {
-                const fetchedProducts = response.data.data;
-                setProducts(fetchedProducts);
-                setProductsCount(response.data.count)
-            });
-        }
-    }, []);
-
-    useEffect(() => {
-        const accessToken =
-            window.localStorage.getItem("accessToken") ||
-            window.sessionStorage.getItem("accessToken");
-        const refreshToken =
-            window.localStorage.getItem("refreshToken") ||
-            window.sessionStorage.getItem("refreshToken");
-
-        if (!accessToken && !refreshToken) {
-            navigate("/login");
-            return;
-        }
-
-        if (storeId) {
-            setPageNumber(1);
-            const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            if (selectedStore) {
-                fetchProducts(storeId, pageNumber, selectedStatus);
-            }
-        }
-    }, [fetchProducts, storeId, selectedStatus]);
+    const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
+    const [stores, setStores] = useState([]);
+    
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -70,7 +39,7 @@ function AllProducts() {
                     setCityId(selectedStore.cityId);
                     setPageNumber(1);
 
-                    fetchProducts(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
+                    fetchProductRequests(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
                 }
             }
         });
@@ -80,29 +49,45 @@ function AllProducts() {
         fetchStores();
     }, [fetchStores]);
 
-    function getStatusClass(statusId) {
-        if (status[statusId] === "Active") {
-            return "bg-green-400";
+    const fetchProductRequests = useCallback(async (cityId,storeId, pageNumber, selectedStatus) => {
+        if (storeId) {
+            try {
+                const response = await getProductRequestsSeller(cityId,storeId, pageNumber, selectedStatus);
+                const allRequests = response.data.data;
+                setProductRequests(allRequests);
+                setProductRequestsCount(response.data.count)
+
+            } catch (error) {
+                console.error("Error fetching product requests:", error);
+            }
         }
-        if (status[statusId] === "Pending") {
-            return "bg-yellow-400";
+    }, []);
+
+    useEffect(() => {
+        if (storeId) {
+            setPageNumber(1);
+            const selectedStore = stores.find(store => store.id === parseInt(storeId));
+            if (selectedStore) {
+                fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
+            }
         }
-    }
+    }, [fetchProductRequests, storeId, selectedStatus]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
         if (selectedStore) {
+            const cityId = selectedStore.cityId;
+            setCityId(cityId);
             setStoreId(storeId);
-            setCityId(selectedStore.cityId);
-            setPageNumber(1); // Reset page number when a new store is selected
+            setPageNumber(1);
 
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProducts(storeId, 1, selectedStatus);
+            fetchProductRequests(cityId, storeId, 1, selectedStatus);
         }
     };
 
@@ -110,20 +95,17 @@ function AllProducts() {
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
         if (selectedStore) {
+            const cityId = selectedStore.cityId;
             setStoreId(storeId);
-            setCityId(selectedStore.cityId);
+            setCityId(cityId);
             setPageNumber(1);
 
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-            fetchProducts(storeId, 1, selectedStatus);
+            fetchProductRequests(cityId, storeId, 1, selectedStatus);
         }
-    };
-
-    const handleViewDetailsClick = (product) => {
-        navigate('/SellerScreen/AllProductsDetailsPage', { state: { productDetails: product } });
     };
 
     const navigate = useNavigate();
@@ -133,16 +115,104 @@ function AllProducts() {
         }
     };
 
+    const [isOwner, setIsOwner] = useState(null);
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            try {
+                const accessToken =
+                    window.localStorage.getItem("accessToken") ||
+                    window.sessionStorage.getItem("accessToken");
+                const refreshToken =
+                    window.localStorage.getItem("refreshToken") ||
+                    window.sessionStorage.getItem("refreshToken");
+
+                if (!accessToken && !refreshToken) {
+                    navigate("/login");
+                    return;
+                }
+                const roleResponse = await getUserRoleContainer();
+                let roles = roleResponse.data.data;
+                roles = roles.map(Number);
+                // 102 is seller
+                if (roles.includes(102)) {
+                    setIsOwner(true);
+                } else {
+                    setIsOwner(false);
+                }
+            } catch (error) {
+                console.error("Error fetching user roles:", error);
+                navigate("/Error");
+            }
+        };
+
+        fetchUserRole();
+    }, [navigate]);
+
+    useEffect(() => {
+        if (isOwner === false) {
+            navigate("/Error");
+        }
+    }, [isOwner, navigate]);
+
+    const handleViewDetailsClick = (product) => {
+        navigate('/SellerScreen/ProductRequestsDetails', {
+            state: {
+                productDetails: product,
+                storeId: storeId,
+                cityId: cityId,
+                isSeller:true
+            }
+        });
+    };
+    
+
     const goToEditProductsPage = (product) => {
         navigate(
-            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
+            `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.productId}`, {
                 state: {
                     
                     isOwnerRouter:false
                 }
             }
         );
+       
     };
+
+    const [showConfirmationModal, setShowConfirmationModal] = useState({
+        visible: false,
+        forums: null,
+        onConfirm: () => { },
+        onCancel: () => { },
+    });
+
+    function handleDelete(product) {
+        deleteProductRequest(cityId, product.shopId, product.id)
+            .then((res) => {
+                setShowConfirmationModal({ visible: false });
+                window.location.reload();
+                const storeId = product.shopId;
+
+                getProductRequestsSeller(cityId,storeId, pageNumber, selectedStatus)
+                    .then((response) => {
+                        console.log("Product requests updated", response.data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching product requests", error);
+                    });
+            })
+            .catch((error) => {
+                console.error("Error deleting product", error);
+            });
+    }
+
+    function deleteProductOnClick(product) {
+        setShowConfirmationModal({
+            visible: true,
+            product,
+            onConfirm: () => handleDelete(product),
+            onCancel: () => setShowConfirmationModal({ visible: false }),
+        });
+    }
 
     return (
         <section className="bg-gray-900 body-font relative h-screen">
@@ -157,19 +227,44 @@ function AllProducts() {
                                     <div
                                         className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Active)}
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Active);
+                                            setPageNumber(1)
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
-                                        {t("active")}
+                                        {t("approved")}
                                     </div>
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => setSelectedStatus(statusByName.Pending)}
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Pending);
+                                            setPageNumber(1)
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {t("pending")}
                                     </div>
+                                    <div
+                                        className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
+                                            } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Inactive);
+                                            setPageNumber(1)
+                                        }}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("rejected")}
+                                    </div>
+                                    {/* <div
+                                        className={`${selectedStatus === statusByName.ChangeRequested ? "bg-gray-700 text-white" : "text-gray-300"
+                                            } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                                        onClick={() => setSelectedStatus(statusByName.ChangeRequested)}
+                                        style={{ fontFamily: "Poppins, sans-serif" }}
+                                    >
+                                        {t("changeRequested")}
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -180,8 +275,10 @@ function AllProducts() {
                                     value={selectedStatus || ""}
                                     style={{ fontFamily: "Poppins, sans-serif" }}
                                 >
-                                    <option value={statusByName.Active}>{t("active")}</option>
+                                    <option value={statusByName.Active}>{t("approved")}</option>
                                     <option value={statusByName.Pending}>{t("pending")}</option>
+                                    <option value={statusByName.Inactive}>{t("rejected")}</option>
+                                    {/* <option value={statusByName.ChangeRequested}>{t("changeRequested")}</option> */}
                                 </select>
                             </div>
                         </div>
@@ -191,7 +288,7 @@ function AllProducts() {
 
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
-                    {storeId && products && products.length > 0 ? (
+                    {storeId && productRequests && productRequests.length > 0 ? (
                         <>
                             <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
                                 <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
@@ -222,18 +319,18 @@ function AllProducts() {
 
                             <div className="bg-white mt-4 p-0">
                                 <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
-                                    {t("allProducts")}
+                                    {t("allProductRequests")}
                                 </h2>
                                 <div className="overflow-x-auto">
-                                    <table className="w-full text-sm text-left text-gray-500 p-6 space-y-10 rounded-lg">
+                                    <table className="w-full text-sm text-left  text-gray-500  p-6 space-y-10 rounded-lg">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                             <tr>
                                                 <th
                                                     scope="col"
-                                                    className="px-6 sm:px-6 py-4 text-center"
+                                                    className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -243,17 +340,7 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
-                                                    }}
-                                                >
-                                                    {t("date_of_creation")}
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center"
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -263,60 +350,51 @@ function AllProducts() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
-                                                    {t("tax")}
+                                                    {t("count")}
                                                 </th>
+
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("minAge")}
                                                 </th>
-                                                <th
+                                                {[0,2].includes(selectedStatus) &&<th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
-                                                    }}
-                                                >
-                                                    {t("status")}
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-center"
-                                                    style={{
-                                                        fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("action")}
-                                                </th>
-                                                <th
+                                                </th>}
+                                                {[1].includes(selectedStatus) && <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "12.5%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
-                                                </th>
+                                                </th>}
 
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            {products.map((product, index) => (
+                                            {productRequests.map((product, index) => (
                                                 <tr
                                                     key={index}
-                                                    className="bg-white border-b hover:bg-gray-50"
+                                                    className="bg-white border-p hover:bg-gray-50"
                                                 >
                                                     <th
                                                         scope="row"
@@ -332,13 +410,13 @@ function AllProducts() {
                                                                     "admin/Container/ShoppingCart.png"
                                                             }
                                                             onError={(e) => {
-                                                                e.target.src = CONTAINERIMAGE; // Set default image if loading fails
+                                                                e.target.src = CONTAINERIMAGE;
                                                             }}
                                                         />
                                                         <div className="pl-0 sm:pl-3 overflow-hidden max-w-[14.3rem] sm:max-w-[10rem]">
                                                             <div
-                                                                className="font-normal text-gray-500 truncate"
-                                                                style={{ fontFamily: 'Poppins, sans-serif' }}
+                                                                className="text-gray-500 font-bold truncate"
+                                                                style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                             >
                                                                 {product.title}
                                                             </div>
@@ -346,24 +424,17 @@ function AllProducts() {
                                                     </th>
 
                                                     <td
-                                                        className="px-6 py-4 text-center font-bold text-blue-600"
-                                                        style={{ fontFamily: 'Poppins, sans-serif' }}
-                                                    >
-                                                        {new Date(product.createdAt).toLocaleString('de')}
-                                                    </td>
-
-                                                    <td
                                                         className="px-6 py-4 text-center font-bold text-green-600"
                                                         style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        € {product.price}
+                                                        {product.price}
                                                     </td>
 
                                                     <td
                                                         className={`px-6 py-4 text-center font-bold text-red-600`}
                                                         style={{ fontFamily: 'Poppins, sans-serif' }}
                                                     >
-                                                        {(product.tax != null ? product.tax : 0).toFixed(2)}%
+                                                        {product.count}
                                                     </td>
 
                                                     <td
@@ -373,23 +444,9 @@ function AllProducts() {
                                                         {product.minAge != null ? product.minAge : 0}
                                                     </td>
 
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center justify-center">
-                                                            <div
-                                                                className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
-                                                                    product.isActive
-                                                                )} mr-2`}
-                                                            ></div>
-
-                                                            <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                                                {t(status[product.isActive].toLowerCase())}
-                                                            </h1>
-                                                        </div>
-                                                    </td>
-
-                                                    <td className="px-6 py-4 text-center font-bold">
+                                                    {[0,2].includes(selectedStatus) && <td className="px-6 py-4 text-center font-bold">
                                                         <div className="flex justify-center items-center">
-                                                            <a
+                                                            {[0].includes(selectedStatus)&&<a
                                                                 className={`font-medium text-green-600 px-2 cursor-pointer`}
                                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                                                 onClick={() => goToEditProductsPage(product)}
@@ -402,11 +459,94 @@ function AllProducts() {
                                                                 >
                                                                     <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
                                                                 </svg>
+                                                            </a>}
+
+                                                            <a
+                                                                className={`font-medium text-red-600 px-2 cursor-pointer`}
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                onClick={() => deleteProductOnClick(product)}
+                                                            >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    height="1em"
+                                                                    viewBox="0 0 640 512"
+                                                                    className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                                                >
+                                                                    <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                                                </svg>
                                                             </a>
                                                         </div>
-                                                    </td>
+                                                    </td>}
+                                                    {showConfirmationModal.visible && (
+                                                        <div className="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto">
+                                                            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                                                <div
+                                                                    className="fixed inset-0 transition-opacity"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                                                                </div>
+                                                                <span
+                                                                    className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    &#8203;
+                                                                </span>
+                                                                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                                                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                                        <div className="sm:flex sm:items-start">
+                                                                            <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                                                <svg
+                                                                                    className="h-6 w-6 text-red-700"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    fill="none"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    stroke="currentColor"
+                                                                                    aria-hidden="true"
+                                                                                >
+                                                                                    <path
+                                                                                        strokeLinecap="round"
+                                                                                        strokeLinejoin="round"
+                                                                                        strokeWidth="2"
+                                                                                        d="M6 18L18 6M6 6l12 12"
+                                                                                    />
+                                                                                </svg>
+                                                                            </div>
+                                                                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                                                <h3 className="text-lg leading-6 font-medium text-slate-800">
+                                                                                    {t("areyousure")}
+                                                                                </h3>
+                                                                                <div className="mt-2">
+                                                                                    <p className="text-sm text-gray-500">
+                                                                                        {t("doyoureallywanttodeleteProduct")}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                                                        <button
+                                                                            onClick={showConfirmationModal.onConfirm}
+                                                                            type="button"
+                                                                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                                                        >
+                                                                            {t("delete")}
+                                                                        </button>
 
-                                                    <td className="px-6 py-4">
+                                                                        <button
+                                                                            onClick={showConfirmationModal.onCancel}
+                                                                            type="button"
+                                                                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                                                                        >
+                                                                            {t("cancel")}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {[1].includes(selectedStatus) && <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
                                                             <div
                                                                 className="relative group inline-block"
@@ -418,7 +558,7 @@ function AllProducts() {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </td>
+                                                    </td>}
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -430,11 +570,11 @@ function AllProducts() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
                                         onClick={() => {
                                             setPageNumber(pageNumber - 1);
-                                            fetchProducts(storeId, pageNumber - 1, selectedStatus);
-                                          }}
+                                            fetchProductRequests(cityId, storeId, pageNumber - 1, selectedStatus);
+                                        }
+                                        }
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -449,14 +589,13 @@ function AllProducts() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && pageNumber * pageSize < productsCount &&(
+                                {productRequests.length >= pageSize && pageNumber * pageSize < productRequestsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
                                         onClick={() => {
-                                            setPageNumber(pageNumber +1);
-                                            fetchProducts(storeId, pageNumber + 1, selectedStatus);
-                                          }}
+                                            setPageNumber(pageNumber + 1);
+                                            fetchProductRequests(cityId, storeId, pageNumber + 1, selectedStatus); // Make sure to fetch with the new page number
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
@@ -469,7 +608,7 @@ function AllProducts() {
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
-                                        <div className="flex justify-center gap-2 ">
+                                        <div className="flex justify-center gap-2">
                                             {stores.map((store) => (
                                                 <div key={store.id} className="w-full max-w-xs">
                                                     <div
@@ -500,7 +639,7 @@ function AllProducts() {
                                 </div>
                             </div>
 
-                            {storeId && products.length === 0 && (
+                            {storeId && productRequests.length === 0 && (
                                 <div className="text-center mt-6">
                                     <p className="text-gray-500">
                                         {t("noDataForStore")}
@@ -513,7 +652,7 @@ function AllProducts() {
 
                             <center className="mt-6">
                                 <a
-                                    onClick={() => navigateTo("/SellerScreen")}
+                                    onClick={() => navigateTo("/OwnerScreen/StoreDetails")}
                                     className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out bg-indigo-700 border-2 border-indigo-600 rounded-full shadow-md group cursor-pointer"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-indigo-700 group-hover:-translate-x-0 ease">
@@ -546,4 +685,4 @@ function AllProducts() {
     );
 }
 
-export default AllProducts;
+export default ProductRequests;

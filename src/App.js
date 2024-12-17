@@ -79,6 +79,9 @@ import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetail
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 
 import Modal from "react-modal";
+import ProductRequests from "./Path/Container/ProductRequests.jsx";
+
+
 Modal.setAppElement("#root");
 
 const App = () => {
@@ -273,6 +276,17 @@ const App = () => {
               <Route
                 path="/SellerScreen/AllProductsDetailsPage"
                 element={<AllProductsDetailsPage />}
+                exact
+              />
+
+              <Route
+                path="/SellerScreen/ProductRequests"
+                element={<ProductRequests />}
+                exact
+              />
+              <Route
+                path="/SellerScreen/ProductRequestsDetails"
+                element={<AllProductRequestsDetails />}
                 exact
               />
 

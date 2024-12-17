@@ -26,10 +26,11 @@ function UploadPosts() {
 	const [updating, setUpdating] = useState(false);
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
+	const [isSuccess, setIsSuccess] = useState(false);
 	// Drag and Drop starts
 	const [image1, setImage1] = useState(null);
 	const [, setDragging] = useState(false);
-
+	const CHARACTER_LIMIT = 255;
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
@@ -167,6 +168,7 @@ function UploadPosts() {
 				// } else {
 				// 	await updateForumPosts(cityId, input, forumId, postId);
 				// }
+				setIsSuccess(true);
 				const response = newPost
 					? await forumPosts(cityId, forumId, input)
 					: await updateForumPosts(cityId, input, forumId, postId);
@@ -222,12 +224,28 @@ function UploadPosts() {
 	};
 
 	const [description, setDescription] = useState("");
-
 	const onDescriptionChange = (newContent) => {
 		const hasNumberedList = newContent.includes("<ol>");
 		const hasBulletList = newContent.includes("<ul>");
 		let descriptions = [];
 		let listType = "";
+
+		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+		const characterCount = plainText.length;
+
+		if (characterCount > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+			}));
+			return;
+		} else {
+			setError((prev) => ({
+				...prev,
+				description: "",
+			}));
+		}
+
 		if (hasNumberedList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
@@ -243,7 +261,6 @@ function UploadPosts() {
 			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
 		} else {
-			// No list tags found, treat the input as plain text
 			setInput((prev) => ({
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
@@ -251,9 +268,11 @@ function UploadPosts() {
 			setDescription(newContent);
 			return;
 		}
+
 		const listHTML = `<${listType}>${descriptions
 			.map((description) => `<li>${description}</li>`)
 			.join("")}</${listType}>`;
+
 		setInput((prev) => ({
 			...prev,
 			description: listHTML,
@@ -362,7 +381,7 @@ function UploadPosts() {
 							placeholder={t("enterTitle")}
 						/>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.title ? "visible" : "hidden",
 							}}
@@ -398,7 +417,7 @@ function UploadPosts() {
 							))}
 						</select>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.cityId ? "visible" : "hidden",
 							}}
@@ -432,7 +451,7 @@ function UploadPosts() {
 							))}
 						</select>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.cityId ? "visible" : "hidden",
 							}}
@@ -455,24 +474,39 @@ function UploadPosts() {
 							ref={editor}
 							value={description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
-							onBlur={(range, source, editor) => {
-								validateInput({
-									target: {
-										name: "description",
-										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-									},
-								});
+							onBlur={() => {
+								const quillInstance = editor.current?.getEditor();
+								if (quillInstance) {
+									validateInput({
+										target: {
+											name: "description",
+											value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+										},
+									});
+								}
 							}}
 							placeholder={t("writeSomethingHere")}
+							readOnly={updating || isSuccess}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-						/>
-						<div
-							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.description ? "visible" : "hidden",
+								position: "relative",
+								zIndex: 1000,
 							}}
-						>
-							{error.description}
+						/>
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "mt-2 text-sm text-red-600"
+									: "h-[24px] text-gray-500"
+									}`}
+							>
+								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.description && (
+								<span className="mt-2 text-sm text-red-600">
+									{error.description}
+								</span>
+							)}
 						</div>
 					</div>
 				</div>

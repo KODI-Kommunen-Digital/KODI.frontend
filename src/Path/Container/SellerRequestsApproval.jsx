@@ -12,6 +12,8 @@ const SellerRequestsApproval = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [sellerRequests, setSellerRequests] = useState([]);
+    const [sellerRequestsCount, setSellerRequestsCount] = useState([]);
+
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [storeId, setStoreId] = useState();
@@ -51,6 +53,8 @@ const SellerRequestsApproval = () => {
             getSellers(cityId, storeId, pageNumber, selectedStatus).then((response) => {
                 const requests = response.data.data;
                 setSellerRequests(requests);
+                setSellerRequestsCount(response.data.count)
+
             });
         }
     }, []);
@@ -429,7 +433,7 @@ const SellerRequestsApproval = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {sellerRequests.length >= pageSize && (
+                                {sellerRequests.length >= pageSize && pageNumber * pageSize < sellerRequestsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}

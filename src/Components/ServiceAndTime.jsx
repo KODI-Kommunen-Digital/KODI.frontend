@@ -514,7 +514,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
               <div
-                className="h-[24px] text-red-600"
+                className="mt-2 text-sm text-red-600"
                 style={{
                   visibility: appointmentError[serviceIndex]?.name ? "visible" : "hidden",
                 }}
@@ -550,7 +550,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
               </div>
 
               <div
-                className="h-[24px] text-red-600"
+                className="mt-2 text-sm text-red-600"
                 style={{
                   visibility: appointmentError[serviceIndex]?.duration ? "visible" : "hidden",
                 }}
@@ -859,7 +859,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
         </button>
 
         <div
-          className="h-[24px] text-red-600"
+          className="mt-2 text-sm text-red-600"
         >
           {!isValidServiceCount && (
             <p >{t(validNumberofServicesError)}</p>

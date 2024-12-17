@@ -14,6 +14,8 @@ function AllProductRequests() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [productRequests, setProductRequests] = useState([]);
+    const [productRequestsCount, setProductRequestsCount] = useState([]);
+
     const [storeId, setStoreId] = useState();
     const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
@@ -47,12 +49,13 @@ function AllProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchProductRequests = useCallback(async (cityId, storeId, pageNumber, selectedStatus) => {
+    const fetchProductRequests = useCallback(async (cityId,storeId, pageNumber, selectedStatus) => {
         if (storeId) {
             try {
                 const response = await getProductRequests(storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
+                setProductRequestsCount(response.data.count)
             } catch (error) {
                 console.error("Error fetching product requests:", error);
             }
@@ -67,7 +70,7 @@ function AllProductRequests() {
                 fetchProductRequests(cityId, storeId, pageNumber, selectedStatus);
             }
         }
-    }, [fetchProductRequests, cityId, storeId, selectedStatus]);
+    }, [fetchProductRequests, storeId, selectedStatus]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -154,10 +157,13 @@ function AllProductRequests() {
             state: {
                 productDetails: product,
                 storeId: storeId,
-                cityId: cityId
+                cityId: cityId,
+                isSeller:false
             }
         });
     };
+
+    
 
     return (
         <section className="bg-gray-900 body-font relative h-screen">
@@ -172,7 +178,8 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => {setSelectedStatus(statusByName.Active);
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Active);
                                             setPageNumber(1)
                                         }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -182,7 +189,8 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => {setSelectedStatus(statusByName.Pending);
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Pending);
                                             setPageNumber(1)
                                         }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -192,7 +200,8 @@ function AllProductRequests() {
                                     <div
                                         className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => {setSelectedStatus(statusByName.Inactive);
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Inactive);
                                             setPageNumber(1)
                                         }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -272,7 +281,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("title")}
@@ -282,7 +291,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("price")}
@@ -292,7 +301,7 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("count")}
@@ -303,17 +312,18 @@ function AllProductRequests() {
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("minAge")}
                                                 </th>
+                                               
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "20%",
+                                                        width: "16.66%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -326,7 +336,7 @@ function AllProductRequests() {
                                             {productRequests.map((product, index) => (
                                                 <tr
                                                     key={index}
-                                                    className="bg-white border-b hover:bg-gray-50"
+                                                    className="bg-white border-p hover:bg-gray-50"
                                                 >
                                                     <th
                                                         scope="row"
@@ -376,6 +386,8 @@ function AllProductRequests() {
                                                         {product.minAge != null ? product.minAge : 0}
                                                     </td>
 
+                                                    
+
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
                                                             <div
@@ -400,8 +412,10 @@ function AllProductRequests() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => {setPageNumber(pageNumber - 1);
-                                            fetchProductRequests(cityId, storeId, pageNumber - 1, selectedStatus);}
+                                        onClick={() => {
+                                            setPageNumber(pageNumber - 1);
+                                            fetchProductRequests(cityId, storeId, pageNumber - 1, selectedStatus);
+                                        }
                                         }
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
@@ -417,7 +431,7 @@ function AllProductRequests() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {productRequests.length >= pageSize && (
+                                {productRequests.length >= pageSize && pageNumber * pageSize < productRequestsCount &&  (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => {

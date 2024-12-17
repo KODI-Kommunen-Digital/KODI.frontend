@@ -9,6 +9,8 @@ const PaymentStatus = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [paymentStatus, setPaymentStatus] = useState([]);
+    const [paymentStatusCount, setPaymentStatusCount] = useState([]);
+
     const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
 
@@ -68,6 +70,8 @@ const PaymentStatus = () => {
             }).then((response) => {
                 const status = response.data.data;
                 setPaymentStatus(status);
+                setPaymentStatusCount(response.data.count)
+
             });
         }
     }, [pageNumber, pageSize]);
@@ -216,7 +220,7 @@ const PaymentStatus = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {paymentStatus.length >= pageSize && (
+                                {paymentStatus.length >= pageSize && pageNumber * pageSize < paymentStatusCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNo(pageNumber + 1)}
