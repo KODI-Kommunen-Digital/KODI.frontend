@@ -37,6 +37,24 @@ export async function createNewProduct(cityId, storeId, params) {
   return axios.post(`/v1/cities/${cityId}/store/${storeId}/product`, params);
 }
 
+export async function updateProduct(cityId, storeId, productId, params) {
+  return axios.patch(
+    `/v1/cities/${cityId}/store/${storeId}/product/${productId}`,
+    params
+  );
+}
+
+export async function deleteProduct(cityId, storeId, productId) {
+  return axios.delete(
+    `/v1/cities/${cityId}/store/${storeId}/product/${productId}`
+  );
+}
+export async function deleteProductRequest(cityId, storeId, productRequestId) {
+  return axios.delete(
+    `/v1/cities/${cityId}/store/${storeId}/productRequest/${productRequestId}`
+  );
+}
+
 export async function uploadImage(formData, cityId, storeId, productId) {
   return axios.post(
     `/v1/cities/${cityId}/store/${storeId}/imageUpload/${productId}`,
@@ -238,6 +256,12 @@ export async function getSellerProducts(storeId, pageNumber, status) {
 export async function getProductRequests(storeId, pageNumber, status) {
   return axios.get(
     `/v1/owners/productRequests?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
+  );
+}
+
+export async function getProductRequestsSeller(cityId,storeId, pageNumber, status) {
+  return axios.get(
+    `/v1/cities/${cityId}/store/${storeId}/productRequest?pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 
