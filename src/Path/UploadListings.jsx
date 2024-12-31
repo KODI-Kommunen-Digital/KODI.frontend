@@ -762,7 +762,7 @@ function UploadListings() {
       const regex = /<li>(.*?)(?=<\/li>|$)/gi;
       const matches = newContent.match(regex);
       descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map((description) => `- ${description}`);
+      descriptions = descriptions.map((description) => `\u2022 ${description}`);
       listType = "ul";
     } else {
       setListingInput((prev) => ({
