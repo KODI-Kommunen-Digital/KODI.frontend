@@ -737,20 +737,6 @@ function UploadListings() {
     const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
     const characterCount = plainText.length;
 
-    if (hasNumberedList || hasBulletList) {
-      const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
-      descriptionHTML = newContent.replace(regex, (match) => {
-        // Replace <li> tags with the appropriate marker (either numbers or bullets)
-        const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
-        const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
-        const plainTextListItems = listItems.map((item, index) => {
-          const listItemContent = item.replace(/<\/?li>/gi, "");
-          return isNumberedList
-            ? `${index + 1}. ${listItemContent}`
-            : `\u2022 ${listItemContent}`;
-        });
-        return plainTextListItems.join("<br />");
-      });
     if (characterCount > CHARACTER_LIMIT) {
       setError((prev) => ({
         ...prev,
