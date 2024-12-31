@@ -201,6 +201,7 @@ function UploadListings() {
       } else {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
+        setLocalImageOrPdf(true);
       }
     } else {
       newFiles.forEach(file => {
@@ -417,10 +418,16 @@ function UploadListings() {
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           currentListingId = response.data.data.map(item => item.listingId);
         }
+        else{
+          currentListingId = Array.isArray(response.data.id) ? response.data.id : [response.data.id];
+        }
 
         let cityIdsArray = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           cityIdsArray = response.data.data.map(item => item.cityId);
+        }
+        else{
+          cityIdsArray = [Number(cityIds)];
         }
 
         // Filter opening dates for appointmentInput and services before submitting
@@ -480,7 +487,7 @@ function UploadListings() {
             const minIterations = Math.min(cityIdsArray.length);
             for (let index = 0; index < minIterations; index++) {
               const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+              const listingId = currentListingId[index]?currentListingId[index]:currentListingId;
               pdfForm.append("pdf", pdf);
               allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
             }
@@ -755,7 +762,7 @@ function UploadListings() {
       const regex = /<li>(.*?)(?=<\/li>|$)/gi;
       const matches = newContent.match(regex);
       descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map((description) => `- ${description}`);
+      descriptions = descriptions.map((description) => `\u2022 ${description}`);
       listType = "ul";
     } else {
       setListingInput((prev) => ({
