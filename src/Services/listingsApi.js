@@ -1,6 +1,7 @@
 import { instance } from "../api/axiosInstance";
 import { getUserId } from "./usersApi";
 const axios = instance;
+const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
 export async function getAllListings() {
 	return axios.get(`/listings`);
@@ -15,13 +16,8 @@ export async function getMyListing(params) {
 	params.showExternalListings = "true";
 	return axios.get(`/users/myListings`, { params });
 }
-
-export async function getListingsByCity(cityId, params) {
-	return axios.get(`/cities/${cityId}/listings`, { params });
-}
-
 export async function getListingsById(cityId, listingsId) {
-	return axios.get(`/cities/${cityId}/listings/${listingsId}`);
+	return axios.get(isV2Backend ? `/listings/${listingsId}` : `/cities/${cityId}/listings/${listingsId}`);
 }
 
 // export async function postListingsData(cityId, newListingsDataObj) {
@@ -38,7 +34,7 @@ export async function getListingsBySearch(params) {
 
 export async function uploadListingImage(formData, cityId, listingsId) {
 	return axios.post(
-		`/cities/${cityId}/listings/${listingsId}/imageUpload`,
+		isV2Backend ? `/listings/${listingsId}/imageUpload` : `/cities/${cityId}/listings/${listingsId}/imageUpload`,
 		formData,
 		{
 			headers: {
@@ -50,7 +46,7 @@ export async function uploadListingImage(formData, cityId, listingsId) {
 
 export async function uploadListingPDF(formData, cityId, listingsId) {
 	return axios.post(
-		`/cities/${cityId}/listings/${listingsId}/pdfUpload`,
+		isV2Backend ? `/listings/${listingsId}/pdfUpload` : `cities/${cityId}/listings/${listingsId}/pdfUpload`,
 		formData,
 		{
 			headers: {
@@ -61,7 +57,7 @@ export async function uploadListingPDF(formData, cityId, listingsId) {
 }
 
 export async function deleteListingImage(cityId, listingsId) {
-	return axios.delete(`/cities/${cityId}/listings/${listingsId}/imageDelete`);
+	return axios.delete(isV2Backend ? `listings/${listingsId}/imageDelete` : `/cities/${cityId}/listings/${listingsId}/imageDelete`);
 }
 
 export async function uploadPDF(formData) {
@@ -78,13 +74,13 @@ export async function updateListingsData(
 	listingsId
 ) {
 	return axios.patch(
-		`/cities/${cityId}/listings/${listingsId}`,
+		isV2Backend ? `/listings/${listingsId}` : `/cities/${cityId}/listings/${listingsId}`,
 		newListingsDataObj
 	);
 }
 
 export async function deleteListing(cityId, listingsId) {
-	return axios.delete(`/cities/${cityId}/listings/${listingsId}`);
+	return axios.delete(isV2Backend ? `listings/${listingsId}` : `/cities/${cityId}/listings/${listingsId}`);
 }
 
 export async function getListingsCount() {

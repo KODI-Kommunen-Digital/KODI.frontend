@@ -30,6 +30,11 @@ function FormImage(props) {
             className="object-cover h-64 w-full mb-4"
             src={imageUrl}
             alt="uploaded"
+            onLoad={() => {
+              if (props.localImageOrPdf && img instanceof Blob) {
+                URL.revokeObjectURL(imageUrl); // Prevent memory leaks
+              }
+            }}
           />
           <button
             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"

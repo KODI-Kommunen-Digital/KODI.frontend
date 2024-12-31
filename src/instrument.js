@@ -14,16 +14,8 @@ const ENV = process.env.REACT_APP_ENVIRONMENT;
 const app = process.env.REACT_APP_NAME;
 const appName = process.env.REACT_APP_NAME;
 
-if (!sentryDsn) {
-    console.error('REACT_APP_SENTRY_DSN environment variable not defined.');
-}
-
-if (!sentryEnv) {
-    console.error('REACT_APP_SENTRY_ENV environment variable not defined.');
-}
-
 Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DSN,
+    dsn: sentryDsn,
     integrations: [
         Sentry.browserTracingIntegration(),
         Sentry.replayIntegration(),
