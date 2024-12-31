@@ -29,6 +29,8 @@ function CreateGroup() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [forumId, setForumId] = useState(0);
+	const [isSuccess, setIsSuccess] = useState(false);
+
 	const navigate = useNavigate();
 
 	// const handleGroupTypeChange = (event) => {
@@ -175,6 +177,8 @@ function CreateGroup() {
 					await deleteForumImage(cityId, input.id);
 				}
 				setSuccessMessage(t("groupCreated"));
+				setIsSuccess(true);
+
 				setErrorMessage(false);
 				setTimeout(() => {
 					setSuccessMessage(false);
@@ -345,8 +349,8 @@ function CreateGroup() {
 						</label>
 						<input
 							type="text"
-							id="title"
-							name="title"
+							id="forumName"
+							name="forumName"
 							value={input.title}
 							onChange={onInputChange}
 							onBlur={validateInput}
