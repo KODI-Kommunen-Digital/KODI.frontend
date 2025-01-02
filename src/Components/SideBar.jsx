@@ -271,7 +271,7 @@ function SideBar() {
           )}
           <div className="my-2 bg-gray-600 h-[1px]"></div>
 
-          {isForumEnabled === "True" && (
+          {isForumEnabled && (
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
@@ -351,7 +351,7 @@ function SideBar() {
             </>
           )}
 
-          {isBookingEnabled === "True" && (
+          {isBookingEnabled && (
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
@@ -437,7 +437,7 @@ function SideBar() {
             </>
           )}
 
-          {isContainerEnabled === "True" && (
+          {isContainerEnabled && (
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
