@@ -11,9 +11,9 @@ function SideBar() {
   const { t } = useTranslation();
   const [loggedIn, setLoggedIn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM;
-  const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING;
-  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER;
+  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const [isForumExpanded, setIsForumExpanded] = useState(false);
   const [isListingExpanded, setIsListingExpanded] = useState(false);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
