@@ -1022,5 +1022,6 @@
     "minAge": "Altersbeschränkung",
     "pleaseEnterAgeLimit": "Bitte geben Sie die Altersgrenze für den Produktkauf ein",
     "characterLimitExceeded": "Zeichenlimit von {{limit}} überschritten. Aktuell: {{count}}",
-    "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen"
+    "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
+    "invalidForum": "Ungültiges Forum"
 }

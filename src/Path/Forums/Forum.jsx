@@ -543,7 +543,7 @@ const Forum = () => {
 				</div>
 			) : (
 				<h1 className="text-2xl md:text-5xl lg:text-5xl text-center font-bold my-4 font-sans py-72">
-					Invalid Forum
+					{t("invalidForum")}
 				</h1>
 			)}
 

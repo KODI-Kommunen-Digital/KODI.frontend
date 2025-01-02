@@ -77,9 +77,10 @@ const OrderDetailsStore = () => {
 
                                 {orders.products && Array.isArray(orders.products) && orders.products.map(productItem => (
                                     <div key={productItem.id} className="md:flex mb-6">
-                                        <div className="md:px-4 py-4 md:py-0">
+                                        <div className="md:px-4 py-4 md:py-0 flex-shrink-0"
+                                            style={{ maxWidth: "500px", minWidth: "300px", height: "auto" }}>
                                             <img
-                                                className="object-cover object-center h-full w-full max-h-96 max-w-96"
+                                                className="object-contain object-center h-full w-full max-h-96"
                                                 src={
                                                     productItem.product.productImages &&
                                                         productItem.product.productImages.length > 0
@@ -88,35 +89,39 @@ const OrderDetailsStore = () => {
                                                         "admin/Container/ShoppingCart.png"
                                                 }
                                                 onError={(e) => {
-                                                    e.target.src = CONTAINERIMAGE;
+                                                    e.target.src = CONTAINERIMAGE; // Set default image if loading fails
                                                 }}
                                             />
                                         </div>
-                                        <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4">
-                                            <h2 className="text-2xl font-bold text-slate-900  mb-2">
+                                        <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4 flex-grow"
+                                            style={{ overflow: "hidden", maxWidth: "100%" }}>
+                                            <h2 className="text-2xl font-bold text-slate-800  mb-2">
                                                 {productItem.product.title}
                                             </h2>
                                             <div className="flex mb-4">
                                                 <div className="mr-4">
-                                                    <span className="font-bold text-slate-900 ">
+                                                    <span className="font-bold text-slate-700 ">
                                                         {t("price")} : </span>
-                                                    <span className="font-bold text-green-600">
+                                                    <span className="font-bold text-slate-600">
                                                         € {productItem.product.price}
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <span className="font-bold text-slate-900 ">
+                                                    <span className="font-bold text-slate-700 ">
                                                         {t("tax")} : </span>
                                                     <span className="font-bold text-red-600">
                                                         {(productItem.product.tax != null ? productItem.product.tax : 0).toFixed(2)}%
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="text-start mb-4">
+                                            <div className="text-start mb-4"
+                                                style={{
+                                                    maxHeight: "50px",
+                                                    overflow: "auto",
+                                                }}
+                                            >
                                                 <span className="font-bold text-slate-700">{t("description")} : </span>
-                                                <span className="text-slate-600"
-                                                    dangerouslySetInnerHTML={{ __html: productItem.product.description }}>
-                                                </span>
+                                                <span className="text-slate-600" dangerouslySetInnerHTML={{ __html: productItem.product.description }}></span>
                                             </div>
                                         </div>
                                     </div>

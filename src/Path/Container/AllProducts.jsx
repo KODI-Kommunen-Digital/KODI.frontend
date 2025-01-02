@@ -136,11 +136,11 @@ function AllProducts() {
     const goToEditProductsPage = (product) => {
         navigate(
             `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
-                state: {
-                    
-                    isOwnerRouter:false
-                }
+            state: {
+
+                isOwnerRouter: false
             }
+        }
         );
     };
 
@@ -389,20 +389,25 @@ function AllProducts() {
 
                                                     <td className="px-6 py-4 text-center font-bold">
                                                         <div className="flex justify-center items-center">
-                                                            <a
-                                                                className={`font-medium text-green-600 px-2 cursor-pointer`}
-                                                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                                                onClick={() => goToEditProductsPage(product)}
-                                                            >
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    height="1em"
-                                                                    viewBox="0 0 640 512"
-                                                                    className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                                            <div className="relative group inline-block">
+                                                                <a
+                                                                    className={`font-medium text-green-600 px-2 cursor-pointer`}
+                                                                    style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                    onClick={() => goToEditProductsPage(product)}
                                                                 >
-                                                                    <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                                </svg>
-                                                            </a>
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        height="1em"
+                                                                        viewBox="0 0 640 512"
+                                                                        className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                                                                    >
+                                                                        <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                                                    </svg>
+                                                                </a>
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                    {t("edit")}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </td>
 
@@ -413,7 +418,7 @@ function AllProducts() {
                                                                 onClick={() => handleViewDetailsClick(product)}
                                                             >
                                                                 <FaEye className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`} />
-                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                                     {t("viewDetails")}
                                                                 </div>
                                                             </div>
@@ -430,11 +435,11 @@ function AllProducts() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
+
                                         onClick={() => {
                                             setPageNumber(pageNumber - 1);
                                             fetchProducts(storeId, pageNumber - 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -449,14 +454,14 @@ function AllProducts() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && pageNumber * pageSize < productsCount &&(
+                                {products.length >= pageSize && pageNumber * pageSize < productsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
+
                                         onClick={() => {
-                                            setPageNumber(pageNumber +1);
+                                            setPageNumber(pageNumber + 1);
                                             fetchProducts(storeId, pageNumber + 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
