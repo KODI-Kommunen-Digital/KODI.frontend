@@ -23,7 +23,6 @@ function CreateGroup() {
 	const [newGroup, setNewGroup] = useState(true);
 	const [updating, setUpdating] = useState(false);
 	const CHARACTER_LIMIT = 255;
-
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
 
@@ -133,14 +132,14 @@ function CreateGroup() {
 		if (!accessToken && !refreshToken) {
 			navigate("/login");
 		}
-		var cityId = searchParams.get("cityId");
+		const cityId = searchParams.get("cityId");
 		setCityId(cityId);
-		var forumId = searchParams.get("forumId");
+		const forumId = searchParams.get("forumId");
 		if (forumId && cityId) {
 			setNewGroup(false);
 			setForumId(forumId);
 			getForum(cityId, forumId).then((forumsResponse) => {
-				let forumsData = forumsResponse.data.data;
+				const forumsData = forumsResponse.data.data;
 				forumsData.cityId = cityId;
 				setInput(forumsData);
 				setDescription(forumsData.description);
@@ -172,7 +171,7 @@ function CreateGroup() {
 			event.preventDefault();
 			try {
 				input.isPrivate = input.visibility == "private";
-				var response = newGroup
+				const response = newGroup
 					? await postForumsData(cityId, input)
 					: await updateForumsData(cityId, input, forumId);
 				if (newGroup) {
@@ -367,14 +366,14 @@ function CreateGroup() {
 						<div className="flex justify-between text-sm mt-1">
 							<span
 								className={`${input.forumName.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
-									? "h-[24px] text-red-600"
-									: "h-[24px] text-gray-500"
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
 								{input.forumName.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
 							</span>
 							{error.forumName && (
-								<span className="h-[24px] text-red-600">
+								<span className="mt-2 text-sm text-red-600">
 									{error.forumName}
 								</span>
 							)}
@@ -404,7 +403,7 @@ function CreateGroup() {
 							))}
 						</select>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.cityId ? "visible" : "hidden",
 							}}
@@ -449,10 +448,10 @@ function CreateGroup() {
 						</div>
 					)}
 
-					<div class="relative mb-4">
+					<div className="relative mb-4">
 						<label
-							for="description"
-							class="block text-sm font-medium text-gray-600"
+							htmlFor="description"
+							className="block text-sm font-medium text-gray-600"
 						>
 							{t("description")} *
 						</label>
@@ -463,28 +462,32 @@ function CreateGroup() {
 							ref={editor}
 							value={description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
-							onBlur={(range, source, editor) => {
-								validateInput({
-									target: {
-										name: "description",
-										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-									},
-								});
+							onBlur={() => {
+								const quillInstance = editor.current?.getEditor();
+								if (quillInstance) {
+									validateInput({
+										target: {
+											name: "description",
+											value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+										},
+									});
+								}
 							}}
 							placeholder={t("writeSomethingHere")}
+							readOnly={updating || isSuccess}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 						/>
 						<div className="flex justify-between text-sm mt-1">
 							<span
 								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
-									? "h-[24px] text-red-600"
-									: "h-[24px] text-gray-500"
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
 								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
 							</span>
 							{error.description && (
-								<span className="h-[24px] text-red-600">
+								<span className="mt-2 text-sm text-red-600">
 									{error.description}
 								</span>
 							)}

@@ -26,14 +26,14 @@ function UploadPosts() {
 	const [updating, setUpdating] = useState(false);
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
+	const [isSuccess, setIsSuccess] = useState(false);
 	// Drag and Drop starts
 	const [image1, setImage1] = useState(null);
 	const [, setDragging] = useState(false);
-
+	const CHARACTER_LIMIT = 255;
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
-	const CHARACTER_LIMIT = 255;
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -168,6 +168,7 @@ function UploadPosts() {
 				// } else {
 				// 	await updateForumPosts(cityId, input, forumId, postId);
 				// }
+				setIsSuccess(true);
 				const response = newPost
 					? await forumPosts(cityId, forumId, input)
 					: await updateForumPosts(cityId, input, forumId, postId);
@@ -392,14 +393,14 @@ function UploadPosts() {
 						<div className="flex justify-between text-sm mt-1">
 							<span
 								className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
-									? "h-[24px] text-red-600"
-									: "h-[24px] text-gray-500"
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
 								{input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
 							</span>
 							{error.title && (
-								<span className="h-[24px] text-red-600">
+								<span className="mt-2 text-sm text-red-600">
 									{error.title}
 								</span>
 							)}
@@ -433,7 +434,7 @@ function UploadPosts() {
 							))}
 						</select>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.cityId ? "visible" : "hidden",
 							}}
@@ -467,7 +468,7 @@ function UploadPosts() {
 							))}
 						</select>
 						<div
-							className="h-[24px] text-red-600"
+							className="mt-2 text-sm text-red-600"
 							style={{
 								visibility: error.cityId ? "visible" : "hidden",
 							}}
@@ -490,24 +491,39 @@ function UploadPosts() {
 							ref={editor}
 							value={description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
-							onBlur={(range, source, editor) => {
-								validateInput({
-									target: {
-										name: "description",
-										value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-									},
-								});
+							onBlur={() => {
+								const quillInstance = editor.current?.getEditor();
+								if (quillInstance) {
+									validateInput({
+										target: {
+											name: "description",
+											value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+										},
+									});
+								}
 							}}
 							placeholder={t("writeSomethingHere")}
+							readOnly={updating || isSuccess}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-						/>
-						<div
-							className="h-[24px] text-red-600"
 							style={{
-								visibility: error.description ? "visible" : "hidden",
+								position: "relative",
+								zIndex: 1000,
 							}}
-						>
-							{error.description}
+						/>
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
+									}`}
+							>
+								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.description && (
+								<span className="mt-2 text-sm text-red-600">
+									{error.description}
+								</span>
+							)}
 						</div>
 					</div>
 				</div>
@@ -604,7 +620,7 @@ function UploadPosts() {
 					</div>
 				</div>
 			</div>
-		</section>
+		</section >
 	);
 }
 

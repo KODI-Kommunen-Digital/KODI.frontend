@@ -11,6 +11,8 @@ const OrdersSold = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [ordersSold, setOrdersSold] = useState([]);
+    const [ordersSoldCount, setOrdersSoldCount] = useState([]);
+
     const [pageNumber, setPageNo] = useState(1);
     const pageSize = 9;
     const [orderStartDate, setOrderStartDate] = useState('');
@@ -186,6 +188,8 @@ const OrdersSold = () => {
                 } else {
                     const soldOrders = response.data.data;
                     setOrdersSold(soldOrders);
+                    setOrdersSoldCount(response.data.count);
+
                 }
             }).catch((error) => {
                 setErrorMessage("Failed. " + (error.message));
@@ -341,7 +345,7 @@ const OrdersSold = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {ordersSold.length >= pageSize && (
+                                {ordersSold.length >= pageSize && pageNumber * pageSize < ordersSoldCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNo(pageNumber + 1)}

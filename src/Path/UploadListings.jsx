@@ -41,14 +41,13 @@ function UploadListings() {
   const [appointmentAdded, setAppointmentAdded] = useState(false);
   const [, setDragging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const CHARACTER_LIMIT = 255;
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const navigate = useNavigate();
-  const CHARACTER_LIMIT = 255;
 
   const getDefaultEndDate = () => {
     const now = new Date();
@@ -1119,14 +1118,14 @@ function UploadListings() {
             <div className="flex justify-between text-sm mt-1">
               <span
                 className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
-                  ? "h-[24px] text-red-600"
-                  : "h-[24px] text-gray-500"
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
                   }`}
               >
                 {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
               </span>
               {error.title && (
-                <span className="h-[24px] text-red-600">
+                <span className="mt-2 text-sm text-red-600">
                   {error.title}
                 </span>
               )}
@@ -1174,7 +1173,7 @@ function UploadListings() {
                 </div>
 
                 <div
-                  className="h-[24px] text-red-600"
+                  className="mt-2 text-sm text-red-600"
                   style={{
                     visibility: (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected ? "visible" : "hidden",
                   }}
@@ -1210,7 +1209,7 @@ function UploadListings() {
                   ))}
                 </select>
                 <div
-                  className="h-[24px] text-red-600"
+                  className="mt-2 text-sm text-red-600"
                   style={{
                     visibility: selectedCities.length === 0 && error.cityIds ? "visible" : "hidden",
                   }}
@@ -1250,7 +1249,7 @@ function UploadListings() {
               })}
             </select>
             <div
-              className="h-[24px] text-red-600"
+              className="mt-2 text-sm text-red-600"
               style={{
                 visibility: error.categoryId ? "visible" : "hidden",
               }}
@@ -1293,7 +1292,7 @@ function UploadListings() {
                 })}
               </select>
               <div
-                className="h-[24px] text-red-600"
+                className="mt-2 text-sm text-red-600"
                 style={{
                   visibility: error.subcategoryId ? "visible" : "hidden",
                 }}
@@ -1350,7 +1349,7 @@ function UploadListings() {
                         onBlur={validateInput}
                       />
                       <div
-                        className="h-[24px] text-red-600"
+                        className="mt-2 text-sm text-red-600"
                         style={{
                           visibility: error.expiryDate ? "visible" : "hidden",
                         }}
@@ -1415,7 +1414,7 @@ function UploadListings() {
                     onBlur={validateInput}
                   />
                   <div
-                    className="h-[24px] text-red-600"
+                    className="mt-2 text-sm text-red-600"
                     style={{
                       visibility: error.startDate ? "visible" : "hidden",
                     }}
@@ -1455,7 +1454,7 @@ function UploadListings() {
                     onBlur={validateInput}
                   />
                   <div
-                    className="h-[24px] text-red-600"
+                    className="mt-2 text-sm text-red-600"
                     style={{
                       visibility: error.endDate ? "visible" : "hidden",
                     }}
@@ -1549,7 +1548,7 @@ function UploadListings() {
               placeholder={t("pleaseEnterPhone")}
             />
             <div
-              className="h-[24px] text-red-600"
+              className="mt-2 text-sm text-red-600"
               style={{
                 visibility: error.phone ? "visible" : "hidden",
               }}
@@ -1576,7 +1575,7 @@ function UploadListings() {
               placeholder={t("emailExample")}
             />
             <div
-              className="h-[24px] text-red-600"
+              className="mt-2 text-sm text-red-600"
               style={{
                 visibility: error.email ? "visible" : "hidden",
               }}
@@ -1604,7 +1603,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-0">
+          <div className="relative mb-4">
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-600"
@@ -1616,27 +1615,41 @@ function UploadListings() {
               id="description"
               name="description"
               ref={editor}
-              // value={input.description}
               value={description}
               onChange={(newContent) => onDescriptionChange(newContent)}
-              onBlur={(range, source, editor) => {
-                validateInput({
-                  target: {
-                    name: "description",
-                    value: editor.getHTML().replace(/(<br>|<\/?p>)/gi, ""),
-                  },
-                });
+              onBlur={() => {
+                const quillInstance = editor.current?.getEditor();
+                if (quillInstance) {
+                  validateInput({
+                    target: {
+                      name: "description",
+                      value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+                    },
+                  });
+                }
               }}
               placeholder={t("writeSomethingHere")}
+              readOnly={updating || isSuccess}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-            />
-            <div
-              className="h-[24px] text-red-600"
               style={{
-                visibility: error.description ? "visible" : "hidden",
+                position: "relative",
+                zIndex: 1000,
               }}
-            >
-              {error.description}
+            />
+            <div className="flex justify-between text-sm mt-1">
+              <span
+                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
+                  }`}
+              >
+                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+              </span>
+              {error.description && (
+                <span className="mt-2 text-sm text-red-600">
+                  {error.description}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -1654,7 +1667,7 @@ function UploadListings() {
               {t("addFileHere")}
             </label>
             <div
-              className="h-[24px] text-red-600"
+              className="mt-2 text-sm text-green-600"
             >
               {t("maxFileSizeAllert")} & {t("imageNumberAlertListings")}
             </div>
@@ -1806,7 +1819,7 @@ function UploadListings() {
             </div>
 
             <div
-              className="h-[24px] text-red-600"
+              className="mt-2 text-sm text-green-600"
             >
               {t("imagePdfWarning")}
             </div>

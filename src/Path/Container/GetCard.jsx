@@ -202,7 +202,7 @@ function GetCard() {
                             placeholder={t("enterCardNumber")}
                         />
                         <div
-                            className="h-[24px] text-red-600"
+                            className="mt-2 text-sm text-red-600"
                             style={{
                                 visibility: error.cardNumber ? "visible" : "hidden",
                             }}
@@ -230,7 +230,7 @@ function GetCard() {
                             placeholder={t("pleaseEnterPINNumber")}
                         />
                         <div
-                            className="h-[24px] text-red-600"
+                            className="mt-2 text-sm text-red-600"
                             style={{
                                 visibility: error.pinCode ? "visible" : "hidden",
                             }}

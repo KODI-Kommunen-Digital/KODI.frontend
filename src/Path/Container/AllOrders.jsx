@@ -12,6 +12,8 @@ function AllSellers() {
     const [pageNumber, setPageNumber] = useState(1);
     const pageSize = 9;
     const [orders, setOrders] = useState([]);
+    const [ordersCount, setOrdersCount] = useState([]);
+
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
 
@@ -20,6 +22,7 @@ function AllSellers() {
             getOrders(cityId, storeId, pageNumber).then((response) => {
                 const allOrders = response.data.data;
                 setOrders(allOrders);
+                setOrdersCount(response.data.count)
             });
         }
     }, []);
@@ -322,7 +325,7 @@ function AllSellers() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {orders.length >= pageSize && (
+                                {orders.length >= pageSize && pageNumber * pageSize < ordersCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}

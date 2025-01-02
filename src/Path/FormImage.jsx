@@ -13,16 +13,16 @@ function FormImage(props) {
   };
 
   return Array.from(props.image).map((img, index) => {
-    const imageUrl =
-      props.localImageOrPdf && img instanceof Blob
-        ? URL.createObjectURL(img)
-        : process.env.REACT_APP_BUCKET_HOST + img;
+    let imageUrl;
 
-    // Check if the image is the default image
-    const isDefaultImage =
-      typeof img === "string" && img.includes("admin/");
+    if (typeof img === "string") {
+      imageUrl = process.env.REACT_APP_BUCKET_HOST + img;
+    } else if (img instanceof File || img instanceof Blob) {
+      imageUrl = URL.createObjectURL(img);
+    }
 
-    // Render the image only if it's not the default image
+    const isDefaultImage = typeof img === "string" && img.includes("admin/");
+
     if (!isDefaultImage) {
       return (
         <div className="flex flex-col items-center px-1" key={index}>
@@ -46,7 +46,7 @@ function FormImage(props) {
       );
     }
 
-    return null; // Don't render anything for the default image
+    return null;
   });
 }
 
@@ -60,4 +60,5 @@ FormImage.propTypes = {
   handleRemoveImage: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
+
 export default FormImage;
