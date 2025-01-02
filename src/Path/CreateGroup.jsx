@@ -22,6 +22,7 @@ function CreateGroup() {
 	const editor = useRef(null);
 	const [newGroup, setNewGroup] = useState(true);
 	const [updating, setUpdating] = useState(false);
+	const CHARACTER_LIMIT = 255;
 
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
@@ -91,7 +92,6 @@ function CreateGroup() {
 		removeImage: false,
 		visibility: "public",
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -105,6 +105,16 @@ function CreateGroup() {
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		if (name === "forumName" && value.length > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				forumName: t("characterLimitExceeded", {
+					limit: CHARACTER_LIMIT,
+					count: value.length
+				}),
+			}));
+			return;
+		}
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
@@ -203,12 +213,28 @@ function CreateGroup() {
 	}, [error]);
 
 	const [description, setDescription] = useState("");
-
 	const onDescriptionChange = (newContent) => {
 		const hasNumberedList = newContent.includes("<ol>");
 		const hasBulletList = newContent.includes("<ul>");
 		let descriptions = [];
 		let listType = "";
+
+		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+		const characterCount = plainText.length;
+
+		if (characterCount > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+			}));
+			return;
+		} else {
+			setError((prev) => ({
+				...prev,
+				description: "",
+			}));
+		}
+
 		if (hasNumberedList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
@@ -224,7 +250,6 @@ function CreateGroup() {
 			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
 		} else {
-			// No list tags found, treat the input as plain text
 			setInput((prev) => ({
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
@@ -232,9 +257,11 @@ function CreateGroup() {
 			setDescription(newContent);
 			return;
 		}
+
 		const listHTML = `<${listType}>${descriptions
 			.map((description) => `<li>${description}</li>`)
 			.join("")}</${listType}>`;
+
 		setInput((prev) => ({
 			...prev,
 			description: listHTML,
@@ -328,28 +355,35 @@ function CreateGroup() {
 						</label>
 						<input
 							type="text"
-							id="title"
-							name="title"
-							value={input.title}
+							id="forumName"
+							name="forumName"
+							value={input.forumName}
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
-						<div
-							className="h-[24px] text-red-600"
-							style={{
-								visibility: error.forumName ? "visible" : "hidden",
-							}}
-						>
-							{error.forumName}
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${input.forumName.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "h-[24px] text-red-600"
+									: "h-[24px] text-gray-500"
+									}`}
+							>
+								{input.forumName.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.forumName && (
+								<span className="h-[24px] text-red-600">
+									{error.forumName}
+								</span>
+							)}
 						</div>
 					</div>
 
 					<div class="relative mb-4">
 						<label
-							for="forumName"
+							for="cityId"
 							class="block text-sm font-medium text-gray-600"
 						>
 							{process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
@@ -440,13 +474,20 @@ function CreateGroup() {
 							placeholder={t("writeSomethingHere")}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 						/>
-						<div
-							className="h-[24px] text-red-600"
-							style={{
-								visibility: error.description ? "visible" : "hidden",
-							}}
-						>
-							{error.description}
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "h-[24px] text-red-600"
+									: "h-[24px] text-gray-500"
+									}`}
+							>
+								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.description && (
+								<span className="h-[24px] text-red-600">
+									{error.description}
+								</span>
+							)}
 						</div>
 					</div>
 				</div>

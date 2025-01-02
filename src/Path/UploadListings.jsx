@@ -48,6 +48,7 @@ function UploadListings() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const navigate = useNavigate();
+  const CHARACTER_LIMIT = 255;
 
   const getDefaultEndDate = () => {
     const now = new Date();
@@ -695,7 +696,16 @@ function UploadListings() {
 
   const onInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
+    if (name === "title" && value.length > CHARACTER_LIMIT) {
+      setError((prev) => ({
+        ...prev,
+        title: t("characterLimitExceeded", {
+          limit: CHARACTER_LIMIT,
+          count: value.length
+        }),
+      }));
+      return;
+    } else if (type === "checkbox") {
       setListingInput((prev) => ({
         ...prev,
         [name]: checked,
@@ -726,37 +736,58 @@ function UploadListings() {
   };
 
   const [description, setDescription] = useState("");
-
   const onDescriptionChange = (newContent) => {
-    let descriptionHTML = newContent;
+    const hasNumberedList = newContent.includes("<ol>");
+    const hasBulletList = newContent.includes("<ul>");
+    let descriptions = [];
+    let listType = "";
 
-    // If there are <ol> or <ul> tags, replace them with plain text representation
-    const hasNumberedList = /<ol>(.*?)<\/ol>/gis.test(newContent);
-    const hasBulletList = /<ul>(.*?)<\/ul>/gis.test(newContent);
+    const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+    const characterCount = plainText.length;
 
-    if (hasNumberedList || hasBulletList) {
-      const regex = /<ol>(.*?)<\/ol>|<ul>(.*?)<\/ul>/gis;
-      descriptionHTML = newContent.replace(regex, (match) => {
-        // Replace <li> tags with the appropriate marker (either numbers or bullets)
-        const isNumberedList = /<ol>(.*?)<\/ol>/gis.test(match);
-        const listItems = match.match(/<li>(.*?)(?=<\/li>|$)/gi);
-        const plainTextListItems = listItems.map((item, index) => {
-          const listItemContent = item.replace(/<\/?li>/gi, "");
-          return isNumberedList
-            ? `${index + 1}. ${listItemContent}`
-            : `- ${listItemContent}`;
-        });
-        return plainTextListItems.join("\n");
-      });
+    if (characterCount > CHARACTER_LIMIT) {
+      setError((prev) => ({
+        ...prev,
+        description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+      }));
+      return;
+    } else {
+      setError((prev) => ({
+        ...prev,
+        description: "",
+      }));
     }
-    setListingInput((prev) => ({
-      ...prev,
-      description: descriptionHTML,
-    }));
 
-    setAppointmentInput((prev) => ({
+    if (hasNumberedList) {
+      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+      const matches = newContent.match(regex);
+      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+      descriptions = descriptions.map(
+        (description, index) => `${index + 1}. ${description}`
+      );
+      listType = "ol";
+    } else if (hasBulletList) {
+      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
+      const matches = newContent.match(regex);
+      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+      descriptions = descriptions.map((description) => `- ${description}`);
+      listType = "ul";
+    } else {
+      setInput((prev) => ({
+        ...prev,
+        description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+      }));
+      setDescription(newContent);
+      return;
+    }
+
+    const listHTML = `<${listType}>${descriptions
+      .map((description) => `<li>${description}</li>`)
+      .join("")}</${listType}>`;
+
+    setInput((prev) => ({
       ...prev,
-      description: descriptionHTML,
+      description: listHTML,
     }));
     setDescription(newContent);
   };
@@ -799,8 +830,6 @@ function UploadListings() {
       case "description":
         if (!value) {
           return t("pleaseEnterDescription");
-        } else if (value.length > 65535) {
-          return t("characterLimitReacehd");
         } else {
           return "";
         }
@@ -1087,13 +1116,20 @@ function UploadListings() {
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("enterTitle")}
             />
-            <div
-              className="h-[24px] text-red-600"
-              style={{
-                visibility: error.title ? "visible" : "hidden",
-              }}
-            >
-              {error.title}
+            <div className="flex justify-between text-sm mt-1">
+              <span
+                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                  ? "h-[24px] text-red-600"
+                  : "h-[24px] text-gray-500"
+                  }`}
+              >
+                {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+              </span>
+              {error.title && (
+                <span className="h-[24px] text-red-600">
+                  {error.title}
+                </span>
+              )}
             </div>
           </div>
 

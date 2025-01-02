@@ -129,6 +129,27 @@ function AddNewProducts() {
     async function onCityChange(e) {
         const cityId = e.target.value;
         setCityId(cityId);
+
+        // Reset shopId and shops if cityId is 0
+        if (cityId === "0") {
+            setShopId(0); // Reset shopId to 0
+            setShops([]); // Clear the shops array
+            setInput((prev) => ({
+                ...prev,
+                cityId: 0,
+                shopId: 0, // Reset shopId in input
+            }));
+            validateInput(e);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.delete("cityId");
+            urlParams.delete("shopId");
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+
+            return;
+        }
+
         setInput((prev) => ({
             ...prev,
             cityId: cityId,
@@ -254,7 +275,7 @@ function AddNewProducts() {
         if (characterCount > CHARACTER_LIMIT) {
             setError((prev) => ({
                 ...prev,
-                description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+                description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
             }));
             return;
         } else {
@@ -303,8 +324,6 @@ function AddNewProducts() {
             case "title":
                 if (!value) {
                     return t("pleaseEnterTitle");
-                } else if (value.length > 25) {
-                    return t("titleTooLong");
                 } else {
                     return "";
                 }
@@ -335,8 +354,6 @@ function AddNewProducts() {
             case "description":
                 if (!value) {
                     return t("pleaseEnterDescription");
-                } else if (value.length > 255) {
-                    return t("characterLimitReached");
                 } else {
                     return "";
                 }
@@ -393,6 +410,16 @@ function AddNewProducts() {
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
+        if (name === "title" && value.length > CHARACTER_LIMIT) {
+            setError((prev) => ({
+                ...prev,
+                title: t("characterLimitExceeded", {
+                    limit: CHARACTER_LIMIT,
+                    count: value.length
+                }),
+            }));
+            return;
+        }
         setInput((prev) => ({
             ...prev,
             [name]: value,
@@ -643,13 +670,20 @@ function AddNewProducts() {
                             className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.title ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.title}
+                        <div className="flex justify-between text-sm mt-1">
+                            <span
+                                className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                    ? "h-[24px] text-red-600"
+                                    : "h-[24px] text-gray-500"
+                                    }`}
+                            >
+                                {input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                            </span>
+                            {error.title && (
+                                <span className="h-[24px] text-red-600">
+                                    {error.title}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -1050,10 +1084,6 @@ function AddNewProducts() {
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                            style={{
-                                position: "relative",
-                                zIndex: 1000, // Higher than the sidebar
-                            }}
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span

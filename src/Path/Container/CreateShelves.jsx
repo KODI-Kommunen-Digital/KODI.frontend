@@ -21,6 +21,7 @@ function CreateShelves() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [productLoading, setProductLoading] = useState(false);
+    const CHARACTER_LIMIT = 255;
 
     const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
@@ -110,9 +111,9 @@ function CreateShelves() {
             } catch (error) {
                 if (error.response.data.errorCode === 1034) {
                     setErrorMessage(t("duplicate_shelf_name")); // Custom message for this specific error
-                  }  else {
+                } else {
                     setErrorMessage(t("changesNotSaved")); // Fallback for other errors
-                  }
+                }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -143,6 +144,23 @@ function CreateShelves() {
         const hasBulletList = newContent.includes("<ul>");
         let descriptions = [];
         let listType = "";
+
+        const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+        const characterCount = plainText.length;
+
+        if (characterCount > CHARACTER_LIMIT) {
+            setError((prev) => ({
+                ...prev,
+                description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+            }));
+            return;
+        } else {
+            setError((prev) => ({
+                ...prev,
+                description: "",
+            }));
+        }
+
         if (hasNumberedList) {
             const regex = /<li>(.*?)(?=<\/li>|$)/gi;
             const matches = newContent.match(regex);
@@ -158,7 +176,6 @@ function CreateShelves() {
             descriptions = descriptions.map((description) => `- ${description}`);
             listType = "ul";
         } else {
-            // No list tags found, treat the input as plain text
             setInput((prev) => ({
                 ...prev,
                 description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
@@ -166,9 +183,11 @@ function CreateShelves() {
             setDescription(newContent);
             return;
         }
+
         const listHTML = `<${listType}>${descriptions
             .map((description) => `<li>${description}</li>`)
             .join("")}</${listType}>`;
+
         setInput((prev) => ({
             ...prev,
             description: listHTML,
@@ -181,8 +200,6 @@ function CreateShelves() {
             case "title":
                 if (!value) {
                     return t("pleaseEnterTitle");
-                } else if (value.length > 25) {
-                    return t("titleTooLong");
                 } else {
                     return "";
                 }
@@ -211,8 +228,6 @@ function CreateShelves() {
             case "description":
                 if (!value) {
                     return t("pleaseEnterDescription");
-                } else if (value.length > 65535) {
-                    return t("characterLimitReacehd");
                 } else {
                     return "";
                 }
@@ -223,6 +238,16 @@ function CreateShelves() {
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
+        if (name === "title" && value.length > CHARACTER_LIMIT) {
+            setError((prev) => ({
+                ...prev,
+                title: t("characterLimitExceeded", {
+                    limit: CHARACTER_LIMIT,
+                    count: value.length
+                }),
+            }));
+            return;
+        }
         setInput((prev) => ({
             ...prev,
             [name]: value,
@@ -243,6 +268,27 @@ function CreateShelves() {
     async function onCityChange(e) {
         const cityId = e.target.value;
         setCityId(cityId);
+
+        // Reset shopId and shops if cityId is 0
+        if (cityId === "0") {
+            setShopId(0); // Reset shopId to 0
+            setShops([]); // Clear the shops array
+            setInput((prev) => ({
+                ...prev,
+                cityId: 0,
+                shopId: 0, // Reset shopId in input
+            }));
+            validateInput(e);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.delete("cityId");
+            urlParams.delete("shopId");
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+
+            return;
+        }
+
         setInput((prev) => ({
             ...prev,
             cityId: cityId,
@@ -269,6 +315,27 @@ function CreateShelves() {
     const handleShopChange = async (event) => {
         const shopId = event.target.value;
         setShopId(shopId);
+
+        // Reset productId and products if shopId is 0
+        if (shopId === "0") {
+            setProductId(0); // Reset productId
+            setProducts([]); // Clear the products array
+            setInput((prevInput) => ({
+                ...prevInput,
+                shopId: 0,
+                productId: 0, // Reset productId in input
+            }));
+            validateInput(event);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.delete("shopId");
+            urlParams.delete("productId");
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+
+            return; // Stop further execution
+        }
+
         setInput((prevInput) => ({ ...prevInput, shopId }));
         validateInput(event);
 
@@ -334,13 +401,20 @@ function CreateShelves() {
                             className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.title ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.title}
+                        <div className="flex justify-between text-sm mt-1">
+                            <span
+                                className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                    ? "h-[24px] text-red-600"
+                                    : "h-[24px] text-gray-500"
+                                    }`}
+                            >
+                                {input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                            </span>
+                            {error.title && (
+                                <span className="h-[24px] text-red-600">
+                                    {error.title}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -502,13 +576,20 @@ function CreateShelves() {
                             placeholder={t("writeSomethingHere")}
                             className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         />
-                        <div
-                            className="h-[24px] text-red-600"
-                            style={{
-                                visibility: error.description ? "visible" : "hidden",
-                            }}
-                        >
-                            {error.description}
+                        <div className="flex justify-between text-sm mt-1">
+                            <span
+                                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                    ? "h-[24px] text-red-600"
+                                    : "h-[24px] text-gray-500"
+                                    }`}
+                            >
+                                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                            </span>
+                            {error.description && (
+                                <span className="h-[24px] text-red-600">
+                                    {error.description}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>

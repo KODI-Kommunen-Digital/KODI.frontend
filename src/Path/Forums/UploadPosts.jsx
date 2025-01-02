@@ -33,6 +33,7 @@ function UploadPosts() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
+	const CHARACTER_LIMIT = 255;
 
 	function handleDragEnter(e) {
 		e.preventDefault();
@@ -214,6 +215,16 @@ function UploadPosts() {
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		if (name === "title" && value.length > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				title: t("characterLimitExceeded", {
+					limit: CHARACTER_LIMIT,
+					count: value.length
+				}),
+			}));
+			return;
+		}
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
@@ -222,12 +233,28 @@ function UploadPosts() {
 	};
 
 	const [description, setDescription] = useState("");
-
 	const onDescriptionChange = (newContent) => {
 		const hasNumberedList = newContent.includes("<ol>");
 		const hasBulletList = newContent.includes("<ul>");
 		let descriptions = [];
 		let listType = "";
+
+		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+		const characterCount = plainText.length;
+
+		if (characterCount > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+			}));
+			return;
+		} else {
+			setError((prev) => ({
+				...prev,
+				description: "",
+			}));
+		}
+
 		if (hasNumberedList) {
 			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
 			const matches = newContent.match(regex);
@@ -243,7 +270,6 @@ function UploadPosts() {
 			descriptions = descriptions.map((description) => `- ${description}`);
 			listType = "ul";
 		} else {
-			// No list tags found, treat the input as plain text
 			setInput((prev) => ({
 				...prev,
 				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
@@ -251,9 +277,11 @@ function UploadPosts() {
 			setDescription(newContent);
 			return;
 		}
+
 		const listHTML = `<${listType}>${descriptions
 			.map((description) => `<li>${description}</li>`)
 			.join("")}</${listType}>`;
+
 		setInput((prev) => ({
 			...prev,
 			description: listHTML,
@@ -361,13 +389,20 @@ function UploadPosts() {
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
-						<div
-							className="h-[24px] text-red-600"
-							style={{
-								visibility: error.title ? "visible" : "hidden",
-							}}
-						>
-							{error.title}
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "h-[24px] text-red-600"
+									: "h-[24px] text-gray-500"
+									}`}
+							>
+								{input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.title && (
+								<span className="h-[24px] text-red-600">
+									{error.title}
+								</span>
+							)}
 						</div>
 					</div>
 

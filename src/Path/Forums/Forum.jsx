@@ -402,7 +402,7 @@ const Forum = () => {
 													`/UploadPosts?forumId=${forumId}&cityId=${cityId}`
 												)
 											}
-											className={`block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 ${RegionColors.darkBgColor} cursor-pointer`}
+											className={`block lg:hidden mx-4 md:mx-8 mb-2 md:mb-0 w-6 h-6 ${RegionColors.darkTextColor} cursor-pointer`}
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
 											viewBox="0 0 24 24"
