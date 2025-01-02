@@ -1022,5 +1022,9 @@
     "minAge": "Altersbeschränkung",
     "pleaseEnterAgeLimit": "Bitte geben Sie die Altersgrenze für den Produktkauf ein",
     "characterLimit": "Zeichen",
-    "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen"
+    "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
+    "debit":"Lastschrift",
+    "creditByCash":"Kredit durch Bargeld",
+    "creditByCard":"Kredit per Karte",
+    "paymentType":"Zahlungsart"
 }
