@@ -11,9 +11,9 @@ function SideBar() {
   const { t } = useTranslation();
   const [loggedIn, setLoggedIn] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM;
-  const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING;
-  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER;
+  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+  const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const [isForumExpanded, setIsForumExpanded] = useState(false);
   const [isListingExpanded, setIsListingExpanded] = useState(false);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
@@ -112,19 +112,21 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        const roleResponse = await getUserRoleContainer();
-        let roles = roleResponse.data.data;
-        roles = roles.map(Number);
-        if (roles.includes(101)) {
-          setIsOwner(true);
-        } else {
-          console.log("User is not owner");
-        }
+        if (isContainerEnabled) {
+          const roleResponse = await getUserRoleContainer();
+          let roles = roleResponse.data.data;
+          roles = roles.map(Number);
+          if (roles.includes(101)) {
+            setIsOwner(true);
+          } else {
+            console.log("User is not owner");
+          }
 
-        if (roles.includes(102)) {
-          setIsSeller(true);
-        } else {
-          console.log("User is not seller");
+          if (roles.includes(102)) {
+            setIsSeller(true);
+          } else {
+            console.log("User is not seller");
+          }
         }
 
       } catch (error) {
