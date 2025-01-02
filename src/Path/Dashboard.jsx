@@ -668,14 +668,14 @@ const Dashboard = () => {
                                       key={index}
                                       value={state}
                                     >
-                                      {t(status[state].toLowerCase())}
+                                      {t(status[state]?.toLowerCase())}
                                     </option>
                                   );
                                 })}
                               </select>
                             ) : (
                               <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                {t(status[listing.statusId].toLowerCase())}
+                                {t(status[listing.statusId]?.toLowerCase())}
                               </h1>
                             )}
                           </div>

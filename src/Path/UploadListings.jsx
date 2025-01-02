@@ -201,6 +201,7 @@ function UploadListings() {
       } else {
         setLocalImages((prevImages) => [...prevImages, ...validImages]);
         setImage((prevImages) => [...prevImages, ...validImages]);
+        setLocalImageOrPdf(true);
       }
     } else {
       newFiles.forEach(file => {
@@ -470,10 +471,14 @@ function UploadListings() {
             for (let img of imageArray) {
               imageForm.append("image", img);
             }
-            for (let index = 0; index < currentListingId.length; index++) {
-              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+            if (process.env.REACT_APP_V2_BACKEND === "True") {
+              await uploadListingImage(imageForm, null, newListing ? currentListingId[0] : listingId)
+            } else {
+              for (let index = 0; index < currentListingId.length; index++) {
+                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+              }
+              await Promise.all(allPromises)
             }
-            await Promise.all(allPromises)
           } else if (pdf) {
             let allPromises = []
             const pdfForm = new FormData();
