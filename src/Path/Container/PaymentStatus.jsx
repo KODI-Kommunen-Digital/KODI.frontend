@@ -146,7 +146,7 @@ const PaymentStatus = () => {
                           className="px-6 py-4 text-center"
                           style={{
                             fontFamily: "Poppins, sans-serif",
-                            width: "33.33%"
+                            width: "25%"
                           }}
                         >
                           {t("transactionId")}
@@ -156,7 +156,7 @@ const PaymentStatus = () => {
                           className="px-6 py-4 text-center"
                           style={{
                             fontFamily: "Poppins, sans-serif",
-                            width: "33.33%"
+                            width: "25%"
                           }}
                         >
                           {t("amount")}
@@ -166,7 +166,7 @@ const PaymentStatus = () => {
                           className="px-6 py-4 text-center "
                           style={{
                             fontFamily: "Poppins, sans-serif",
-                            width: "33.33%"
+                            width: "25%"
                           }}
                         >
                           {t("orderDate")}
@@ -176,7 +176,7 @@ const PaymentStatus = () => {
                           className="px-6 py-4 text-center "
                           style={{
                             fontFamily: "Poppins, sans-serif",
-                            width: "33.33%"
+                            width: "25%"
                           }}
                         >
                           {t("paymentType")}
