@@ -1009,7 +1009,8 @@
     "pleaseEnterValidMinCount": "Please enter a minimum count",
     "minAge": "Age Limitation",
     "pleaseEnterAgeLimit": "Please enter the age limit for the product purchase",
-    "characterLimit": "characters",
-    "noShelvesMessage": "No shelves are present to assign this product"
+    "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
+    "noShelvesMessage": "No shelves are present to assign this product",
+    "invalidForum": "Invalid Forum"
 
 }

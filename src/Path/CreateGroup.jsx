@@ -93,7 +93,6 @@ function CreateGroup() {
 		removeImage: false,
 		visibility: "public",
 	});
-	console.log(input);
 
 	const [error, setError] = useState({
 		categoryId: "",
@@ -107,6 +106,16 @@ function CreateGroup() {
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		if (name === "forumName" && value.length > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				forumName: t("characterLimitExceeded", {
+					limit: CHARACTER_LIMIT,
+					count: value.length
+				}),
+			}));
+			return;
+		}
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
@@ -219,7 +228,7 @@ function CreateGroup() {
 		if (characterCount > CHARACTER_LIMIT) {
 			setError((prev) => ({
 				...prev,
-				description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+				description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
 			}));
 			return;
 		} else {
@@ -351,26 +360,33 @@ function CreateGroup() {
 							type="text"
 							id="forumName"
 							name="forumName"
-							value={input.title}
+							value={input.forumName}
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
-						<div
-							className="mt-2 text-sm text-red-600"
-							style={{
-								visibility: error.forumName ? "visible" : "hidden",
-							}}
-						>
-							{error.forumName}
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${input.forumName.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
+									}`}
+							>
+								{input.forumName.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.forumName && (
+								<span className="mt-2 text-sm text-red-600">
+									{error.forumName}
+								</span>
+							)}
 						</div>
 					</div>
 
 					<div class="relative mb-4">
 						<label
-							for="forumName"
+							for="cityId"
 							class="block text-sm font-medium text-gray-600"
 						>
 							{process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
@@ -464,16 +480,12 @@ function CreateGroup() {
 							placeholder={t("writeSomethingHere")}
 							readOnly={updating || isSuccess}
 							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-							style={{
-								position: "relative",
-								zIndex: 1000,
-							}}
 						/>
 						<div className="flex justify-between text-sm mt-1">
 							<span
 								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
 									? "mt-2 text-sm text-red-600"
-									: "h-[24px] text-gray-500"
+									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
 								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
