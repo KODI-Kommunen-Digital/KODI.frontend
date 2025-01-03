@@ -1016,6 +1016,8 @@
     "creditByCard":"Credit By Card",
     "paymentType":"Payment Type",
     "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
-    "invalidForum": "Invalid Forum"
+    "invalidForum": "Invalid Forum",
+    "startDate": "Start Date",
+    "endDate": "End Date"
 
 }
