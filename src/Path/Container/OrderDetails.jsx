@@ -62,7 +62,7 @@ const OrderDetails = () => {
                                                 src={
                                                     productItem.product.productImages &&
                                                         productItem.product.productImages.length > 0
-                                                        ? productItem.product.productImages[0]
+                                                        ? process.env.REACT_APP_BUCKET_HOST +productItem.product.productImages[0]
                                                         : process.env.REACT_APP_BUCKET_HOST +
                                                         "admin/Container/ShoppingCart.png"
                                                 }
