@@ -410,23 +410,7 @@ const OrdersSold = () => {
                                 </div>
                             </center>
 
-                            <div className="flex flex-wrap justify-center gap-2 mt-4">
-                                {periodOptions.map((period) => (
-                                    <div
-                                        key={period.value}
-                                        className={`w-full sm:w-auto px-4 py-2 text-center text-gray-800 border-2 border-black rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
-                                            ? 'bg-green-600 text-white'
-                                            : 'bg-gray-200 hover:bg-green-600 hover:text-white'
-                                            }`}
-                                        onClick={() => handlePeriodClick(period.value)}
-                                        style={{ fontFamily: 'Poppins, sans-serif' }}
-                                    >
-                                        {period.label}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4">
+                            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4 mt-4">
                                 <div className="bg-zinc-100 shadow-lg rounded-lg overflow-hidden">
                                     <div className="items-center px-6 py-3">
                                         <div className="grid grid-cols-2 gap-4">
@@ -466,6 +450,22 @@ const OrdersSold = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="flex flex-wrap justify-center gap-2 p-4">
+                                {periodOptions.map((period) => (
+                                    <div
+                                        key={period.value}
+                                        className={`w-full sm:w-auto px-4 py-2 text-center text-gray-800 border-2 border-gray-800 rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
+                                            ? 'bg-green-600 text-white'
+                                            : 'bg-gray-200 hover:bg-green-600 hover:text-white'
+                                            }`}
+                                        onClick={() => handlePeriodClick(period.value)}
+                                        style={{ fontFamily: 'Poppins, sans-serif' }}
+                                    >
+                                        {period.label}
+                                    </div>
+                                ))}
                             </div>
 
                             <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4">
