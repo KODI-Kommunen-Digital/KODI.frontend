@@ -76,7 +76,7 @@ const OrdersSold = () => {
         const selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         setOrderStartDate(selectedDate);
         setOrderEndDate(selectedDate);
-        setSelectedPeriod(''); // Clear selected period
+        setSelectedPeriod('');
     };
 
     const handlePrevMonth = () => {
@@ -146,7 +146,7 @@ const OrdersSold = () => {
         setSelectedPeriod(periodValue);
         setOrderStartDate('');
         setOrderEndDate('');
-        setOrderDatesForPeriod(periodValue);
+        setTimeout(() => setOrderDatesForPeriod(periodValue), 0);
     };
 
     const totalRevenue = ordersSold.reduce((total, product) => {
@@ -186,17 +186,20 @@ const OrdersSold = () => {
                 if (response.data.status === "error") {
                     setErrorMessage("Failed. " + t("selectAnotherDate"));
                 } else {
-                    const soldOrders = response.data.data;
-                    setOrdersSold(soldOrders);
+                    setOrdersSold(response.data.data);
                     setOrdersSoldCount(response.data.count);
-
                 }
             }).catch((error) => {
-                setErrorMessage("Failed. " + (error.message));
+                setErrorMessage("Failed. " + error.message);
             });
         }
     }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
 
+    useEffect(() => {
+        if (selectedPeriod) {
+            setOrderDatesForPeriod(selectedPeriod);
+        }
+    }, [selectedPeriod]);
 
     useEffect(() => {
         const accessToken =

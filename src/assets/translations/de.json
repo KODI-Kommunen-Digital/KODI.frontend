@@ -1026,5 +1026,7 @@
     "debit":"Lastschrift",
     "creditByCash":"Kredit durch Bargeld",
     "creditByCard":"Kredit per Karte",
-    "paymentType":"Zahlungsart"
+    "paymentType":"Zahlungsart",
+    "characterLimitExceeded": "Zeichenlimit von {{limit}} überschritten. Aktuell: {{count}}",
+    "invalidForum": "Ungültiges Forum"
 }

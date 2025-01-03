@@ -136,11 +136,11 @@ function AllProducts() {
     const goToEditProductsPage = (product) => {
         navigate(
             `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
-                state: {
-                    
-                    isOwnerRouter:false
-                }
+            state: {
+
+                isOwnerRouter: false
             }
+        }
         );
     };
 
@@ -435,11 +435,11 @@ function AllProducts() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
+
                                         onClick={() => {
                                             setPageNumber(pageNumber - 1);
                                             fetchProducts(storeId, pageNumber - 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -454,14 +454,14 @@ function AllProducts() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize && pageNumber * pageSize < productsCount &&(
+                                {products.length >= pageSize && pageNumber * pageSize < productsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        
+
                                         onClick={() => {
-                                            setPageNumber(pageNumber +1);
+                                            setPageNumber(pageNumber + 1);
                                             fetchProducts(storeId, pageNumber + 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}

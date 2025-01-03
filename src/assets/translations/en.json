@@ -1014,7 +1014,8 @@
     "debit":"Debit",
     "creditByCash":"Credit By Cash",
     "creditByCard":"Credit By Card",
-    "paymentType":"Payment Type"
-
+    "paymentType":"Payment Type",
+    "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
+    "invalidForum": "Invalid Forum"
 
 }
