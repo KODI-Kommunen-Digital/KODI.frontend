@@ -1009,8 +1009,13 @@
     "pleaseEnterValidMinCount": "Please enter a minimum count",
     "minAge": "Age Limitation",
     "pleaseEnterAgeLimit": "Please enter the age limit for the product purchase",
-    "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
+    "characterLimit": "characters",
     "noShelvesMessage": "No shelves are present to assign this product",
+    "debit":"Debit",
+    "creditByCash":"Credit By Cash",
+    "creditByCard":"Credit By Card",
+    "paymentType":"Payment Type",
+    "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
     "invalidForum": "Invalid Forum"
 
 }

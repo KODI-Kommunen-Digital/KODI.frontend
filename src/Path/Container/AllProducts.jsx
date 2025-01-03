@@ -389,25 +389,25 @@ function AllProducts() {
 
                                                     <td className="px-6 py-4 text-center font-bold">
                                                         <div className="flex justify-center items-center">
-                                                            <div className="relative group inline-block">
-                                                                <a
-                                                                    className={`font-medium text-green-600 px-2 cursor-pointer`}
-                                                                    style={{ fontFamily: "Poppins, sans-serif" }}
-                                                                    onClick={() => goToEditProductsPage(product)}
+                                                        <div className="relative group inline-block">
+                                                            <a
+                                                                className={`font-medium text-green-600 px-2 cursor-pointer`}
+                                                                style={{ fontFamily: "Poppins, sans-serif" }}
+                                                                onClick={() => goToEditProductsPage(product)}
+                                                            >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    height="1em"
+                                                                    viewBox="0 0 640 512"
+                                                                    className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
                                                                 >
-                                                                    <svg
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        height="1em"
-                                                                        viewBox="0 0 640 512"
-                                                                        className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
-                                                                    >
-                                                                        <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                                    </svg>
-                                                                </a>
-                                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                                    {t("edit")}
-                                                                </div>
+                                                                    <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                                                </svg>
+                                                            </a>
+                                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                            {t("edit")} 
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </td>
 

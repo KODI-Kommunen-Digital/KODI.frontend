@@ -1021,7 +1021,12 @@
     "pleaseEnterValidMinCount": "Bitte geben Sie eine Mindestanzahl ein",
     "minAge": "Altersbeschränkung",
     "pleaseEnterAgeLimit": "Bitte geben Sie die Altersgrenze für den Produktkauf ein",
-    "characterLimitExceeded": "Zeichenlimit von {{limit}} überschritten. Aktuell: {{count}}",
+    "characterLimit": "Zeichen",
     "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
+    "debit":"Lastschrift",
+    "creditByCash":"Kredit durch Bargeld",
+    "creditByCard":"Kredit per Karte",
+    "paymentType":"Zahlungsart",
+    "characterLimitExceeded": "Zeichenlimit von {{limit}} überschritten. Aktuell: {{count}}",
     "invalidForum": "Ungültiges Forum"
 }
