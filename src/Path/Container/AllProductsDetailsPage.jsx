@@ -93,7 +93,12 @@ const AllProductsDetailsPage = () => {
                                             )}
                                         </div>
 
-                                        <div className="text-start mb-4">
+                                        <div className="text-start mb-4"
+                                            style={{
+                                                maxHeight: "100px",
+                                                overflow: "auto",
+                                            }}
+                                        >
                                             <span className="font-bold text-slate-700">{t("description")} : </span>
                                             <span className="text-slate-600" dangerouslySetInnerHTML={{ __html: product.description }}></span>
                                         </div>

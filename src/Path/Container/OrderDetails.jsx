@@ -57,9 +57,15 @@ const OrderDetails = () => {
                                 {orders.products && Array.isArray(orders.products) && orders.products.map(productItem => (
                                     <div key={productItem.id} className="md:flex mb-6">
                                         <div className="md:px-4 py-4 md:py-0 flex-shrink-0"
-                                            style={{ maxWidth: "500px", minWidth: "300px", height: "auto" }}>
+                                            style={{
+                                                maxWidth: "300px",
+                                                width: "300px",
+                                                height: "300px",
+                                                overflow: "hidden",
+                                            }}
+                                        >
                                             <img
-                                                className="object-contain object-center h-full w-full max-h-96"
+                                                className="object-cover object-center w-full h-full"
                                                 src={
                                                     productItem.product.productImages &&
                                                         productItem.product.productImages.length > 0
@@ -95,7 +101,7 @@ const OrderDetails = () => {
                                             </div>
                                             <div className="text-start mb-4"
                                                 style={{
-                                                    maxHeight: "50px",
+                                                    maxHeight: "100px",
                                                     overflow: "auto",
                                                 }}
                                             >
