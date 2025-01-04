@@ -1018,6 +1018,8 @@
     "characterLimitExceeded": "Character limit of {{limit}} exceeded. Current: {{count}}",
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
-    "endDate": "End Date"
+    "endDate": "End Date",
+    "editpost":"Edit Post"
+
 
 }
