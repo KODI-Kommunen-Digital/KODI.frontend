@@ -298,11 +298,10 @@ const PaymentStatus = () => {
                         <div key={card.id} className="w-full max-w-xs">
                           {/* Card Selector */}
                           <div
-                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${
-                              cardId === card.id
+                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${cardId === card.id
                                 ? "bg-gray-300"
                                 : "bg-gray-200 hover:bg-gray-300"
-                            }`}
+                              }`}
                             onClick={() => handleCardClick(card.id)}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                           >
@@ -318,11 +317,10 @@ const PaymentStatus = () => {
                         <div key={card.id} className="w-full">
                           {/* Card Selector */}
                           <div
-                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${
-                              cardId === card.id
+                            className={`p-4 text-center  border-2 border-black rounded-full cursor-pointer transition-all ${cardId === card.id
                                 ? "bg-gray-300"
                                 : "bg-gray-200 hover:bg-gray-300"
-                            }`}
+                              }`}
                             onClick={() => handleCardClick(card.id)}
                             style={{ fontFamily: "Poppins, sans-serif" }}
                           >

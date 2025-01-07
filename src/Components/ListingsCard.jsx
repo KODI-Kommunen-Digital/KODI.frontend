@@ -4,7 +4,7 @@ import React from "react";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import listingSource  from "../Constants/listingSource";
+import listingSource from "../Constants/listingSource";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
@@ -39,7 +39,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     console.log('Listing clicked:', listing.title);
     console.log('Browser Info:', browserInfo);
 
-    if (listing.sourceId === listingSource.INSTAGRAM && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+    if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
       window.open(listing.website, '_blank');
     }
     else if (iFrame) {
