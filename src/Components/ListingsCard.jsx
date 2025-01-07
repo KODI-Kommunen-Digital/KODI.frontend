@@ -39,7 +39,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     console.log('Listing clicked:', listing.title);
     console.log('Browser Info:', browserInfo);
 
-    if (iFrame && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+    if (listing.website && listing.website.startsWith('https://www.instagram.com')) {
       window.open(listing.website, '_blank');
     }
     else if (iFrame) {
