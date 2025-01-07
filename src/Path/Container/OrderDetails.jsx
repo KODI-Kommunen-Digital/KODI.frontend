@@ -56,9 +56,16 @@ const OrderDetails = () => {
 
                                 {orders.products && Array.isArray(orders.products) && orders.products.map(productItem => (
                                     <div key={productItem.id} className="md:flex mb-6">
-                                        <div className="md:px-4 py-4 md:py-0">
+                                        <div className="md:px-4 py-4 md:py-0 flex-shrink-0"
+                                            style={{
+                                                maxWidth: "300px",
+                                                width: "300px",
+                                                height: "300px",
+                                                overflow: "hidden",
+                                            }}
+                                        >
                                             <img
-                                                className="object-contain object-center h-full w-full max-h-96"
+                                                className="object-cover object-center w-full h-full"
                                                 src={
                                                     productItem.product.productImages &&
                                                         productItem.product.productImages.length > 0
@@ -71,7 +78,8 @@ const OrderDetails = () => {
                                                 }}
                                             />
                                         </div>
-                                        <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4">
+                                        <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4 flex-grow"
+                                            style={{ overflow: "hidden", maxWidth: "100%" }}>
                                             <h2 className="text-2xl font-bold text-slate-800  mb-2">
                                                 {productItem.product.title}
                                             </h2>
@@ -91,7 +99,12 @@ const OrderDetails = () => {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="text-start mb-4">
+                                            <div className="text-start mb-4"
+                                                style={{
+                                                    maxHeight: "100px",
+                                                    overflow: "auto",
+                                                }}
+                                            >
                                                 <span className="font-bold text-slate-700">{t("description")} : </span>
                                                 <span className="text-slate-600" dangerouslySetInnerHTML={{ __html: productItem.product.description }}></span>
                                             </div>
