@@ -39,8 +39,8 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     console.log('Listing clicked:', listing.title);
     console.log('Browser Info:', browserInfo);
 
-    if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
-      window.open(listing.externalId, '_blank');
+    if (listing.sourceId === listingSource.INSTAGRAM && listing.website && listing.website.startsWith('https://www.instagram.com')) {
+      window.open(listing.website, '_blank');
     }
     else if (iFrame) {
       navigateTo(
