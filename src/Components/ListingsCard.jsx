@@ -40,7 +40,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
     console.log('Browser Info:', browserInfo);
 
     if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
-      window.open(listing.website, '_blank');
+      window.open(listing.externalId, '_blank');
     }
     else if (iFrame) {
       navigateTo(
