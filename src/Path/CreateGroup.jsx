@@ -30,7 +30,6 @@ function CreateGroup() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [forumId, setForumId] = useState(0);
-	const [isSuccess, setIsSuccess] = useState(false);
 
 	const navigate = useNavigate();
 
