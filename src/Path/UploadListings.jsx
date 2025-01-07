@@ -695,7 +695,16 @@ function UploadListings() {
 
   const onInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
+    if (name === "title" && value.length > CHARACTER_LIMIT) {
+      setError((prev) => ({
+        ...prev,
+        title: t("characterLimitExceeded", {
+          limit: CHARACTER_LIMIT,
+          count: value.length
+        }),
+      }));
+      return;
+    } else if (type === "checkbox") {
       setListingInput((prev) => ({
         ...prev,
         [name]: checked,
@@ -738,7 +747,7 @@ function UploadListings() {
     if (characterCount > CHARACTER_LIMIT) {
       setError((prev) => ({
         ...prev,
-        description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+        description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
       }));
       return;
     } else {
@@ -820,8 +829,6 @@ function UploadListings() {
       case "description":
         if (!value) {
           return t("pleaseEnterDescription");
-        } else if (value.length > 65535) {
-          return t("characterLimitReacehd");
         } else {
           return "";
         }
@@ -1108,13 +1115,20 @@ function UploadListings() {
               className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("enterTitle")}
             />
-            <div
-              className="mt-2 text-sm text-red-600"
-              style={{
-                visibility: error.title ? "visible" : "hidden",
-              }}
-            >
-              {error.title}
+            <div className="flex justify-between text-sm mt-1">
+              <span
+                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
+                  }`}
+              >
+                {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+              </span>
+              {error.title && (
+                <span className="mt-2 text-sm text-red-600">
+                  {error.title}
+                </span>
+              )}
             </div>
           </div>
 
@@ -1626,7 +1640,7 @@ function UploadListings() {
               <span
                 className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
                   ? "mt-2 text-sm text-red-600"
-                  : "h-[24px] text-gray-500"
+                  : "mt-2 text-sm text-gray-500"
                   }`}
               >
                 {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}

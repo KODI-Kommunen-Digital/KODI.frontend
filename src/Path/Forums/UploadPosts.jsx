@@ -216,6 +216,16 @@ function UploadPosts() {
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
+		if (name === "title" && value.length > CHARACTER_LIMIT) {
+			setError((prev) => ({
+				...prev,
+				title: t("characterLimitExceeded", {
+					limit: CHARACTER_LIMIT,
+					count: value.length
+				}),
+			}));
+			return;
+		}
 		setInput((prev) => ({
 			...prev,
 			[name]: value,
@@ -236,7 +246,7 @@ function UploadPosts() {
 		if (characterCount > CHARACTER_LIMIT) {
 			setError((prev) => ({
 				...prev,
-				description: `Character limit of ${CHARACTER_LIMIT} exceeded. Current: ${characterCount}`,
+				description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
 			}));
 			return;
 		} else {
@@ -380,13 +390,20 @@ function UploadPosts() {
 							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
-						<div
-							className="mt-2 text-sm text-red-600"
-							style={{
-								visibility: error.title ? "visible" : "hidden",
-							}}
-						>
-							{error.title}
+						<div className="flex justify-between text-sm mt-1">
+							<span
+								className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+									? "mt-2 text-sm text-red-600"
+									: "mt-2 text-sm text-gray-500"
+									}`}
+							>
+								{input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+							</span>
+							{error.title && (
+								<span className="mt-2 text-sm text-red-600">
+									{error.title}
+								</span>
+							)}
 						</div>
 					</div>
 
@@ -497,7 +514,7 @@ function UploadPosts() {
 							<span
 								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
 									? "mt-2 text-sm text-red-600"
-									: "h-[24px] text-gray-500"
+									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
 								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
@@ -603,7 +620,7 @@ function UploadPosts() {
 					</div>
 				</div>
 			</div>
-		</section>
+		</section >
 	);
 }
 
