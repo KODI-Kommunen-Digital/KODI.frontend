@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { getOrdersSold } from "../../Services/containerApi";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
 
 const OrdersSold = () => {
     window.scrollTo(0, 0);
@@ -22,6 +24,8 @@ const OrdersSold = () => {
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [selectedPeriod, setSelectedPeriod] = useState('today');
+    const [tempStartDate, setTempStartDate] = useState('');
+    const [tempEndDate, setTempEndDate] = useState('');
 
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -195,11 +199,37 @@ const OrdersSold = () => {
         }
     }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
 
+    const handleFetchOrders = useCallback(() => {
+        if (orderStartDate && orderEndDate) {
+            getOrdersSold({
+                orderStartDate,
+                orderEndDate,
+                pageNumber,
+                pageSize,
+            })
+                .then(response => {
+                    if (response.data.status === "error") {
+                        setErrorMessage(t("selectAnotherDate"));
+                    } else {
+                        setOrdersSold(response.data.data);
+                        setOrdersSoldCount(response.data.count);
+                    }
+                })
+                .catch(err => {
+                    setErrorMessage(err.message);
+                });
+        }
+    }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
+
     useEffect(() => {
         if (selectedPeriod) {
             setOrderDatesForPeriod(selectedPeriod);
         }
     }, [selectedPeriod]);
+
+    useEffect(() => {
+        handleFetchOrders();
+    }, [orderStartDate, orderEndDate, handleFetchOrders]);
 
     useEffect(() => {
         const accessToken =
@@ -216,9 +246,14 @@ const OrdersSold = () => {
         }
     }, [orderStartDate, orderEndDate, fetchOrdersSold]);
 
-    useEffect(() => {
-        setOrderDatesForPeriod(selectedPeriod);
-    }, []);
+    const handleOkayClick = () => {
+        if (tempStartDate && tempEndDate) {
+            setOrderStartDate(tempStartDate);
+            setOrderEndDate(tempEndDate);
+        } else {
+            setErrorMessage(t("pleaseSelectBothDates"));
+        }
+    };
 
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -375,13 +410,55 @@ const OrdersSold = () => {
                                 </div>
                             </center>
 
-                            <div className="flex flex-wrap justify-center gap-2 mt-4">
+                            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4 mt-4">
+                                <div className="bg-zinc-100 shadow-lg rounded-lg overflow-hidden">
+                                    <div className="items-center px-6 py-3">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label htmlFor="startDate" className="block text-gray-800">
+                                                    {t("startDate")}
+                                                </label>
+                                                <Flatpickr
+                                                    options={{ dateFormat: "Y-m-d" }}
+                                                    value={tempStartDate}
+                                                    onChange={([date]) => setTempStartDate(date.toISOString().split('T')[0])}
+                                                    className="w-full px-3 py-2 border border-gray-800 rounded"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="endDate" className="block text-gray-800">
+                                                    {t("endDate")}
+                                                </label>
+                                                <Flatpickr
+                                                    options={{ dateFormat: "Y-m-d" }}
+                                                    value={tempEndDate}
+                                                    onChange={([date]) => setTempEndDate(date.toISOString().split('T')[0])}
+                                                    className="w-full px-3 py-2 border border-gray-800 rounded"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="mt-4">
+                                            <button
+                                                onClick={handleOkayClick}
+                                                className=" w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                                            >
+                                                {t("select")}
+                                            </button>
+                                            {errorMessage && (
+                                                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap justify-center gap-2 p-4">
                                 {periodOptions.map((period) => (
                                     <div
                                         key={period.value}
-                                        className={`w-full sm:w-auto px-4 py-2 text-center border-2 border-black rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
-                                            ? 'bg-gray-300'
-                                            : 'bg-gray-200 hover:bg-gray-300'
+                                        className={`w-full sm:w-auto px-4 py-2 text-center text-gray-800 border-2 border-gray-800 rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
+                                            ? 'bg-green-600 text-white'
+                                            : 'bg-gray-200 hover:bg-green-600 hover:text-white'
                                             }`}
                                         onClick={() => handlePeriodClick(period.value)}
                                         style={{ fontFamily: 'Poppins, sans-serif' }}
