@@ -747,7 +747,10 @@ function UploadListings() {
     if (characterCount > CHARACTER_LIMIT) {
       setError((prev) => ({
         ...prev,
-        description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+        description: t("characterLimitExceeded", {
+          limit: CHARACTER_LIMIT,
+          count: characterCount,
+        }),
       }));
       return;
     } else {
@@ -757,38 +760,43 @@ function UploadListings() {
       }));
     }
 
-    if (hasNumberedList) {
-      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(regex);
-      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map(
-        (description, index) => `${index + 1}. ${description}`
-      );
-      listType = "ol";
-    } else if (hasBulletList) {
-      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(regex);
-      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map((description) => `- ${description}`);
-      listType = "ul";
-    } else {
-      setInput((prev) => ({
+    if (hasNumberedList || hasBulletList) {
+      const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
+      const matches = newContent.match(liRegex);
+      if (matches) {
+        descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+      }
+
+      listType = hasNumberedList ? "ol" : "ul";
+
+      const listHTML = `<${listType}>${descriptions
+        .map((item) => `<li>${item}</li>`)
+        .join("")}</${listType}>`;
+
+      let leftoverText = newContent
+        .replace(/<ol>.*?<\/ol>/gis, "")
+        .replace(/<ul>.*?<\/ul>/gis, "")
+        .trim();
+
+      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+
+      const finalDescription = leftoverText
+        ? `${leftoverText}<br/>${listHTML}`
+        : listHTML;
+
+      setListingInput((prev) => ({
         ...prev,
-        description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+        description: finalDescription,
       }));
-      setDescription(newContent);
-      return;
+    } else {
+      setListingInput((prev) => ({
+        ...prev,
+        description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
+      }));
     }
 
-    const listHTML = `<${listType}>${descriptions
-      .map((description) => `<li>${description}</li>`)
-      .join("")}</${listType}>`;
-
-    setInput((prev) => ({
-      ...prev,
-      description: listHTML,
-    }));
     setDescription(newContent);
+    console.log(newContent)
   };
 
   const isValidEmail = (email) => {
@@ -960,69 +968,68 @@ function UploadListings() {
   const onCityChange = async (e) => {
     const selectedCityId = parseInt(e.target.value);
 
-    if (process.env.REACT_APP_MULTIPLECITYSELECTION === 'True') {
+    if (selectedCityId === 0) {
+      setSelectedCities([]);
+      setCityId(0);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: [],
+      }));
+      setError((prevState) => ({
+        ...prevState,
+        cityIds: t("pleaseSelectCity"),
+      }));
+      return;
+    }
+
+    const selectedCity = cities.find(city => city.id === selectedCityId);
+
+    if (selectedCity) {
       if (selectedCities.some(city => city.id === selectedCityId)) {
         setError((prevState) => ({
           ...prevState,
           cityAlreadySelected: t("cityAlreadySelected"),
         }));
-        return;
       } else {
         setError((prevState) => ({
           ...prevState,
           cityAlreadySelected: "",
+          cityIds: "",
         }));
-      }
 
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        setCityId(selectedCityId);
-        const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
+        const updatedSelectedCities = [...selectedCities, selectedCity];
         setSelectedCities(updatedSelectedCities);
+        setCityId(selectedCityId);
         setListingInput((prev) => ({
           ...prev,
           cityIds: updatedSelectedCities.map(city => city.id),
-          villageId: 0,
         }));
       }
-
-      if (selectedCities.length === 0 || cities.length > 1) {
-        validateInput(e);
-      }
-    } else {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        setCityId(selectedCityId);
-        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
-        setListingInput((prev) => ({
-          ...prev,
-          cityIds: [selectedCityId],
-          villageId: 0,
-        }));
-      }
-      if (parseInt(cityIds))
-        validateInput(e);
     }
   };
 
-  const removeCity = (cityIds) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
+  const removeCity = (cityIdToRemove) => {
+    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
     setSelectedCities(updatedSelectedCities);
-    setListingInput((prev) => ({
-      ...prev,
-      cityIds: updatedSelectedCities.map(city => city.id),
-      villageId: 0,
-    }));
 
-    if (updatedSelectedCities.length === 0 && cities.length > 1) {
-      setError(prevState => ({
+    if (updatedSelectedCities.length === 0) {
+      setCityId(0);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: [],
+      }));
+      setError((prevState) => ({
         ...prevState,
         cityIds: t("pleaseSelectCity"),
       }));
     } else {
-      setError(prevState => ({
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: updatedSelectedCities.map(city => city.id),
+      }));
+      setError((prevState) => ({
         ...prevState,
-        cityIds: "", // Reset the cityIds error when there are selected cities again
+        cityIds: "",
       }));
     }
   };
@@ -1149,7 +1156,7 @@ function UploadListings() {
                   disabled={!newListing}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
-                  <option value="">{t("select")}</option>
+                  <option value={0}>{t("select")}</option>
                   {cities.map((city) => (
                     <option key={city.id} value={city.id}>
                       {city.name}

@@ -20,7 +20,7 @@ function ProductRequests() {
     const [cityId, setCityId] = useState();
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [stores, setStores] = useState([]);
-    
+
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -49,10 +49,10 @@ function ProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchProductRequests = useCallback(async (cityId,storeId, pageNumber, selectedStatus) => {
+    const fetchProductRequests = useCallback(async (cityId, storeId, pageNumber, selectedStatus) => {
         if (storeId) {
             try {
-                const response = await getProductRequestsSeller(cityId,storeId, pageNumber, selectedStatus);
+                const response = await getProductRequestsSeller(cityId, storeId, pageNumber, selectedStatus);
                 const allRequests = response.data.data;
                 setProductRequests(allRequests);
                 setProductRequestsCount(response.data.count)
@@ -160,22 +160,22 @@ function ProductRequests() {
                 productDetails: product,
                 storeId: storeId,
                 cityId: cityId,
-                isSeller:true
+                isSeller: true
             }
         });
     };
-    
+
 
     const goToEditProductsPage = (product) => {
         navigate(
             `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.productId}`, {
-                state: {
-                    
-                    isOwnerRouter:false
-                }
+            state: {
+
+                isOwnerRouter: false
             }
+        }
         );
-       
+
     };
 
     const [showConfirmationModal, setShowConfirmationModal] = useState({
@@ -192,7 +192,7 @@ function ProductRequests() {
                 window.location.reload();
                 const storeId = product.shopId;
 
-                getProductRequestsSeller(cityId,storeId, pageNumber, selectedStatus)
+                getProductRequestsSeller(cityId, storeId, pageNumber, selectedStatus)
                     .then((response) => {
                         console.log("Product requests updated", response.data);
                     })
@@ -215,7 +215,7 @@ function ProductRequests() {
     }
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
             <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -366,7 +366,7 @@ function ProductRequests() {
                                                 >
                                                     {t("minAge")}
                                                 </th>
-                                                {[0,2].includes(selectedStatus) &&<th
+                                                {[0, 2].includes(selectedStatus) && <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
@@ -444,9 +444,9 @@ function ProductRequests() {
                                                         {product.minAge != null ? product.minAge : 0}
                                                     </td>
 
-                                                    {[0,2].includes(selectedStatus) && <td className="px-6 py-4 text-center font-bold">
+                                                    {[0, 2].includes(selectedStatus) && <td className="px-6 py-4 text-center font-bold">
                                                         <div className="flex justify-center items-center">
-                                                            {[0].includes(selectedStatus)&&<a
+                                                            {[0].includes(selectedStatus) && <a
                                                                 className={`font-medium text-green-600 px-2 cursor-pointer`}
                                                                 style={{ fontFamily: "Poppins, sans-serif" }}
                                                                 onClick={() => goToEditProductsPage(product)}
