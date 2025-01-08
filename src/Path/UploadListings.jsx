@@ -796,6 +796,7 @@ function UploadListings() {
     }
 
     setDescription(newContent);
+    console.log(newContent)
   };
 
   const isValidEmail = (email) => {
