@@ -115,3 +115,12 @@
         z-index: 1000 !important; /* Ensure it appears above other content, including sidebar */
     }
 }
+
+ol, ul {
+    margin-left: 20px;
+    list-style-position: inside;
+}
+
+li {
+    margin-bottom: 0.5em;
+}

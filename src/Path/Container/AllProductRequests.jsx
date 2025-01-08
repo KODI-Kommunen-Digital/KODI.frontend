@@ -49,7 +49,7 @@ function AllProductRequests() {
         fetchStores();
     }, [fetchStores]);
 
-    const fetchProductRequests = useCallback(async (cityId,storeId, pageNumber, selectedStatus) => {
+    const fetchProductRequests = useCallback(async (cityId, storeId, pageNumber, selectedStatus) => {
         if (storeId) {
             try {
                 const response = await getProductRequests(storeId, pageNumber, selectedStatus);
@@ -158,15 +158,15 @@ function AllProductRequests() {
                 productDetails: product,
                 storeId: storeId,
                 cityId: cityId,
-                isSeller:false
+                isSeller: false
             }
         });
     };
 
-    
+
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
             <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -317,7 +317,7 @@ function AllProductRequests() {
                                                 >
                                                     {t("minAge")}
                                                 </th>
-                                               
+
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
@@ -386,7 +386,7 @@ function AllProductRequests() {
                                                         {product.minAge != null ? product.minAge : 0}
                                                     </td>
 
-                                                    
+
 
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
@@ -431,7 +431,7 @@ function AllProductRequests() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {productRequests.length >= pageSize && pageNumber * pageSize < productRequestsCount &&  (
+                                {productRequests.length >= pageSize && pageNumber * pageSize < productRequestsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => {
