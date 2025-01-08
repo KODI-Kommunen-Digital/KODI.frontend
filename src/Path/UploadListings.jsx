@@ -747,7 +747,10 @@ function UploadListings() {
     if (characterCount > CHARACTER_LIMIT) {
       setError((prev) => ({
         ...prev,
-        description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+        description: t("characterLimitExceeded", {
+          limit: CHARACTER_LIMIT,
+          count: characterCount,
+        }),
       }));
       return;
     } else {
@@ -757,37 +760,41 @@ function UploadListings() {
       }));
     }
 
-    if (hasNumberedList) {
-      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(regex);
-      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map(
-        (description, index) => `${index + 1}. ${description}`
-      );
-      listType = "ol";
-    } else if (hasBulletList) {
-      const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(regex);
-      descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map((description) => `- ${description}`);
-      listType = "ul";
+    if (hasNumberedList || hasBulletList) {
+      const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
+      const matches = newContent.match(liRegex);
+      if (matches) {
+        descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+      }
+
+      listType = hasNumberedList ? "ol" : "ul";
+
+      const listHTML = `<${listType}>${descriptions
+        .map((item) => `<li>${item}</li>`)
+        .join("")}</${listType}>`;
+
+      let leftoverText = newContent
+        .replace(/<ol>.*?<\/ol>/gis, "")
+        .replace(/<ul>.*?<\/ul>/gis, "")
+        .trim();
+
+      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+
+      const finalDescription = leftoverText
+        ? `${leftoverText}<br/>${listHTML}`
+        : listHTML;
+
+      setListingInput((prev) => ({
+        ...prev,
+        description: finalDescription,
+      }));
     } else {
       setListingInput((prev) => ({
         ...prev,
-        description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+        description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
       }));
-      setDescription(newContent);
-      return;
     }
 
-    const listHTML = `<${listType}>${descriptions
-      .map((description) => `<li>${description}</li>`)
-      .join("")}</${listType}>`;
-
-    setListingInput((prev) => ({
-      ...prev,
-      description: listHTML,
-    }));
     setDescription(newContent);
   };
 
