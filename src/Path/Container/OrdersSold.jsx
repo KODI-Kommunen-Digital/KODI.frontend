@@ -199,27 +199,27 @@ const OrdersSold = () => {
         }
     }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
 
-    const handleFetchOrders = useCallback(() => {
-        if (orderStartDate && orderEndDate) {
-            getOrdersSold({
-                orderStartDate,
-                orderEndDate,
-                pageNumber,
-                pageSize,
-            })
-                .then(response => {
-                    if (response.data.status === "error") {
-                        setErrorMessage(t("selectAnotherDate"));
-                    } else {
-                        setOrdersSold(response.data.data);
-                        setOrdersSoldCount(response.data.count);
-                    }
-                })
-                .catch(err => {
-                    setErrorMessage(err.message);
-                });
-        }
-    }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
+    // const handleFetchOrders = useCallback(() => {
+    //     if (orderStartDate && orderEndDate) {
+    //         getOrdersSold({
+    //             orderStartDate,
+    //             orderEndDate,
+    //             pageNumber,
+    //             pageSize,
+    //         })
+    //             .then(response => {
+    //                 if (response.data.status === "error") {
+    //                     setErrorMessage(t("selectAnotherDate"));
+    //                 } else {
+    //                     setOrdersSold(response.data.data);
+    //                     setOrdersSoldCount(response.data.count);
+    //                 }
+    //             })
+    //             .catch(err => {
+    //                 setErrorMessage(err.message);
+    //             });
+    //     }
+    // }, [orderStartDate, orderEndDate, pageNumber, pageSize, t]);
 
     useEffect(() => {
         if (selectedPeriod) {
@@ -227,9 +227,9 @@ const OrdersSold = () => {
         }
     }, [selectedPeriod]);
 
-    useEffect(() => {
-        handleFetchOrders();
-    }, [orderStartDate, orderEndDate, handleFetchOrders]);
+    // useEffect(() => {
+    //     handleFetchOrders();
+    // }, [orderStartDate, orderEndDate, handleFetchOrders]);
 
     useEffect(() => {
         const accessToken =
