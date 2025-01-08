@@ -166,11 +166,11 @@ function ProductStore() {
     const goToEditProductsPage = (product) => {
         navigate(
             `/SellerScreen/AddNewProducts?cityId=${cityId}&storeId=${product.shopId}&productId=${product.id}`, {
-                state: {
-                    
-                    isOwnerRouter:true
-                }
+            state: {
+
+                isOwnerRouter: true
             }
+        }
         );
     };
 
@@ -211,7 +211,7 @@ function ProductStore() {
     }
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
             <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -223,7 +223,8 @@ function ProductStore() {
                                     <div
                                         className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => {setSelectedStatus(statusByName.Active);
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Active);
                                             setPageNumber(1);
                                         }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -233,7 +234,8 @@ function ProductStore() {
                                     <div
                                         className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
                                             } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                                        onClick={() => {setSelectedStatus(statusByName.Pending);
+                                        onClick={() => {
+                                            setSelectedStatus(statusByName.Pending);
                                             setPageNumber(1);
                                         }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
@@ -599,7 +601,7 @@ function ProductStore() {
                                         onClick={() => {
                                             setPageNumber(pageNumber - 1);
                                             fetchProducts(storeId, pageNumber - 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -614,13 +616,13 @@ function ProductStore() {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {products.length >= pageSize  && pageNumber * pageSize < productCount && (
+                                {products.length >= pageSize && pageNumber * pageSize < productCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => {
                                             setPageNumber(pageNumber + 1);
                                             fetchProducts(storeId, pageNumber + 1, selectedStatus);
-                                          }}
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}

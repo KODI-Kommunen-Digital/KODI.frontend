@@ -21,7 +21,7 @@ const MyOrders = () => {
             const sortedOrders = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             setMyOrders(sortedOrders);
             setMyOrdersCount(response.data.count)
-            
+
         });
     }, []);
 
@@ -47,7 +47,7 @@ const MyOrders = () => {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
             <div className="container w-auto px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
@@ -176,7 +176,7 @@ const MyOrders = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {myOrders.length >= pageSize  && pageNumber * pageSize < myOrdersCount && (
+                                {myOrders.length >= pageSize && pageNumber * pageSize < myOrdersCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}

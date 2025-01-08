@@ -1030,5 +1030,7 @@
     "characterLimitExceeded": "Zeichenlimit von {{limit}} überschritten. Aktuell: {{count}}",
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
-    "endDate": "Enddatum"
+    "endDate": "Enddatum",
+    "editpost":"Beitrag bearbeiten"
+
 }

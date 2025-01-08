@@ -26,10 +26,10 @@ function CreateGroup() {
 	//Drag and Drop starts
 	const [image1, setImage1] = useState(null);
 
+	const [isSuccess, setIsSuccess] = useState(false);
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [forumId, setForumId] = useState(0);
-	const [isSuccess, setIsSuccess] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -189,6 +189,7 @@ function CreateGroup() {
 				setIsSuccess(true);
 
 				setErrorMessage(false);
+				setIsSuccess(true);
 				setTimeout(() => {
 					setSuccessMessage(false);
 					navigate("/MyGroups");
@@ -335,7 +336,7 @@ function CreateGroup() {
 	}
 
 	return (
-		<section class="bg-gray-900 body-font relative h-screen">
+		<section class="bg-gray-900 body-font relative h-full">
 			<SideBar />
 
 			<div class="container w-auto px-5 py-2 bg-gray-800">
@@ -577,7 +578,7 @@ function CreateGroup() {
 						<button
 							type="button"
 							onClick={handleSubmit}
-							disabled={updating}
+							disabled={updating || isSuccess}
 							class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
 							{t("saveChanges")}
