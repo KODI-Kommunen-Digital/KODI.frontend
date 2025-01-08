@@ -418,10 +418,16 @@ function UploadListings() {
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           currentListingId = response.data.data.map(item => item.listingId);
         }
+        else{
+          currentListingId = Array.isArray(response.data.id) ? response.data.id : [response.data.id];
+        }
 
         let cityIdsArray = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           cityIdsArray = response.data.data.map(item => item.cityId);
+        }
+        else{
+          cityIdsArray = [Number(cityIds)];
         }
 
         // Filter opening dates for appointmentInput and services before submitting
@@ -485,7 +491,7 @@ function UploadListings() {
             const minIterations = Math.min(cityIdsArray.length);
             for (let index = 0; index < minIterations; index++) {
               const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+              const listingId = currentListingId[index]?currentListingId[index]:currentListingId;
               pdfForm.append("pdf", pdf);
               allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
             }
@@ -769,10 +775,10 @@ function UploadListings() {
       const regex = /<li>(.*?)(?=<\/li>|$)/gi;
       const matches = newContent.match(regex);
       descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      descriptions = descriptions.map((description) => `- ${description}`);
+      descriptions = descriptions.map((description) => `\u2022 ${description}`);
       listType = "ul";
     } else {
-      setInput((prev) => ({
+      setListingInput((prev) => ({
         ...prev,
         description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
       }));
@@ -784,7 +790,7 @@ function UploadListings() {
       .map((description) => `<li>${description}</li>`)
       .join("")}</${listType}>`;
 
-    setInput((prev) => ({
+    setListingInput((prev) => ({
       ...prev,
       description: listHTML,
     }));
@@ -960,69 +966,68 @@ function UploadListings() {
   const onCityChange = async (e) => {
     const selectedCityId = parseInt(e.target.value);
 
-    if (process.env.REACT_APP_MULTIPLECITYSELECTION === 'True') {
+    if (selectedCityId === 0) {
+      setSelectedCities([]);
+      setCityId(0);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: [],
+      }));
+      setError((prevState) => ({
+        ...prevState,
+        cityIds: t("pleaseSelectCity"),
+      }));
+      return;
+    }
+
+    const selectedCity = cities.find(city => city.id === selectedCityId);
+
+    if (selectedCity) {
       if (selectedCities.some(city => city.id === selectedCityId)) {
         setError((prevState) => ({
           ...prevState,
           cityAlreadySelected: t("cityAlreadySelected"),
         }));
-        return;
       } else {
         setError((prevState) => ({
           ...prevState,
           cityAlreadySelected: "",
+          cityIds: "",
         }));
-      }
 
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        setCityId(selectedCityId);
-        const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
+        const updatedSelectedCities = [...selectedCities, selectedCity];
         setSelectedCities(updatedSelectedCities);
+        setCityId(selectedCityId);
         setListingInput((prev) => ({
           ...prev,
           cityIds: updatedSelectedCities.map(city => city.id),
-          villageId: 0,
         }));
       }
-
-      if (selectedCities.length === 0 || cities.length > 1) {
-        validateInput(e);
-      }
-    } else {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        setCityId(selectedCityId);
-        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
-        setListingInput((prev) => ({
-          ...prev,
-          cityIds: [selectedCityId],
-          villageId: 0,
-        }));
-      }
-      if (parseInt(cityIds))
-        validateInput(e);
     }
   };
 
-  const removeCity = (cityIds) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
+  const removeCity = (cityIdToRemove) => {
+    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
     setSelectedCities(updatedSelectedCities);
-    setListingInput((prev) => ({
-      ...prev,
-      cityIds: updatedSelectedCities.map(city => city.id),
-      villageId: 0,
-    }));
 
-    if (updatedSelectedCities.length === 0 && cities.length > 1) {
-      setError(prevState => ({
+    if (updatedSelectedCities.length === 0) {
+      setCityId(0);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: [],
+      }));
+      setError((prevState) => ({
         ...prevState,
         cityIds: t("pleaseSelectCity"),
       }));
     } else {
-      setError(prevState => ({
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: updatedSelectedCities.map(city => city.id),
+      }));
+      setError((prevState) => ({
         ...prevState,
-        cityIds: "", // Reset the cityIds error when there are selected cities again
+        cityIds: "",
       }));
     }
   };
@@ -1149,7 +1154,7 @@ function UploadListings() {
                   disabled={!newListing}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
-                  <option value="">{t("select")}</option>
+                  <option value={0}>{t("select")}</option>
                   {cities.map((city) => (
                     <option key={city.id} value={city.id}>
                       {city.name}

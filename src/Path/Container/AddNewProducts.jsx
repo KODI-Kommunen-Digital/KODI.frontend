@@ -153,7 +153,16 @@ function AddNewProducts() {
                 }, 5000);
 
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response.data.errorCode === 7002) {
+                    setErrorMessage(t("duplicate_product_name")); // Custom message for this specific error
+                  }
+                  else if (error.response.data.errorCode === 6012) {
+                    setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
+                  } 
+                    else {
+                    setErrorMessage(t("changesNotSaved")); // Fallback for other errors
+                  }
+                
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -737,7 +746,7 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                logo: null,
+                // logo: null,
             }));
         }
         setImage((prevImages) => {
@@ -779,7 +788,7 @@ function AddNewProducts() {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
             <div className="container w-auto px-5 py-2 bg-gray-800">

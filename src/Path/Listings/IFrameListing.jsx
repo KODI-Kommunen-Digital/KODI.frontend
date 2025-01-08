@@ -15,7 +15,7 @@ import {
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
-import { listingSource } from "../../Constants/listingSource";
+import listingSource from "../../Constants/listingSource";
 import './HeidiListings.css'
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 

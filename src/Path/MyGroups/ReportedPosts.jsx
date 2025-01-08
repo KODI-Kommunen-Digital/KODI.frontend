@@ -77,7 +77,7 @@ const ReportedPosts = () => {
 	};
 
 	return (
-		<section className="bg-gray-900 body-font relative h-screen">
+		<section className="bg-gray-900 body-font relative h-full">
 			<SideBar />
 			<ForumNavbar cityId={cityId} forumId={forumId} />
 			<div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">

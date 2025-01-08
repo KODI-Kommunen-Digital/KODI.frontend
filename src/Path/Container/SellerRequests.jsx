@@ -113,7 +113,7 @@ const SellerRequests = () => {
     }
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
             <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
                 <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-18">
@@ -313,7 +313,7 @@ const SellerRequests = () => {
                                     {t("page")} {pageNumber}
                                 </span>
 
-                                {sellerRequests.length >= pageSize && pageNumber * pageSize < sellerRequestsCount &&  (
+                                {sellerRequests.length >= pageSize && pageNumber * pageSize < sellerRequestsCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
                                         onClick={() => setPageNumber(pageNumber + 1)}
