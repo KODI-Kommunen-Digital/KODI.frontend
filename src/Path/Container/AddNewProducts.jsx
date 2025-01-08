@@ -746,7 +746,7 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                logo: null,
+                // logo: null,
             }));
         }
         setImage((prevImages) => {
