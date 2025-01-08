@@ -29,6 +29,38 @@ import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 const Description = (props) => {
   const [desc, setDesc] = useState();
+  function convertAndLinkify(input) {
+    const container = document.createElement("div");
+    container.innerHTML = input;
+
+    function processElement(element) {
+      if (element.nodeName === "OL") {
+        return Array.from(element.children)
+          .map((child, index) => `${index + 1}. ${processElement(child)}`)
+          .join("\n");
+      } else if (element.nodeName === "UL") {
+        return Array.from(element.children)
+          .map((child) => `\u2022  ${processElement(child)}`)
+          .join("\n");
+      } else if (element.nodeName === "LI") {
+        return element.textContent.trim();
+      } else if (element.nodeName === "BR") {
+        return "\n";
+      } else {
+        return element.textContent.trim();
+      }
+    }
+
+    const plainText = Array.from(container.childNodes)
+      .map((node) => processElement(node))
+      .filter((text) => text.trim() !== "")
+      .join("\n");
+
+    // Replace newlines with <br> for HTML rendering
+    const htmlText = plainText.replace(/\n/g, "<br>");
+    return linkify(htmlText);
+  }
+
   const linkify = (text) => {
     const urlRegex =
       /(?<!<img\s[^>]*)(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])(?![^<]*<\/a>)/gi;
@@ -38,6 +70,7 @@ const Description = (props) => {
       (url) =>
         `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
     );
+
     const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
 
     return text.replace(anchorTagRegex, (match, url, attributes, linkText) => {
@@ -56,9 +89,9 @@ const Description = (props) => {
   };
 
   useEffect(() => {
+    const linkedContent = convertAndLinkify(props.content);
+    setDesc(linkedContent);
     if (process.env.REACT_APP_SHOW_ADVERTISMENT === "True") {
-      const linkedContent = linkify(props.content);
-      setDesc(linkedContent);
       try {
         if (linkedContent.length > 800 && !isNaN(props.cityId)) {
           getAds(props.cityId).then((value) => {
@@ -87,13 +120,9 @@ const Description = (props) => {
       } catch (error) {
         console.log("Error", error);
       }
-    } else {
-      const linkedContent = linkify(props.content);
-      setDesc(linkedContent);
     }
   }, [props.cityId, props.content]);
 
-  // const linkedContent = linkify(content);
   return (
     <div
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"

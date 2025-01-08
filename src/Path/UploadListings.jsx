@@ -628,12 +628,9 @@ function UploadListings() {
             });
 
             setAppointmentInput(appointmentData);
-            // console.log(appointmentData)
 
             getAppointmentServices(cityIds, listingId, appointmentId)
               .then((servicesResponse) => {
-
-                console.log(servicesResponse.data.data)
                 const servicesData = servicesResponse.data.data.map((item) => {
                   const metadata = JSON.parse(item.metadata);
 
@@ -796,7 +793,6 @@ function UploadListings() {
     }
 
     setDescription(newContent);
-    console.log(newContent)
   };
 
   const isValidEmail = (email) => {
