@@ -95,10 +95,10 @@ const Description = (props) => {
 
   // const linkedContent = linkify(content);
   return (
-    <p
+    <div
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
       dangerouslySetInnerHTML={{ __html: desc }}
-    ></p>
+    ></div>
   );
 };
 
