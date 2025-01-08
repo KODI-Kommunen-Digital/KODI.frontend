@@ -737,7 +737,7 @@ function AddNewProducts() {
         if (shopId) {
             setInput((prev) => ({
                 ...prev,
-                logo: null,
+                // logo: null,
             }));
         }
         setImage((prevImages) => {
@@ -779,7 +779,7 @@ function AddNewProducts() {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-screen">
+        <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
             <div className="container w-auto px-5 py-2 bg-gray-800">

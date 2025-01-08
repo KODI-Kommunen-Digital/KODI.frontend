@@ -23,7 +23,7 @@ import {
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
-import { listingSource } from "../../Constants/listingSource";
+import listingSource from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 
@@ -66,8 +66,9 @@ const Description = (props) => {
             if (ad && ad.image && ad.link) {
               const parser = new DOMParser();
               const parsed = parser.parseFromString(linkedContent, "text/html");
-              const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
-                } alt="Ad" href=${ad.link}/>`;
+              const tag = `<img src=${
+                process.env.REACT_APP_BUCKET_HOST + ad.image
+              } alt="Ad" href=${ad.link}/>`;
               const a = document.createElement("a");
               const text = document.createElement("p");
               text.className = "text-right";
@@ -94,10 +95,10 @@ const Description = (props) => {
 
   // const linkedContent = linkify(content);
   return (
-    <p
+    <div
       className="leading-relaxed text-md font-medium my-6 text-slate-800 dark:text-slate-800"
       dangerouslySetInnerHTML={{ __html: desc }}
-    ></p>
+    ></div>
   );
 };
 
@@ -113,8 +114,9 @@ Description.defaultProps = {
 const Listing = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
-  const version = process.env.REACT_APP_FORNTENDVERSION || '1';
-  const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
+  const version = process.env.REACT_APP_FORNTENDVERSION || "1";
+  const HomePageNavBar =
+    require(`../../Components/V${version}/HomePageNavBar`).default;
 
   const [listingId, setListingId] = useState(0);
   const [description, setDescription] = useState("");
@@ -164,7 +166,7 @@ const Listing = () => {
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data
-        .filter(cat => !hiddenCategories.includes(cat.id))
+        .filter((cat) => !hiddenCategories.includes(cat.id))
         .forEach((cat) => {
           catList[cat.id] = cat.name;
         });
@@ -188,11 +190,13 @@ const Listing = () => {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      const isLoggedIn = accessToken || refreshToken
+      const isLoggedIn = accessToken || refreshToken;
       setIsLoggedIn(isLoggedIn);
       getListingsById(cityId, listingId, params)
         .then((listingsResponse) => {
-          setIsActive(listingsResponse.data.data.statusId === statusByName.Active)
+          setIsActive(
+            listingsResponse.data.data.statusId === statusByName.Active
+          );
           if (
             listingsResponse.data.data.sourceId !== source.User &&
             listingsResponse.data.data.showExternal !== 0
@@ -234,7 +238,6 @@ const Listing = () => {
                 setIsLoading(false);
               }
             }, 1000);
-
             setSelectedCategoryId(listingsResponse.data.data.categoryId);
             setListingId(listingsResponse.data.data.id);
             setDescription(listingsResponse.data.data.description);
@@ -327,14 +330,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-              .then((response) => {
-                setFavoriteId(response.data.id);
-                setSuccessMessage(t("List added to the favorites"));
-                // setHandleClassName(
-                //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                // );
-              })
-              .catch((err) => console.log("Error", err))
+                .then((response) => {
+                  setFavoriteId(response.data.id);
+                  setSuccessMessage(t("List added to the favorites"));
+                  // setHandleClassName(
+                  //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                  // );
+                })
+                .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -353,9 +356,10 @@ const Listing = () => {
   useEffect(() => {
     if (user) {
       try {
-        const socialMedia = typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
-          ? JSON.parse(user.socialMedia)
-          : {};
+        const socialMedia =
+          typeof user.socialMedia === "string" && isValidJSON(user.socialMedia)
+            ? JSON.parse(user.socialMedia)
+            : {};
         setUserSocial(socialMedia);
         setFirstname(user.firstname);
         setLastname(user.lastname);
@@ -408,8 +412,13 @@ const Listing = () => {
                               xmlns="http://www.w3.org/2000/svg"
                               height="1em"
                               viewBox="0 0 448 512"
-                              fill={process.env.REACT_APP_NAME === 'Salzkotten APP' ? '#fecc00' :
-                                process.env.REACT_APP_NAME === 'FICHTEL' ? '#4d7c0f' : '#1e40af'}
+                              fill={
+                                process.env.REACT_APP_NAME === "Salzkotten APP"
+                                  ? "#fecc00"
+                                  : process.env.REACT_APP_NAME === "FICHTEL"
+                                  ? "#4d7c0f"
+                                  : "#1e40af"
+                              }
                             >
                               <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                             </svg>
@@ -425,20 +434,28 @@ const Listing = () => {
                           </div>
 
                           <div
-                            className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                              }`}
+                            className={`hidden md:block flex items-center mt-6 ${
+                              terminalView ? "hidden" : "visible"
+                            }`}
                           >
-
-                            <a onClick={() => handleFavorite()} className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
-                              <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                            <a
+                              onClick={() => handleFavorite()}
+                              className={`relative inline-flex items-center justify-start px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}
+                            >
+                              <span
+                                className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}
+                              ></span>
                               <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-                                {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
+                                {favoriteId !== 0
+                                  ? t("unfavorite")
+                                  : t("favourites")}
                               </span>
                             </a>
                           </div>
                           <div
-                            className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                              }`}
+                            className={`md:hidden block flex items-center mt-6 ${
+                              terminalView ? "hidden" : "visible"
+                            }`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -492,7 +509,9 @@ const Listing = () => {
                                   </span>
                                   {input.endDate && (
                                     <>
-                                      <span className={`${RegionColors.lightTextColor}`}>
+                                      <span
+                                        className={`${RegionColors.lightTextColor}`}
+                                      >
                                         {" "}
                                         {t("To")}{" "}
                                       </span>
@@ -548,13 +567,15 @@ const Listing = () => {
                               {terminalView ? (
                                 <PDFDisplay
                                   url={
-                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                    process.env.REACT_APP_BUCKET_HOST +
+                                    input.pdf
                                   }
                                 />
                               ) : (
                                 <iframe
                                   src={
-                                    process.env.REACT_APP_BUCKET_HOST + input.pdf
+                                    process.env.REACT_APP_BUCKET_HOST +
+                                    input.pdf
                                   }
                                   type="text/html"
                                   className="w-full xs:h-[10rem] sm:h-[14rem] md:h-[26rem] lg:h-[32rem] object-contain"
@@ -572,7 +593,11 @@ const Listing = () => {
                           <img
                             alt="default"
                             className="object-cover object-center h-[600px] w-full"
-                            src={input.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
+                            src={
+                              input.appointmentId !== null
+                                ? APPOINTMENTDEFAULTIMAGE
+                                : LISTINGSIMAGE
+                            }
                           />
                         )}
                       </div>
@@ -591,7 +616,10 @@ const Listing = () => {
                   {sourceId === listingSource.SCRAPER && (
                     <p className="text-slate-800 font-medium">
                       {t("visitWebsite")}{" "}
-                      <a href={website} className={`${RegionColors.lightTextColor} font-medium" target="_blank" rel="noopener noreferrer`}>
+                      <a
+                        href={website}
+                        className={`${RegionColors.lightTextColor} font-medium" target="_blank" rel="noopener noreferrer`}
+                      >
                         {website}
                       </a>
                     </p>
@@ -605,28 +633,47 @@ const Listing = () => {
                 {userSocial && userSocial.length > 0 ? (
                   <UserProfile user={user} />
                 ) : (
-                  <div
-                    className="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
-                    <div onClick={() =>
-                      navigateTo(
-                        user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-                      )
-                    }
-                      className="rounded-t-lg h-32 overflow-hidden">
-                      <img className="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain' />
+                  <div className="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
+                    <div
+                      onClick={() =>
+                        navigateTo(
+                          user
+                            ? `/ViewProfile/${user.username}`
+                            : "/ViewProfile"
+                        )
+                      }
+                      className="rounded-t-lg h-32 overflow-hidden"
+                    >
+                      <img
+                        className="object-cover object-top w-full"
+                        src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                        alt="Mountain"
+                      />
                     </div>
                     <div
-                      onClick={() => navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")}
+                      onClick={() =>
+                        navigateTo(
+                          user
+                            ? `/ViewProfile/${user.username}`
+                            : "/ViewProfile"
+                        )
+                      }
                       className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden flex items-center justify-center"
                     >
                       <img
                         className="object-cover object-center h-full w-full"
-                        src={user?.image ? process.env.REACT_APP_BUCKET_HOST + user?.image : PROFILEIMAGE}
+                        src={
+                          user?.image
+                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                            : PROFILEIMAGE
+                        }
                         alt={user?.lastname}
                       />
                     </div>
                     <div className="text-center mt-2 p-4">
-                      <h2 className="font-semibold">{firstname + " " + lastname}</h2>
+                      <h2 className="font-semibold">
+                        {firstname + " " + lastname}
+                      </h2>
                       <p className="text-gray-500">{user?.username}</p>
                     </div>
 
@@ -634,57 +681,83 @@ const Listing = () => {
                       <a
                         onClick={() =>
                           navigateTo(
-                            user ? `/ViewProfile/${user.username}` : "/ViewProfile"
+                            user
+                              ? `/ViewProfile/${user.username}`
+                              : "/ViewProfile"
                           )
                         }
-                        className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
-                        <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
+                        className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}
+                      >
+                        <span
+                          className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}
+                        ></span>
                         <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
                           {t("viewProfile")}
                         </span>
                       </a>
                     </div>
-                  </div >
+                  </div>
                 )}
 
-                {!isActive &&
+                {!isActive && (
                   <div className="w-full items-center text-center justify-center">
-                    <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-red-600 duration-300 group-hover:translate-x-0 ease"
+                    <p
+                      className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-red-600 duration-300 group-hover:translate-x-0 ease"
                       style={{ fontFamily: "Poppins, sans-serif" }}
-                      onClick={() => navigateTo("/login")}>
+                      onClick={() => navigateTo("/login")}
+                    >
                       {t("listingInactiveMessage")}
                     </p>
                   </div>
-                }
-
-                {isLoggedIn ? (
-                  input.id && input.categoryId === 18 && (
-                    <a
-                      onClick={() =>
-                        navigateTo(`/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`)
-                      }
-                      className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
-                    >
-                      <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                      </span>
-                      <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">{t("clickHereToBook")}</span>
-                      <span className="relative invisible">
-                        {t("clickHereToBook")}
-                      </span>
-                    </a>
-                  )
-                ) : (
-                  input.id && input.categoryId === 18 && (
-                    <div className="w-full items-center text-center justify-center">
-                      <p className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() => navigateTo("/login")}>
-                        {t("pleaseLogin")}
-                      </p>
-                    </div>
-                  )
                 )}
+
+                {isLoggedIn
+                  ? input.id &&
+                    input.categoryId === 18 && (
+                      <a
+                        onClick={() =>
+                          navigateTo(
+                            `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`
+                          )
+                        }
+                        className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                      >
+                        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                          <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            ></path>
+                          </svg>
+                        </span>
+                        <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">
+                          {t("clickHereToBook")}
+                        </span>
+                        <span className="relative invisible">
+                          {t("clickHereToBook")}
+                        </span>
+                      </a>
+                    )
+                  : input.id &&
+                    input.categoryId === 18 && (
+                      <div className="w-full items-center text-center justify-center">
+                        <p
+                          className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                          onClick={() => navigateTo("/login")}
+                        >
+                          {t("pleaseLogin")}
+                        </p>
+                      </div>
+                    )}
               </div>
             </div>
           </div>
