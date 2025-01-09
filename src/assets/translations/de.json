@@ -1031,6 +1031,7 @@
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
     "endDate": "Enddatum",
+    "not_seller":"Sie sind nicht berechtigt, Produkte in diesen Shop einzustellen, da Sie kein Verkäufer sind.",
     "editpost":"Beitrag bearbeiten"
 
 }

@@ -159,10 +159,12 @@ function AddNewProducts() {
                   else if (error.response.data.errorCode === 6012) {
                     setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
                   } 
+                  else if (error.response.data.errorCode === 1009) {
+                    setErrorMessage(t("not_seller")); // Custom message for this specific error
+                  } 
                     else {
                     setErrorMessage(t("changesNotSaved")); // Fallback for other errors
                   }
-                
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -779,13 +781,32 @@ function AddNewProducts() {
         }
     };
 
-    const handleInventoryChange = (newInventory) => {
-        const updatedInventory = Math.max(newInventory, 0);
+    // const handleInventoryChange = (newInventory) => {
+    //     const updatedInventory = Math.max(newInventory, 0);
+    //     setInput((prev) => ({
+    //         ...prev,
+    //         inventory: updatedInventory,
+    //     }));
+    // };
+
+    const handleInventoryChange = (newInventory, triggeredByButton = false) => {
+        // Allow empty input while typing
+        if (!triggeredByButton && newInventory === 0) {
+            setInput((prev) => ({
+                ...prev,
+                inventory: "",
+            }));
+            return;
+        }
+    
+        // Ensure valid numbers when triggered by buttons or on valid input
+        const updatedInventory = Math.max(Number(newInventory),0);
         setInput((prev) => ({
             ...prev,
             inventory: updatedInventory,
         }));
     };
+    
 
     return (
         <section className="bg-gray-900 body-font relative h-full">
@@ -1226,7 +1247,7 @@ function AddNewProducts() {
                         <div className="flex items-center gap-2 sm:gap-4">
                             {/* Decrement Button */}
                             <button
-                                onClick={() => handleInventoryChange(input.inventory - 1)}
+                                onClick={() => handleInventoryChange(input.inventory - 1,true)}
                                 disabled={updating || isSuccess || input.inventory <= 0}
                                 id="decrement-btn"
                                 className="bg-gray-500 text-gray-700 px-2 py-1 rounded-l text-white hover:bg-gray-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
@@ -1258,7 +1279,7 @@ function AddNewProducts() {
 
                             {/* Increment Button */}
                             <button
-                                onClick={() => handleInventoryChange(input.inventory + 1)}
+                                onClick={() => handleInventoryChange(input.inventory + 1,true)}
                                 disabled={updating || isSuccess}
                                 id="increment-btn"
                                 className="bg-indigo-500 text-gray-700 px-2 py-1 rounded-r text-white hover:bg-indigo-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
