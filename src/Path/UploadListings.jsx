@@ -418,10 +418,16 @@ function UploadListings() {
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           currentListingId = response.data.data.map(item => item.listingId);
         }
+        else {
+          currentListingId = Array.isArray(response.data.id) ? response.data.id : [response.data.id];
+        }
 
         let cityIdsArray = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           cityIdsArray = response.data.data.map(item => item.cityId);
+        }
+        else {
+          cityIdsArray = [Number(cityIds)];
         }
 
         // Filter opening dates for appointmentInput and services before submitting
@@ -485,7 +491,7 @@ function UploadListings() {
             const minIterations = Math.min(cityIdsArray.length);
             for (let index = 0; index < minIterations; index++) {
               const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
+              const listingId = currentListingId[index] ? currentListingId[index] : currentListingId;
               pdfForm.append("pdf", pdf);
               allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
             }
