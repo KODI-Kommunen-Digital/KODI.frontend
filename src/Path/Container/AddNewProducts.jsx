@@ -153,7 +153,18 @@ function AddNewProducts() {
                 }, 5000);
 
             } catch (error) {
-                setErrorMessage(t("changesNotSaved"));
+                if (error.response.data.errorCode === 7002) {
+                    setErrorMessage(t("duplicate_product_name")); // Custom message for this specific error
+                  }
+                  else if (error.response.data.errorCode === 6012) {
+                    setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
+                  } 
+                  else if (error.response.data.errorCode === 1009) {
+                    setErrorMessage(t("not_seller")); // Custom message for this specific error
+                  } 
+                    else {
+                    setErrorMessage(t("changesNotSaved")); // Fallback for other errors
+                  }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
