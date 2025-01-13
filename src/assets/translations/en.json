@@ -1020,6 +1020,7 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "not_seller":"You are not authorised to add product to this store as you are not a seller",
-    "editpost":"Edit Post"
+    "editpost":"Edit Post",
+    "sellerTitle":"Seller Title"
 
 }
