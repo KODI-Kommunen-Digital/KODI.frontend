@@ -1025,5 +1025,7 @@
     "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
-    "endDate": "Enddatum"
+    "endDate": "Enddatum",
+    "noOrdersFound": "Keine Bestellungen gefunden",
+    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus"
 }

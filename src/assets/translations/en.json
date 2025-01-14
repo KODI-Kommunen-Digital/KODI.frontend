@@ -1013,6 +1013,7 @@
     "noShelvesMessage": "No shelves are present to assign this product",
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
-    "endDate": "End Date"
-
+    "endDate": "End Date",
+    "noOrdersFound": "No orders found",
+    "pleaseSelectBothDates": "Please select both dates"
 }
