@@ -13,7 +13,6 @@ import {
   uploadListingImage,
   deleteListingImage,
 } from "../Services/listingsApi";
-import { getProfile } from "../Services/usersApi";
 import { getCities } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
@@ -47,6 +46,8 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -105,13 +106,13 @@ function UploadListings() {
 
   function handleInputChange(e) {
     e.preventDefault();
-    const files = e.target.files;
+    const fileList = e.target.files;
     const MAX_IMAGE_SIZE_MB = 20;
     let hasImage = false;
     let hasPdf = false;
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
 
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         return t("maxFileSizeAllert");
@@ -129,9 +130,11 @@ function UploadListings() {
       return;
     }
 
+    const filesArray = Array.from(fileList);
+
     if (hasImage) {
       setLocalImageOrPdf(true);
-      setImage(files);
+      setImage(filesArray);
       setListingInput((prev) => ({
         ...prev,
         hasAttachment: false,
@@ -140,7 +143,7 @@ function UploadListings() {
 
     if (hasPdf) {
       setLocalImageOrPdf(true);
-      setPdf(files[0]); // Assuming only one PDF file is allowed
+      setPdf(filesArray[0]);
       setListingInput((prev) => ({
         ...prev,
         hasAttachment: true,
@@ -405,29 +408,26 @@ function UploadListings() {
       setUpdating(true);
 
       try {
+        const cityIdsToSubmit = selectedCities.map(city => city.id);
         const dataToSubmit = {
           ...listingInput,
-          cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
+          cityIds: cityIdsToSubmit,
         };
-        // Post or update listing data
-        const response = await (newListing
-          ? postListingsData(dataToSubmit)
-          : updateListingsData(cityIds, dataToSubmit, listingId));
+
+        const response = newListing
+          ? await postListingsData(dataToSubmit)
+          : await updateListingsData(cityIdsToSubmit, dataToSubmit, listingId);
+
+        console.log("Response:", response);
 
         let currentListingId = [];
-        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
-          currentListingId = response.data.data.map(item => item.listingId);
-        }
-        else {
-          currentListingId = Array.isArray(response.data.id) ? response.data.id : [response.data.id];
-        }
-
         let cityIdsArray = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+          currentListingId = response.data.data.map(item => item.listingId);
           cityIdsArray = response.data.data.map(item => item.cityId);
-        }
-        else {
-          cityIdsArray = [Number(cityIds)];
+        } else {
+          console.error("Invalid response structure. Response:", response);
+          throw new Error("Unable to retrieve listing and city IDs");
         }
 
         // Filter opening dates for appointmentInput and services before submitting
@@ -491,7 +491,7 @@ function UploadListings() {
             const minIterations = Math.min(cityIdsArray.length);
             for (let index = 0; index < minIterations; index++) {
               const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index] ? currentListingId[index] : currentListingId;
+              const listingId = currentListingId[index];
               pdfForm.append("pdf", pdf);
               allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
             }
@@ -563,67 +563,94 @@ function UploadListings() {
   };
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (!accessToken && !refreshToken) {
-      navigateTo("/login");
-    }
-    var cityIds = searchParams.get("cityId");
-    getCategory().then((response) => {
-      const categories = response?.data?.data || [];
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const accessToken =
+        window.localStorage.getItem("accessToken") ||
+        window.sessionStorage.getItem("accessToken");
+      const refreshToken =
+        window.localStorage.getItem("refreshToken") ||
+        window.sessionStorage.getItem("refreshToken");
 
-      const filteredCategories = categories.filter(
-        category => !hiddenCategories.includes(category.id)
-      );
+      if (!accessToken && !refreshToken) {
+        navigateTo("/login");
+        return;
+      }
 
-      setCategories(filteredCategories);
-    });
-    getNewsSubCategory().then((response) => {
-      const subcatList = {};
-      response?.data.data.forEach((subCat) => {
-        subcatList[subCat.id] = subCat.name;
-      });
-      setSubCategories(subcatList);
-    });
-    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
-    setAppointmentInput(prevAppointmentInput => ({
-      ...prevAppointmentInput,
-      title: listingInput.title,
-      description: listingInput.description,
-    }));
-    setSubcategoryId(null);
-    setCityId(cityIds);
-    var listingId = searchParams.get("listingId");
-    getProfile().then((response) => {
-      setIsAdmin(response.data.data.roleId === 1);
-    });
-    if (listingId && cityIds) {
-      setListingId(parseInt(listingId));
-      setNewListing(false);
-      getListingsById(cityIds, listingId).then((listingsResponse) => {
-        const listingData = listingsResponse.data.data;
-        listingData.cityIds = cityIds;
-        setListingInput(listingData);
-        setDescription(listingData.description);
-        setCategoryId(listingData.categoryId);
-        setSubcategoryId(listingData.subcategoryId);
+      const cityIds = searchParams.get("cityId");
+      const listingId = searchParams.get("listingId");
 
-        if (listingData.categoryId === 1 && !listingData.expiryDate) {
-          setListingInput((prevState) => ({
-            ...prevState,
-            disableDates: true,
-          }));
-        }
+      try {
+        // Fetch all required data
+        const [citiesResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
+          getCities(),
+          getCategory(),
+          getNewsSubCategory(),
+        ]);
 
-        const appointmentId = listingData.appointmentId;
-        const listingId = listingData.id
-        if (appointmentId) {
-          getAppointments(cityIds, listingId, appointmentId).then((appointmentResponse) => {
+        const citiesData = citiesResponse?.data?.data || [];
+        setCities(citiesData);
+
+        const categories = categoriesResponse?.data?.data || [];
+        const filteredCategories = categories.filter(
+          (category) => !hiddenCategories.includes(category.id)
+        );
+        setCategories(filteredCategories);
+
+        const subcategories = subcategoriesResponse?.data?.data || [];
+        const subcatList = {};
+        subcategories.forEach((subCat) => {
+          subcatList[subCat.id] = subCat.name;
+        });
+        setSubCategories(subcatList);
+
+        if (listingId) {
+          setListingId(parseInt(listingId));
+          setNewListing(false);
+
+          const listingsResponse = isV2Backend
+            ? await getListingsById(null, listingId)
+            : await getListingsById(cityIds, listingId);
+
+          const listingData = listingsResponse.data.data;
+          const allCities = listingData.allCities || [];
+          const selectedCitiesFromBackend = citiesData.filter((city) =>
+            allCities.includes(city.id)
+          );
+
+          setSelectedCities(selectedCitiesFromBackend);
+
+          if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
+            const singleCity = citiesData.find((city) => city.id === listingData.cityId);
+            if (singleCity) setSelectedCities([singleCity]);
+          }
+
+          setListingInput({
+            ...listingInput,
+            cityIds: allCities.length > 0 ? allCities : [listingData.cityId],
+            title: listingData.title || "",
+            categoryId: listingData.categoryId,
+            subcategoryId: listingData.subcategoryId,
+            description: listingData.description,
+          });
+          setDescription(listingData.description);
+          setCategoryId(listingData.categoryId);
+          setSubcategoryId(listingData.subcategoryId);
+
+          if (listingData.categoryId === 1 && !listingData.expiryDate) {
+            setListingInput((prevState) => ({
+              ...prevState,
+              disableDates: true,
+            }));
+          }
+
+          // Handle appointments
+          if (listingData.appointmentId) {
+            const fetchAppointments = isV2Backend
+              ? getAppointments(null, listingData.id, listingData.appointmentId)
+              : getAppointments(cityIds, listingData.id, listingData.appointmentId);
+
+            const appointmentResponse = await fetchAppointments;
             const appointmentData = appointmentResponse.data.data;
             appointmentData.metadata = JSON.parse(appointmentData.metadata);
 
@@ -634,50 +661,49 @@ function UploadListings() {
             });
 
             setAppointmentInput(appointmentData);
-            // console.log(appointmentData)
 
-            getAppointmentServices(cityIds, listingId, appointmentId)
-              .then((servicesResponse) => {
+            const fetchServices = isV2Backend
+              ? getAppointmentServices(null, listingData.id, listingData.appointmentId)
+              : getAppointmentServices(cityIds, listingData.id, listingData.appointmentId);
 
-                console.log(servicesResponse.data.data)
-                const servicesData = servicesResponse.data.data.map((item) => {
-                  const metadata = JSON.parse(item.metadata);
+            const servicesResponse = await fetchServices;
+            const servicesData = servicesResponse.data.data.map((item) => {
+              const metadata = JSON.parse(item.metadata);
 
-                  // Ensure all days of the week have at least one time slot
-                  daysOfWeek.forEach((day) => {
-                    if (!metadata.openingDates[day]) {
-                      metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
-                    }
-                  });
-
-                  return { ...item, metadata };
-                });
-                setAppointmentInput(prevState => ({
-                  ...prevState,
-                  services: servicesData
-                }));
-              })
-              .catch((error) => {
-                console.error("Error fetching appointment services:", error);
+              daysOfWeek.forEach((day) => {
+                if (!metadata.openingDates[day]) {
+                  metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                }
               });
-          }).catch((error) => {
-            console.error("Error fetching appointment details:", error);
-          });
-        }
 
-        if (listingData.logo && listingData.otherlogos) {
-          const temp = listingData.otherlogos
-            .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
-            .map((img) => img.logo);
-          setImage(temp);
-        } else if (listingData.pdf) {
-          setPdf({
-            link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
-            name: listingData.pdf.split("/")[1],
-          });
+              return { ...item, metadata };
+            });
+
+            setAppointmentInput((prevState) => ({
+              ...prevState,
+              services: servicesData,
+            }));
+          }
+
+          // Handle images or PDF
+          if (listingData.logo && listingData.otherlogos) {
+            const temp = listingData.otherlogos
+              .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
+              .map((img) => img.logo);
+            setImage(temp);
+          } else if (listingData.pdf) {
+            setPdf({
+              link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
+              name: listingData.pdf.split("/")[1],
+            });
+          }
         }
-      });
-    }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, [listingId]);
 
   function categoryDescription(category) {
@@ -802,7 +828,6 @@ function UploadListings() {
     }
 
     setDescription(newContent);
-    console.log(newContent)
   };
 
   const isValidEmail = (email) => {
@@ -821,6 +846,8 @@ function UploadListings() {
 
       case "cityIds":
         if (!parseInt(value)) {
+          return t("pleaseSelectCity");
+        } else if (!listingInput.cityIds || listingInput.cityIds.length === 0) {
           return t("pleaseSelectCity");
         } else {
           return "";
@@ -934,7 +961,6 @@ function UploadListings() {
         }
       }
 
-      // Validate expiryDate if it's required to be in the future
       if (name === "expiryDate") {
         const expiryDate = new Date(listingInput.expiryDate);
         const now = new Date();
@@ -955,61 +981,64 @@ function UploadListings() {
   };
 
   useEffect(() => {
-    getCities().then((citiesResponse) => {
-      const citiesData = citiesResponse.data.data;
-      setCities(citiesData);
-      if (citiesData.length === 1) {
-        const cityIds = citiesData[0].id;
-        const cityName = citiesData[0].name;
-        setSelectedCities([{ id: cityIds, name: cityName }]);
-        setListingInput((prev) => ({
-          ...prev,
-          cityIds: [cityIds],
-          villageId: 0,
-        }));
+    const fetchCities = async () => {
+      try {
+        const citiesResponse = await getCities();
+        const citiesData = citiesResponse?.data?.data || [];
+
+        if (!Array.isArray(citiesData) || citiesData.length === 0) {
+          console.error("No cities found");
+          return;
+        }
+
+        setCities(citiesData);
+        if (citiesData.length === 1) {
+          const cityId = citiesData[0].id;
+          const cityName = citiesData[0].name;
+
+          setSelectedCities([{ id: cityId, name: cityName }]);
+          setListingInput((prev) => ({
+            ...prev,
+            cityIds: [cityId],
+            villageId: 0,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching cities:", error);
       }
-    });
+    };
+
+    fetchCities();
   }, []);
 
   const onCityChange = async (e) => {
     const selectedCityId = parseInt(e.target.value);
 
-    if (selectedCityId === 0) {
-      setSelectedCities([]);
-      setCityId(0);
+    if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      setSelectedCities(selectedCity ? [selectedCity] : []);
+      setCityId(selectedCityId);
       setListingInput((prev) => ({
         ...prev,
-        cityIds: [],
+        cityIds: selectedCity ? [selectedCity.id] : [],
       }));
-      setError((prevState) => ({
-        ...prevState,
-        cityIds: t("pleaseSelectCity"),
-      }));
-      return;
-    }
-
-    const selectedCity = cities.find(city => city.id === selectedCityId);
-
-    if (selectedCity) {
-      if (selectedCities.some(city => city.id === selectedCityId)) {
-        setError((prevState) => ({
-          ...prevState,
-          cityAlreadySelected: t("cityAlreadySelected"),
-        }));
-      } else {
-        setError((prevState) => ({
-          ...prevState,
-          cityAlreadySelected: "",
-          cityIds: "",
-        }));
-
-        const updatedSelectedCities = [...selectedCities, selectedCity];
-        setSelectedCities(updatedSelectedCities);
-        setCityId(selectedCityId);
-        setListingInput((prev) => ({
-          ...prev,
-          cityIds: updatedSelectedCities.map(city => city.id),
-        }));
+    } else {
+      const selectedCity = cities.find(city => city.id === selectedCityId);
+      if (selectedCity) {
+        if (!selectedCities.some(city => city.id === selectedCityId)) {
+          const updatedSelectedCities = [...selectedCities, selectedCity];
+          setSelectedCities(updatedSelectedCities);
+          setCityId(selectedCityId);
+          setListingInput((prev) => ({
+            ...prev,
+            cityIds: updatedSelectedCities.map(city => city.id),
+          }));
+        } else {
+          setError((prevState) => ({
+            ...prevState,
+            cityAlreadySelected: t("cityAlreadySelected"),
+          }));
+        }
       }
     }
   };
@@ -1095,6 +1124,36 @@ function UploadListings() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleSelectCity = (city) => {
+    if (!selectedCities.some((selectedCity) => selectedCity.id === city.id)) {
+      setSelectedCities([...selectedCities, city]);
+    }
+  };
+
+  const handleRemoveCity = (cityId) => {
+    setSelectedCities(selectedCities.filter((city) => city.id !== cityId));
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
@@ -1145,7 +1204,68 @@ function UploadListings() {
             </div>
           </div>
 
-          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' && newListing ? (
+          <div className="relative mb-4" ref={dropdownRef}>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-600">
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+            </label>
+            <div
+              className="w-full bg-white rounded border border-gray-300 focus-within:border-black focus-within:ring-2 focus-within:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              onClick={toggleDropdown}
+            >
+              <div className="flex flex-wrap">
+                {selectedCities.map((city) => (
+                  <div
+                    key={city.id}
+                    className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
+                  >
+                    <span>{city.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCity(city.id)}
+                      className="text-red-600 ml-2"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  placeholder={selectedCities.length === 0 ? t("select") : ""}
+                  className="bg-transparent outline-none flex-1"
+                  readOnly
+                />
+              </div>
+            </div>
+            {isOpen && (
+              <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
+                {cities.map((city) => (
+                  <div
+                    key={city.id}
+                    onClick={() => handleSelectCity(city)}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((selectedCity) => selectedCity.id === city.id)
+                      ? "text-teal-700"
+                      : "text-gray-700"
+                      }`}
+                  >
+                    {city.name}
+                  </div>
+                ))}
+              </div>
+            )}
+            <div
+              className="mt-2 text-sm text-red-600"
+              style={{
+                visibility:
+                  (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected
+                    ? "visible"
+                    : "hidden",
+              }}
+            >
+              {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
+            </div>
+          </div>
+
+          {/* {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' ? (
             cities.length > 1 && (
               <div className="relative mb-4">
                 <label
@@ -1159,7 +1279,7 @@ function UploadListings() {
                   name="cityIds"
                   value={cityIds || 0}
                   onChange={onCityChange}
-                  disabled={!newListing}
+                  // disabled={!newListing && selectedCities.length > 0}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
                   <option value={0}>{t("select")}</option>
@@ -1205,13 +1325,12 @@ function UploadListings() {
                   {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
                 </label>
                 <select
-                  type="text"
                   id="cityIds"
                   name="cityIds"
                   value={cityIds || 0}
                   onChange={onCityChange}
                   autoComplete="country-name"
-                  disabled={!newListing}
+                  // disabled={!newListing && selectedCities.length > 0}
                   className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
                   <option value={0}>{t("select")}</option>
@@ -1231,7 +1350,7 @@ function UploadListings() {
                 </div>
               </div>
             )
-          )}
+          )} */}
 
           <div className="relative mb-4">
             <label

@@ -1033,6 +1033,7 @@
     "endDate": "Enddatum",
     "not_seller":"Sie sind nicht berechtigt, Produkte in diesen Shop einzustellen, da Sie kein Verkäufer sind.",
     "editpost":"Beitrag bearbeiten",
-    "sellerTitle":"Titel des Verkäufers"
-
+    "sellerTitle":"Titel des Verkäufers",
+    "editpost":"Beitrag bearbeiten",
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit"
 }
