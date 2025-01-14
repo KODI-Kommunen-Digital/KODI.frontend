@@ -18,6 +18,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
   };
   const { trackEvent } = useMatomo();
   const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const handleListingClick = () => {
     // Track the event with Matomo
@@ -43,14 +44,14 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
       window.open(listing.website, '_blank');
     }
     else if (iFrame) {
-      navigateTo(
+      navigateTo(isV2Backend ? `/IframeListing?listingId=${listing.id}` :
         `/IframeListing?listingId=${listing.id}&cityId=${listing.cityId}`
       );
     } else if (
       listing.sourceId === listingSource.USER_ENTRY ||
       listing.showExternal === 0
     ) {
-      navigateTo(`/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
+      navigateTo(isV2Backend ? `/Listing?listingId=${listing.id}&terminalView=${terminalView}` : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
     } else if (
       (listing.sourceId === listingSource.SCRAPER &&
         listing.showExternal === 1) ||

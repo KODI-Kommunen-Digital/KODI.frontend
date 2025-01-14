@@ -1025,5 +1025,6 @@
     "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
-    "endDate": "Enddatum"
+    "endDate": "Enddatum",
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit"
 }
