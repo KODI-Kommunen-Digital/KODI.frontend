@@ -1022,7 +1022,7 @@
     "not_seller":"You are not authorised to add product to this store as you are not a seller",
     "editpost":"Edit Post",
     "sellerTitle":"Seller Title",
-    "editpost":"Edit Post",
-    "expiryDateInPast": "Expiry date is in the past"
-
+    "expiryDateInPast": "Expiry date is in the past",
+    "noOrdersFound": "No orders found",
+    "pleaseSelectBothDates": "Please select both dates"
 }

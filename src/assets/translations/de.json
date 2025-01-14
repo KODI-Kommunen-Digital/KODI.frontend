@@ -1034,6 +1034,7 @@
     "not_seller":"Sie sind nicht berechtigt, Produkte in diesen Shop einzustellen, da Sie kein Verkäufer sind.",
     "editpost":"Beitrag bearbeiten",
     "sellerTitle":"Titel des Verkäufers",
-    "editpost":"Beitrag bearbeiten",
-    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit"
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit",
+    "noOrdersFound": "Keine Bestellungen gefunden",
+    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus"
 }
