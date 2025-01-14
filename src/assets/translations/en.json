@@ -1019,6 +1019,6 @@
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "editpost":"Edit Post"
-
+    "editpost":"Edit Post",
+    "expiryDateInPast": "Expiry date is in the past"
 }

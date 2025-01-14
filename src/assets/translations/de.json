@@ -1031,6 +1031,6 @@
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
     "endDate": "Enddatum",
-    "editpost":"Beitrag bearbeiten"
-
+    "editpost":"Beitrag bearbeiten",
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit"
 }
