@@ -1014,5 +1014,7 @@
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "expiryDateInPast": "Expiry date is in the past"
+    "expiryDateInPast": "Expiry date is in the past",
+    "noOrdersFound": "No orders found",
+    "pleaseSelectBothDates": "Please select both dates"
 }
