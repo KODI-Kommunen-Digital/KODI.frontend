@@ -101,8 +101,10 @@ export async function getCategory(cityId, storeId) {
 
 export async function deleteSubCategory(storeId, subCategoryId) {
   return axios.delete(`/v1/owners/subCategory`, {
-    storeId,
-    subCategoryId,
+    params: {
+      storeId,
+      subCategoryId,
+    },
   });
 }
 
@@ -259,7 +261,12 @@ export async function getProductRequests(storeId, pageNumber, status) {
   );
 }
 
-export async function getProductRequestsSeller(cityId,storeId, pageNumber, status) {
+export async function getProductRequestsSeller(
+  cityId,
+  storeId,
+  pageNumber,
+  status
+) {
   return axios.get(
     `/v1/cities/${cityId}/store/${storeId}/productRequest?pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
   );

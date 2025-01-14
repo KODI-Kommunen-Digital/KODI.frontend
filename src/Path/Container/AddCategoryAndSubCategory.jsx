@@ -158,7 +158,7 @@ function AddCategoryAndSubCategory() {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
             <div className="container w-auto px-5 py-2 bg-gray-800">

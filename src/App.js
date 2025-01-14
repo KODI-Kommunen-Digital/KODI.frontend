@@ -55,6 +55,7 @@ import SellerScreen from "./Path/Container/SellerScreen";
 import SellerRequests from "./Path/Container/SellerRequests";
 import SellerRequestPage from "./Path/Container/SellerRequestPage";
 import OrdersSold from "./Path/Container/OrdersSold";
+import PeriodSelection from "./Path/Container/PeriodSelection";
 import AddNewProducts from "./Path/Container/AddNewProducts";
 import AllProducts from "./Path/Container/AllProducts";
 import CustomerScreen from "./Path/Container/CustomerScreen";
@@ -80,7 +81,6 @@ import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 
 import Modal from "react-modal";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
-
 
 Modal.setAppElement("#root");
 
@@ -252,6 +252,11 @@ const App = () => {
               <Route
                 path="/SellerScreen/SellerRequests"
                 element={<SellerRequests />}
+                exact
+              />
+              <Route
+                path="/SellerScreen/PeriodSelection"
+                element={<PeriodSelection />}
                 exact
               />
 

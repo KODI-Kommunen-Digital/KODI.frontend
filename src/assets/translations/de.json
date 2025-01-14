@@ -1026,5 +1026,7 @@
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
     "endDate": "Enddatum",
-    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit"
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit",
+    "noOrdersFound": "Keine Bestellungen gefunden",
+    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus"
 }
