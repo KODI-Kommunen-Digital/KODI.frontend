@@ -1013,6 +1013,6 @@
     "noShelvesMessage": "No shelves are present to assign this product",
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
-    "endDate": "End Date"
-
+    "endDate": "End Date",
+    "expiryDateInPast": "Expiry date is in the past"
 }

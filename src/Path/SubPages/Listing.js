@@ -161,6 +161,7 @@ const Listing = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -212,7 +213,7 @@ const Listing = () => {
     const cityId = searchParams.get("cityId");
     setCityId(cityId);
     const listingId = searchParams.get("listingId");
-    if (listingId && cityId) {
+    if (listingId && (isV2Backend || cityId)) {
       const accessToken =
         window.localStorage.getItem("accessToken") ||
         window.sessionStorage.getItem("accessToken");
@@ -221,11 +222,17 @@ const Listing = () => {
         window.sessionStorage.getItem("refreshToken");
       const isLoggedIn = accessToken || refreshToken;
       setIsLoggedIn(isLoggedIn);
-      getListingsById(cityId, listingId, params)
+
+      const fetchListing = isV2Backend
+        ? getListingsById(null, listingId, params)
+        : getListingsById(cityId, listingId, params);
+
+      fetchListing
         .then((listingsResponse) => {
           setIsActive(
             listingsResponse.data.data.statusId === statusByName.Active
           );
+
           if (
             listingsResponse.data.data.sourceId !== source.User &&
             listingsResponse.data.data.showExternal !== 0
@@ -235,8 +242,11 @@ const Listing = () => {
             setInput(listingsResponse.data.data);
             const cityUserId = listingsResponse.data.data.userId;
             const currentUserId = isLoggedIn ? Number(getUserId()) : null;
+
             setTimeout(() => {
-              const params = { cityId, cityUser: true };
+              const params = isV2Backend
+                ? { cityUser: true }
+                : { cityId, cityUser: true };
               getProfile(cityUserId, params).then((currentUserResult) => {
                 const user = currentUserResult.data.data;
                 setUser(user);
@@ -254,7 +264,7 @@ const Listing = () => {
                   const favorite = response.data.data.find(
                     (f) =>
                       f.listingId === parseInt(listingId) &&
-                      f.cityId === parseInt(cityId)
+                      (!isV2Backend || f.cityId === parseInt(cityId))
                   );
                   if (favorite) {
                     setFavoriteId(favorite.id);
@@ -267,6 +277,7 @@ const Listing = () => {
                 setIsLoading(false);
               }
             }, 1000);
+
             setSelectedCategoryId(listingsResponse.data.data.categoryId);
             setListingId(listingsResponse.data.data.id);
             setDescription(listingsResponse.data.data.description);

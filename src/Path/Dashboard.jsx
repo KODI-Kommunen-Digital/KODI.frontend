@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -190,11 +191,11 @@ const Dashboard = () => {
   function goToEditListingsPage(listing) {
     if (listing.categoryId === 18) {
       navigateTo(
-        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+        isV2Backend ? `/EditListings?listingId=${listing.id}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
       );
     } else {
       navigateTo(
-        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+        isV2Backend ? `/EditListings?listingId=${listing.id}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
       );
     }
   }
