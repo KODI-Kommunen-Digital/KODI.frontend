@@ -273,12 +273,22 @@ const SellerRequestsApproval = () => {
                                     <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                             <tr>
+                                            <th
+                                                    scope="col"
+                                                    className="px-6 py-4 text-center "
+                                                    style={{
+                                                        fontFamily: "Poppins, sans-serif",
+                                                        width: "20%",
+                                                    }}
+                                                >
+                                                    {t("sellerTitle")}
+                                                </th>
                                                 <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("sellerName")}
@@ -298,7 +308,7 @@ const SellerRequestsApproval = () => {
                                                     className="px-6 py-4 text-center "
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("description")}
@@ -309,7 +319,7 @@ const SellerRequestsApproval = () => {
                                                     className="px-6 py-4 text-center "
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("viewDetails")}
@@ -320,7 +330,7 @@ const SellerRequestsApproval = () => {
                                                     className="px-6 py-4 text-center "
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
-                                                        width: "25%",
+                                                        width: "20%",
                                                     }}
                                                 >
                                                     {t("action")}
@@ -337,6 +347,13 @@ const SellerRequestsApproval = () => {
                                                         style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                                                     >
                                                         {sellerRequest.title}
+                                                    </th>
+                                                    <th
+                                                        scope="row"
+                                                        className="px-6 py-4 text-center font-bold text-gray-500 truncate"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                    >
+                                                        {sellerRequest.user.firstname} {sellerRequest.user.lastname}
                                                     </th>
 
                                                     {/* <td
