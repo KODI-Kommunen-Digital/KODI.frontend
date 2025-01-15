@@ -184,7 +184,7 @@ const HomePage = () => {
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
                 loading="lazy"
               />
-              <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+              <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
                 <h1
                   className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl text-center font-bold tracking-wide"
                   style={{
@@ -364,7 +364,7 @@ const HomePage = () => {
                         e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
                       }}
                     />
-                    <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+                    <div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-75 text-white z--1">
                       <h1
                         className="text-xl pb-5 md:text-2xl font-sans font-bold mb-0 ml-4"
                         style={{

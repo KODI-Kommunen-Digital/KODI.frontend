@@ -75,7 +75,7 @@ function UserProfile({ user }) {
       </div>
       <div className="text-center mt-2">
         <h2 className="font-semibold">{user?.firstname + " " + user?.lastname}</h2>
-        <p className="text-gray-500">{user?.username}</p>
+        <p className="text-gray-800">{user?.username}</p>
       </div>
 
       <div className="bg-white justify-center mx-2 py-2 px-2 mt-4 md:mt-2 lg:mt-2 mb-2 flex flex-wrap gap-1">

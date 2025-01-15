@@ -179,6 +179,19 @@ const SellerRequestsApproval = () => {
         navigate('/OwnerScreen/SellerDetailsStore', { state: { sellerDetails: sellerRequest, cityId: selectedCityId } });
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDescription, setSelectedDescription] = useState("");
+
+    const handleDescriptionClick = (description) => {
+        setSelectedDescription(description);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedDescription("");
+    };
+
     return (
         <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
@@ -365,20 +378,43 @@ const SellerRequestsApproval = () => {
                                                         : "-"}
                                                 </td> */}
 
-                                                    <div className="px-6 py-4">
-                                                        <td
-                                                            className="text-center font-bold text-blue-600 line-clamp-3"
-                                                            style={{
-                                                                fontFamily: "Poppins, sans-serif",
-                                                                maxWidth: "200px",
-                                                                overflow: "hidden",
-                                                                textOverflow: "ellipsis",
-                                                                whiteSpace: "pre-wrap"
-                                                            }}
-                                                            dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-blue-600 truncate cursor-pointer"
+                                                        style={{ fontFamily: "Poppins, sans-serif", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                                        dangerouslySetInnerHTML={{ __html: sellerRequest.description }}
+                                                        onClick={() => handleDescriptionClick(sellerRequest.description)}
+                                                    >
+                                                    </td>
+                                                    {isModalOpen && (
+                                                        <div
+                                                            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
+                                                            onClick={closeModal}
                                                         >
-                                                        </td>
-                                                    </div>
+                                                            <div
+                                                                className="relative bg-white rounded-lg shadow-lg transform transition-all sm:max-w-lg w-full"
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            >
+                                                                <div className="px-6 py-4">
+                                                                    <h3 className="text-lg leading-6 font-medium text-slate-800 text-center">
+                                                                        {t("description")}
+                                                                    </h3>
+                                                                    <div className="mt-4">
+                                                                        <p className="text-sm text-gray-500 text-center break-words">
+                                                                            {selectedDescription}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="bg-gray-50 px-4 py-3 flex justify-end">
+                                                                    <button
+                                                                        className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                                                                        onClick={closeModal}
+                                                                    >
+                                                                        {t("close")}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
@@ -462,7 +498,7 @@ const SellerRequestsApproval = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
@@ -499,10 +535,10 @@ const SellerRequestsApproval = () => {
 
                             {storeId && sellerRequests.length === 0 && (
                                 <div className="text-center mt-6">
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("noDataForStore")}
                                     </p>
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("selectAnotherStore")}
                                     </p>
                                 </div>
@@ -510,7 +546,7 @@ const SellerRequestsApproval = () => {
 
                             <center className="mt-6">
                                 <a
-                                    onClick={() => navigateTo("/OwnerScreen/StoreDetails")}
+                                    onClick={() => navigateTo("/OwnerScreen")}
                                     className="relative w-full inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out bg-indigo-700 border-2 border-indigo-600 rounded-full shadow-md group cursor-pointer"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 translate-x-full bg-indigo-700 group-hover:-translate-x-0 ease">

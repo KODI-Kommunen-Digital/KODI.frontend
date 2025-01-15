@@ -63,7 +63,7 @@ const CitizenServiceManagement = () => {
 								src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
 								loading="lazy"
 							/>
-							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+							<div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
 								<h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
 									{citizenService}
 								</h1>
@@ -120,7 +120,7 @@ const CitizenServiceManagement = () => {
 												className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
 												src={process.env.REACT_APP_BUCKET_HOST + data.image}
 											/>
-											<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-50 text-white z--1">
+											<div className="absolute inset-0 flex flex-col justify-end bg-gray-800 bg-opacity-75 text-white z--1">
 												<h1 className="text-xl md:text-3xl font-sans font-bold mb-0 ml-4">
 													{cities[data.cityId]}
 												</h1>

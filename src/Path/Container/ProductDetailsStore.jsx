@@ -72,7 +72,7 @@ const ProductDetailsStore = () => {
                             <div key={product.id} className="mb-6 px-4">
                                 <div className="md:px-4 py-4 md:py-0">
                                     <h2 className="text-xl font-bold text-slate-900 mb-2">
-                                        {t("orderId")} : {product.id}
+                                        {t("productId")} : {product.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
                                         {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}

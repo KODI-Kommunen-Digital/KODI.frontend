@@ -494,16 +494,17 @@ function UploadListings() {
               await Promise.all(allPromises)
             }
           } else if (pdf) {
-            let allPromises = []
             const pdfForm = new FormData();
-            const minIterations = Math.min(cityIdsArray.length);
-            for (let index = 0; index < minIterations; index++) {
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
-              pdfForm.append("pdf", pdf);
-              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
+            pdfForm.append("pdf", pdf); // Append the PDF only once
+
+            if (process.env.REACT_APP_V2_BACKEND === "True") {
+              await uploadListingPDF(pdfForm, null, newListing ? currentListingId[0] : listingId);
+            } else {
+              const allPromises = currentListingId.map((listingId, index) =>
+                uploadListingPDF(pdfForm, cityIdsArray[index], listingId)
+              );
+              await Promise.all(allPromises);
             }
-            await Promise.all(allPromises)
           }
         }
 

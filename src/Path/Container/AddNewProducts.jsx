@@ -812,7 +812,7 @@ function AddNewProducts() {
         <section className="bg-gray-900 body-font relative h-full">
             <SideBar />
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
                     <h2
                         style={{
@@ -1205,7 +1205,7 @@ function AddNewProducts() {
                                 {t("minAge")}
                             </label>
                             <input
-                                type="number"
+                                type="text"
                                 id="minAge"
                                 name="minAge"
                                 value={input.minAge}
@@ -1235,7 +1235,6 @@ function AddNewProducts() {
                     </div>
 
                     <div className="relative mb-6">
-                        {/* Label */}
                         <label
                             htmlFor="inventory"
                             className="block text-sm font-medium text-gray-700 mb-2"
@@ -1243,9 +1242,7 @@ function AddNewProducts() {
                             {t("maxInventory")} *
                         </label>
 
-                        {/* Input Group */}
                         <div className="flex items-center gap-2 sm:gap-4">
-                            {/* Decrement Button */}
                             <button
                                 onClick={() => handleInventoryChange(input.inventory - 1,true)}
                                 disabled={updating || isSuccess || input.inventory <= 0}
@@ -1263,9 +1260,8 @@ function AddNewProducts() {
                                 </svg>
                             </button>
 
-                            {/* Inventory Input */}
                             <input
-                                type="number"
+                                type="text"
                                 id="inventory"
                                 name="inventory"
                                 value={input.inventory}
@@ -1276,8 +1272,6 @@ function AddNewProducts() {
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterTotalNumber")}
                             />
-
-                            {/* Increment Button */}
                             <button
                                 onClick={() => handleInventoryChange(input.inventory + 1,true)}
                                 disabled={updating || isSuccess}
@@ -1295,8 +1289,6 @@ function AddNewProducts() {
                                 </svg>
                             </button>
                         </div>
-
-                        {/* Error Message */}
                         <div
                             className="mt-2 text-sm sm:text-base text-red-600"
                             style={{
@@ -1355,7 +1347,7 @@ function AddNewProducts() {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
                     <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
                         {t("uploadProductImage")}
@@ -1512,7 +1504,7 @@ function AddNewProducts() {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6">
                     <div className="py-2 mt-1 px-2">
                         <button
