@@ -16,7 +16,7 @@ import {
 import { getCities } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../Services/CategoryApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
@@ -585,7 +585,7 @@ function UploadListings() {
         const [citiesResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
           getCities(),
           getCategory(),
-          getNewsSubCategory(),
+          getListingsSubCategory(),
         ]);
 
         const citiesData = citiesResponse?.data?.data || [];
@@ -861,7 +861,7 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (!value && parseInt(listingInput.categoryId) == 1) {
+        if (categories.find(cat => cat.id === parseInt(listingInput.categoryId))?.noOfSubcategories > 0 && !value) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -1073,25 +1073,34 @@ function UploadListings() {
   const [subcategoryId, setSubcategoryId] = useState(0);
 
   const handleCategoryChange = async (event) => {
-    let categoryId = event.target.value;
-    setCategoryId(categoryId);
-    if (categoryId == 1) {
-      const subCats = await getNewsSubCategory();
-      const subcatList = {};
-      subCats?.data.data.forEach((subCat) => {
-        subcatList[subCat.id] = subCat.name;
-      });
-      setSubCategories(subcatList);
-    }
-    if (categoryId == 18) {
-      setAppointmentAdded(true)
-    }
-    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
+    const selectedCategoryId = parseInt(event.target.value, 10);
+    setCategoryId(selectedCategoryId);
+    const selectedCategory = categories.find(category => category.id === selectedCategoryId);
     setSubcategoryId(null);
-    validateInput(event);
+    setListingInput((prevInput) => ({ ...prevInput, categoryId: selectedCategoryId, subcategoryId: 0 }));
 
+    if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
+      try {
+        const subCats = await getListingsSubCategory(selectedCategoryId);
+        const filteredSubCategories = subCats?.data?.data;
+
+        const subcatList = {};
+        filteredSubCategories.forEach((subCat) => {
+          subcatList[subCat.id] = subCat.name;
+        });
+
+        setSubCategories(subcatList);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+      }
+    } else {
+      setSubCategories([]);
+    }
+    if (selectedCategoryId === 18) {
+      setAppointmentAdded(true);
+    }
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("categoryId", categoryId);
+    urlParams.set("categoryId", selectedCategoryId);
     urlParams.delete("subcategoryId");
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
@@ -1393,44 +1402,29 @@ function UploadListings() {
           {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
             appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
-          {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
+          {Object.keys(subCategories).length > 0 && (
             <div className="relative mb-0">
-              <label
-                htmlFor="subcategoryId"
-                className="block text-sm font-medium text-gray-600"
-              >
+              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
                 {t("subCategory")} *
               </label>
               <select
-                type="subcategoryId"
                 id="subcategoryId"
                 name="subcategoryId"
                 value={subcategoryId || 0}
                 onChange={handleSubcategoryChange}
-                onBlur={validateInput}
                 required
-                // disabled={!newListing}
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
-                <option className="font-sans" value={0} key={0}>
-                  {t("chooseOneSubCategory")}
-                </option>
-                {Object.keys(subCategories).map((key) => {
-                  return (
-                    <option className="font-sans" value={key} key={key}>
-                      {t(subCategories[key])}
-                    </option>
-                  );
-                })}
+                <option value={0}>{t("chooseOneSubCategory")}</option>
+                {Object.entries(subCategories).map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {t(name)}
+                  </option>
+                ))}
               </select>
-              <div
-                className="mt-2 text-sm text-red-600"
-                style={{
-                  visibility: error.subcategoryId ? "visible" : "hidden",
-                }}
-              >
-                {error.selectedSubCategory}
-              </div>
+              {error.subcategoryId && (
+                <div className="mt-2 text-sm text-red-600">{error.subcategoryId}</div>
+              )}
             </div>
           )}
 
