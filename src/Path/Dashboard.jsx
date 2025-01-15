@@ -445,7 +445,7 @@ const Dashboard = () => {
                     >
                       {t("action")}
                     </th>
-                    {viewAllListings && (
+                    {/* {viewAllListings && (
                       <th
                         scope="col"
                         className="px-6 py-4 text-center"
@@ -453,7 +453,7 @@ const Dashboard = () => {
                       >
                         {t("username")}
                       </th>
-                    )}
+                    )} */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -633,7 +633,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-                        {
+                        {/* {
                           viewAllListings && (
                             <td className="px-6 py-4 text-center">
                               <a
@@ -645,7 +645,7 @@ const Dashboard = () => {
                               </a>
                             </td>
                           )
-                        }
+                        } */}
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div
