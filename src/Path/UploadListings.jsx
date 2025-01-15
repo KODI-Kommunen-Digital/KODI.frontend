@@ -343,6 +343,8 @@ function UploadListings() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("Starting submission...");
+    console.log("Listing Input: ", listingInput);
 
     const trimStartDate = (startDate) => {
       if (startDate.endsWith(".000Z")) {
@@ -351,7 +353,6 @@ function UploadListings() {
       return startDate;
     };
 
-    // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
         const { duration, metadata: { openingDates } } = service;
@@ -404,6 +405,11 @@ function UploadListings() {
 
     setError(newError);
 
+    if (!valid) {
+      console.error("Validation failed. Errors: ", newError);
+      return;
+    }
+
     if (valid) {
       setUpdating(true);
 
@@ -413,6 +419,8 @@ function UploadListings() {
           ...listingInput,
           cityIds: cityIdsToSubmit,
         };
+        console.log("Listing Input: ", listingInput);
+        console.log("Error State: ", error);
 
         const response = newListing
           ? await postListingsData(dataToSubmit)
@@ -1142,12 +1150,33 @@ function UploadListings() {
 
   const handleSelectCity = (city) => {
     if (!selectedCities.some((selectedCity) => selectedCity.id === city.id)) {
-      setSelectedCities([...selectedCities, city]);
+      const updatedCities = [...selectedCities, city];
+      setSelectedCities(updatedCities);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: updatedCities.map((city) => city.id),
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        cityAlreadySelected: t("cityAlreadySelected"),
+      }));
     }
   };
 
   const handleRemoveCity = (cityId) => {
-    setSelectedCities(selectedCities.filter((city) => city.id !== cityId));
+    const updatedCities = selectedCities.filter((city) => city.id !== cityId);
+    setSelectedCities(updatedCities);
+    setListingInput((prev) => ({
+      ...prev,
+      cityIds: updatedCities.map((city) => city.id),
+    }));
+    if (updatedCities.length === 0) {
+      setError((prev) => ({
+        ...prev,
+        cityIds: t("pleaseSelectCity"),
+      }));
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -1218,7 +1247,7 @@ function UploadListings() {
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <div
-              className="w-full bg-white rounded border border-gray-300 focus-within:border-black focus-within:ring-2 focus-within:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               onClick={toggleDropdown}
             >
               <div className="flex flex-wrap">
