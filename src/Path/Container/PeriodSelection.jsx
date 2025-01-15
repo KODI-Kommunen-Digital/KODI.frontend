@@ -194,7 +194,10 @@ const PeriodSelection = () => {
                                     {t("startDate")}
                                 </label>
                                 <Flatpickr
-                                    options={{ dateFormat: "Y-m-d" }}
+                                    options={{
+                                        dateFormat: "Y-m-d",
+                                        maxDate: new Date(), // Restrict future dates
+                                    }}
                                     value={tempStartDate}
                                     onChange={([date]) => {
                                         const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -210,7 +213,10 @@ const PeriodSelection = () => {
                                     {t("endDate")}
                                 </label>
                                 <Flatpickr
-                                    options={{ dateFormat: "Y-m-d" }}
+                                    options={{
+                                        dateFormat: "Y-m-d",
+                                        maxDate: new Date(), // Restrict future dates
+                                    }}
                                     value={tempEndDate}
                                     onChange={([date]) => {
                                         const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
