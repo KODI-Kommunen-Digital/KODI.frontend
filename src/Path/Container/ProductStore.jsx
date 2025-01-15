@@ -22,48 +22,56 @@ function ProductStore() {
     const [cityId, setCityId] = useState();
 
     const fetchProducts = useCallback((storeId, pageNumber, selectedStatus) => {
-        if (storeId) {
-            getProducts(storeId, pageNumber, selectedStatus).then((response) => {
-                const productStores = response.data.data;
-                setProducts(productStores);
-                setProductsCount(response.data.count)
+        if (!storeId) return;
+
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        getProducts(storeId, pageNumber, selectedStatus, { signal })
+            .then((response) => {
+                setProducts(response.data.data);
+                setProductsCount(response.data.count);
+            })
+            .catch((error) => {
+                if (error.name !== "AbortError") {
+                    console.error(error);
+                }
             });
-        }
+
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
-        if (storeId) {
-            // setPageNumber(1);
-            const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            if (selectedStore) {
-                fetchProducts(storeId, pageNumber, selectedStatus);
-            }
+        const urlParams = new URLSearchParams(window.location.search);
+        const storeIdFromUrl = urlParams.get("storeId");
+
+        if (storeIdFromUrl && parseInt(storeIdFromUrl, 10) !== storeId) {
+            setStoreId(parseInt(storeIdFromUrl, 10));
         }
-    }, [fetchProducts, storeId, selectedStatus]);
+    }, [window.location.search]);
+
+    useEffect(() => {
+        if (storeId) {
+            fetchProducts(storeId, pageNumber, selectedStatus);
+        }
+    }, [storeId, pageNumber, selectedStatus]);
 
     const fetchStores = useCallback(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlStoreId = urlParams.get("storeId");
-
         getOwnerShops().then((response) => {
             const fetchedStores = response.data.data;
             setStores(fetchedStores);
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlStoreId = urlParams.get("storeId");
+
             if (urlStoreId) {
                 const storeIdNumber = parseInt(urlStoreId, 10);
-                const selectedStore = fetchedStores.find(store => store.id === storeIdNumber);
-
-                if (selectedStore) {
+                if (storeId !== storeIdNumber) {
                     setStoreId(storeIdNumber);
-                    const cityId = selectedStore.cityId;
-                    setCityId(cityId)
-                    setPageNumber(1);
-
-                    fetchProducts(selectedStore.cityId, storeIdNumber, 1, selectedStatus);
                 }
             }
         });
-    }, []);
+    }, [storeId]);
 
     useEffect(() => {
         fetchStores();
@@ -621,7 +629,7 @@ function ProductStore() {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
@@ -658,10 +666,10 @@ function ProductStore() {
 
                             {storeId && products.length === 0 && (
                                 <div className="text-center mt-6">
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("noDataForStore")}
                                     </p>
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("selectAnotherStore")}
                                     </p>
                                 </div>

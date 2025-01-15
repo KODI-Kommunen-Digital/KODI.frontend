@@ -99,9 +99,8 @@ const Description = (props) => {
             if (ad && ad.image && ad.link) {
               const parser = new DOMParser();
               const parsed = parser.parseFromString(linkedContent, "text/html");
-              const tag = `<img src=${
-                process.env.REACT_APP_BUCKET_HOST + ad.image
-              } alt="Ad" href=${ad.link}/>`;
+              const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
+                } alt="Ad" href=${ad.link}/>`;
               const a = document.createElement("a");
               const text = document.createElement("p");
               text.className = "text-right";
@@ -370,14 +369,14 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-                .then((response) => {
-                  setFavoriteId(response.data.id);
-                  setSuccessMessage(t("List added to the favorites"));
-                  // setHandleClassName(
-                  //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                  // );
-                })
-                .catch((err) => console.log("Error", err))
+              .then((response) => {
+                setFavoriteId(response.data.id);
+                setSuccessMessage(t("List added to the favorites"));
+                // setHandleClassName(
+                //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                // );
+              })
+              .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -456,8 +455,8 @@ const Listing = () => {
                                 process.env.REACT_APP_NAME === "Salzkotten APP"
                                   ? "#fecc00"
                                   : process.env.REACT_APP_NAME === "FICHTEL"
-                                  ? "#4d7c0f"
-                                  : "#1e40af"
+                                    ? "#4d7c0f"
+                                    : "#1e40af"
                               }
                             >
                               <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
@@ -474,9 +473,8 @@ const Listing = () => {
                           </div>
 
                           <div
-                            className={`hidden md:block flex items-center mt-6 ${
-                              terminalView ? "hidden" : "visible"
-                            }`}
+                            className={`hidden md:block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
                           >
                             <a
                               onClick={() => handleFavorite()}
@@ -493,9 +491,8 @@ const Listing = () => {
                             </a>
                           </div>
                           <div
-                            className={`md:hidden block flex items-center mt-6 ${
-                              terminalView ? "hidden" : "visible"
-                            }`}
+                            className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
+                              }`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -714,7 +711,7 @@ const Listing = () => {
                       <h2 className="font-semibold">
                         {firstname + " " + lastname}
                       </h2>
-                      <p className="text-gray-500">{user?.username}</p>
+                      <p className="text-gray-800">{user?.username}</p>
                     </div>
 
                     <div className="flex justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:flex">
@@ -753,51 +750,51 @@ const Listing = () => {
 
                 {isLoggedIn
                   ? input.id &&
-                    input.categoryId === 18 && (
-                      <a
-                        onClick={() =>
-                          navigateTo(
-                            `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`
-                          )
-                        }
-                        className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
-                      >
-                        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                          <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            ></path>
-                          </svg>
-                        </span>
-                        <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">
-                          {t("clickHereToBook")}
-                        </span>
-                        <span className="relative invisible">
-                          {t("clickHereToBook")}
-                        </span>
-                      </a>
-                    )
-                  : input.id &&
-                    input.categoryId === 18 && (
-                      <div className="w-full items-center text-center justify-center">
-                        <p
-                          className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                          onClick={() => navigateTo("/login")}
+                  input.categoryId === 18 && (
+                    <a
+                      onClick={() =>
+                        navigateTo(
+                          `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`
+                        )
+                      }
+                      className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
+                    >
+                      <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          {t("pleaseLogin")}
-                        </p>
-                      </div>
-                    )}
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          ></path>
+                        </svg>
+                      </span>
+                      <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">
+                        {t("clickHereToBook")}
+                      </span>
+                      <span className="relative invisible">
+                        {t("clickHereToBook")}
+                      </span>
+                    </a>
+                  )
+                  : input.id &&
+                  input.categoryId === 18 && (
+                    <div className="w-full items-center text-center justify-center">
+                      <p
+                        className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        onClick={() => navigateTo("/login")}
+                      >
+                        {t("pleaseLogin")}
+                      </p>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
