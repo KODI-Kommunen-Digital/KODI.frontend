@@ -336,7 +336,7 @@ function CreateGroup() {
 		<section class="bg-gray-900 body-font relative h-full">
 			<SideBar />
 
-			<div class="container w-auto px-5 py-2 bg-gray-800">
+			<div class="container w-auto px-5 py-2 bg-gray-900">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2
 						style={{
@@ -498,7 +498,7 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-gray-800">
+			<div class="container w-auto px-5 py-2 bg-gray-900">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
@@ -569,7 +569,7 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div className="container w-auto px-5 py-2 bg-gray-800">
+			<div className="container w-auto px-5 py-2 bg-gray-900">
 				<div className="bg-white mt-4 p-6">
 					<div className="py-2 mt-1 px-2">
 						<button

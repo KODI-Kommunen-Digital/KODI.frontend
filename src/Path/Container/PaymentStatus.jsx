@@ -232,7 +232,7 @@ const PaymentStatus = () => {
                             </div>
                         </>
                     ) : cards.length > 0 ? (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {cards.length < 5 ? (
@@ -271,10 +271,10 @@ const PaymentStatus = () => {
 
                             {cardId !== 0 && paymentStatus.length === 0 && (
                                 <div className="text-center mt-6">
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("noDataForStore")}
                                     </p>
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("selectAnotherStore")}
                                     </p>
                                 </div>

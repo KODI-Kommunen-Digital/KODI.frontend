@@ -937,6 +937,7 @@
     "selectAnotherDate": "Keine Bestellung für dieses Datum gefunden, bitte wähle ein anderes Datum",
     "noShopsAvailableForThisCity": "Keine Geschäfte in dieser Stadt gefunden, bitte wähle eine andere Stadt, um fortzufahren",
     "orderId": "Bestellnummer",
+    "productId": "Product Id",
     "discount": "Rabatt",
     "imageWarning": "Du kannst nur Bilder hochladen, aber kein PDF hier hochladen",
     "PdfAlert": "Du kannst kein PDF hochladen, du kannst nur ein Bild hochladen",

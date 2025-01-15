@@ -566,7 +566,7 @@ class ProfilePage extends React.Component {
               </div>
             </div>
             <SocialMedia setSocialMedia={this.setSocialMedia.bind(this)} />
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
               <div className="bg-white mt-4 p-6">
                 <div className="py-2 mt-1 px-2">
                   <button
