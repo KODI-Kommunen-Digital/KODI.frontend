@@ -256,7 +256,9 @@ const ViewPost = () => {
   };
 
   function goToAllForums() {
-    navigateTo(`/CitizenService`);
+    navigateTo(
+      `/Forum?cityId=${cityId}&forumId=${forumId}`
+    );
   }
 
   const handleDelete = async () => {

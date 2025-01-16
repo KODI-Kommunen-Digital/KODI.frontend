@@ -30,6 +30,7 @@ function CreateGroup() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [forumId, setForumId] = useState(0);
+
 	const navigate = useNavigate();
 
 	// const handleGroupTypeChange = (event) => {
@@ -185,6 +186,8 @@ function CreateGroup() {
 					await deleteForumImage(cityId, input.id);
 				}
 				setSuccessMessage(t("groupCreated"));
+				setIsSuccess(true);
+
 				setErrorMessage(false);
 				setIsSuccess(true);
 				setTimeout(() => {
