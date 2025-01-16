@@ -1046,7 +1046,9 @@
     "subcategoryExist":"Die Unterkategorie für diese Kategorie ist bereits vorhanden.",
     "addCategory":"Kategorie hinzufügen",
     "addsubcategory":"Unterkategorie hinzufügen",
-    "category_not_added":"Kategorie nicht in den Shop aufgenommen"
+    "category_not_added":"Kategorie nicht in den Shop aufgenommen",
+    "subcategoryUpdated": "Neue Unterkategorie aktualisiert"
+
 
 
 }

@@ -276,7 +276,7 @@ export async function getProductRequestsSeller(
 
 export async function getOrders(cityId, storeId, pageNumber) {
   return axios.get(
-    `/v1/cities/${cityId}/store/${storeId}/orders?pageNumber=${pageNumber}&pageSize=9&sort=createdAt&sortDesc=true`
+    `/v1/cities/${cityId}/store/${storeId}/orders?pageNumber=${pageNumber}&pageSize=9`
   );
 }
 
