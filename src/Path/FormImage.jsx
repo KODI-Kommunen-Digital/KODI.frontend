@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 function FormImage(props) {
   const { t } = useTranslation();
+  console.log("props", props)
 
   const updateListing = (imgIndex) => {
     const updatedImages = Array.from(props.image);

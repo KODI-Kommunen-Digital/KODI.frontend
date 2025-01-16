@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./bodyContainer.css";
-import SideBar from "../Components/SideBar";
+import "../bodyContainer.css";
+import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -12,16 +12,16 @@ import {
   uploadListingPDF,
   uploadListingImage,
   deleteListingImage,
-} from "../Services/listingsApi";
-import { getCities } from "../Services/citiesApi";
+} from "../../Services/listingsApi";
+import { getCities } from "../../Services/citiesApi";
 import FormData from "form-data";
-import Alert from "../Components/Alert";
-import { getCategory, getListingsSubCategory } from "../Services/CategoryApi";
-import { hiddenCategories } from "../Constants/hiddenCategories";
-import FormImage from "./FormImage";
-import { UploadSVG } from "../assets/icons/upload";
-import ServiceAndTime from "../Components/ServiceAndTime";
-import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
+import Alert from "../../Components/Alert";
+import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
+import { hiddenCategories } from "../../Constants/hiddenCategories";
+import FormImage from "../FormImage";
+import { UploadSVG } from "../../assets/icons/upload";
+import ServiceAndTime from "../../Components/ServiceAndTime";
+import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../../Services/appointmentBookingApi";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from 'date-fns';
@@ -1208,6 +1208,10 @@ function UploadListings() {
 
     setIsFormValid(isValid);
   }, [listingInput, error, categoryId, selectedCities]);
+
+  console.log("image:", image);
+  console.log("image.length:", image && image.length);
+  console.log("newListing:", newListing);
 
   return (
     <section className="bg-slate-600 body-font relative">

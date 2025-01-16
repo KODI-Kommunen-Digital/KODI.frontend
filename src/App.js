@@ -19,6 +19,8 @@ import HomePageV1 from "./Path/V1/HomePage";
 import HomePageV2 from "./Path/V2/HomePage";
 import AllListingsV1 from "./Path/V1/AllListings";
 import AllListingsV2 from "./Path/V2/AllListings";
+import UploadListingsV1 from "./Path/V1/UploadListings";
+import UploadListingsV2 from "./Path/V2/UploadListings";
 
 import Favorites from "./Path/Favorites";
 import Listing from "./Path/SubPages/Listing";
@@ -30,7 +32,7 @@ import AllForums from "./Path/CitizenServices/AllForums";
 import CitizenServiceManagement from "./Path/CitizenServices/CitizenServiceManagement";
 import OverviewPage from "./Path/Listings/OverviewPage";
 import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
-import UploadListings from "./Path/UploadListings";
+
 import CreateGroup from "./Path/CreateGroup";
 import MyGroups from "./Path/MyGroups";
 import VerifyEmail from "./Path/VerifyEmail";
@@ -91,6 +93,7 @@ const App = () => {
   const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   useEffect(() => {
     const link =
@@ -117,6 +120,10 @@ const App = () => {
               frontendVersion === "1" ? <AllListingsV1 /> : <AllListingsV2 />
             }
           />
+          <Route
+            path="/UploadListings"
+            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
+          />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
@@ -128,7 +135,6 @@ const App = () => {
           <Route path="/DashboardAdmin" element={<Dashboard />} exact />
           <Route path="/AccountSettings" element={<AccountSettings />} exact />
           <Route path="/AllDevices" element={<AllDevices />} exact />
-          <Route path="/UploadListings" element={<UploadListings />} exact />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/PasswordForgot" element={<PasswordForgot />} />
           <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
@@ -138,7 +144,11 @@ const App = () => {
 
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
-          <Route path="/EditListings" element={<UploadListings />} exact />
+          <Route
+            path="/EditListings"
+            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
+            exact
+          />
 
           {inFrame && (
             <React.Fragment>
