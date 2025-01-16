@@ -432,6 +432,7 @@ function UploadListings() {
           console.error("Invalid response structure. Response:", response);
           throw new Error("Unable to retrieve listing and city IDs");
         }
+       
 
         // Filter opening dates for appointmentInput and services before submitting
         const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
