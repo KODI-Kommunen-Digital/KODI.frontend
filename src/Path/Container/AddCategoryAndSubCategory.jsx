@@ -21,6 +21,7 @@ function AddCategoryAndSubCategory() {
     const navigate = useNavigate();
     const [categoryLoading, setCategoryLoading] = useState(false);
     const [subCategoryLoading, setSubCategoryLoading] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
@@ -157,6 +158,16 @@ function AddCategoryAndSubCategory() {
         }
     };
 
+    const checkFormValidity = useCallback(() => {
+        return storeId > 0 && categoryId > 0 && subcategoryId > 0;
+    }, [storeId, categoryId, subcategoryId]);
+
+    useEffect(() => {
+        const isValid = checkFormValidity();
+        setIsFormValid(isValid);
+    }, [checkFormValidity]);
+
+
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
@@ -277,7 +288,7 @@ function AddCategoryAndSubCategory() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}

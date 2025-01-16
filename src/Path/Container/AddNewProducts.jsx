@@ -36,6 +36,7 @@ function AddNewProducts() {
     const [isOwner, setIsOwner] = useState(false);
     const CHARACTER_LIMIT = 255;
     const [originalData, setOriginalData] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -172,37 +173,39 @@ function AddNewProducts() {
         const cityId = e.target.value;
         setCityId(cityId);
 
-        // Reset shopId and shops if cityId is 0
-        if (cityId === "0") {
-            setShopId(0); // Reset shopId to 0
-            setShops([]); // Clear the shops array
-            setInput((prev) => ({
-                ...prev,
-                cityId: 0,
-                shopId: 0, // Reset shopId in input
-            }));
-            validateInput(e);
+        // Reset shopId and shops when changing city
+        setShopId(0); // Reset shopId to 0
+        setShops([]); // Clear the shops array
 
+        setInput((prev) => ({
+            ...prev,
+            cityId: cityId,
+            shopId: 0, // Reset shopId in input
+        }));
+        validateInput(e);
+
+        // If cityId is "0", clear shops and return
+        if (cityId === "0") {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.delete("cityId");
             urlParams.delete("shopId");
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-
             return;
         }
-
-        setInput((prev) => ({
-            ...prev,
-            cityId: cityId,
-        }));
-        validateInput(e);
 
         setLoading(true);
 
         try {
             const response = await getShopsInACity(cityId);
-            setShops(response?.data?.data || []);
+            const fetchedShops = response?.data?.data || [];
+
+            if (fetchedShops.length > 0) {
+                setShops(fetchedShops);
+            } else {
+                setShops([]); // Ensure shops array is empty
+                console.log(t("noShopsAvailableForThisCity")); // Optionally log or handle this case
+            }
         } catch (error) {
             console.error("Error fetching shops:", error);
         } finally {
@@ -778,6 +781,29 @@ function AddNewProducts() {
         }));
     };
 
+    const checkFormValidity = () => {
+        const requiredFieldsValid = [
+            input.title.trim() !== "",
+            parseInt(input.cityId, 10) > 0,
+            parseInt(input.shopId, 10) > 0,
+            parseInt(input.categoryId, 10) > 0,
+            parseInt(input.subCategoryId, 10) > 0,
+            input.description.trim() !== "",
+            !isNaN(parseFloat(input.price)) && parseFloat(input.price) > 0,
+            !isNaN(parseFloat(input.tax)) && parseFloat(input.tax) >= 0,
+            !isNaN(parseInt(input.inventory, 10)) && parseInt(input.inventory, 10) > 0,
+            !isNaN(parseInt(input.minCount, 10)) && parseInt(input.minCount, 10) >= 0 && parseInt(input.minCount, 10) <= parseInt(input.inventory, 10),
+            !isOwnerRouter || (!isNaN(parseInt(input.maxCount, 10)) && parseInt(input.maxCount, 10) >= 0),
+        ];
+
+        return requiredFieldsValid.every(Boolean);
+    };
+
+    useEffect(() => {
+        const isValid = checkFormValidity();
+        setIsFormValid(isValid);
+    }, [input, error, isOwnerRouter]);
+
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
@@ -869,7 +895,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : shops.length > 0 || shopId ? (
+                            ) : shops.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -1480,7 +1506,7 @@ function AddNewProducts() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}

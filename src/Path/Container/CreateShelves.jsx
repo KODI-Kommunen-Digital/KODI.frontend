@@ -268,41 +268,41 @@ function CreateShelves() {
     async function onCityChange(e) {
         const cityId = e.target.value;
         setCityId(cityId);
+        setShopId(0);
+        setShops([]);
 
-        // Reset shopId and shops if cityId is 0
+        setInput((prev) => ({
+            ...prev,
+            cityId: cityId,
+            shopId: 0,
+        }));
+        validateInput(e);
+
         if (cityId === "0") {
-            setShopId(0); // Reset shopId to 0
-            setShops([]); // Clear the shops array
-            setInput((prev) => ({
-                ...prev,
-                cityId: 0,
-                shopId: 0, // Reset shopId in input
-            }));
-            validateInput(e);
-
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.delete("cityId");
             urlParams.delete("shopId");
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-
             return;
         }
-
-        setInput((prev) => ({
-            ...prev,
-            cityId: cityId,
-        }));
-        validateInput(e);
 
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set("cityId", cityId);
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
+
         setLoading(true);
+
         try {
             const response = await getOwnerShops({ cityId });
-            setShops(response?.data?.data || []);
+            const fetchedShops = response?.data?.data || [];
+
+            if (fetchedShops.length > 0) {
+                setShops(fetchedShops);
+            } else {
+                setShops([]); // Ensure shops array is empty
+            }
         } catch (error) {
             console.error("Error fetching shops:", error);
         } finally {
@@ -367,6 +367,19 @@ function CreateShelves() {
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
+
+    const [isFormValid, setIsFormValid] = useState(false);
+    const validateForm = () => {
+        const requiredFields = ["shopId", "cityId", "title", "description"];
+        const isValid = requiredFields.every(
+            (field) => input[field] && !error[field]
+        );
+        setIsFormValid(isValid);
+    };
+
+    useEffect(() => {
+        validateForm();
+    }, [input, error]);
 
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
@@ -605,7 +618,7 @@ function CreateShelves() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}

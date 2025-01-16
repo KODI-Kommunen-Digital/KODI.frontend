@@ -135,6 +135,20 @@ function GetCard() {
         });
     };
 
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    useEffect(() => {
+        validateForm();
+    }, [input, error]);
+
+    const validateForm = () => {
+        const requiredFields = ["cardNumber", "pinCode"];
+        const isValid = requiredFields.every(
+            (field) => input[field] && !error[field]
+        );
+        setIsFormValid(isValid);
+    };
+
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
@@ -247,7 +261,7 @@ function GetCard() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}
