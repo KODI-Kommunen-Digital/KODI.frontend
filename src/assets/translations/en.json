@@ -896,6 +896,7 @@
     "selectAnotherDate": "No order found for this date, please select another date",
     "noShopsAvailableForThisCity": "No shops are found for this city, please select another city to continue",
     "orderId": "Order Id",
+    "productId": "Product Id",
     "maxFileSizeAllert": "Maximum file size is 20 MB",
     "discount": "Discount",
     "imagePdfWarning": "You can either upload Images here or PDF, but you cannot do both",
@@ -1013,6 +1014,8 @@
     "noShelvesMessage": "No shelves are present to assign this product",
     "invalidForum": "Invalid Forum",
     "startDate": "Start Date",
-    "endDate": "End Date"
-
+    "endDate": "End Date",
+    "expiryDateInPast": "Expiry date is in the past",
+    "noOrdersFound": "No orders found",
+    "pleaseSelectBothDates": "Please select both dates"
 }

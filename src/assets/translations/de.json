@@ -937,6 +937,7 @@
     "selectAnotherDate": "Keine Bestellung für dieses Datum gefunden, bitte wähle ein anderes Datum",
     "noShopsAvailableForThisCity": "Keine Geschäfte in dieser Stadt gefunden, bitte wähle eine andere Stadt, um fortzufahren",
     "orderId": "Bestellnummer",
+    "productId": "Product Id",
     "discount": "Rabatt",
     "imageWarning": "Du kannst nur Bilder hochladen, aber kein PDF hier hochladen",
     "PdfAlert": "Du kannst kein PDF hochladen, du kannst nur ein Bild hochladen",
@@ -1025,5 +1026,8 @@
     "noShelvesMessage": "Es sind keine Regale vorhanden, um diesem Produkt zuzuordnen",
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
-    "endDate": "Enddatum"
+    "endDate": "Enddatum",
+    "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit",
+    "noOrdersFound": "Keine Bestellungen gefunden",
+    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus"
 }

@@ -663,7 +663,7 @@ const ViewPost = () => {
                                 </p>
                               </div>
                             </div>
-                            <p className="text-gray-500">{reply.comment}</p>
+                            <p className="text-gray-800">{reply.comment}</p>
                           </div>
                         ))}
                       {comment.showReplies &&

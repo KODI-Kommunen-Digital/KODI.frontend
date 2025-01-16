@@ -113,7 +113,7 @@ const SellerRequests = () => {
     }
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
             <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
                 <div className="relative bg-black mr-0 ml-0 px-10 lg:rounded-lg h-18">
@@ -218,7 +218,7 @@ const SellerRequests = () => {
                                                 </th>
                                                 <th
                                                     scope="col"
-                                                    className="px-6 py-4 text-center "
+                                                    className="px-6 py-4 text-center"
                                                     style={{
                                                         fontFamily: "Poppins, sans-serif",
                                                         width: "25%",
@@ -258,20 +258,18 @@ const SellerRequests = () => {
                                                             : "-"}
                                                     </td>
 
-                                                    <div className="px-6 py-4">
-                                                        <td
-                                                            className="text-center font-bold text-blue-600 line-clamp-3"
-                                                            style={{
-                                                                fontFamily: "Poppins, sans-serif",
-                                                                maxWidth: "200px",
-                                                                overflow: "hidden",
-                                                                textOverflow: "ellipsis",
-                                                                whiteSpace: "pre-wrap"
-                                                            }}
-                                                            dangerouslySetInnerHTML={{ __html: products.description }}
-                                                        >
-                                                        </td>
-                                                    </div>
+                                                    <td
+                                                        className="px-6 py-4 text-center font-bold text-blue-600"
+                                                        style={{
+                                                            fontFamily: "Poppins, sans-serif",
+                                                            maxWidth: "200px",
+                                                            overflow: "hidden",
+                                                            textOverflow: "ellipsis",
+                                                            whiteSpace: "pre-wrap"
+                                                        }}
+                                                        dangerouslySetInnerHTML={{ __html: products.description }}
+                                                    >
+                                                    </td>
 
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center justify-center">
@@ -325,7 +323,7 @@ const SellerRequests = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
@@ -362,10 +360,10 @@ const SellerRequests = () => {
 
                             {storeId && sellerRequests.length === 0 && (
                                 <div className="text-center mt-6">
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("noDataForStore")}
                                     </p>
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("selectAnotherStore")}
                                     </p>
                                 </div>

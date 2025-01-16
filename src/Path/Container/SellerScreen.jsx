@@ -28,7 +28,7 @@ const SellerScreen = () => {
     }, []);
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
             <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
@@ -91,7 +91,7 @@ const SellerScreen = () => {
                                 </p>
                                 <a
                                     onClick={() => {
-                                        navigateTo("/SellerScreen/OrdersSold");
+                                        navigateTo("/SellerScreen/PeriodSelection");
                                     }}
                                     className={`relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out bg-indigo-700 border-2 border-indigo-600 rounded-full shadow-md group cursor-pointer`}
                                 >

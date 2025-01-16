@@ -15,6 +15,7 @@ function AllSellers() {
     const [ordersCount, setOrdersCount] = useState([]);
 
     const [storeId, setStoreId] = useState();
+    const [cityId, setCityId] = useState();
     const [stores, setStores] = useState([]);
 
     const fetchProducts = useCallback((cityId, storeId, pageNumber) => {
@@ -32,15 +33,22 @@ function AllSellers() {
     };
 
     useEffect(() => {
+        if (storeId && cityId) {
+            fetchProducts(cityId, storeId, pageNumber);
+        }
+    }, [pageNumber, storeId, cityId, fetchProducts]);
+
+    useEffect(() => {
         if (storeId) {
             setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
-            const cityId = selectedStore.cityId;
             if (selectedStore) {
-                fetchProducts(cityId, storeId, pageNumber);
+                const cityId = selectedStore.cityId;
+                setCityId(cityId);
+                fetchProducts(cityId, storeId, 1);
             }
         }
-    }, [fetchProducts, storeId, pageNumber]);
+    }, [fetchProducts, storeId, stores]);
 
     const fetchStores = useCallback(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -152,7 +160,7 @@ function AllSellers() {
 
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
@@ -310,7 +318,11 @@ function AllSellers() {
                                 {pageNumber !== 1 ? (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber - 1)}
+
+                                        onClick={() => {
+                                            setPageNumber(pageNumber - 1);
+                                            fetchProducts(cityId, storeId, pageNumber - 1);
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {"<"}{" "}
@@ -328,7 +340,11 @@ function AllSellers() {
                                 {orders.length >= pageSize && pageNumber * pageSize < ordersCount && (
                                     <span
                                         className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                                        onClick={() => setPageNumber(pageNumber + 1)}
+
+                                        onClick={() => {
+                                            setPageNumber(pageNumber + 1);
+                                            fetchProducts(cityId, storeId, pageNumber + 1);
+                                        }}
                                         style={{ fontFamily: "Poppins, sans-serif" }}
                                     >
                                         {">"}
@@ -337,7 +353,7 @@ function AllSellers() {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <div className="flex justify-center px-5 py-2 gap-2 w-full">
                                 <div className="w-full">
                                     {stores.length < 5 ? (
@@ -374,10 +390,10 @@ function AllSellers() {
 
                             {storeId && orders.length === 0 && (
                                 <div className="text-center mt-6">
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("noDataForStore")}
                                     </p>
-                                    <p className="text-gray-500">
+                                    <p className="text-gray-800">
                                         {t("selectAnotherStore")}
                                     </p>
                                 </div>

@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
+  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -190,11 +191,11 @@ const Dashboard = () => {
   function goToEditListingsPage(listing) {
     if (listing.categoryId === 18) {
       navigateTo(
-        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+        isV2Backend ? `/EditListings?listingId=${listing.id}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
       );
     } else {
       navigateTo(
-        `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+        isV2Backend ? `/EditListings?listingId=${listing.id}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
       );
     }
   }
@@ -299,7 +300,7 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="bg-gray-900 body-font relative h-full">
+    <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -444,7 +445,7 @@ const Dashboard = () => {
                     >
                       {t("action")}
                     </th>
-                    {viewAllListings && (
+                    {/* {viewAllListings && (
                       <th
                         scope="col"
                         className="px-6 py-4 text-center"
@@ -452,7 +453,7 @@ const Dashboard = () => {
                       >
                         {t("username")}
                       </th>
-                    )}
+                    )} */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -632,7 +633,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-                        {
+                        {/* {
                           viewAllListings && (
                             <td className="px-6 py-4 text-center">
                               <a
@@ -644,7 +645,7 @@ const Dashboard = () => {
                               </a>
                             </td>
                           )
-                        }
+                        } */}
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div
