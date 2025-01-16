@@ -74,18 +74,18 @@ const HomePage = () => {
     } else {
       urlParams.delete("cityId");
     }
+
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
+
     getListings(params).then((response) => {
       const listings = response.data.data;
-
       const filteredListings = listings.filter(
-        listing => !hiddenCategories.includes(listing.categoryId)
+        (listing) => !hiddenCategories.includes(listing.categoryId)
       );
-
       setListings(filteredListings);
     });
-  }, [cities, cityId]);
+  }, [cityId]);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -95,20 +95,19 @@ const HomePage = () => {
   };
   const onCityChange = (e) => {
     const selectedCityId = e.target.value;
-    const urlParams = new URLSearchParams(window.location.search);
     const selectedCity = cities.find(
       (city) => city.id.toString() === selectedCityId
     );
+
     if (selectedCity) {
       localStorage.setItem("selectedCity", selectedCity.name);
-      window.location.href = `?cityId=${selectedCityId}`;
+      navigate(`?cityId=${selectedCityId}`);
+      setCityId(parseInt(selectedCityId));
     } else {
       const defaultCityName = process.env.REACT_APP_REGION_NAME === "HIVADA"
         ? t("allClusters")
         : t("allCities");
-
       localStorage.setItem("selectedCity", defaultCityName);
-      urlParams.delete("cityId");
       setCityId(0);
     }
   };
@@ -337,13 +336,12 @@ const HomePage = () => {
       <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
           {cities.map((city) => {
-            if (city.id !== Number(cityId)) {
+            if (city.id !== Number(cityId)) { // Ensure current city is not displayed
               return (
                 <div
                   key={city.id}
                   onClick={() => {
                     const scrollPosition = window.scrollY;
-                    localStorage.setItem("selectedCity", city.name);
                     navigateTo(`/AllListings?cityId=${city.id}`);
                     window.addEventListener("popstate", function () {
                       window.scrollTo(0, scrollPosition);

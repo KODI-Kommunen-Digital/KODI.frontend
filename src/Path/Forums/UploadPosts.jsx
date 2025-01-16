@@ -246,7 +246,10 @@ function UploadPosts() {
 		if (characterCount > CHARACTER_LIMIT) {
 			setError((prev) => ({
 				...prev,
-				description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+				description: t("characterLimitExceeded", {
+					limit: CHARACTER_LIMIT,
+					count: characterCount,
+				}),
 			}));
 			return;
 		} else {
@@ -256,37 +259,41 @@ function UploadPosts() {
 			}));
 		}
 
-		if (hasNumberedList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map(
-				(description, index) => `${index + 1}. ${description}`
-			);
-			listType = "ol";
-		} else if (hasBulletList) {
-			const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(regex);
-			descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			descriptions = descriptions.map((description) => `- ${description}`);
-			listType = "ul";
+		if (hasNumberedList || hasBulletList) {
+			const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
+			const matches = newContent.match(liRegex);
+			if (matches) {
+				descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+			}
+
+			listType = hasNumberedList ? "ol" : "ul";
+
+			const listHTML = `<${listType}>${descriptions
+				.map((item) => `<li>${item}</li>`)
+				.join("")}</${listType}>`;
+
+			let leftoverText = newContent
+				.replace(/<ol>.*?<\/ol>/gis, "")
+				.replace(/<ul>.*?<\/ul>/gis, "")
+				.trim();
+
+			leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+
+			const finalDescription = leftoverText
+				? `${leftoverText}<br/>${listHTML}`
+				: listHTML;
+
+			setInput((prev) => ({
+				...prev,
+				description: finalDescription,
+			}));
 		} else {
 			setInput((prev) => ({
 				...prev,
-				description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+				description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
 			}));
-			setDescription(newContent);
-			return;
 		}
 
-		const listHTML = `<${listType}>${descriptions
-			.map((description) => `<li>${description}</li>`)
-			.join("")}</${listType}>`;
-
-		setInput((prev) => ({
-			...prev,
-			description: listHTML,
-		}));
 		setDescription(newContent);
 	};
 
@@ -356,6 +363,17 @@ function UploadPosts() {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 	}
+
+	const [isFormValid, setIsFormValid] = useState(false);
+	useEffect(() => {
+		const validateForm = () => {
+			const requiredFields = ["title", "description", "cityId"];
+			const isValid = requiredFields.every((field) => input[field] && !error[field]);
+			setIsFormValid(isValid);
+		};
+
+		validateForm();
+	}, [input, error]);
 
 	return (
 		<section className="bg-gray-800 body-font relative">
@@ -606,7 +624,7 @@ function UploadPosts() {
 						<button
 							type="button"
 							onClick={handleSubmit}
-							disabled={updating}
+							disabled={!isFormValid || updating || isSuccess}
 							className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
 						{!newPost ? t("saveChanges") : t("createPost")}
