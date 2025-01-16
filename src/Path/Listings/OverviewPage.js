@@ -23,7 +23,7 @@ function OverviewPage() {
   }
 
   return (
-    <section className="bg-gray-900 body-font relative h-full">
+    <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
       <div className="container w-auto px-5 py-2 bg-gray-900 h-full">
         <div className="bg-white mt-4 p-6 space-y-10">

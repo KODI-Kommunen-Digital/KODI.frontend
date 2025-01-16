@@ -197,7 +197,7 @@ function ViewCategories() {
   };
 
   return (
-    <section className="bg-gray-900 body-font relative h-full">
+    <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
 
       <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
