@@ -110,7 +110,7 @@ function UploadPosts() {
 				}
 			);
 		}
-		if (forumIdFromURL && cityIdFromURL) {
+		else if (forumIdFromURL && cityIdFromURL) {
 			setNewPost(true);
 		}
 	}, []);
@@ -387,7 +387,7 @@ function UploadPosts() {
 						}}
 						className="text-slate-800 text-lg mb-4 font-medium title-font"
 					>
-						{t("createPost")}
+						{!newPost ? t("editpost") : t("createPost")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
 					<div className="relative mb-4">
@@ -627,7 +627,7 @@ function UploadPosts() {
 							disabled={!isFormValid || updating || isSuccess}
 							className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
-							{t("createPost")}
+						{!newPost ? t("saveChanges") : t("createPost")}
 						</button>
 					</div>
 					<div>
