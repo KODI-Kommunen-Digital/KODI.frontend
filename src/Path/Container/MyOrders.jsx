@@ -47,7 +47,7 @@ const MyOrders = () => {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
             <div className="container w-auto px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
                 <div className="h-full">
@@ -188,7 +188,7 @@ const MyOrders = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
+                        <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
                             <center>
                                 <svg
                                     className="emoji-404"

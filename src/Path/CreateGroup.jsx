@@ -32,15 +32,8 @@ function CreateGroup() {
 	const [forumId, setForumId] = useState(0);
 
 	const navigate = useNavigate();
+	const [isFormValid, setIsFormValid] = useState(false);
 
-	// const handleGroupTypeChange = (event) => {
-	// 	const isPrivate = event.target.checked;
-	// 	setInput((prevInput) => ({
-	// 		...prevInput,
-	// 		isPrivate,
-	// 		visibility: isPrivate ? "private" : "public",
-	// 	}));
-	// };
 	const handleToggle = () => {
 		setInput((prevInput) => ({
 			...prevInput,
@@ -148,6 +141,7 @@ function CreateGroup() {
 			});
 		}
 	}, []);
+
 	const handleImageUpload = async (id) => {
 		const form = new FormData();
 		form.append("image", image1);
@@ -308,7 +302,6 @@ function CreateGroup() {
 			return { ...prevState, [name]: errorMessage };
 		});
 	};
-	//Sending data to backend ends
 
 	useEffect(() => {
 		getCities({ hasForum: true }).then((citiesResponse) => {
@@ -335,11 +328,27 @@ function CreateGroup() {
 		window.history.replaceState({}, "", newUrl);
 	}
 
+	useEffect(() => {
+		const checkFormValidity = () => {
+			const requiredFields = [
+				input.forumName,
+				input.description,
+				cityId > 0,
+				!(error.forumName || error.description || error.cityId),
+			];
+
+			return requiredFields.every(Boolean);
+		};
+
+		const isValid = checkFormValidity();
+		setIsFormValid(isValid);
+	}, [input, error, cityId]);
+
 	return (
-		<section class="bg-gray-900 body-font relative h-full">
+		<section class="bg-gray-900 body-font relative min-h-screen">
 			<SideBar />
 
-			<div class="container w-auto px-5 py-2 bg-gray-800">
+			<div class="container w-auto px-5 py-2 bg-gray-900">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2
 						style={{
@@ -501,7 +510,7 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-gray-800">
+			<div class="container w-auto px-5 py-2 bg-gray-900">
 				<div class="bg-white mt-4 p-6 space-y-10">
 					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
@@ -572,13 +581,13 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div className="container w-auto px-5 py-2 bg-gray-800">
+			<div className="container w-auto px-5 py-2 bg-gray-900">
 				<div className="bg-white mt-4 p-6">
 					<div className="py-2 mt-1 px-2">
 						<button
 							type="button"
 							onClick={handleSubmit}
-							disabled={updating || isSuccess}
+							disabled={!isFormValid || updating || isSuccess}
 							class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
 							{t("saveChanges")}

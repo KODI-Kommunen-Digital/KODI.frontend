@@ -127,7 +127,7 @@ const Favorites = () => {
                     src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-white z--1">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
                     <h1
                       className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans"
                       style={{ fontFamily: "Poppins, sans-serif" }}

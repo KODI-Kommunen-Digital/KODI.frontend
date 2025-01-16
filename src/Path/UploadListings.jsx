@@ -16,7 +16,7 @@ import {
 import { getCities } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
-import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../Services/CategoryApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
@@ -47,6 +47,7 @@ function UploadListings() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const navigate = useNavigate();
 
@@ -256,7 +257,7 @@ function UploadListings() {
   // Drag and Drop ends
 
   //Sending data to backend starts
-  const [cityIds, setCityId] = useState(0);
+  const [cityIds] = useState(0);
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [listingInput, setListingInput] = useState({
@@ -351,7 +352,6 @@ function UploadListings() {
       return startDate;
     };
 
-    // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
         const { duration, metadata: { openingDates } } = service;
@@ -404,6 +404,11 @@ function UploadListings() {
 
     setError(newError);
 
+    if (!valid) {
+      console.error("Validation failed. Errors: ", newError);
+      return;
+    }
+
     if (valid) {
       setUpdating(true);
 
@@ -417,8 +422,6 @@ function UploadListings() {
         const response = newListing
           ? await postListingsData(dataToSubmit)
           : await updateListingsData(cityIdsToSubmit, dataToSubmit, listingId);
-
-        console.log("Response:", response);
 
         let currentListingId = [];
         let cityIdsArray = [];
@@ -486,16 +489,17 @@ function UploadListings() {
               await Promise.all(allPromises)
             }
           } else if (pdf) {
-            let allPromises = []
             const pdfForm = new FormData();
-            const minIterations = Math.min(cityIdsArray.length);
-            for (let index = 0; index < minIterations; index++) {
-              const cityId = cityIdsArray[index];
-              const listingId = currentListingId[index];
-              pdfForm.append("pdf", pdf);
-              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
+            pdfForm.append("pdf", pdf); // Append the PDF only once
+
+            if (process.env.REACT_APP_V2_BACKEND === "True") {
+              await uploadListingPDF(pdfForm, null, newListing ? currentListingId[0] : listingId);
+            } else {
+              const allPromises = currentListingId.map((listingId, index) =>
+                uploadListingPDF(pdfForm, cityIdsArray[index], listingId)
+              );
+              await Promise.all(allPromises);
             }
-            await Promise.all(allPromises)
           }
         }
 
@@ -585,7 +589,7 @@ function UploadListings() {
         const [citiesResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
           getCities(),
           getCategory(),
-          getNewsSubCategory(),
+          getListingsSubCategory(),
         ]);
 
         const citiesData = citiesResponse?.data?.data || [];
@@ -861,7 +865,7 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (!value && parseInt(listingInput.categoryId) == 1) {
+        if (categories.find(cat => cat.id === parseInt(listingInput.categoryId))?.noOfSubcategories > 0 && !value) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -1011,87 +1015,96 @@ function UploadListings() {
     fetchCities();
   }, []);
 
-  const onCityChange = async (e) => {
-    const selectedCityId = parseInt(e.target.value);
+  // const onCityChange = async (e) => {
+  //   const selectedCityId = parseInt(e.target.value);
 
-    if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      setSelectedCities(selectedCity ? [selectedCity] : []);
-      setCityId(selectedCityId);
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: selectedCity ? [selectedCity.id] : [],
-      }));
-    } else {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        if (!selectedCities.some(city => city.id === selectedCityId)) {
-          const updatedSelectedCities = [...selectedCities, selectedCity];
-          setSelectedCities(updatedSelectedCities);
-          setCityId(selectedCityId);
-          setListingInput((prev) => ({
-            ...prev,
-            cityIds: updatedSelectedCities.map(city => city.id),
-          }));
-        } else {
-          setError((prevState) => ({
-            ...prevState,
-            cityAlreadySelected: t("cityAlreadySelected"),
-          }));
-        }
-      }
-    }
-  };
+  //   if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
+  //     const selectedCity = cities.find(city => city.id === selectedCityId);
+  //     setSelectedCities(selectedCity ? [selectedCity] : []);
+  //     setCityId(selectedCityId);
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: selectedCity ? [selectedCity.id] : [],
+  //     }));
+  //   } else {
+  //     const selectedCity = cities.find(city => city.id === selectedCityId);
+  //     if (selectedCity) {
+  //       if (!selectedCities.some(city => city.id === selectedCityId)) {
+  //         const updatedSelectedCities = [...selectedCities, selectedCity];
+  //         setSelectedCities(updatedSelectedCities);
+  //         setCityId(selectedCityId);
+  //         setListingInput((prev) => ({
+  //           ...prev,
+  //           cityIds: updatedSelectedCities.map(city => city.id),
+  //         }));
+  //       } else {
+  //         setError((prevState) => ({
+  //           ...prevState,
+  //           cityAlreadySelected: t("cityAlreadySelected"),
+  //         }));
+  //       }
+  //     }
+  //   }
+  // };
 
-  const removeCity = (cityIdToRemove) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
-    setSelectedCities(updatedSelectedCities);
+  // const removeCity = (cityIdToRemove) => {
+  //   const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
+  //   setSelectedCities(updatedSelectedCities);
 
-    if (updatedSelectedCities.length === 0) {
-      setCityId(0);
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: [],
-      }));
-      setError((prevState) => ({
-        ...prevState,
-        cityIds: t("pleaseSelectCity"),
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: updatedSelectedCities.map(city => city.id),
-      }));
-      setError((prevState) => ({
-        ...prevState,
-        cityIds: "",
-      }));
-    }
-  };
+  //   if (updatedSelectedCities.length === 0) {
+  //     setCityId(0);
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: [],
+  //     }));
+  //     setError((prevState) => ({
+  //       ...prevState,
+  //       cityIds: t("pleaseSelectCity"),
+  //     }));
+  //   } else {
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: updatedSelectedCities.map(city => city.id),
+  //     }));
+  //     setError((prevState) => ({
+  //       ...prevState,
+  //       cityIds: "",
+  //     }));
+  //   }
+  // };
 
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
   const handleCategoryChange = async (event) => {
-    let categoryId = event.target.value;
-    setCategoryId(categoryId);
-    if (categoryId == 1) {
-      const subCats = await getNewsSubCategory();
-      const subcatList = {};
-      subCats?.data.data.forEach((subCat) => {
-        subcatList[subCat.id] = subCat.name;
-      });
-      setSubCategories(subcatList);
-    }
-    if (categoryId == 18) {
-      setAppointmentAdded(true)
-    }
-    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
+    const selectedCategoryId = parseInt(event.target.value, 10);
+    setCategoryId(selectedCategoryId);
+    const selectedCategory = categories.find(category => category.id === selectedCategoryId);
     setSubcategoryId(null);
-    validateInput(event);
+    setListingInput((prevInput) => ({ ...prevInput, categoryId: selectedCategoryId, subcategoryId: 0 }));
 
+    if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
+      try {
+        const subCats = await getListingsSubCategory(selectedCategoryId);
+        const filteredSubCategories = subCats?.data?.data;
+
+        const subcatList = {};
+        filteredSubCategories.forEach((subCat) => {
+          subcatList[subCat.id] = subCat.name;
+        });
+
+        setSubCategories(subcatList);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+      }
+    } else {
+      setSubCategories([]);
+    }
+    if (selectedCategoryId === 18) {
+      setAppointmentAdded(true);
+    }
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("categoryId", categoryId);
+    urlParams.set("categoryId", selectedCategoryId);
     urlParams.delete("subcategoryId");
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
@@ -1133,12 +1146,33 @@ function UploadListings() {
 
   const handleSelectCity = (city) => {
     if (!selectedCities.some((selectedCity) => selectedCity.id === city.id)) {
-      setSelectedCities([...selectedCities, city]);
+      const updatedCities = [...selectedCities, city];
+      setSelectedCities(updatedCities);
+      setListingInput((prev) => ({
+        ...prev,
+        cityIds: updatedCities.map((city) => city.id),
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        cityAlreadySelected: t("cityAlreadySelected"),
+      }));
     }
   };
 
   const handleRemoveCity = (cityId) => {
-    setSelectedCities(selectedCities.filter((city) => city.id !== cityId));
+    const updatedCities = selectedCities.filter((city) => city.id !== cityId);
+    setSelectedCities(updatedCities);
+    setListingInput((prev) => ({
+      ...prev,
+      cityIds: updatedCities.map((city) => city.id),
+    }));
+    if (updatedCities.length === 0) {
+      setError((prev) => ({
+        ...prev,
+        cityIds: t("pleaseSelectCity"),
+      }));
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -1153,6 +1187,26 @@ function UploadListings() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
+    const checkFormValidity = () => {
+      const requiredFields = [
+        listingInput.title,
+        listingInput.description,
+        categoryId,
+        selectedCities.length > 0,
+        !(error.title || error.description || error.cityIds || error.categoryId),
+        isCategorySpecificValid,
+      ];
+
+      return requiredFields.every(Boolean);
+    };
+
+    const isValid = checkFormValidity();
+
+    setIsFormValid(isValid);
+  }, [listingInput, error, categoryId, selectedCities]);
 
   return (
     <section className="bg-slate-600 body-font relative">
@@ -1209,7 +1263,7 @@ function UploadListings() {
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <div
-              className="w-full bg-white rounded border border-gray-300 focus-within:border-black focus-within:ring-2 focus-within:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               onClick={toggleDropdown}
             >
               <div className="flex flex-wrap">
@@ -1231,7 +1285,7 @@ function UploadListings() {
                 <input
                   type="text"
                   placeholder={selectedCities.length === 0 ? t("select") : ""}
-                  className="bg-transparent outline-none flex-1"
+                  className="bg-transparent outline-none flex-1 cursor-pointer"
                   readOnly
                 />
               </div>
@@ -1393,44 +1447,29 @@ function UploadListings() {
           {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
             appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
 
-          {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
+          {Object.keys(subCategories).length > 0 && (
             <div className="relative mb-0">
-              <label
-                htmlFor="subcategoryId"
-                className="block text-sm font-medium text-gray-600"
-              >
+              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
                 {t("subCategory")} *
               </label>
               <select
-                type="subcategoryId"
                 id="subcategoryId"
                 name="subcategoryId"
                 value={subcategoryId || 0}
                 onChange={handleSubcategoryChange}
-                onBlur={validateInput}
                 required
-                // disabled={!newListing}
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
-                <option className="font-sans" value={0} key={0}>
-                  {t("chooseOneSubCategory")}
-                </option>
-                {Object.keys(subCategories).map((key) => {
-                  return (
-                    <option className="font-sans" value={key} key={key}>
-                      {t(subCategories[key])}
-                    </option>
-                  );
-                })}
+                <option value={0}>{t("chooseOneSubCategory")}</option>
+                {Object.entries(subCategories).map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {t(name)}
+                  </option>
+                ))}
               </select>
-              <div
-                className="mt-2 text-sm text-red-600"
-                style={{
-                  visibility: error.subcategoryId ? "visible" : "hidden",
-                }}
-              >
-                {error.selectedSubCategory}
-              </div>
+              {error.subcategoryId && (
+                <div className="mt-2 text-sm text-red-600">{error.subcategoryId}</div>
+              )}
             </div>
           )}
 
@@ -1968,7 +2007,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating || isSuccess}
+              disabled={!isFormValid || updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}

@@ -40,7 +40,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 		<div>
 			{isFirstPopupOpen && (
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${isOpen ? "" : "hidden"
+					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-20 ${isOpen ? "" : "hidden"
 						}`}
 				>
 					<div className="bg-white p-6 lg:rounded-md fixed top-0 overflow-y-auto max-h-[90vh]">
@@ -128,7 +128,7 @@ const PrivacyPolicyPopup = ({ onClose }) => {
 
 			{isSecondPopupOpen && (
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-20 ${isSecondPopupOpen ? "" : "hidden"
+					className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-20 ${isSecondPopupOpen ? "" : "hidden"
 						}`}
 				>
 					<div className="bg-white p-6 lg:rounded-md fixed top-0 overflow-y-auto max-h-[90vh]">

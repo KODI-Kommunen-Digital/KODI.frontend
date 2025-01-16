@@ -31,7 +31,7 @@ const AllProductsDetailsPage = () => {
     }, [productDetails]);
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
             <div className="container w-auto md:px-2 md:py-2 bg-gray-800 md:min-h-screen flex items-center justify-center">
@@ -41,7 +41,7 @@ const AllProductsDetailsPage = () => {
                             <div key={product.id} className="mb-6 px-4">
                                 <div className="md:px-4 py-4 md:py-0">
                                     <h2 className="text-xl font-bold text-slate-900 mb-2">
-                                        {t("orderId")} : {product.id}
+                                        {t("productId")} : {product.id}
                                     </h2>
                                     <p className="font-bold text-blue-600 text-sm mb-4">
                                         {t("orderDate")} : {new Date(product.createdAt).toLocaleDateString()}

@@ -4,20 +4,20 @@ import { useTranslation } from "react-i18next";
 import "../../index.css";
 import { useLocation, useNavigate } from 'react-router-dom';
 import CONTAINERIMAGE from "../../assets/ContainerDefaultImage.jpeg";
-import { status, statusByName } from "../../Constants/containerStatus";
+import { statusByName } from "../../Constants/containerStatus";
 import { updateProductRequests, getShelves, getUserRoleContainer } from "../../Services/containerApi";
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import Alert from "../../Components/Alert";
 
 const AllProductRequestsDetails = () => {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     const { t } = useTranslation();
     const [productRequest, setProductRequest] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
+    // const [selectedStatus, setSelectedStatus] = useState(statusByName.Pending);
     const [shelves, setShelves] = useState([]);
     const [selectedShelves, setSelectedShelves] = useState([]);
     const [maxCount, setMaxCount] = useState('');
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    // const [dropdownOpen, setDropdownOpen] = useState(false);
     const [visibleShelves, setVisibleShelves] = useState(4);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -54,6 +54,7 @@ const AllProductRequestsDetails = () => {
         };
 
         fetchUserRole();
+        window.scrollTo(0, 0);
     }, [navigate]);
 
     useEffect(() => {
@@ -86,7 +87,7 @@ const AllProductRequestsDetails = () => {
     useEffect(() => {
         if (productDetails) {
             setProductRequest(productDetails);
-            setSelectedStatus(productDetails.status);
+            // setSelectedStatus(productDetails.status);
             setMaxCount(productDetails.maxCount || '');
         }
     }, [productDetails]);
@@ -122,9 +123,9 @@ const AllProductRequestsDetails = () => {
     }, [cityId, storeId, productRequest]);
 
 
-    const handleStatusChange = (newStatus) => {
-        setSelectedStatus(newStatus);
-    };
+    // const handleStatusChange = (newStatus) => {
+    //     setSelectedStatus(newStatus);
+    // };
 
     // Handle checkbox shelf selection
     const handleShelfSelection = (shelfId) => {
@@ -194,7 +195,7 @@ const AllProductRequestsDetails = () => {
     };
 
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
             <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
@@ -203,7 +204,7 @@ const AllProductRequestsDetails = () => {
                         {productRequest && (
                             <div key={productRequest.id} className="mb-6 p-4">
 
-                                <div className="w-full my-4">
+                                <div className="w-full my-0">
                                     <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
                                         <div className="relative h-[30rem]">
                                             <img className="object-cover object-center h-full w-full"
@@ -412,7 +413,7 @@ const AllProductRequestsDetails = () => {
                                                 <div className="mb-8">
                                                     <label className="font-bold text-slate-700">{t("maxCount")}</label>
                                                     <input
-                                                        type="number"
+                                                        type="text"
                                                         className="border font-sans border-blue-600 text-blue-600 sm:text-sm rounded-xl p-2.5 w-full"
                                                         value={maxCount === 0 ? '' : maxCount}
                                                         onChange={handleMaxCountChange}
@@ -430,33 +431,41 @@ const AllProductRequestsDetails = () => {
 
                                                 {/* Status dropdown */}
                                                 {productRequest.status === 0 && (
-                                                    <div className="relative w-full text-center">
-                                                        <button
-                                                            className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
-                                                            type="button"
-                                                            onClick={() => setDropdownOpen(!dropdownOpen)}
-                                                        >
-                                                            {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                                        </button>
-                                                        {dropdownOpen && (
-                                                            <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
-                                                                <ul className="py-1">
-                                                                    {Object.entries(status).map(([key, value]) => (
-                                                                        <li key={key}>
-                                                                            <button
-                                                                                onClick={() => {
-                                                                                    handleStatusChange(parseInt(key));
-                                                                                    setDropdownOpen(false);
-                                                                                }}
-                                                                                className="text-sm hover:bg-blue-400 text-slate-700 block px-4 py-2 w-full text-left"
-                                                                            >
-                                                                                {value}
-                                                                            </button>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                        )}
+                                                    // <div className="relative w-full text-center">
+                                                    //     <button
+                                                    //         className="text-white bg-blue-800 hover:bg-blue-400 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                                    //         type="button"
+                                                    //         onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                    //     >
+                                                    //         {status[selectedStatus]} <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    //     </button>
+                                                    //     {dropdownOpen && (
+                                                    //         <div className="relative w-full text-center bg-white rounded-xl text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4">
+                                                    //             <ul className="py-1">
+                                                    //                 {Object.entries(status).map(([key, value]) => (
+                                                    //                     <li key={key}>
+                                                    //                         <button
+                                                    //                             onClick={() => {
+                                                    //                                 handleStatusChange(parseInt(key));
+                                                    //                                 setDropdownOpen(false);
+                                                    //                             }}
+                                                    //                             className="text-sm hover:bg-blue-400 text-slate-700 block px-4 py-2 w-full text-left"
+                                                    //                         >
+                                                    //                             {value}
+                                                    //                         </button>
+                                                    //                     </li>
+                                                    //                 ))}
+                                                    //             </ul>
+                                                    //         </div>
+                                                    //     )}
+                                                    // </div>
+                                                    <div className="flex items-center justify-center">
+                                                        <div
+                                                            className="h-2.5 w-2.5 border border-yellow-600 rounded-full bg-yellow-400 mr-2"
+                                                        ></div>
+                                                        <span className="border border-yellow-600 rounded bg-yellow-100 font-bold py-2 px-4 rounded-lg disabled:opacity-60 text-yellow-600">
+                                                            {t("pending")}
+                                                        </span>
                                                     </div>
                                                 )}
                                             </div>

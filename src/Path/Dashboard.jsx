@@ -302,7 +302,7 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="bg-gray-900 body-font relative h-full">
+    <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
 
       <div className="container px-0 sm:px-0 py-0 pb-2 w-full fixed top-0 z-10 lg:px-5 lg:w-auto relative">
@@ -447,7 +447,7 @@ const Dashboard = () => {
                     >
                       {t("action")}
                     </th>
-                    {viewAllListings && (
+                    {/* {viewAllListings && (
                       <th
                         scope="col"
                         className="px-6 py-4 text-center"
@@ -455,7 +455,7 @@ const Dashboard = () => {
                       >
                         {t("username")}
                       </th>
-                    )}
+                    )} */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -635,7 +635,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-                        {
+                        {/* {
                           viewAllListings && (
                             <td className="px-6 py-4 text-center">
                               <a
@@ -647,7 +647,7 @@ const Dashboard = () => {
                               </a>
                             </td>
                           )
-                        }
+                        } */}
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div

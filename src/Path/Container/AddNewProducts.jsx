@@ -36,6 +36,7 @@ function AddNewProducts() {
     const [isOwner, setIsOwner] = useState(false);
     const CHARACTER_LIMIT = 255;
     const [originalData, setOriginalData] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -183,37 +184,39 @@ function AddNewProducts() {
         const cityId = e.target.value;
         setCityId(cityId);
 
-        // Reset shopId and shops if cityId is 0
-        if (cityId === "0") {
-            setShopId(0); // Reset shopId to 0
-            setShops([]); // Clear the shops array
-            setInput((prev) => ({
-                ...prev,
-                cityId: 0,
-                shopId: 0, // Reset shopId in input
-            }));
-            validateInput(e);
+        // Reset shopId and shops when changing city
+        setShopId(0); // Reset shopId to 0
+        setShops([]); // Clear the shops array
 
+        setInput((prev) => ({
+            ...prev,
+            cityId: cityId,
+            shopId: 0, // Reset shopId in input
+        }));
+        validateInput(e);
+
+        // If cityId is "0", clear shops and return
+        if (cityId === "0") {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.delete("cityId");
             urlParams.delete("shopId");
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-
             return;
         }
-
-        setInput((prev) => ({
-            ...prev,
-            cityId: cityId,
-        }));
-        validateInput(e);
 
         setLoading(true);
 
         try {
             const response = await getShopsInACity(cityId);
-            setShops(response?.data?.data || []);
+            const fetchedShops = response?.data?.data || [];
+
+            if (fetchedShops.length > 0) {
+                setShops(fetchedShops);
+            } else {
+                setShops([]); // Ensure shops array is empty
+                console.log(t("noShopsAvailableForThisCity")); // Optionally log or handle this case
+            }
         } catch (error) {
             console.error("Error fetching shops:", error);
         } finally {
@@ -808,11 +811,34 @@ function AddNewProducts() {
     };
     
 
+    const checkFormValidity = () => {
+        const requiredFieldsValid = [
+            input.title.trim() !== "",
+            parseInt(input.cityId, 10) > 0,
+            parseInt(input.shopId, 10) > 0,
+            parseInt(input.categoryId, 10) > 0,
+            parseInt(input.subCategoryId, 10) > 0,
+            input.description.trim() !== "",
+            !isNaN(parseFloat(input.price)) && parseFloat(input.price) > 0,
+            !isNaN(parseFloat(input.tax)) && parseFloat(input.tax) >= 0,
+            !isNaN(parseInt(input.inventory, 10)) && parseInt(input.inventory, 10) > 0,
+            !isNaN(parseInt(input.minCount, 10)) && parseInt(input.minCount, 10) >= 0 && parseInt(input.minCount, 10) <= parseInt(input.inventory, 10),
+            !isOwnerRouter || (!isNaN(parseInt(input.maxCount, 10)) && parseInt(input.maxCount, 10) >= 0),
+        ];
+
+        return requiredFieldsValid.every(Boolean);
+    };
+
+    useEffect(() => {
+        const isValid = checkFormValidity();
+        setIsFormValid(isValid);
+    }, [input, error, isOwnerRouter]);
+
     return (
-        <section className="bg-gray-900 body-font relative h-full">
+        <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
                     <h2
                         style={{
@@ -899,7 +925,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : shops.length > 0 || shopId ? (
+                            ) : shops.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -1205,7 +1231,7 @@ function AddNewProducts() {
                                 {t("minAge")}
                             </label>
                             <input
-                                type="number"
+                                type="text"
                                 id="minAge"
                                 name="minAge"
                                 value={input.minAge}
@@ -1235,7 +1261,6 @@ function AddNewProducts() {
                     </div>
 
                     <div className="relative mb-6">
-                        {/* Label */}
                         <label
                             htmlFor="inventory"
                             className="block text-sm font-medium text-gray-700 mb-2"
@@ -1243,9 +1268,7 @@ function AddNewProducts() {
                             {t("maxInventory")} *
                         </label>
 
-                        {/* Input Group */}
                         <div className="flex items-center gap-2 sm:gap-4">
-                            {/* Decrement Button */}
                             <button
                                 onClick={() => handleInventoryChange(input.inventory - 1,true)}
                                 disabled={updating || isSuccess || input.inventory <= 0}
@@ -1263,9 +1286,8 @@ function AddNewProducts() {
                                 </svg>
                             </button>
 
-                            {/* Inventory Input */}
                             <input
-                                type="number"
+                                type="text"
                                 id="inventory"
                                 name="inventory"
                                 value={input.inventory}
@@ -1276,8 +1298,6 @@ function AddNewProducts() {
                                 className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterTotalNumber")}
                             />
-
-                            {/* Increment Button */}
                             <button
                                 onClick={() => handleInventoryChange(input.inventory + 1,true)}
                                 disabled={updating || isSuccess}
@@ -1295,8 +1315,6 @@ function AddNewProducts() {
                                 </svg>
                             </button>
                         </div>
-
-                        {/* Error Message */}
                         <div
                             className="mt-2 text-sm sm:text-base text-red-600"
                             style={{
@@ -1355,7 +1373,7 @@ function AddNewProducts() {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
                     <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
                         {t("uploadProductImage")}
@@ -1512,13 +1530,13 @@ function AddNewProducts() {
                 </div>
             </div>
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6">
                     <div className="py-2 mt-1 px-2">
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}

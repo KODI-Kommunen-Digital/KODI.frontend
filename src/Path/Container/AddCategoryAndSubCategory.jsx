@@ -21,6 +21,7 @@ function AddCategoryAndSubCategory() {
     const navigate = useNavigate();
     const [categoryLoading, setCategoryLoading] = useState(false);
     const [subCategoryLoading, setSubCategoryLoading] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const [isOwner, setIsOwner] = useState(null);
     const location = useLocation(); // Access current location object
@@ -218,11 +219,21 @@ function AddCategoryAndSubCategory() {
         }
     };
 
+    const checkFormValidity = useCallback(() => {
+        return storeId > 0 && categoryId > 0 && subcategoryId > 0;
+    }, [storeId, categoryId, subcategoryId]);
+
+    useEffect(() => {
+        const isValid = checkFormValidity();
+        setIsFormValid(isValid);
+    }, [checkFormValidity]);
+
+
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
             <SideBar />
 
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
                     
                     <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
@@ -334,13 +345,13 @@ function AddCategoryAndSubCategory() {
             </div>
 
             {/* Submit button */}
-            <div className="container w-auto px-5 py-2 bg-gray-800">
+            <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6">
                     <div className="py-2 mt-1 px-2">
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}
