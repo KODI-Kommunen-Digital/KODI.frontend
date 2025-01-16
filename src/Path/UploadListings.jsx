@@ -433,6 +433,7 @@ function UploadListings() {
           throw new Error("Unable to retrieve listing and city IDs");
         }
 
+
         // Filter opening dates for appointmentInput and services before submitting
         const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
         const filteredServices = appointmentInput.services.map(service => ({
