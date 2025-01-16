@@ -241,15 +241,13 @@ function SellerRequestPage() {
     async function onCityChange(e) {
         const cityId = e.target.value;
         setCityId(cityId);
-
-        // Reset shopId and shops if cityId is 0
         if (cityId === "0") {
-            setShopId(0); // Reset shopId to 0
-            setShops([]); // Clear the shops array
+            setShopId(0);
+            setShops([]);
             setInput((prev) => ({
                 ...prev,
                 cityId: 0,
-                shopId: 0, // Reset shopId in input
+                shopId: 0,
             }));
             validateInput(e);
 
@@ -265,21 +263,38 @@ function SellerRequestPage() {
         setInput((prev) => ({
             ...prev,
             cityId: cityId,
+            shopId: 0,
         }));
         validateInput(e);
 
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set("cityId", cityId);
+        urlParams.delete("shopId");
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
 
         setLoading(true);
-
         try {
             const response = await getShopsInACity(cityId);
-            setShops(response?.data?.data || []);
+            const fetchedShops = response?.data?.data || [];
+
+            if (fetchedShops.length === 0) {
+                setShops([]);
+                setInput((prev) => ({
+                    ...prev,
+                    shopId: 0, // Reset shopId in case no shops are available
+                }));
+                validateInput({ target: { name: "shopId", value: 0 } });
+            } else {
+                setShops(fetchedShops);
+            }
         } catch (error) {
             console.error("Error fetching shops:", error);
+            setShops([]);
+            setInput((prev) => ({
+                ...prev,
+                shopId: 0, // Ensure shopId is reset if an error occurs
+            }));
         } finally {
             setLoading(false);
         }
@@ -303,6 +318,20 @@ function SellerRequestPage() {
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
+
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    useEffect(() => {
+        const validateForm = () => {
+            const requiredFields = ["title", "cityId", "shopId", "description"];
+            const isValid = requiredFields.every(
+                (field) => input[field] && !error[field]
+            );
+            setIsFormValid(isValid);
+        };
+
+        validateForm();
+    }, [input, error]);
 
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
@@ -492,7 +521,7 @@ function SellerRequestPage() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("sendRequest")}
