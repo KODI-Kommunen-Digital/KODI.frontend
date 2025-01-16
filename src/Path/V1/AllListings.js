@@ -172,7 +172,7 @@ const AllListings = () => {
 
   const handleSortOptionChange = (event) => {
     setSelectedSortOption(event.target.value);
-    clearSearchResults();
+    // clearSearchResults();
   };
 
   const navigate = useNavigate();
@@ -204,7 +204,7 @@ const AllListings = () => {
       default:
         break;
     }
-  }, [selectedSortOption, listings]);
+  }, [selectedSortOption]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
