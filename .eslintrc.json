@@ -19,7 +19,8 @@
         "react-hooks"
     ],
     "ignorePatterns": [
-        "src/Path/UploadListings.jsx",
+        "src/Path/V1/UploadListings.jsx",
+        "src/Path/V2/UploadListings.jsx",
         "src/Path/CreateGroup.jsx"
     ],
     "rules": {
