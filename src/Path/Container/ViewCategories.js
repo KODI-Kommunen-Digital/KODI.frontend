@@ -7,6 +7,7 @@ import {
   deleteSubCategory,
   getOwnerShops,
   getUserRoleContainer,
+  deleteCategory
 } from "../../Services/containerApi";
 import { useTranslation } from "react-i18next";
 
@@ -19,9 +20,12 @@ function ViewCategories() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const [showNoSubCategoriesMessage, setShowNoSubCategoriesMessage] =
-    useState(false);
+  const [activeCategoryName, setActiveCategoryName] = useState(null);
 
+  const [showNoSubCategoriesMessage, setShowNoSubCategoriesMessage] =useState(false);
+  const [showSubCategories, setShowSubCategories] =useState(false);  
+  const [errorMessageCategory, setErrorMessageCategory] = useState("");
+  const [errorMessageSubCategory, setErrorMessageSubCategory] = useState("");
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -89,12 +93,16 @@ function ViewCategories() {
     }
   }, [fetchCategories, cityId, storeId]);
 
-  const handleCategoryClick = async (categoryId) => {
+  const handleCategoryClick = async (categoryId,name) => {
     if (activeCategoryId === categoryId) {
       setActiveCategoryId(null);
       setSubCategories({});
+      setShowSubCategories(false)
+      setShowNoSubCategoriesMessage(false);
+
     } else {
       setActiveCategoryId(categoryId);
+      setActiveCategoryName(name)
 
       try {
         const subCats = await getSubCategory(cityId, storeId, categoryId);
@@ -105,9 +113,13 @@ function ViewCategories() {
             subcatList[subCat.id] = subCat.name;
           });
           setSubCategories(subcatList);
+          setShowSubCategories(true)
+          setShowNoSubCategoriesMessage(false);
         } else {
           // Show the "no subcategories" message for 3 seconds
           setSubCategories({});
+          setShowSubCategories(false)
+
           setShowNoSubCategoriesMessage(true);
           setTimeout(() => {
             setShowNoSubCategoriesMessage(false);
@@ -192,24 +204,87 @@ function ViewCategories() {
       });
       console.log(`Subcategory ${subCategoryId} deleted successfully`);
     } catch (error) {
-      console.error("Error deleting subcategory:", error);
+      if (error.response && error.response.data) {
+        const errorCode = error.response.data.errorCode;
+
+        // Handle specific error codes
+        if (errorCode === 5009) {
+          setErrorMessageSubCategory(t("subCategoryNotFound"));
+        } 
+        else if (errorCode === 1009) {
+          setErrorMessageSubCategory(t("delete_auth_subcategory"));
+        }  else if (errorCode === 9003) {
+          setErrorMessageSubCategory(t("productExist"));
+        } else {
+          setErrorMessageSubCategory(t("changesNotSaved"));
+        }
+        setTimeout(() => {
+          setErrorMessageSubCategory("");
+        }, 3000);
+    } 
+    }
+  };
+  const handleDeleteCategory = async (storeId, categoryId) => {
+    event.stopPropagation();
+    try {
+      await deleteCategory(storeId, categoryId);
+      setCategories((prev) => {
+        const newSubCategories = { ...prev };
+        delete newSubCategories[categoryId];
+        return newSubCategories;
+      });
+      
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errorCode = error.response.data.errorCode;
+
+        // Handle specific error codes
+        if (errorCode === 5008) {
+          setErrorMessageCategory(t("categoryNotFound"));
+        } 
+        else if (errorCode === 1009) {
+          setErrorMessageCategory(t("delete_auth_category"));
+        }  else if (errorCode === 9002) {
+          setErrorMessageCategory(t("subcategoryExist"));
+        } else {
+          setErrorMessageCategory(t("changesNotSaved"));
+        }
+        setTimeout(() => {
+          setErrorMessageCategory("");
+        }, 3000);
+    } 
     }
   };
 
   return (
     <section className="bg-gray-900 body-font relative h-full">
       <SideBar />
-
+     {/* add */}
       <div className="container flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
         <a
           onClick={() => {
-            navigateTo("/OwnerScreen/AddCategoryAndSubCategory");
+            navigateTo("/OwnerScreen/AddCategory?isCategory=true");
+            
           }}
           className="relative inline-flex items-center justify-center px-12 py-4 overflow-hidden font-mono font-medium tracking-tighter text-white bg-black rounded-full group transition-all duration-500 ease-out w-full max-w-xs"
         >
           <span className="absolute w-0 h-0 transition-all duration-200 ease-out bg-green-500 rounded-full group-hover:w-full group-hover:h-full"></span>
           <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
-          <span className="relative">{t("add")}</span>
+          <span className="relative">{t("addCategory")}</span>
+          
+        </a>
+        <a
+        onClick={() => {
+          navigateTo("/OwnerScreen/AddSubCategory?isCategory=false");
+          
+        }}
+          
+          className="relative inline-flex items-center justify-center px-12 py-4 overflow-hidden font-mono font-medium tracking-tighter text-white bg-black rounded-full group transition-all duration-500 ease-out w-full max-w-xs"
+        >
+          <span className="absolute w-0 h-0 transition-all duration-200 ease-out bg-green-500 rounded-full group-hover:w-full group-hover:h-full"></span>
+          <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+          <span className="relative">{t("addsubcategory")}</span>
+          
         </a>
       </div>
 
@@ -217,6 +292,7 @@ function ViewCategories() {
         <div className="h-full">
           {storeId && categories && categories.length > 0 ? (
             <>
+             {/* storeid filter */}
               <div className="flex justify-center px-5 py-2 gap-2 w-full md:w-auto fixed lg:w-auto relative">
                 <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
                   <select
@@ -247,70 +323,139 @@ function ViewCategories() {
                   </select>
                 </div>
               </div>
-
+              {/* categories */}
               <div className="flex flex-col items-center mt-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 w-full">
-                  {categories.map((category) => (
-                    <div key={category.id} className="w-full">
-                      {/* Category Card */}
-                      <div
-                        className={`p-4 text-center rounded-lg cursor-pointer transition-all ${
-                          activeCategoryId === category.id
-                            ? "bg-gray-300"
-                            : "bg-gray-200 hover:bg-gray-300"
-                        }`}
-                        onClick={() => handleCategoryClick(category.id)}
-                      >
-                        {category.name}
-                      </div>
+              <div className="grid grid-row-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 w-full">
+  {categories.map((category) => (
+    <div key={category.id} className="w-full">
+      {/* Category Card */}
+      <div
+        className={`p-4 flex justify-between items-center rounded-lg cursor-pointer transition-all ${
+          activeCategoryId === category.id
+            ? "bg-gray-300"
+            : "bg-gray-200 hover:bg-gray-300"
+        }`}
+        onClick={() => handleCategoryClick(category.id, category.name)}
+      >
+        <span className="text-center">{category.name}</span>
 
-                      {/* Subcategories Section - only show if this category is active */}
-                      {activeCategoryId === category.id &&
-                        Object.keys(subCategories).length > 0 && (
-                          <div className="transition-max-height duration-500 ease-in-out overflow-hidden mt-2">
-                            <ul className="list-none p-0">
-                              {Object.entries(subCategories).map(
-                                ([subCatId, subCatName]) => (
-                                  <li
-                                    key={subCatId}
-                                    className="relative bg-gray-100 p-4 my-2 rounded-md flex flex-col justify-between text-center min-h-[120px]"
-                                  >
-                                    <span>{subCatName}</span>
+        {/* Delete Icon aligned with category name */}
+        <div className="group relative ml-4">
+          <a
+            className="font-medium text-red-600 px-2 cursor-pointer"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the card click from being triggered
+              handleDeleteCategory(storeId, parseInt(category.id, 10));
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 640 512"
+              className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+            >
+              <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+            </svg>
+          </a>
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {t("delete")}
+          </div>
+        </div>
+      </div>
 
-                                    {/* Delete Button */}
-                                    <button
-                                      className="absolute bottom-0 left-0 right-0 p-2 bg-red-100 border border-red-400 text-red-700 rounded-b-md focus:outline-none font-bold"
-                                      onClick={() =>
-                                        handleDeleteSubCategory(
-                                          category.id,
-                                          parseInt(subCatId, 10)
-                                        )
-                                      }
-                                    >
-                                      {t("delete")}
-                                    </button>
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-                        )}
-                    </div>
-                  ))}
-                </div>
+      {/* Subcategories Section - only show if this category is active */}
+    </div>
+  ))}
+   
+</div>
+{(
+    errorMessageCategory && (
+    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
+     {errorMessageCategory}
+    </div>
+  )
+)}
 
-                {showNoSubCategoriesMessage && (
-                  <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
-                    <span>{t("noSubCategoriesAvailableForThisCategory")}</span>
-                  </div>
-                )}
-              </div>
+
+                {showSubCategories && activeCategoryId && Object.keys(subCategories).length > 0 ? (
+              
+<div className="mt-4 w-full bg-white p-4 rounded-md shadow-lg">
+  {/* Header Section */}
+  <div className="mb-4">
+    <h4 className="text-xl font-semibold">{t("subCategory")}</h4>
+    <h4 className="text-lg font-semibold text-gray-700 mt-1">
+      {t("category")}: {activeCategoryName}
+    </h4>
+  </div>
+
+  {/* Subcategory cards in a horizontal layout */}
+  <div className="flex overflow-x-auto gap-4">
+    {Object.entries(subCategories).map(([subCatId, subCatName]) => (
+      <div
+        key={subCatId}
+        className="bg-gray-100 p-4 w-48 rounded-md shadow-md text-center cursor-pointer flex flex-col justify-between"
+      >
+        <div className="flex justify-between items-center">
+          <span className="font-semibold">{subCatName}</span>
+
+          {/* Delete Icon */}
+          <div className="group relative ml-4">
+            <a
+              className="font-medium text-red-600 px-2 cursor-pointer"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent card click event
+                handleDeleteSubCategory(storeId, parseInt(subCatId, 10));
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 640 512"
+                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+              >
+                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+              </svg>
+            </a>
+            <div className="z-10 absolute bottom-full left-1/2 transform -translate-x-1/2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {t("delete")}
+            </div>
+          </div>
+        </div>
+
+        {/* Delete Button */}
+       
+      </div>
+    ))}
+  </div>
+  {(
+    errorMessageSubCategory && (
+    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
+      <span>{errorMessageSubCategory}</span>
+    </div>
+  )
+)}
+</div>
+
+
+
+
+) : (
+  showNoSubCategoriesMessage && (
+    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
+      <span>{t("noSubCategoriesAvailableForThisCategory")}</span>
+    </div>
+  )
+)}
+          </div>
             </>
           ) : (
             <div className="bg-gray-800 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
               <div className="flex justify-center px-5 py-2 gap-2 w-full">
                 <div className="w-full">
                   {stores.length < 5 ? (
+                    // storeid name filter
                     <div className="flex justify-center gap-2 ">
                       {stores.map((store) => (
                         <div key={store.id} className="w-full max-w-xs">
