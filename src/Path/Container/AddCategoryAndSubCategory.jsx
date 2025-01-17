@@ -159,7 +159,10 @@ function AddCategoryAndSubCategory() {
                 setErrorMessage(t("changesNotSaved")); // Show generic error message
             }
             setSuccessMessage("");
-            setTimeout(() => setErrorMessage(""), 5000);
+            setTimeout(() => {
+                setErrorMessage("")
+                // navigate("/OwnerScreen");
+            }, 5000);
         } finally {
             setUpdating(false);
         }
@@ -177,7 +180,7 @@ function AddCategoryAndSubCategory() {
             setErrorMessage("");
             setTimeout(() => {
                 setSuccessMessage("");
-                navigate("/OwnerScreen");
+                 navigate("/OwnerScreen");
             }, 5000);
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errorCode === 5009) {
@@ -195,7 +198,10 @@ function AddCategoryAndSubCategory() {
                 setErrorMessage(t("changesNotSaved")); // Show generic error message
             }
             setSuccessMessage("");
-            setTimeout(() => setErrorMessage(""), 5000);
+            setTimeout(() => {
+                setErrorMessage("")
+                // navigate("/OwnerScreen");
+            }, 5000);
         } finally {
             setUpdating(false);
         }
@@ -220,7 +226,12 @@ function AddCategoryAndSubCategory() {
     };
 
     const checkFormValidity = useCallback(() => {
+        if(isCategoryState){
+            return storeId > 0 && categoryId > 0
+        }
+        else{
         return storeId > 0 && categoryId > 0 && subcategoryId > 0;
+        }
     }, [storeId, categoryId, subcategoryId]);
 
     useEffect(() => {

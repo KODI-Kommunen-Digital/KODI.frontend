@@ -76,9 +76,10 @@ function ViewCategories() {
     if (cityId && storeId) {
       getCategory(cityId, storeId).then((response) => {
         setCategories(response.data.data);
+        setSubCategories([])
       });
     }
-  }, []);
+  }, [storeId]);
 
   useEffect(() => {
     if (storeId) {
@@ -225,6 +226,7 @@ function ViewCategories() {
     }
   };
   const handleDeleteCategory = async (storeId, categoryId) => {
+    event.preventDefault();
     event.stopPropagation();
     try {
       await deleteCategory(storeId, categoryId);
@@ -378,74 +380,66 @@ function ViewCategories() {
 )}
 
 
-                {showSubCategories && activeCategoryId && Object.keys(subCategories).length > 0 ? (
-              
-<div className="mt-4 w-full bg-white p-4 rounded-md shadow-lg">
-  {/* Header Section */}
-  <div className="mb-4">
-    <h4 className="text-xl font-semibold">{t("subCategory")}</h4>
-    <h4 className="text-lg font-semibold text-gray-700 mt-1">
-      {t("category")}: {activeCategoryName}
-    </h4>
-  </div>
+{showSubCategories && activeCategoryId && Object.keys(subCategories).length > 0 ? (
+  <div className="mt-4 w-full p-4 rounded-md shadow-lg">
+    {/* Header Section */}
+    <div className="mb-4">
+      <h4 className="text-xl font-semibold text-white">{t("Sub-Categories")}</h4>
+      <h4 className="text-lg font-semibold text-white mt-1">
+        {t("category")}: {activeCategoryName}
+      </h4>
+    </div>
 
-  {/* Subcategory cards in a horizontal layout */}
-  <div className="flex overflow-x-auto gap-4">
-    {Object.entries(subCategories).map(([subCatId, subCatName]) => (
-      <div
-        key={subCatId}
-        className="bg-gray-100 p-4 w-48 rounded-md shadow-md text-center cursor-pointer flex flex-col justify-between"
-      >
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">{subCatName}</span>
+    {/* Subcategory cards in a horizontal layout */}
+    <div className="flex overflow-x-auto gap-4 relative">
+      {Object.entries(subCategories).map(([subCatId, subCatName]) => (
+        <div
+          key={subCatId}
+          className="bg-gray-100 p-4 w-48 rounded-md shadow-md text-center cursor-pointer flex flex-col justify-between"
+        >
+          <div className="flex justify-between items-center">
+            <span className="font-semibold">{subCatName}</span>
 
-          {/* Delete Icon */}
-          <div className="group relative ml-4">
-            <a
-              className="font-medium text-red-600 px-2 cursor-pointer"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent card click event
-                handleDeleteSubCategory(storeId, parseInt(subCatId, 10));
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="1em"
-                viewBox="0 0 640 512"
-                className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+            {/* Delete Icon */}
+            <div className="group relative ml-4">
+              <a
+                className="font-medium text-red-600 px-2 cursor-pointer"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent card click event
+                  handleDeleteSubCategory(storeId, parseInt(subCatId, 10));
+                }}
               >
-                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-              </svg>
-            </a>
-           
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 640 512"
+                  className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                >
+                  <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
-
-        {/* Delete Button */}
-       
-      </div>
-    ))}
-  </div>
-  {(
-    errorMessageSubCategory && (
-    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
-      <span>{errorMessageSubCategory}</span>
+      ))}
     </div>
-  )
-)}
-</div>
 
-
-
-
+    {/* Error Message */}
+    {errorMessageSubCategory && (
+      <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50 w-full">
+        <span>{errorMessageSubCategory}</span>
+      </div>
+    )}
+  </div>
 ) : (
   showNoSubCategoriesMessage && (
-    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50">
+    <div className="mt-4 bg-yellow-200 border border-yellow-800 text-yellow-800 px-4 py-3 rounded-lg shadow-lg z-50 w-full">
       <span>{t("noSubCategoriesAvailableForThisCategory")}</span>
     </div>
   )
 )}
+
           </div>
             </>
           ) : (
