@@ -168,8 +168,7 @@ function UploadListings() {
         // Calculate total number of images
         const totalImages = image.length + validImages.length;
 
-        // Check if total images exceed the limit of 3
-        if (totalImages > 3) {
+        if (totalImages > 8) {
           alert(t("listingImageNumberAlert", { limit: MAX_IMAGES }));
         } else {
           setLocalImages((prevImages) => [...prevImages, ...validImages]);
@@ -689,11 +688,13 @@ function UploadListings() {
           }
 
           // Handle images or PDF
-          if (listingData.logo && listingData.otherlogos) {
-            const temp = listingData.otherlogos
-              .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
+          if (listingData.logo) {
+            setImage([listingData.logo]); // Use the primary logo
+          } else if (listingData.otherLogos && listingData.otherLogos.length > 0) {
+            const sortedLogos = listingData.otherLogos
+              .sort(({ imageOrder: a }, { imageOrder: b }) => a - b)
               .map((img) => img.logo);
-            setImage(temp);
+            setImage(sortedLogos); // Use sorted logos
           } else if (listingData.pdf) {
             setPdf({
               link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1206,10 +1207,6 @@ function UploadListings() {
 
     setIsFormValid(isValid);
   }, [listingInput, error, categoryId, selectedCities]);
-
-  console.log("image:", image);
-  console.log("image.length:", image && image.length);
-  console.log("newListing:", newListing);
 
   return (
     <section className="bg-slate-600 body-font relative">

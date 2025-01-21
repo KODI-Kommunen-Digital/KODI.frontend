@@ -161,6 +161,7 @@ const Listing = () => {
   const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const [isProfileImageLoaded, setIsProfileImageLoaded] = useState(false);
 
   const [input, setInput] = useState({
     categoryId: 0,
@@ -173,7 +174,8 @@ const Listing = () => {
     email: "",
     description: "",
     logo: "",
-    otherlogos: [],
+    otherlogos: isV2Backend ? [] : undefined, // How it is coming from backend
+    otherLogos: isV2Backend ? undefined : [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -186,6 +188,7 @@ const Listing = () => {
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
+
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
@@ -417,6 +420,12 @@ const Listing = () => {
     }
   };
 
+  useEffect(() => {
+    if (user && listings.length > 0 && isProfileImageLoaded) {
+      setIsLoading(false);
+    }
+  }, [user, listings, isProfileImageLoaded]);
+
   return (
     <section className="text-slate-800 bg-white body-font">
       {isLoading ? (
@@ -622,7 +631,7 @@ const Listing = () => {
                           </div>
                         ) : input.logo ? (
                           <CustomCarousel
-                            imageList={input.otherlogos}
+                            imageList={isV2Backend ? input.otherLogos : input.otherlogos}
                             sourceId={input.sourceId}
                             appointmentId={input.appointmentId || null}
                           />
@@ -668,7 +677,10 @@ const Listing = () => {
             <div className="w-2/3 lg:w-1/3 mx-auto">
               <div className="grid grid-cols-1 gap-4 col-span-2 lg:col-span-1">
                 {userSocial && userSocial.length > 0 ? (
-                  <UserProfile user={user} />
+                  <UserProfile
+                    user={user}
+                    onProfileImageLoad={() => setIsLoading(false)} // Stop loading when the image loads
+                  />
                 ) : (
                   <div className="max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
                     <div
@@ -701,10 +713,14 @@ const Listing = () => {
                         className="object-cover object-center h-full w-full"
                         src={
                           user?.image
-                            ? process.env.REACT_APP_BUCKET_HOST + user?.image
+                            ? `${process.env.REACT_APP_BUCKET_HOST}${user.image}`
                             : PROFILEIMAGE
                         }
                         alt={user?.lastname}
+                        onError={(e) => {
+                          e.target.src = PROFILEIMAGE; // Fallback to PROFILEIMAGE if the image fails to load
+                          setIsProfileImageLoaded(true); // Handle error gracefully
+                        }}
                       />
                     </div>
                     <div className="text-center mt-2 p-4">
@@ -874,6 +890,7 @@ const Listing = () => {
               </div>
             )}
           </div>
+
           {!isLoading && (
             <div className="bottom-0 w-full">
               <Footer />
