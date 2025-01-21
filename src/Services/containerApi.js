@@ -101,7 +101,7 @@ export async function getCategory(cityId, storeId) {
 
 export async function deleteSubCategory(storeId, subCategoryId) {
   return axios.delete(`/v1/owners/subCategory`, {
-    params: {
+    data: {
       storeId,
       subCategoryId,
     },
@@ -109,9 +109,11 @@ export async function deleteSubCategory(storeId, subCategoryId) {
 }
 
 export async function deleteCategory(storeId, categoryId) {
-  return axios.delete(`/v1/owners/subCategory`, {
-    storeId,
-    categoryId,
+  return axios.delete(`/v1/owners/category`, {
+    data: {
+      storeId,
+      categoryId,
+    },
   });
 }
 
@@ -274,7 +276,7 @@ export async function getProductRequestsSeller(
 
 export async function getOrders(cityId, storeId, pageNumber) {
   return axios.get(
-    `/v1/cities/${cityId}/store/${storeId}/orders?pageNumber=${pageNumber}&pageSize=9`
+    `/v1/cities/${cityId}/store/${storeId}/orders?pageNumber=${pageNumber}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 

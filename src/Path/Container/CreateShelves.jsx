@@ -532,8 +532,8 @@ function CreateShelves() {
                                         type="text"
                                         id="productId"
                                         name="productId"
-                                        value={productId || 0}
-                                        onChange={handleProductChange}
+                                        value={productId || null}
+                                        onChange={(e) => handleProductChange(e.target.value === "0" ? null : e.target.value)}
                                         autoComplete="country-name"
                                         className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
