@@ -168,8 +168,7 @@ function UploadListings() {
         // Calculate total number of images
         const totalImages = image.length + validImages.length;
 
-        // Check if total images exceed the limit of 3
-        if (totalImages > 3) {
+        if (totalImages > 8) {
           alert(t("listingImageNumberAlert", { limit: MAX_IMAGES }));
         } else {
           setLocalImages((prevImages) => [...prevImages, ...validImages]);
