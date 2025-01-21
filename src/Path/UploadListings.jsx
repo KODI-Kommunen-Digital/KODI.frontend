@@ -47,6 +47,7 @@ function UploadListings() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const navigate = useNavigate();
 
@@ -256,7 +257,7 @@ function UploadListings() {
   // Drag and Drop ends
 
   //Sending data to backend starts
-  const [cityIds, setCityId] = useState(0);
+  const [cityIds] = useState(0);
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [listingInput, setListingInput] = useState({
@@ -343,8 +344,6 @@ function UploadListings() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Starting submission...");
-    console.log("Listing Input: ", listingInput);
 
     const trimStartDate = (startDate) => {
       if (startDate.endsWith(".000Z")) {
@@ -419,14 +418,10 @@ function UploadListings() {
           ...listingInput,
           cityIds: cityIdsToSubmit,
         };
-        console.log("Listing Input: ", listingInput);
-        console.log("Error State: ", error);
 
         const response = newListing
           ? await postListingsData(dataToSubmit)
           : await updateListingsData(cityIdsToSubmit, dataToSubmit, listingId);
-
-        console.log("Response:", response);
 
         let currentListingId = [];
         let cityIdsArray = [];
@@ -437,8 +432,6 @@ function UploadListings() {
           console.error("Invalid response structure. Response:", response);
           throw new Error("Unable to retrieve listing and city IDs");
         }
-       
-
         // Filter opening dates for appointmentInput and services before submitting
         const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
         const filteredServices = appointmentInput.services.map(service => ({
@@ -1021,63 +1014,63 @@ function UploadListings() {
     fetchCities();
   }, []);
 
-  const onCityChange = async (e) => {
-    const selectedCityId = parseInt(e.target.value);
+  // const onCityChange = async (e) => {
+  //   const selectedCityId = parseInt(e.target.value);
 
-    if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      setSelectedCities(selectedCity ? [selectedCity] : []);
-      setCityId(selectedCityId);
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: selectedCity ? [selectedCity.id] : [],
-      }));
-    } else {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
-      if (selectedCity) {
-        if (!selectedCities.some(city => city.id === selectedCityId)) {
-          const updatedSelectedCities = [...selectedCities, selectedCity];
-          setSelectedCities(updatedSelectedCities);
-          setCityId(selectedCityId);
-          setListingInput((prev) => ({
-            ...prev,
-            cityIds: updatedSelectedCities.map(city => city.id),
-          }));
-        } else {
-          setError((prevState) => ({
-            ...prevState,
-            cityAlreadySelected: t("cityAlreadySelected"),
-          }));
-        }
-      }
-    }
-  };
+  //   if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
+  //     const selectedCity = cities.find(city => city.id === selectedCityId);
+  //     setSelectedCities(selectedCity ? [selectedCity] : []);
+  //     setCityId(selectedCityId);
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: selectedCity ? [selectedCity.id] : [],
+  //     }));
+  //   } else {
+  //     const selectedCity = cities.find(city => city.id === selectedCityId);
+  //     if (selectedCity) {
+  //       if (!selectedCities.some(city => city.id === selectedCityId)) {
+  //         const updatedSelectedCities = [...selectedCities, selectedCity];
+  //         setSelectedCities(updatedSelectedCities);
+  //         setCityId(selectedCityId);
+  //         setListingInput((prev) => ({
+  //           ...prev,
+  //           cityIds: updatedSelectedCities.map(city => city.id),
+  //         }));
+  //       } else {
+  //         setError((prevState) => ({
+  //           ...prevState,
+  //           cityAlreadySelected: t("cityAlreadySelected"),
+  //         }));
+  //       }
+  //     }
+  //   }
+  // };
 
-  const removeCity = (cityIdToRemove) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
-    setSelectedCities(updatedSelectedCities);
+  // const removeCity = (cityIdToRemove) => {
+  //   const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
+  //   setSelectedCities(updatedSelectedCities);
 
-    if (updatedSelectedCities.length === 0) {
-      setCityId(0);
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: [],
-      }));
-      setError((prevState) => ({
-        ...prevState,
-        cityIds: t("pleaseSelectCity"),
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: updatedSelectedCities.map(city => city.id),
-      }));
-      setError((prevState) => ({
-        ...prevState,
-        cityIds: "",
-      }));
-    }
-  };
+  //   if (updatedSelectedCities.length === 0) {
+  //     setCityId(0);
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: [],
+  //     }));
+  //     setError((prevState) => ({
+  //       ...prevState,
+  //       cityIds: t("pleaseSelectCity"),
+  //     }));
+  //   } else {
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       cityIds: updatedSelectedCities.map(city => city.id),
+  //     }));
+  //     setError((prevState) => ({
+  //       ...prevState,
+  //       cityIds: "",
+  //     }));
+  //   }
+  // };
 
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
@@ -1194,6 +1187,26 @@ function UploadListings() {
     };
   }, []);
 
+  useEffect(() => {
+    const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
+    const checkFormValidity = () => {
+      const requiredFields = [
+        listingInput.title,
+        listingInput.description,
+        categoryId,
+        selectedCities.length > 0,
+        !(error.title || error.description || error.cityIds || error.categoryId),
+        isCategorySpecificValid,
+      ];
+
+      return requiredFields.every(Boolean);
+    };
+
+    const isValid = checkFormValidity();
+
+    setIsFormValid(isValid);
+  }, [listingInput, error, categoryId, selectedCities]);
+
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
@@ -1271,7 +1284,7 @@ function UploadListings() {
                 <input
                   type="text"
                   placeholder={selectedCities.length === 0 ? t("select") : ""}
-                  className="bg-transparent outline-none flex-1"
+                  className="bg-transparent outline-none flex-1 cursor-pointer"
                   readOnly
                 />
               </div>
@@ -1993,7 +2006,7 @@ function UploadListings() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={updating || isSuccess}
+              disabled={!isFormValid || updating || isSuccess}
               className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
             >
               {t("saveChanges")}

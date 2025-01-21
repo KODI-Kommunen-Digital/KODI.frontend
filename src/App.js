@@ -332,7 +332,13 @@ const App = () => {
               />
 
               <Route
-                path="/OwnerScreen/AddCategoryAndSubCategory"
+                path="/OwnerScreen/AddCategory"
+                element={<AddCategoryAndSubCategory />}
+                exact
+              />
+
+              <Route
+                path="/OwnerScreen/AddSubCategory"
                 element={<AddCategoryAndSubCategory />}
                 exact
               />

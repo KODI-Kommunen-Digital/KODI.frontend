@@ -1032,8 +1032,22 @@
     "invalidForum": "Ungültiges Forum",
     "startDate": "Startdatum",
     "endDate": "Enddatum",
+    "not_seller":"Sie sind nicht berechtigt, Produkte in diesen Shop einzustellen, da Sie kein Verkäufer sind.",
     "editpost":"Beitrag bearbeiten",
+    "sellerTitle":"Titel des Verkäufers",
     "expiryDateInPast": "Das Ablaufdatum liegt in der Vergangenheit",
     "noOrdersFound": "Keine Bestellungen gefunden",
-    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus"
+    "pleaseSelectBothDates": "Bitte wählen Sie beide Termine aus",
+    "productExist":"Aktive Produkte für diese Unterkategorie sind vorhanden.",
+    "subCategoryNotFound":"Unterkategorie nicht gefunden",
+    "subcategoryAlreadyAddedError": "Unterkategorie bereits zum Shop hinzugefügt",
+    "categoryNotFound":"Kategorie nicht gefunden",
+    "delete_auth_category":"Sie sind nicht berechtigt, die Kategorie",
+    "delete_auth_subcategory":"Sie sind nicht berechtigt, Unterkategorien zu löschen",
+    "subcategoryExist":"Die Unterkategorie für diese Kategorie ist bereits vorhanden.",
+    "addCategory":"Kategorie hinzufügen",
+    "addsubcategory":"Unterkategorie hinzufügen",
+    "category_not_added":"Kategorie nicht in den Shop aufgenommen",
+    "subcategoryUpdated": "Neue Unterkategorie aktualisiert",
+    "Sub-Categories":"Unterkatheorien"
 }

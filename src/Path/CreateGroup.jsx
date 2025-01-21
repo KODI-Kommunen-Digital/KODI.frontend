@@ -32,15 +32,8 @@ function CreateGroup() {
 	const [forumId, setForumId] = useState(0);
 
 	const navigate = useNavigate();
+	const [isFormValid, setIsFormValid] = useState(false);
 
-	// const handleGroupTypeChange = (event) => {
-	// 	const isPrivate = event.target.checked;
-	// 	setInput((prevInput) => ({
-	// 		...prevInput,
-	// 		isPrivate,
-	// 		visibility: isPrivate ? "private" : "public",
-	// 	}));
-	// };
 	const handleToggle = () => {
 		setInput((prevInput) => ({
 			...prevInput,
@@ -148,6 +141,7 @@ function CreateGroup() {
 			});
 		}
 	}, []);
+
 	const handleImageUpload = async (id) => {
 		const form = new FormData();
 		form.append("image", image1);
@@ -308,7 +302,6 @@ function CreateGroup() {
 			return { ...prevState, [name]: errorMessage };
 		});
 	};
-	//Sending data to backend ends
 
 	useEffect(() => {
 		getCities({ hasForum: true }).then((citiesResponse) => {
@@ -334,6 +327,22 @@ function CreateGroup() {
 		const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 		window.history.replaceState({}, "", newUrl);
 	}
+
+	useEffect(() => {
+		const checkFormValidity = () => {
+			const requiredFields = [
+				input.forumName,
+				input.description,
+				cityId > 0,
+				!(error.forumName || error.description || error.cityId),
+			];
+
+			return requiredFields.every(Boolean);
+		};
+
+		const isValid = checkFormValidity();
+		setIsFormValid(isValid);
+	}, [input, error, cityId]);
 
 	return (
 		<section class="bg-gray-900 body-font relative min-h-screen">
@@ -578,7 +587,7 @@ function CreateGroup() {
 						<button
 							type="button"
 							onClick={handleSubmit}
-							disabled={updating || isSuccess}
+							disabled={!isFormValid || updating || isSuccess}
 							class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
 							{t("saveChanges")}

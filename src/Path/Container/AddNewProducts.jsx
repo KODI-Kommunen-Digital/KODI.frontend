@@ -36,6 +36,7 @@ function AddNewProducts() {
     const [isOwner, setIsOwner] = useState(false);
     const CHARACTER_LIMIT = 255;
     const [originalData, setOriginalData] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const [input, setInput] = useState({
         shopId: 0,
@@ -159,10 +160,12 @@ function AddNewProducts() {
                   else if (error.response.data.errorCode === 6012) {
                     setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
                   } 
+                  else if (error.response.data.errorCode === 1009) {
+                    setErrorMessage(t("not_seller")); // Custom message for this specific error
+                  } 
                     else {
                     setErrorMessage(t("changesNotSaved")); // Fallback for other errors
                   }
-                
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -181,37 +184,39 @@ function AddNewProducts() {
         const cityId = e.target.value;
         setCityId(cityId);
 
-        // Reset shopId and shops if cityId is 0
-        if (cityId === "0") {
-            setShopId(0); // Reset shopId to 0
-            setShops([]); // Clear the shops array
-            setInput((prev) => ({
-                ...prev,
-                cityId: 0,
-                shopId: 0, // Reset shopId in input
-            }));
-            validateInput(e);
+        // Reset shopId and shops when changing city
+        setShopId(0); // Reset shopId to 0
+        setShops([]); // Clear the shops array
 
+        setInput((prev) => ({
+            ...prev,
+            cityId: cityId,
+            shopId: 0, // Reset shopId in input
+        }));
+        validateInput(e);
+
+        // If cityId is "0", clear shops and return
+        if (cityId === "0") {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.delete("cityId");
             urlParams.delete("shopId");
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
             window.history.replaceState({}, "", newUrl);
-
             return;
         }
-
-        setInput((prev) => ({
-            ...prev,
-            cityId: cityId,
-        }));
-        validateInput(e);
 
         setLoading(true);
 
         try {
             const response = await getShopsInACity(cityId);
-            setShops(response?.data?.data || []);
+            const fetchedShops = response?.data?.data || [];
+
+            if (fetchedShops.length > 0) {
+                setShops(fetchedShops);
+            } else {
+                setShops([]); // Ensure shops array is empty
+                console.log(t("noShopsAvailableForThisCity")); // Optionally log or handle this case
+            }
         } catch (error) {
             console.error("Error fetching shops:", error);
         } finally {
@@ -779,13 +784,55 @@ function AddNewProducts() {
         }
     };
 
-    const handleInventoryChange = (newInventory) => {
-        const updatedInventory = Math.max(newInventory, 0);
+    // const handleInventoryChange = (newInventory) => {
+    //     const updatedInventory = Math.max(newInventory, 0);
+    //     setInput((prev) => ({
+    //         ...prev,
+    //         inventory: updatedInventory,
+    //     }));
+    // };
+
+    const handleInventoryChange = (newInventory, triggeredByButton = false) => {
+        // Allow empty input while typing
+        if (!triggeredByButton && newInventory === 0) {
+            setInput((prev) => ({
+                ...prev,
+                inventory: "",
+            }));
+            return;
+        }
+    
+        // Ensure valid numbers when triggered by buttons or on valid input
+        const updatedInventory = Math.max(Number(newInventory),0);
         setInput((prev) => ({
             ...prev,
             inventory: updatedInventory,
         }));
     };
+    
+
+    const checkFormValidity = () => {
+        const requiredFieldsValid = [
+            input.title.trim() !== "",
+            parseInt(input.cityId, 10) > 0,
+            parseInt(input.shopId, 10) > 0,
+            parseInt(input.categoryId, 10) > 0,
+            parseInt(input.subCategoryId, 10) > 0,
+            input.description.trim() !== "",
+            !isNaN(parseFloat(input.price)) && parseFloat(input.price) > 0,
+            !isNaN(parseFloat(input.tax)) && parseFloat(input.tax) >= 0,
+            !isNaN(parseInt(input.inventory, 10)) && parseInt(input.inventory, 10) > 0,
+            !isNaN(parseInt(input.minCount, 10)) && parseInt(input.minCount, 10) >= 0 && parseInt(input.minCount, 10) <= parseInt(input.inventory, 10),
+            !isOwnerRouter || (!isNaN(parseInt(input.maxCount, 10)) && parseInt(input.maxCount, 10) >= 0),
+        ];
+
+        return requiredFieldsValid.every(Boolean);
+    };
+
+    useEffect(() => {
+        const isValid = checkFormValidity();
+        setIsFormValid(isValid);
+    }, [input, error, isOwnerRouter]);
 
     return (
         <section className="bg-gray-900 body-font relative min-h-screen">
@@ -878,7 +925,7 @@ function AddNewProducts() {
                                 <div className="flex justify-center my-4">
                                     <span className="text-gray-600">{t("loading")}</span>
                                 </div>
-                            ) : shops.length > 0 || shopId ? (
+                            ) : shops.length > 0 ? (
                                 <div className="relative mb-4">
                                     <label
                                         htmlFor="title"
@@ -1223,7 +1270,7 @@ function AddNewProducts() {
 
                         <div className="flex items-center gap-2 sm:gap-4">
                             <button
-                                onClick={() => handleInventoryChange(input.inventory - 1)}
+                                onClick={() => handleInventoryChange(input.inventory - 1,true)}
                                 disabled={updating || isSuccess || input.inventory <= 0}
                                 id="decrement-btn"
                                 className="bg-gray-500 text-gray-700 px-2 py-1 rounded-l text-white hover:bg-gray-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
@@ -1252,7 +1299,7 @@ function AddNewProducts() {
                                 placeholder={t("pleaseEnterTotalNumber")}
                             />
                             <button
-                                onClick={() => handleInventoryChange(input.inventory + 1)}
+                                onClick={() => handleInventoryChange(input.inventory + 1,true)}
                                 disabled={updating || isSuccess}
                                 id="increment-btn"
                                 className="bg-indigo-500 text-gray-700 px-2 py-1 rounded-r text-white hover:bg-indigo-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
@@ -1489,7 +1536,7 @@ function AddNewProducts() {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={updating || isSuccess}
+                            disabled={!isFormValid || updating || isSuccess}
                             className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
                         >
                             {t("saveChanges")}
