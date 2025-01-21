@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
@@ -24,6 +24,19 @@ function AddCategoryAndSubCategory() {
     const [isFormValid, setIsFormValid] = useState(false);
 
     const [isOwner, setIsOwner] = useState(null);
+    const location = useLocation(); // Access current location object
+  const queryParams = new URLSearchParams(location.search); // Parse the query string
+
+  const [isCategoryState, setIsCategoryState] = useState(null);
+
+  useEffect(() => {
+    const isCategory = queryParams.get('isCategory'); // Get the value of isCategory from query string
+    if (isCategory === 'true') {
+      setIsCategoryState(true);
+    } else if (isCategory === 'false') {
+      setIsCategoryState(false);
+    }
+  }, [location.search]);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -110,7 +123,7 @@ function AddCategoryAndSubCategory() {
                 const response = await getOwnerSubCategory(categoryId);
                 setSubCategories(response.data.data || []);
             } catch (error) {
-                setErrorMessage(t("subcategoryFetchError"));
+                
             } finally {
                 setSubCategoryLoading(false);
             }
@@ -122,36 +135,90 @@ function AddCategoryAndSubCategory() {
         setSubcategoryId(subcategoryId);
     };
 
+    const addCategoryFun=async(storeId, categoryId)=>{
+        setUpdating(true);
+        try {
+            await addCategory(parseInt(storeId), parseInt(categoryId)); // First API call for adding category
+
+            const successMessage = t("categoryUpdated");
+            setSuccessMessage(successMessage);
+            setIsSuccess(true);
+            setErrorMessage("");
+            setTimeout(() => {
+                setSuccessMessage("");
+                navigate("/OwnerScreen");
+            }, 5000);
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.errorCode === 5008) {
+                setErrorMessage(t("categoryNotFound")); // Show specific error message
+            }
+            else if (error.response && error.response.data && error.response.data.errorCode === 2004) {
+                setErrorMessage(t("categoryAlreadyAddedError")); // Show specific error message
+            } 
+             else {
+                setErrorMessage(t("changesNotSaved")); // Show generic error message
+            }
+            setSuccessMessage("");
+            setTimeout(() => {
+                setErrorMessage("")
+                // navigate("/OwnerScreen");
+            }, 5000);
+        } finally {
+            setUpdating(false);
+        }
+    }
+    const addSubCategoryFun=async(storeId,subcategoryId,categoryId)=>{
+        setUpdating(true);
+        try {
+            
+
+            await addSubCategory(parseInt(storeId), parseInt(subcategoryId)); // Second API call for adding subcategory
+
+            const successMessage = t("subcategoryUpdated");
+            setSuccessMessage(successMessage);
+            setIsSuccess(true);
+            setErrorMessage("");
+            setTimeout(() => {
+                setSuccessMessage("");
+                 navigate("/OwnerScreen");
+            }, 5000);
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.errorCode === 5009) {
+                setErrorMessage(t("subCategoryNotFound")); // Show specific error message
+            }
+            else if (error.response && error.response.data && error.response.data.errorCode === 2005) {
+                setErrorMessage(t("subcategoryAlreadyAddedError")); // Show specific error message
+            } 
+            else if (error.response && error.response.data && error.response.data.errorCode === 2006) {
+                // setErrorMessage(t("category_not_added")); // Show specific error message
+                addCategoryFun(storeId,categoryId)
+                addSubCategoryFun(storeId,subcategoryId,categoryId)
+            } 
+             else {
+                setErrorMessage(t("changesNotSaved")); // Show generic error message
+            }
+            setSuccessMessage("");
+            setTimeout(() => {
+                setErrorMessage("")
+                // navigate("/OwnerScreen");
+            }, 5000);
+        } finally {
+            setUpdating(false);
+        }
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (storeId && categoryId && subcategoryId) {
-            setUpdating(true);
-            try {
-                await addCategory(parseInt(storeId), parseInt(categoryId)); // First API call for adding category
-
-                await addSubCategory(parseInt(storeId), parseInt(subcategoryId)); // Second API call for adding subcategory
-
-                const successMessage = t("categoryUpdated");
-                setSuccessMessage(successMessage);
-                setIsSuccess(true);
-                setErrorMessage("");
-                setTimeout(() => {
-                    setSuccessMessage("");
-                    navigate("/OwnerScreen");
-                }, 5000);
-            } catch (error) {
-                if (error.response && error.response.data && error.response.data.errorCode === 2004) {
-                    setErrorMessage(t("categoryAlreadyAddedError")); // Show specific error message
-                } else {
-                    setErrorMessage(t("changesNotSaved")); // Show generic error message
-                }
-                setSuccessMessage("");
-                setTimeout(() => setErrorMessage(""), 5000);
-            } finally {
-                setUpdating(false);
-            }
-        } else {
+        if (storeId && categoryId && subcategoryId && !isCategoryState) {
+            
+            addSubCategoryFun(storeId,subcategoryId,categoryId)
+        } 
+        else if(isCategoryState && storeId && categoryId ){
+            addCategoryFun(storeId,categoryId)
+               
+        }
+        else {
             setErrorMessage(t("invalidData"));
             setSuccessMessage("");
             setTimeout(() => setErrorMessage(""), 5000);
@@ -159,7 +226,12 @@ function AddCategoryAndSubCategory() {
     };
 
     const checkFormValidity = useCallback(() => {
+        if(isCategoryState){
+            return storeId > 0 && categoryId > 0
+        }
+        else{
         return storeId > 0 && categoryId > 0 && subcategoryId > 0;
+        }
     }, [storeId, categoryId, subcategoryId]);
 
     useEffect(() => {
@@ -174,8 +246,10 @@ function AddCategoryAndSubCategory() {
 
             <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
+                    
                     <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
-                        {t("addCategoryAndSubCategory")}
+                      
+                        {isCategoryState ? t("addCategory") : t("addsubcategory")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
 
@@ -242,7 +316,7 @@ function AddCategoryAndSubCategory() {
                     )}
 
                     {/* Subcategory dropdown, visible only when a category is selected */}
-                    {categoryId !== 0 && (
+                    {categoryId !== 0 && !isCategoryState && (
                         <>
                             {subCategoryLoading ? (
                                 <div className="flex justify-center my-4">

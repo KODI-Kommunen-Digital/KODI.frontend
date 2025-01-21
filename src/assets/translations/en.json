@@ -1025,5 +1025,20 @@
     "sellerTitle":"Seller Title",
     "expiryDateInPast": "Expiry date is in the past",
     "noOrdersFound": "No orders found",
-    "pleaseSelectBothDates": "Please select both dates"
+    "pleaseSelectBothDates": "Please select both dates",
+    "productExist":"Unable to delete.Active products exist for this sub category.",
+    "subCategoryNotFound":"Sub category not found",
+    "subcategoryAlreadyAddedError": "Sub category already added to the store",
+    "categoryNotFound":"Category not found",
+    "delete_auth_category":"You are not authorised to delete category",
+    "delete_auth_subcategory":"You are not authorised to delete sub category",
+    "subcategoryExist":"Unable to delete.Subcategory exist for this category.",
+    "addCategory":"Add Category",
+    "addsubcategory":"Add Sub-Category",
+    "category_not_added":"Category not added to the store",
+    "subcategoryUpdated": "New sub category updated",
+    "Sub-Categories":"Sub-Categories"
+
+
+
 }
