@@ -4,8 +4,9 @@ import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-function UserProfile({ user }) {
+function UserProfile({ user, onProfileImageLoad }) {
   const { t } = useTranslation();
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const [userSocial, setUserSocial] = useState({});
   const socialMediaSVGPathList = {
@@ -53,6 +54,13 @@ function UserProfile({ user }) {
       navigate(path);
     }
   };
+
+  useEffect(() => {
+    if (isImageLoaded) {
+      onProfileImageLoad();
+    }
+  }, [isImageLoaded, onProfileImageLoad]);
+
   return (
     <div
       className="w-full max-w-2xl sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
@@ -69,8 +77,16 @@ function UserProfile({ user }) {
       >
         <img
           className="object-cover object-center h-full w-full"
-          src={user?.image ? process.env.REACT_APP_BUCKET_HOST + user?.image : PROFILEIMAGE}
+          src={
+            user?.image
+              ? `${process.env.REACT_APP_BUCKET_HOST}${user.image}`
+              : PROFILEIMAGE
+          }
           alt={user?.lastname}
+          onError={(e) => {
+            e.target.src = PROFILEIMAGE; // Fallback to PROFILEIMAGE if the image fails to load
+            setIsImageLoaded(true);
+          }}
         />
       </div>
       <div className="text-center mt-2">
@@ -135,5 +151,6 @@ UserProfile.propTypes = {
     id: PropTypes.number,
   }).isRequired,
   createdAt: PropTypes.string,
+  onProfileImageLoad: PropTypes.func.isRequired,
 };
 export default UserProfile;
