@@ -81,9 +81,6 @@ const AllProductRequestsDetails = () => {
         return "";
     };
 
-
-
-
     useEffect(() => {
         if (productDetails) {
             setProductRequest(productDetails);
@@ -139,7 +136,26 @@ const AllProductRequestsDetails = () => {
 
     const handleMaxCountChange = (event) => {
         const value = event.target.value;
-        setMaxCount(value === '' ? '' : Number(value));
+
+        // Validation logic
+        if (!value) {
+            setError((prevState) => ({
+                ...prevState,
+                maxCount: t("pleaseEnterMaxCount"),
+            }));
+            setMaxCount("");
+        } else if (isNaN(value)) {
+            setError((prevState) => ({
+                ...prevState,
+                maxCount: t("pleaseEnterValidNumber"),
+            }));
+        } else {
+            setError((prevState) => ({
+                ...prevState,
+                maxCount: "",
+            }));
+            setMaxCount(Number(value));
+        }
     };
 
     const handleApprove = async () => {

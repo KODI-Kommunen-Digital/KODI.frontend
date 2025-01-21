@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 
 const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantitySold, averagePricePerQuantity }) => {
     const { t } = useTranslation();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProductName, setSelectedProductName] = useState("");
+
+    const handleProductNameClick = (description) => {
+        setSelectedProductName(description);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedProductName("");
+    };
+
     return (
         <section className="text-slate-800 body-font bg-slate-300">
             <div className="bg-slate-300 mt-0 space-y-0 overflow-x-auto">
                 <div className="w-full text-sm text-left text-slate-500 p-0 space-y-10 rounded-xl">
+
                     <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-0 mt-0">
                         <a className=" bg-blue-200 flex flex-col p-5 border-b-4 border-r-4 border-blue-600">
                             <div className="flex justify-start">
@@ -43,7 +57,7 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                             <div className="w-full flex-1 mt-3 text-base text-slate-800">{t("avgPrice")}</div>
                             <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800">€ {averagePricePerQuantity || t("noData")}</div>
                         </a>
-                        <a className=" bg-green-200 flex flex-col p-5 border-b-4 border-r-4 border-green-600">
+                        <a className=" bg-green-200 flex flex-col p-5 border-b-4 border-r-4 border-green-600 cursor-pointer">
                             <div className="flex justify-start">
                                 <div className="flex items-center justify-center h-10 w-10 bg-green-200 rounded-full border-2 border-green-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,9 +66,43 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                                 </div>
                             </div>
                             <div className="w-full flex-1 mt-3 text-base text-slate-800">{t("topSelling")}</div>
-                            <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800">{topProductNameByQuantity || t("noData")}</div>
+                            <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800 truncate"
+                                onClick={() => handleProductNameClick(topProductNameByQuantity)}>
+                                {topProductNameByQuantity || t("noData")}
+                            </div>
                         </a>
                     </div>
+
+                    {isModalOpen && (
+                        <div
+                            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
+                            onClick={closeModal}
+                        >
+                            <div
+                                className="relative bg-white rounded-lg shadow-lg transform transition-all sm:max-w-lg w-full"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="px-6 py-4">
+                                    <h3 className="text-lg leading-6 font-medium text-slate-800 text-center">
+                                        {t("productDetails")}
+                                    </h3>
+                                    <div className="mt-4">
+                                        <p className="text-sm text-gray-500 text-center break-words">
+                                            {selectedProductName}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 px-4 py-3 flex justify-end">
+                                    <button
+                                        className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                                        onClick={closeModal}
+                                    >
+                                        {t("close")}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                 </div>
             </div>
