@@ -173,7 +173,8 @@ const Listing = () => {
     email: "",
     description: "",
     logo: "",
-    otherlogos: [],
+    otherlogos: isV2Backend ? [] : undefined, // How it is coming from backend
+    otherLogos: isV2Backend ? undefined : [],
     startDate: "",
     endDate: "",
     originalPrice: "",
@@ -186,6 +187,7 @@ const Listing = () => {
   const [cityId, setCityId] = useState(0);
   const location = useLocation();
   const [terminalView, setTerminalView] = useState(false);
+
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
@@ -406,6 +408,7 @@ const Listing = () => {
         console.error("Error parsing user.socialMedia:", error);
       }
     }
+    console.log("userSocial", userSocial)
   }, [user]);
 
   const isValidJSON = (str) => {
@@ -622,7 +625,7 @@ const Listing = () => {
                           </div>
                         ) : input.logo ? (
                           <CustomCarousel
-                            imageList={input.otherlogos}
+                            imageList={isV2Backend ? input.otherLogos : input.otherlogos}
                             sourceId={input.sourceId}
                             appointmentId={input.appointmentId || null}
                           />
