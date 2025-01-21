@@ -293,6 +293,8 @@ const Dashboard = () => {
       localStorage.setItem("selectedCity", t("allCities"));
       urlParams.delete("cityId");
     }
+    urlParams.delete("pageNo");
+    setPageNoAndUpdateURL(1)
 
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
