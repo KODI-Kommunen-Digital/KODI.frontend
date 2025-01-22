@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import LocationBar from "../../Components/V2/LocationBar";
+import MultiCityDropdown from "../../Components/V2/MultiCityDropdown";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -22,7 +23,7 @@ import MostPopularCategories from "../../Components/V2/MostPopularCategories";
 
 const HomePage = () => {
   const { t } = useTranslation();
-  const [cityId, setCityId] = useState();
+  const [cityId, setCityId] = useState([]);
   const [categoryId, setCategoryId] = useState();
   const [cities, setCities] = useState([]);
   const [listings, setListings] = useState([]);
@@ -88,12 +89,7 @@ const HomePage = () => {
     }
     setIsLoading(true);
     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-    if (parseInt(cityId)) {
-      urlParams.set("cityId", cityId);
-      params.cityId = cityId;
-    } else {
-      urlParams.delete("cityId");
-    }
+
     if (parseInt(categoryId)) {
       urlParams.set("categoryId", categoryId);
       params.categoryId = categoryId;
@@ -107,24 +103,41 @@ const HomePage = () => {
     setTimeout(() => {
       fetchData(params);
     }, 1000);
-  }, [cities, cityId, categoryId]);
+  }, [cityId, categoryId]);
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
+
+    const normalizedCityId = Array.isArray(cityId) ? cityId : [cityId];
+
+    if (normalizedCityId && normalizedCityId.length > 0) {
+      params.cityId = normalizedCityId.join(",");
+    } else {
+      delete params.cityId;
+    }
+
     try {
-      const response = await getListings(params);
-      const listings = response.data.data;
+      setIsLoading(true);
 
-      const filteredListings = listings.filter(
-        listing => !hiddenCategories.includes(listing.categoryId)
-      );
+      const minimumLoadingTime = new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setListings(filteredListings);
-    } catch (error) {
-      setListings([]);
-      console.error("Error fetching listings:", error);
+      const apiCall = getListings(params)
+        .then((response) => {
+          console.log("parameters to API", params);
+          const listings = response.data.data;
+          const filteredListings = listings.filter(
+            (listing) => !hiddenCategories.includes(listing.categoryId)
+          );
+          setListings(filteredListings);
+        })
+        .catch((error) => {
+          setListings([]);
+          console.error("Error fetching listings:", error);
+        });
+
+      await Promise.all([minimumLoadingTime, apiCall]);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide loading screen
     }
   };
 
@@ -197,7 +210,7 @@ const HomePage = () => {
       <div className="pt-16 flex flex-col">
         <HomePageNavBar />
 
-        <div className="mt-2">
+        <div className="mt-4">
           <LocationBar onSearch={handleSearch} searchQuery={searchQuery} />
         </div>
       </div>
@@ -213,6 +226,7 @@ const HomePage = () => {
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
                 loading="lazy"
               />
+
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-75 text-white z--1">
                 <div className="flex flex-col items-start max-w-[90%] md:max-w-[80%] lg:max-w-[70%] px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6">
                   <h1
@@ -223,8 +237,17 @@ const HomePage = () => {
                   >
                     {t("homePageHeading")}
                   </h1>
+
+                  <MultiCityDropdown
+                    cities={cities}
+                    setListings={(updatedListings) => {
+                      setCityId(updatedListings.cityId);
+                      fetchData({ ...updatedListings, pageSize: 12, statusId: 1, pageNo: 1 });
+                    }}
+                  />
                 </div>
               </div>
+
             </div>
           </div>
         </div>

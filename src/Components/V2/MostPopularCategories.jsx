@@ -69,7 +69,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                     <div className="flex overflow-x-scroll">
                         <div className="flex flex-nowrap md:gap-20 gap-8">
                             <h2
-                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === "allCategories" ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-gray-700 ${selectedCategory === "allCategories" ? 'bg-white text-gray-900' : 'text-white'} rounded-t-xl inline-flex text-md md:text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
                                 style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                 onClick={(e) => handleCategoryClick(null, "allCategories", e)}
                             >
@@ -94,7 +94,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
 
                                 return (
                                     <h2
-                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === categoryName ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-gray-500 ${selectedCategory === categoryName ? 'bg-white text-gray-800' : 'text-white'} rounded-t-xl inline-flex text-md md:text-xl items-center justify-center whitespace-nowrap cursor-pointer`}
                                         style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
                                         key={listing.categoryId}
                                         onClick={(e) => handleCategoryClick(listing.categoryId, categoryName, e)}

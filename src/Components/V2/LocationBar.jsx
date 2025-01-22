@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import RegionColors from "../../Components/RegionColors";
 import PropTypes from "prop-types";
 
 const LocationBar = ({ onSearch, searchQuery }) => {
@@ -57,7 +56,7 @@ const LocationBar = ({ onSearch, searchQuery }) => {
     };
 
     return (
-        <div className={`${RegionColors.darkBgColor} px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-4 flex justify-center`}>
+        <div className={`bg-gray-900 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-4 flex justify-center`}>
             <div className="bg-white rounded-full flex items-center shadow-md px-4 py-2 w-full">
                 {/* Search Icon and Input */}
                 <form
@@ -85,28 +84,6 @@ const LocationBar = ({ onSearch, searchQuery }) => {
                         className="flex-grow outline-none text-gray-700"
                     />
                 </form>
-
-                {/* Divider */}
-                <div className="border-l border-gray-300 h-8 mx-3"></div>
-
-                {/* Dropdown for Cities */}
-                <div className="flex items-center flex-1 p-2 hover:bg-gray-100 cursor-pointer rounded-full">
-                    <span className="text-gray-700 mr-2">{t("allCities")}</span>
-                    <svg
-                        className="w-4 h-4 text-gray-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                        />
-                    </svg>
-                </div>
 
                 {/* Divider */}
                 <div className="border-l border-gray-300 h-8 mx-3"></div>
@@ -165,7 +142,7 @@ const LocationBar = ({ onSearch, searchQuery }) => {
                 </div>
 
                 {/* Find Button */}
-                <button className={`${RegionColors.darkBgColor} font-bold font-sans text-white rounded-full px-4 py-2 ml-4`}
+                <button className={`bg-gray-900 font-bold font-sans text-white rounded-full px-4 py-2 ml-4`}
                     style={{
                         fontFamily: "Poppins, sans-serif",
                     }}

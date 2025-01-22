@@ -93,7 +93,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
         e.stopPropagation();
         handleListingClick();
       }}
-      className="w-full bg-slate-100 h-96 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+      className="w-full bg-slate-100 h-80 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
     >
       <div className="relative h-full w-full overflow-hidden rounded-lg">
         {listing.pdf ? (

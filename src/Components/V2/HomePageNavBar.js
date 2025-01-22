@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../../Services/usersApi";
-// import PropTypes from 'prop-types';
-import { getCities } from "../../Services/citiesApi";
 
 export default function HomePageNavBar() {
   const location = useLocation();
@@ -13,12 +11,6 @@ export default function HomePageNavBar() {
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
   const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
-  // const [cityId, setCityId] = useState();
-  // const [cities, setCities] = useState([]);
-  // const [categoryId, setCategoryId] = useState();
-  const [setCityId] = useState();
-  const [setCities] = useState([]);
-  const [setCategoryId] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -28,152 +20,60 @@ export default function HomePageNavBar() {
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const accessToken =
       window.localStorage.getItem("accessToken") ||
       window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken || refreshToken) {
+    if (accessToken) {
       setIsLoggedIn(true);
-    }
-    const urlParams = new URLSearchParams(window.location.search);
-    getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
-    });
-    const cityId = parseInt(urlParams.get("cityId"));
-    if (cityId) {
-      setCityId(cityId);
-    }
-    const categoryId = parseInt(urlParams.get("categoryId"));
-    if (categoryId) {
-      setCategoryId(categoryId);
     }
   }, []);
 
   const handleLoginLogout = () => {
     if (isLoggedIn) {
-      const accessToken =
-        window.localStorage.getItem("accessToken") ||
-        window.sessionStorage.getItem("accessToken");
-      const refreshToken =
-        window.localStorage.getItem("refreshToken") ||
-        window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken })
-        .then(() => {})
-        .finally(() => {
-          clearStorage();
-        });
+      logout()
+        .then(() => clearStorage())
+        .finally(() => navigate("/"));
     } else {
-      navigateTo("/login");
+      navigate("/login");
     }
   };
+
   const handleGotoDashboard = () => {
     navigateTo("/Dashboard");
   };
 
-  function clearStorage() {
-    window.localStorage.removeItem("accessToken");
-    window.localStorage.removeItem("refreshToken");
-    window.localStorage.removeItem("userId");
-    window.localStorage.removeItem("selectedItem");
-    window.sessionStorage.removeItem("accessToken");
-    window.sessionStorage.removeItem("refreshToken");
-    window.sessionStorage.removeItem("userId");
-    window.sessionStorage.removeItem("selectedItem");
+  const clearStorage = () => {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
     setIsLoggedIn(false);
-    navigateTo("/");
-  }
-
-  // const onCityChange = (e) => {
-  //   const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
-  //   const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
-
-  //   if (selectedCityId === 0) {
-  //     setCityId(0);
-  //     window.location.href = "/";
-  //   } else {
-  //     const selectedCity = cities.find((city) => city.id === selectedCityId);
-
-  //     if (selectedCity) {
-  //       setCityId(selectedCityId);
-  //       if (selectedCategoryId) {
-  //         window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-  //       } else {
-  //         window.location.href = `?cityId=${selectedCityId}`;
-  //       }
-  //     }
-  //   }
-  // };
+  };
 
   return (
-    <div className="w-full fixed top-0 z-10 flex items-center px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-2 bg-white">
-      <Popover
-        // className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-        // id="scrollablePopover"
-        className="w-full"
-      >
+    <div className="w-full fixed top-0 z-10 h-20 flex items-center justify-center px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-2 bg-white">
+      <Popover className="w-full">
         <div className="w-full">
           <div
-            className={`flex items-center justify-between border-gray-100 lg:justify-start lg:space-x-10 ${buttonClass}`}
+            className={`flex items-center justify-between border-gray-100 lg:space-x-10 ${buttonClass}`}
           >
-            <div className="items-center justify-start flex">
-              <div
-                className={`mx-auto lg:h-10 md:h-10 h-auto cursor-pointer ${buttonClass}`}
-                onClick={() => {
-                  navigateTo("/");
-                  window.location.reload();
-                }}
-              >
-                <div
-                  className="text-center text-gray-900 hover:text-gray-700"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  <p className="text-3xl font-extrabold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
-                    HEIDI
-                  </p>
+            <div
+              className="text-center text-gray-900 hover:text-gray-700"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+              }}
+              onClick={() => {
+                navigateTo("/");
+                window.location.reload();
+              }}
+            >
+              <p className="text-3xl font-extrabold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
+                HEIDI
+              </p>
 
-                  <p className="text-sm font-bold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
-                    Heimat Digital
-                  </p>
-                </div>
-              </div>
-
-              {/* {location.pathname === "/" && (
-                <div className="relative w-40 px-0 mb-0 md:w-80">
-                  <div className="relative">
-                    <select
-                      id="city"
-                      name="city"
-                      autoComplete="city-name"
-                      onChange={onCityChange}
-                      value={cityId || 0}
-                      className="text-gray-900 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      <option className="font-sans" value={0} key={0}>
-                        {t("allCities", {
-                          regionName: process.env.REACT_APP_REGION_NAME,
-                        })}
-                      </option>
-                      {cities.map((city) => (
-                        <option
-                          className="font-sans"
-                          value={city.id}
-                          key={city.id}
-                        >
-                          {city.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )} */}
+              <p className="text-sm font-bold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
+                Heimat Digital
+              </p>
             </div>
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
@@ -186,7 +86,7 @@ export default function HomePageNavBar() {
             <div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
               {isLoggedIn && (
                 <a
-                  className={`text-gray-900 border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
+                  className={`text-gray-900 border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
                   onClick={() => {
                     navigateTo("/Favorite");
                   }}
