@@ -13,9 +13,12 @@ export default function HomePageNavBar() {
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
   const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
-  const [cityId, setCityId] = useState();
-  const [cities, setCities] = useState([]);
-  const [categoryId, setCategoryId] = useState();
+  // const [cityId, setCityId] = useState();
+  // const [cities, setCities] = useState([]);
+  // const [categoryId, setCategoryId] = useState();
+  const [setCityId] = useState();
+  const [setCities] = useState([]);
+  const [setCategoryId] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -83,29 +86,29 @@ export default function HomePageNavBar() {
     navigateTo("/");
   }
 
-  const onCityChange = (e) => {
-    const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
-    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
+  // const onCityChange = (e) => {
+  //   const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
+  //   const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
 
-    if (selectedCityId === 0) {
-      setCityId(0);
-      window.location.href = "/";
-    } else {
-      const selectedCity = cities.find((city) => city.id === selectedCityId);
+  //   if (selectedCityId === 0) {
+  //     setCityId(0);
+  //     window.location.href = "/";
+  //   } else {
+  //     const selectedCity = cities.find((city) => city.id === selectedCityId);
 
-      if (selectedCity) {
-        setCityId(selectedCityId);
-        if (selectedCategoryId) {
-          window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-        } else {
-          window.location.href = `?cityId=${selectedCityId}`;
-        }
-      }
-    }
-  };
+  //     if (selectedCity) {
+  //       setCityId(selectedCityId);
+  //       if (selectedCategoryId) {
+  //         window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
+  //       } else {
+  //         window.location.href = `?cityId=${selectedCityId}`;
+  //       }
+  //     }
+  //   }
+  // };
 
   return (
-    <div className="w-full fixed top-0 z-10 flex items-center px-5 md:px-10 lg:px-[20rem] py-2 bg-white">
+    <div className="w-full fixed top-0 z-10 flex items-center px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-2 bg-white">
       <Popover
         // className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
         // id="scrollablePopover"
@@ -116,19 +119,30 @@ export default function HomePageNavBar() {
             className={`flex items-center justify-between border-gray-100 lg:justify-start lg:space-x-10 ${buttonClass}`}
           >
             <div className="items-center justify-start flex">
-              <div>
-                <img
-                  className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
-                  src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
-                  alt="HEDI- Heimat Digital"
-                  onClick={() => {
-                    navigateTo("/");
-                    window.location.reload();
+              <div
+                className={`mx-auto lg:h-10 md:h-10 h-auto cursor-pointer ${buttonClass}`}
+                onClick={() => {
+                  navigateTo("/");
+                  window.location.reload();
+                }}
+              >
+                <div
+                  className="text-center text-gray-900 hover:text-gray-700"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
                   }}
-                />
+                >
+                  <p className="text-3xl font-extrabold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
+                    HEIDI
+                  </p>
+
+                  <p className="text-sm font-bold tracking-wide text-gray-900 hover:text-gray-700 motion-safe:transition-all motion-safe:duration-300 hover:scale-105">
+                    Heimat Digital
+                  </p>
+                </div>
               </div>
 
-              {location.pathname === "/" && (
+              {/* {location.pathname === "/" && (
                 <div className="relative w-40 px-0 mb-0 md:w-80">
                   <div className="relative">
                     <select
@@ -159,7 +173,7 @@ export default function HomePageNavBar() {
                     </select>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
