@@ -1238,7 +1238,7 @@ function UploadListings() {
               onChange={onInputChange}
               onBlur={validateInput}
               required
-              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("enterTitle")}
             />
             <div className="flex justify-between text-sm mt-1">
@@ -1263,7 +1263,7 @@ function UploadListings() {
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <div
-              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               onClick={toggleDropdown}
             >
               <div className="flex flex-wrap">
@@ -1334,7 +1334,7 @@ function UploadListings() {
                   value={cityIds || 0}
                   onChange={onCityChange}
                   // disabled={!newListing && selectedCities.length > 0}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
                   <option value={0}>{t("select")}</option>
                   {cities.map((city) => (
@@ -1385,7 +1385,7 @@ function UploadListings() {
                   onChange={onCityChange}
                   autoComplete="country-name"
                   // disabled={!newListing && selectedCities.length > 0}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                 >
                   <option value={0}>{t("select")}</option>
                   {cities.map((city) => (
@@ -1421,7 +1421,7 @@ function UploadListings() {
               onChange={handleCategoryChange}
               required
               // disabled={!newListing}
-              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
             >
               <option className="font-sans" value={0} key={0}>
                 {t("chooseOneCategory")}
@@ -1458,7 +1458,7 @@ function UploadListings() {
                 value={subcategoryId || 0}
                 onChange={handleSubcategoryChange}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value={0}>{t("chooseOneSubCategory")}</option>
                 {Object.entries(subCategories).map(([id, name]) => (
@@ -1515,7 +1515,7 @@ function UploadListings() {
                           setListingInput(prev => ({ ...prev, expiryDate: formattedDate }));
                           validateInput({ target: { name: "expiryDate", value: formattedDate } });
                         }}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("expiryDate")}
                         onBlur={validateInput}
                       />
@@ -1580,7 +1580,7 @@ function UploadListings() {
                       setListingInput(prev => ({ ...prev, startDate: formattedDate }));
                       validateInput({ target: { name: "startDate", value: formattedDate } });
                     }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventStartDate")}
                     onBlur={validateInput}
                   />
@@ -1620,7 +1620,7 @@ function UploadListings() {
                       setListingInput(prev => ({ ...prev, endDate: formattedDate }));
                       validateInput({ target: { name: "endDate", value: formattedDate } });
                     }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                     placeholder={t("eventEndDate")}
                     onBlur={validateInput}
                   />
@@ -1652,7 +1652,7 @@ function UploadListings() {
                 value={listingInput.address}
                 onChange={onInputChange}
                 onBlur={validateInput}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder={t("enterAddress")}
               />
             </div>
@@ -1675,7 +1675,7 @@ function UploadListings() {
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                   placeholder="Enter the price of the product"
                 />
               </div>
@@ -1694,7 +1694,7 @@ function UploadListings() {
                   onChange={onInputChange}
                   onBlur={validateInput}
                   required
-                  className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                   placeholder="Enter the price of the product"
                 />
               </div>
@@ -1715,7 +1715,7 @@ function UploadListings() {
               value={listingInput.phone}
               onChange={onInputChange}
               onBlur={validateInput}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("pleaseEnterPhone")}
             />
             <div
@@ -1742,7 +1742,7 @@ function UploadListings() {
               value={listingInput.email}
               onChange={onInputChange}
               onBlur={validateInput}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("emailExample")}
             />
             <div
@@ -1769,7 +1769,7 @@ function UploadListings() {
               value={listingInput.website}
               onChange={onInputChange}
               onBlur={validateInput}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               placeholder={t("enter_website")}
             />
           </div>
@@ -1801,7 +1801,7 @@ function UploadListings() {
               }}
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               style={{
                 position: "relative",
                 zIndex: 1000,

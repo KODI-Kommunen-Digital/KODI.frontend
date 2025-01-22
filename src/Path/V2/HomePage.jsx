@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
+import LocationBar from "../../Components/V2/LocationBar";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
+import { getListings, getListingsCount } from "../../Services/listingsApi";
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
-import SearchBar from "../../Components/SearchBar";
+// import SearchBar from "../../Components/SearchBar";
 import { getCategory } from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
-import {
-  sortByTitleAZ,
-  sortByTitleZA,
-  sortLatestFirst,
-  sortOldestFirst,
-} from "../../Services/helper";
+// import {
+//   sortByTitleAZ,
+//   sortByTitleZA,
+//   sortLatestFirst,
+//   sortOldestFirst,
+// } from "../../Services/helper";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 
 import CITYIMAGE from "../../assets/City.png";
@@ -34,11 +35,11 @@ const HomePage = () => {
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
-  const [selectedSortOption, setSelectedSortOption] = useState("");
+  // const [selectedSortOption, setSelectedSortOption] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -137,7 +138,7 @@ const HomePage = () => {
 
   const clearSearchResults = () => {
     setListings([]); // Clear the listings to remove the search results
-    setSearchQuery(""); // Clear the search query
+    // setSearchQuery(""); // Clear the search query
   };
 
   const getTheListings = (newCategoryId, event) => {
@@ -153,24 +154,24 @@ const HomePage = () => {
   });
 
 
-  useEffect(() => {
-    switch (selectedSortOption) {
-      case "titleAZ":
-        setListings([...sortByTitleAZ(listings)]);
-        break;
-      case "titleZA":
-        setListings([...sortByTitleZA(listings)]);
-        break;
-      case "recent":
-        setListings([...sortLatestFirst(listings)]);
-        break;
-      case "oldest":
-        setListings([...sortOldestFirst(listings)]);
-        break;
-      default:
-        break;
-    }
-  }, [selectedSortOption]); // We removed [selectedSortOption, listings] due to Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render
+  // useEffect(() => {
+  //   switch (selectedSortOption) {
+  //     case "titleAZ":
+  //       setListings([...sortByTitleAZ(listings)]);
+  //       break;
+  //     case "titleZA":
+  //       setListings([...sortByTitleZA(listings)]);
+  //       break;
+  //     case "recent":
+  //       setListings([...sortLatestFirst(listings)]);
+  //       break;
+  //     case "oldest":
+  //       setListings([...sortOldestFirst(listings)]);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }, [selectedSortOption]); // We removed [selectedSortOption, listings] due to Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -179,42 +180,39 @@ const HomePage = () => {
     }
   };
 
-  function handleSortOptionChange(event) {
-    const newValue = event.target.value;
-    if (newValue !== selectedSortOption) {
-      setSelectedSortOption(newValue);
-    }
-  }
+  // function handleSortOptionChange(event) {
+  //   const newValue = event.target.value;
+  //   if (newValue !== selectedSortOption) {
+  //     setSelectedSortOption(newValue);
+  //   }
+  // }
 
-  const handleSearch = async (searchQuery) => {
-    console.log("Search term:", searchQuery);
-    setSearchQuery(searchQuery);
+  // const handleSearch = async (searchQuery) => {
+  //   console.log("Search term:", searchQuery);
+  //   setSearchQuery(searchQuery);
 
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = { statusId: 1 };
+  //   try {
+  //     const urlParams = new URLSearchParams(window.location.search);
+  //     const params = { statusId: 1 };
 
-      const cityId = urlParams.get('cityId');
-      if (cityId && parseInt(cityId)) {
-        params.cityId = parseInt(cityId);
-      }
+  //     const cityId = urlParams.get('cityId');
+  //     if (cityId && parseInt(cityId)) {
+  //       params.cityId = parseInt(cityId);
+  //     }
 
-      const categoryId = urlParams.get('categoryId');
-      if (categoryId && parseInt(categoryId)) {
-        params.categoryId = parseInt(categoryId);
-      }
-      const response = await getListingsBySearch({
-        searchQuery,
-        ...params
-      });
-      setListings(response.data.data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-
-    // const listingsSection = document.getElementById("listingsSection");
-    // listingsSection.scrollIntoView({ behavior: "smooth" });  // Use this if you want navidation to a place in page. Use id="listingsSection" in that section
-  };
+  //     const categoryId = urlParams.get('categoryId');
+  //     if (categoryId && parseInt(categoryId)) {
+  //       params.categoryId = parseInt(categoryId);
+  //     }
+  //     const response = await getListingsBySearch({
+  //       searchQuery,
+  //       ...params
+  //     });
+  //     setListings(response.data.data);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   function goToCitizensPage() {
     let navUrl = `/CitizenService`;
@@ -229,7 +227,13 @@ const HomePage = () => {
 
   return (
     <section className="text-gray-600 body-font relative">
-      <HomePageNavBar />
+      <div className="pt-16 flex flex-col">
+        <HomePageNavBar />
+
+        <div className="mt-2">
+          <LocationBar />
+        </div>
+      </div>
       {showPopup && <PrivacyPolicyPopup onClose={handlePrivacyPolicyAccept} />}
 
       <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
@@ -243,9 +247,9 @@ const HomePage = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-75 text-white z--1">
-                <div className="flex flex-col items-start max-w-[90%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 px-5 py-6">
+                <div className="flex flex-col items-start max-w-[90%] md:max-w-[80%] lg:max-w-[70%] px-5 md:px-10 lg:px-[20rem] py-6">
                   <h1
-                    className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
+                    className="font-sans mb-8 lg:mb-12 text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide"
                     style={{
                       fontFamily: "Poppins, sans-serif",
                     }}
@@ -272,7 +276,7 @@ const HomePage = () => {
       ) : (
         <>
           <div className="grid md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative mt-10 justify-between">
-            <div className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
+            <div className="text-slate-800 px-5 md:px-10 lg:px-[20rem] py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
               style={{ fontFamily: "Poppins, sans-serif" }}>
               {categoryId ? (
                 <h2>{t(categories[categoryId])}</h2>
@@ -281,7 +285,7 @@ const HomePage = () => {
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 px-5 py-6">
+            {/* <div className="flex flex-col md:flex-row lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center px-5 md:px-10 lg:px-[20rem] py-6">
               <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
                 <select
                   value={selectedSortOption}
@@ -297,28 +301,15 @@ const HomePage = () => {
                   <option value="recent">{t("recent")}</option>
                   <option value="oldest">{t("oldest")}</option>
                 </select>
-
-                {/* <select
-                  className="text-slate-800 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
-                  value={selectedSortOption}
-                  onChange={handleSortOptionChange}
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  <option value="">{t("sort")}</option>
-                  <option value="titleAZ">{t("atoztitle")}</option>
-                  <option value="titleZA">{t("ztoatitle")}</option>
-                  <option value="recent">{t("recent")}</option>
-                  <option value="oldest">{t("oldest")}</option>
-                </select> */}
               </div>
 
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
-            </div>
+            </div> */}
           </div>
 
           {listings && listings.length > 0 ? (
-            <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-              <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
+            <div className="bg-white px-5 md:px-10 lg:px-[20rem] py-6 mt-0 mb-10 space-y-10 flex flex-col">
+              <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
                 {listings &&
                   listings.map((listing, index) => (
                     <ListingsCard listing={listing} key={index} />
@@ -369,13 +360,13 @@ const HomePage = () => {
           )}
 
           <h2
-            className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+            className="text-slate-800 px-5 md:px-10 lg:px-[20rem] py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("discoverMorePlaces")}
           </h2>
 
-          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+          <div className="bg-white px-5 md:px-10 lg:px-[20rem] py-6 mt-0 mb-10 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
               {cities.map((city) => {
                 if (city.id !== Number(cityId)) {
@@ -421,8 +412,8 @@ const HomePage = () => {
 
           {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
-          {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
-          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
+          {/* <div className="bg-slate-500 px-5 md:px-10 lg:px-[20rem] py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
+          <div className="bg-white px-5 md:px-10 lg:px-[20rem] py-6 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
               <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
                 <div className="relative h-96 rounded overflow-hidden w-auto">
@@ -508,7 +499,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
+          <div className={`mx-auto px-5 md:px-10 lg:px-[20rem] py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
             <div className="flex flex-wrap items-center">
               <div className="w-full md:w-1/2 px-4">
                 <h2
@@ -550,7 +541,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
+          <div className={`${RegionColors.darkBgColor} px-5 md:px-10 lg:px-[20rem] py-6 flex justify-start`}>
             <style>
               {`
 								@media (max-width: 280px) {

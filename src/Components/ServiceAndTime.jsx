@@ -511,7 +511,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                 value={service.name}
                 onChange={(e) => onServiceChange(serviceIndex, 'name', e.target.value)}
                 onBlur={(e) => validateInput(serviceIndex, e)}
-                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
               <div
                 className="mt-2 text-sm text-red-600"
@@ -534,14 +534,14 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                   value={service.duration}
                   onChange={(e) => { onServiceChange(serviceIndex, 'duration', e.target.value); handleInputChange(e.target.value); }}
                   onBlur={(e) => validateInput(serviceIndex, e)}
-                  className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
 
                 {/* <select
                   id="states"
                   name="durationUnit"
                   value={service.durationUnit}
-                  className="shadow-md bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  className="shadow-md bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   onChange={(e) => onDurationUnitChange(serviceIndex, e.target.value)}
                 >
                   <option value="minutes">min</option>
@@ -682,7 +682,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                   }
                                   onChange={(e) => { handleTimeChange(day, index, "startTime", e.target.value, index) }
                                   }
-                                  className={`w-full rounded border focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.startTime && timeSlot.startTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
+                                  className={`w-full rounded border focus:border-black  text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.startTime && timeSlot.startTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
                                   placeholder="HH:mm"
                                 />
                               </div>
@@ -697,7 +697,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                   }
                                   onChange={(e) => { handleTimeChange(day, index, "endTime", e.target.value, index) }
                                   }
-                                  className={`w-full rounded border focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.endTime && timeSlot.endTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
+                                  className={`w-full rounded border focus:border-black  text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md ${timeSlot.endTime && timeSlot.endTime !== "00:00" ? 'bg-green-200 text-green-700 border-green-700' : 'bg-white text-gray-400 border-gray-300'}`}
                                   placeholder="HH:mm"
                                 />
                               </div>
@@ -754,7 +754,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                       timeSlot.startTime ? timeSlot.startTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, serviceIndex, "startTime", e.target.value, index) }}
-                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
                                 </div>
@@ -768,7 +768,7 @@ const ServiceAndTime = ({ appointmentInput, setAppointmentInput, appointmentErro
                                       timeSlot.endTime ? timeSlot.endTime : "00:00"
                                     }
                                     onChange={(e) => { handleTimeChange(day, serviceIndex, "endTime", e.target.value, index) }}
-                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder="HH:mm"
                                   />
                                 </div>

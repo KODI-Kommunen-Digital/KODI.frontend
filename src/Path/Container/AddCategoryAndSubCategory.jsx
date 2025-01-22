@@ -25,18 +25,18 @@ function AddCategoryAndSubCategory() {
 
     const [isOwner, setIsOwner] = useState(null);
     const location = useLocation(); // Access current location object
-  const queryParams = new URLSearchParams(location.search); // Parse the query string
+    const queryParams = new URLSearchParams(location.search); // Parse the query string
 
-  const [isCategoryState, setIsCategoryState] = useState(null);
+    const [isCategoryState, setIsCategoryState] = useState(null);
 
-  useEffect(() => {
-    const isCategory = queryParams.get('isCategory'); // Get the value of isCategory from query string
-    if (isCategory === 'true') {
-      setIsCategoryState(true);
-    } else if (isCategory === 'false') {
-      setIsCategoryState(false);
-    }
-  }, [location.search]);
+    useEffect(() => {
+        const isCategory = queryParams.get('isCategory'); // Get the value of isCategory from query string
+        if (isCategory === 'true') {
+            setIsCategoryState(true);
+        } else if (isCategory === 'false') {
+            setIsCategoryState(false);
+        }
+    }, [location.search]);
     useEffect(() => {
         const fetchUserRole = async () => {
             try {
@@ -123,7 +123,7 @@ function AddCategoryAndSubCategory() {
                 const response = await getOwnerSubCategory(categoryId);
                 setSubCategories(response.data.data || []);
             } catch (error) {
-                
+
             } finally {
                 setSubCategoryLoading(false);
             }
@@ -135,7 +135,7 @@ function AddCategoryAndSubCategory() {
         setSubcategoryId(subcategoryId);
     };
 
-    const addCategoryFun=async(storeId, categoryId)=>{
+    const addCategoryFun = async (storeId, categoryId) => {
         setUpdating(true);
         try {
             await addCategory(parseInt(storeId), parseInt(categoryId)); // First API call for adding category
@@ -154,8 +154,8 @@ function AddCategoryAndSubCategory() {
             }
             else if (error.response && error.response.data && error.response.data.errorCode === 2004) {
                 setErrorMessage(t("categoryAlreadyAddedError")); // Show specific error message
-            } 
-             else {
+            }
+            else {
                 setErrorMessage(t("changesNotSaved")); // Show generic error message
             }
             setSuccessMessage("");
@@ -167,10 +167,10 @@ function AddCategoryAndSubCategory() {
             setUpdating(false);
         }
     }
-    const addSubCategoryFun=async(storeId,subcategoryId,categoryId)=>{
+    const addSubCategoryFun = async (storeId, subcategoryId, categoryId) => {
         setUpdating(true);
         try {
-            
+
 
             await addSubCategory(parseInt(storeId), parseInt(subcategoryId)); // Second API call for adding subcategory
 
@@ -180,7 +180,7 @@ function AddCategoryAndSubCategory() {
             setErrorMessage("");
             setTimeout(() => {
                 setSuccessMessage("");
-                 navigate("/OwnerScreen");
+                navigate("/OwnerScreen");
             }, 5000);
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errorCode === 5009) {
@@ -188,13 +188,13 @@ function AddCategoryAndSubCategory() {
             }
             else if (error.response && error.response.data && error.response.data.errorCode === 2005) {
                 setErrorMessage(t("subcategoryAlreadyAddedError")); // Show specific error message
-            } 
+            }
             else if (error.response && error.response.data && error.response.data.errorCode === 2006) {
                 // setErrorMessage(t("category_not_added")); // Show specific error message
-                addCategoryFun(storeId,categoryId)
-                addSubCategoryFun(storeId,subcategoryId,categoryId)
-            } 
-             else {
+                addCategoryFun(storeId, categoryId)
+                addSubCategoryFun(storeId, subcategoryId, categoryId)
+            }
+            else {
                 setErrorMessage(t("changesNotSaved")); // Show generic error message
             }
             setSuccessMessage("");
@@ -211,12 +211,12 @@ function AddCategoryAndSubCategory() {
         event.preventDefault();
 
         if (storeId && categoryId && subcategoryId && !isCategoryState) {
-            
-            addSubCategoryFun(storeId,subcategoryId,categoryId)
-        } 
-        else if(isCategoryState && storeId && categoryId ){
-            addCategoryFun(storeId,categoryId)
-               
+
+            addSubCategoryFun(storeId, subcategoryId, categoryId)
+        }
+        else if (isCategoryState && storeId && categoryId) {
+            addCategoryFun(storeId, categoryId)
+
         }
         else {
             setErrorMessage(t("invalidData"));
@@ -226,11 +226,11 @@ function AddCategoryAndSubCategory() {
     };
 
     const checkFormValidity = useCallback(() => {
-        if(isCategoryState){
+        if (isCategoryState) {
             return storeId > 0 && categoryId > 0
         }
-        else{
-        return storeId > 0 && categoryId > 0 && subcategoryId > 0;
+        else {
+            return storeId > 0 && categoryId > 0 && subcategoryId > 0;
         }
     }, [storeId, categoryId, subcategoryId]);
 
@@ -246,9 +246,9 @@ function AddCategoryAndSubCategory() {
 
             <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6 space-y-10">
-                    
+
                     <h2 className="text-gray-900 text-lg mb-4 font-medium title-font">
-                      
+
                         {isCategoryState ? t("addCategory") : t("addsubcategory")}
                         <div className="my-4 bg-gray-600 h-[1px]"></div>
                     </h2>
@@ -266,7 +266,7 @@ function AddCategoryAndSubCategory() {
                             name="storeId"
                             value={storeId}
                             onChange={handleShopChange}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         >
                             <option value={0}>{t("select")}</option>
                             {stores.map((shop) => (
@@ -294,7 +294,7 @@ function AddCategoryAndSubCategory() {
                                         name="categoryId"
                                         value={categoryId}
                                         onChange={handleCategoryChange}
-                                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                        className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     >
                                         <option value={0}>{t("chooseOneCategory")}</option>
                                         {categories.map((category) => (
@@ -332,7 +332,7 @@ function AddCategoryAndSubCategory() {
                                         name="subcategoryId"
                                         value={subcategoryId}
                                         onChange={handleSubcategoryChange}
-                                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                        className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     >
                                         <option value={0}>{t("chooseOneSubCategory")}</option>
                                         {subCategories.map((subCat) => (

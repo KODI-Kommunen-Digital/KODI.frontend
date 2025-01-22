@@ -1049,5 +1049,7 @@
     "addsubcategory":"Unterkategorie hinzufügen",
     "category_not_added":"Kategorie nicht in den Shop aufgenommen",
     "subcategoryUpdated": "Neue Unterkategorie aktualisiert",
-    "Sub-Categories":"Unterkatheorien"
+    "Sub-Categories":"Unterkatheorien",
+    "chooseLocation": "Standort wählen",
+    "whatAreYouLookingFor": "Wonach suchst du?"
 }

@@ -21,7 +21,7 @@ function Footer(props) {
   return (
     <footer className="text-center md:text-left bg-black text-white">
       <div className="mx-6 py-10 text-center md:text-left">
-        <div className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 md:gap-20 lg:px-20 md:px-5 px-5 py-6 justify-center md:justify-start`}>
+        <div className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 md:gap-20 px-5 md:px-10 lg:px-[20rem] py-6 justify-center md:justify-start`}>
           {process.env.REACT_APP_SHOW_FOOTER_LOGO === "True" && (
             <>
               <div>

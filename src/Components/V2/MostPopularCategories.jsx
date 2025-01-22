@@ -63,7 +63,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     };
 
     return (
-        <div className="lg:px-20 md:px-0 px-0 py-0 mt-10 mb-0 flex flex-col w-full">
+        <div className="px-5 md:px-10 lg:px-[20rem] py-0 mt-10 mb-0 flex flex-col w-full">
             <div className="flex flex-row relative items-center justify-center">
                 <div className="flex justify-between w-full category-animation rounded-t-xl">
                     <div className="flex overflow-x-scroll">

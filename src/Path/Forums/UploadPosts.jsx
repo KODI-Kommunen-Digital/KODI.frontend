@@ -405,7 +405,7 @@ function UploadPosts() {
 							onChange={onInputChange}
 							onBlur={validateInput}
 							required
-							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							placeholder={t("enterTitle")}
 						/>
 						<div className="flex justify-between text-sm mt-1">
@@ -440,7 +440,7 @@ function UploadPosts() {
 							onChange={onCityChange}
 							disabled={!newPost}
 							autoComplete="country-name"
-							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0} key={0}>
 								{t("select")}
@@ -476,7 +476,7 @@ function UploadPosts() {
 							onChange={onForumChange}
 							disabled={!newPost}
 							autoComplete="country-name"
-							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{forum.map((forum) => (
@@ -522,7 +522,7 @@ function UploadPosts() {
 							}}
 							placeholder={t("writeSomethingHere")}
 							readOnly={updating || isSuccess}
-							className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+							className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
 							style={{
 								position: "relative",
 								zIndex: 1000,
@@ -627,7 +627,7 @@ function UploadPosts() {
 							disabled={!isFormValid || updating || isSuccess}
 							className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
 						>
-						{!newPost ? t("saveChanges") : t("createPost")}
+							{!newPost ? t("saveChanges") : t("createPost")}
 						</button>
 					</div>
 					<div>

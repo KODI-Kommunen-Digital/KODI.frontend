@@ -397,7 +397,7 @@ class ProfilePage extends React.Component {
                         type="text"
                         name="firstname"
                         id="firstname"
-                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         placeholder={t("pleaseEnterFirstName")}
                         required
                         defaultValue={this.state.profile.firstname}
@@ -429,7 +429,7 @@ class ProfilePage extends React.Component {
                         name="lastname"
                         id="lastname"
                         required
-                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         placeholder={t("pleaseEnterLastName")}
                         defaultValue={this.state.profile.lastname}
                         onChange={this.handleProfileChange}
@@ -458,7 +458,7 @@ class ProfilePage extends React.Component {
                         type="text"
                         name="username"
                         id="username"
-                        className="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        className="w-full bg-gray-200 rounded border border-gray-300 focus:border-indigo-500  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         placeholder={t("pleaseEnterUsername")}
                         required
                         defaultValue={this.state.profile.username}
@@ -530,7 +530,7 @@ class ProfilePage extends React.Component {
                         type="text"
                         name="description"
                         id="description"
-                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         placeholder={t("enter_description")}
                         defaultValue={this.state.profile.description}
                         style={{
@@ -552,7 +552,7 @@ class ProfilePage extends React.Component {
                         type="text"
                         name="website"
                         id="website"
-                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         placeholder={t("enter_website")}
                         defaultValue={this.state.profile.website}
                         style={{

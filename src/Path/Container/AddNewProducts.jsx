@@ -156,16 +156,16 @@ function AddNewProducts() {
             } catch (error) {
                 if (error.response.data.errorCode === 7002) {
                     setErrorMessage(t("duplicate_product_name")); // Custom message for this specific error
-                  }
-                  else if (error.response.data.errorCode === 6012) {
+                }
+                else if (error.response.data.errorCode === 6012) {
                     setErrorMessage(t("duplicate_barcode")); // Custom message for this specific error
-                  } 
-                  else if (error.response.data.errorCode === 1009) {
+                }
+                else if (error.response.data.errorCode === 1009) {
                     setErrorMessage(t("not_seller")); // Custom message for this specific error
-                  } 
-                    else {
+                }
+                else {
                     setErrorMessage(t("changesNotSaved")); // Fallback for other errors
-                  }
+                }
                 setSuccessMessage(false);
                 setTimeout(() => setErrorMessage(false), 5000);
             } finally {
@@ -801,15 +801,15 @@ function AddNewProducts() {
             }));
             return;
         }
-    
+
         // Ensure valid numbers when triggered by buttons or on valid input
-        const updatedInventory = Math.max(Number(newInventory),0);
+        const updatedInventory = Math.max(Number(newInventory), 0);
         setInput((prev) => ({
             ...prev,
             inventory: updatedInventory,
         }));
     };
-    
+
 
     const checkFormValidity = () => {
         const requiredFieldsValid = [
@@ -865,7 +865,7 @@ function AddNewProducts() {
                             onBlur={validateInput}
                             required
                             disabled={updating || isSuccess}
-                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
                         <div className="flex justify-between text-sm mt-1">
@@ -900,7 +900,7 @@ function AddNewProducts() {
                             onChange={onCityChange}
                             disabled={updating || isSuccess || !newProduct}
                             autoComplete="country-name"
-                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
                             <option value={0}>{t("select")}</option>
                             {cities.map((city) => (
@@ -941,7 +941,7 @@ function AddNewProducts() {
                                         onChange={handleShopChange}
                                         disabled={updating || isSuccess}
                                         autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
                                         <option value={0}>{t("select")}</option>
                                         {shops.map((shop) => (
@@ -992,7 +992,7 @@ function AddNewProducts() {
                                         onChange={handleCategoryChange}
                                         disabled={updating || isSuccess || !newProduct}
                                         required
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
                                         <option className="font-sans" value={0} key={0}>
                                             {t("chooseOneCategory")}
@@ -1045,7 +1045,7 @@ function AddNewProducts() {
                                         onBlur={validateInput}
                                         disabled={updating || isSuccess || !newProduct}
                                         required
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
                                         <option className="font-sans" value={0} key={0}>
                                             {t("chooseOneSubCategory")}
@@ -1090,7 +1090,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 required
                                 disabled={updating || isSuccess}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterOriginalPrice")}
                             />
                             <div
@@ -1118,7 +1118,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 required
                                 disabled={updating || isSuccess}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterTaxPrice")}
                             />
                             <div
@@ -1149,7 +1149,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 required
                                 disabled={updating || isSuccess}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterFastSellingAlert")}
                             />
                             <div
@@ -1179,7 +1179,7 @@ function AddNewProducts() {
                                     onBlur={validateInput}
                                     required
                                     disabled={updating || isSuccess}
-                                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                    className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                     placeholder={t("pleaseEnterFastSellingAlert")}
                                 />
                                 <div
@@ -1210,7 +1210,7 @@ function AddNewProducts() {
                                 onChange={onInputChange}
                                 onBlur={validateInput}
                                 disabled={updating || isSuccess}
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterBarcode")}
                             />
                             {/* <div
@@ -1246,7 +1246,7 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 disabled={updating || isSuccess}
                                 required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterAgeLimit")}
                             />
                             <div
@@ -1270,7 +1270,7 @@ function AddNewProducts() {
 
                         <div className="flex items-center gap-2 sm:gap-4">
                             <button
-                                onClick={() => handleInventoryChange(input.inventory - 1,true)}
+                                onClick={() => handleInventoryChange(input.inventory - 1, true)}
                                 disabled={updating || isSuccess || input.inventory <= 0}
                                 id="decrement-btn"
                                 className="bg-gray-500 text-gray-700 px-2 py-1 rounded-l text-white hover:bg-gray-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
@@ -1295,11 +1295,11 @@ function AddNewProducts() {
                                 onBlur={validateInput}
                                 disabled={updating || isSuccess}
                                 required
-                                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                                 placeholder={t("pleaseEnterTotalNumber")}
                             />
                             <button
-                                onClick={() => handleInventoryChange(input.inventory + 1,true)}
+                                onClick={() => handleInventoryChange(input.inventory + 1, true)}
                                 disabled={updating || isSuccess}
                                 id="increment-btn"
                                 className="bg-indigo-500 text-gray-700 px-2 py-1 rounded-r text-white hover:bg-indigo-600 disabled:opacity-50 focus:outline-none shadow-lg transition"
@@ -1352,7 +1352,7 @@ function AddNewProducts() {
                             }}
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span

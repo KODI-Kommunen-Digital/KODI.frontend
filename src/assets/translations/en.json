@@ -1037,5 +1037,7 @@
     "addsubcategory":"Add Sub-Category",
     "category_not_added":"Category not added to the store",
     "subcategoryUpdated": "New sub category updated",
-    "Sub-Categories":"Sub-Categories"
+    "Sub-Categories":"Sub-Categories",
+    "chooseLocation": "Choose Location",
+    "whatAreYouLookingFor": "What are you looking for?"
 }

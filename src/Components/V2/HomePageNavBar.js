@@ -57,10 +57,11 @@ export default function HomePageNavBar() {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken }).then(() => {
-      }).finally(() => {
-        clearStorage();
-      });
+      logout({ accesToken: accessToken, refreshToken })
+        .then(() => {})
+        .finally(() => {
+          clearStorage();
+        });
     } else {
       navigateTo("/login");
     }
@@ -88,11 +89,9 @@ export default function HomePageNavBar() {
 
     if (selectedCityId === 0) {
       setCityId(0);
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
-      const selectedCity = cities.find(
-        (city) => city.id === selectedCityId
-      );
+      const selectedCity = cities.find((city) => city.id === selectedCityId);
 
       if (selectedCity) {
         setCityId(selectedCityId);
@@ -106,14 +105,15 @@ export default function HomePageNavBar() {
   };
 
   return (
-    <div className="w-full fixed top-0 z-10">
+    <div className="w-full fixed top-0 z-10 flex items-center px-5 md:px-10 lg:px-[20rem] py-2 bg-white">
       <Popover
-        className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-      // id="scrollablePopover"
+        // className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
+        // id="scrollablePopover"
+        className="w-full"
       >
         <div className="w-full">
           <div
-            className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
+            className={`flex items-center justify-between border-gray-100 lg:justify-start lg:space-x-10 ${buttonClass}`}
           >
             <div className="items-center justify-start flex">
               <div>
@@ -128,7 +128,7 @@ export default function HomePageNavBar() {
                 />
               </div>
 
-              {location.pathname === '/' && (
+              {location.pathname === "/" && (
                 <div className="relative w-40 px-0 mb-0 md:w-80">
                   <div className="relative">
                     <select
@@ -137,7 +137,7 @@ export default function HomePageNavBar() {
                       autoComplete="city-name"
                       onChange={onCityChange}
                       value={cityId || 0}
-                      className="text-white rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
+                      className="text-gray-900 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -163,7 +163,7 @@ export default function HomePageNavBar() {
             </div>
 
             <div className={`-my-2 -mr-2 lg:hidden ${buttonClass}`}>
-              <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+              <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-gray-900 p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                 <span className="sr-only">Open menu</span>
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </Popover.Button>
@@ -172,8 +172,10 @@ export default function HomePageNavBar() {
             <div className="hidden items-center justify-end lg:flex md:flex-1 lg:w-0 space-x-15">
               {isLoggedIn && (
                 <a
-                  className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
-                  onClick={() => { navigateTo("/Favorite"); }}
+                  className={`text-gray-900 border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
+                  onClick={() => {
+                    navigateTo("/Favorite");
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -192,14 +194,14 @@ export default function HomePageNavBar() {
               )}
               <a
                 onClick={handleLoginLogout}
-                className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {isLoggedIn ? t("logOut") : t("login")}
               </a>
               {isLoggedIn && (
                 <a
                   onClick={handleGotoDashboard}
-                  className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                  className={`ml-8 font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
                 >
                   {t("dashboard")}
                 </a>
@@ -211,14 +213,14 @@ export default function HomePageNavBar() {
                     ? navigateTo("/UploadListings")
                     : navigateTo("/login");
                 }}
-                className={`ml-8 font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
+                className={`ml-8 font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer ${buttonClass}`}
               >
                 {t("submit")}
               </a>
             </div>
           </div>
 
-          {location.pathname !== '/' && (
+          {location.pathname !== "/" && (
             <div
               className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
             >
@@ -230,7 +232,7 @@ export default function HomePageNavBar() {
                     navigateTo("/");
                   }
                 }}
-                className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-black px-8 py-2 text-base font-bold text-white cursor-pointer ${gobackClass}`}
+                className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-black px-8 py-2 text-base font-bold text-gray-900 cursor-pointer ${gobackClass}`}
               >
                 <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
               </a>
@@ -256,8 +258,10 @@ export default function HomePageNavBar() {
                 <div className="mr-2 flex justify-between">
                   {isLoggedIn && (
                     <a
-                      className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
-                      onClick={() => { navigateTo("/Favorite"); }}
+                      className="text-gray-900 border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
+                      onClick={() => {
+                        navigateTo("/Favorite");
+                      }}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -274,7 +278,7 @@ export default function HomePageNavBar() {
                       </svg>
                     </a>
                   )}
-                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-white">
+                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-gray-900">
                     <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </Popover.Button>
@@ -283,7 +287,7 @@ export default function HomePageNavBar() {
                 <div>
                   <a
                     onClick={handleLoginLogout}
-                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {isLoggedIn ? t("logOut") : t("login")}
                   </a>
@@ -293,7 +297,7 @@ export default function HomePageNavBar() {
                   <div>
                     <a
                       onClick={handleGotoDashboard}
-                      className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                      className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                     >
                       {t("dashboard")}
                     </a>
@@ -307,12 +311,11 @@ export default function HomePageNavBar() {
                         ? navigateTo("/UploadListings")
                         : navigateTo("/login")
                     }
-                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {t("submit")}
                   </a>
                 </div>
-
               </div>
             </div>
           </Popover.Panel>
@@ -321,10 +324,3 @@ export default function HomePageNavBar() {
     </div>
   );
 }
-
-// HomePageNavBar.propTypes = {
-//   cities: PropTypes.array.isRequired,
-//   onCityChange: PropTypes.func.isRequired,
-//   cityId: PropTypes.number.isRequired,
-//   categoryId: PropTypes.number.isRequired,
-// };

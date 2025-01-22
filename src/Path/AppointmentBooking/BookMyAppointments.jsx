@@ -651,7 +651,7 @@ function BookMyAppointments() {
                 }}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black  outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -685,7 +685,7 @@ function BookMyAppointments() {
                 onChange={onInputChange}
                 onBlur={validateInput}
                 required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
               >
                 <option value="" disabled>
                   {t("select")}
@@ -941,7 +941,7 @@ function BookMyAppointments() {
 
                           onChange={(e) => onInputChange(e, index)}
                           onBlur={(e) => validateInput(e, index)}
-                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                           placeholder={t("firstname")}
                           required
                         />
@@ -967,7 +967,7 @@ function BookMyAppointments() {
                           }
                           onChange={(e) => onInputChange(e, index)}
                           onBlur={(e) => validateInput(e, index)}
-                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
+                          className="w-full col-span-6 sm:col-span-1 bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-0"
                           placeholder={t("lastname")}
                           required
                         />
@@ -992,7 +992,7 @@ function BookMyAppointments() {
                           : (bookingInput?.friends[index - 1]?.email || "")
                       }
                       onChange={(e) => onInputChange(e, index)}
-                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-slate-800 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md mt-2"
                       placeholder={t("email")}
                       onBlur={(e) => validateInput(e, index)}
                       required

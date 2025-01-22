@@ -411,7 +411,7 @@ function CreateShelves() {
                             onChange={onInputChange}
                             onBlur={validateInput}
                             required
-                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                             placeholder={t("enterTitle")}
                         />
                         <div className="flex justify-between text-sm mt-1">
@@ -445,7 +445,7 @@ function CreateShelves() {
                             value={cityId || 0}
                             onChange={onCityChange}
                             autoComplete="country-name"
-                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                         >
                             <option value={0}>{t("select")}</option>
                             {cities.map((city) => (
@@ -485,7 +485,7 @@ function CreateShelves() {
                                         value={shopId || 0}
                                         onChange={handleShopChange}
                                         autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
                                         <option value={0}>{t("select")}</option>
                                         {shops.map((shop) => (
@@ -535,7 +535,7 @@ function CreateShelves() {
                                         value={productId || null}
                                         onChange={(e) => handleProductChange(e.target.value === "0" ? null : e.target.value)}
                                         autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
                                     >
                                         <option value={0}>{t("select")}</option>
                                         {products.map((product) => (
@@ -591,7 +591,7 @@ function CreateShelves() {
                             }}
                             placeholder={t("writeSomethingHere")}
                             readOnly={updating || isSuccess}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                            className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span
