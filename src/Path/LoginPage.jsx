@@ -52,7 +52,8 @@ const LoginPage = () => {
 		const refreshToken =
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
-		if (accessToken?.length === 456 || refreshToken?.length === 456) {
+		if (accessToken?.length === 458 || refreshToken?.length === 458) {
+			process.env.REACT_APP_NAME === "KODI_DE" ? navigateTo("/home") :
 			routeChangeToUpload();
 		}
 
@@ -130,7 +131,9 @@ const LoginPage = () => {
 				try {
 					const cardResponse = await getCards();
 					if (cardResponse.data.data.length > 0) {
-						navigateTo("/");
+						process.env.REACT_APP_NAME === "KODI_DE"
+						? navigateTo("/home")
+						: navigateTo("/");
 					} else {
 						navigateTo("/CustomerScreen/GetCard");
 					}
@@ -144,6 +147,8 @@ const LoginPage = () => {
 						setAlertMessage(t("somethingWrong"));
 					}
 				}
+			} else if (process.env.REACT_APP_NAME === "KODI_DE") {
+				navigateTo("/home");
 			} else {
 				navigateTo("/");
 			}
@@ -219,7 +224,7 @@ const LoginPage = () => {
 				<div className="w-full max-w-md space-y-8">
 					<div>
 						<img
-							onClick={() => navigate("/")}
+							onClick={() => process.env.REACT_APP_NAME === "KODI_DE" ? navigate("/home"): navigate("/")}
 							className="mx-auto h-20 w-auto cursor-pointer"
 							// src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
 							src={HeidiLogo}
