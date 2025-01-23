@@ -47,7 +47,7 @@ function SideBar() {
 				console.log(error);
 			}
 		} else {
-			navigateTo("/login");
+			navigateTo("/");
 		}
 	};
 
@@ -61,7 +61,7 @@ function SideBar() {
 		window.sessionStorage.removeItem("userId");
 		window.sessionStorage.removeItem("selectedItem");
 		setLoggedIn(false);
-		navigateTo("/");
+		navigateTo("/home");
 	}
 
 	function openSidebar() {
@@ -105,14 +105,14 @@ function SideBar() {
 					<div className="p-2.5 mt-1 flex items-center justify-center">
 						{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
 							<img
-								onClick={() => navigateTo("/")}
+								onClick={() => navigateTo("/home")}
 								className="p-5 h-40 w-40 cursor-pointer"
 								src={kodiLogo}
 								alt="KODI"
 							/>
 						) : (
 							<img
-								onClick={() => navigateTo("/")}
+								onClick={() => navigateTo("/home")}
 								className="p-5 cursor-pointer"
 								src={logo}
 								alt="HEDI- Heimat Digital"

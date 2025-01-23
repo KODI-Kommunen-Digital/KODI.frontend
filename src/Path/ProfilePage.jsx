@@ -88,7 +88,7 @@ class ProfilePage extends React.Component {
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
     if (!accessToken && !refreshToken) {
-      this.navigateTo("/login");
+      this.navigateTo("/");
     }
     const { t } = this.props;
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("profile");

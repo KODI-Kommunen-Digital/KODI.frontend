@@ -302,7 +302,7 @@ const GroupFeeds = () => {
                     localStorage.setItem("selectedItem", "Choose one category");
                     isLoggedIn
                       ? navigateTo("/UploadListings")
-                      : navigateTo("/login");
+                      : navigateTo("/");
                   }}
                 >
                   {t("click_here")}

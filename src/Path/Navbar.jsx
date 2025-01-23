@@ -23,7 +23,7 @@ export default function Example() {
                                 className="mx-auto h-10 w-auto cursor-pointer"
                                 src={LOGO}
                                 alt="HEDI- Heimat Digital"
-                                onClick={() => navigateTo("/")}
+                                onClick={() => navigateTo("/home")}
                             />
                         </div>
 

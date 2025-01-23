@@ -17,7 +17,7 @@ const CitizenService = () => {
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
-      const absolutePath = path.startsWith("/") ? path : `/${path}`;
+      const absolutePath = path.startsWith("/home") ? path : `/${path}`;
       navigate(absolutePath);
     }
   };

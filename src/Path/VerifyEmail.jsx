@@ -43,7 +43,7 @@ const VerifyEmail = () => {
 					setRedirect(true);
 					setVerifyState("success");
 					setTimeout(() => {
-						navigateTo("/login");
+						navigateTo("/");
 					}, 5000);
 				})
 				.catch((e) => {
@@ -101,7 +101,7 @@ const VerifyEmail = () => {
 						<div className="mb-20 mt-20 py-30 text-center">
 							<button
 								type="submit"
-								onClick={() => navigateTo("/login")}
+								onClick={() => navigateTo("/")}
 								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{t("goback")}
@@ -134,7 +134,7 @@ const VerifyEmail = () => {
 						<div className="mt-20 mb-20 py-30 text-center">
 							<button
 								type="submit"
-								onClick={() => navigateTo("/login")}
+								onClick={() => navigateTo("/")}
 								className="mt-20 mb-20 w-fit mx-auto text-center text-white whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
 							>
 								{t("goback")}

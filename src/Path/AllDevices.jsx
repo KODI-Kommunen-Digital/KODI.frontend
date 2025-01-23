@@ -43,12 +43,12 @@ const AllDevices = () => {
 				window.sessionStorage.removeItem("userId");
 				window.sessionStorage.removeItem("selectedItem");
 				setIsLoggedIn(false);
-				navigateTo("/");
+				navigateTo("/home");
 			} catch (error) {
 				return error;
 			}
 		} else {
-			navigateTo("/login");
+			navigateTo("/");
 		}
 	};
 

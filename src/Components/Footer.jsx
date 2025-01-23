@@ -136,7 +136,7 @@ function Footer(props) {
               </p>
             )}
             <p className={`${footerClass} mb-4`}>
-              <a href="/login" className="text-gray-600 font-sans">
+              <a href="/" className="text-gray-600 font-sans">
                 {t("login")}
               </a>
             </p>

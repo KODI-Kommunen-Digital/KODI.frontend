@@ -35,7 +35,7 @@ const AccountSettings = () => {
 			window.localStorage.getItem("refreshToken") ||
 			window.sessionStorage.getItem("refreshToken");
 		if (!accessToken && !refreshToken) {
-			navigateTo("/login");
+			navigateTo("/");
 		}
 		getProfile().then((response) => {
 			const { username, email, phoneNumber } = response.data.data;
@@ -88,7 +88,7 @@ const AccountSettings = () => {
 				window.sessionStorage.removeItem("accessToken");
 				window.sessionStorage.removeItem("refreshToken");
 				window.sessionStorage.removeItem("userId");
-				window.location.href = "/";
+				window.location.href = "/home";
 				setShowConfirmationModal({ visible: false });
 			})
 			.catch((error) => {

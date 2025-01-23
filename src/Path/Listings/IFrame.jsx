@@ -194,7 +194,7 @@ const IFrame = ({ cityId }) => {
                                             );
                                             isLoggedIn
                                                 ? navigateTo("/UploadListings")
-                                                : navigateTo("/login");
+                                                : navigateTo("/");
                                         }}
                                     >
                                         {t("click_here")}

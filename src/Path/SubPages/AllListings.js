@@ -171,8 +171,8 @@ const AllListings = () => {
   };
 
   const handleOfficialNotificationButton = () => {
-    setCategoryId(16)
-    navigateTo("/AllListings?terminalView=true&categoryId=16")
+    setCategoryId(16);
+    navigateTo("/AllListings?terminalView=true&categoryId=16");
   };
 
   useEffect(() => {
@@ -215,18 +215,18 @@ const AllListings = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const params = { statusId: 1 };
 
-      const cityId = urlParams.get('cityId');
+      const cityId = urlParams.get("cityId");
       if (cityId && parseInt(cityId)) {
         params.cityId = parseInt(cityId);
       }
 
-      const categoryId = urlParams.get('categoryId');
+      const categoryId = urlParams.get("categoryId");
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
       const response = await getListingsBySearch({
         searchQuery,
-        ...params
+        ...params,
       });
       console.log("API Response:", response.data.data);
       setListings(response.data.data);
@@ -341,7 +341,10 @@ const AllListings = () => {
                     </select>
                   </div>
 
-                  <SearchBar onSearch={handleSearch} searchBarClassName="w-full" />
+                  <SearchBar
+                    onSearch={handleSearch}
+                    searchBarClassName="w-full"
+                  />
                 </div>
               </div>
             </div>
@@ -350,14 +353,15 @@ const AllListings = () => {
       </div>
 
       <div className="mt-5 mb-20 customproview py-6">
-        {terminalViewParam && (<div className="text-center mt-4 mb-4">
-          <button
-            onClick={handleOfficialNotificationButton}
-            className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            {t("officialnotification")}
-          </button>
-        </div>
+        {terminalViewParam && (
+          <div className="text-center mt-4 mb-4">
+            <button
+              onClick={handleOfficialNotificationButton}
+              className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              {t("officialnotification")}
+            </button>
+          </div>
         )}
         <style>
           {`
@@ -412,7 +416,7 @@ const AllListings = () => {
                       );
                       isLoggedIn
                         ? navigateTo("/UploadListings")
-                        : navigateTo("/login");
+                        : navigateTo("/");
                     }}
                   >
                     {t("click_here")}

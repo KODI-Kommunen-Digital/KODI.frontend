@@ -309,7 +309,7 @@ function UploadListings() {
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
     if (!accessToken && !refreshToken) {
-      navigateTo("/login");
+      navigateTo("/");
     }
     var cityId = searchParams.get("cityId");
     getCategory().then((response) => {
@@ -359,7 +359,7 @@ function UploadListings() {
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
-            name: listingData.pdf.split("/")[1],
+            name: listingData.pdf.split("/home")[1],
           });
         }
       });

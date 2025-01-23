@@ -274,7 +274,7 @@ const IFrameListing = () => {
                 }
             } else {
                 window.sessionStorage.setItem("redirectTo", "/Favorite");
-                navigateTo("/login");
+                navigateTo("/");
             }
         } catch (error) {
             setErrorMessage(t("Error", error));

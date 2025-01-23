@@ -64,7 +64,7 @@ const Dashboard = () => {
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
     if (!accessToken && !refreshToken) {
-      window.location.href = "/login";
+      window.location.href = "/";
     }
     getCategory().then((response) => {
       const catList = {};

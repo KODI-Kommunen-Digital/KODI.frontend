@@ -35,12 +35,13 @@ export default function HomePageNavBar() {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken }).then(() => {
-      }).finally(() => {
-        clearStorage();
-      });
+      logout({ accesToken: accessToken, refreshToken })
+        .then(() => {})
+        .finally(() => {
+          clearStorage();
+        });
     } else {
-      navigateTo("/login");
+      navigateTo("/");
     }
   };
   const handleGotoDashboard = () => {
@@ -57,7 +58,7 @@ export default function HomePageNavBar() {
     window.sessionStorage.removeItem("userId");
     window.sessionStorage.removeItem("selectedItem");
     setIsLoggedIn(false);
-    navigateTo("/");
+    navigateTo("/home");
   }
 
   const location = useLocation();
@@ -88,7 +89,7 @@ export default function HomePageNavBar() {
                 alt="HEDI- Heimat Digital"
                 onClick={() => {
                   window.localStorage.removeItem("selectedCity");
-                  navigateTo("/");
+                  navigateTo("/home");
                   window.location.reload();
                 }}
               />
@@ -109,7 +110,7 @@ export default function HomePageNavBar() {
                     navigateTo("/Favorite");
                   } else {
                     window.sessionStorage.setItem("redirectTo", "/Favorite");
-                    navigateTo("/login");
+                    navigateTo("/");
                   }
                 }}
               >
@@ -144,9 +145,7 @@ export default function HomePageNavBar() {
               <a
                 onClick={() => {
                   localStorage.setItem("selectedItem", t("chooseOneCategory"));
-                  isLoggedIn
-                    ? navigateTo("/UploadListings")
-                    : navigateTo("/login");
+                  isLoggedIn ? navigateTo("/UploadListings") : navigateTo("/");
                 }}
                 className={`ml-8 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${buttonClass}`}
               >
@@ -163,7 +162,7 @@ export default function HomePageNavBar() {
                 if (terminalViewParam === "true") {
                   navigateTo("/AllListings?terminalView=true");
                 } else {
-                  navigateTo("/");
+                  navigateTo("/home");
                 }
               }}
               className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
@@ -199,7 +198,7 @@ export default function HomePageNavBar() {
                           "redirectTo",
                           "/Favorite"
                         );
-                        navigateTo("/login");
+                        navigateTo("/");
                       }
                     }}
                   >
@@ -242,7 +241,7 @@ export default function HomePageNavBar() {
                     onClick={() =>
                       isLoggedIn
                         ? navigateTo("/UploadListings")
-                        : navigateTo("/login")
+                        : navigateTo("/")
                     }
                     className="flex font-sans w-full items-center justify-center rounded-xl mt-4 px-4 py-2 border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                   >

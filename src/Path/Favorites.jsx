@@ -34,7 +34,7 @@ const Favorites = () => {
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
     if (!accessToken && !refreshToken) {
-      window.location.href = "/login";
+      window.location.href = "/";
     }
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("favourites");
     const urlParams = new URLSearchParams(window.location.search);

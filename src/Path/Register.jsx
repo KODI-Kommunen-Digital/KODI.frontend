@@ -181,14 +181,14 @@ const Register = () => {
 				<div>
 					{process.env.REACT_APP_NAME === 'KODI - DEMO' ? (
 						<img
-							onClick={() => navigate("/")}
+							onClick={() => navigate("/home")}
 							className="mx-auto h-20 w-auto cursor-pointer"
 							src={kodiLogo}
 							alt="KODI Logo"
 						/>
 					) : (
 						<img
-							onClick={() => navigate("/")}
+							onClick={() => navigate("/home")}
 							className="mx-auto h-20 w-auto cursor-pointer"
 							src={HeidiLogo}
 							alt="Heidi Logo"
