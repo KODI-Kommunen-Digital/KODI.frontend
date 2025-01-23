@@ -892,23 +892,28 @@ function AddNewProducts() {
                         >
                             {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
                         </label>
-                        <select
-                            type="text"
-                            id="cityId"
-                            name="cityId"
-                            value={cityId || 0}
-                            onChange={onCityChange}
-                            disabled={updating || isSuccess || !newProduct}
-                            autoComplete="country-name"
-                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                        >
-                            <option value={0}>{t("select")}</option>
-                            {cities.map((city) => (
-                                <option key={Number(city.id)} value={Number(city.id)}>
-                                    {city.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <select
+                                type="text"
+                                id="cityId"
+                                name="cityId"
+                                value={cityId || 0}
+                                onChange={onCityChange}
+                                disabled={updating || isSuccess || !newProduct}
+                                autoComplete="country-name"
+                                className="appearance-none overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            >
+                                <option value={0}>{t("select")}</option>
+                                {cities.map((city) => (
+                                    <option key={Number(city.id)} value={Number(city.id)}>
+                                        {city.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                ▼
+                            </span>
+                        </div>
                         <div
                             className="mt-2 text-sm text-red-600"
                             style={{
@@ -933,23 +938,28 @@ function AddNewProducts() {
                                     >
                                         {t("shop")} *
                                     </label>
-                                    <select
-                                        type="text"
-                                        id="shopId"
-                                        name="shopId"
-                                        value={shopId || 0}
-                                        onChange={handleShopChange}
-                                        disabled={updating || isSuccess}
-                                        autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                    >
-                                        <option value={0}>{t("select")}</option>
-                                        {shops.map((shop) => (
-                                            <option key={Number(shop.id)} value={Number(shop.id)}>
-                                                {shop.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            type="text"
+                                            id="shopId"
+                                            name="shopId"
+                                            value={shopId || 0}
+                                            onChange={handleShopChange}
+                                            disabled={updating || isSuccess}
+                                            autoComplete="country-name"
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option value={0}>{t("select")}</option>
+                                            {shops.map((shop) => (
+                                                <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                    {shop.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                     <div
                                         className="mt-2 text-sm text-red-600"
                                         style={{
@@ -984,27 +994,32 @@ function AddNewProducts() {
                                     >
                                         {t("category")} *
                                     </label>
-                                    <select
-                                        type="categoryId"
-                                        id="categoryId"
-                                        name="categoryId"
-                                        value={categoryId || 0}
-                                        onChange={handleCategoryChange}
-                                        disabled={updating || isSuccess || !newProduct}
-                                        required
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                    >
-                                        <option className="font-sans" value={0} key={0}>
-                                            {t("chooseOneCategory")}
-                                        </option>
-                                        {categories.map((category) => {
-                                            return (
-                                                <option className="font-sans" value={category.id} key={category.id}>
-                                                    {t(category.name)}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            type="categoryId"
+                                            id="categoryId"
+                                            name="categoryId"
+                                            value={categoryId || 0}
+                                            onChange={handleCategoryChange}
+                                            disabled={updating || isSuccess || !newProduct}
+                                            required
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option className="font-sans" value={0} key={0}>
+                                                {t("chooseOneCategory")}
+                                            </option>
+                                            {categories.map((category) => {
+                                                return (
+                                                    <option className="font-sans" value={category.id} key={category.id}>
+                                                        {t(category.name)}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                     <div
                                         className="mt-2 text-sm text-red-600"
                                         style={{
@@ -1036,26 +1051,31 @@ function AddNewProducts() {
                                     <label htmlFor="subCategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *
                                     </label>
-                                    <select
-                                        type="subCategoryId"
-                                        id="subCategoryId"
-                                        name="subCategoryId"
-                                        value={subCategoryId || 0}
-                                        onChange={handleSubcategoryChange}
-                                        onBlur={validateInput}
-                                        disabled={updating || isSuccess || !newProduct}
-                                        required
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                    >
-                                        <option className="font-sans" value={0} key={0}>
-                                            {t("chooseOneSubCategory")}
-                                        </option>
-                                        {Object.keys(subCategories).map((key) => (
-                                            <option className="font-sans" value={key} key={key}>
-                                                {t(subCategories[key])}
+                                    <div className="relative">
+                                        <select
+                                            type="subCategoryId"
+                                            id="subCategoryId"
+                                            name="subCategoryId"
+                                            value={subCategoryId || 0}
+                                            onChange={handleSubcategoryChange}
+                                            onBlur={validateInput}
+                                            disabled={updating || isSuccess || !newProduct}
+                                            required
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option className="font-sans" value={0} key={0}>
+                                                {t("chooseOneSubCategory")}
                                             </option>
-                                        ))}
-                                    </select>
+                                            {Object.keys(subCategories).map((key) => (
+                                                <option className="font-sans" value={key} key={key}>
+                                                    {t(subCategories[key])}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                     <div
                                         className="mt-2 text-sm text-red-600"
                                         style={{ visibility: error.subCategoryId ? "visible" : "hidden" }}

@@ -261,20 +261,25 @@ function AddCategoryAndSubCategory() {
                         >
                             {t("shop")} *
                         </label>
-                        <select
-                            id="storeId"
-                            name="storeId"
-                            value={storeId}
-                            onChange={handleShopChange}
-                            className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        >
-                            <option value={0}>{t("select")}</option>
-                            {stores.map((shop) => (
-                                <option key={shop.id} value={shop.id}>
-                                    {shop.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <select
+                                id="storeId"
+                                name="storeId"
+                                value={storeId}
+                                onChange={handleShopChange}
+                                className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            >
+                                <option value={0}>{t("select")}</option>
+                                {stores.map((shop) => (
+                                    <option key={shop.id} value={shop.id}>
+                                        {shop.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                ▼
+                            </span>
+                        </div>
                     </div>
 
                     {/* Category dropdown, visible only when a shop is selected */}
@@ -289,20 +294,25 @@ function AddCategoryAndSubCategory() {
                                     <label htmlFor="categoryId" className="block text-sm font-medium text-gray-600">
                                         {t("category")} *
                                     </label>
-                                    <select
-                                        id="categoryId"
-                                        name="categoryId"
-                                        value={categoryId}
-                                        onChange={handleCategoryChange}
-                                        className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                    >
-                                        <option value={0}>{t("chooseOneCategory")}</option>
-                                        {categories.map((category) => (
-                                            <option key={category.id} value={category.id}>
-                                                {category.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            id="categoryId"
+                                            name="categoryId"
+                                            value={categoryId}
+                                            onChange={handleCategoryChange}
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option value={0}>{t("chooseOneCategory")}</option>
+                                            {categories.map((category) => (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded  "
@@ -327,20 +337,25 @@ function AddCategoryAndSubCategory() {
                                     <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
                                         {t("subCategory")} *
                                     </label>
-                                    <select
-                                        id="subcategoryId"
-                                        name="subcategoryId"
-                                        value={subcategoryId}
-                                        onChange={handleSubcategoryChange}
-                                        className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                                    >
-                                        <option value={0}>{t("chooseOneSubCategory")}</option>
-                                        {subCategories.map((subCat) => (
-                                            <option key={subCat.id} value={subCat.id}>
-                                                {subCat.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            id="subcategoryId"
+                                            name="subcategoryId"
+                                            value={subcategoryId}
+                                            onChange={handleSubcategoryChange}
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option value={0}>{t("chooseOneSubCategory")}</option>
+                                            {subCategories.map((subCat) => (
+                                                <option key={subCat.id} value={subCat.id}>
+                                                    {subCat.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="flex inline-flex justify-between bg-red-100 border border-red-400 text-red-700 px-4 py-3 my-2 rounded"

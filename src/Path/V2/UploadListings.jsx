@@ -1168,7 +1168,7 @@ function UploadListings() {
           <div className="relative mb-0">
             <label
               htmlFor="title"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {t("title")} *
             </label>
@@ -1201,7 +1201,7 @@ function UploadListings() {
           </div>
 
           <div className="relative mb-4" ref={dropdownRef}>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-600">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-900">
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
             </label>
             <div
@@ -1264,31 +1264,36 @@ function UploadListings() {
           <div className="relative mb-4">
             <label
               htmlFor="dropdown"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {t("category")} *
             </label>
-            <select
-              type="categoryId"
-              id="categoryId"
-              name="categoryId"
-              value={categoryId || 0}
-              onChange={handleCategoryChange}
-              required
-              // disabled={!newListing}
-              className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-            >
-              <option className="font-sans" value={0} key={0}>
-                {t("chooseOneCategory")}
-              </option>
-              {categories.map((category) => {
-                return (
-                  <option className="font-sans" value={category.id} key={category.id}>
-                    {t(category.name)} {t(categoryDescription(category.id))}
-                  </option>
-                );
-              })}
-            </select>
+            <div className="relative">
+              <select
+                type="categoryId"
+                id="categoryId"
+                name="categoryId"
+                value={categoryId || 0}
+                onChange={handleCategoryChange}
+                required
+                // disabled={!newListing}
+                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400 appearance-none"
+              >
+                <option className="font-sans" value={0} key={0}>
+                  {t("chooseOneCategory")}
+                </option>
+                {categories.map((category) => {
+                  return (
+                    <option className="font-sans" value={category.id} key={category.id}>
+                      {t(category.name)} {t(categoryDescription(category.id))}
+                    </option>
+                  );
+                })}
+              </select>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                ▼
+              </span>
+            </div>
             <div
               className="mt-2 text-sm text-red-600"
               style={{
@@ -1304,24 +1309,29 @@ function UploadListings() {
 
           {Object.keys(subCategories).length > 0 && (
             <div className="relative mb-0">
-              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
+              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-900">
                 {t("subCategory")} *
               </label>
-              <select
-                id="subcategoryId"
-                name="subcategoryId"
-                value={subcategoryId || 0}
-                onChange={handleSubcategoryChange}
-                required
-                className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-              >
-                <option value={0}>{t("chooseOneSubCategory")}</option>
-                {Object.entries(subCategories).map(([id, name]) => (
-                  <option key={id} value={id}>
-                    {t(name)}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="subcategoryId"
+                  name="subcategoryId"
+                  value={subcategoryId || 0}
+                  onChange={handleSubcategoryChange}
+                  required
+                  className="w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md appearance-none"
+                >
+                  <option value={0}>{t("chooseOneSubCategory")}</option>
+                  {Object.entries(subCategories).map(([id, name]) => (
+                    <option key={id} value={id}>
+                      {t(name)}
+                    </option>
+                  ))}
+                </select>
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  ▼
+                </span>
+              </div>
               {error.subcategoryId && (
                 <div className="mt-2 text-sm text-red-600">{error.subcategoryId}</div>
               )}
@@ -1334,7 +1344,7 @@ function UploadListings() {
                 {listingInput.disableDates ? (
                   <label
                     htmlFor="dropdown"
-                    className="text-gray-600 text-md mb-4 font-medium title-font"
+                    className="text-gray-900 text-md mb-4 font-medium title-font"
                   >
                     * {t("noExpiryMessage")}
                   </label>
@@ -1344,7 +1354,7 @@ function UploadListings() {
                       <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                         <svg
                           aria-hidden="true"
-                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          className="w-5 h-5 text-gray-900 dark:text-gray-400"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
@@ -1352,7 +1362,7 @@ function UploadListings() {
                       </div>
                       <label
                         htmlFor="expiryDate"
-                        className="block text-sm font-medium text-gray-600"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         {t("expiryDate")} *
                       </label>
@@ -1398,7 +1408,7 @@ function UploadListings() {
                 />
                 <label
                   htmlFor="disableDates"
-                  className="block text-sm font-medium text-gray-600"
+                  className="block text-sm font-medium text-gray-900"
                 >
                   {t("disableDates")}
                 </label>
@@ -1413,7 +1423,7 @@ function UploadListings() {
                   <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                     <svg
                       aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                      className="w-5 h-5 text-gray-900 dark:text-gray-400"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -1421,7 +1431,7 @@ function UploadListings() {
                   </div>
                   <label
                     htmlFor="startDate"
-                    className="block text-sm font-medium text-gray-600"
+                    className="block text-sm font-medium text-gray-900"
                   >
                     {t("eventStartDate")} *
                   </label>
@@ -1453,7 +1463,7 @@ function UploadListings() {
                   <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                     <svg
                       aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                      className="w-5 h-5 text-gray-900 dark:text-gray-400"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -1461,7 +1471,7 @@ function UploadListings() {
                   </div>
                   <label
                     htmlFor="endDate"
-                    className="block text-sm font-medium text-gray-600"
+                    className="block text-sm font-medium text-gray-900"
                   >
                     {t("eventEndDate")}
                   </label>
@@ -1495,7 +1505,7 @@ function UploadListings() {
           <div className="relative mb-4">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("stichworte") : t("streetAddress")}
             </label>
@@ -1518,7 +1528,7 @@ function UploadListings() {
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
                   htmlFor="place"
-                  className="block text-sm font-medium text-gray-600"
+                  className="block text-sm font-medium text-gray-900"
                 >
                   {t("originalPrice")}
                 </label>
@@ -1537,7 +1547,7 @@ function UploadListings() {
               <div className="col-span-6 sm:col-span-1 mt-1 px-0 mr-2">
                 <label
                   htmlFor="place"
-                  className="block text-sm font-medium text-gray-600"
+                  className="block text-sm font-medium text-gray-900"
                 >
                   {t("discountedPrice")}
                 </label>
@@ -1559,7 +1569,7 @@ function UploadListings() {
           <div className="relative mb-0">
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
             </label>
@@ -1586,7 +1596,7 @@ function UploadListings() {
           <div className="relative mb-0">
             <label
               htmlFor="place"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {t("email")}
             </label>
@@ -1613,7 +1623,7 @@ function UploadListings() {
           <div className="relative mb-0">
             <label
               htmlFor="place"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("veranstaltungsinfos") : t("website")}
             </label>
@@ -1632,7 +1642,7 @@ function UploadListings() {
           <div className="relative mb-4">
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium text-gray-900"
             >
               {t("description")} *
             </label>
@@ -1822,7 +1832,7 @@ function UploadListings() {
               ) : (
                 <div className="text-center">
                   <UploadSVG />
-                  <p className="mt-1 text-sm text-gray-600">
+                  <p className="mt-1 text-sm text-gray-900">
                     {t("dragAndDropImageOrPDF")}
                   </p>
                   <div className="relative mb-0 mt-8">
@@ -1869,7 +1879,7 @@ function UploadListings() {
               {updating && (
                 <svg
                   aria-hidden="true"
-                  className="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
+                  className="inline w-5 h-5 ml-2 text-gray-200 animate-spin dark:text-gray-900 fill-gray-600 dark:fill-gray-300"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"

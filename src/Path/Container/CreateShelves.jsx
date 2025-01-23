@@ -438,22 +438,27 @@ function CreateShelves() {
                         >
                             {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
                         </label>
-                        <select
-                            type="text"
-                            id="cityId"
-                            name="cityId"
-                            value={cityId || 0}
-                            onChange={onCityChange}
-                            autoComplete="country-name"
-                            className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                        >
-                            <option value={0}>{t("select")}</option>
-                            {cities.map((city) => (
-                                <option key={Number(city.id)} value={Number(city.id)}>
-                                    {city.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <select
+                                type="text"
+                                id="cityId"
+                                name="cityId"
+                                value={cityId || 0}
+                                onChange={onCityChange}
+                                autoComplete="country-name"
+                                className="appearance-none overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                            >
+                                <option value={0}>{t("select")}</option>
+                                {cities.map((city) => (
+                                    <option key={Number(city.id)} value={Number(city.id)}>
+                                        {city.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                ▼
+                            </span>
+                        </div>
                         <div
                             className="mt-2 text-sm text-red-600"
                             style={{
@@ -478,22 +483,27 @@ function CreateShelves() {
                                     >
                                         {t("shop")} *
                                     </label>
-                                    <select
-                                        type="text"
-                                        id="shopId"
-                                        name="shopId"
-                                        value={shopId || 0}
-                                        onChange={handleShopChange}
-                                        autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                    >
-                                        <option value={0}>{t("select")}</option>
-                                        {shops.map((shop) => (
-                                            <option key={Number(shop.id)} value={Number(shop.id)}>
-                                                {shop.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            type="text"
+                                            id="shopId"
+                                            name="shopId"
+                                            value={shopId || 0}
+                                            onChange={handleShopChange}
+                                            autoComplete="country-name"
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option value={0}>{t("select")}</option>
+                                            {shops.map((shop) => (
+                                                <option key={Number(shop.id)} value={Number(shop.id)}>
+                                                    {shop.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                     <div
                                         className="mt-2 text-sm text-red-600"
                                         style={{
@@ -528,22 +538,27 @@ function CreateShelves() {
                                     >
                                         {t("product")}
                                     </label>
-                                    <select
-                                        type="text"
-                                        id="productId"
-                                        name="productId"
-                                        value={productId || null}
-                                        onChange={(e) => handleProductChange(e.target.value === "0" ? null : e.target.value)}
-                                        autoComplete="country-name"
-                                        className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                                    >
-                                        <option value={0}>{t("select")}</option>
-                                        {products.map((product) => (
-                                            <option key={Number(product.id)} value={Number(product.id)}>
-                                                {product.title}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            type="text"
+                                            id="productId"
+                                            name="productId"
+                                            value={productId || null}
+                                            onChange={(e) => handleProductChange(e.target.value === "0" ? null : e.target.value)}
+                                            autoComplete="country-name"
+                                            className="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                                        >
+                                            <option value={0}>{t("select")}</option>
+                                            {products.map((product) => (
+                                                <option key={Number(product.id)} value={Number(product.id)}>
+                                                    {product.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                            ▼
+                                        </span>
+                                    </div>
                                     <div
                                         className="mt-2 text-sm text-red-600"
                                         style={{

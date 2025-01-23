@@ -401,21 +401,26 @@ function CreateGroup() {
 						>
 							{process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
 						</label>
-						<select
-							type="text"
-							id="cityId"
-							name="cityId"
-							value={cityId}
-							onChange={onCityChange}
-							disabled={!newGroup}
-							autocomplete="country-name"
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-						>
-							<option value={0}>{t("select")}</option>
-							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
-							))}
-						</select>
+						<div className="relative">
+							<select
+								type="text"
+								id="cityId"
+								name="cityId"
+								value={cityId}
+								onChange={onCityChange}
+								disabled={!newGroup}
+								autocomplete="country-name"
+								class="appearance-none overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							>
+								<option value={0}>{t("select")}</option>
+								{cities.map((city) => (
+									<option value={Number(city.id)}>{city.name}</option>
+								))}
+							</select>
+							<span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+								▼
+							</span>
+						</div>
 						<div
 							className="mt-2 text-sm text-red-600"
 							style={{
