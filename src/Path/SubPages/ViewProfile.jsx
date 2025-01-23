@@ -5,7 +5,7 @@ import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
 import { getUserListings, fetchUsers } from "../../Services/usersApi";
 import ContactInfo from "../../Components/ContactInfo";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 import {
   sortByTitleAZ,
   sortByTitleZA,

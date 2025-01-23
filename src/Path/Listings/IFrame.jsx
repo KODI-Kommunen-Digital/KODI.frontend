@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings } from "../../Services/listingsApi";

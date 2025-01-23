@@ -10,7 +10,7 @@ import {
 } from "../Services/helper";
 import { getCities } from "../Services/citiesApi";
 import Footer from "../Components/Footer";
-import ListingsCard from "../Components/ListingsCard";
+import ListingsCard from "../Components/V1/ListingsCard";
 import LoadingPage from "../Components/LoadingPage";
 import { getCategory } from "../Services/CategoryApi";
 import RegionColors from "../Components/RegionColors";

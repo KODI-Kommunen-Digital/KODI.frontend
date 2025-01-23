@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../../Components/V1/HomePageNavBar";
 import SearchBar from "../../Components/SearchBar";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   sortByTitleAZ,

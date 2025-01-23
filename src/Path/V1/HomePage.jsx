@@ -7,7 +7,7 @@ import { getListings, getListingsCount, getListingsBySearch } from "../../Servic
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import CITYIMAGE from "../../assets/City.png";

@@ -1,11 +1,11 @@
-import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
+import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React from "react";
-import PdfThumbnail from "../Components/PdfThumbnail";
+import PdfThumbnail from "../PdfThumbnail";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import listingSource from "../Constants/listingSource";
-import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
+import listingSource from "../../Constants/listingSource";
+import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 function ListingsCard({ listing, terminalView = false, iFrame = false }) {
@@ -181,15 +181,6 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
               }}
             />
           )}
-
-          {/* <div className="my-2 px-2">
-            <h2
-              className="flex text-white title-font text-start text-sm font-semibold text-center font-special truncate"
-              style={{ fontFamily: "Poppins, sans-serif" }}
-            >
-              {new Date(listing.createdAt).toLocaleDateString('en-GB')}
-            </h2>
-          </div> */}
         </div>
       </div>
     </div>

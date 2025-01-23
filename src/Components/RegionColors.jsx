@@ -22,6 +22,12 @@ const RegionColors = {
     hoverBgColor: colors.hoverBgColor || 'bg-blue-800',
     hoverTextColor: colors.hoverTextColor || 'text-blue-400',
     hoverShadowColor: colors.hoverShadowColor || 'shadow-blue-400',
+    darkTextColorV2: 'text-gray-900',
+    lightTextColorV2: 'text-gray-400',
+    darkBgColorV2: 'bg-gray-900',
+    lightBgColorV2: 'bg-gray-400',
+    darkBorderColorV2: 'border-gray-900',
+    lightBorderColorV2: 'border-gray-400',
 };
 
 export default RegionColors;

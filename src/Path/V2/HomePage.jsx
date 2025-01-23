@@ -9,7 +9,8 @@ import { getListings, getListingsCount, getListingsBySearch } from "../../Servic
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V2/ListingsCard";
+import ListingsFeed from "../../Components/V2/ListingsFeed";
 import { getCategory } from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
@@ -33,6 +34,12 @@ const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [isGridView, setIsGridView] = useState(true);
+
+  const toggleView = () => {
+    setIsGridView(!isGridView);
+  };
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -123,7 +130,6 @@ const HomePage = () => {
 
       const apiCall = getListings(params)
         .then((response) => {
-          console.log("parameters to API", params);
           const listings = response.data.data;
           const filteredListings = listings.filter(
             (listing) => !hiddenCategories.includes(listing.categoryId)
@@ -218,8 +224,8 @@ const HomePage = () => {
 
       <div className="container-fluid py-0 mr-0 ml-0 mt-0 w-full flex flex-col relative">
         <div className="w-full mr-0 ml-0">
-          <div className="h-[35rem] lg:h-full overflow-hidden px-0 py-0 relative">
-            <div className="relative h-[35rem]">
+          <div className="h-[30rem] lg:h-full overflow-hidden px-0 py-0 relative">
+            <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
@@ -265,23 +271,40 @@ const HomePage = () => {
         <LoadingPage />
       ) : (
         <>
-          <div className="text-slate-800 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+          <div className="text-gray-900 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold flex justify-between items-center"
             style={{ fontFamily: "Poppins, sans-serif" }}>
-            {categoryId ? (
-              <h2>{t(categories[categoryId])}</h2>
-            ) : (
-              <h2>{t("allCategories")}</h2>
-            )}
+            <h2>
+              {categoryId ? t(categories[categoryId]) : t("allCategories")}
+            </h2>
+            <svg
+              className="h-6 w-6 fill-current text-gray-900 cursor-pointer"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              onClick={toggleView}
+            >
+              <path d="M128 136c0-22.1-17.9-40-40-40L40 96C17.9 96 0 113.9 0 136l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zm0 192c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zm32-192l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM288 328c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zm32-192l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM448 328c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48z" />
+            </svg>
           </div>
 
           {listings && listings.length > 0 ? (
             <div className="bg-white px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 mt-0 mb-10 space-y-10 flex flex-col">
-              <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
-                {listings &&
-                  listings.map((listing, index) => (
-                    <ListingsCard listing={listing} key={index} />
-                  ))}
-              </div>
+              {isGridView ? (
+                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
+                  {listings &&
+                    listings.map((listing, index) => (
+                      <ListingsCard listing={listing} key={index} />
+                    ))}
+                </div>
+              ) : (
+
+                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 gap-10 justify-start">
+                  {listings &&
+                    listings.map((listing, index) => (
+
+                      <ListingsFeed listing={listing} key={index} />
+                    ))}
+                </div>
+              )}
 
               <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
                 onClick={() => {
@@ -290,7 +313,7 @@ const HomePage = () => {
                 }} style={{ fontFamily: "Poppins, sans-serif" }}>
                 <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-slate-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
                 <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-slate-800 group-hover:bg-slate-800"></span>
-                <span className="relative text-slate-800 group-hover:text-white">{t("viewMore")}</span>
+                <span className="relative text-gray-900 group-hover:text-white">{t("viewMore")}</span>
               </a>
             </div>
           ) : (
@@ -311,7 +334,7 @@ const HomePage = () => {
                   {t("to_upload_new_listing")}
                 </span>
                 <a
-                  className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
+                  className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColorV2}`}
                   style={{ fontFamily: "Poppins, sans-serif" }}
                   onClick={() => {
                     localStorage.setItem("selectedItem", "Choose one category");
@@ -327,7 +350,7 @@ const HomePage = () => {
           )}
 
           <h2
-            className="text-slate-800 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+            className="text-gray-900 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
             style={{ fontFamily: "Poppins, sans-serif" }}
           >
             {t("discoverMorePlaces")}
@@ -391,7 +414,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                      className="text-gray-900 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -399,7 +422,7 @@ const HomePage = () => {
                       {t("createAnAccount")}
                     </h2>
                     <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -418,7 +441,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                      className="text-gray-900 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -426,7 +449,7 @@ const HomePage = () => {
                       {t("getVerified")}
                     </h2>
                     <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -445,7 +468,7 @@ const HomePage = () => {
                   />
                   <div className="p-6">
                     <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                      className="text-gray-900 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -453,7 +476,7 @@ const HomePage = () => {
                       {t("start")}
                     </h2>
                     <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                      className="text-gray-900 title-font text-lg font-bold text-start font-sans"
                       style={{
                         fontFamily: "Poppins, sans-serif",
                       }}
@@ -466,7 +489,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`mx-auto px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
+          <div className={`mx-auto px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColorV2}`}>
             <div className="flex flex-wrap items-center">
               <div className="w-full md:w-1/2 px-4">
                 <h2
@@ -476,7 +499,7 @@ const HomePage = () => {
                   {t("citizenService")}
                 </h2>
                 <p
-                  className="mb-4 text-slate-800 text-lg font-bold font-sans"
+                  className="mb-4 text-gray-900 text-lg font-bold font-sans"
                   style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   {t("findBestCitizenServicesInTheCity")}
@@ -484,7 +507,7 @@ const HomePage = () => {
 
                 <a
                   onClick={() => goToCitizensPage()}
-                  className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+                  className={`flex items-center ${RegionColors.darkTextColorV2} border ${RegionColors.darkBorderColorV2} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
                   style={{ fontFamily: "Poppins, sans-serif" }}>
                   <span>
                     {t("clickHereToFind")}
@@ -508,7 +531,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className={`${RegionColors.darkBgColor} px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 flex justify-start`}>
+          <div className={`${RegionColors.darkBgColorV2} px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 flex justify-start`}>
             <style>
               {`
 								@media (max-width: 280px) {

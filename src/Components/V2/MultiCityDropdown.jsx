@@ -59,10 +59,10 @@ const MultiCityDropdown = ({ cities, setListings }) => {
             </label>
 
             <div
-                className="shadow-lg w-full bg-white flex items-center flex-1 p-2 rounded-full cursor-pointer"
+                className="shadow-lg w-full bg-white flex items-center flex-1 p-2 rounded-r-full cursor-pointer"
                 onClick={toggleDropdown}
             >
-                <div className="bg-white rounded-full flex items-center px-4 py-2 gap-2 hover:bg-gray-100 w-full">
+                <div className="bg-white rounded-r-full flex items-center px-4 py-2 gap-2 hover:bg-gray-100 w-full">
                     {selectedCities.map((city) => (
                         <div
                             key={city.id}

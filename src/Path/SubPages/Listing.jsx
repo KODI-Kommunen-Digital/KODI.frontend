@@ -13,7 +13,7 @@ import UserProfile from "../../Components/UserProfile";
 import { source } from "../../Constants/source";
 import { statusByName } from "../../Constants/status";
 import PropTypes from "prop-types";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 import CustomCarousel from "../Carousel/CustomCarousel";
 import {
   getFavorites,
