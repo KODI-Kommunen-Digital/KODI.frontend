@@ -371,14 +371,14 @@ const Dashboard = () => {
         />
 
         {window.location.pathname.includes("/DashboardAdmin") && (
-          <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
+          <div className="relative col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
             <select
               id="city"
               name="city"
               autoComplete="city-name"
               onChange={onCityChange}
               value={cityId || 0}
-              className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+              className="bg-white appearance-none h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
               style={{
                 fontFamily: "Poppins, sans-serif",
               }}
@@ -394,6 +394,9 @@ const Dashboard = () => {
                 </option>
               ))}
             </select>
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-600">
+              ▼
+            </span>
           </div>
         )}
       </div>
@@ -656,30 +659,47 @@ const Dashboard = () => {
                               )} mr-2`}
                             ></div>
                             {viewAllListings ? (
-                              <select
-                                className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                onChange={(e) =>
-                                  handleChangeInStatus(e.target.value, listing)
-                                }
-                                value={listing.statusId || 0}
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                              >
-                                {Object.keys(status).map((state, index) => {
-                                  return (
-                                    <option
-                                      className="p-0"
-                                      key={index}
-                                      value={state}
-                                    >
-                                      {t(status[state]?.toLowerCase())}
-                                    </option>
-                                  );
-                                })}
-                              </select>
+                              <div className="relative w-full max-w-[10rem] sm:max-w-[12rem]">
+                                <select
+                                  className="w-full bg-white rounded-full border border-gray-400 text-sm outline-none text-gray-900 p-2 leading-8 transition-colors duration-200 ease-in-out appearance-none min-w-[8rem]"
+                                  onChange={(e) => handleChangeInStatus(e.target.value, listing)}
+                                  value={listing.statusId || 0}
+                                  style={{
+                                    fontFamily: "Poppins, sans-serif",
+                                    paddingRight: "2rem",
+                                  }}
+                                >
+                                  {Object.keys(status).map((state, index) => {
+                                    return (
+                                      <option
+                                        className="p-2 bg-white text-gray-900 transition-all truncate text-sm"
+                                        key={index}
+                                        value={state}
+                                        style={{
+                                          maxWidth: "100%",
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                        }}
+                                      >
+                                        {t(status[state])}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
+                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                                  ▼
+                                </span>
+                              </div>
                             ) : (
-                              <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
-                                {t(status[listing.statusId]?.toLowerCase())}
-                              </h1>
+                              <div
+                                className="flex items-center justify-center px-2 py-1 text-center text-gray-500 truncate max-w-[10rem] sm:max-w-[12rem]"
+                                style={{
+                                  fontFamily: "Poppins, sans-serif",
+                                }}
+                              >
+                                {t(status[listing.statusId])}
+                              </div>
                             )}
                           </div>
                         </td>

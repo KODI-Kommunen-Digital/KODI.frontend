@@ -475,27 +475,34 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            let allPromises = []
+            let allPromises = [];
+
+            // Append images to the form data
             for (let img of imageArray) {
               imageForm.append("image", img);
             }
+
             if (process.env.REACT_APP_V2_BACKEND === "True") {
-              await uploadListingImage(imageForm, null, newListing ? currentListingId[0] : listingId)
+              // Use listingId directly if editing an existing listing
+              await uploadListingImage(imageForm, null, newListing ? currentListingId[0] : listingId);
             } else {
-              for (let index = 0; index < currentListingId.length; index++) {
-                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+              const idsToUse = currentListingId.length > 0 ? currentListingId : [listingId];
+              for (let index = 0; index < idsToUse.length; index++) {
+                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], idsToUse[index]));
               }
-              await Promise.all(allPromises)
+              await Promise.all(allPromises);
             }
           } else if (pdf) {
             const pdfForm = new FormData();
             pdfForm.append("pdf", pdf); // Append the PDF only once
 
             if (process.env.REACT_APP_V2_BACKEND === "True") {
+              // Use listingId directly if editing an existing listing
               await uploadListingPDF(pdfForm, null, newListing ? currentListingId[0] : listingId);
             } else {
-              const allPromises = currentListingId.map((listingId, index) =>
-                uploadListingPDF(pdfForm, cityIdsArray[index], listingId)
+              const idsToUse = currentListingId.length > 0 ? currentListingId : [listingId];
+              const allPromises = idsToUse.map((id, index) =>
+                uploadListingPDF(pdfForm, cityIdsArray[index], id)
               );
               await Promise.all(allPromises);
             }

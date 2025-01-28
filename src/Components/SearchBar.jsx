@@ -28,7 +28,7 @@ function SearchBar({ onSearch, searchBarClassName, searchQuery }) {
         onChange={handleChange}
         name="search"
         placeholder="Search"
-        className="bg-white border-2 border-gray-500 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
+        className="bg-white appearance-none h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
         style={{ fontFamily: "Poppins, sans-serif" }}
       />
       <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
