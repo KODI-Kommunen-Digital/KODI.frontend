@@ -237,7 +237,7 @@ const LocationBar = ({ onSearch, searchQuery }) => {
 
 LocationBar.propTypes = {
     onSearch: PropTypes.func.isRequired,
-    searchQuery: PropTypes.string.isRequired,
+    searchQuery: PropTypes.string,
 };
 
 export default LocationBar;
