@@ -39,6 +39,11 @@ const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [terminalView, setTerminalView] = useState(false);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    setTerminalView(queryParams.get("terminalView") === "true");
+  }, []);
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
@@ -328,8 +333,10 @@ const HomePage = () => {
               <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
                 onClick={() => {
                   localStorage.setItem("selectedItem", t("chooseOneCategory"));
-                  navigateTo("/AllListings");
-                }} style={{ fontFamily: "Poppins, sans-serif" }}>
+                  const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
+                  navigateTo(url);
+                }}
+                style={{ fontFamily: "Poppins, sans-serif" }}>
                 <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-slate-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
                 <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-slate-800 group-hover:bg-slate-800"></span>
                 <span className="relative text-slate-800 group-hover:text-white">{t("viewMore")}</span>
@@ -368,278 +375,282 @@ const HomePage = () => {
             </div>
           )}
 
-          <h2
-            className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
-            {t("discoverMorePlaces")}
-          </h2>
+          {!terminalView && (
+            <>
+              <h2
+                className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("discoverMorePlaces")}
+              </h2>
 
-          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-              {cities.map((city) => {
-                if (city.id !== Number(cityId)) {
-                  return (
-                    <div
-                      key={city.id}
-                      onClick={() => {
-                        const scrollPosition = window.scrollY;
-                        localStorage.setItem("selectedCity", city.name);
-                        navigateTo(`/AllListings?cityId=${city.id}`);
-                        window.addEventListener("popstate", function () {
-                          window.scrollTo(0, scrollPosition);
-                        });
-                      }}
-                      className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-                    >
-                      <div className="relative h-80 rounded overflow-hidden">
-                        <img
-                          alt="ecommerce"
-                          className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                          src={
-                            city.image
-                              ? process.env.REACT_APP_BUCKET_HOST + city.image
-                              : CITYIMAGE
-                          }
-                          onError={(e) => {
-                            e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+              <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
+                  {cities.map((city) => {
+                    if (city.id !== Number(cityId)) {
+                      return (
+                        <div
+                          key={city.id}
+                          onClick={() => {
+                            const scrollPosition = window.scrollY;
+                            localStorage.setItem("selectedCity", city.name);
+                            navigateTo(`/AllListings?cityId=${city.id}`);
+                            window.addEventListener("popstate", function () {
+                              window.scrollTo(0, scrollPosition);
+                            });
                           }}
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
-                          <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
-                            {city.name}
-                          </h1>
+                          className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                        >
+                          <div className="relative h-80 rounded overflow-hidden">
+                            <img
+                              alt="ecommerce"
+                              className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+                              src={
+                                city.image
+                                  ? process.env.REACT_APP_BUCKET_HOST + city.image
+                                  : CITYIMAGE
+                              }
+                              onError={(e) => {
+                                e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
+                              }}
+                            />
+                            <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
+                              <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
+                                {city.name}
+                              </h1>
+                            </div>
+                          </div>
                         </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              </div>
+
+              {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
+
+              {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
+              <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
+                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
+                    <div className="relative h-96 rounded overflow-hidden w-auto">
+                      <img
+                        alt="ecommerce"
+                        className="object-cover object-center h-48 w-48 m-auto"
+                        src={ONEIMAGE}
+                      />
+                      <div className="p-6">
+                        <h2
+                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("createAnAccount")}
+                        </h2>
+                        <p
+                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("createAnAccountDescription")}
+                        </p>
                       </div>
                     </div>
-                  );
-                }
-                return null;
-              })}
-            </div>
-          </div>
-
-          {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
-
-          {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
-          <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                <div className="relative h-96 rounded overflow-hidden w-auto">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center h-48 w-48 m-auto"
-                    src={ONEIMAGE}
-                  />
-                  <div className="p-6">
-                    <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {t("createAnAccount")}
-                    </h2>
-                    <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {t("createAnAccountDescription")}
-                    </p>
+                  </div>
+                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
+                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
+                      <img
+                        alt="ecommerce"
+                        className="object-cover object-center h-48 w-48 m-auto"
+                        src={TWOIMAGE}
+                      />
+                      <div className="p-6">
+                        <h2
+                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("getVerified")}
+                        </h2>
+                        <p
+                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("getVerifiedDescription")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
+                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
+                      <img
+                        alt="ecommerce"
+                        className="object-cover object-center h-48 w-48 m-auto"
+                        src={THREEIMAGE}
+                      />
+                      <div className="p-6">
+                        <h2
+                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("start")}
+                        </h2>
+                        <p
+                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          {t("startDescription")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center h-48 w-48 m-auto"
-                    src={TWOIMAGE}
-                  />
-                  <div className="p-6">
+
+              <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
+                <div className="flex flex-wrap items-center">
+                  <div className="w-full md:w-1/2 px-4">
                     <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
+                      className="text-4xl text-white font-bold mb-4 font-sans"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
                     >
-                      {t("getVerified")}
+                      {t("citizenService")}
                     </h2>
                     <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
+                      className="mb-4 text-slate-800 text-lg font-bold font-sans"
+                      style={{ fontFamily: "Poppins, sans-serif" }}
                     >
-                      {t("getVerifiedDescription")}
+                      {t("findBestCitizenServicesInTheCity")}
                     </p>
+
+                    <a
+                      onClick={() => goToCitizensPage()}
+                      className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+                      style={{ fontFamily: "Poppins, sans-serif" }}>
+                      <span>
+                        {t("clickHereToFind")}
+                      </span>
+                      <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                        viewBox="0 0 24 24" className="w-6 h-6 ml-2">
+                        <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </a>
+                  </div>
+
+                  <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
+                    <img
+                      src={
+                        process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
+                      }
+                      alt="Image 1"
+                      className="w-full md:w-98 mb-2"
+                    />
                   </div>
                 </div>
               </div>
-              <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                  <img
-                    alt="ecommerce"
-                    className="object-cover object-center h-48 w-48 m-auto"
-                    src={THREEIMAGE}
-                  />
-                  <div className="p-6">
-                    <h2
-                      className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {t("start")}
-                    </h2>
-                    <p
-                      className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {t("startDescription")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
-            <div className="flex flex-wrap items-center">
-              <div className="w-full md:w-1/2 px-4">
-                <h2
-                  className="text-4xl text-white font-bold mb-4 font-sans"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("citizenService")}
-                </h2>
-                <p
-                  className="mb-4 text-slate-800 text-lg font-bold font-sans"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("findBestCitizenServicesInTheCity")}
-                </p>
-
-                <a
-                  onClick={() => goToCitizensPage()}
-                  className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
-                  style={{ fontFamily: "Poppins, sans-serif" }}>
-                  <span>
-                    {t("clickHereToFind")}
-                  </span>
-                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                    viewBox="0 0 24 24" className="w-6 h-6 ml-2">
-                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </a>
-              </div>
-
-              <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
-                <img
-                  src={
-                    process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
-                  }
-                  alt="Image 1"
-                  className="w-full md:w-98 mb-2"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
-            <style>
-              {`
+              <div className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
+                <style>
+                  {`
 								@media (max-width: 280px) {
 									.galaxy-fold {
 										flex-direction: column; /* Adjust the margin value as needed */
 									}
 								}
 							`}
-            </style>
-            <div className="flex flex-col md:flex-row place-items-center justify-start">
-              <p
-                className="flex mt-4 px-4 py-2 text-white items-center cursor-pointer text-lg font-bold font-sans"
-                style={{ fontFamily: "Poppins, sans-serif" }}
-              >
-                {t("downloadUs")}
-              </p>
-              <div className="flex mt-4 px-4 py-2 md:gap-4 gap-4 items-center cursor-pointer galaxy-fold">
-                <div
-                  className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                  onClick={() => {
-                    if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                      window.location.href = process.env.REACT_APP_APPLESTORE;
-                    } else {
-                      window.location.href = process.env.REACT_APP_APPLESTORE;
-                    }
-                  }}
-                >
-                  <div className="mr-2">
-                    <svg viewBox="0 0 384 512" width="20">
-                      <path
-                        fill="currentColor"
-                        d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="block">
-                    <div className="text-xs">{t("downloadOnThe")}</div>
-                    <div className="-mt-1 font-sans text-sm font-semibold">
-                      {t("appStore")}
+                </style>
+                <div className="flex flex-col md:flex-row place-items-center justify-start">
+                  <p
+                    className="flex mt-4 px-4 py-2 text-white items-center cursor-pointer text-lg font-bold font-sans"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("downloadUs")}
+                  </p>
+                  <div className="flex mt-4 px-4 py-2 md:gap-4 gap-4 items-center cursor-pointer galaxy-fold">
+                    <div
+                      className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+                      onClick={() => {
+                        if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+                          window.location.href = process.env.REACT_APP_APPLESTORE;
+                        } else {
+                          window.location.href = process.env.REACT_APP_APPLESTORE;
+                        }
+                      }}
+                    >
+                      <div className="mr-2">
+                        <svg viewBox="0 0 384 512" width="20">
+                          <path
+                            fill="currentColor"
+                            d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="block">
+                        <div className="text-xs">{t("downloadOnThe")}</div>
+                        <div className="-mt-1 font-sans text-sm font-semibold">
+                          {t("appStore")}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div
-                  className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                  onClick={() => {
-                    if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                      window.location.href =
-                        process.env.REACT_APP_GOOGLEPLAYSTORE;
-                    } else {
-                      window.location.href =
-                        process.env.REACT_APP_GOOGLEPLAYSTORE;
-                    }
-                  }}
-                >
-                  <div className="mr-2">
-                    <svg viewBox="30 336.7 120.9 129.2" width="20">
-                      <path
-                        fill="#FFD400"
-                        d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z"
-                      />
-                      <path
-                        fill="#FF3333"
-                        d="M99.1,401.1l-64.2,64.7c1.5,0.2,3.2-0.2,5.2-1.3  c4.2-2.3,48.8-26.7,79.1-43.3L99.1,401.1L99.1,401.1z"
-                      />
-                      <path
-                        fill="#48FF48"
-                        d="M99.1,401.1l20.1-20.2c0,0-74.6-40.7-79.1-43.1  c-1.7-1-3.6-1.3-5.3-1L99.1,401.1z"
-                      />
-                      <path
-                        fill="#3BCCFF"
-                        d="M99.1,401.1l-64.3-64.3c-2.6,0.6-4.8,2.9-4.8,7.6  c0,7.5,0,107.5,0,113.8c0,4.3,1.7,7.4,4.9,7.7L99.1,401.1z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="block">
-                    <div className="text-xs">{t("getItOn")}</div>
-                    <div className="-mt-1 font-sans text-sm font-semibold">
-                      {t("googlePlay")}
+                    <div
+                      className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
+                      onClick={() => {
+                        if (process.env.REACT_APP_REGION_NAME === "WALDI") {
+                          window.location.href =
+                            process.env.REACT_APP_GOOGLEPLAYSTORE;
+                        } else {
+                          window.location.href =
+                            process.env.REACT_APP_GOOGLEPLAYSTORE;
+                        }
+                      }}
+                    >
+                      <div className="mr-2">
+                        <svg viewBox="30 336.7 120.9 129.2" width="20">
+                          <path
+                            fill="#FFD400"
+                            d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z"
+                          />
+                          <path
+                            fill="#FF3333"
+                            d="M99.1,401.1l-64.2,64.7c1.5,0.2,3.2-0.2,5.2-1.3  c4.2-2.3,48.8-26.7,79.1-43.3L99.1,401.1L99.1,401.1z"
+                          />
+                          <path
+                            fill="#48FF48"
+                            d="M99.1,401.1l20.1-20.2c0,0-74.6-40.7-79.1-43.1  c-1.7-1-3.6-1.3-5.3-1L99.1,401.1z"
+                          />
+                          <path
+                            fill="#3BCCFF"
+                            d="M99.1,401.1l-64.3-64.3c-2.6,0.6-4.8,2.9-4.8,7.6  c0,7.5,0,107.5,0,113.8c0,4.3,1.7,7.4,4.9,7.7L99.1,401.1z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="block">
+                        <div className="text-xs">{t("getItOn")}</div>
+                        <div className="-mt-1 font-sans text-sm font-semibold">
+                          {t("googlePlay")}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </>
       )}
 
-      {!isLoading && (
+      {!isLoading && !terminalView && (
         <div className="bottom-0 w-full">
           <Footer />
         </div>

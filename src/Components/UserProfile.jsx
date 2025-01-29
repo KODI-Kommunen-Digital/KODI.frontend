@@ -4,7 +4,7 @@ import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-function UserProfile({ user, onProfileImageLoad }) {
+function UserProfile({ user, terminalView, onProfileImageLoad }) {
   const { t } = useTranslation();
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -123,20 +123,45 @@ function UserProfile({ user, onProfileImageLoad }) {
           ))}
       </div>
 
-      <div className="flex justify-center p-4 space-y-0 md:space-y-6 sm:p-4 hidden lg:flex">
-        <a
-          onClick={() =>
-            navigateTo(
-              user ? `/ViewProfile/${user.username}` : "/ViewProfile"
-            )
-          }
-          className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}>
-          <span className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}></span>
-          <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-            {t("viewProfile")}
-          </span>
-        </a>
+      <div className="flex justify-center p-4 space-y-0 md:space-y-6 sm:p-4">
+        {terminalView ? (
+          <a
+            onClick={() => navigateTo("/AllListings?terminalView=true")}
+            className="flex items-center text-gray-900 bg-green-600 py-2 px-6 gap-2 rounded cursor-pointer"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              className="w-6 h-6 ml-2"
+            >
+              <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>{t("goBack")}</span>
+          </a>
+        ) : (
+          <div className="hidden lg:flex">
+            <a
+              onClick={() =>
+                navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")
+              }
+              className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}
+            >
+              <span
+                className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}
+              ></span>
+              <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
+                {t("viewProfile")}
+              </span>
+            </a>
+          </div>
+        )}
       </div>
+
     </div >
   );
 }
@@ -150,6 +175,7 @@ UserProfile.propTypes = {
     image: PropTypes.string,
     id: PropTypes.number,
   }).isRequired,
+  terminalView: PropTypes.bool,
   createdAt: PropTypes.string,
   onProfileImageLoad: PropTypes.func.isRequired,
 };

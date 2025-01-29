@@ -13,8 +13,12 @@ export default function HomePageNavBar() {
       navigate(path);
     }
   };
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const terminalViewParam = searchParams.get("terminalView");
+  const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
+
   useEffect(() => {
     const accessToken =
       window.localStorage.getItem("accessToken") ||
@@ -59,30 +63,16 @@ export default function HomePageNavBar() {
     navigateTo("/");
   }
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalView");
-  const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
-  const [, setShowNavBar] = useState(true);
-  useEffect(() => {
-    if (terminalViewParam === "true") {
-      setShowNavBar(false);
-    } else {
-      setShowNavBar(true);
-    }
-  }, [terminalViewParam]);
-
   return (
     <div className="w-full fixed top-0 z-10">
       <Popover className="relative bg-white mr-0 ml-0 px-5 md:px-10 py-5">
         <div className="w-full">
           <div
-            className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
+            className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10`}
           >
             <div>
               <img
-                className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
+                className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer`}
                 src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                 alt="HEDI- Heimat Digital"
                 onClick={() => {
@@ -104,14 +94,6 @@ export default function HomePageNavBar() {
               {isLoggedIn && (
                 <a
                   className={`text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
-                  // onClick={() => {
-                  //   if (isLoggedIn) {
-                  //     navigateTo("/Favorite");
-                  //   } else {
-                  //     window.sessionStorage.setItem("redirectTo", "/Favorite");
-                  //     navigateTo("/login");
-                  //   }
-                  // }}
                   onClick={() => {
                     navigateTo("/Favorite");
                   }}
@@ -157,23 +139,6 @@ export default function HomePageNavBar() {
                 {t("submit")}
               </a>
             </div>
-          </div>
-
-          <div
-            className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
-          >
-            <a
-              onClick={() => {
-                if (terminalViewParam === "true") {
-                  navigateTo("/AllListings?terminalView=true");
-                } else {
-                  navigateTo("/");
-                }
-              }}
-              className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer ${gobackClass}`}
-            >
-              <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
-            </a>
           </div>
         </div>
 

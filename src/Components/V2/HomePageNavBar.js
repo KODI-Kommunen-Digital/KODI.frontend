@@ -12,7 +12,6 @@ export default function HomePageNavBar() {
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
   const [cityId, setCityId] = useState();
   const [cities, setCities] = useState([]);
   const [categoryId, setCategoryId] = useState();
@@ -57,10 +56,11 @@ export default function HomePageNavBar() {
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-      logout({ accesToken: accessToken, refreshToken }).then(() => {
-      }).finally(() => {
-        clearStorage();
-      });
+      logout({ accesToken: accessToken, refreshToken })
+        .then(() => {})
+        .finally(() => {
+          clearStorage();
+        });
     } else {
       navigateTo("/login");
     }
@@ -88,11 +88,9 @@ export default function HomePageNavBar() {
 
     if (selectedCityId === 0) {
       setCityId(0);
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
-      const selectedCity = cities.find(
-        (city) => city.id === selectedCityId
-      );
+      const selectedCity = cities.find((city) => city.id === selectedCityId);
 
       if (selectedCity) {
         setCityId(selectedCityId);
@@ -109,16 +107,16 @@ export default function HomePageNavBar() {
     <div className="w-full fixed top-0 z-10">
       <Popover
         className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-      // id="scrollablePopover"
+        // id="scrollablePopover"
       >
         <div className="w-full">
           <div
-            className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10 ${buttonClass}`}
+            className={`flex items-center justify-between border-gray-100  lg:justify-start lg:space-x-10`}
           >
             <div className="items-center justify-start flex">
               <div>
                 <img
-                  className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
+                  className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer`}
                   src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                   alt="HEDI- Heimat Digital"
                   onClick={() => {
@@ -128,8 +126,10 @@ export default function HomePageNavBar() {
                 />
               </div>
 
-              {location.pathname === '/' && (
-                <div className="relative w-40 px-0 mb-0 md:w-80">
+              {location.pathname === "/" && (
+                <div
+                  className={`relative w-40 px-0 mb-0 md:w-80 ${buttonClass}`}
+                >
                   <div className="relative">
                     <select
                       id="city"
@@ -173,7 +173,9 @@ export default function HomePageNavBar() {
               {isLoggedIn && (
                 <a
                   className={`text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer ${buttonClass}`}
-                  onClick={() => { navigateTo("/Favorite"); }}
+                  onClick={() => {
+                    navigateTo("/Favorite");
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -217,25 +219,6 @@ export default function HomePageNavBar() {
               </a>
             </div>
           </div>
-
-          {location.pathname !== '/' && (
-            <div
-              className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
-            >
-              <a
-                onClick={() => {
-                  if (terminalViewParam === "true") {
-                    navigateTo("/AllListings?terminalView=true");
-                  } else {
-                    navigateTo("/");
-                  }
-                }}
-                className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-black px-8 py-2 text-base font-bold text-white cursor-pointer ${gobackClass}`}
-              >
-                <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
-              </a>
-            </div>
-          )}
         </div>
 
         <Transition
@@ -257,7 +240,9 @@ export default function HomePageNavBar() {
                   {isLoggedIn && (
                     <a
                       className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
-                      onClick={() => { navigateTo("/Favorite"); }}
+                      onClick={() => {
+                        navigateTo("/Favorite");
+                      }}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +297,6 @@ export default function HomePageNavBar() {
                     {t("submit")}
                   </a>
                 </div>
-
               </div>
             </div>
           </Popover.Panel>
