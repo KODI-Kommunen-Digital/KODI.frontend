@@ -326,7 +326,7 @@ const HomePage = () => {
               <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
                 {listings &&
                   listings.map((listing, index) => (
-                    <ListingsCard listing={listing} key={index} />
+                    <ListingsCard listing={listing} terminalView={terminalView} key={index} />
                   ))}
               </div>
 
