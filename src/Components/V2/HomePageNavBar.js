@@ -22,8 +22,13 @@ export default function HomePageNavBar() {
       navigate(path);
     }
   };
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [terminalView, setTerminalView] = useState(false);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    setTerminalView(queryParams.get("terminalView") === "true");
+  }, []);
+
   useEffect(() => {
     const accessToken =
       window.localStorage.getItem("accessToken") ||
@@ -120,7 +125,8 @@ export default function HomePageNavBar() {
                   src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
                   alt="HEDI- Heimat Digital"
                   onClick={() => {
-                    navigateTo("/");
+                    const url = terminalView ? "/?terminalView=true" : "/";
+                    navigateTo(url);
                     window.location.reload();
                   }}
                 />
