@@ -39,6 +39,23 @@ const AllListings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const terminalViewParam = searchParams.get("terminalView");
+  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
+  const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
+  const [showNavBar, setShowNavBar] = useState(true);
+  const [terminalView, setTerminalView] = useState(false);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    setTerminalView(queryParams.get("terminalView") === "true");
+  }, []);
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
   useEffect(() => {
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
@@ -175,13 +192,6 @@ const AllListings = () => {
     // clearSearchResults();
   };
 
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
   const handleOfficialNotificationButton = () => {
     setCategoryId(16);
     navigateTo("/AllListings?terminalView=true&categoryId=16");
@@ -206,12 +216,6 @@ const AllListings = () => {
     }
   }, [selectedSortOption]);
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalView");
-  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-20";
-  const pyClass = terminalViewParam === "true" ? "py-0" : "py-1";
-  const [showNavBar, setShowNavBar] = useState(true);
   useEffect(() => {
     if (terminalViewParam === "true") {
       setShowNavBar(false);
@@ -385,10 +389,11 @@ const AllListings = () => {
 
       <div className="mt-5 mb-20 customproview py-6">
         {terminalViewParam && (
-          <div className="text-center mt-4 mb-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4 mb-4">
+            {/* Official Notification Button */}
             <a
               onClick={handleOfficialNotificationButton}
-              className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
+              className={`flex items-center text-white border ${RegionColors.darkBgColor} py-2 px-6 gap-2 rounded cursor-pointer`}
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               <span>{t("officialnotification")}</span>
@@ -403,6 +408,28 @@ const AllListings = () => {
               >
                 <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
+            </a>
+
+            {/* Go Back Button */}
+            <a
+              onClick={() => {
+                navigateTo("/?terminalView=true");
+              }}
+              className={`flex items-center text-gray-900 bg-green-600 py-2 px-6 gap-2 rounded cursor-pointer`}
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                className="w-6 h-6 ml-2"
+              >
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              <span>{t("goBack")}</span>
             </a>
           </div>
         )}
@@ -498,9 +525,11 @@ const AllListings = () => {
           )}
         </div>
       </div>
-      <div className="bottom-0 w-full">
-        <Footer />
-      </div>
+      {!isLoading && !terminalView && (
+        <div className="bottom-0 w-full">
+          <Footer />
+        </div>
+      )}
     </section>
   );
 };

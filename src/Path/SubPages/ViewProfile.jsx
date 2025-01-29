@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PROFILEIMAGE from "../../assets/ProfilePicture.png";
 import Footer from "../../Components/Footer";
@@ -114,18 +114,6 @@ const ViewProfile = () => {
       return false;
     }
   };
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalView");
-  const [, setShowNavBar] = useState(true);
-  useEffect(() => {
-    if (terminalViewParam === "true") {
-      setShowNavBar(false);
-    } else {
-      setShowNavBar(true);
-    }
-  }, [terminalViewParam]);
 
   return (
     <section className="text-gray-600 bg-white body-font">
