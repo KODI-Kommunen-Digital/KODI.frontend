@@ -386,7 +386,7 @@ const App = () => {
               <Route
                 path="/terminal"
                 element={
-                  regionName === "WALDI" ? (
+                  regionName === "WEISSENBURG" ? (
                     <HorizondalTerminalScreen />
                   ) : (
                     <Error />
