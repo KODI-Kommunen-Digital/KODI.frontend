@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-function Footer(props) {
+function Footer() {
   const { t } = useTranslation();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
   const footerClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const [, setShowNavBar] = useState(true);
-  useEffect(() => {
-    if (terminalViewParam === "true") {
-      setShowNavBar(false);
-    } else {
-      setShowNavBar(true);
-    }
-  }, [terminalViewParam]);
 
   return (
     <footer className="text-center md:text-left bg-black text-white">
