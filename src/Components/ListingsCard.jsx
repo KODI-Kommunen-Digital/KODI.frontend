@@ -130,7 +130,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
             </h2>
           </div>
 
-          {listing.id && listing.categoryId === 3 ? (
+          {listing.id && listing.categoryId === 3 && listing.startDate ? (
             <div
               className="text-start items-start"
               style={{ fontFamily: "Poppins, sans-serif" }}
@@ -139,11 +139,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 className="text-white my-2 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
-                {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-                  "de-DE"
-                )}{" "}
+                {new Date(listing.startDate?.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
                 (
-                {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                {new Date(listing.startDate?.replace("Z", "")).toLocaleTimeString(
                   "de-DE",
                   {
                     hour: "2-digit",
@@ -155,11 +153,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 {listing.endDate && (
                   <>
                     <span className="text-white"> {t("To")} </span>
-                    {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                      "de-DE"
-                    )}{" "}
+                    {new Date(listing.endDate?.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
                     (
-                    {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                    {new Date(listing.endDate?.replace("Z", "")).toLocaleTimeString(
                       "de-DE",
                       {
                         hour: "2-digit",
@@ -177,7 +173,7 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
               className="text-white my-2 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
               style={{ fontFamily: "Poppins, sans-serif" }}
               dangerouslySetInnerHTML={{
-                __html: listing.description,
+                __html: listing.description || "No description available",
               }}
             />
           )}

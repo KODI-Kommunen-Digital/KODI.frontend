@@ -80,6 +80,7 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
+import HorizondalTerminalScreen from "./Path/Container/HorizondalTerminalScreen";
 
 import Modal from "react-modal";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
@@ -94,6 +95,7 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  // const regionName = process.env.REACT_APP_REGION_NAME;
 
   useEffect(() => {
     const link =
@@ -408,6 +410,8 @@ const App = () => {
                 element={<OrderDetailsStore />}
                 exact
               />
+
+              <Route path="/terminal" element={<HorizondalTerminalScreen />} />
             </React.Fragment>
           )}
         </Routes>
