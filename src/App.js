@@ -80,7 +80,7 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
-import HorizondalTerminalScreen from "./Path/Container/HorizondalTerminalScreen";
+// import HorizondalTerminalScreen from "./Path/Container/HorizondalTerminalScreen";
 
 import Modal from "react-modal";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
@@ -411,7 +411,7 @@ const App = () => {
                 exact
               />
 
-              <Route path="/terminal" element={<HorizondalTerminalScreen />} />
+              {/* <Route path="/terminal" element={<HorizondalTerminalScreen />} /> */}
             </React.Fragment>
           )}
         </Routes>

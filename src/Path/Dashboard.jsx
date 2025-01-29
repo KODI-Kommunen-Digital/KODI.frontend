@@ -32,6 +32,8 @@ const Dashboard = () => {
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const [selectedProductName, setSelectedProductName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -72,15 +74,6 @@ const Dashboard = () => {
     if (!accessToken && !refreshToken) {
       window.location.href = "/login";
     }
-    // getCategory().then((response) => {
-    //   const catList = {};
-    //   response?.data?.data
-    //     .filter(cat => !hiddenCategories.includes(cat.id))
-    //     .forEach((cat) => {
-    //       catList[cat.id] = cat.name;
-    //     });
-    //   setCategories(catList);
-    // });
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data.forEach((cat) => {
@@ -118,12 +111,6 @@ const Dashboard = () => {
       });
     }
     if (viewAllListings === false) {
-      // getUserListings({
-      //   statusId: selectedStatus,
-      //   pageNo,
-      // }).then((response) => {
-      //   setListings(response.data.data);
-      // });
       getMyListing({
         statusId: selectedStatus,
         pageNo,
@@ -301,6 +288,16 @@ const Dashboard = () => {
     setCityId(selectedCityId || 0);
   };
 
+  const handleListingNameClick = (description) => {
+    setSelectedProductName(description);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductName("");
+  };
+
   return (
     <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
@@ -447,7 +444,8 @@ const Dashboard = () => {
                     >
                       {t("action")}
                     </th>
-                    {/* {viewAllListings && (
+
+                    {viewAllListings && (
                       <th
                         scope="col"
                         className="px-6 py-4 text-center"
@@ -455,7 +453,8 @@ const Dashboard = () => {
                       >
                         {t("username")}
                       </th>
-                    )} */}
+                    )}
+
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -475,14 +474,15 @@ const Dashboard = () => {
                         <th
                           scope="row"
                           className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
-                          onClick={() => {
-                            if (!hiddenCategories.includes(listing.categoryId)) {
-                              goToListingPage(listing);
-                            }
-                          }}
                         >
                           {listing.pdf ? (
-                            <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell">
+                            <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              onClick={() => {
+                                if (!hiddenCategories.includes(listing.categoryId)) {
+                                  goToListingPage(listing);
+                                }
+                              }}
+                            >
                               <PdfThumbnail
                                 pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
                               />
@@ -490,6 +490,11 @@ const Dashboard = () => {
                           ) : listing.logo ? (
                             <img
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              onClick={() => {
+                                if (!hiddenCategories.includes(listing.categoryId)) {
+                                  goToListingPage(listing);
+                                }
+                              }}
                               src={
                                 listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
                               }
@@ -502,6 +507,11 @@ const Dashboard = () => {
                             <img
                               alt="Listing"
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                              onClick={() => {
+                                if (!hiddenCategories.includes(listing.categoryId)) {
+                                  goToListingPage(listing);
+                                }
+                              }}
                               src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                             />
                           )}
@@ -510,6 +520,7 @@ const Dashboard = () => {
                             <div
                               className="text-gray-500 font-bold truncate"
                               style={{ fontFamily: "Poppins, sans-serif" }}
+                              onClick={() => handleListingNameClick(listing.title)}
                             >
                               {listing.title}
                             </div>
@@ -522,18 +533,21 @@ const Dashboard = () => {
                         >
                           {t(categories[listing.categoryId])}
                         </td>
+
                         <td
                           className="px-6 py-4 hidden lg:table-cell text-center font-bold text-blue-600"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
                           {new Date(listing.createdAt).toLocaleString("de")}
                         </td>
+
                         <td
                           className="px-6 py-4 font-bold text-blue-600 text-center"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
                           {listing.viewCount}
                         </td>
+
                         <td className="px-6 py-4 text-center font-bold">
                           <div className="flex justify-center items-center">
                             <a
@@ -635,19 +649,14 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-                        {/* {
-                          viewAllListings && (
-                            <td className="px-6 py-4 text-center">
-                              <a
-                                className="font-medium text-blue-600 hover:underline cursor-pointer"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                                href={"/ViewProfile/" + listing.username}
-                              >
-                                {listing.username}
-                              </a>
-                            </td>
-                          )
-                        } */}
+
+                        <td
+                          className="px-6 py-4 text-center font-bold text-violet-600 text-sm truncate"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                        >
+                          {listing.userName ? listing.userName : t("unavailable")}
+                        </td>
+
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div
@@ -690,6 +699,38 @@ const Dashboard = () => {
               </table>
             </div>
           </div>
+
+          {isModalOpen && (
+            <div
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
+              onClick={closeModal}
+            >
+              <div
+                className="relative bg-white rounded-lg shadow-lg transform transition-all sm:max-w-lg w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="px-6 py-4">
+                  <h3 className="text-lg leading-6 font-medium text-slate-800 text-center">
+                    {t("listingDetails")}
+                  </h3>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-500 text-center break-words">
+                      {selectedProductName}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 flex justify-end">
+                  <button
+                    className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                    onClick={closeModal}
+                  >
+                    {t("close")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
             {pageNo !== 1 ? (
               <span
