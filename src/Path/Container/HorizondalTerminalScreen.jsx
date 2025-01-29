@@ -59,19 +59,19 @@ const HorizondalTerminalScreen = () => {
 
     return (
         <section className="text-gray-900 body-font">
-            <div className="bg-white px-5 py-6">
+            <div className="bg-gray-300 px-5 py-6">
                 {/* Header Section with Date and Clock */}
-                <div className="w-full h-full bg-white p-2">
-                    <div className="flex justify-between items-center bg-gray-300 px-5 py-6 rounded-lg shadow-md">
+                <div className="w-full h-full bg-gray-300 p-2">
+                    <div className="flex justify-between items-center bg-white px-5 py-6 rounded-lg shadow-md">
                         <h1 className="text-xl font-bold">{formattedDate}</h1>
                         <h2 className="text-xl font-bold">{formattedTime}</h2>
                     </div>
                 </div>
 
-                <div className="flex bg-white body-font relative min-h-screen">
+                <div className="flex bg-gray-300 body-font relative min-h-screen">
                     {/* Left Side: Events */}
-                    <div className="w-1/2 h-full bg-white p-2">
-                        <div className="bg-gray-300 px-5 py-6 rounded-lg">
+                    <div className="w-1/2 h-full bg-gray-300 p-2">
+                        <div className="bg-white px-5 py-6 rounded-lg">
                             <h2 className="text-2xl font-bold mb-4">{t("Events")}</h2>
                             <div className="space-y-4 overflow-y-scroll">
                                 {events.map((event, index) => (
@@ -82,8 +82,8 @@ const HorizondalTerminalScreen = () => {
                     </div>
 
                     {/* Right Side: News, Notifications, Clubs */}
-                    <div className="w-1/2 h-full bg-white p-2 flex flex-col">
-                        <div className="bg-gray-300 rounded-lg">
+                    <div className="w-1/2 h-full bg-gray-300 p-2 flex flex-col">
+                        <div className="bg-white rounded-lg">
                             {[{ title: t("News"), data: news }, { title: t("Official Notifications"), data: officialNotifications }, { title: t("Clubs"), data: clubs }].map(
                                 (section, index) => (
                                     <div key={index} className="flex-1 px-5 py-6">
@@ -92,7 +92,7 @@ const HorizondalTerminalScreen = () => {
                                             {section.data.map((item, itemIndex) => (
                                                 <div
                                                     key={itemIndex}
-                                                    className="min-w-[250px] max-w-[250px] rounded-lg shadow-lg bg-white"
+                                                    className="min-w-[250px] max-w-[250px] rounded-lg bg-white"
                                                 >
                                                     <ListingsCard listing={item} />
                                                 </div>
