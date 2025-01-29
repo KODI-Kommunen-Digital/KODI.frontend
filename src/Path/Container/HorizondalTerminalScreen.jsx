@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ListingsCard from "../../Components/ListingsCard";
+import ListingsCard from "../../Components/V1/ListingsCard";
 import ListingsFeed from "../../Components/V2/ListingsFeed";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
