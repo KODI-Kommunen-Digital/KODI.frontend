@@ -95,7 +95,7 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
-  const regionName = process.env.REACT_APP_REGION_NAME;
+  // const regionName = process.env.REACT_APP_REGION_NAME;
 
   useEffect(() => {
     const link =
@@ -246,17 +246,21 @@ const App = () => {
           {isContainerEnabled && (
             <React.Fragment>
               <Route path="/OwnerScreen" element={<OwnerScreen />} exact />
+
               <Route path="/SellerScreen" element={<SellerScreen />} exact />
+
               <Route
                 path="/CustomerScreen"
                 element={<CustomerScreen />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/SellerRequestPage"
                 element={<SellerRequestPage />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/SellerRequests"
                 element={<SellerRequests />}
@@ -267,26 +271,31 @@ const App = () => {
                 element={<PeriodSelection />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/OrdersSold"
                 element={<OrdersSold />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/AddNewProducts"
                 element={<AddNewProducts />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/AllProducts"
                 element={<AllProducts />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/AllProductsDetailsPage"
                 element={<AllProductsDetailsPage />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/ProductRequests"
                 element={<ProductRequests />}
@@ -297,103 +306,112 @@ const App = () => {
                 element={<AllProductRequestsDetails />}
                 exact
               />
+
               <Route
                 path="/CustomerScreen/MyOrders"
                 element={<MyOrders />}
                 exact
               />
+
               <Route
                 path="/CustomerScreen/PaymentStatus"
                 element={<PaymentStatus />}
                 exact
               />
+
               <Route
                 path="/CustomerScreen/GetCard"
                 element={<GetCard />}
                 exact
               />
+
               <Route
                 path="/CustomerScreen/OrderDetails"
                 element={<OrderDetails />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/StoreDetails"
                 element={<StoreDetails />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/ViewCategories"
                 element={<ViewCategories />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/AddCategory"
                 element={<AddCategoryAndSubCategory />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/AddSubCategory"
                 element={<AddCategoryAndSubCategory />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/ProductStore"
                 element={<ProductStore />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/ProductDetailsStore"
                 element={<ProductDetailsStore />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/AllProductRequestsDetails"
                 element={<AllProductRequestsDetails />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/SellerDetailsStore"
                 element={<SellerDetailsStore />}
                 exact
               />
+
               <Route path="/OwnerScreen/Shelves" element={<Shelves />} exact />
+
               <Route
                 path="/OwnerScreen/AllOrders"
                 element={<AllOrders />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/AllProductRequests"
                 element={<AllProductRequests />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/CreateShelves"
                 element={<CreateShelves />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/SellerRequestsApproval"
                 element={<SellerRequestsApproval />}
                 exact
               />
+
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
                 element={<OrderDetailsStore />}
                 exact
               />
-              <Route
-                path="/terminal"
-                element={
-                  regionName === "WEISSENBURG" ? (
-                    <HorizondalTerminalScreen />
-                  ) : (
-                    <Error />
-                  )
-                }
-              />
-              ;
+
+              <Route path="/terminal" element={<HorizondalTerminalScreen />} />
             </React.Fragment>
           )}
         </Routes>
