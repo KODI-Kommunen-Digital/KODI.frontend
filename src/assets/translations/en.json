@@ -1042,5 +1042,6 @@
     "whatAreYouLookingFor": "What are you looking for?",
     "find": "Find",
     "selectCity": "Select Cities",
-    "whereAndWhat": "Where and What are you looking for ?"
+    "whereAndWhat": "Where and What are you looking for ?",
+    "unavailable": "Unavailable"
 }

@@ -1054,5 +1054,6 @@
     "whatAreYouLookingFor": "Wonach suchst du?",
     "find": "Suchen",
     "selectCity": "Wählen Sie Städte aus",
-    "whereAndWhat": "Wo und was suchen Sie ?"
+    "whereAndWhat": "Wo und was suchen Sie ?",
+    "unavailable": "Nicht verfügbar"
 }
