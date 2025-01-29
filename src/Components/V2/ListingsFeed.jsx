@@ -37,7 +37,6 @@ function ListingsFeed({ listing, terminalView = false, iFrame = false }) {
             platform: navigator.platform,
         };
 
-        console.log('Listing clicked:', listing.title);
         console.log('Browser Info:', browserInfo);
 
         if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
@@ -131,55 +130,43 @@ function ListingsFeed({ listing, terminalView = false, iFrame = false }) {
                     {listing.title}
                 </h2>
 
-                {listing.id && listing.categoryId === 3 ? (
-                    <div
-                        className="text-start items-start"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                        <p
-                            className="text-gray-600 my-2 title-font text-sm font-semibold truncate"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                            {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-                                "de-DE"
-                            )}{" "}
-                            (
-                            {new Date(
-                                listing.startDate.replace("Z", "")
-                            ).toLocaleTimeString("de-DE", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                timeZone: "Europe/Berlin",
-                            })}
-                            )
-                            {listing.endDate && (
-                                <>
-                                    <span className="text-gray-600"> {t("To")} </span>
-                                    {new Date(
-                                        listing.endDate.slice(0, 10)
-                                    ).toLocaleDateString("de-DE")}{" "}
-                                    (
-                                    {new Date(
-                                        listing.endDate.replace("Z", "")
-                                    ).toLocaleTimeString("de-DE", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        timeZone: "Europe/Berlin",
-                                    })}
-                                    )
-                                </>
-                            )}
-                        </p>
-                    </div>
-                ) : (
+                <div
+                    className="text-start items-start"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                >
                     <p
                         className="text-gray-600 my-2 title-font text-sm font-semibold truncate"
                         style={{ fontFamily: "Poppins, sans-serif" }}
-                        dangerouslySetInnerHTML={{
-                            __html: listing.description,
-                        }}
-                    />
-                )}
+                    >
+                        {listing.startDate &&
+                            `${new Date(listing.startDate.slice(0, 10)).toLocaleDateString("de-DE")} (
+                            ${new Date(listing.startDate.replace("Z", "")).toLocaleTimeString("de-DE", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                timeZone: "Europe/Berlin",
+                            })})`
+                        }
+                        {listing.endDate && (
+                            <>
+                                <span className="text-gray-600"> {t("To")} </span>
+                                {`${new Date(listing.endDate.slice(0, 10)).toLocaleDateString("de-DE")} (
+                                ${new Date(listing.endDate.replace("Z", "")).toLocaleTimeString("de-DE", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    timeZone: "Europe/Berlin",
+                                })})`}
+                            </>
+                        )}
+                    </p>
+                </div>
+
+                <p
+                    className="text-gray-600 my-2 title-font text-sm font-semibold truncate"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                    dangerouslySetInnerHTML={{
+                        __html: listing.description,
+                    }}
+                />
             </div>
         </div>
     );
