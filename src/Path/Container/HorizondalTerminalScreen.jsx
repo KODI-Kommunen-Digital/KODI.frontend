@@ -68,7 +68,7 @@ const HorizondalTerminalScreen = () => {
                     </div>
                 </div>
 
-                <div className="flex bg-white body-font relative min-h-screen">
+                <div className="flex bg-gray-300 body-font relative min-h-screen">
                     {/* Left Side: Events */}
                     <div className="w-1/2 h-full bg-gray-300 p-2">
                         <div className="bg-white px-5 py-6 rounded-lg">
