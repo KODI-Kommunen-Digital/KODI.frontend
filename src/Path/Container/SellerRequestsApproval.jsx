@@ -53,20 +53,18 @@ const SellerRequestsApproval = () => {
             getSellers(cityId, storeId, pageNumber, selectedStatus).then((response) => {
                 const requests = response.data.data;
                 setSellerRequests(requests);
-                setSellerRequestsCount(response.data.count)
-
+                setSellerRequestsCount(response.data.count);
             });
         }
     }, []);
 
     useEffect(() => {
         if (storeId) {
-            setPageNumber(1);
             const selectedStore = stores.find(store => store.id === parseInt(storeId));
             const cityId = selectedStore.cityId;
             fetchSellerRequests(cityId, storeId, pageNumber, selectedStatus);
         }
-    }, [fetchSellerRequests, storeId, pageNumber, selectedStatus]);
+    }, [fetchSellerRequests, storeId, pageNumber, selectedStatus, stores]);
 
     const handleStoreChange = async (event) => {
         const storeId = event.target.value;
@@ -286,7 +284,7 @@ const SellerRequestsApproval = () => {
                                     <table className="w-full text-sm text-left  text-gray-500 p-6 space-y-10 rounded-lg">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                             <tr>
-                                            <th
+                                                <th
                                                     scope="col"
                                                     className="px-6 py-4 text-center "
                                                     style={{
@@ -399,8 +397,11 @@ const SellerRequestsApproval = () => {
                                                                         {t("description")}
                                                                     </h3>
                                                                     <div className="mt-4">
-                                                                        <p className="text-sm text-gray-500 text-center break-words">
-                                                                            {selectedDescription}
+                                                                        <p className="text-sm text-gray-500 text-center break-words"
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: selectedDescription,
+                                                                            }}>
+                                                                            {/* {selectedDescription} */}
                                                                         </p>
                                                                     </div>
                                                                 </div>
