@@ -37,7 +37,6 @@ function ListingsFeed({ listing, terminalView = false, iFrame = false }) {
             platform: navigator.platform,
         };
 
-        console.log('Listing clicked:', listing.title);
         console.log('Browser Info:', browserInfo);
 
         if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
