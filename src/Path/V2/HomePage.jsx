@@ -311,16 +311,32 @@ const HomePage = () => {
                 </div>
               )}
 
-              <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+              <a
+                className={`relative w-full sm:w-80 cursor-pointer items-center justify-center inline-block px-4 py-2 font-medium group`}
+                type="submit"
                 onClick={() => {
-                  localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                  if (!terminalView) {
+                    localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                  }
                   const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
                   navigateTo(url);
                 }}
-                style={{ fontFamily: "Poppins, sans-serif" }}>
-                <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-slate-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-                <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-slate-800 group-hover:bg-slate-800"></span>
-                <span className="relative text-gray-900 group-hover:text-white">{t("viewMore")}</span>
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                <span
+                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${terminalView ? "bg-green-600" : "bg-gray-900"
+                    } group-hover:-translate-x-0 group-hover:-translate-y-0`}
+                ></span>
+                <span
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView ? "border-green-600 group-hover:bg-green-600" : "border-gray-900 group-hover:bg-gray-900"
+                    }`}
+                ></span>
+                <span
+                  className={`relative ${terminalView ? "text-green-600 group-hover:text-white" : "text-gray-900 group-hover:text-white"
+                    }`}
+                >
+                  {t("viewMore")}
+                </span>
               </a>
             </div>
           ) : (

@@ -436,7 +436,7 @@ const Listing = () => {
               <div className="grid grid-cols-1 gap-4 col-span-2">
 
                 {terminalView && (
-                  <div className="w-full sm:w-40">
+                  <div className="w-full sm:w-60">
                     <a
                       onClick={() => navigateTo("/AllListings?terminalView=true")}
                       className="flex items-center text-white bg-green-600 py-2 px-6 gap-2 rounded-lg cursor-pointer"

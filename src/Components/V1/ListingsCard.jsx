@@ -51,7 +51,11 @@ function ListingsCard({ listing, terminalView, iFrame = false }) {
       listing.sourceId === listingSource.USER_ENTRY ||
       listing.showExternal === 0
     ) {
-      navigateTo(isV2Backend ? `/Listing?listingId=${listing.id}&terminalView=${terminalView}` : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
+      const url = isV2Backend
+        ? `/Listing?listingId=${listing.id}${terminalView ? "&terminalView=true" : ""}`
+        : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""}`;
+
+      navigateTo(url);
     } else if (
       (listing.sourceId === listingSource.SCRAPER &&
         listing.showExternal === 1) ||

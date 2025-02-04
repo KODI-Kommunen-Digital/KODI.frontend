@@ -383,7 +383,7 @@ const AllListings = () => {
             {/* Official Notification Button */}
             <a
               onClick={handleOfficialNotificationButton}
-              className={`flex items-center w-60 text-white border ${RegionColors.darkBgColor} py-2 px-6 gap-2 rounded-lg cursor-pointer`}
+              className={`flex items-center w-80 text-white border ${RegionColors.darkBgColor} py-2 px-6 gap-2 rounded-lg cursor-pointer`}
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               <span>{t("officialnotification")}</span>
@@ -405,7 +405,7 @@ const AllListings = () => {
               onClick={() => {
                 navigateTo("/?terminalView=true");
               }}
-              className={`flex items-center w-60 text-white bg-green-600 py-2 px-6 gap-2 rounded-lg cursor-pointer`}
+              className="flex items-center w-80 text-white bg-green-600 py-2 px-6 gap-2 rounded-lg cursor-pointer"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               <svg
