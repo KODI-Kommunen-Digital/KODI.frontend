@@ -8,7 +8,7 @@ import listingSource from "../../Constants/listingSource";
 import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-function ListingsFeed({ listing, terminalView = false, iFrame = false }) {
+function ListingsFeed({ listing, terminalView, iFrame = false }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const navigateTo = (path) => {
@@ -50,7 +50,11 @@ function ListingsFeed({ listing, terminalView = false, iFrame = false }) {
             listing.sourceId === listingSource.USER_ENTRY ||
             listing.showExternal === 0
         ) {
-            navigateTo(isV2Backend ? `/Listing?listingId=${listing.id}&terminalView=${terminalView}` : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
+            const url = isV2Backend
+                ? `/Listing?listingId=${listing.id}${terminalView ? "&terminalView=true" : ""}`
+                : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""}`;
+
+            navigateTo(url);
         } else if (
             (listing.sourceId === listingSource.SCRAPER &&
                 listing.showExternal === 1) ||

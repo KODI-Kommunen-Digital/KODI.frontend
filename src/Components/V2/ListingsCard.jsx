@@ -8,7 +8,7 @@ import listingSource from "../../Constants/listingSource";
 import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-function ListingsCard({ listing, terminalView = false, iFrame = false }) {
+function ListingsCard({ listing, terminalView, iFrame = false }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -51,7 +51,10 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
       listing.sourceId === listingSource.USER_ENTRY ||
       listing.showExternal === 0
     ) {
-      navigateTo(isV2Backend ? `/Listing?listingId=${listing.id}&terminalView=${terminalView}` : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}&terminalView=${terminalView}`);
+      const url = isV2Backend
+        ? `/Listing?listingId=${listing.id}${terminalView ? "&terminalView=true" : ""}`
+        : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}${terminalView ? "&terminalView=true" : ""}`;
+      navigateTo(url);
     } else if (
       (listing.sourceId === listingSource.SCRAPER &&
         listing.showExternal === 1) ||
@@ -139,11 +142,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 className="text-white my-2 p-2 h-[1.8rem] title-font text-sm text-start font-semibold truncate"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
-                {new Date(listing.startDate.slice(0, 10)).toLocaleDateString(
-                  "de-DE"
-                )}{" "}
+                {new Date(listing.startDate?.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
                 (
-                {new Date(listing.startDate.replace("Z", "")).toLocaleTimeString(
+                {new Date(listing.startDate?.replace("Z", "")).toLocaleTimeString(
                   "de-DE",
                   {
                     hour: "2-digit",
@@ -155,11 +156,9 @@ function ListingsCard({ listing, terminalView = false, iFrame = false }) {
                 {listing.endDate && (
                   <>
                     <span className="text-white"> {t("To")} </span>
-                    {new Date(listing.endDate.slice(0, 10)).toLocaleDateString(
-                      "de-DE"
-                    )}{" "}
+                    {new Date(listing.endDate?.slice(0, 10)).toLocaleDateString("de-DE")}{" "}
                     (
-                    {new Date(listing.endDate.replace("Z", "")).toLocaleTimeString(
+                    {new Date(listing.endDate?.replace("Z", "")).toLocaleTimeString(
                       "de-DE",
                       {
                         hour: "2-digit",

@@ -8,7 +8,7 @@ import listingSource from "../../Constants/listingSource";
 import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-function ListingsCard({ listing, terminalView = false, iFrame = false }) {
+function ListingsCard({ listing, terminalView, iFrame = false }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const navigateTo = (path) => {

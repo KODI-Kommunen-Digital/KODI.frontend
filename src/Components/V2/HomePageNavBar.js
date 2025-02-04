@@ -10,7 +10,6 @@ export default function HomePageNavBar() {
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const gobackClass = terminalViewParam === "true" ? "visible" : "hidden";
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -20,6 +19,11 @@ export default function HomePageNavBar() {
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [terminalView, setTerminalView] = useState(false);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    setTerminalView(queryParams.get("terminalView") === "true");
+  }, []);
 
   useEffect(() => {
     const accessToken =
@@ -55,7 +59,7 @@ export default function HomePageNavBar() {
       <Popover className="w-full">
         <div className="w-full">
           <div
-            className={`flex items-center justify-between border-gray-100 lg:space-x-10 ${buttonClass}`}
+            className={`flex items-center justify-between border-gray-100 lg:space-x-10`}
           >
             <div
               className="text-center text-gray-900 hover:text-gray-700"
@@ -63,7 +67,8 @@ export default function HomePageNavBar() {
                 fontFamily: "Poppins, sans-serif",
               }}
               onClick={() => {
-                navigateTo("/");
+                const url = terminalView ? "/?terminalView=true" : "/";
+                navigateTo(url);
                 window.location.reload();
               }}
             >
@@ -133,25 +138,6 @@ export default function HomePageNavBar() {
               </a>
             </div>
           </div>
-
-          {location.pathname !== "/" && (
-            <div
-              className={`flex items-center justify-center border-gray-100 lg:justify-center lg:space-x-10 ${gobackClass}`}
-            >
-              <a
-                onClick={() => {
-                  if (terminalViewParam === "true") {
-                    navigateTo("/AllListings?terminalView=true");
-                  } else {
-                    navigateTo("/");
-                  }
-                }}
-                className={`font-sans inline-flex whitespace-nowrap rounded-xl border border-transparent bg-black px-8 py-2 text-base font-bold text-gray-900 cursor-pointer ${gobackClass}`}
-              >
-                <span className="mx-2">&#8592;</span> {t("gobacktoalllistings")}
-              </a>
-            </div>
-          )}
         </div>
 
         <Transition
