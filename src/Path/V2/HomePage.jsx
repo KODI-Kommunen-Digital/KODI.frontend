@@ -40,19 +40,20 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [terminalView, setTerminalView] = useState(false);
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     setTerminalView(queryParams.get("terminalView") === "true");
   }, []);
 
   useEffect(() => {
-    const hasAcceptedPrivacyPolicy = localStorage.getItem(
-      "privacyPolicyAccepted"
-    );
-
-    if (!hasAcceptedPrivacyPolicy) {
-      setShowPopup(true);
+    if (!terminalView) { // Skip Popup if terminalView is true
+      const hasAcceptedPrivacyPolicy = localStorage.getItem("privacyPolicyAccepted");
+      if (!hasAcceptedPrivacyPolicy) {
+        setShowPopup(true);
+      }
     }
+
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
@@ -89,15 +90,21 @@ const HomePage = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken =
-      window.localStorage.getItem("accessToken") ||
-      window.sessionStorage.getItem("accessToken");
-    const refreshToken =
-      window.localStorage.getItem("refreshToken") ||
-      window.sessionStorage.getItem("refreshToken");
-    if (accessToken || refreshToken) {
-      setIsLoggedIn(true);
+
+    if (!terminalView) { // Skip cookie storage if terminalView is true
+      const accessToken =
+        window.localStorage.getItem("accessToken") ||
+        window.sessionStorage.getItem("accessToken");
+
+      const refreshToken =
+        window.localStorage.getItem("refreshToken") ||
+        window.sessionStorage.getItem("refreshToken");
+
+      if (accessToken || refreshToken) {
+        setIsLoggedIn(true);
+      }
     }
+
     setIsLoading(true);
     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
     if (parseInt(cityId)) {
@@ -151,11 +158,13 @@ const HomePage = () => {
     clearSearchResults();
   };
 
-  window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
+  if (!terminalView) { // Scroll position disabled for Terminl View
+    window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
 
-  window.addEventListener("beforeunload", () => {
-    sessionStorage.setItem("scrollPosition", window.scrollY);
-  });
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
+  }
 
 
   useEffect(() => {
@@ -218,7 +227,7 @@ const HomePage = () => {
     }
 
     // const listingsSection = document.getElementById("listingsSection");
-    // listingsSection.scrollIntoView({ behavior: "smooth" });  // Use this if you want navidation to a place in page. Use id="listingsSection" in that section
+    // listingsSection.scrollIntoView({ behavior: "smooth" });  // Use this if you want navigation to a place in page. Use id="listingsSection" in that section
   };
 
   function goToCitizensPage() {
@@ -228,7 +237,9 @@ const HomePage = () => {
   }
 
   const handlePrivacyPolicyAccept = () => {
-    localStorage.setItem("privacyPolicyAccepted", "true");
+    if (!terminalView) {
+      localStorage.setItem("privacyPolicyAccepted", "true");
+    }
     setShowPopup(false);
   };
 
@@ -302,19 +313,6 @@ const HomePage = () => {
                   <option value="recent">{t("recent")}</option>
                   <option value="oldest">{t("oldest")}</option>
                 </select>
-
-                {/* <select
-                  className="text-slate-800 rounded-md p-4 gap-2 text-md font-bold cursor-pointer bg-transparent border-none focus:outline-none"
-                  value={selectedSortOption}
-                  onChange={handleSortOptionChange}
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  <option value="">{t("sort")}</option>
-                  <option value="titleAZ">{t("atoztitle")}</option>
-                  <option value="titleZA">{t("ztoatitle")}</option>
-                  <option value="recent">{t("recent")}</option>
-                  <option value="oldest">{t("oldest")}</option>
-                </select> */}
               </div>
 
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
@@ -330,16 +328,32 @@ const HomePage = () => {
                   ))}
               </div>
 
-              <a className="relative w-full items-center justify-center inline-block px-4 py-2 font-medium group" type="submit"
+              <a
+                className={`relative w-full sm:w-80 cursor-pointer items-center justify-center inline-block px-4 py-2 font-medium group`}
+                type="submit"
                 onClick={() => {
-                  localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                  if (!terminalView) {
+                    localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                  }
                   const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
                   navigateTo(url);
                 }}
-                style={{ fontFamily: "Poppins, sans-serif" }}>
-                <span className="absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-slate-800 group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-                <span className="absolute inset-0 w-full sm:w-80 h-full bg-white border-2 border-slate-800 group-hover:bg-slate-800"></span>
-                <span className="relative text-slate-800 group-hover:text-white">{t("viewMore")}</span>
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                <span
+                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${terminalView ? "bg-green-600" : "bg-gray-900"
+                    } group-hover:-translate-x-0 group-hover:-translate-y-0`}
+                ></span>
+                <span
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView ? "border-green-600 group-hover:bg-green-600" : "border-gray-900 group-hover:bg-gray-900"
+                    }`}
+                ></span>
+                <span
+                  className={`relative ${terminalView ? "text-green-600 group-hover:text-white" : "text-gray-900 group-hover:text-white"
+                    }`}
+                >
+                  {t("viewMore")}
+                </span>
               </a>
             </div>
           ) : (
