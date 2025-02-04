@@ -200,36 +200,6 @@ const PaymentStatus = () => {
                   </table>
                 </div>
               </div>
-
-              <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
-                {pageNumber !== 1 ? (
-                  <span
-                    className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                    onClick={() => setPageNo(pageNumber - 1)}
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {"<"}{" "}
-                  </span>
-                ) : (
-                  <span />
-                )}
-                <span
-                  className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                >
-                  {t("page")} {pageNumber}
-                </span>
-
-                {paymentStatus.length >= pageSize && pageNumber * pageSize < paymentStatusCount && (
-                  <span
-                    className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
-                    onClick={() => setPageNo(pageNumber + 1)}
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {">"}
-                  </span>
-                )}
-              </div>
             </>
           ) : cards.length > 0 ? (
             <div className="bg-gray-500 mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
@@ -338,6 +308,36 @@ const PaymentStatus = () => {
               </center>
             </div>
           )}
+
+          <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
+            {pageNumber !== 1 ? (
+              <span
+                className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+                onClick={() => setPageNo(pageNumber - 1)}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {"<"}{" "}
+              </span>
+            ) : (
+              <span />
+            )}
+            <span
+              className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("page")} {pageNumber}
+            </span>
+
+            {paymentStatus.length >= pageSize && pageNumber * pageSize < paymentStatusCount && (
+              <span
+                className="inline-block bg-black px-2 pb-2 pt-2 text-xs font-bold uppercase leading-normal text-neutral-50"
+                onClick={() => setPageNo(pageNumber + 1)}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {">"}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </section>
