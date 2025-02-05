@@ -1,12 +1,11 @@
-import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React from "react";
 import PdfThumbnail from "../PdfThumbnail";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import listingSource from "../../Constants/listingSource";
-import APPOINTMENTDEFAULTIMAGE from "../../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import RegionColors from "../../Components/RegionColors";
 
 function ListingsFeed({ listing, terminalView, iFrame = false }) {
     const { t } = useTranslation();
@@ -26,18 +25,10 @@ function ListingsFeed({ listing, terminalView, iFrame = false }) {
             trackEvent({
                 category: 'Listing',
                 action: 'Click',
-                name: listing.title, // Listing title
-                value: listing.id, // Optional: listing ID
+                name: listing.title,
+                value: listing.id,
             });
         }
-
-        // Browser information
-        const browserInfo = {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-        };
-
-        console.log('Browser Info:', browserInfo);
 
         if (listing.sourceId === listingSource.INSTAGRAM && listing.externalId && listing.externalId.startsWith('https://www.instagram.com')) {
             window.open(listing.website, '_blank');
@@ -66,24 +57,21 @@ function ListingsFeed({ listing, terminalView, iFrame = false }) {
         }
     };
 
-    const getImage = () => {
-
-        let image = listing.logo;
+    const getImage = (image) => {
+        if (!image) return ''; // Handle empty image cases
 
         if (listing.sourceId === listingSource.USER_ENTRY) {
-            image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
+            return process.env.REACT_APP_BUCKET_HOST + image; // Uploaded images
         }
 
         // Check if the logo is from the img.ecmaps.de/remote/.jpg? domain
         const isEcmapsDomain = image?.startsWith('img.ecmaps.de/remote/.jpg?');
 
         if (isEcmapsDomain) {
-            // Extract the `url` parameter from the logo URL
             const urlParams = new URLSearchParams(image.split('?')[1]);
             const extractedUrl = urlParams.get('url');
-
             if (extractedUrl) {
-                image = decodeURIComponent(extractedUrl);
+                return decodeURIComponent(extractedUrl);
             }
         }
 
@@ -94,52 +82,20 @@ function ListingsFeed({ listing, terminalView, iFrame = false }) {
         <div
             onClick={(e) => {
                 e.stopPropagation();
-                handleListingClick();
+                handleListingClick(listing);
             }}
-            className="w-full bg-slate-100 rounded-lg cursor-pointer hover:shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2 flex flex-row"
+            className="bg-gray-200 rounded-lg p-4 mb-4 shadow-lg border border-gray-100 flex flex-col h-auto self-start cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
         >
-            {/* Left: Image */}
-            <div className="relative h-80 w-1/3 overflow-hidden rounded-l-lg">
-                {listing.pdf ? (
-                    <PdfThumbnail
-                        pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
-                    />
-                ) : listing.logo ? (
-                    <img
-                        alt="Listing"
-                        className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                        src={getImage()}
-                        onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = listing.appointmentId
-                                ? APPOINTMENTDEFAULTIMAGE
-                                : LISTINGSIMAGE; // Set default image if loading fails
-                        }}
-                    />
-                ) : (
-                    <img
-                        alt="Listing"
-                        className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                        src={LISTINGSIMAGE}
-                    />
-                )}
-            </div>
-
-            {/* Right: Details */}
-            <div className="px-4 bg-gray-200 bg-opacity-75 shadow-md py-4 w-2/3">
-                <h2
-                    className="text-start text-lg md:text-2xl font-bold text-gray-800 truncate"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                >
+            <div className="px-4 bg-gray-200 py-4 rounded-t-lg">
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800">
                     {listing.title}
                 </h2>
-
                 <div
                     className="text-start items-start"
                     style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                     <p
-                        className="text-gray-600 my-2 title-font text-sm font-semibold truncate"
+                        className={`${RegionColors.darkTextColorV2} my-2 title-font text-sm font-semibold`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                         {listing.startDate &&
@@ -152,7 +108,7 @@ function ListingsFeed({ listing, terminalView, iFrame = false }) {
                         }
                         {listing.endDate && (
                             <>
-                                <span className="text-gray-600"> {t("To")} </span>
+                                <span className={`${RegionColors.darkTextColorV2}`}> {t("To")} </span>
                                 {`${new Date(listing.endDate.slice(0, 10)).toLocaleDateString("de-DE")} (
                                 ${new Date(listing.endDate.replace("Z", "")).toLocaleTimeString("de-DE", {
                                     hour: "2-digit",
@@ -163,15 +119,35 @@ function ListingsFeed({ listing, terminalView, iFrame = false }) {
                         )}
                     </p>
                 </div>
-
-                <p
-                    className="text-gray-600 my-2 title-font text-sm font-semibold truncate"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                    dangerouslySetInnerHTML={{
-                        __html: listing.description,
-                    }}
-                />
+                <p className={`${RegionColors.darkTextColorV2} my-2 text-sm font-semibold`}
+                    dangerouslySetInnerHTML={{ __html: listing.description }} />
             </div>
+            <div className="flex gap-2 p-2 overflow-x-auto">
+                {listing.pdf && (
+                    <div className="w-28 h-40 object-cover rounded-lg border border-gray-300 cursor-pointer">
+                        <PdfThumbnail pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf} />
+                    </div>
+                )}
+            </div>
+
+            {listing.otherLogos?.length > 0 && (
+                <div className="flex gap-2 p-2 overflow-x-auto">
+                    {[...listing.otherLogos]
+                        .sort((a, b) => a.imageOrder - b.imageOrder) // Sort by imageOrder
+                        .map((logo, index) => (
+                            <img
+                                key={`thumb-${index}`}
+                                src={getImage(logo.logo)}
+                                alt={`Thumbnail ${index + 1}`}
+                                className="w-28 h-40 object-cover rounded-lg cursor-pointer"
+                            // onClick={(e) => {
+                            //     e.stopPropagation();
+                            //     window.open(getImage(logo.logo), '_blank');
+                            // }}
+                            />
+                        ))}
+                </div>
+            )}
         </div>
     );
 }

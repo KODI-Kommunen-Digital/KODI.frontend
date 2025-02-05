@@ -432,6 +432,7 @@ const AllListings = () => {
 							}
 						`}
         </style>
+
         {isLoading ? (
           <LoadingPage />
         ) : (
@@ -486,6 +487,7 @@ const AllListings = () => {
             )}
           </div>
         )}
+
         <div
           className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${
             process.env.REACT_APP_NAME === "Salzkotten APP"

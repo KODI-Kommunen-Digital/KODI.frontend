@@ -80,18 +80,6 @@ const CustomCarousel = (props) => {
   return (
     <div className="relative">
       <div className={`rounded-xl mb-${sortedImageList.length <= 1 ? 0 : 4} relative`}>
-        {/* {sortedImageList.length <= 1 ? null : (
-          <>
-            <div className="absolute mr-1 right-0 top-1/2 transform -translate-y-1/2">
-              <NextIconButton onClick={onClickNext} />
-            </div>
-
-            <div className="absolute ml-1 left-0 top-1/2 transform -translate-y-1/2">
-              <PrevIconButton onClick={onClickPrev} />
-            </div>
-          </>
-        )} */}
-
         {mainImageComponent}
       </div>
 
@@ -104,7 +92,6 @@ const CustomCarousel = (props) => {
 
       {sortedImageList.length <= 1 ? null : (
         <>
-          {/* <div className="my-4 bg-slate-500 h-[1px]"></div> */}
           <div className="flex px-0 py-0 overflow-x-auto bg-slate-100 border-t-8 border-slate-500">{thumbnailComponent}</div>
         </>
       )}

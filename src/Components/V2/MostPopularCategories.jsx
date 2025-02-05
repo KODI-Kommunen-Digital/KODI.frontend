@@ -58,8 +58,6 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                 value: categoryId,
             });
         }
-
-        console.log('Category clicked:', categoryName);
     };
 
     return (

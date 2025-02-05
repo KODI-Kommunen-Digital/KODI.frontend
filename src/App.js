@@ -21,10 +21,12 @@ import AllListingsV1 from "./Path/V1/AllListings";
 import AllListingsV2 from "./Path/V2/AllListings";
 import UploadListingsV1 from "./Path/V1/UploadListings";
 import UploadListingsV2 from "./Path/V2/UploadListings";
+import ListingV1 from "./Path/V1/Listing";
+import ListingV2 from "./Path/V2/Listing";
+import ViewProfileV1 from "./Path/V1/ViewProfile";
+import ViewProfileV2 from "./Path/V2/ViewProfile";
 
 import Favorites from "./Path/Favorites";
-import Listing from "./Path/SubPages/Listing";
-import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
 import Forum from "./Path/Forums/Forum";
 import UploadPosts from "./Path/Forums/UploadPosts";
@@ -113,7 +115,16 @@ const App = () => {
             path="/"
             element={frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />}
           />
-          <Route path="/Listing" element={<Listing />} exact />
+          <Route
+            path="/Listing"
+            element={frontendVersion === "1" ? <ListingV1 /> : <ListingV2 />}
+          />
+          <Route
+            path="/ViewProfile/:username"
+            element={
+              frontendVersion === "1" ? <ViewProfileV1 /> : <ViewProfileV2 />
+            }
+          />
           <Route
             path="/AllListings"
             element={
@@ -124,7 +135,6 @@ const App = () => {
             path="/UploadListings"
             element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
           />
-          <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
             path="/CitizenService/CitizenServiceManagement"

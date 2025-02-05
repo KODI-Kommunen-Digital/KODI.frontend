@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../../Services/usersApi";
+import RegionColors from "../../Components/RegionColors";
 
 export default function HomePageNavBar() {
   const location = useLocation();
@@ -153,12 +154,14 @@ export default function HomePageNavBar() {
             focus
             className="absolute inset-x-0 top-0 origin-top-right transform p-2 transition lg:hidden"
           >
-            <div className="divide-y-2 divide-gray-50 rounded-xl bg-black">
+            <div
+              className={`${RegionColors.darkBgColorV2} divide-y-2 divide-gray-50 rounded-xl`}
+            >
               <div className="space-y-6 py-6 px-5">
                 <div className="mr-2 flex justify-between">
                   {isLoggedIn && (
                     <a
-                      className="text-gray-900 border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
+                      className="text-white border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center cursor-pointer"
                       onClick={() => {
                         navigateTo("/Favorite");
                       }}
@@ -178,7 +181,7 @@ export default function HomePageNavBar() {
                       </svg>
                     </a>
                   )}
-                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-gray-900">
+                  <Popover.Button className="inline-flex items-center justify-center rounded-xl bg-blck p-2 text-white">
                     <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </Popover.Button>
@@ -187,7 +190,7 @@ export default function HomePageNavBar() {
                 <div>
                   <a
                     onClick={handleLoginLogout}
-                    className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {isLoggedIn ? t("logOut") : t("login")}
                   </a>
@@ -197,7 +200,7 @@ export default function HomePageNavBar() {
                   <div>
                     <a
                       onClick={handleGotoDashboard}
-                      className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                      className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                     >
                       {t("dashboard")}
                     </a>
@@ -211,7 +214,7 @@ export default function HomePageNavBar() {
                         ? navigateTo("/UploadListings")
                         : navigateTo("/login")
                     }
-                    className="font-bold text-gray-900 inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
+                    className="font-bold text-white inline-flex items-center justify-center whitespace-nowrap cursor-pointer"
                   >
                     {t("submit")}
                   </a>

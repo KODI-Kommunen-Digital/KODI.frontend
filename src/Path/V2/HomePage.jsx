@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import LocationBar from "../../Components/V2/LocationBar";
-import MultiCityDropdown from "../../Components/V2/MultiCityDropdown";
+// import MultiCityDropdown from "../../Components/V2/MultiCityDropdown";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,7 @@ import ONEIMAGE from "../../assets/01.png";
 import TWOIMAGE from "../../assets/02.png";
 import THREEIMAGE from "../../assets/03.png";
 import MostPopularCategories from "../../Components/V2/MostPopularCategories";
+import categoryImages from "../../Components/V2/CategoryImages";
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -216,6 +217,10 @@ const HomePage = () => {
     setShowPopup(false);
   };
 
+  const getCategoryImage = (categoryId) => {
+    return categoryImages[categoryId] || categoryImages[0]; // Default image
+  };
+
   return (
     <section className="text-gray-600 body-font relative">
       <div className="pt-16 flex flex-col">
@@ -234,7 +239,8 @@ const HomePage = () => {
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
-                src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                // src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                src={getCategoryImage(categoryId)}
                 loading="lazy"
               />
 
@@ -249,13 +255,13 @@ const HomePage = () => {
                     {t("homePageHeading")}
                   </h1>
 
-                  <MultiCityDropdown
+                  {/* <MultiCityDropdown
                     cities={cities}
                     setListings={(updatedListings) => {
                       setCityId(updatedListings.cityId);
                       fetchData({ ...updatedListings, pageSize: 12, statusId: 1, pageNo: 1 });
                     }}
-                  />
+                  /> */}
                 </div>
               </div>
 
@@ -294,7 +300,7 @@ const HomePage = () => {
           {listings && listings.length > 0 ? (
             <div className="bg-white px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 mt-0 mb-10 space-y-10 flex flex-col">
               {isGridView ? (
-                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-10 justify-start">
+                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-start">
                   {listings &&
                     listings.map((listing, index) => (
                       <ListingsCard listing={listing} terminalView={terminalView} key={index} />
@@ -302,10 +308,9 @@ const HomePage = () => {
                 </div>
               ) : (
 
-                <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 gap-10 justify-start">
+                <div className="columns-1 md:columns-2 gap-4">
                   {listings &&
                     listings.map((listing, index) => (
-
                       <ListingsFeed listing={listing} terminalView={terminalView} key={index} />
                     ))}
                 </div>
@@ -426,93 +431,6 @@ const HomePage = () => {
               </div>
 
               {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
-
-              {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
-              <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
-                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={ONEIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("createAnAccount")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("createAnAccountDescription")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={TWOIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("getVerified")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("getVerifiedDescription")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={THREEIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("start")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("startDescription")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>{/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
 
               {/* <div className="bg-slate-500 px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
               <div className="bg-white px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-6 space-y-10 flex flex-col">
@@ -732,15 +650,18 @@ const HomePage = () => {
             </>
           )}
         </>
-      )}
+      )
+      }
 
-      {!isLoading && !terminalView && (
-        <div className="bottom-0 w-full">
-          <Footer />
-        </div>
-      )}
+      {
+        !isLoading && !terminalView && (
+          <div className="bottom-0 w-full">
+            <Footer />
+          </div>
+        )
+      }
 
-    </section>
+    </section >
   );
 };
 

@@ -2,13 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import RegionColors from "../../Components/RegionColors";
+import { Combobox } from "@headlessui/react";
 
 const LocationBar = ({ onSearch, searchQuery }) => {
     const { t } = useTranslation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [location, setLocation] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDistanceDropdownOpen, setIsDistanceDropdownOpen] = useState(false);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
     const [selectedDistance, setSelectedDistance] = useState("+ 5 km");
     const dropdownRef = useRef(null);
     const options = [
@@ -23,14 +26,42 @@ const LocationBar = ({ onSearch, searchQuery }) => {
         "+ 200 km",
     ];
 
+    useEffect(() => {
+        if (query.length < 3) {
+            setSuggestions([]);
+            setIsLocationDropdownOpen(false);
+            return;
+        }
+
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    setSuggestions(data);
+                    setIsLocationDropdownOpen(true);
+                } else {
+                    setSuggestions([]);
+                    setIsLocationDropdownOpen(false);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, [query]);
+
     const toggleDropdown = () => {
-        setIsOpen(!isOpen);
+        setIsDistanceDropdownOpen(!isDistanceDropdownOpen);
     };
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
+                setIsDistanceDropdownOpen(false);
+                setIsLocationDropdownOpen(false);
             }
         };
 
@@ -42,7 +73,7 @@ const LocationBar = ({ onSearch, searchQuery }) => {
 
     const selectOption = (option) => {
         setSelectedDistance(option);
-        setIsOpen(false);
+        setIsDistanceDropdownOpen(false);
     };
 
     useEffect(() => {
@@ -61,7 +92,7 @@ const LocationBar = ({ onSearch, searchQuery }) => {
 
     return (
         <div>
-            <div className={`${RegionColors.darkBgColorV2} hidden md:flex px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-4 justify-center`}>
+            <div className={`${RegionColors.lightBgColorV2} hidden md:flex px-5 md:px-10 lg:px-[10rem] 2xl:px-[20rem] py-4 justify-center`}>
                 <div className="bg-white rounded-full flex items-center shadow-md px-4 py-2 w-full">
                     {/* Search Icon and Input */}
                     <form
@@ -94,15 +125,33 @@ const LocationBar = ({ onSearch, searchQuery }) => {
                     <div className="border-l border-gray-300 h-8 mx-3"></div>
 
                     {/* Location Input */}
-                    <div className="flex items-center flex-1 p-2">
+                    <div className="flex items-center flex-1 p-2 relative" ref={dropdownRef}>
                         <svg className="w-5 h-5 text-gray-700 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                             <path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
                         </svg>
-                        <input
-                            type="text"
-                            placeholder={t("chooseLocation")}
-                            className="flex-grow outline-none text-gray-700"
-                        />
+                        <Combobox value={query} onChange={setQuery}>
+                            <Combobox.Input
+                                onChange={(event) => setQuery(event.target.value)}
+                                placeholder={t("chooseLocation")}
+                                className="flex-grow outline-none text-gray-700"
+                            />
+                        </Combobox>
+                        {isLocationDropdownOpen && (
+                            <div className="absolute top-full left-0 mt-4 w-full bg-white shadow-md rounded-lg z-10">
+                                {suggestions.map((place) => (
+                                    <div
+                                        key={place.place_id}
+                                        onClick={() => {
+                                            setQuery(place.display_name);
+                                            setIsLocationDropdownOpen(false);
+                                        }}
+                                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                        {place.display_name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="border-l border-gray-300 h-8 mx-3"></div>
@@ -131,8 +180,8 @@ const LocationBar = ({ onSearch, searchQuery }) => {
                         </button>
 
                         {/* Dropdown menu */}
-                        {isOpen && (
-                            <div className="absolute top-full left-0 mt-1 w-32 bg-white shadow-md rounded-lg z-10">
+                        {isDistanceDropdownOpen && (
+                            <div className="absolute top-full left-0 mt-4 w-32 bg-white shadow-md rounded-lg z-10">
                                 {options.map((option, index) => (
                                     <div
                                         key={index}
@@ -185,49 +234,81 @@ const LocationBar = ({ onSearch, searchQuery }) => {
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-white bg-opacity-100 flex justify-center items-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-2/3">
                         {/* Close Button */}
-                        <button
-                            className="absolute top-2 right-2 text-gray-900"
-                            onClick={() => setIsModalOpen(false)}
-                        >
+                        <button className="absolute top-3 right-3 text-gray-900 text-lg" onClick={() => setIsModalOpen(false)}>
                             ✕
                         </button>
 
-                        {/* Search Form */}
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="What are you looking for?"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                            />
-                            <input
-                                type="text"
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
-                                placeholder="Choose location"
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                            />
-                            <select
-                                value={selectedDistance}
-                                onChange={(e) => setSelectedDistance(e.target.value)}
-                                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                            >
-                                {options.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder={t("whatAreYouLookingFor")}
+                            className="w-full border border-gray-300 rounded-md p-3 mb-4"
+                        />
+
+                        {/* Location Search */}
+                        <div ref={dropdownRef}>
+                            <Combobox value={query} onChange={(value) => {
+                                setQuery(value);
+                                setIsLocationDropdownOpen(false);
+                            }}>
+                                <Combobox.Input
+                                    onChange={(event) => setQuery(event.target.value)}
+                                    placeholder={t("chooseLocation")}
+                                    className="w-full border border-gray-300 rounded-md p-3 mb-4"
+                                />
+                            </Combobox>
+                            {isLocationDropdownOpen && (
+                                <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 mb-4">
+                                    {suggestions.map((place) => (
+                                        <div
+                                            key={place.place_id}
+                                            onClick={() => {
+                                                setQuery(place.display_name);
+                                                setIsLocationDropdownOpen(false);
+                                            }}
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            {place.display_name}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Distance Dropdown */}
+                        <div ref={dropdownRef}>
                             <button
-                                type="submit"
-                                className="bg-gray-800 text-white rounded-md px-4 py-2 w-full"
+                                onClick={() => setIsDistanceDropdownOpen(!isDistanceDropdownOpen)}
+                                className="w-full border border-gray-300 rounded-md p-3 mb-4"
                             >
-                                Find
+                                {selectedDistance}
                             </button>
-                        </form>
+                            {isDistanceDropdownOpen && (
+                                <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 mb-4">
+                                    {options.map((option, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => {
+                                                setSelectedDistance(option);
+                                                setIsDistanceDropdownOpen(false);
+                                            }}
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            {option}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Find Button */}
+                        <button onClick={handleSubmit} className="bg-gray-800 text-white rounded-md px-4 py-2 w-full">
+                            {t("find")}
+                        </button>
                     </div>
                 </div>
             )}
