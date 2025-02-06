@@ -39,7 +39,7 @@ function UploadListings() {
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
   const [, setDragging] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin] = useState(false);
   const CHARACTER_LIMIT = 255;
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -688,13 +688,13 @@ function UploadListings() {
           }
 
           // Handle images or PDF
-          if (listingData.logo) {
-            setImage([listingData.logo]); // Use the primary logo
-          } else if (listingData.otherLogos && listingData.otherLogos.length > 0) {
+          if (listingData.otherLogos && listingData.otherLogos.length > 0) {
             const sortedLogos = listingData.otherLogos
               .sort(({ imageOrder: a }, { imageOrder: b }) => a - b)
               .map((img) => img.logo);
             setImage(sortedLogos); // Use sorted logos
+          } else if (listingData.logo) {
+            setImage([listingData.logo]); // Use the primary logo
           } else if (listingData.pdf) {
             setPdf({
               link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1196,7 +1196,7 @@ function UploadListings() {
         listingInput.description,
         categoryId,
         selectedCities.length > 0,
-        !(error.title || error.description || error.cityIds || error.categoryId),
+        !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
 

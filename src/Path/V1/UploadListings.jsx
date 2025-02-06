@@ -660,11 +660,13 @@ function UploadListings() {
           });
         }
 
-        if (listingData.logo && listingData.otherlogos) {
-          const temp = listingData.otherlogos
-            .sort(({ imageOrder: a }, { imageOrder: b }) => b - a)
+        if (listingData.otherLogos && listingData.otherLogos.length > 0) {
+          const sortedLogos = listingData.otherLogos
+            .sort(({ imageOrder: a }, { imageOrder: b }) => a - b)
             .map((img) => img.logo);
-          setImage(temp);
+          setImage(sortedLogos); // Use sorted logos
+        } else if (listingData.logo) {
+          setImage([listingData.logo]); // Use the primary logo
         } else if (listingData.pdf) {
           setPdf({
             link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1110,7 +1112,7 @@ function UploadListings() {
         listingInput.description,
         categoryId,
         selectedCities.length > 0,
-        !(error.title || error.description || error.cityIds || error.categoryId),
+        !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
 
