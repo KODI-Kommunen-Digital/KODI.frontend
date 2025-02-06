@@ -650,13 +650,6 @@ const Dashboard = () => {
                           </div>
                         )}
 
-                        <td
-                          className="px-6 py-4 text-center font-bold text-violet-600 text-sm truncate"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {listing.userName ? listing.userName : t("unavailable")}
-                        </td>
-
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div
