@@ -416,6 +416,7 @@ function UploadListings() {
         const dataToSubmit = {
           ...listingInput,
           cityIds: cityIdsToSubmit,
+          villageId: 0,
         };
 
         const response = newListing
@@ -660,8 +661,8 @@ function UploadListings() {
           });
         }
 
-        if (listingData.otherLogos && listingData.otherLogos.length > 0) {
-          const sortedLogos = listingData.otherLogos
+        if (listingData.otherlogos && listingData.otherlogos.length > 0) {
+          const sortedLogos = listingData.otherlogos
             .sort(({ imageOrder: a }, { imageOrder: b }) => a - b)
             .map((img) => img.logo);
           setImage(sortedLogos); // Use sorted logos
@@ -1111,7 +1112,7 @@ function UploadListings() {
         listingInput.title,
         listingInput.description,
         categoryId,
-        selectedCities.length > 0,
+        cityIds,
         !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];

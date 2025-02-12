@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import PropTypes from "prop-types";
 
+function PdfThumbnail({ pdfUrl }) {
+	const containerRef = React.useRef(null);
+	const [width, setWidth] = React.useState(null);
 
-function PdfThumbnail(pdfUrl) {
-	const [scale, setScale] = useState(1)
-
-	function handleRenderSuccess(pageData) {
-		setScale(Number(document.getElementsByClassName("pdf-listing-card")[0].offsetWidth / Number(pageData.originalWidth)))
-
+	function onPageLoadSuccess() {
+		if (containerRef.current) {
+			setWidth(containerRef.current.offsetWidth);
+		}
 	}
 
 	return (
-		<div className="pdf-listing-card">
-			<Document file={pdfUrl.pdfUrl}>
-				<Page pageNumber={1} onRenderSuccess={handleRenderSuccess} scale={scale} />
+		<div
+			ref={containerRef}
+		>
+			<Document file={pdfUrl}>
+				<Page
+					pageNumber={1}
+					width={width || 300}
+					onLoadSuccess={onPageLoadSuccess}
+					renderMode="svg"
+				/>
 			</Document>
 		</div>
 	);
 }
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+PdfThumbnail.propTypes = {
+	pdfUrl: PropTypes.string.isRequired,
+};
 
 export default PdfThumbnail;

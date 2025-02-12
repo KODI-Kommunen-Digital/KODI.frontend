@@ -1015,64 +1015,6 @@ function UploadListings() {
     fetchCities();
   }, []);
 
-  // const onCityChange = async (e) => {
-  //   const selectedCityId = parseInt(e.target.value);
-
-  //   if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
-  //     const selectedCity = cities.find(city => city.id === selectedCityId);
-  //     setSelectedCities(selectedCity ? [selectedCity] : []);
-  //     setCityId(selectedCityId);
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: selectedCity ? [selectedCity.id] : [],
-  //     }));
-  //   } else {
-  //     const selectedCity = cities.find(city => city.id === selectedCityId);
-  //     if (selectedCity) {
-  //       if (!selectedCities.some(city => city.id === selectedCityId)) {
-  //         const updatedSelectedCities = [...selectedCities, selectedCity];
-  //         setSelectedCities(updatedSelectedCities);
-  //         setCityId(selectedCityId);
-  //         setListingInput((prev) => ({
-  //           ...prev,
-  //           cityIds: updatedSelectedCities.map(city => city.id),
-  //         }));
-  //       } else {
-  //         setError((prevState) => ({
-  //           ...prevState,
-  //           cityAlreadySelected: t("cityAlreadySelected"),
-  //         }));
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const removeCity = (cityIdToRemove) => {
-  //   const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
-  //   setSelectedCities(updatedSelectedCities);
-
-  //   if (updatedSelectedCities.length === 0) {
-  //     setCityId(0);
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: [],
-  //     }));
-  //     setError((prevState) => ({
-  //       ...prevState,
-  //       cityIds: t("pleaseSelectCity"),
-  //     }));
-  //   } else {
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: updatedSelectedCities.map(city => city.id),
-  //     }));
-  //     setError((prevState) => ({
-  //       ...prevState,
-  //       cityIds: "",
-  //     }));
-  //   }
-  // };
-
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
