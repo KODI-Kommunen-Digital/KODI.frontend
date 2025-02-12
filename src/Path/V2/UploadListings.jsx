@@ -39,7 +39,7 @@ function UploadListings() {
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
   const [, setDragging] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin] = useState(false);
   const CHARACTER_LIMIT = 255;
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -688,13 +688,13 @@ function UploadListings() {
           }
 
           // Handle images or PDF
-          if (listingData.logo) {
-            setImage([listingData.logo]); // Use the primary logo
-          } else if (listingData.otherLogos && listingData.otherLogos.length > 0) {
+          if (listingData.otherLogos && listingData.otherLogos.length > 0) {
             const sortedLogos = listingData.otherLogos
               .sort(({ imageOrder: a }, { imageOrder: b }) => a - b)
               .map((img) => img.logo);
             setImage(sortedLogos); // Use sorted logos
+          } else if (listingData.logo) {
+            setImage([listingData.logo]); // Use the primary logo
           } else if (listingData.pdf) {
             setPdf({
               link: process.env.REACT_APP_BUCKET_HOST + listingData.pdf,
@@ -1015,64 +1015,6 @@ function UploadListings() {
     fetchCities();
   }, []);
 
-  // const onCityChange = async (e) => {
-  //   const selectedCityId = parseInt(e.target.value);
-
-  //   if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
-  //     const selectedCity = cities.find(city => city.id === selectedCityId);
-  //     setSelectedCities(selectedCity ? [selectedCity] : []);
-  //     setCityId(selectedCityId);
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: selectedCity ? [selectedCity.id] : [],
-  //     }));
-  //   } else {
-  //     const selectedCity = cities.find(city => city.id === selectedCityId);
-  //     if (selectedCity) {
-  //       if (!selectedCities.some(city => city.id === selectedCityId)) {
-  //         const updatedSelectedCities = [...selectedCities, selectedCity];
-  //         setSelectedCities(updatedSelectedCities);
-  //         setCityId(selectedCityId);
-  //         setListingInput((prev) => ({
-  //           ...prev,
-  //           cityIds: updatedSelectedCities.map(city => city.id),
-  //         }));
-  //       } else {
-  //         setError((prevState) => ({
-  //           ...prevState,
-  //           cityAlreadySelected: t("cityAlreadySelected"),
-  //         }));
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const removeCity = (cityIdToRemove) => {
-  //   const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIdToRemove);
-  //   setSelectedCities(updatedSelectedCities);
-
-  //   if (updatedSelectedCities.length === 0) {
-  //     setCityId(0);
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: [],
-  //     }));
-  //     setError((prevState) => ({
-  //       ...prevState,
-  //       cityIds: t("pleaseSelectCity"),
-  //     }));
-  //   } else {
-  //     setListingInput((prev) => ({
-  //       ...prev,
-  //       cityIds: updatedSelectedCities.map(city => city.id),
-  //     }));
-  //     setError((prevState) => ({
-  //       ...prevState,
-  //       cityIds: "",
-  //     }));
-  //   }
-  // };
-
   const [categoryId, setCategoryId] = useState(0);
   const [subcategoryId, setSubcategoryId] = useState(0);
 
@@ -1196,7 +1138,7 @@ function UploadListings() {
         listingInput.description,
         categoryId,
         selectedCities.length > 0,
-        !(error.title || error.description || error.cityIds || error.categoryId),
+        !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
 

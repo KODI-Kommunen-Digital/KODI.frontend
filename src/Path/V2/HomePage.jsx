@@ -67,11 +67,10 @@ const HomePage = () => {
       setCategoryId(categoryId);
     }
     getListingsCount().then((response) => {
-      const data = response.data.data;
+      const data = response?.data?.data || [];
       const sortedData = data.sort(
         (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
       );
-
       setListingsCount(sortedData);
     });
 
@@ -132,7 +131,7 @@ const HomePage = () => {
     params.showExternalListings = "false";
     try {
       const response = await getListings(params);
-      const listings = response.data.data;
+      const listings = response?.data?.data || [];
 
       const filteredListings = listings.filter(
         listing => !hiddenCategories.includes(listing.categoryId)
