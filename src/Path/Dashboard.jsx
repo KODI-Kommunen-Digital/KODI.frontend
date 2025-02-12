@@ -445,16 +445,6 @@ const Dashboard = () => {
                       {t("action")}
                     </th>
 
-                    {viewAllListings && (
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                      >
-                        {t("username")}
-                      </th>
-                    )}
-
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
@@ -476,7 +466,7 @@ const Dashboard = () => {
                           className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
                         >
                           {listing.pdf ? (
-                            <div className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
+                            <div className="object-cover object-center w-10 h-10 rounded-full overflow-hidden"
                               onClick={() => {
                                 if (!hiddenCategories.includes(listing.categoryId)) {
                                   goToListingPage(listing);
@@ -649,13 +639,6 @@ const Dashboard = () => {
                             </div>
                           </div>
                         )}
-
-                        <td
-                          className="px-6 py-4 text-center font-bold text-violet-600 text-sm truncate"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {listing.userName ? listing.userName : t("unavailable")}
-                        </td>
 
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
