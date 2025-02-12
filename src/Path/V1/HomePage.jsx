@@ -49,11 +49,10 @@ const HomePage = () => {
       setCityId(cityId);
     }
     getListingsCount().then((response) => {
-      const data = response.data.data;
+      const data = response?.data?.data || [];
       const sortedData = data.sort(
         (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
       );
-
       setListingsCount(sortedData);
     });
 
@@ -85,7 +84,7 @@ const HomePage = () => {
     window.history.replaceState({}, "", newUrl);
 
     getListings(params).then((response) => {
-      const listings = response.data.data;
+      const listings = response?.data?.data || [];
       const filteredListings = listings.filter(
         (listing) => !hiddenCategories.includes(listing.categoryId)
       );
@@ -217,12 +216,8 @@ const HomePage = () => {
                           regionName: process.env.REACT_APP_REGION_NAME,
                         })}
                       </option>
-                      {cities.map((city) => (
-                        <option
-                          className="font-sans"
-                          value={city.id}
-                          key={city.id}
-                        >
+                      {(cities ?? []).map((city) => (
+                        <option className="font-sans" value={city.id} key={city.id}>
                           {city.name}
                         </option>
                       ))}
