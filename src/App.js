@@ -94,6 +94,7 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const appName = process.env.REACT_APP_NAME;
 
   useEffect(() => {
     const link =
@@ -111,8 +112,24 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />}
+            element={
+              appName === "KODI_DE" ? (
+                <LoginPage />
+              ) : frontendVersion === "1" ? (
+                <HomePageV1 />
+              ) : (
+                <HomePageV2 />
+              )
+            }
           />
+          {appName === "KODI_DE" && (
+            <Route
+              path="/home"
+              element={
+                frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />
+              }
+            />
+          )}
           <Route path="/Listing" element={<Listing />} exact />
           <Route
             path="/AllListings"
