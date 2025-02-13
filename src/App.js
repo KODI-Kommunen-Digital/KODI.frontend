@@ -80,9 +80,10 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
+import ProductRequests from "./Path/Container/ProductRequests.jsx";
+import HamburgTerminalScreen from "./Path/Container/HamburgTerminalScreen";
 
 import Modal from "react-modal";
-import ProductRequests from "./Path/Container/ProductRequests.jsx";
 
 Modal.setAppElement("#root");
 
@@ -299,6 +300,7 @@ const App = () => {
                 element={<ProductRequests />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/ProductRequestsDetails"
                 element={<AllProductRequestsDetails />}
@@ -406,6 +408,12 @@ const App = () => {
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
                 element={<OrderDetailsStore />}
+                exact
+              />
+
+              <Route
+                path="/HamburgTerminalScreen"
+                element={<HamburgTerminalScreen />}
                 exact
               />
             </React.Fragment>
