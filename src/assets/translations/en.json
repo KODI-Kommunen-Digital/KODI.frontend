@@ -1038,5 +1038,6 @@
     "category_not_added":"Category not added to the store",
     "subcategoryUpdated": "New sub category updated",
     "Sub-Categories":"Sub-Categories",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "invalidEmailAddress": "Invalid email address"
 }

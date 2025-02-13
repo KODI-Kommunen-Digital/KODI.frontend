@@ -49,11 +49,10 @@ const HomePage = () => {
       setCityId(cityId);
     }
     getListingsCount().then((response) => {
-      const data = response.data.data;
+      const data = response?.data?.data || [];
       const sortedData = data.sort(
         (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
       );
-
       setListingsCount(sortedData);
     });
 
@@ -85,7 +84,7 @@ const HomePage = () => {
     window.history.replaceState({}, "", newUrl);
 
     getListings(params).then((response) => {
-      const listings = response.data.data;
+      const listings = response?.data?.data || [];
       const filteredListings = listings.filter(
         (listing) => !hiddenCategories.includes(listing.categoryId)
       );
@@ -217,12 +216,8 @@ const HomePage = () => {
                           regionName: process.env.REACT_APP_REGION_NAME,
                         })}
                       </option>
-                      {cities.map((city) => (
-                        <option
-                          className="font-sans"
-                          value={city.id}
-                          key={city.id}
-                        >
+                      {(cities ?? []).map((city) => (
+                        <option className="font-sans" value={city.id} key={city.id}>
                           {city.name}
                         </option>
                       ))}
@@ -345,7 +340,7 @@ const HomePage = () => {
 
           <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-              {cities.map((city) => {
+              {(cities ?? []).map((city) => { // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
                 if (city.id !== Number(cityId)) { // Ensure current city is not displayed
                   return (
                     <div

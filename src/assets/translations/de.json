@@ -1050,5 +1050,6 @@
     "category_not_added":"Kategorie nicht in den Shop aufgenommen",
     "subcategoryUpdated": "Neue Unterkategorie aktualisiert",
     "Sub-Categories":"Unterkatheorien",
-    "unavailable": "Nicht verfügbar"
+    "unavailable": "Nicht verfügbar",
+    "invalidEmailAddress": "Ungültige E-Mail-Adresse"
 }

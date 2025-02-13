@@ -67,11 +67,10 @@ const HomePage = () => {
       setCategoryId(categoryId);
     }
     getListingsCount().then((response) => {
-      const data = response.data.data;
+      const data = response?.data?.data || [];
       const sortedData = data.sort(
         (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
       );
-
       setListingsCount(sortedData);
     });
 
@@ -132,7 +131,7 @@ const HomePage = () => {
     params.showExternalListings = "false";
     try {
       const response = await getListings(params);
-      const listings = response.data.data;
+      const listings = response?.data?.data || [];
 
       const filteredListings = listings.filter(
         listing => !hiddenCategories.includes(listing.categoryId)
@@ -400,7 +399,7 @@ const HomePage = () => {
 
               <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-                  {cities.map((city) => {
+                  {(cities ?? []).map((city) => { // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
                     if (city.id !== Number(cityId)) {
                       return (
                         <div

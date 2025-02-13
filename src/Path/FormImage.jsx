@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import LISTINGSIMAGE from "../assets/ListingsImage.jpg"; // Import the default image
 
 function FormImage(props) {
   const { t } = useTranslation();
@@ -16,37 +17,36 @@ function FormImage(props) {
     let imageUrl;
 
     if (typeof img === "string") {
-      imageUrl = process.env.REACT_APP_BUCKET_HOST + img;
+      // Check if the image is a default admin image
+      if (img.includes("admin/")) {
+        imageUrl = LISTINGSIMAGE;
+      } else {
+        imageUrl = process.env.REACT_APP_BUCKET_HOST + img;
+      }
     } else if (img instanceof File || img instanceof Blob) {
       imageUrl = URL.createObjectURL(img);
     }
 
-    const isDefaultImage = typeof img === "string" && img.includes("admin/");
-
-    if (!isDefaultImage) {
-      return (
-        <div className="flex flex-col items-center px-1" key={index}>
-          <img
-            className="object-cover h-64 w-full mb-4"
-            src={imageUrl}
-            alt="uploaded"
-            onLoad={() => {
-              if (props.localImageOrPdf && img instanceof Blob) {
-                URL.revokeObjectURL(imageUrl); // Prevent memory leaks
-              }
-            }}
-          />
-          <button
-            className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
-            onClick={() => updateListing(index)}
-          >
-            {t("removeFile")}
-          </button>
-        </div>
-      );
-    }
-
-    return null;
+    return (
+      <div className="flex flex-col items-center px-1" key={index}>
+        <img
+          className="object-cover h-64 w-full mb-4"
+          src={imageUrl}
+          alt="uploaded"
+          onLoad={() => {
+            if (props.localImageOrPdf && img instanceof Blob) {
+              URL.revokeObjectURL(imageUrl); // Prevent memory leaks
+            }
+          }}
+        />
+        <button
+          className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
+          onClick={() => updateListing(index)}
+        >
+          {t("removeFile")}
+        </button>
+      </div>
+    );
   });
 }
 
