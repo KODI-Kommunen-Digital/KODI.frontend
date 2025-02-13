@@ -1137,7 +1137,7 @@ function UploadListings() {
         listingInput.title,
         listingInput.description,
         categoryId,
-        selectedCities.length > 0,
+        cityIds || selectedCities.length > 0,
         !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
