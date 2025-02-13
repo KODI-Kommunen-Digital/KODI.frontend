@@ -421,16 +421,16 @@ function UploadListings() {
 
         const response = newListing
           ? await postListingsData(dataToSubmit)
-          : await updateListingsData(cityIdsToSubmit, dataToSubmit, listingId);
+          : await updateListingsData(cityIds, dataToSubmit, listingId);
 
         let currentListingId = [];
-        let cityIdsArray = [];
         if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           currentListingId = response.data.data.map(item => item.listingId);
+        }
+
+        let cityIdsArray = [];
+        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
           cityIdsArray = response.data.data.map(item => item.cityId);
-        } else {
-          console.error("Invalid response structure. Response:", response);
-          throw new Error("Unable to retrieve listing and city IDs");
         }
 
         // Filter opening dates for appointmentInput and services before submitting
@@ -476,29 +476,31 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            let allPromises = []
             for (let img of imageArray) {
               imageForm.append("image", img);
             }
-            if (process.env.REACT_APP_V2_BACKEND === "True") {
-              await uploadListingImage(imageForm, null, newListing ? currentListingId[0] : listingId)
-            } else {
+            if (newListing) {
+              const allPromises = [];
+
               for (let index = 0; index < currentListingId.length; index++) {
-                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]));
               }
-              await Promise.all(allPromises)
+
+              await Promise.all(allPromises);
+            } else {
+              await uploadListingImage(imageForm, cityIds, listingId);
             }
           } else if (pdf) {
             const pdfForm = new FormData();
             pdfForm.append("pdf", pdf); // Append the PDF only once
 
-            if (process.env.REACT_APP_V2_BACKEND === "True") {
-              await uploadListingPDF(pdfForm, null, newListing ? currentListingId[0] : listingId);
-            } else {
+            if (newListing) {
               const allPromises = currentListingId.map((listingId, index) =>
                 uploadListingPDF(pdfForm, cityIdsArray[index], listingId)
               );
               await Promise.all(allPromises);
+            } else {
+              await uploadListingPDF(pdfForm, cityIds, newListing ? currentListingId[0] : listingId);
             }
           }
         }
@@ -635,8 +637,6 @@ function UploadListings() {
 
             getAppointmentServices(cityIds, listingId, appointmentId)
               .then((servicesResponse) => {
-
-                console.log(servicesResponse.data.data)
                 const servicesData = servicesResponse.data.data.map((item) => {
                   const metadata = JSON.parse(item.metadata);
 
@@ -1112,7 +1112,8 @@ function UploadListings() {
         listingInput.title,
         listingInput.description,
         categoryId,
-        selectedCities.length > 0,
+        cityIds,
+        // selectedCities.length > 0,
         !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
