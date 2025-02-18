@@ -80,9 +80,10 @@ import SellerDetailsStore from "./Path/Container/SellerDetailsStore";
 import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
+import ProductRequests from "./Path/Container/ProductRequests.jsx";
+import HamburgTerminalScreen from "./Path/Container/HamburgTerminalScreen";
 
 import Modal from "react-modal";
-import ProductRequests from "./Path/Container/ProductRequests.jsx";
 
 Modal.setAppElement("#root");
 
@@ -94,6 +95,8 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const isTerminalScreenEnabled =
+    process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
 
   useEffect(() => {
     const link =
@@ -110,11 +113,6 @@ const App = () => {
       <div>
         <Routes>
           <Route
-            path="/"
-            element={frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />}
-          />
-          <Route path="/Listing" element={<Listing />} exact />
-          <Route
             path="/AllListings"
             element={
               frontendVersion === "1" ? <AllListingsV1 /> : <AllListingsV2 />
@@ -124,13 +122,19 @@ const App = () => {
             path="/UploadListings"
             element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
           />
+          <Route
+            path="/EditListings"
+            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
+            exact
+          />
+
+          <Route path="/Listing" element={<Listing />} exact />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
             path="/CitizenService/CitizenServiceManagement"
             element={<CitizenServiceManagement />}
           />
-
           <Route path="/Dashboard" element={<Dashboard />} exact />
           <Route path="/DashboardAdmin" element={<Dashboard />} exact />
           <Route path="/AccountSettings" element={<AccountSettings />} exact />
@@ -141,14 +145,29 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ImprintPage" element={<ImprintPage />} />
-
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
+          <Route path="/Favorite" element={<Favorites />} />
+          <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
+          <Route path="/OverviewPage" element={<OverviewPage />} />
           <Route
-            path="/EditListings"
-            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
-            exact
+            path="/OverviewPage/NewsCategories"
+            element={<OverviewPageNewsCategories />}
           />
+          <Route path="/VerifyEmail" element={<VerifyEmail />} />
+          <Route path="*" element={<Error />} />
+          <Route path="ForumsError" element={<ForumsError />} />
+
+          {isTerminalScreenEnabled ? (
+            <Route path="/" element={<HamburgTerminalScreen />} exact />
+          ) : (
+            <Route
+              path="/"
+              element={
+                frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />
+              }
+            />
+          )}
 
           {inFrame && (
             <React.Fragment>
@@ -164,18 +183,6 @@ const App = () => {
               <Route path="/IFrameListing" element={<IFrameListing />} exact />
             </React.Fragment>
           )}
-
-          <Route path="/Favorite" element={<Favorites />} />
-          <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
-
-          <Route path="/OverviewPage" element={<OverviewPage />} />
-          <Route
-            path="/OverviewPage/NewsCategories"
-            element={<OverviewPageNewsCategories />}
-          />
-          <Route path="/VerifyEmail" element={<VerifyEmail />} />
-          <Route path="*" element={<Error />} />
-          <Route path="ForumsError" element={<ForumsError />} />
 
           {isForumEnabled && (
             <React.Fragment>
@@ -299,6 +306,7 @@ const App = () => {
                 element={<ProductRequests />}
                 exact
               />
+
               <Route
                 path="/SellerScreen/ProductRequestsDetails"
                 element={<AllProductRequestsDetails />}
