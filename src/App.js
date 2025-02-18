@@ -95,6 +95,8 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const isTerminalScreenEnabled =
+    process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
 
   useEffect(() => {
     const link =
@@ -110,10 +112,6 @@ const App = () => {
     <BrowserRouter>
       <div>
         <Routes>
-          <Route
-            path="/"
-            element={frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />}
-          />
           <Route
             path="/AllListings"
             element={
@@ -159,6 +157,17 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+
+          {isTerminalScreenEnabled ? (
+            <Route path="/" element={<HamburgTerminalScreen />} exact />
+          ) : (
+            <Route
+              path="/"
+              element={
+                frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />
+              }
+            />
+          )}
 
           {inFrame && (
             <React.Fragment>
@@ -405,12 +414,6 @@ const App = () => {
               <Route
                 path="/OwnerScreen/OrderDetailsStore"
                 element={<OrderDetailsStore />}
-                exact
-              />
-
-              <Route
-                path="/HamburgTerminalScreen"
-                element={<HamburgTerminalScreen />}
                 exact
               />
             </React.Fragment>

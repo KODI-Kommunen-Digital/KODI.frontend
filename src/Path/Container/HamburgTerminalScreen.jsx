@@ -44,7 +44,7 @@ const HamburgTerminalScreen = () => {
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
             {/* grid grid-cols-2 gap-2 w-full max-w-4xl flex-grow overflow-auto */}
-            <div className="relative w-full max-w-4xl overflow-auto h-64 shadow-md grid grid-cols-2 gap-2 items-center justify-center">
+            <div className="relative w-full max-w-4xl overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -55,7 +55,7 @@ const HamburgTerminalScreen = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-64">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-80">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Aktuelles aus dem Bezirksamt</h2>
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
                                 onClick={() => navigateTo("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
@@ -67,7 +67,7 @@ const HamburgTerminalScreen = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-64">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-80">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Veranstaltungen Jenfeld</h2>
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
                                 onClick={() => navigateTo("https://www.jenfeld-haus.de/gruppen-und-kurse")}
@@ -83,7 +83,7 @@ const HamburgTerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full max-w-4xl h-64 bg-white p-1 shadow-md flex items-center justify-center">
+            <div className="relative mt-2 w-full max-w-4xl h-80 bg-white p-1 shadow-md flex items-center justify-center">
                 {overlayMasterportal && (
                     <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
                         <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white" onClick={() => setOverlayMasterportal(false)}>
