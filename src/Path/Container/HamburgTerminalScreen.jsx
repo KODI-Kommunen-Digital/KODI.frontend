@@ -20,7 +20,7 @@ const HamburgTerminalScreen = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const params = { showExternalListings: "false" };
+            const params = { pageSize: 10 };
             try {
                 const response = await getListings(params);
                 const listings = response.data.data;
@@ -28,6 +28,8 @@ const HamburgTerminalScreen = () => {
                     (listing) => !hiddenCategories.includes(listing.categoryId)
                 );
                 setListings(filteredListings);
+                console.log("listings", listings)
+                console.log("filteredListings", filteredListings)
             } catch (error) {
                 setListings([]);
                 console.error("Error fetching listings:", error);
@@ -60,11 +62,29 @@ const HamburgTerminalScreen = () => {
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
                                 onClick={() => navigateTo("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
                             >
-                                {listings.filter(listing => listing.categoryId === 16).map(listing => (
-                                    <div key={listing.id} className="inline-block">
-                                        <HamburgListingsCard listing={listing} />
-                                    </div>
-                                ))}
+                                {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
+                                    listings.filter(listing => listing.categoryId === 1).map(listing => (
+                                        <div key={listing.id} className="inline-block">
+                                            <HamburgListingsCard listing={listing} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <>
+                                        {Array.from({ length: 3 }).map((_, index) => (
+                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                                {/* Placeholder Image */}
+                                                <div className="w-full h-64 bg-gray-300"></div>
+
+                                                {/* Placeholder Text */}
+                                                <div className="p-1 flex-1 flex flex-col">
+                                                    <div className="h-4 bg-gray-300 w-3/4 rounded mt-2"></div>
+                                                    <div className="h-3 bg-gray-200 w-5/6 rounded mt-2"></div>
+                                                    <div className="h-3 bg-gray-200 w-2/3 rounded mt-2"></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="bg-white p-1 flex flex-col overflow-hidden max-h-80">
@@ -72,11 +92,29 @@ const HamburgTerminalScreen = () => {
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
                                 onClick={() => navigateTo("https://www.jenfeld-haus.de/gruppen-und-kurse")}
                             >
-                                {listings.filter(listing => listing.categoryId === 17).map(listing => (
-                                    <div key={listing.id} className="inline-block">
-                                        <HamburgListingsCard listing={listing} />
-                                    </div>
-                                ))}
+                                {listings.filter(listing => listing.categoryId === 3).length > 0 ? (
+                                    listings.filter(listing => listing.categoryId === 3).map(listing => (
+                                        <div key={listing.id} className="inline-block">
+                                            <HamburgListingsCard listing={listing} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <>
+                                        {Array.from({ length: 3 }).map((_, index) => (
+                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                                {/* Placeholder Image */}
+                                                <div className="w-full h-64 bg-gray-300"></div>
+
+                                                {/* Placeholder Text */}
+                                                <div className="p-1 flex-1 flex flex-col">
+                                                    <div className="h-4 bg-gray-300 w-3/4 rounded mt-2"></div>
+                                                    <div className="h-3 bg-gray-200 w-5/6 rounded mt-2"></div>
+                                                    <div className="h-3 bg-gray-200 w-2/3 rounded mt-2"></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
                             </div>
                         </div>
                     </>
