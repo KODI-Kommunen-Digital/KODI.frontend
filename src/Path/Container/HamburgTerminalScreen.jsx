@@ -20,7 +20,7 @@ const HamburgTerminalScreen = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const params = { pageSize: 10 };
+            const params = { pageSize: 20 };
             try {
                 const response = await getListings(params);
                 const listings = response.data.data;
@@ -28,8 +28,6 @@ const HamburgTerminalScreen = () => {
                     (listing) => !hiddenCategories.includes(listing.categoryId)
                 );
                 setListings(filteredListings);
-                console.log("listings", listings)
-                console.log("filteredListings", filteredListings)
             } catch (error) {
                 setListings([]);
                 console.error("Error fetching listings:", error);
@@ -121,7 +119,7 @@ const HamburgTerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full max-w-4xl h-80 bg-white p-1 shadow-md flex items-center justify-center">
+            <div className="relative mt-2 w-full max-w-4xl h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
                 {overlayMasterportal && (
                     <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
                         <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white" onClick={() => setOverlayMasterportal(false)}>
@@ -129,7 +127,7 @@ const HamburgTerminalScreen = () => {
                         </button>
                     </div>
                 )}
-                <iframe src="https://geoportal-hamburg.de/club-kataster/" className="w-full h-full relative z-0" title="Masterportal" allow="geolocation" />
+                <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/" className="w-full h-full relative z-0" title="Masterportal" allow="geolocation" />
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full mt-2 max-w-4xl flex-grow">
