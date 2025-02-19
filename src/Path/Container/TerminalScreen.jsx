@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
-import { useNavigate } from "react-router-dom";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -10,16 +9,6 @@ const TerminalScreen = () => {
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] = useState(true);
     const [listings, setListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
-    const navigateTo = (path) => {
-        if (path) {
-            navigate(path);
-        }
-    };
-
-    useEffect(() => {
-        document.documentElement.requestFullscreen().catch(err => console.warn("Fullscreen request denied:", err));
-    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,8 +35,7 @@ const TerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            {/* grid grid-cols-2 gap-2 w-full flex-grow overflow-auto */}
-            <div className="relative w-full overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
+            <div className="relative w-full basis-[20%] overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -58,10 +46,10 @@ const TerminalScreen = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-80">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Aktuelles aus dem Bezirksamt</h2>
-                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
-                                onClick={() => navigateTo("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
+                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
+                                onClick={() => window.open("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
                             >
                                 {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 1).map(listing => (
@@ -88,10 +76,10 @@ const TerminalScreen = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden max-h-80">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Veranstaltungen Jenfeld</h2>
-                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap"
-                                onClick={() => navigateTo("https://www.jenfeld-haus.de/gruppen-und-kurse")}
+                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
+                                onClick={() => window.open("https://www.jenfeld-haus.de/gruppen-und-kurse")}
                             >
                                 {listings.filter(listing => listing.categoryId === 3).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 3).map(listing => (
@@ -122,10 +110,11 @@ const TerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
+            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-md flex items-center justify-center"
+            >
                 {overlayMasterportal && (
                     <div
-                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
+                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                     >
                         <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                             onClick={() => setOverlayMasterportal(false)}>
@@ -134,11 +123,12 @@ const TerminalScreen = () => {
                     </div>
                 )}
                 <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+                    onClick={() => window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")}
                     className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"}`}
                     title="Masterportal" allow="geolocation" />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 w-full mt-2 flex-grow">
+            <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
                 <div className="relative bg-white p-1 shadow-md h-full">
                     <iframe src="https://www.hvv.de/de/fahrplaene/abfahrten"
                         allow="geolocation"
@@ -149,10 +139,11 @@ const TerminalScreen = () => {
                 <div className="flex flex-col gap-2 h-full">
 
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow">
+                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    >
                         {overlayMaengelmelder && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayMaengelmelder(false)}>
@@ -161,16 +152,18 @@ const TerminalScreen = () => {
                             </div>
                         )}
                         <iframe src="https://static.hamburg.de/kartenclient/prod/"
+                            onClick={() => window.open("https://static.hamburg.de/kartenclient/prod/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Mängelmelder" />
                     </div>
 
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow">
+                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    >
                         {overlayBuergerbeteiligung && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayBuergerbeteiligung(false)}>
@@ -179,6 +172,7 @@ const TerminalScreen = () => {
                             </div>
                         )}
                         <iframe src="https://beteiligung.hamburg/navigator/#/"
+                            onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Bürgerbeteiligung" />
@@ -186,8 +180,11 @@ const TerminalScreen = () => {
                 </div>
             </div>
 
-            <div className="fixed bottom-2 right-2 z-50">
-                <button className="bg-sky-950 text-white p-2 w-10 h-10 rounded-full border border-white flex items-center justify-center">
+            <div className="fixed bottom-2 right-2 z-[99999]"
+            >
+                <button className="bg-sky-950 text-white p-2 w-10 h-10 rounded-full border border-white flex items-center justify-center"
+                    onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
+                >
                     ?
                 </button>
             </div>
