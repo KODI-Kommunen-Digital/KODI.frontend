@@ -81,7 +81,7 @@ import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
-import HamburgTerminalScreen from "./Path/Container/TerminalScreen.jsx";
+import TerminalScreen from "./Path/Container/TerminalScreen.jsx";
 
 import Modal from "react-modal";
 
@@ -159,7 +159,7 @@ const App = () => {
           <Route path="ForumsError" element={<ForumsError />} />
 
           {isTerminalScreenEnabled ? (
-            <Route path="/" element={<HamburgTerminalScreen />} exact />
+            <Route path="/" element={<TerminalScreen />} exact />
           ) : (
             <Route
               path="/"
