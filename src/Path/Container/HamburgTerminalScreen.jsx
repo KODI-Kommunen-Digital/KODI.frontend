@@ -125,10 +125,8 @@ const HamburgTerminalScreen = () => {
             <div className="relative mt-2 w-full h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
                 {overlayMasterportal && (
                     <div
-                        className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
-                        style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
                     >
-                        <h1 className="text-4xl text-white mb-4">Overlay Debug</h1>
                         <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                             onClick={() => setOverlayMasterportal(false)}>
                             Was ist wo? Öffnen
@@ -154,8 +152,7 @@ const HamburgTerminalScreen = () => {
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayMaengelmelder && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
-                                style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayMaengelmelder(false)}>
@@ -173,8 +170,7 @@ const HamburgTerminalScreen = () => {
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayBuergerbeteiligung && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
-                                style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[99999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayBuergerbeteiligung(false)}>
