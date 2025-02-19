@@ -11,12 +11,15 @@ const HamburgTerminalScreen = () => {
     const [listings, setListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
-
     const navigateTo = (path) => {
         if (path) {
             navigate(path);
         }
     };
+
+    useEffect(() => {
+        document.documentElement.requestFullscreen().catch(err => console.warn("Fullscreen request denied:", err));
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -121,7 +124,11 @@ const HamburgTerminalScreen = () => {
 
             <div className="relative mt-2 w-full h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
                 {overlayMasterportal && (
-                    <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
+                    <div
+                        className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
+                        style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                    >
+                        <h1 className="text-4xl text-white mb-4">Overlay Debug</h1>
                         <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                             onClick={() => setOverlayMasterportal(false)}>
                             Was ist wo? Öffnen
@@ -129,7 +136,7 @@ const HamburgTerminalScreen = () => {
                     </div>
                 )}
                 <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
-                    className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : ""}`}
+                    className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"}`}
                     title="Masterportal" allow="geolocation" />
             </div>
 
@@ -146,7 +153,10 @@ const HamburgTerminalScreen = () => {
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayMaengelmelder && (
-                            <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
+                            <div
+                                className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
+                                style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                            >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayMaengelmelder(false)}>
                                     Schaden Melden
@@ -155,14 +165,17 @@ const HamburgTerminalScreen = () => {
                         )}
                         <iframe src="https://static.hamburg.de/kartenclient/prod/"
                             allow="geolocation"
-                            className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : ""}`}
+                            className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Mängelmelder" />
                     </div>
 
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayBuergerbeteiligung && (
-                            <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
+                            <div
+                                className="absolute top-0 left-0 w-full h-full z-[99999] flex items-center justify-center"
+                                style={{ backgroundColor: 'rgba(255, 0, 0, 1)' }}
+                            >
                                 <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
                                     onClick={() => setOverlayBuergerbeteiligung(false)}>
                                     Bürger Beteiligung
@@ -171,7 +184,7 @@ const HamburgTerminalScreen = () => {
                         )}
                         <iframe src="https://beteiligung.hamburg/navigator/#/"
                             allow="geolocation"
-                            className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : ""}`}
+                            className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Bürgerbeteiligung" />
                     </div>
                 </div>
