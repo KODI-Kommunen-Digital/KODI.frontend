@@ -43,8 +43,8 @@ const HamburgTerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            {/* grid grid-cols-2 gap-2 w-full max-w-4xl flex-grow overflow-auto */}
-            <div className="relative w-full max-w-4xl overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
+            {/* grid grid-cols-2 gap-2 w-full flex-grow overflow-auto */}
+            <div className="relative w-full overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -119,41 +119,60 @@ const HamburgTerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full max-w-4xl h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
+            <div className="relative mt-2 w-full h-1/2 bg-white p-1 shadow-md flex items-center justify-center">
                 {overlayMasterportal && (
                     <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
-                        <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white" onClick={() => setOverlayMasterportal(false)}>
+                        <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                            onClick={() => setOverlayMasterportal(false)}>
                             Was ist wo? Öffnen
                         </button>
                     </div>
                 )}
-                <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/" className="w-full h-full relative z-0" title="Masterportal" allow="geolocation" />
+                <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+                    className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : ""}`}
+                    title="Masterportal" allow="geolocation" />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 w-full mt-2 max-w-4xl flex-grow">
-                <div className="bg-white p-1 shadow-md h-full">
-                    <iframe src="https://www.hvv.de/de/fahrplaene/abfahrten" allow="geolocation" className="w-full h-full relative z-0" title="Mobilität" />
+            <div className="grid grid-cols-2 gap-2 w-full mt-2 flex-grow">
+                <div className="relative bg-white p-1 shadow-md h-full">
+                    <iframe src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                        allow="geolocation"
+                        className="w-full h-full relative z-0"
+                        title="Mobilität" />
                 </div>
+
                 <div className="flex flex-col gap-2 h-full">
+
+                    {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayMaengelmelder && (
                             <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
-                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white" onClick={() => setOverlayMaengelmelder(false)}>
+                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                                    onClick={() => setOverlayMaengelmelder(false)}>
                                     Schaden Melden
                                 </button>
                             </div>
                         )}
-                        <iframe src="https://static.hamburg.de/kartenclient/prod/" allow="geolocation" className="w-full h-full relative z-0" title="Mängelmelder" />
+                        <iframe src="https://static.hamburg.de/kartenclient/prod/"
+                            allow="geolocation"
+                            className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : ""}`}
+                            title="Mängelmelder" />
                     </div>
+
+                    {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow">
                         {overlayBuergerbeteiligung && (
                             <div className="absolute inset-0 bg-sky-950 bg-opacity-75 flex items-center justify-center z-10">
-                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white" onClick={() => setOverlayBuergerbeteiligung(false)}>
+                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                                    onClick={() => setOverlayBuergerbeteiligung(false)}>
                                     Bürger Beteiligung
                                 </button>
                             </div>
                         )}
-                        <iframe src="https://beteiligung.hamburg/navigator/#/" allow="geolocation" className="w-full h-full relative z-0" title="Bürgerbeteiligung" />
+                        <iframe src="https://beteiligung.hamburg/navigator/#/"
+                            allow="geolocation"
+                            className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : ""}`}
+                            title="Bürgerbeteiligung" />
                     </div>
                 </div>
             </div>
