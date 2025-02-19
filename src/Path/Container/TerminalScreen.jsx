@@ -11,10 +11,6 @@ const TerminalScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        document.documentElement.requestFullscreen().catch(err => console.warn("Fullscreen request denied:", err));
-    }, []);
-
-    useEffect(() => {
         const fetchData = async () => {
             const params = { pageSize: 20 };
             try {
