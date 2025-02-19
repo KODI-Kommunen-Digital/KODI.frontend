@@ -9,12 +9,38 @@ function HamburgListingsCard({ listing }) {
         return null; // Only display scraped data
     }
 
+    const getImage = () => {
+
+        let image = listing.logo;
+
+        if (listing.sourceId === listingSource.USER_ENTRY) {
+            image = process.env.REACT_APP_BUCKET_HOST + image; // uploaded image
+        }
+
+        // Check if the logo is from the img.ecmaps.de/remote/.jpg? domain
+        const isEcmapsDomain = image?.startsWith('img.ecmaps.de/remote/.jpg?');
+
+        if (isEcmapsDomain) {
+            // Extract the `url` parameter from the logo URL
+            const urlParams = new URLSearchParams(image.split('?')[1]);
+            const extractedUrl = urlParams.get('url');
+
+            if (extractedUrl) {
+                image = decodeURIComponent(extractedUrl);
+            }
+        }
+
+        return image;
+    };
+
     return (
         <div className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full">
             <img
                 alt="Listing"
                 className="w-full h-64 object-cover"
-                src={listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE}
+                src={
+                    getImage()
+                }
                 onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = LISTINGSIMAGE;
