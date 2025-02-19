@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HamburgListingsCard from "./TerminalListingsCard";
+import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import { useNavigate } from "react-router-dom";
@@ -66,7 +66,7 @@ const TerminalScreen = () => {
                                 {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 1).map(listing => (
                                         <div key={listing.id} className="inline-block">
-                                            <HamburgListingsCard listing={listing} />
+                                            <TerminalListingsCard listing={listing} />
                                         </div>
                                     ))
                                 ) : (
@@ -96,7 +96,7 @@ const TerminalScreen = () => {
                                 {listings.filter(listing => listing.categoryId === 3).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 3).map(listing => (
                                         <div key={listing.id} className="inline-block">
-                                            <HamburgListingsCard listing={listing} />
+                                            <TerminalListingsCard listing={listing} />
                                         </div>
                                     ))
                                 ) : (
