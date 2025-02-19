@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import listingSource from "../../Constants/listingSource";
 
-function HamburgListingsCard({ listing }) {
+function TerminalListingsCard({ listing }) {
 
     if (listing.sourceId !== listingSource.SCRAPER) {
         return null; // Only display scraped data
@@ -59,8 +59,8 @@ function HamburgListingsCard({ listing }) {
     );
 }
 
-HamburgListingsCard.propTypes = {
+TerminalListingsCard.propTypes = {
     listing: PropTypes.object.isRequired
 };
 
-export default HamburgListingsCard;
+export default TerminalListingsCard;

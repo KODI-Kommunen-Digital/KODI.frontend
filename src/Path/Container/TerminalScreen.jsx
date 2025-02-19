@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import HamburgListingsCard from "../Container/HamburgListingsCard";
+import HamburgListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import { useNavigate } from "react-router-dom";
 
-const HamburgTerminalScreen = () => {
+const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
     const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] = useState(true);
@@ -195,4 +195,4 @@ const HamburgTerminalScreen = () => {
     );
 };
 
-export default HamburgTerminalScreen;
+export default TerminalScreen;
