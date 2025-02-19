@@ -34,7 +34,7 @@ function TerminalListingsCard({ listing }) {
     };
 
     return (
-        <div className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full">
+        <div className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-48 h-full">
             <img
                 alt="Listing"
                 className="w-full h-64 object-cover"
