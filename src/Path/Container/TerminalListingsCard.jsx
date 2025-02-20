@@ -44,12 +44,10 @@ function TerminalListingsCard({ listing }) {
 
     return (
         <>
-            {/* Listing Card */}
             <div
                 className="flex bg-white shadow-md overflow-hidden max-w-xl h-48 cursor-pointer"
                 onClick={handleListingClick}
             >
-                {/* Image Section */}
                 <img
                     src={getImage()}
                     onError={(e) => {
@@ -76,7 +74,6 @@ function TerminalListingsCard({ listing }) {
             {isPopupOpen && selectedListing && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999] px-4">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-[90vh] flex flex-col overflow-hidden">
-                        {/* Close Button */}
                         <button
                             className="self-end text-red-600 font-bold text-xl"
                             onClick={handleClosePopup}
@@ -84,7 +81,6 @@ function TerminalListingsCard({ listing }) {
                             ✕
                         </button>
 
-                        {/* Listing Image */}
                         <div className="w-full h-60 sm:h-80 md:h-96 lg:h-[500px] xl:h-[550px] flex justify-center">
                             <img
                                 src={getImage()}
@@ -93,16 +89,14 @@ function TerminalListingsCard({ listing }) {
                                     e.target.src = LISTINGSIMAGE;
                                 }}
                                 alt={selectedListing.title}
-                                className="w-full h-full object-contain rounded-md"
+                                className="w-full h-full object-contain rounded-lg"
                             />
                         </div>
 
-                        {/* Listing Title */}
                         <h2 className="text-2xl font-bold text-sky-950 mt-4">
                             {selectedListing.title}
                         </h2>
 
-                        {/* Listing Description - Scrollable */}
                         <div className="text-sky-950 bg-gray-200 text-lg max-h-[30vh] overflow-y-auto overflow-x-hidden break-words whitespace-pre-line rounded-lg p-6 mt-2">
                             <p
                                 style={{ lineHeight: "1.5rem", wordBreak: "break-word", overflowWrap: "break-word" }}

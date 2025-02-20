@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
+import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
+import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -13,6 +15,72 @@ const TerminalScreen = () => {
     const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] = useState(false);
     const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
     const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
+    const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+    const [surveyData, setSurveyData] = useState(null);
+    const [responses, setResponses] = useState({});
+    const [votes, setVotes] = useState({});
+
+    const handleOpenSurvey = async () => {
+        try {
+            const response = await getSurveyFAQ();
+            const survey = response.data;
+            setSurveyData(survey);
+
+            const initialResponses = {};
+            const initialVotes = {};
+
+            for (const question of survey.questions) {
+                initialResponses[question.id] = question.type === "checkbox" ? [] : "";
+
+                if (question.type === "checkbox") {
+                    initialVotes[question.id] = question.votes || {};
+                }
+            }
+
+            setResponses(initialResponses);
+            setVotes(initialVotes);
+            setIsSurveyOpen(true);
+        } catch (error) {
+            console.error("Error fetching survey data:", error);
+        }
+    };
+
+    const handleCloseSurvey = () => {
+        setIsSurveyOpen(false);
+    };
+
+    const handleCheckboxChange = async (questionId, value) => {
+        setResponses((prev) => {
+            const updatedValues = prev[questionId].includes(value)
+                ? prev[questionId].filter((item) => item !== value)
+                : [...prev[questionId], value];
+            return { ...prev, [questionId]: updatedValues };
+        });
+
+        setVotes((prevVotes) => {
+            const updatedVotes = { ...prevVotes };
+            updatedVotes[questionId][value] += 1;
+            return updatedVotes;
+        });
+    };
+
+    const handleSubmitSurvey = async () => {
+        try {
+            for (const [questionId, selectedOptions] of Object.entries(responses)) {
+                if (Array.isArray(selectedOptions)) {
+                    for (const option of selectedOptions) {
+                        await postVoteById(questionId, option);
+                    }
+                } else if (selectedOptions) {
+                    await postVoteById(questionId, selectedOptions);
+                }
+            }
+            alert("Vielen Dank für Ihr Feedback!");
+            setIsSurveyOpen(false);
+        } catch (error) {
+            console.error("Error submitting survey:", error);
+        }
+    };
 
     const handleMobilitaetClick = () => {
         setOverlayMobilitaet(false);
@@ -69,7 +137,7 @@ const TerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            <div className="relative w-full flex-grow-0 overflow-auto shadow-md grid grid-cols-2 gap-2 items-start justify-center">
+            <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -93,7 +161,7 @@ const TerminalScreen = () => {
                                 ) : (
                                     <>
                                         {Array.from({ length: 3 }).map((_, index) => (
-                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                            <div key={index} className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
                                                 {/* Placeholder Image */}
                                                 <div className="w-full h-64 bg-gray-300"></div>
 
@@ -122,7 +190,7 @@ const TerminalScreen = () => {
                                 ) : (
                                     <>
                                         {Array.from({ length: 3 }).map((_, index) => (
-                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                            <div key={index} className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
                                                 {/* Placeholder Image */}
                                                 <div className="w-full h-64 bg-gray-300"></div>
 
@@ -142,32 +210,43 @@ const TerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-md flex items-center justify-center"
-            >
+            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-lg flex items-center justify-center">
                 {overlayMasterportal && (
                     <div
-                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
+                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex flex-col items-center justify-center"
                     >
-                        <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                            onClick={() => setOverlayMasterportal(false)}>
+                        <button
+                            className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                            onClick={() => setOverlayMasterportal(false)}
+                        >
                             Was ist wo? Öffnen
                         </button>
+
+                        <img
+                            src={HAMBURGLOGO}
+                            alt="Hamburg Logo"
+                            className="w-48 h-48 mb-4"
+                        />
                     </div>
                 )}
-                <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+
+                <iframe
+                    src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
                     onClick={() => window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")}
                     className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"}`}
-                    title="Masterportal" allow="geolocation" />
+                    title="Masterportal"
+                    allow="geolocation"
+                />
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
-                <div className="relative bg-white p-1 shadow-md h-full">
+                <div className="relative bg-white p-1 shadow-lg h-full">
                     {overlayMobilitaet && (
                         <div
                             className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-25 z-[9999] flex items-center justify-center"
                         >
                             <button
-                                className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
+                                className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
                                 onClick={handleMobilitaetClick}
                             >
                                 Fahrpläne Öffnen
@@ -202,13 +281,13 @@ const TerminalScreen = () => {
 
                 <div className="flex flex-col gap-2 h-full">
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    <div className="relative bg-white p-1 shadow-lg flex-grow"
                     >
                         {overlayMaengelmelder && (
                             <div
                                 className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
                                     onClick={handleMaengelmelderClick}>
                                     Schaden Melden
                                 </button>
@@ -239,13 +318,13 @@ const TerminalScreen = () => {
                     )}
 
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    <div className="relative bg-white p-1 shadow-lg flex-grow"
                     >
                         {overlayBuergerbeteiligung && (
                             <div
                                 className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
                                     onClick={handleBuergerBeteiligungClick}>
                                     Bürger Beteiligung
                                 </button>
@@ -280,11 +359,43 @@ const TerminalScreen = () => {
             <div className="fixed bottom-2 right-2 z-[99999]"
             >
                 <button className="bg-sky-950 text-white p-2 w-10 h-10 rounded-full border border-white flex items-center justify-center"
-                    onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
+                    onClick={handleOpenSurvey}
                 >
                     ?
                 </button>
             </div>
+            {isSurveyOpen && surveyData && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto">
+                        <button className="self-end text-sky-950 font-bold text-xl" onClick={handleCloseSurvey}>✕</button>
+                        <h2 className="text-2xl font-bold text-sky-950 mb-2">{surveyData.title}</h2>
+                        <p className="text-sky-950 mb-4">{surveyData.description}</p>
+                        {surveyData.questions.map((question) => (
+                            <div key={question.id} className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg">
+                                <h3 className="text-lg text-sky-950 font-semibold">{question.question}</h3>
+                                {question.type === "checkbox" && (
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        {question.options.map((option) => (
+                                            <label key={option} className="flex text-sky-950 items-center gap-2">
+                                                <input
+                                                    type="checkbox"
+                                                    value={option}
+                                                    checked={responses[question.id].includes(option)}
+                                                    onChange={() => handleCheckboxChange(question.id, option)}
+                                                />
+                                                {option} ({votes[question.id]?.[option] || 0} Stimmen)
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4" onClick={handleSubmitSurvey}>
+                            Feedback senden
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

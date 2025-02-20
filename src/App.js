@@ -30,8 +30,6 @@ import Forum from "./Path/Forums/Forum";
 import UploadPosts from "./Path/Forums/UploadPosts";
 import AllForums from "./Path/CitizenServices/AllForums";
 import CitizenServiceManagement from "./Path/CitizenServices/CitizenServiceManagement";
-import OverviewPage from "./Path/Listings/OverviewPage";
-import OverviewPageNewsCategories from "./Path/Listings/OverviewPageNewsCategories";
 
 import CreateGroup from "./Path/CreateGroup";
 import MyGroups from "./Path/MyGroups";
@@ -149,11 +147,6 @@ const App = () => {
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/Favorite" element={<Favorites />} />
           <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
-          <Route path="/OverviewPage" element={<OverviewPage />} />
-          <Route
-            path="/OverviewPage/NewsCategories"
-            element={<OverviewPageNewsCategories />}
-          />
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
