@@ -35,7 +35,7 @@ const TerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            <div className="relative w-full basis-[20%] overflow-auto shadow-md grid grid-cols-2 gap-2 items-center justify-center">
+            <div className="relative w-full flex-grow-0 overflow-auto shadow-md grid grid-cols-2 gap-2 items-start justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -46,9 +46,9 @@ const TerminalScreen = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Aktuelles aus dem Bezirksamt</h2>
-                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
+                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-fit max-h-48"
                                 onClick={() => window.open("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
                             >
                                 {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
@@ -76,7 +76,7 @@ const TerminalScreen = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Veranstaltungen Jenfeld</h2>
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
                                 onClick={() => window.open("https://www.jenfeld-haus.de/gruppen-und-kurse")}
@@ -116,7 +116,7 @@ const TerminalScreen = () => {
                     <div
                         className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                     >
-                        <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                        <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
                             onClick={() => setOverlayMasterportal(false)}>
                             Was ist wo? Öffnen
                         </button>
@@ -145,7 +145,7 @@ const TerminalScreen = () => {
                             <div
                                 className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
                                     onClick={() => setOverlayMaengelmelder(false)}>
                                     Schaden Melden
                                 </button>
@@ -165,7 +165,7 @@ const TerminalScreen = () => {
                             <div
                                 className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-sm px-4 py-2 rounded shadow-md border border-white"
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
                                     onClick={() => setOverlayBuergerbeteiligung(false)}>
                                     Bürger Beteiligung
                                 </button>

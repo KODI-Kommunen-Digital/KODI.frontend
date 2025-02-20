@@ -34,22 +34,23 @@ function TerminalListingsCard({ listing }) {
     };
 
     return (
-        <div className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-48 h-full">
+        <div className="flex bg-white shadow-md overflow-hidden max-w-xl h-48">
+            {/* Image Section */}
             <img
-                alt="Listing"
-                className="w-full h-64 object-cover"
-                src={
-                    getImage()
-                }
+                src={getImage()}
                 onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = LISTINGSIMAGE;
                 }}
+                alt={listing.title}
+                className="w-48 h-full object-cover"
             />
-            <div className="p-1 flex-1 flex flex-col">
-                <h2 className="text-sm/6 font-semibold text-gray-800 truncate">{listing.title}</h2>
+
+            {/* Content Section */}
+            <div className="p-4 flex-1 flex flex-col">
+                <h2 className="text-xl font-semibold text-sky-950 truncate">{listing.title}</h2>
                 <p
-                    className="text-gray-600 mt-0 text-sm/6 flex-grow overflow-hidden truncate"
+                    className="text-sky-950 mt-2 text-sm truncate"
                     dangerouslySetInnerHTML={{
                         __html: listing.description || "No description available",
                     }}
