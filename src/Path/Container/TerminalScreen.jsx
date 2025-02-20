@@ -3,7 +3,7 @@ import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
-import { faq } from "../../Constants/FAQ";
+import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -16,36 +16,6 @@ const TerminalScreen = () => {
     const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
     const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
-    const [responses, setResponses] = useState({});
-
-    const handleOpenSurvey = () => {
-        const initialResponses = {};
-        faq.questions.forEach((q) => {
-            initialResponses[q.id] = q.type === "checkbox" ? [] : "";
-        });
-        setResponses(initialResponses);
-        setIsSurveyOpen(true);
-    };
-
-    const handleCloseSurvey = () => {
-        setIsSurveyOpen(false);
-    };
-
-    const handleCheckboxChange = (questionId, value) => {
-        setResponses((prev) => {
-            const updatedValues = prev[questionId].includes(value)
-                ? prev[questionId].filter((item) => item !== value)
-                : [...prev[questionId], value];
-
-            return { ...prev, [questionId]: updatedValues };
-        });
-    };
-
-    const handleSubmitSurvey = () => {
-        console.log("Survey Responses:", responses);
-        alert("Vielen Dank für Ihr Feedback!");
-        setIsSurveyOpen(false);
-    };
 
     const handleMobilitaetClick = () => {
         setOverlayMobilitaet(false);
@@ -97,6 +67,64 @@ const TerminalScreen = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchSurveys = async () => {
+            const listingIds = [25, 26, 27, 28];
+            try {
+                const surveyPromises = listingIds.map(id => getSurveyFAQ(id));
+                const surveyResponses = await Promise.all(surveyPromises);
+                const surveyData = surveyResponses.map(response => response.data.data);
+                setSurveys(surveyData);
+            } catch (error) {
+                console.error("Error fetching surveys:", error);
+            }
+        };
+
+        fetchSurveys();
+    }, []);
+
+    const [surveys, setSurveys] = useState([]);
+    const [responses, setResponses] = useState({});
+    const handleInputChange = (surveyId, optionId) => {
+        setResponses(prevResponses => ({
+            ...prevResponses,
+            [surveyId]: optionId,
+        }));
+    };
+
+    const handleOpenSurvey = () => {
+        setIsSurveyOpen(true);
+    };
+
+    const handleCloseSurvey = () => {
+        setResponses({});
+        setIsSurveyOpen(false);
+    };
+
+    const handleSubmitSurvey = async () => {
+        try {
+            const submitPromises = Object.entries(responses).map(([surveyId, selectedOptionId]) => {
+                const survey = surveys.find(s => s.id === Number(surveyId));
+
+                if (!survey) return null;
+
+                const updatedVotes = survey.pollOptions.map(option => ({
+                    optionId: option.id,
+                    vote: option.id === selectedOptionId ? option.votes + 1 : option.votes,
+                }));
+
+                return postVoteById(surveyId, updatedVotes);
+            });
+
+            await Promise.all(submitPromises.filter(Boolean));
+
+            setResponses({});
+            setIsSurveyOpen(false);
+        } catch (error) {
+            console.error("Error submitting survey responses:", error);
+        }
+    };
 
     // When you Iframe a website always check the X-Frame-Options and the Content-Security-Policy (CSP) 
 
@@ -332,41 +360,49 @@ const TerminalScreen = () => {
             {isSurveyOpen && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
-                        {/* Close Button */}
                         <button className="self-end text-sky-950 font-bold text-xl" onClick={handleCloseSurvey}>
                             ✕
                         </button>
 
-                        {/* Survey Title & Description */}
-                        <h2 className="text-2xl font-bold text-sky-950 mb-2">{faq.title}</h2>
-                        <p className="text-sky-950 mb-4">{faq.description}</p>
+                        <h2 className="text-2xl font-bold text-sky-950 mb-2">Intro zu den Fragen</h2>
+                        <p className="text-sky-950 mb-4">Willkommen zur Feedbackfunktion für unsere digitale Informationsstele!</p>
 
-                        {/* Render Questions Dynamically */}
-                        {faq.questions.map((question) => (
-                            <div key={question.id} className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg">
-                                <h3 className="text-lg text-sky-950 font-semibold">{question.question}</h3>
+                        {surveys.map(survey => (
+                            <div key={survey.id} className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg">
+                                <h3 className="text-lg text-sky-950 font-semibold">{survey.title}</h3>
+                                <div className="flex flex-col gap-2 mt-2">
+                                    {survey.pollOptions.map(option => (
+                                        <label key={option.id} className="flex text-sky-950 items-center gap-2 text-lg font-medium">
+                                            <input
+                                                type="radio"
+                                                name={`survey-${survey.id}`}
+                                                value={option.id}
+                                                checked={responses[survey.id] === option.id}
+                                                onChange={() => handleInputChange(survey.id, option.id)}
+                                                className="hidden"
+                                            />
+                                            <div
+                                                className={`cursor-pointer px-3 py-2 rounded-lg
+                                                ${responses[survey.id] === option.id ? 'border-sky-600 bg-sky-100' : 'border-gray-300 bg-white'} 
+                                                transition duration-300 ease-in-out hover:border-sky-500 hover:bg-sky-50`}
+                                            >
+                                                {option.title}
+                                            </div>
 
-                                {/* Checkbox Questions */}
-                                {question.type === "checkbox" && (
-                                    <div className="flex flex-col gap-2 mt-2">
-                                        {question.options.map((option) => (
-                                            <label key={option} className="flex text-sky-950 items-center gap-2">
-                                                <input
-                                                    type="checkbox"
-                                                    value={option}
-                                                    checked={responses[question.id].includes(option)}
-                                                    onChange={() => handleCheckboxChange(question.id, option)}
-                                                />
-                                                {option}
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
+                                            <span
+                                                className={`ml-2 text-sm px-3 py-1 rounded-lg font-bold transition-all transform 
+                                                ${responses[survey.id] === option.id ? 'text-white bg-sky-600 scale-110' : 'text-gray-600 bg-gray-200'}`}
+                                            >
+                                                {option.votes} Stimmen
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         ))}
 
-                        {/* Submit Button */}
-                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center" onClick={handleSubmitSurvey}>
+                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center"
+                            onClick={handleSubmitSurvey}>
                             Feedback senden
                         </button>
                     </div>
