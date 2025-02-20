@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
+import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
+import { faq } from "../../Constants/FAQ";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -9,6 +11,71 @@ const TerminalScreen = () => {
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] = useState(true);
     const [listings, setListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
+    const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] = useState(false);
+    const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
+    const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
+    const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+    const [responses, setResponses] = useState({});
+
+    const handleOpenSurvey = () => {
+        const initialResponses = {};
+        faq.questions.forEach((q) => {
+            initialResponses[q.id] = q.type === "checkbox" ? [] : "";
+        });
+        setResponses(initialResponses);
+        setIsSurveyOpen(true);
+    };
+
+    const handleCloseSurvey = () => {
+        setIsSurveyOpen(false);
+    };
+
+    const handleCheckboxChange = (questionId, value) => {
+        setResponses((prev) => {
+            const updatedValues = prev[questionId].includes(value)
+                ? prev[questionId].filter((item) => item !== value)
+                : [...prev[questionId], value];
+
+            return { ...prev, [questionId]: updatedValues };
+        });
+    };
+
+    const handleSubmitSurvey = () => {
+        console.log("Survey Responses:", responses);
+        alert("Vielen Dank für Ihr Feedback!");
+        setIsSurveyOpen(false);
+    };
+
+    const handleMobilitaetClick = () => {
+        setOverlayMobilitaet(false);
+        setIsMobilitaetPopupOpen(true);
+    };
+
+    const handleCloseMobilitaetPopup = () => {
+        setIsMobilitaetPopupOpen(false);
+        setOverlayMobilitaet(true);
+    };
+
+    const handleMaengelmelderClick = () => {
+        setOverlayMaengelmelder(false);
+        setIsMaengelmelderPopupOpen(true);
+    };
+
+    const handleCloseMaengelmelderPopup = () => {
+        setIsMaengelmelderPopupOpen(false);
+        setOverlayMaengelmelder(true);
+    };
+
+    const handleBuergerBeteiligungClick = () => {
+        setOverlayBuergerbeteiligung(false);
+        setIsBeteiligungOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsBeteiligungOpen(false);
+        setOverlayBuergerbeteiligung(true);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,7 +102,7 @@ const TerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            <div className="relative w-full flex-grow-0 overflow-auto shadow-md grid grid-cols-2 gap-2 items-start justify-center">
+            <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg className='w-6 h-6 stroke-indigo-600 animate-spin' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -49,7 +116,6 @@ const TerminalScreen = () => {
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Aktuelles aus dem Bezirksamt</h2>
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-fit max-h-48"
-                                onClick={() => window.open("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
                             >
                                 {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 1).map(listing => (
@@ -60,7 +126,7 @@ const TerminalScreen = () => {
                                 ) : (
                                     <>
                                         {Array.from({ length: 3 }).map((_, index) => (
-                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                            <div key={index} className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
                                                 {/* Placeholder Image */}
                                                 <div className="w-full h-64 bg-gray-300"></div>
 
@@ -78,8 +144,7 @@ const TerminalScreen = () => {
                         </div>
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Veranstaltungen Jenfeld</h2>
-                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
-                                onClick={() => window.open("https://www.jenfeld-haus.de/gruppen-und-kurse")}
+                            <div className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
                             >
                                 {listings.filter(listing => listing.categoryId === 3).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 3).map(listing => (
@@ -90,7 +155,7 @@ const TerminalScreen = () => {
                                 ) : (
                                     <>
                                         {Array.from({ length: 3 }).map((_, index) => (
-                                            <div key={index} className="bg-white shadow-md overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                                            <div key={index} className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
                                                 {/* Placeholder Image */}
                                                 <div className="w-full h-64 bg-gray-300"></div>
 
@@ -110,84 +175,203 @@ const TerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-md flex items-center justify-center"
-            >
+            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-lg flex items-center justify-center">
                 {overlayMasterportal && (
                     <div
-                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex flex-col items-center justify-center"
                     >
-                        <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                            onClick={() => setOverlayMasterportal(false)}>
+                        <button
+                            className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                            onClick={() => setOverlayMasterportal(false)}
+                        >
                             Was ist wo? Öffnen
                         </button>
+
+                        <img
+                            src={HAMBURGLOGO}
+                            alt="Hamburg Logo"
+                            className="w-48 h-48 mb-4"
+                        />
                     </div>
                 )}
-                <iframe src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+
+                <iframe
+                    src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
                     onClick={() => window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")}
                     className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"}`}
-                    title="Masterportal" allow="geolocation" />
+                    title="Masterportal"
+                    allow="geolocation"
+                />
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
-                <div className="relative bg-white p-1 shadow-md h-full">
-                    <iframe src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                <div className="relative bg-white p-1 shadow-lg h-full">
+                    {overlayMobilitaet && (
+                        <div
+                            className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-25 z-[9999] flex items-center justify-center"
+                        >
+                            <button
+                                className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                                onClick={handleMobilitaetClick}
+                            >
+                                Fahrpläne Öffnen
+                            </button>
+                        </div>
+                    )}
+                    <iframe
+                        src="https://geofox.hvv.de/web/de/connections?clear=true&onefield=true&language=de&start=Charlottenburger%20Straße&startCity=Geesthacht&startType=STATION&destination=&destinationCity=&destinationType="
                         allow="geolocation"
-                        className="w-full h-full relative z-0"
-                        title="Mobilität" />
+                        className={`w-full h-full relative z-0 ${overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"}`}
+                        title="Mobilität"
+                    />
                 </div>
+                {isMobilitaetPopupOpen && (
+                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                        <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                            <button
+                                className="self-end text-red-600 font-bold"
+                                onClick={handleCloseMobilitaetPopup}
+                            >
+                                ✕
+                            </button>
+                            <iframe
+                                src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                                allow="geolocation"
+                                className="w-full h-full"
+                                title="Mobilität Popup"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex flex-col gap-2 h-full">
-
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    <div className="relative bg-white p-1 shadow-lg flex-grow"
                     >
                         {overlayMaengelmelder && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                                    onClick={() => setOverlayMaengelmelder(false)}>
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                                    onClick={handleMaengelmelderClick}>
                                     Schaden Melden
                                 </button>
                             </div>
                         )}
                         <iframe src="https://static.hamburg.de/kartenclient/prod/"
-                            onClick={() => window.open("https://static.hamburg.de/kartenclient/prod/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Mängelmelder" />
                     </div>
+                    {isMaengelmelderPopupOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="self-end text-red-600 font-bold"
+                                    onClick={handleCloseMaengelmelderPopup}
+                                >
+                                    ✕
+                                </button>
+                                <iframe
+                                    src="https://static.hamburg.de/kartenclient/prod/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Mängelmelder Popup"
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
-                    <div className="relative bg-white p-1 shadow-md flex-grow"
+                    <div className="relative bg-white p-1 shadow-lg flex-grow"
                     >
                         {overlayBuergerbeteiligung && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
-                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                                    onClick={() => setOverlayBuergerbeteiligung(false)}>
+                                <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                                    onClick={handleBuergerBeteiligungClick}>
                                     Bürger Beteiligung
                                 </button>
                             </div>
                         )}
                         <iframe src="https://beteiligung.hamburg/navigator/#/"
-                            onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Bürgerbeteiligung" />
                     </div>
+                    {isBeteiligungOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="self-end text-red-600 font-bold"
+                                    onClick={handleClosePopup}
+                                >
+                                    ✕
+                                </button>
+                                <iframe
+                                    src="https://beteiligung.hamburg/navigator/#/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Bürgerbeteiligung Popup"
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
             <div className="fixed bottom-2 right-2 z-[99999]"
             >
                 <button className="bg-sky-950 text-white p-2 w-10 h-10 rounded-full border border-white flex items-center justify-center"
-                    onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
+                    onClick={handleOpenSurvey}
                 >
                     ?
                 </button>
             </div>
+            {isSurveyOpen && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
+                        {/* Close Button */}
+                        <button className="self-end text-sky-950 font-bold text-xl" onClick={handleCloseSurvey}>
+                            ✕
+                        </button>
+
+                        {/* Survey Title & Description */}
+                        <h2 className="text-2xl font-bold text-sky-950 mb-2">{faq.title}</h2>
+                        <p className="text-sky-950 mb-4">{faq.description}</p>
+
+                        {/* Render Questions Dynamically */}
+                        {faq.questions.map((question) => (
+                            <div key={question.id} className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg">
+                                <h3 className="text-lg text-sky-950 font-semibold">{question.question}</h3>
+
+                                {/* Checkbox Questions */}
+                                {question.type === "checkbox" && (
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        {question.options.map((option) => (
+                                            <label key={option} className="flex text-sky-950 items-center gap-2">
+                                                <input
+                                                    type="checkbox"
+                                                    value={option}
+                                                    checked={responses[question.id].includes(option)}
+                                                    onChange={() => handleCheckboxChange(question.id, option)}
+                                                />
+                                                {option}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+                        {/* Submit Button */}
+                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center" onClick={handleSubmitSurvey}>
+                            Feedback senden
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
