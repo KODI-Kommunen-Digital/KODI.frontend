@@ -83,7 +83,6 @@ const TerminalScreen = () => {
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Aktuelles aus dem Bezirksamt</h2>
                             <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-fit max-h-48"
-                                onClick={() => window.open("https://www.hamburg.de/politik-und-verwaltung/bezirke/wandsbek/aktuelles/pressemitteilungen")}
                             >
                                 {listings.filter(listing => listing.categoryId === 1).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 1).map(listing => (
@@ -112,8 +111,7 @@ const TerminalScreen = () => {
                         </div>
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">Veranstaltungen Jenfeld</h2>
-                            <div className="overflow-x-auto flex gap-2 scrollbar-hide whitespace-nowrap h-full"
-                                onClick={() => window.open("https://www.jenfeld-haus.de/gruppen-und-kurse")}
+                            <div className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
                             >
                                 {listings.filter(listing => listing.categoryId === 3).length > 0 ? (
                                     listings.filter(listing => listing.categoryId === 3).map(listing => (
@@ -177,7 +175,7 @@ const TerminalScreen = () => {
                         </div>
                     )}
                     <iframe
-                        src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                        src="https://geofox.hvv.de/web/de/connections?clear=true&onefield=true&language=de&start=Charlottenburger%20Straße&startCity=Geesthacht&startType=STATION&destination=&destinationCity=&destinationType="
                         allow="geolocation"
                         className={`w-full h-full relative z-0 ${overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"}`}
                         title="Mobilität"
