@@ -9,6 +9,40 @@ const TerminalScreen = () => {
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] = useState(true);
     const [listings, setListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
+    const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] = useState(false);
+    const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
+    const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
+
+    const handleMobilitaetClick = () => {
+        setOverlayMobilitaet(false);
+        setIsMobilitaetPopupOpen(true);
+    };
+
+    const handleCloseMobilitaetPopup = () => {
+        setIsMobilitaetPopupOpen(false);
+        setOverlayMobilitaet(true);
+    };
+
+    const handleMaengelmelderClick = () => {
+        setOverlayMaengelmelder(false);
+        setIsMaengelmelderPopupOpen(true);
+    };
+
+    const handleCloseMaengelmelderPopup = () => {
+        setIsMaengelmelderPopupOpen(false);
+        setOverlayMaengelmelder(true);
+    };
+
+    const handleBuergerBeteiligungClick = () => {
+        setOverlayBuergerbeteiligung(false);
+        setIsBeteiligungOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsBeteiligungOpen(false);
+        setOverlayBuergerbeteiligung(true);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -114,7 +148,7 @@ const TerminalScreen = () => {
             >
                 {overlayMasterportal && (
                     <div
-                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                        className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                     >
                         <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
                             onClick={() => setOverlayMasterportal(false)}>
@@ -130,53 +164,118 @@ const TerminalScreen = () => {
 
             <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
                 <div className="relative bg-white p-1 shadow-md h-full">
-                    <iframe src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                    {overlayMobilitaet && (
+                        <div
+                            className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-25 z-[9999] flex items-center justify-center"
+                        >
+                            <button
+                                className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
+                                onClick={handleMobilitaetClick}
+                            >
+                                Fahrpläne Öffnen
+                            </button>
+                        </div>
+                    )}
+                    <iframe
+                        src="https://www.hvv.de/de/fahrplaene/abfahrten"
                         allow="geolocation"
-                        className="w-full h-full relative z-0"
-                        title="Mobilität" />
+                        className={`w-full h-full relative z-0 ${overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"}`}
+                        title="Mobilität"
+                    />
                 </div>
+                {isMobilitaetPopupOpen && (
+                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                        <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                            <button
+                                className="self-end text-red-600 font-bold"
+                                onClick={handleCloseMobilitaetPopup}
+                            >
+                                ✕
+                            </button>
+                            <iframe
+                                src="https://www.hvv.de/de/fahrplaene/abfahrten"
+                                allow="geolocation"
+                                className="w-full h-full"
+                                title="Mobilität Popup"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex flex-col gap-2 h-full">
-
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow"
                     >
                         {overlayMaengelmelder && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                                    onClick={() => setOverlayMaengelmelder(false)}>
+                                    onClick={handleMaengelmelderClick}>
                                     Schaden Melden
                                 </button>
                             </div>
                         )}
                         <iframe src="https://static.hamburg.de/kartenclient/prod/"
-                            onClick={() => window.open("https://static.hamburg.de/kartenclient/prod/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Mängelmelder" />
                     </div>
+                    {isMaengelmelderPopupOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="self-end text-red-600 font-bold"
+                                    onClick={handleCloseMaengelmelderPopup}
+                                >
+                                    ✕
+                                </button>
+                                <iframe
+                                    src="https://static.hamburg.de/kartenclient/prod/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Mängelmelder Popup"
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-md flex-grow"
                     >
                         {overlayBuergerbeteiligung && (
                             <div
-                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[99999] flex items-center justify-center"
+                                className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center"
                             >
                                 <button className="bg-sky-950 text-white text-xl px-8 py-4 rounded-xl shadow-lg border border-white"
-                                    onClick={() => setOverlayBuergerbeteiligung(false)}>
+                                    onClick={handleBuergerBeteiligungClick}>
                                     Bürger Beteiligung
                                 </button>
                             </div>
                         )}
                         <iframe src="https://beteiligung.hamburg/navigator/#/"
-                            onClick={() => window.open("https://beteiligung.hamburg/navigator/#/")}
                             allow="geolocation"
                             className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung ? "pointer-events-none" : "pointer-events-auto"}`}
                             title="Bürgerbeteiligung" />
                     </div>
+                    {isBeteiligungOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="self-end text-red-600 font-bold"
+                                    onClick={handleClosePopup}
+                                >
+                                    ✕
+                                </button>
+                                <iframe
+                                    src="https://beteiligung.hamburg/navigator/#/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Bürgerbeteiligung Popup"
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
