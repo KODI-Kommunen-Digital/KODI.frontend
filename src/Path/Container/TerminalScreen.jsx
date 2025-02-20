@@ -3,7 +3,7 @@ import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
-import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
+import { faq } from "../../Constants/FAQ";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -16,70 +16,35 @@ const TerminalScreen = () => {
     const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
     const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
-    const [surveyData, setSurveyData] = useState(null);
     const [responses, setResponses] = useState({});
-    const [votes, setVotes] = useState({});
 
-    const handleOpenSurvey = async () => {
-        try {
-            const response = await getSurveyFAQ();
-            const survey = response.data;
-            setSurveyData(survey);
-
-            const initialResponses = {};
-            const initialVotes = {};
-
-            for (const question of survey.questions) {
-                initialResponses[question.id] = question.type === "checkbox" ? [] : "";
-
-                if (question.type === "checkbox") {
-                    initialVotes[question.id] = question.votes || {};
-                }
-            }
-
-            setResponses(initialResponses);
-            setVotes(initialVotes);
-            setIsSurveyOpen(true);
-        } catch (error) {
-            console.error("Error fetching survey data:", error);
-        }
+    const handleOpenSurvey = () => {
+        const initialResponses = {};
+        faq.questions.forEach((q) => {
+            initialResponses[q.id] = q.type === "checkbox" ? [] : "";
+        });
+        setResponses(initialResponses);
+        setIsSurveyOpen(true);
     };
 
     const handleCloseSurvey = () => {
         setIsSurveyOpen(false);
     };
 
-    const handleCheckboxChange = async (questionId, value) => {
+    const handleCheckboxChange = (questionId, value) => {
         setResponses((prev) => {
             const updatedValues = prev[questionId].includes(value)
                 ? prev[questionId].filter((item) => item !== value)
                 : [...prev[questionId], value];
-            return { ...prev, [questionId]: updatedValues };
-        });
 
-        setVotes((prevVotes) => {
-            const updatedVotes = { ...prevVotes };
-            updatedVotes[questionId][value] += 1;
-            return updatedVotes;
+            return { ...prev, [questionId]: updatedValues };
         });
     };
 
-    const handleSubmitSurvey = async () => {
-        try {
-            for (const [questionId, selectedOptions] of Object.entries(responses)) {
-                if (Array.isArray(selectedOptions)) {
-                    for (const option of selectedOptions) {
-                        await postVoteById(questionId, option);
-                    }
-                } else if (selectedOptions) {
-                    await postVoteById(questionId, selectedOptions);
-                }
-            }
-            alert("Vielen Dank für Ihr Feedback!");
-            setIsSurveyOpen(false);
-        } catch (error) {
-            console.error("Error submitting survey:", error);
-        }
+    const handleSubmitSurvey = () => {
+        console.log("Survey Responses:", responses);
+        alert("Vielen Dank für Ihr Feedback!");
+        setIsSurveyOpen(false);
     };
 
     const handleMobilitaetClick = () => {
@@ -364,15 +329,24 @@ const TerminalScreen = () => {
                     ?
                 </button>
             </div>
-            {isSurveyOpen && surveyData && (
+            {isSurveyOpen && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto">
-                        <button className="self-end text-sky-950 font-bold text-xl" onClick={handleCloseSurvey}>✕</button>
-                        <h2 className="text-2xl font-bold text-sky-950 mb-2">{surveyData.title}</h2>
-                        <p className="text-sky-950 mb-4">{surveyData.description}</p>
-                        {surveyData.questions.map((question) => (
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
+                        {/* Close Button */}
+                        <button className="self-end text-sky-950 font-bold text-xl" onClick={handleCloseSurvey}>
+                            ✕
+                        </button>
+
+                        {/* Survey Title & Description */}
+                        <h2 className="text-2xl font-bold text-sky-950 mb-2">{faq.title}</h2>
+                        <p className="text-sky-950 mb-4">{faq.description}</p>
+
+                        {/* Render Questions Dynamically */}
+                        {faq.questions.map((question) => (
                             <div key={question.id} className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg">
                                 <h3 className="text-lg text-sky-950 font-semibold">{question.question}</h3>
+
+                                {/* Checkbox Questions */}
                                 {question.type === "checkbox" && (
                                     <div className="flex flex-col gap-2 mt-2">
                                         {question.options.map((option) => (
@@ -383,14 +357,16 @@ const TerminalScreen = () => {
                                                     checked={responses[question.id].includes(option)}
                                                     onChange={() => handleCheckboxChange(question.id, option)}
                                                 />
-                                                {option} ({votes[question.id]?.[option] || 0} Stimmen)
+                                                {option}
                                             </label>
                                         ))}
                                     </div>
                                 )}
                             </div>
                         ))}
-                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4" onClick={handleSubmitSurvey}>
+
+                        {/* Submit Button */}
+                        <button className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center" onClick={handleSubmitSurvey}>
                             Feedback senden
                         </button>
                     </div>
