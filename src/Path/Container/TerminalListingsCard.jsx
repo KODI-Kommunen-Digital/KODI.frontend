@@ -55,11 +55,11 @@ function TerminalListingsCard({ listing }) {
                         e.target.src = LISTINGSIMAGE;
                     }}
                     alt={listing.title}
-                    className="w-48 h-full object-cover"
+                    className="w-18 h-full object-cover"
                 />
 
                 {/* Content Section */}
-                <div className="p-4 flex-1 flex flex-col">
+                <div className="p-2 flex-1 flex flex-col">
                     <h2 className="text-xl font-semibold text-sky-950 truncate">{listing.title}</h2>
                     <p
                         className="text-sky-950 mt-2 text-sm truncate"
