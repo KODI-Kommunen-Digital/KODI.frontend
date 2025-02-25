@@ -248,7 +248,7 @@ const TerminalScreen = () => {
               listings
                 .filter((listing) => listing.categoryId === 1)
                 .map((listing) => (
-                  <div key={listing.id} className="inline-block w-2/5">
+                  <div key={listing.id} className="inline-block">
                     <TerminalListingsCard listing={listing} />
                   </div>
                 ))
@@ -337,7 +337,7 @@ const TerminalScreen = () => {
               listings
                 .filter((listing) => listing.categoryId === 3)
                 .map((listing) => (
-                  <div key={listing.id} className="inline-block w-2/5">
+                  <div key={listing.id} className="inline-block">
                     <TerminalListingsCard listing={listing} />
                   </div>
                 ))
@@ -550,7 +550,7 @@ const TerminalScreen = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-[4rem] right-2 z-[99999]">
+      <div className="fixed bottom-[1rem] right-2 z-[99999]">
         <button
           className="bg-sky-950 text-white p-2 w-20 h-20 rounded-full border border-white flex items-center justify-center"
           onClick={handleOpenSurvey}
