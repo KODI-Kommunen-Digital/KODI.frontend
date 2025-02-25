@@ -248,7 +248,7 @@ const TerminalScreen = () => {
               listings
                 .filter((listing) => listing.categoryId === 1)
                 .map((listing) => (
-                  <div key={listing.id} className="inline-block">
+                  <div key={listing.id} className="inline-block w-3/4 ">
                     <TerminalListingsCard listing={listing} />
                   </div>
                 ))
@@ -337,7 +337,7 @@ const TerminalScreen = () => {
               listings
                 .filter((listing) => listing.categoryId === 3)
                 .map((listing) => (
-                  <div key={listing.id} className="inline-block">
+                  <div key={listing.id} className="inline-block w-3/4">
                     <TerminalListingsCard listing={listing} />
                   </div>
                 ))
