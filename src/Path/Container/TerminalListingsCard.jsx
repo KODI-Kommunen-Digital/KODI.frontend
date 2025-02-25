@@ -45,7 +45,7 @@ function TerminalListingsCard({ listing }) {
     return (
         <>
             <div
-                className="flex bg-white shadow-md overflow-hidden max-w-xl h-48 cursor-pointer"
+                className="flex bg-white shadow-md overflow-hidden max-w-l h-48 cursor-pointer"
                 onClick={handleListingClick}
             >
                 <img
@@ -60,9 +60,9 @@ function TerminalListingsCard({ listing }) {
 
                 {/* Content Section */}
                 <div className="p-2 flex-1 flex flex-col">
-                    <h2 className="text-xl font-semibold text-sky-950 truncate">{listing.title}</h2>
+                    <h2 className="text-xl font-semibold text-sky-950 break-words">{listing.title}</h2>
                     <p
-                        className="text-sky-950 mt-2 text-sm truncate"
+                        className="text-sky-950 mt-2 text-sm break-words"
                         dangerouslySetInnerHTML={{
                             __html: listing.description || "No description available",
                         }}
@@ -93,7 +93,7 @@ function TerminalListingsCard({ listing }) {
                             />
                         </div>
 
-                        <h2 className="text-2xl font-bold text-sky-950 mt-4">
+                        <h2 className="text-2xl font-bold text-sky-950 mt-4 break-words">
                             {selectedListing.title}
                         </h2>
 
@@ -107,7 +107,6 @@ function TerminalListingsCard({ listing }) {
                         </div>
                     </div>
                 </div>
-
             )}
         </>
     );
