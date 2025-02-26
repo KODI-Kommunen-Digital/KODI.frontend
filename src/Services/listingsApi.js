@@ -11,19 +11,6 @@ export async function getListings(params) {
 	params.showExternalListings = "true";
 	return axios.get(`/listings`, { params });
 }
-export async function getListingsNews(params) {
-	// Ensure categoryId is set to 1 for news listings
-	params.showExternalListings = "true";
-	params.categoryId = 1;
-	return axios.get(`/listings`, { params });
-  }
-  
-  export async function getListingsEvents(params) {
-	// Ensure categoryId is set to 3 for event listings
-	params.showExternalListings = "true";
-	params.categoryId = 3;
-	return axios.get(`/listings`, { params });
-  }
 export async function getMyListing(params) {
 	params.showExternalListings = "true";
 	return axios.get(`/users/myListings`, { params });

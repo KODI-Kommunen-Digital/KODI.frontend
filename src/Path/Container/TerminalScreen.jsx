@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import TerminalListingsCard from "./TerminalListingsCard";
-import { getListingsNews, getListingsEvents } from "../../Services/listingsApi";
+import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
@@ -121,14 +121,14 @@ useEffect(() => {
       setIsLoading(true); // Show loading spinner while fetching data
       try {
         // Fetch news listings
-        const newsResponse = await getListingsNews({ pageSize: 20 });
+        const newsResponse = await getListings({ pageSize: 20,categoryId:1 });
         const newsListings = newsResponse.data.data.filter(
           (listing) => !hiddenCategories.includes(listing.categoryId)
         );
         setNewsListings(newsListings);
 
         // Fetch events listings
-        const eventsResponse = await getListingsEvents({ pageSize: 20 });
+        const eventsResponse = await getListings({ pageSize: 20,categoryId:3 });
         const eventsListings = eventsResponse.data.data.filter(
           (listing) => !hiddenCategories.includes(listing.categoryId)
         );
