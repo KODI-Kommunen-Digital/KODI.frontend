@@ -48,15 +48,17 @@ function TerminalListingsCard({ listing }) {
                 className="flex bg-white shadow-md overflow-hidden max-w-l h-48 cursor-pointer"
                 onClick={handleListingClick}
             >
-                <img
-                    src={getImage()}
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = LISTINGSIMAGE;
-                    }}
-                    alt={listing.title}
-                    className="w-18 h-full object-cover"
-                />
+                <div className="w-48 h-48 flex-shrink-0 overflow-hidden">
+                    <img
+                        src={getImage()}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = LISTINGSIMAGE;
+                        }}
+                        alt={listing.title}
+                        className="w-full h-full object-cover"
+                    />
+                </div>
 
                 {/* Content Section */}
                 <div className="p-2 flex-1 flex flex-col">
@@ -89,7 +91,7 @@ function TerminalListingsCard({ listing }) {
                                     e.target.src = LISTINGSIMAGE;
                                 }}
                                 alt={selectedListing.title}
-                                className="w-full h-full object-contain rounded-lg"
+                                className="w-full h-full object-cover rounded-lg"
                             />
                         </div>
 

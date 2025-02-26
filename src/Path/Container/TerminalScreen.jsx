@@ -12,7 +12,9 @@ const TerminalScreen = () => {
   const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
   const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] =
     useState(true);
-  const [listings, setListings] = useState([]);
+ // const [listings, setListings] = useState([]);
+  const [newsListings, setNewsListings] = useState([]);
+  const [eventsListings, setEventsListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
   const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] =
@@ -81,26 +83,65 @@ const TerminalScreen = () => {
     setOverlayBuergerbeteiligung(true);
   };
 
+useEffect(() => {
+    let inactivityTimeout;
+
+    // Function to reset the inactivity timer
+    const resetInactivityTimer = () => {
+      clearTimeout(inactivityTimeout);
+      inactivityTimeout = setTimeout(() => {
+        // Reload the page after 2 minutes (120,000 ms) of inactivity
+        window.location.reload();
+      }, 600000); // 2 minutes
+    };
+
+    // Add event listeners for user interactions
+    const handleUserInteraction = () => {
+      resetInactivityTimer();
+    };
+
+    // Listen for any user interaction
+    document.addEventListener('mousemove', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener('click', handleUserInteraction);
+
+    // Initialize the inactivity timer
+    resetInactivityTimer();
+
+    // Cleanup the event listeners and timeout on unmount
+    return () => {
+      clearTimeout(inactivityTimeout);
+      document.removeEventListener('mousemove', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  }, []); 
   useEffect(() => {
     const fetchData = async () => {
-      const params = { pageSize: 20 };
+      setIsLoading(true); // Show loading spinner while fetching data
       try {
-        const response = await getListings(params);
-        const listings = response.data.data;
-        const filteredListings = listings.filter(
+        // Fetch news listings
+        const newsResponse = await getListings({ pageSize: 20,categoryId:1 });
+        const newsListings = newsResponse.data.data.filter(
           (listing) => !hiddenCategories.includes(listing.categoryId)
         );
-        setListings(filteredListings);
+        setNewsListings(newsListings);
+
+        // Fetch events listings
+        const eventsResponse = await getListings({ pageSize: 20,categoryId:3 });
+        const eventsListings = eventsResponse.data.data.filter(
+          (listing) => !hiddenCategories.includes(listing.categoryId)
+        );
+        setEventsListings(eventsListings);
       } catch (error) {
-        setListings([]);
         console.error("Error fetching listings:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Hide loading spinner after data is fetched
       }
     };
 
     fetchData();
-  }, []);
+  }, [hiddenCategories]);
   const fetchSurveys = async () => {
     const listingIds = [25, 26, 27, 28];
     try {
@@ -239,7 +280,7 @@ const TerminalScreen = () => {
               </h2>
               <div className="relative">
                 {/* Left Arrow */}
-                {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft1 && (
+                {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft1 && (
                   <button
                     onClick={() => handleSlide("left", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
                     className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
@@ -267,13 +308,13 @@ const TerminalScreen = () => {
                   ref={containerRef1}
                   onScroll={() => handleScroll(containerRef1, setCanScrollLeft1, setCanScrollRight1)}
                 >
-                  {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
-                    listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
+                  {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
+                    newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                       <div className="w-full">
-                        <TerminalListingsCard listing={listings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
+                        <TerminalListingsCard listing={newsListings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
                       </div>
                     ) : (
-                      listings
+                      newsListings
                         .filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)
                         .map((listing) => (
                           <div key={listing.id} className="w-[75%] flex-shrink-0">
@@ -291,7 +332,7 @@ const TerminalScreen = () => {
                 </div>
 
                 {/* Right Arrow */}
-                {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight1 && (
+                {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight1 && (
                   <button
                     onClick={() => handleSlide("right", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
@@ -322,7 +363,7 @@ const TerminalScreen = () => {
               </h2>
               <div className="relative">
                 {/* Left Arrow */}
-                {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft2 && (
+                {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft2 && (
                   <button
                     onClick={() => handleSlide("left", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
                     className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
@@ -350,13 +391,13 @@ const TerminalScreen = () => {
                   ref={containerRef2}
                   onScroll={() => handleScroll(containerRef2, setCanScrollLeft2, setCanScrollRight2)}
                 >
-                  {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
-                    listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
+                  {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
+                    eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                       <div className="w-full">
-                        <TerminalListingsCard listing={listings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
+                        <TerminalListingsCard listing={eventsListings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
                       </div>
                     ) : (
-                      listings
+                      eventsListings
                         .filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)
                         .map((listing) => (
                           <div key={listing.id} className="w-[75%] flex-shrink-0">
@@ -374,7 +415,7 @@ const TerminalScreen = () => {
                 </div>
 
                 {/* Right Arrow */}
-                {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight2 && (
+                {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight2 && (
                   <button
                     onClick={() => handleSlide("right", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"

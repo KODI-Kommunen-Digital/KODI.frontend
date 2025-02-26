@@ -11,7 +11,6 @@ export async function getListings(params) {
 	params.showExternalListings = "true";
 	return axios.get(`/listings`, { params });
 }
-
 export async function getMyListing(params) {
 	params.showExternalListings = "true";
 	return axios.get(`/users/myListings`, { params });
