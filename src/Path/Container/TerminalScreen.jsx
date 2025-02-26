@@ -504,12 +504,15 @@ useEffect(() => {
               >
                 ✕
               </button>
-              <iframe
+              {/* <iframe
                 src="https://www.hvv.de/de/fahrplaene/abfahrten"
                 allow="geolocation"
                 className="w-full h-full"
                 title="Mobilität Popup"
-              />
+              /> */}
+               <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+               </div>
             </div>
           </div>
         )}
@@ -589,12 +592,15 @@ useEffect(() => {
                 >
                   ✕
                 </button>
-                <iframe
+                {/* <iframe
                   src="https://beteiligung.hamburg/navigator/#/"
                   allow="geolocation"
                   className="w-full h-full"
                   title="Bürgerbeteiligung Popup"
-                />
+                /> */}
+                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                </div>
               </div>
             </div>
           )}
