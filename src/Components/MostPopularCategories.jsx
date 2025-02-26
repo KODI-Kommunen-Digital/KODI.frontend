@@ -21,8 +21,8 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                             onClick={() => {
                                 goToAllListingsPage(listing.categoryId);
                             }}
-                            className={`p-4 justify-center bg-white h-30 ${listingsCount.length <= 3 ? "md:w-48 xl:w-60" : "md:w-48"
-                                } w-30 shadow-xl rounded-xl mt-10 cursor-pointer`}
+                            className={`p-4 justify-center bg-white h-20 ${listingsCount.length <= 3 ? "md:w-48 xl:w-60" : "md:w-48"
+                                } w-20 shadow-xl rounded-xl mt-10 cursor-pointer`}
                         >
                             <div className={categoryIcon.className}>
                                 <svg
