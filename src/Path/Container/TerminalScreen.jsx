@@ -4,6 +4,8 @@ import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
+import listingSource from "../../Constants/listingSource";
+
 
 const TerminalScreen = () => {
   const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -20,17 +22,37 @@ const TerminalScreen = () => {
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
   const containerRef1 = useRef(null); // For the first section
   const containerRef2 = useRef(null); // For the second section
+  const [canScrollLeft1, setCanScrollLeft1] = useState(false); // Track if left scroll is possible for container 1
+  const [canScrollRight1, setCanScrollRight1] = useState(true); // Track if right scroll is possible for container 1
+  const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
+  const [canScrollRight2, setCanScrollRight2] = useState(true);
   const handleMobilitaetClick = () => {
     setOverlayMobilitaet(false);
     setIsMobilitaetPopupOpen(true);
   };
-  const handleSlide = (direction, ref) => {
+  const handleSlide = (direction, ref, setCanScrollLeft, setCanScrollRight) => {
     if (ref.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300; // Adjust this value for smoother/faster sliding
+      const scrollAmount = direction === "left" ? -300 : 300; // Adjust this value for smoother/faster sliding
       ref.current.scrollBy({
         left: scrollAmount,
-        behavior: 'smooth', // This makes the scroll smooth
+        behavior: "smooth", // This makes the scroll smooth
       });
+
+      // Update scroll state after a short delay to allow the scroll to complete
+      setTimeout(() => {
+        const { scrollLeft, scrollWidth, clientWidth } = ref.current;
+        setCanScrollLeft(scrollLeft > 0);
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
+      }, 300);
+    }
+  };
+
+  // Check scroll position on container scroll
+  const handleScroll = (ref, setCanScrollLeft, setCanScrollRight) => {
+    if (ref.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = ref.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
     }
   };
 
@@ -189,207 +211,195 @@ const TerminalScreen = () => {
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-      <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
-  {isLoading ? (
-    <div className="flex justify-center items-center h-full">
-      <svg
-        className="w-6 h-6 stroke-indigo-600 animate-spin"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g clipPath="url(#clip0_9023_61563)">
-          <path
-            d="M14.6437 2.05426C11.9803 1.2966 9.01686 1.64245 6.50315 3.25548C1.85499 6.23817 0.504864 12.4242 3.48756 17.0724C6.47025 21.7205 12.6563 23.0706 17.3044 20.088C20.4971 18.0393 22.1338 14.4793 21.8792 10.9444"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-          ></path>
-        </g>
-      </svg>
-    </div>
-  ) : (
-    <>
-      {/* First Section */}
-      <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
-        <h2 className="text-sm font-bold text-sky-950 mb-2">
-          Aktuelles aus dem Bezirksamt
-        </h2>
-        <div className="relative">
-          {/* Only show left arrow button if there are listings */}
-          {listings.filter((listing) => listing.categoryId === 1).length > 0 && (
-            <button
-              onClick={() => handleSlide('left', containerRef1)}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+       <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <svg
+              className="w-6 h-6 stroke-indigo-600 animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6 text-white"
-              >
+              <g clipPath="url(#clip0_9023_61563)">
                 <path
+                  d="M14.6437 2.05426C11.9803 1.2966 9.01686 1.64245 6.50315 3.25548C1.85499 6.23817 0.504864 12.4242 3.48756 17.0724C6.47025 21.7205 12.6563 23.0706 17.3044 20.088C20.4971 18.0393 22.1338 14.4793 21.8792 10.9444"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
                   strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-          )}
-
-          {/* Scrollable Content */}
-          <div
-            className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
-            ref={containerRef1}
-          >
-            {listings.filter((listing) => listing.categoryId === 1).length > 0 ? (
-              listings
-                .filter((listing) => listing.categoryId === 1)
-                .map((listing) => (
-                  <div key={listing.id} className="inline-block w-3/4 ">
-                    <TerminalListingsCard listing={listing} />
-                  </div>
-                ))
-            ) : (
-              <>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse"
-                  >
-                    {/* Placeholder Image */}
-                    <div className="w-full h-64 bg-gray-300"></div>
-
-                    {/* Placeholder Text */}
-                    <div className="p-1 flex-1 flex flex-col">
-                      <div className="h-4 bg-gray-300 w-3/4 rounded mt-2"></div>
-                      <div className="h-3 bg-gray-200 w-5/6 rounded mt-2"></div>
-                      <div className="h-3 bg-gray-200 w-2/3 rounded mt-2"></div>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
+                ></path>
+              </g>
+            </svg>
           </div>
-
-          {/* Only show right arrow button if there are listings */}
-          {listings.filter((listing) => listing.categoryId === 1).length > 0 && (
-            <button
-              onClick={() => handleSlide('right', containerRef1)}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Second Section */}
-      <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
-        <h2 className="text-sm font-bold text-sky-950 mb-2">
-          Veranstaltungen Jenfeld
-        </h2>
-        <div className="relative">
-          {/* Only show left arrow button if there are listings */}
-          {listings.filter((listing) => listing.categoryId === 3).length > 0 && (
-            <button
-              onClick={() => handleSlide('left', containerRef2)}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-          )}
-
-          {/* Scrollable Content */}
-          <div
-            className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
-            ref={containerRef2}
-          >
-            {listings.filter((listing) => listing.categoryId === 3).length > 0 ? (
-              listings
-                .filter((listing) => listing.categoryId === 3)
-                .map((listing) => (
-                  <div key={listing.id} className="inline-block w-3/4">
-                    <TerminalListingsCard listing={listing} />
-                  </div>
-                ))
-            ) : (
-              <>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse"
+        ) : (
+          <>
+            {/* First Section */}
+            <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
+              <h2 className="text-sm font-bold text-sky-950 mb-2">
+                Aktuelles aus dem Bezirksamt
+              </h2>
+              <div className="relative">
+                {/* Left Arrow */}
+                {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft1 && (
+                  <button
+                    onClick={() => handleSlide("left", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
                   >
-                    {/* Placeholder Image */}
-                    <div className="w-full h-64 bg-gray-300"></div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                )}
 
-                    {/* Placeholder Text */}
-                    <div className="p-1 flex-1 flex flex-col">
-                      <div className="h-4 bg-gray-300 w-3/4 rounded mt-2"></div>
-                      <div className="h-3 bg-gray-200 w-5/6 rounded mt-2"></div>
-                      <div className="h-3 bg-gray-200 w-2/3 rounded mt-2"></div>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
+                {/* Scrollable Content */}
+                <div
+                  className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
+                  ref={containerRef1}
+                  onScroll={() => handleScroll(containerRef1, setCanScrollLeft1, setCanScrollRight1)}
+                >
+                  {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
+                    listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
+                      <div className="w-full">
+                        <TerminalListingsCard listing={listings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
+                      </div>
+                    ) : (
+                      listings
+                        .filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)
+                        .map((listing) => (
+                          <div key={listing.id} className="w-[75%] flex-shrink-0">
+                            <TerminalListingsCard listing={listing} />
+                          </div>
+                        ))
+                    )
+                  ) : (
+                    <>
+                      <div className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                        <div className="w-full bg-gray-300"></div>
+                      </div>
+                    </>
+                  )}
+                </div>
 
-          {/* Only show right arrow button if there are listings */}
-          {listings.filter((listing) => listing.categoryId === 3).length > 0 && (
-            <button
-              onClick={() => handleSlide('right', containerRef2)}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
+                {/* Right Arrow */}
+                {listings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight1 && (
+                  <button
+                    onClick={() => handleSlide("right", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Second Section */}
+            <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
+              <h2 className="text-sm font-bold text-sky-950 mb-2">
+                Veranstaltungen Jenfeld
+              </h2>
+              <div className="relative">
+                {/* Left Arrow */}
+                {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft2 && (
+                  <button
+                    onClick={() => handleSlide("left", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Scrollable Content */}
+                <div
+                  className="overflow-x-auto flex gap-2 scrollbar-hide h-full"
+                  ref={containerRef2}
+                  onScroll={() => handleScroll(containerRef2, setCanScrollLeft2, setCanScrollRight2)}
+                >
+                  {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
+                    listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
+                      <div className="w-full">
+                        <TerminalListingsCard listing={listings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
+                      </div>
+                    ) : (
+                      listings
+                        .filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)
+                        .map((listing) => (
+                          <div key={listing.id} className="w-[75%] flex-shrink-0">
+                            <TerminalListingsCard listing={listing} />
+                          </div>
+                        ))
+                    )
+                  ) : (
+                    <>
+                      <div className="bg-white shadow-lg overflow-hidden max-w-sm flex flex-col w-40 h-full animate-pulse">
+                        <div className="w-full bg-gray-300"></div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Right Arrow */}
+                {listings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight2 && (
+                  <button
+                    onClick={() => handleSlide("right", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </>
-  )}
-</div>
 
 
       <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-lg flex items-center justify-center">
@@ -550,7 +560,7 @@ const TerminalScreen = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-[1rem] right-2 z-[99999]">
+      <div className="fixed bottom-[1rem] right-[1rem] z-[99999]">
         <button
           className="bg-sky-950 text-white p-2 w-20 h-20 rounded-full border border-white flex items-center justify-center"
           onClick={handleOpenSurvey}
