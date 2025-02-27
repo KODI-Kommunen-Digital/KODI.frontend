@@ -55,6 +55,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+    
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken =
       window.localStorage.getItem("accessToken") ||
@@ -62,6 +63,9 @@ const HomePage = () => {
     const refreshToken =
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
+    if (!accessToken && !refreshToken) {
+      navigateTo("/");
+    }
     if (accessToken || refreshToken) {
       setIsLoggedIn(true);
     }
@@ -568,13 +572,13 @@ const HomePage = () => {
               >
                 {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("findCommunity") : t("findBestCitizenServicesInTheCity")}
               </p>
-              <a
+              {/* <a
                 onClick={() => goToCitizensPage()}
                 className="ml-0 w-full sm:w-48 font-sans inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-transparent bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("button") : t("clickHereToFind")}
-              </a>
+              </a> */}
             </div>
 
             <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">

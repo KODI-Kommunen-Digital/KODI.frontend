@@ -63,6 +63,7 @@ const App = () => {
       <div>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/Listing" element={<Listing />} exact />
           <Route path="/AllListings" element={<AllListings />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />

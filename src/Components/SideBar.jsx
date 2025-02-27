@@ -11,7 +11,7 @@ function SideBar() {
 	const { t } = useTranslation();
 	const [loggedIn, setLoggedIn] = useState(true);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === 'True';
+	const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === 'False';
 
 	const navigate = useNavigate();
 	const navigateTo = (path) => {
