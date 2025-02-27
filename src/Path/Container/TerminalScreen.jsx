@@ -12,7 +12,7 @@ const TerminalScreen = () => {
   const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
   const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] =
     useState(true);
- // const [listings, setListings] = useState([]);
+  // const [listings, setListings] = useState([]);
   const [newsListings, setNewsListings] = useState([]);
   const [eventsListings, setEventsListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,7 +83,7 @@ const TerminalScreen = () => {
     setOverlayBuergerbeteiligung(true);
   };
 
-useEffect(() => {
+  useEffect(() => {
     let inactivityTimeout;
 
     // Function to reset the inactivity timer
@@ -92,7 +92,7 @@ useEffect(() => {
       inactivityTimeout = setTimeout(() => {
         // Reload the page after 2 minutes (120,000 ms) of inactivity
         window.location.reload();
-      }, 600000); // 2 minutes
+      }, 120000); // 2 minutes
     };
 
     // Add event listeners for user interactions
@@ -115,20 +115,20 @@ useEffect(() => {
       document.removeEventListener('keydown', handleUserInteraction);
       document.removeEventListener('click', handleUserInteraction);
     };
-  }, []); 
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); // Show loading spinner while fetching data
       try {
         // Fetch news listings
-        const newsResponse = await getListings({ pageSize: 20,categoryId:1 });
+        const newsResponse = await getListings({ pageSize: 20, categoryId: 1 });
         const newsListings = newsResponse.data.data.filter(
           (listing) => !hiddenCategories.includes(listing.categoryId)
         );
         setNewsListings(newsListings);
 
         // Fetch events listings
-        const eventsResponse = await getListings({ pageSize: 20,categoryId:3 });
+        const eventsResponse = await getListings({ pageSize: 20, categoryId: 3 });
         const eventsListings = eventsResponse.data.data.filter(
           (listing) => !hiddenCategories.includes(listing.categoryId)
         );
@@ -155,11 +155,11 @@ useEffect(() => {
   };
   useEffect(() => {
     console.log("Fetching surveys...");
-    
-  
+
+
     fetchSurveys();
   }, []);
-  
+
 
   const [surveys, setSurveys] = useState([]);
   const [responses, setResponses] = useState({});
@@ -180,20 +180,20 @@ useEffect(() => {
           const survey = surveys.find((s) => s.id === Number(surveyId));
 
           if (!survey) return null;
-        const selectedOption = survey.pollOptions.find(
+          const selectedOption = survey.pollOptions.find(
             (option) => option.id === selectedOptionId
           );
-      
+
           // If no selected option, return null
           if (!selectedOption) return null;
-      
+
           // Create the payload with only the selected option's vote count incremented
-          const updatedVotes = 
-            {
-              optionId: selectedOption.id,
-              vote:  1,
-            }
-          ;
+          const updatedVotes =
+          {
+            optionId: selectedOption.id,
+            vote: 1,
+          }
+            ;
 
           return postVoteById(surveyId, updatedVotes);
         }
@@ -215,7 +215,7 @@ useEffect(() => {
         ...prevResponses,
         [surveyId]: selectedOptionId,
       };
-  
+
       // Step 2: Update the survey UI (increment/decrement vote counts)
       const updatedSurveys = surveys.map((survey) => {
         if (survey.id === surveyId) {
@@ -234,7 +234,7 @@ useEffect(() => {
             }
             return option;
           });
-  
+
           return {
             ...survey,
             pollOptions: updatedPollOptions,
@@ -242,17 +242,17 @@ useEffect(() => {
         }
         return survey;
       });
-  
+
       // Step 3: Update the surveys state to reflect the new vote counts
       setSurveys(updatedSurveys);
-  
+
       return updatedResponses;
     });
   };
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-       <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
+      <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <svg
@@ -466,9 +466,8 @@ useEffect(() => {
           onClick={() =>
             window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")
           }
-          className={`w-full h-full relative z-0 ${
-            overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"
-          }`}
+          className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"
+            }`}
           title="Masterportal"
           allow="geolocation"
         />
@@ -489,9 +488,8 @@ useEffect(() => {
           <iframe
             src="https://geofox.hvv.de/web/de/connections?clear=true&onefield=true&language=de&start=Charlottenburger%20Straße&startCity=Geesthacht&startType=STATION&destination=&destinationCity=&destinationType="
             allow="geolocation"
-            className={`w-full h-full relative z-0 ${
-              overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"
-            }`}
+            className={`w-full h-full relative z-0 ${overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"
+              }`}
             title="Mobilität"
           />
         </div>
@@ -510,9 +508,9 @@ useEffect(() => {
                 className="w-full h-full"
                 title="Mobilität Popup"
               /> */}
-               <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+              <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                 Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
-               </div>
+              </div>
             </div>
           </div>
         )}
@@ -533,11 +531,10 @@ useEffect(() => {
             <iframe
               src="https://static.hamburg.de/kartenclient/prod/"
               allow="geolocation"
-              className={`w-full h-full relative z-0 ${
-                overlayMaengelmelder
+              className={`w-full h-full relative z-0 ${overlayMaengelmelder
                   ? "pointer-events-none"
                   : "pointer-events-auto"
-              }`}
+                }`}
               title="Mängelmelder"
             />
           </div>
@@ -575,11 +572,10 @@ useEffect(() => {
             <iframe
               src="https://beteiligung.hamburg/navigator/#/"
               allow="geolocation"
-              className={`w-full h-full relative z-0 ${
-                overlayBuergerbeteiligung
+              className={`w-full h-full relative z-0 ${overlayBuergerbeteiligung
                   ? "pointer-events-none"
                   : "pointer-events-auto"
-              }`}
+                }`}
               title="Bürgerbeteiligung"
             />
           </div>
@@ -598,8 +594,8 @@ useEffect(() => {
                   className="w-full h-full"
                   title="Bürgerbeteiligung Popup"
                 /> */}
-                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
-                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                  Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                 </div>
               </div>
             </div>
@@ -616,87 +612,85 @@ useEffect(() => {
         </button>
       </div>
       {isSurveyOpen && (
-  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
-      <button
-        className="self-end text-sky-950 font-bold text-xl"
-        onClick={handleCloseSurvey}
-      >
-        ✕
-      </button>
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
+            <button
+              className="self-end text-sky-950 font-bold text-xl"
+              onClick={handleCloseSurvey}
+            >
+              ✕
+            </button>
 
-      <h2 className="text-2xl font-bold text-sky-950 mb-2">
-        Intro zu den Fragen
-      </h2>
-      <p className="text-sky-950 mb-4">
-        Willkommen zur Feedbackfunktion für unsere digitale
-        Informationsstele!
-      </p>
+            <h2 className="text-2xl font-bold text-sky-950 mb-2">
+              Intro zu den Fragen
+            </h2>
+            <p className="text-sky-950 mb-4">
+              Willkommen zur Feedbackfunktion für unsere digitale
+              Informationsstele!
+            </p>
 
-      {surveys.map((survey) => (
-        <div
-          key={survey.id}
-          className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg"
-        >
-          <h3 className="text-lg text-sky-950 font-semibold">
-            {survey.title}
-          </h3>
-          <div className="flex flex-col gap-2 mt-2">
-            {survey.pollOptions.map((option) => (
-              <label
-                key={option.id}
-                className="flex items-center justify-between text-sky-950 gap-1 text-lg font-medium"
+            {surveys.map((survey) => (
+              <div
+                key={survey.id}
+                className="mt-4 p-6 bg-gray-200 rounded-lg shadow-lg"
               >
-                <input
-                  type="radio"
-                  name={`survey-${survey.id}`}
-                  value={option.id}
-                  checked={responses[survey.id] === option.id}
-                  onChange={() => handleInputChange(survey.id, option.id)}
-                  className="hidden"
-                />
-                <div
-                  className={`cursor-pointer px-3 py-2 rounded-lg
-                              ${
-                                responses[survey.id] === option.id
-                                  ? "border-sky-600 bg-sky-100"
-                                  : "border-gray-300 bg-white"
-                              } 
+                <h3 className="text-lg text-sky-950 font-semibold">
+                  {survey.title}
+                </h3>
+                <div className="flex flex-col gap-2 mt-2">
+                  {survey.pollOptions.map((option) => (
+                    <label
+                      key={option.id}
+                      className="flex items-center justify-between text-sky-950 gap-1 text-lg font-medium"
+                    >
+                      <input
+                        type="radio"
+                        name={`survey-${survey.id}`}
+                        value={option.id}
+                        checked={responses[survey.id] === option.id}
+                        onChange={() => handleInputChange(survey.id, option.id)}
+                        className="hidden"
+                      />
+                      <div
+                        className={`cursor-pointer px-3 py-2 rounded-lg
+                              ${responses[survey.id] === option.id
+                            ? "border-sky-600 bg-sky-100"
+                            : "border-gray-300 bg-white"
+                          } 
                               transition duration-300 ease-in-out hover:border-sky-500 hover:bg-sky-50`}
-                >
-                  {option.title}
+                      >
+                        {option.title}
+                      </div>
+
+                      <span
+                        className={`ml-2 text-sm px-3 py-1 rounded-lg font-bold transition-all transform 
+              ${responses[survey.id] === option.id
+                            ? "text-white bg-sky-600 scale-110"
+                            : "text-gray-600 bg-gray-200"
+                          } min-w-[100px] text-center`}
+                      >
+
+
+                        {option.votes} Stimmen
+                      </span>
+                    </label>
+                  ))}
                 </div>
-
-                <span
-  className={`ml-2 text-sm px-3 py-1 rounded-lg font-bold transition-all transform 
-              ${
-                responses[survey.id] === option.id
-                  ? "text-white bg-sky-600 scale-110"
-                  : "text-gray-600 bg-gray-200"
-              } min-w-[100px] text-center`}
->
-  
-
-                  {option.votes} Stimmen
-                </span>
-              </label>
+              </div>
             ))}
+
+            <button
+              className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center"
+              onClick={async () => {
+                await handleSubmitSurvey();
+                fetchSurveys(); // You may want this to be async if it fetches data from an API
+              }}
+            >
+              Feedback senden
+            </button>
           </div>
         </div>
-      ))}
-
-      <button
-        className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center"
-        onClick={async () => {
-          await handleSubmitSurvey();
-          fetchSurveys(); // You may want this to be async if it fetches data from an API
-        }}
-      >
-        Feedback senden
-      </button>
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );
