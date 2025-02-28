@@ -30,6 +30,10 @@ const LoginPage = () => {
 		const path = `/UploadListings`;
 		navigate(path);
 	}, [navigate]);
+	const routeChangeToHome = useCallback(() => {
+		const path = `/home`;
+		navigate(path);
+	}, [navigate]);
 	const routeChangeToRegister = () => {
 		const path = `/Register`;
 		navigate(path);
@@ -142,7 +146,7 @@ const LoginPage = () => {
 				navigate(window.sessionStorage.getItem("redirectTo"));
 			} else {
 				localStorage.setItem("selectedItem", t("chooseOneCategory"));
-				routeChangeToUpload();
+				routeChangeToHome();
 			}
 		} catch (err) {
 			setLoginLoading(false);

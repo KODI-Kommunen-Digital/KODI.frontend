@@ -564,13 +564,13 @@ const HomePage = () => {
                 className="text-4xl text-white font-bold mb-4 font-sans"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
-                {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("community") : t("citizenService")}
+                {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("community") : t("homePageHeadingKODI")}
               </h2>
               <p
                 className="mb-4 text-gray-900 text-lg font-bold font-sans"
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
-                {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("findCommunity") : t("findBestCitizenServicesInTheCity")}
+                {process.env.REACT_APP_NAME === 'KODI - DEMO' ? t("findCommunity") : t("Benefitfromalargecommunity")}
               </p>
               {/* <a
                 onClick={() => goToCitizensPage()}
