@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
+import KODILOGO from "../assets/KODILOGO.png";
 import { useTranslation } from "react-i18next";
 import { updateProfile } from "../Services/usersApi";
 import Alert from "../Components/Alert";
@@ -119,7 +119,7 @@ const PasswordUpdate = () => {
 					<img
 						onClick={() => navigate("/home")}
 						className="mx-auto h-20 w-auto cursor-pointer"
-						src={HeidiLogo}
+						src={KODILOGO}
 						alt="HEIDI"
 					/>
 					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">

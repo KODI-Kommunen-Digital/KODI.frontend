@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
+import KODILOGO from "../assets/KODILOGO.png";
 import { updatePassword } from "../Services/usersApi";
 import { useTranslation } from "react-i18next";
 import Alert from "../Components/Alert";
@@ -120,7 +120,7 @@ const PasswordForgot = () => {
 					<img
 						onClick={() => navigate("/home")}
 						className="mx-auto h-20 w-auto cursor-pointer"
-						src={HeidiLogo}
+						src={KODILOGO}
 						alt="Your Company"
 					/>
 					<h3 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">

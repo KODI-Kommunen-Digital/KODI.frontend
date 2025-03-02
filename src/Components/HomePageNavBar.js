@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../Services/usersApi";
+import KODILOGO from "../assets/KODILOGO.png";
+
 
 export default function HomePageNavBar() {
   const navigate = useNavigate();
@@ -85,8 +87,8 @@ export default function HomePageNavBar() {
             <div>
               <img
                 className={`mx-auto lg:h-10 md:h-10 h-8 w-auto cursor-pointer ${buttonClass}`}
-                src={process.env.REACT_APP_BUCKET_HOST + "admin/logo.png"}
-                alt="HEDI- Heimat Digital"
+                src={KODILOGO}
+                alt="KODI"
                 onClick={() => {
                   window.localStorage.removeItem("selectedCity");
                   navigateTo("/home");

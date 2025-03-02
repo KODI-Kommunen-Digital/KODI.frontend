@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { useTranslation } from "react-i18next";
 import { register } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
 import { role } from "../Constants/role";
+import KODILOGO from "../assets/KODILOGO.png";
+
 
 const Register = () => {
 	const { t } = useTranslation();
@@ -183,14 +184,14 @@ const Register = () => {
 						<img
 							onClick={() => navigate("/home")}
 							className="mx-auto h-20 w-auto cursor-pointer"
-							src={kodiLogo}
+							src={KODILOGO}
 							alt="KODI Logo"
 						/>
 					) : (
 						<img
 							onClick={() => navigate("/home")}
 							className="mx-auto h-20 w-auto cursor-pointer"
-							src={HeidiLogo}
+							src={KODILOGO}
 							alt="Heidi Logo"
 						/>
 					)}

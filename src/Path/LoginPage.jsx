@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import HeidiLogo from "../assets/HEIDI_Logo.png";
-import kodiLogo from "../assets/KODILOGO.png";
+import KODILOGO from "../assets/KODILOGO.png";
 import "../index.css";
 import { useTranslation } from "react-i18next";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
@@ -218,14 +217,14 @@ const LoginPage = () => {
 							<img
 								// onClick={() => navigate("/home")}
 								className="mx-auto h-20 w-auto cursor-pointer"
-								src={kodiLogo}
+								src={KODILOGO}
 								alt="KODI Logo"
 							/>
 						) : (
 							<img
 								// onClick={() => navigate("/home")}
 								className="mx-auto h-20 w-auto cursor-pointer"
-								src={HeidiLogo}
+								src={KODILOGO}
 								alt="Heidi Logo"
 							/>
 						)}

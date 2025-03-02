@@ -34,7 +34,7 @@ import AllDevices from "./Path/AllDevices";
 
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
-import HeidiLogo from "./assets/HEIDI_Logo.png";
+import KODILOGO from "./assets/KODILOGO.png";
 import "./i18n";
 
 import ViewPost from "./Path/Forums/ViewPost";
@@ -55,7 +55,7 @@ const App = () => {
       document.createElement("link");
     link.type = "image/x-icon";
     link.rel = "shortcut icon";
-    link.href = HeidiLogo;
+    link.href = KODILOGO;
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
   return (
