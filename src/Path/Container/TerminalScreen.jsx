@@ -436,13 +436,15 @@ const TerminalScreen = () => {
                             className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                             onClick={() => setOverlayMasterportal(false)}
                         >
-                            Was ist wo? Öffnen
+                            <span>{`"Was ist wo?"`}</span>
+                            <br />
+                            <span>{`Öffnen`}</span>
                         </button>
 
                         <img
                             src={HAMBURGLOGO}
                             alt="Hamburg Logo"
-                            className="w-24 h-18 m-4"
+                            className="w-30 h-20 m-4"
                         />
                     </div>
                 )}
@@ -504,13 +506,15 @@ const TerminalScreen = () => {
                                     className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleMaengelmelderClick}
                                 >
-                                    Schaden Melden
+                                    <span>{`Schaden`}</span>
+                                    <br />
+                                    <span>{`melden`}</span>
                                 </button>
 
                                 <img
                                     src={HAMBURGLOGO}
                                     alt="Hamburg Logo"
-                                    className="w-24 h-18 m-4"
+                                    className="w-30 h-20 m-4"
                                 />
                             </div>
                         )}
@@ -554,13 +558,15 @@ const TerminalScreen = () => {
                                     className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleBuergerBeteiligungClick}
                                 >
-                                    Bürger Beteiligung
+                                    <span>{`Bürger`}</span>
+                                    <br />
+                                    <span>{`Beteiligung`}</span>
                                 </button>
 
                                 <img
                                     src={HAMBURGLOGO}
                                     alt="Hamburg Logo"
-                                    className="w-24 h-18 m-4"
+                                    className="w-30 h-20 m-4"
                                 />
                             </div>
                         )}
