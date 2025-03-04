@@ -75,9 +75,9 @@ const TerminalScreen = () => {
         const resetInactivityTimer = () => {
             clearTimeout(inactivityTimeout);
             inactivityTimeout = setTimeout(() => {
-                // Reload the page after 2 minutes (120,000 ms) of inactivity
+                // Reload the page after 2 minutes (60,000 ms) of inactivity
                 window.location.reload();
-            }, 120000); // 2 minutes
+            }, 60000); // 1 minutes
         };
 
         // Add event listeners for user interactions
@@ -127,6 +127,9 @@ const TerminalScreen = () => {
         fetchData();
     }, [hiddenCategories]);
 
+    const [surveys, setSurveys] = useState([]);
+    const [responses, setResponses] = useState({});
+
     const fetchSurveys = async () => {
         const listingIds = [25, 26, 27, 28];
         try {
@@ -139,11 +142,13 @@ const TerminalScreen = () => {
         }
     };
 
-    const [surveys, setSurveys] = useState([]);
-    const [responses, setResponses] = useState({});
+    // useEffect(() => {
+    //     fetchSurveys();
+    //   }, []);
 
     const handleOpenSurvey = () => {
         setIsSurveyOpen(true);
+        fetchSurveys();
     };
 
     const handleCloseSurvey = () => {
@@ -580,6 +585,12 @@ const TerminalScreen = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
+                                {/* <iframe
+                                    src="https://beteiligung.hamburg/navigator/#/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Bürgerbeteiligung Popup"
+                                /> */}
                                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                     Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                                 </div>
