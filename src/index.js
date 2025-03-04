@@ -8,25 +8,35 @@ import { AuthProvider } from "./context/AuthProvider";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 
-// Cancel zoom for Hamburg terminal
+// Disable Zoom for Hamburg Terminal
 const enableTerminalScreen =
   process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
-const metaViewport = document.querySelector("meta[name=viewport]");
+const existingMetaViewport = document.querySelector("meta[name=viewport]");
+if (existingMetaViewport) {
+  existingMetaViewport.remove();
+}
+const metaViewport = document.createElement("meta");
+metaViewport.name = "viewport";
+metaViewport.content = enableTerminalScreen
+  ? "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
+  : "width=device-width, initial-scale=1";
 
-if (metaViewport) {
-  metaViewport.setAttribute(
-    "content",
-    enableTerminalScreen
-      ? "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
-      : "width=device-width, initial-scale=1"
+document.head.appendChild(metaViewport);
+const preventZoom = (event) => {
+  event.preventDefault();
+};
+if (enableTerminalScreen) {
+  document.addEventListener(
+    "wheel",
+    (event) => {
+      if (event.ctrlKey) event.preventDefault();
+    },
+    { passive: false }
   );
+
+  document.addEventListener("gesturestart", preventZoom, { passive: false });
 } else {
-  const newMetaViewport = document.createElement("meta");
-  newMetaViewport.name = "viewport";
-  newMetaViewport.content = enableTerminalScreen
-    ? "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
-    : "width=device-width, initial-scale=1";
-  document.head.appendChild(newMetaViewport);
+  document.removeEventListener("gesturestart", preventZoom);
 }
 
 // Check the Matomo status
