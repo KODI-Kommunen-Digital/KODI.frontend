@@ -6,7 +6,6 @@ import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
 
-
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
     const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
@@ -18,8 +17,6 @@ const TerminalScreen = () => {
     const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
     const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] =
         useState(false);
-    // const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
-    // const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
     const containerRef1 = useRef(null);
     const containerRef2 = useRef(null);
@@ -27,10 +24,6 @@ const TerminalScreen = () => {
     const [canScrollRight1, setCanScrollRight1] = useState(true); // Track if right scroll is possible for container 1
     const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
     const [canScrollRight2, setCanScrollRight2] = useState(true);
-    // const handleMobilitaetClick = () => {
-    //     setOverlayMobilitaet(false);
-    //     setIsMobilitaetPopupOpen(true);
-    // };
 
     const handleSlide = (direction, ref, setCanScrollLeft, setCanScrollRight) => {
         if (ref.current) {
@@ -54,11 +47,6 @@ const TerminalScreen = () => {
             setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
         }
     };
-
-    // const handleCloseMobilitaetPopup = () => {
-    //     setIsMobilitaetPopupOpen(false);
-    //     setOverlayMobilitaet(true);
-    // };
 
     const handleMaengelmelderClick = () => {
         setOverlayMaengelmelder(false);
@@ -436,13 +424,15 @@ const TerminalScreen = () => {
                             className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                             onClick={() => setOverlayMasterportal(false)}
                         >
-                            Was ist wo? Öffnen
+                            <span>{`"Was ist wo?"`}</span>
+                            <br />
+                            <span>{`Öffnen`}</span>
                         </button>
 
                         <img
                             src={HAMBURGLOGO}
                             alt="Hamburg Logo"
-                            className="w-24 h-18 m-4"
+                            className="w-30 h-20 m-4"
                         />
                     </div>
                 )}
@@ -504,13 +494,15 @@ const TerminalScreen = () => {
                                     className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleMaengelmelderClick}
                                 >
-                                    Schaden Melden
+                                    <span>{`Schaden`}</span>
+                                    <br />
+                                    <span>{`melden`}</span>
                                 </button>
 
                                 <img
                                     src={HAMBURGLOGO}
                                     alt="Hamburg Logo"
-                                    className="w-24 h-18 m-4"
+                                    className="w-30 h-20 m-4"
                                 />
                             </div>
                         )}
@@ -554,13 +546,15 @@ const TerminalScreen = () => {
                                     className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleBuergerBeteiligungClick}
                                 >
-                                    Bürger Beteiligung
+                                    <span>{`Bürger`}</span>
+                                    <br />
+                                    <span>{`Beteiligung`}</span>
                                 </button>
 
                                 <img
                                     src={HAMBURGLOGO}
                                     alt="Hamburg Logo"
-                                    className="w-24 h-18 m-4"
+                                    className="w-30 h-20 m-4"
                                 />
                             </div>
                         )}
@@ -586,12 +580,6 @@ const TerminalScreen = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                                {/* <iframe
-                                    src="https://beteiligung.hamburg/navigator/#/"
-                                    allow="geolocation"
-                                    className="w-full h-full"
-                                    title="Bürgerbeteiligung Popup"
-                                /> */}
                                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                     Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                                 </div>
