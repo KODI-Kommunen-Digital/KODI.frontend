@@ -22,12 +22,12 @@ const MostPopularCategories = ({ listingsCount, t, goToAllListingsPage }) => {
                                 goToAllListingsPage(listing.categoryId);
                             }}
                             className={`p-4 justify-center bg-white h-30 ${listingsCount.length <= 3 ? "md:w-48 xl:w-60" : "md:w-48"
-                                } w-30 shadow-xl rounded-xl mt-10 cursor-pointer`}
+                                } w-30 shadow-xl rounded-xl mt-10 cursor-pointer min-h-[200px] flex flex-col justify-between`}
                         >
-                            <div className={categoryIcon.className}>
+                            <div className={`${categoryIcon.className} ${listing.categoryId === 33 ? 'pl-4' : ''}`}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 448 512"
+                                    viewBox="0 0 576 576"
                                     className={categoryIcon.svgClassName}
                                 >
                                     <path d={categoryIcon.svgIcon} />
