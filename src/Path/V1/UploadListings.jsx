@@ -795,7 +795,7 @@ function UploadListings() {
     } else {
       setListingInput((prev) => ({
         ...prev,
-        description: newContent.replace(/(<br>|<\/?p>)/gi, ""),
+        description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
       }));
     }
 

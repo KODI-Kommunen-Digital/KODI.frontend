@@ -178,7 +178,7 @@ function CreateShelves() {
         } else {
             setInput((prev) => ({
                 ...prev,
-                description: newContent.replace(/(<br>|<\/?p>)/gi, ""), // Remove <br> and <p> tags
+                description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"), // Remove <br> and <p> tags
             }));
             setDescription(newContent);
             return;
