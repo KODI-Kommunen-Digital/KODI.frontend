@@ -45,10 +45,10 @@ function TerminalListingsCard({ listing }) {
     return (
         <>
             <div
-                className="flex bg-white shadow-md overflow-hidden max-w-l h-48 cursor-pointer"
+                className="w-full bg-white h-full rounded-lg cursor-pointer"
                 onClick={handleListingClick}
             >
-                <div className="w-48 h-48 flex-shrink-0 overflow-hidden">
+                <div className="relative h-48 w-full overflow-hidden rounded-lg">
                     <img
                         src={getImage()}
                         onError={(e) => {
@@ -62,9 +62,30 @@ function TerminalListingsCard({ listing }) {
 
                 {/* Content Section */}
                 <div className="p-2 flex-1 flex flex-col">
-                    <h2 className="text-xl font-semibold text-sky-950 break-words">{listing.title}</h2>
+                    <h2
+                        className="text-xl font-semibold text-sky-950 break-words overflow-hidden text-ellipsis line-clamp-2"
+                        style={{
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: 2,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxHeight: "4rem",
+                        }}
+                    >
+                        {listing.title}
+                    </h2>
+
                     <p
-                        className="text-sky-950 mt-2 text-sm break-words"
+                        className="text-sky-950 mt-2 text-sm break-words overflow-hidden text-ellipsis line-clamp-3"
+                        style={{
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: 3,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxHeight: "5rem",
+                        }}
                         dangerouslySetInnerHTML={{
                             __html: listing.description || "No description available",
                         }}

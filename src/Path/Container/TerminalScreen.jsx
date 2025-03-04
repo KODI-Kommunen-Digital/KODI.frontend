@@ -18,19 +18,20 @@ const TerminalScreen = () => {
     const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
     const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] =
         useState(false);
-    const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
-    const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
+    // const [overlayMobilitaet, setOverlayMobilitaet] = useState(true);
+    // const [isMobilitaetPopupOpen, setIsMobilitaetPopupOpen] = useState(false);
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
-    const containerRef1 = useRef(null); // For the first section
-    const containerRef2 = useRef(null); // For the second section
+    const containerRef1 = useRef(null);
+    const containerRef2 = useRef(null);
     const [canScrollLeft1, setCanScrollLeft1] = useState(false); // Track if left scroll is possible for container 1
     const [canScrollRight1, setCanScrollRight1] = useState(true); // Track if right scroll is possible for container 1
     const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
     const [canScrollRight2, setCanScrollRight2] = useState(true);
-    const handleMobilitaetClick = () => {
-        setOverlayMobilitaet(false);
-        setIsMobilitaetPopupOpen(true);
-    };
+    // const handleMobilitaetClick = () => {
+    //     setOverlayMobilitaet(false);
+    //     setIsMobilitaetPopupOpen(true);
+    // };
+
     const handleSlide = (direction, ref, setCanScrollLeft, setCanScrollRight) => {
         if (ref.current) {
             const scrollAmount = direction === "left" ? -300 : 300; // Adjust this value for smoother/faster sliding
@@ -38,8 +39,6 @@ const TerminalScreen = () => {
                 left: scrollAmount,
                 behavior: "smooth", // This makes the scroll smooth
             });
-
-            // Update scroll state after a short delay to allow the scroll to complete
             setTimeout(() => {
                 const { scrollLeft, scrollWidth, clientWidth } = ref.current;
                 setCanScrollLeft(scrollLeft > 0);
@@ -48,7 +47,6 @@ const TerminalScreen = () => {
         }
     };
 
-    // Check scroll position on container scroll
     const handleScroll = (ref, setCanScrollLeft, setCanScrollRight) => {
         if (ref.current) {
             const { scrollLeft, scrollWidth, clientWidth } = ref.current;
@@ -57,10 +55,10 @@ const TerminalScreen = () => {
         }
     };
 
-    const handleCloseMobilitaetPopup = () => {
-        setIsMobilitaetPopupOpen(false);
-        setOverlayMobilitaet(true);
-    };
+    // const handleCloseMobilitaetPopup = () => {
+    //     setIsMobilitaetPopupOpen(false);
+    //     setOverlayMobilitaet(true);
+    // };
 
     const handleMaengelmelderClick = () => {
         setOverlayMaengelmelder(false);
@@ -115,18 +113,17 @@ const TerminalScreen = () => {
             document.removeEventListener('click', handleUserInteraction);
         };
     }, []);
+
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true); // Show loading spinner while fetching data
+            setIsLoading(true);
             try {
-                // Fetch news listings
                 const newsResponse = await getListings({ pageSize: 20, categoryId: 1 });
                 const newsListings = newsResponse.data.data.filter(
                     (listing) => !hiddenCategories.includes(listing.categoryId)
                 );
                 setNewsListings(newsListings);
 
-                // Fetch events listings
                 const eventsResponse = await getListings({ pageSize: 20, categoryId: 3 });
                 const eventsListings = eventsResponse.data.data.filter(
                     (listing) => !hiddenCategories.includes(listing.categoryId)
@@ -135,12 +132,13 @@ const TerminalScreen = () => {
             } catch (error) {
                 console.error("Error fetching listings:", error);
             } finally {
-                setIsLoading(false); // Hide loading spinner after data is fetched
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, [hiddenCategories]);
+
     const fetchSurveys = async () => {
         const listingIds = [25, 26, 27, 28];
         try {
@@ -152,13 +150,6 @@ const TerminalScreen = () => {
             console.error("Error fetching surveys:", error);
         }
     };
-    useEffect(() => {
-        console.log("Fetching surveys...");
-
-
-        fetchSurveys();
-    }, []);
-
 
     const [surveys, setSurveys] = useState([]);
     const [responses, setResponses] = useState({});
@@ -183,10 +174,7 @@ const TerminalScreen = () => {
                         (option) => option.id === selectedOptionId
                     );
 
-                    // If no selected option, return null
                     if (!selectedOption) return null;
-
-                    // Create the payload with only the selected option's vote count incremented
                     const updatedVotes =
                     {
                         optionId: selectedOption.id,
@@ -251,7 +239,7 @@ const TerminalScreen = () => {
 
     return (
         <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
-            <div className="relative w-full flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
+            <div className="relative w-full basis-[20%] flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <svg
@@ -273,7 +261,7 @@ const TerminalScreen = () => {
                 ) : (
                     <>
                         {/* First Section */}
-                        <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">
                                 Aktuelles aus dem Bezirksamt
                             </h2>
@@ -282,7 +270,7 @@ const TerminalScreen = () => {
                                 {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft1 && (
                                     <button
                                         onClick={() => handleSlide("left", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
-                                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                                        className="absolute left-0 border-2 border-white top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +304,7 @@ const TerminalScreen = () => {
                                             newsListings
                                                 .filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
-                                                    <div key={listing.id} className="w-[75%] flex-shrink-0">
+                                                    <div key={listing.id} className="w-[40%] flex-shrink-0">
                                                         <TerminalListingsCard listing={listing} />
                                                     </div>
                                                 ))
@@ -334,7 +322,7 @@ const TerminalScreen = () => {
                                 {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight1 && (
                                     <button
                                         onClick={() => handleSlide("right", containerRef1, setCanScrollLeft1, setCanScrollRight1)}
-                                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                                        className="absolute right-0 border-2 border-white top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -356,7 +344,7 @@ const TerminalScreen = () => {
                         </div>
 
                         {/* Second Section */}
-                        <div className="bg-white p-1 flex flex-col overflow-hidden h-auto">
+                        <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
                             <h2 className="text-sm font-bold text-sky-950 mb-2">
                                 Veranstaltungen Jenfeld
                             </h2>
@@ -365,7 +353,7 @@ const TerminalScreen = () => {
                                 {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollLeft2 && (
                                     <button
                                         onClick={() => handleSlide("left", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
-                                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                                        className="absolute left-0 border-2 border-white top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -399,7 +387,7 @@ const TerminalScreen = () => {
                                             eventsListings
                                                 .filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
-                                                    <div key={listing.id} className="w-[75%] flex-shrink-0">
+                                                    <div key={listing.id} className="w-[40%] flex-shrink-0">
                                                         <TerminalListingsCard listing={listing} />
                                                     </div>
                                                 ))
@@ -417,7 +405,7 @@ const TerminalScreen = () => {
                                 {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 1 && canScrollRight2 && (
                                     <button
                                         onClick={() => handleSlide("right", containerRef2, setCanScrollLeft2, setCanScrollRight2)}
-                                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
+                                        className="absolute right-0 border-2 border-white top-1/2 transform -translate-y-1/2 bg-sky-950 text-white p-2 rounded-full z-10"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -441,12 +429,11 @@ const TerminalScreen = () => {
                 )}
             </div>
 
-
             <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-lg flex items-center justify-center">
                 {overlayMasterportal && (
-                    <div className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex flex-col items-center justify-center">
+                    <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
                         <button
-                            className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                            className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                             onClick={() => setOverlayMasterportal(false)}
                         >
                             Was ist wo? Öffnen
@@ -455,7 +442,7 @@ const TerminalScreen = () => {
                         <img
                             src={HAMBURGLOGO}
                             alt="Hamburg Logo"
-                            className="w-48 h-48 mb-4"
+                            className="w-24 h-18 m-4"
                         />
                     </div>
                 )}
@@ -474,57 +461,57 @@ const TerminalScreen = () => {
 
             <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
                 <div className="relative bg-white p-1 shadow-lg h-full">
-                    {overlayMobilitaet && (
-                        <div className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-25 z-[9999] flex items-center justify-center">
-                            <button
-                                className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
-                                onClick={handleMobilitaetClick}
-                            >
-                                Fahrpläne Öffnen
-                            </button>
-                        </div>
-                    )}
                     <iframe
-                        src="https://geofox.hvv.de/web/de/connections?clear=true&onefield=true&language=de&start=Charlottenburger%20Straße&startCity=Geesthacht&startType=STATION&destination=&destinationCity=&destinationType="
+                        src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=f3f148d4a18146bb8e72669a42f867e5"
                         allow="geolocation"
-                        className={`w-full h-full relative z-0 ${overlayMobilitaet ? "pointer-events-none" : "pointer-events-auto"
-                            }`}
+                        className={`w-full h-full relative z-0 pointer-events-auto`}
                         title="Mobilität"
                     />
                 </div>
-                {isMobilitaetPopupOpen && (
+                {/* {isMobilitaetPopupOpen && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                         <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
                             <button
-                                className="self-end text-red-600 font-bold"
+                                className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
                                 onClick={handleCloseMobilitaetPopup}
                             >
-                                ✕
+                                <span className="sr-only">Close menu</span>
+                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
-                            {/* <iframe
-                src="https://www.hvv.de/de/fahrplaene/abfahrten"
-                allow="geolocation"
-                className="w-full h-full"
-                title="Mobilität Popup"
-              /> */}
+                            <iframe
+                                src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=f3f148d4a18146bb8e72669a42f867e5"
+                                width="100%"
+                                height="600px"
+                                frameBorder="0"
+                                allow="geolocation"
+                                title="HVV Departures">
+                            </iframe>
                             <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                 Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
 
                 <div className="flex flex-col gap-2 h-full">
                     {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayMaengelmelder && (
-                            <div className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center">
+                            <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
                                 <button
-                                    className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                                    className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleMaengelmelderClick}
                                 >
                                     Schaden Melden
                                 </button>
+
+                                <img
+                                    src={HAMBURGLOGO}
+                                    alt="Hamburg Logo"
+                                    className="w-24 h-18 m-4"
+                                />
                             </div>
                         )}
                         <iframe
@@ -541,10 +528,13 @@ const TerminalScreen = () => {
                         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                             <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
                                 <button
-                                    className="self-end text-red-600 font-bold"
+                                    className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
                                     onClick={handleCloseMaengelmelderPopup}
                                 >
-                                    ✕
+                                    <span className="sr-only">Close menu</span>
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                                 <iframe
                                     src="https://static.hamburg.de/kartenclient/prod/"
@@ -559,13 +549,19 @@ const TerminalScreen = () => {
                     {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayBuergerbeteiligung && (
-                            <div className="absolute top-0 left-0 w-full h-full bg-sky-900 bg-opacity-75 z-[9999] flex items-center justify-center">
+                            <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
                                 <button
-                                    className="bg-sky-950 text-white text-xl px-8 py-4 rounded-lg shadow-lg border border-white"
+                                    className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                     onClick={handleBuergerBeteiligungClick}
                                 >
                                     Bürger Beteiligung
                                 </button>
+
+                                <img
+                                    src={HAMBURGLOGO}
+                                    alt="Hamburg Logo"
+                                    className="w-24 h-18 m-4"
+                                />
                             </div>
                         )}
                         <iframe
@@ -582,17 +578,20 @@ const TerminalScreen = () => {
                         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                             <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
                                 <button
-                                    className="self-end text-red-600 font-bold"
+                                    className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
                                     onClick={handleClosePopup}
                                 >
-                                    ✕
+                                    <span className="sr-only">Close menu</span>
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                                 {/* <iframe
-                  src="https://beteiligung.hamburg/navigator/#/"
-                  allow="geolocation"
-                  className="w-full h-full"
-                  title="Bürgerbeteiligung Popup"
-                /> */}
+                                    src="https://beteiligung.hamburg/navigator/#/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Bürgerbeteiligung Popup"
+                                /> */}
                                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                     Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                                 </div>
@@ -607,17 +606,26 @@ const TerminalScreen = () => {
                     className="bg-sky-950 text-white p-2 w-20 h-20 rounded-full border border-white flex items-center justify-center"
                     onClick={handleOpenSurvey}
                 >
-                    <span className="text-5xl">?</span>
+                    <svg
+                        className="h-8 w-10 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 487.3 487.3"
+                    >
+                        <path d="M160 368c26.5 0 48 21.5 48 48l0 16 72.5-54.4c8.3-6.2 18.4-9.6 28.8-9.6L448 368c8.8 0 16-7.2 16-16l0-288c0-8.8-7.2-16-16-16L64 48c-8.8 0-16 7.2-16 16l0 288c0 8.8 7.2 16 16 16l96 0zm48 124l-.2 .2-5.1 3.8-17.1 12.8c-4.8 3.6-11.3 4.2-16.8 1.5s-8.8-8.2-8.8-14.3l0-21.3 0-6.4 0-.3 0-4 0-48-48 0-48 0c-35.3 0-64-28.7-64-64L0 64C0 28.7 28.7 0 64 0L448 0c35.3 0 64 28.7 64 64l0 288c0 35.3-28.7 64-64 64l-138.7 0L208 492z" />
+                    </svg>
                 </button>
             </div>
             {isSurveyOpen && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
                         <button
-                            className="self-end text-sky-950 font-bold text-xl"
+                            className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
                             onClick={handleCloseSurvey}
                         >
-                            ✕
+                            <span className="sr-only">Close menu</span>
+                            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </button>
 
                         <h2 className="text-2xl font-bold text-sky-950 mb-2">
@@ -653,10 +661,10 @@ const TerminalScreen = () => {
                                             <div
                                                 className={`cursor-pointer px-3 py-2 rounded-lg
                               ${responses[survey.id] === option.id
-                                                        ? "border-sky-600 bg-sky-100"
-                                                        : "border-gray-300 bg-white"
+                                                        ? "bg-sky-200"
+                                                        : "bg-white"
                                                     } 
-                              transition duration-300 ease-in-out hover:border-sky-500 hover:bg-sky-50`}
+                              transition duration-300 ease-in-out hover:bg-sky-50`}
                                             >
                                                 {option.title}
                                             </div>
@@ -664,8 +672,8 @@ const TerminalScreen = () => {
                                             <span
                                                 className={`ml-2 text-sm px-3 py-1 rounded-lg font-bold transition-all transform 
               ${responses[survey.id] === option.id
-                                                        ? "text-white bg-sky-600 scale-110"
-                                                        : "text-gray-600 bg-gray-200"
+                                                        ? "text-white bg-sky-950 rounded-xl shadow-xl border-2 border-white scale-110"
+                                                        : "text-gray-600 bg-gray-200 rounded-xl shadow-xl border-2 border-gray-600"
                                                     } min-w-[100px] text-center`}
                                             >
 
@@ -679,7 +687,7 @@ const TerminalScreen = () => {
                         ))}
 
                         <button
-                            className="bg-sky-950 text-white text-lg px-6 py-3 rounded-lg shadow-lg border border-white mt-4 self-center"
+                            className="bg-sky-950 text-white text-lg px-6 py-3 rounded-xl shadow-xl border-2 border-white mt-4 self-center"
                             onClick={async () => {
                                 await handleSubmitSurvey();
                                 fetchSurveys(); // You may want this to be async if it fetches data from an API
@@ -690,7 +698,6 @@ const TerminalScreen = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
