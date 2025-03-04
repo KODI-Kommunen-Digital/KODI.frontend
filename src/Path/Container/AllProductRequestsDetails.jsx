@@ -244,7 +244,7 @@ const AllProductRequestsDetails = () => {
                                     </p>
                                     <h2 className="text-2xl font-bold text-slate-800 mb-2">{productRequest.title}</h2>
                                     <h2 className="text-md font-bold text-orange-600 mb-2">
-                                        {t("description")} : {productRequest.description}
+                                        <span dangerouslySetInnerHTML={{ __html: productRequest.description }} />
                                     </h2>
                                     <div className="flex flex-col mb-4">
                                         <div className="flex items-center space-x-4">
