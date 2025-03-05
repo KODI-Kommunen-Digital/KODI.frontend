@@ -32,8 +32,6 @@ const Dashboard = () => {
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
-  const [selectedProductName, setSelectedProductName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -288,16 +286,6 @@ const Dashboard = () => {
     setCityId(selectedCityId || 0);
   };
 
-  const handleListingNameClick = (description) => {
-    setSelectedProductName(description);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedProductName("");
-  };
-
   return (
     <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
@@ -464,14 +452,14 @@ const Dashboard = () => {
                         <th
                           scope="row"
                           className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
+                          onClick={() => {
+                            if (!hiddenCategories.includes(listing.categoryId)) {
+                              goToListingPage(listing);
+                            }
+                          }}
                         >
                           {listing.pdf ? (
                             <div className="object-cover object-center w-10 h-10 rounded-full overflow-hidden"
-                              onClick={() => {
-                                if (!hiddenCategories.includes(listing.categoryId)) {
-                                  goToListingPage(listing);
-                                }
-                              }}
                             >
                               <PdfThumbnail
                                 pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
@@ -480,11 +468,6 @@ const Dashboard = () => {
                           ) : listing.logo ? (
                             <img
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                              onClick={() => {
-                                if (!hiddenCategories.includes(listing.categoryId)) {
-                                  goToListingPage(listing);
-                                }
-                              }}
                               src={
                                 listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
                               }
@@ -497,11 +480,6 @@ const Dashboard = () => {
                             <img
                               alt="Listing"
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                              onClick={() => {
-                                if (!hiddenCategories.includes(listing.categoryId)) {
-                                  goToListingPage(listing);
-                                }
-                              }}
                               src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
                             />
                           )}
@@ -510,7 +488,6 @@ const Dashboard = () => {
                             <div
                               className="text-gray-500 font-bold truncate"
                               style={{ fontFamily: "Poppins, sans-serif" }}
-                              onClick={() => handleListingNameClick(listing.title)}
                             >
                               {listing.title}
                             </div>
@@ -551,7 +528,7 @@ const Dashboard = () => {
                                 viewBox="0 0 640 512"
                                 className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
                               >
-                                <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
                               </svg>
                             </a>
 
@@ -682,37 +659,6 @@ const Dashboard = () => {
               </table>
             </div>
           </div>
-
-          {isModalOpen && (
-            <div
-              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
-              onClick={closeModal}
-            >
-              <div
-                className="relative bg-white rounded-lg shadow-lg transform transition-all sm:max-w-lg w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="px-6 py-4">
-                  <h3 className="text-lg leading-6 font-medium text-slate-800 text-center">
-                    {t("listingDetails")}
-                  </h3>
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-500 text-center break-words">
-                      {selectedProductName}
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-gray-50 px-4 py-3 flex justify-end">
-                  <button
-                    className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
-                    onClick={closeModal}
-                  >
-                    {t("close")}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
 
           <div className="bottom-5 right-5 mt-5 px-1 py-2 text-xs font-medium text-center float-right cursor-pointer bg-black rounded-xl">
             {pageNo !== 1 ? (

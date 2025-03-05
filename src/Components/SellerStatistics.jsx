@@ -23,7 +23,7 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                 <div className="w-full text-sm text-left text-slate-500 p-0 space-y-10 rounded-xl">
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-0 mt-0">
-                        <a className=" bg-blue-200 flex flex-col p-5 border-b-4 border-r-4 border-blue-600">
+                        <a className=" bg-gray-100 flex flex-col p-5 border-b-4 border-r-4 border-blue-600">
                             <div className="flex justify-start">
                                 <div className="flex items-center justify-center h-10 w-10 bg-blue-200 rounded-full border-2 border-blue-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -34,7 +34,7 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                             <div className="w-full flex-1 mt-3 text-base text-slate-800">{t("totalRevenue")}</div>
                             <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800">€ {totalRevenue || t("noData")}</div>
                         </a>
-                        <a className=" bg-yellow-200 flex flex-col p-5 border-b-4 border-r-4 border-yellow-600">
+                        <a className=" bg-gray-100 flex flex-col p-5 border-b-4 border-r-4 border-yellow-600">
                             <div className="flex justify-start">
                                 <div className="flex items-center justify-center h-10 w-10 bg-yellow-200 rounded-full border-2 border-yellow-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -45,7 +45,7 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                             <div className="w-full flex-1 mt-3 text-base text-slate-800">{t("totalQuantity")}</div>
                             <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800">{totalQuantitySold || t("noData")}</div>
                         </a>
-                        <a className=" bg-pink-200 flex flex-col p-5 border-b-4 border-r-4 border-pink-600">
+                        <a className=" bg-gray-100 flex flex-col p-5 border-b-4 border-r-4 border-pink-600">
                             <div className="flex justify-start">
                                 <div className="flex items-center justify-center h-10 w-10 bg-pink-200 rounded-full border-2 border-pink-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,7 +57,7 @@ const SellerStatistics = ({ totalRevenue, topProductNameByQuantity, totalQuantit
                             <div className="w-full flex-1 mt-3 text-base text-slate-800">{t("avgPrice")}</div>
                             <div className="w-full flex-1 mt-3 text-3xl font-bold leading-8 text-slate-800">€ {averagePricePerQuantity || t("noData")}</div>
                         </a>
-                        <a className=" bg-green-200 flex flex-col p-5 border-b-4 border-r-4 border-green-600 cursor-pointer">
+                        <a className=" bg-gray-100 flex flex-col p-5 border-b-4 border-r-4 border-green-600 cursor-pointer">
                             <div className="flex justify-start">
                                 <div className="flex items-center justify-center h-10 w-10 bg-green-200 rounded-full border-2 border-green-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

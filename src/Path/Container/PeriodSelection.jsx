@@ -6,6 +6,7 @@ import "flatpickr/dist/themes/material_blue.css";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { getOrdersSold } from "../../Services/containerApi";
+import SideBar from "../../Components/SideBar";
 
 const PeriodSelection = () => {
     const navigate = useNavigate();
@@ -56,11 +57,11 @@ const PeriodSelection = () => {
 
     const handleDateSelect = (year, month, day) => {
         const selectedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        setOrderStartDate(selectedDate);
-        setOrderEndDate(selectedDate);
-        setTempStartDate(selectedDate);
-        setTempEndDate(selectedDate);
-        setSelectedPeriod("");
+
+        // Navigate immediately with the selected date
+        navigate("/SellerScreen/OrdersSold", {
+            state: { orderStartDate: selectedDate, orderEndDate: selectedDate }
+        });
     };
 
     const generateCalendar = (year, month) => {
@@ -172,111 +173,131 @@ const PeriodSelection = () => {
     };
 
     return (
-        <div className="bg-gray-800 relative min-h-screen mt-0 min-h-[30rem] px-5 py-2 flex flex-col justify-center items-center">
-            <center>
-                <div className="tracking-widest mt-4">
-                    {errorMessage ? (
-                        <span className="text-red-500 text-center">{errorMessage}</span>
-                    ) : (
-                        <span className="text-gray-500 text-xl">
-                            {ordersSoldLength > 0 ? `${ordersSoldLength} ${t("ordersFound")}` : t("noOrdersFound")}
-                        </span>
-                    )}
-                </div>
-            </center>
+        <section className="bg-gray-900 body-font relative min-h-screen">
+            <SideBar />
+            <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
+                <center>
+                    <div className="tracking-widest mt-4">
+                        {errorMessage ? (
+                            <span className="text-red-500 text-center">{errorMessage}</span>
+                        ) : (
+                            <span className="text-gray-500 text-xl">
+                                {ordersSoldLength > 0 ? `${ordersSoldLength} ${t("ordersFound")}` : t("noOrdersFound")}
+                            </span>
+                        )}
+                    </div>
+                </center>
 
-            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4 mt-4">
-                <div className="bg-zinc-100 shadow-lg rounded-lg overflow-hidden">
-                    <div className="items-center px-6 py-3">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label htmlFor="startDate" className="block text-gray-800">
-                                    {t("startDate")}
-                                </label>
-                                <Flatpickr
-                                    options={{
-                                        dateFormat: "Y-m-d",
-                                        maxDate: new Date(), // Restrict future dates
-                                    }}
-                                    value={tempStartDate}
-                                    onChange={([date]) => {
-                                        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-                                            .toISOString()
-                                            .split("T")[0];
-                                        setTempStartDate(localDate);
-                                    }}
-                                    className="w-full px-3 py-2 border border-gray-800 rounded"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="endDate" className="block text-gray-800">
-                                    {t("endDate")}
-                                </label>
-                                <Flatpickr
-                                    options={{
-                                        dateFormat: "Y-m-d",
-                                        maxDate: new Date(), // Restrict future dates
-                                    }}
-                                    value={tempEndDate}
-                                    onChange={([date]) => {
-                                        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-                                            .toISOString()
-                                            .split("T")[0];
-                                        setTempEndDate(localDate);
-                                    }}
-                                    className="w-full px-3 py-2 border border-gray-800 rounded"
-                                />
+                <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-500 mb-4 mt-4">
+                    {t("goForAnyOfOptions")}
+                </h1>
+
+                <div className="w-full  mx-auto p-4 mt-4 grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8">
+                    <div className="flex flex-col gap-4 w-full">
+                        <h1 className="title-font sm:text-2xl text-xl font-medium text-white mb-4">
+                            {t("chooseStartAndEndDate")}
+                        </h1>
+
+                        <div className="bg-zinc-100 shadow-md shadow-indigo-500/20 rounded-lg overflow-hidden">
+                            <div className="items-center px-6 py-3">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label htmlFor="startDate" className="block text-gray-800">
+                                            {t("startDate")}
+                                        </label>
+                                        <Flatpickr
+                                            options={{ dateFormat: "Y-m-d", maxDate: new Date() }}
+                                            value={tempStartDate}
+                                            onChange={([date]) => {
+                                                const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                                                    .toISOString()
+                                                    .split("T")[0];
+                                                setTempStartDate(localDate);
+                                            }}
+                                            className="w-full px-3 py-2 border border-gray-800 rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="endDate" className="block text-gray-800">
+                                            {t("endDate")}
+                                        </label>
+                                        <Flatpickr
+                                            options={{ dateFormat: "Y-m-d", maxDate: new Date() }}
+                                            value={tempEndDate}
+                                            onChange={([date]) => {
+                                                const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                                                    .toISOString()
+                                                    .split("T")[0];
+                                                setTempEndDate(localDate);
+                                            }}
+                                            className="w-full px-3 py-2 border border-gray-800 rounded"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <button
+                                        onClick={handleOkayClick}
+                                        className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
+                                    >
+                                        {t("select")}
+                                    </button>
+                                    {errorMessage && (
+                                        <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                        <div className="mt-4">
-                            <button
-                                onClick={handleOkayClick}
-                                className="w-full bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"
-                            >
-                                {t("select")}
-                            </button>
-                            {errorMessage && (
-                                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                            )}
+
+                        <div className="my-2 hidden md:flex bg-gray-400 h-[1px]"></div>
+
+                        <h1 className="title-font sm:text-2xl text-xl font-medium text-white mb-4">
+                            {t("chooseAPeriodOfTime")}
+                        </h1>
+
+                        <div className="flex flex-wrap justify-center gap-2 p-4 bg-white shadow-md shadow-indigo-500/20 rounded-lg">
+                            {periodOptions.map((period) => (
+                                <div
+                                    key={period.value}
+                                    className={`w-full sm:w-auto px-4 py-2 text-center text-gray-800 border-2 border-gray-800 rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
+                                        ? "bg-green-600 text-white"
+                                        : "bg-gray-200 hover:bg-green-600 hover:text-white"
+                                        }`}
+                                    onClick={() => handlePeriodClick(period.value)}
+                                >
+                                    {period.label}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="hidden md:flex mx-auto bg-gray-400 w-[1px] h-full"></div>
+
+                    <div>
+                        <h1 className="title-font sm:text-2xl text-xl font-medium text-white mb-4">
+                            {t("selectAParticularDate")}
+                        </h1>
+
+                        <div className="md:row-span-2 bg-black shadow-md shadow-indigo-500/20 rounded-lg overflow-hidden">
+                            <div className="flex items-center justify-between px-6 py-3 bg-black">
+                                <GrFormPrevious
+                                    className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
+                                    onClick={handlePrevMonth}
+                                />
+                                <h2 className="text-white">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
+                                <GrFormNext
+                                    className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
+                                    onClick={handleNextMonth}
+                                />
+                            </div>
+                            <div className="grid grid-cols-7 gap-2 p-4 bg-zinc-100" id="calendar">
+                                {generateCalendar(currentYear, currentMonth)}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="flex flex-wrap justify-center gap-2 p-4">
-                {periodOptions.map((period) => (
-                    <div
-                        key={period.value}
-                        className={`w-full sm:w-auto px-4 py-2 text-center text-gray-800 border-2 border-gray-800 rounded-full cursor-pointer transition-all ${selectedPeriod === period.value
-                            ? "bg-green-600 text-white"
-                            : "bg-gray-200 hover:bg-green-600 hover:text-white"
-                            }`}
-                        onClick={() => handlePeriodClick(period.value)}
-                    >
-                        {period.label}
-                    </div>
-                ))}
             </div>
-
-            <div className="lg:w-7/12 md:w-9/12 sm:w-10/12 mx-auto p-4">
-                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-between px-6 py-3 bg-black">
-                        <GrFormPrevious
-                            className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
-                            onClick={handlePrevMonth}
-                        />
-                        <h2 className="text-white">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
-                        <GrFormNext
-                            className="text-sm font-bold h-5 w-5 rounded-full grid place-content-center bg-white text-black transition-all cursor-pointer select-none"
-                            onClick={handleNextMonth}
-                        />
-                    </div>
-                    <div className="grid grid-cols-7 gap-2 p-4 bg-zinc-100" id="calendar">
-                        {generateCalendar(currentYear, currentMonth)}
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     );
 };
 
