@@ -32,9 +32,9 @@ const CustomerScreen = () => {
             <SideBar />
             <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full w-full max-w-screen-lg">
-                    <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-6">
+                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-2">
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("notASeller")}
                                 </h2>
@@ -79,7 +79,7 @@ const CustomerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("orders")}
                                 </h2>
@@ -123,8 +123,8 @@ const CustomerScreen = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                        {/* <div className="p-4 w-full">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("payments")}
                                 </h2>
@@ -169,7 +169,7 @@ const CustomerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("card")}
                                 </h2>
@@ -211,7 +211,7 @@ const CustomerScreen = () => {
                                     <span className="relative invisible">{t("clickHereToFind")}</span>
                                 </a>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

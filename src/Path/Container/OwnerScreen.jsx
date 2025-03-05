@@ -63,10 +63,10 @@ const OwnerScreen = () => {
             <SideBar />
             <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
-                    <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-6">
+                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-2">
                         {/* Store Details */}
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("storeDetails")}
                                 </h2>
@@ -112,7 +112,7 @@ const OwnerScreen = () => {
 
                         {/* Create Shelves */}
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("create")}
                                 </h2>
@@ -158,7 +158,7 @@ const OwnerScreen = () => {
 
                         {/* Seller Requests */}
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("requests")}
                                 </h2>
@@ -204,7 +204,7 @@ const OwnerScreen = () => {
 
                         {/* Categories and Subcategories */}
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("list")}
                                 </h2>

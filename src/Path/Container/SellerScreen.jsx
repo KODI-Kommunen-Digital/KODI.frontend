@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const SellerScreen = () => {
     window.scrollTo(0, 0);
     const { t } = useTranslation();
-
     const navigate = useNavigate();
     const navigateTo = (path) => {
         if (path) {
@@ -32,9 +31,9 @@ const SellerScreen = () => {
             <SideBar />
             <div className="container w-auto px-5 py-5 bg-gray-900 min-h-screen flex flex-col justify-center items-center">
                 <div className="h-full">
-                    <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-6">
+                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-2">
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("requests")}
                                 </h2>
@@ -79,7 +78,7 @@ const SellerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("orders")}
                                 </h2>
@@ -124,7 +123,7 @@ const SellerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("create")}
                                 </h2>
@@ -169,7 +168,7 @@ const SellerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("view")}
                                 </h2>
@@ -214,7 +213,7 @@ const SellerScreen = () => {
                         </div>
 
                         <div className="p-4 w-full">
-                            <div className="h-full bg-gray-800 shadow-lg px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
+                            <div className="h-full bg-gray-800 shadow-md shadow-indigo-500/20 px-8 py-16 rounded-lg overflow-hidden text-center relative border border-gray-700">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-2">
                                     {t("requests")}
                                 </h2>

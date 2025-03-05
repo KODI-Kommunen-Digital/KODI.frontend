@@ -1039,5 +1039,9 @@
     "subcategoryUpdated": "New sub category updated",
     "Sub-Categories":"Sub-Categories",
     "unavailable": "Unavailable",
-    "invalidEmailAddress": "Invalid email address"
+    "invalidEmailAddress": "Invalid email address",
+    "goForAnyOfOptions": "You can choose any of the three options",
+    "chooseStartAndEndDate": "Choose Start and End dates",
+    "chooseAPeriodOfTime": "Choose a Period of Time",
+    "selectAParticularDate": "Select a Particular Date"
 }

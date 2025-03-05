@@ -1051,5 +1051,9 @@
     "subcategoryUpdated": "Neue Unterkategorie aktualisiert",
     "Sub-Categories":"Unterkatheorien",
     "unavailable": "Nicht verfügbar",
-    "invalidEmailAddress": "Ungültige E-Mail-Adresse"
+    "invalidEmailAddress": "Ungültige E-Mail-Adresse",
+    "goForAnyOfOptions": "Sie können eine der drei Optionen wählen",
+    "chooseStartAndEndDate": "Wählen Sie Start- und Enddatum",
+    "chooseAPeriodOfTime": "Wählen Sie einen Zeitraum",
+    "selectAParticularDate": "Wählen Sie ein bestimmtes Datum"
 }
