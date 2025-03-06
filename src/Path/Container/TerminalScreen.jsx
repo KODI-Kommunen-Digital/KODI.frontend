@@ -457,7 +457,7 @@ const TerminalScreen = () => {
             <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
                 <div className="relative bg-white p-1 shadow-lg h-full">
                     <iframe
-                        src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=f3f148d4a18146bb8e72669a42f867e5"
+                        src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=8468ff3fcc034fabbb6c17f2d7503f41"
                         allow="geolocation"
                         className={`w-full h-full relative z-0 pointer-events-auto`}
                         title="Mobilität"
