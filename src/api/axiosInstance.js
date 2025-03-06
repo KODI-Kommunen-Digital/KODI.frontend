@@ -1,10 +1,15 @@
 import axios from "axios";
+const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
 // Function to create a new axios instance with a specified baseURL
 const createInstance = (baseURL) => {
   const instance = axios.create({
     baseURL,
   });
+
+  // const refreshInstance = axios.create({
+  // 	baseURL: process.env.REACT_APP_API_BASE_URL,
+  // });
 
   const handleLogout = () => {
     try {
@@ -71,7 +76,9 @@ const createInstance = (baseURL) => {
               window.sessionStorage.getItem("userId");
             if (refreshToken && userId) {
               // Create a new axios instance for the token refresh request
-              const refreshBaseURL = process.env.REACT_APP_API_BASE_URL;
+              const refreshBaseURL = isV2Backend
+                ? process.env.REACT_APP_API_BASE_URL_V2
+                : process.env.REACT_APP_API_BASE_URL_V1;
 
               const refreshInstance = axios.create({
                 baseURL: refreshBaseURL,
@@ -132,7 +139,9 @@ const createInstance = (baseURL) => {
 };
 
 // Create instances for different API endpoints using the createInstance function and export them
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+const baseURL = isV2Backend
+  ? process.env.REACT_APP_API_BASE_URL_V2
+  : process.env.REACT_APP_API_BASE_URL_V1;
 
 const instance = createInstance(baseURL);
 const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
