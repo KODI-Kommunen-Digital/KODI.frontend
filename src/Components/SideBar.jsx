@@ -73,18 +73,25 @@ function SideBar() {
   
     if (listing === "uploadListings") {
       navigateTo("/UploadListings");
+      window.location.reload();
     } else if (listing === "myEntries") {
       navigateTo("/Dashboard");
+      window.location.reload();
     } else if (listing === "allListings") {
       navigateTo("/DashboardAdmin");
+      window.location.reload();
     } else if (forum === "createGroup") {
       navigateTo("/CreateGroup");
+      window.location.reload();
     } else if (forum === "myGroups") {
       navigateTo("/MyGroups");
+      window.location.reload();
     } else if (booking === "myAppoinment") {
       navigateTo("/AppointmentBooking/AppointmentsUserCreated");
+      window.location.reload();
     } else if (booking === "myBooking") {
       navigateTo("/AppointmentBooking/MyBookings");
+      window.location.reload();
     } else if (container === "SellerScreen") {
       navigateTo("/SellerScreen");
     } else if (container === "customerScreen") {
