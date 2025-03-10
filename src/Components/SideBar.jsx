@@ -14,7 +14,6 @@ function SideBar() {
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isBookingEnabled = process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
   const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
-  const [activeIndependentMenu, setActiveIndependentMenu] = useState("");
 
   const [expandedMenus, setExpandedMenus] = useState({
     forum: false,
@@ -44,25 +43,7 @@ function SideBar() {
     });
   };
 
-  useEffect(() => {
-    // Get the saved state from localStorage
-    const savedState = localStorage.getItem("expandedMenus");
-    
-    // If there's a saved state, set it to the state
-    if (savedState) {
-      setExpandedMenus(JSON.parse(savedState));
-    }
 
-    const savedActiveSubmenu = localStorage.getItem("activeSubmenu");
-    if (savedActiveSubmenu) {
-      setActiveSubmenu(JSON.parse(savedActiveSubmenu));
-    }
-
-    const savedActiveIndependentMenu = localStorage.getItem("activeIndependentMenu");
-  if (savedActiveIndependentMenu) {
-    setActiveIndependentMenu(savedActiveIndependentMenu);
-  }
-  }, []);
 
   const handleSubmenuClick = (category, submenu) => {
     setActiveSubmenu((prevState) => {
@@ -79,10 +60,7 @@ function SideBar() {
     });
   };
   const handleIndependentMenuClick = (menu) => {
-    setActiveIndependentMenu(menu);
-   
-  
-    // Save the updated state to localStorage
+
     localStorage.setItem("activeIndependentMenu", menu);
     localStorage.removeItem("expandedMenus");
     localStorage.removeItem("activeSubmenu");
@@ -275,18 +253,19 @@ function SideBar() {
             </span>
 
             <svg
-              className={`h-6 w-6 ml-4 fill-current ${expandedMenus.listing ? "rotate-180" : ""
-                }`}
+              className={`h-6 w-6 ml-4 fill-current ${
+                JSON.parse(localStorage.getItem("expandedMenus"))?.listing ? "rotate-180" : ""
+              }`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
               <path d="M7 10l5 5 5-5z" />
             </svg>
           </div>
-          {expandedMenus.listing && (
+          {JSON.parse(localStorage.getItem("expandedMenus"))?.listing && (
             <div className="ml-4">
               <div
-                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.listing === "myEntries" ? "bg-gray-700" : ""}`}
+                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.listing === "myEntries" ? "bg-gray-700" : ""}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSubmenuClick("listing", "myEntries");
@@ -304,7 +283,7 @@ function SideBar() {
                 </span>
               </div>
               <div
-                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.listing === "uploadListings" ? "bg-gray-700" : ""}`}
+                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.listing === "uploadListings" ? "bg-gray-700" : ""}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSubmenuClick("listing", "uploadListings");
@@ -326,7 +305,7 @@ function SideBar() {
               </div>
               {userRole === role.Admin && (
                 <div
-                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.listing === "allListings" ? "bg-gray-700" : ""}`}
+                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.listing === "allListings" ? "bg-gray-700" : ""}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSubmenuClick("listing", "allListings");
@@ -369,7 +348,7 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${expandedMenus.forum ? "rotate-180" : ""
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.forum ? "rotate-180" : ""
                     }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -377,12 +356,12 @@ function SideBar() {
                   <path d="M7 10l5 5 5-5z" />
                 </svg>
               </div>
-              {expandedMenus.forum && (
+              {JSON.parse(localStorage.getItem("expandedMenus"))?.forum && (
                 <>
-                  {expandedMenus.forum && (
+                  {JSON.parse(localStorage.getItem("expandedMenus"))?.forum && (
                     <div className="ml-4">
                       <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.forum === "createGroup" ? "bg-gray-700" : ""}`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.forum === "createGroup" ? "bg-gray-700" : ""}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("forum", "createGroup");
@@ -404,7 +383,7 @@ function SideBar() {
                       </div>
 
                       <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.forum === "myGroups" ? "bg-gray-700" : ""}`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.forum === "myGroups" ? "bg-gray-700" : ""}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("forum", "myGroups");
@@ -450,7 +429,7 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${expandedMenus.booking ? "rotate-180" : ""
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.booking ? "rotate-180" : ""
                     }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -459,13 +438,13 @@ function SideBar() {
                 </svg>
               </div>
 
-              {expandedMenus.booking && (
+              {JSON.parse(localStorage.getItem("expandedMenus"))?.booking && (
                 <>
-                  {expandedMenus.booking && (
+                  {JSON.parse(localStorage.getItem("expandedMenus"))?.booking && (
                     <div className="ml-4">
                       <div>
                         <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.booking === "myAppoinment" ? "bg-gray-700" : ""}`}
+                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.booking === "myAppoinment" ? "bg-gray-700" : ""}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSubmenuClick("booking", "myAppoinment");
@@ -489,7 +468,7 @@ function SideBar() {
 
                       <div>
                         <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.booking === "myBooking" ? "bg-gray-700" : ""}`}
+                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.booking === "myBooking" ? "bg-gray-700" : ""}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSubmenuClick("booking", "myBooking");
@@ -536,7 +515,7 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${expandedMenus.container ? "rotate-180" : ""
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.container ? "rotate-180" : ""
                     }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -544,12 +523,12 @@ function SideBar() {
                   <path d="M7 10l5 5 5-5z" />
                 </svg>
               </div>
-              {expandedMenus.container && (
+              {JSON.parse(localStorage.getItem("expandedMenus"))?.container && (
                 <>
-                  {expandedMenus.container && (
+                  {JSON.parse(localStorage.getItem("expandedMenus")).container && (
                     <div className="ml-4">
                        <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.container === "customerScreen" ? "bg-gray-700" : ""}`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.container === "customerScreen" ? "bg-gray-700" : ""}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("container", "customerScreen");
@@ -571,7 +550,7 @@ function SideBar() {
                       </div>
                       {((isSeller || isOwner)) && (
                         <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.container === "SellerScreen" ? "bg-gray-700" : ""}`}
+                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.container === "SellerScreen" ? "bg-gray-700" : ""}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSubmenuClick("container", "SellerScreen");
@@ -595,7 +574,7 @@ function SideBar() {
 
                       {(isOwner) && (
                         <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeSubmenu.container === "ownerScreen" ? "bg-gray-700" : ""}`}
+                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.container === "ownerScreen" ? "bg-gray-700" : ""}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSubmenuClick("container", "ownerScreen");
@@ -628,7 +607,7 @@ function SideBar() {
 
           <div className="bottom-2 w-[280px]">
             <div
-              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeIndependentMenu === "profilePage" ? "bg-gray-700" : ""}`}
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") === "profilePage" ? "bg-gray-700" : ""}`}
               onClick={() => {handleIndependentMenuClick("profilePage");navigateTo("/profilePage")}}
             >
               <svg
@@ -648,7 +627,7 @@ function SideBar() {
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
             <div
-              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${activeIndependentMenu === "Account_Settings" ? "bg-gray-700" : ""}`}
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu")=== "Account_Settings" ? "bg-gray-700" : ""}`}
               onClick={() => {handleIndependentMenuClick("Account_Settings");navigateTo("/AccountSettings")}}
             >
               <svg
