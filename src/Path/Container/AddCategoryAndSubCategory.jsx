@@ -28,7 +28,11 @@ function AddCategoryAndSubCategory() {
   const queryParams = new URLSearchParams(location.search); // Parse the query string
 
   const [isCategoryState, setIsCategoryState] = useState(null);
+  const handleCancel = () => {
+    
+        navigate('/OwnerScreen');
 
+};
   useEffect(() => {
     const isCategory = queryParams.get('isCategory'); // Get the value of isCategory from query string
     if (isCategory === 'true') {
@@ -359,6 +363,7 @@ function AddCategoryAndSubCategory() {
             <div className="container w-auto px-5 py-2 bg-gray-900">
                 <div className="bg-white mt-4 p-6">
                     <div className="py-2 mt-1 px-2">
+                    <div className="flex gap-2">
                         <button
                             type="button"
                             onClick={handleSubmit}
@@ -385,6 +390,14 @@ function AddCategoryAndSubCategory() {
                                 </svg>
                             )}
                         </button>
+                        <button
+                                type="button"
+                                onClick={handleCancel}
+                                className="w-full  bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                            >
+                                {t("cancel")}
+                            </button>
+                    </div>
                     </div>
                     <div>
                         {successMessage && (

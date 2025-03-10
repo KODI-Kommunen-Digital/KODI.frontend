@@ -142,6 +142,12 @@ function CreateGroup() {
 		}
 	}, []);
 
+	const handleCancel = () => {
+    
+        navigate('/MyGroups');
+
+};
+
 	const handleImageUpload = async (id) => {
 		const form = new FormData();
 		form.append("image", image1);
@@ -584,6 +590,7 @@ function CreateGroup() {
 			<div className="container w-auto px-5 py-2 bg-gray-900">
 				<div className="bg-white mt-4 p-6">
 					<div className="py-2 mt-1 px-2">
+					<div className="flex gap-2">
 						<button
 							type="button"
 							onClick={handleSubmit}
@@ -592,6 +599,25 @@ function CreateGroup() {
 						>
 							{t("saveChanges")}
 						</button>
+						{!newGroup && (
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                {t("cancel")}
+              </button>
+            )}
+            {newGroup && (
+        <button
+          type="button"
+          onClick={() => navigate(-1)} // Inline navigation
+          className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          {t("Back")}
+        </button>
+      )}
+						</div>
 					</div>
 					<div>
 						{successMessage && (
