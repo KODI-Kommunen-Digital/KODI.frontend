@@ -21,6 +21,8 @@ function SideBar() {
     booking: false,
     container: false,
   });
+  console.log(expandedMenus)
+  const istogglecontainer=JSON.parse(localStorage.getItem("expandedMenus"))?.container;
 
   const [activeSubmenu, setActiveSubmenu] = useState({
     forum: "",
@@ -168,30 +170,42 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        if (expandedMenus.container) {
-          const roleResponse = await getUserRoleContainer();
-          let roles = roleResponse.data.data;
-          roles = roles.map(Number);
-          if (roles.includes(101)) {
-            setIsOwner(true);
-          } else {
-            console.log("User is not owner");
-          }
-
-          if (roles.includes(102)) {
-            setIsSeller(true);
-          } else {
-            console.log("User is not seller");
-          }
-        }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [expandedMenus.container]);
-
+  }, []);
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const roleResponse = await getUserRoleContainer();
+        let roles = roleResponse.data.data;
+        roles = roles.map(Number);
+  
+        if (roles.includes(101)) {
+          setIsOwner(true);
+        } else {
+          console.log("User is not owner");
+        }
+  
+        if (roles.includes(102)) {
+          setIsSeller(true);
+        } else {
+          console.log("User is not seller");
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+  
+    if (istogglecontainer) {
+      fetchRoles();
+    }
+  }, [istogglecontainer]); // Fetch roles when expandedMenus.container changes
+  console.log("seller",isSeller)
   return (
     <div>
       <span
