@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
 import { useTranslation } from "react-i18next";
@@ -32,7 +32,7 @@ function UploadListings() {
   const [listingId, setListingId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const location = useLocation();
+  
   // Drag and Drop starts
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
@@ -48,20 +48,7 @@ function UploadListings() {
   const [subCategories, setSubCategories] = useState([]);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isFormValid, setIsFormValid] = useState(false);
-  const hasReloaded = useRef(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    // Check if the current route is "/UploadListings" and if the page hasn't been reloaded
-    if (location.pathname === "/UploadListings" ) {
-      // Reset the editor ref
-      if (editor.current) {
-        editor.current = null;
-      }
-
-      
-    }
-  }, [location.pathname]); // Only re-run when the pathname changes
-
   const getDefaultEndDate = () => {
     const now = new Date();
     const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds

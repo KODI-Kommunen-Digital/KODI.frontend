@@ -21,7 +21,7 @@ function SideBar() {
     booking: false,
     container: false,
   });
-  console.log(expandedMenus)
+
   const istogglecontainer=JSON.parse(localStorage.getItem("expandedMenus"))?.container;
 
   const [activeSubmenu, setActiveSubmenu] = useState({
@@ -104,7 +104,9 @@ function SideBar() {
   const navigateTo = (path) => {
     if (path) {
       if (path === "/") {
+        if(expandedMenus){
         localStorage.removeItem("expandedMenus");
+        }
         localStorage.removeItem("activeSubmenu");
         localStorage.removeItem("activeIndependentMenu")
       }
