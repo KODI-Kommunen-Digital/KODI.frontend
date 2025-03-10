@@ -282,7 +282,7 @@ const MyGroups = () => {
                             </div>
                           </td>
                         ) : (
-                          <div className="text-gray-500">{t("onlyAdmins")}</div>
+                          <div className="text-gray-500 items-center justify-center text-center">{t("onlyAdmins")}</div>
                         )}
                         {showConfirmationModal.visible && (
                           <div className="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto">

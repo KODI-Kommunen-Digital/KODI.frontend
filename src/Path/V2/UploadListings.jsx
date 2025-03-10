@@ -38,9 +38,7 @@ function UploadListings() {
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
-  const [, setDragging] = useState(false);
   const [isAdmin] = useState(false);
-  const CHARACTER_LIMIT = 255;
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,6 +46,10 @@ function UploadListings() {
   const [subCategories, setSubCategories] = useState([]);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isFormValid, setIsFormValid] = useState(false);
+  const [localImages, setLocalImages] = useState([]);
+  const MAX_IMAGES = 8;
+  const CHARACTER_LIMIT = 255;
+
   const navigate = useNavigate();
   const getDefaultEndDate = () => {
     const now = new Date();
@@ -66,13 +68,11 @@ function UploadListings() {
   function handleDragEnter(e) {
     e.preventDefault();
     e.stopPropagation();
-    setDragging(true);
   }
 
   function handleDragLeave(e) {
     e.preventDefault();
     e.stopPropagation();
-    setDragging(false);
   }
 
   function handleDragOver(e) {
@@ -100,7 +100,6 @@ function UploadListings() {
         }));
       }
     }
-    setDragging(false);
   }
 
   function handleInputChange(e) {
@@ -149,9 +148,6 @@ function UploadListings() {
       }));
     }
   }
-
-  const [localImages, setLocalImages] = useState([]);
-  const MAX_IMAGES = 8;
 
   const handleMultipleInputChange = (event) => {
     const newFiles = Array.from(event.target.files);
@@ -251,12 +247,19 @@ function UploadListings() {
     }));
   }
 
-  // Drag and Drop ends
-
-  //Sending data to backend starts
   const [cityIds] = useState(0);
   const [cities, setCities] = useState([]);
+
+  // --- Single City Dropdown State ---
+  const [selectedSingleCity, setSelectedSingleCity] = useState(null);
+  const [isOpenSingle, setIsOpenSingle] = useState(false);
+  const singleDropdownRef = useRef(null);
+
+  // --- Multiple City Dropdown State ---
   const [selectedCities, setSelectedCities] = useState([]);
+  const [isOpenMultiple, setIsOpenMultiple] = useState(false);
+  const multipleDropdownRef = useRef(null);
+
   const [listingInput, setListingInput] = useState({
     categoryId: 0,
     subcategoryId: 0,
@@ -391,6 +394,11 @@ function UploadListings() {
     let valid = true;
     const newError = { ...error };
 
+    if (!selectedSingleCity) {
+      newError.singleCity = t("pleaseSelectCity");
+      valid = false;
+    }
+
     for (const key in error) {
       const errorMessage = getErrorMessage(key, listingInput[key]);
       newError[key] = errorMessage;
@@ -410,7 +418,7 @@ function UploadListings() {
       setUpdating(true);
 
       try {
-        const cityIdsToSubmit = selectedCities.map(city => city.id);
+        const cityIdsToSubmit = listingInput.cityIds;
         const dataToSubmit = {
           ...listingInput,
           cityIds: cityIdsToSubmit,
@@ -614,16 +622,12 @@ function UploadListings() {
 
           const listingData = listingsResponse.data.data;
           const allCities = listingData.allCities || [];
-          const selectedCitiesFromBackend = citiesData.filter((city) =>
-            allCities.includes(city.id)
-          );
 
-          setSelectedCities(selectedCitiesFromBackend);
-
-          if (!process.env.REACT_APP_MULTIPLECITYSELECTION || process.env.REACT_APP_MULTIPLECITYSELECTION === "False") {
-            const singleCity = citiesData.find((city) => city.id === listingData.cityId);
-            if (singleCity) setSelectedCities([singleCity]);
-          }
+          const [firstCityId, ...otherCityIds] = allCities;
+          const singleCityObject = citiesData.find((c) => c.id === firstCityId) || null;
+          const multiCityObjects = citiesData.filter((c) => otherCityIds.includes(c.id));
+          setSelectedSingleCity(singleCityObject);
+          setSelectedCities(multiCityObjects);
 
           setListingInput({
             ...listingInput,
@@ -812,7 +816,9 @@ function UploadListings() {
         .replace(/<ul>.*?<\/ul>/gis, "")
         .trim();
 
-      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+      leftoverText = leftoverText
+        .replace(/<p>/gi, "")
+        .replace(/<\/p>/gi, "<br>");
 
       const finalDescription = leftoverText
         ? `${leftoverText}<br/>${listHTML}`
@@ -842,15 +848,6 @@ function UploadListings() {
       case "title":
         if (!value) {
           return t("pleaseEnterTitle");
-        } else {
-          return "";
-        }
-
-      case "cityIds":
-        if (!parseInt(value)) {
-          return t("pleaseSelectCity");
-        } else if (!listingInput.cityIds || listingInput.cityIds.length === 0) {
-          return t("pleaseSelectCity");
         } else {
           return "";
         }
@@ -1077,23 +1074,40 @@ function UploadListings() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  // Filter out any city already in the multi-city selection
+  const singleDropdownCities = cities.filter(
+    c => !selectedCities.some(mC => mC.id === c.id)
+  );
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  // Filter out the single-selected city
+  const multipleDropdownCities = selectedSingleCity
+    ? cities.filter(c => c.id !== selectedSingleCity.id)
+    : cities;
+
+  const toggleSingleDropdown = () => {
+    setIsOpenSingle(prev => !prev);
+  };
+
+  const handleSelectSingleCity = (city) => {
+    setSelectedSingleCity(city);
+    setError(prev => ({ ...prev, singleCity: "" }));
+  };
+
+  const handleRemoveSingleCity = () => {
+    setSelectedSingleCity(null);
+  };
+
+  const toggleMultipleDropdown = () => {
+    setIsOpenMultiple((prev) => !prev);
   };
 
   const handleSelectCity = (city) => {
     if (!selectedCities.some((selectedCity) => selectedCity.id === city.id)) {
       const updatedCities = [...selectedCities, city];
       setSelectedCities(updatedCities);
-      setListingInput((prev) => ({
-        ...prev,
-        cityIds: updatedCities.map((city) => city.id),
-      }));
+      setError(prev => ({ ...prev, cityAlreadySelected: "" }));
     } else {
-      setError((prev) => ({
+      setError(prev => ({
         ...prev,
         cityAlreadySelected: t("cityAlreadySelected"),
       }));
@@ -1101,41 +1115,69 @@ function UploadListings() {
   };
 
   const handleRemoveCity = (cityId) => {
-    const updatedCities = selectedCities.filter((city) => city.id !== cityId);
+    const updatedCities = selectedCities.filter(city => city.id !== cityId);
     setSelectedCities(updatedCities);
-    setListingInput((prev) => ({
-      ...prev,
-      cityIds: updatedCities.map((city) => city.id),
-    }));
-    if (updatedCities.length === 0) {
-      setError((prev) => ({
-        ...prev,
-        cityIds: t("pleaseSelectCity"),
-      }));
-    }
-  };
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false);
-    }
   };
 
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    const mergedCityIds = [];
+    if (selectedSingleCity) {
+      mergedCityIds.push(selectedSingleCity.id);
+    }
+    selectedCities.forEach((city) => {
+      if (!mergedCityIds.includes(city.id)) {
+        mergedCityIds.push(city.id);
+      }
+    });
+
+    setListingInput((prev) => ({
+      ...prev,
+      cityIds: mergedCityIds,
+    }));
+  }, [selectedSingleCity, selectedCities]);
+
+  // Handle outside clicks to close Single-City dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        singleDropdownRef.current &&
+        !singleDropdownRef.current.contains(event.target)
+      ) {
+        setIsOpenSingle(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Handle outside clicks to close Multiple-City dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        multipleDropdownRef.current &&
+        !multipleDropdownRef.current.contains(event.target)
+      ) {
+        setIsOpenMultiple(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   useEffect(() => {
-    const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
+    const isCategorySpecificValid =
+      categoryId === 3 ? listingInput.startDate : true;
+
     const checkFormValidity = () => {
       const requiredFields = [
         listingInput.title,
         listingInput.description,
         categoryId,
-        cityIds || selectedCities.length > 0,
+        selectedSingleCity,
         !(error.title || error.description || error.categoryId),
         isCategorySpecificValid,
       ];
@@ -1144,9 +1186,8 @@ function UploadListings() {
     };
 
     const isValid = checkFormValidity();
-
     setIsFormValid(isValid);
-  }, [listingInput, error, categoryId, selectedCities]);
+  }, [listingInput, error, categoryId, selectedCities, selectedSingleCity]);
 
   return (
     <section className="bg-slate-600 body-font relative">
@@ -1198,13 +1239,65 @@ function UploadListings() {
             </div>
           </div>
 
-          <div className="relative mb-4" ref={dropdownRef}>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-600">
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
+          {/* SINGLE CITY DROPDOWN */}
+          <div className="relative mb-4" ref={singleDropdownRef}>
+            <label htmlFor="singleCity" className="block text-sm font-medium text-gray-600">
+              {t("myCommunity")} *
             </label>
             <div
-              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              onClick={toggleDropdown}
+              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              onClick={toggleSingleDropdown}
+            >
+              <div className="flex flex-wrap">
+                {selectedSingleCity ? (
+                  <div className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300">
+                    <span>{selectedSingleCity.name}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSingleCity();
+                      }}
+                      className="text-red-600 ml-2"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ) : (
+                  <span className="bg-transparent outline-none flex-1 cursor-pointer">{t("select")}</span>
+                )}
+              </div>
+            </div>
+            {isOpenSingle && (
+              <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
+                {singleDropdownCities.map(city => (
+                  <div
+                    key={city.id}
+                    onClick={() => handleSelectSingleCity(city)}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id ? "text-teal-700" : "text-gray-700"
+                      }`}
+                  >
+                    {city.name}
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* Show error ONLY if single city not picked */}
+            {error.singleCity && (
+              <div className="mt-2 text-sm text-red-600">
+                {error.singleCity}
+              </div>
+            )}
+          </div>
+
+          {/* MULTIPLE CITY DROPDOWN */}
+          <div className="relative mb-4" ref={multipleDropdownRef}>
+            <label htmlFor="multipleCity" className="block text-sm font-medium text-gray-600">
+              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")}
+            </label>
+            <div
+              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              onClick={toggleMultipleDropdown}
             >
               <div className="flex flex-wrap">
                 {selectedCities.map((city) => (
@@ -1215,7 +1308,10 @@ function UploadListings() {
                     <span>{city.name}</span>
                     <button
                       type="button"
-                      onClick={() => handleRemoveCity(city.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveCity(city.id);
+                      }}
                       className="text-red-600 ml-2"
                     >
                       &times;
@@ -1230,15 +1326,13 @@ function UploadListings() {
                 />
               </div>
             </div>
-            {isOpen && (
+            {isOpenMultiple && (
               <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
-                {cities.map((city) => (
+                {multipleDropdownCities.map(city => (
                   <div
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((selectedCity) => selectedCity.id === city.id)
-                      ? "text-teal-700"
-                      : "text-gray-700"
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some(sC => sC.id === city.id) ? "text-teal-700" : "text-gray-700"
                       }`}
                   >
                     {city.name}
@@ -1246,105 +1340,13 @@ function UploadListings() {
                 ))}
               </div>
             )}
-            <div
-              className="mt-2 text-sm text-red-600"
-              style={{
-                visibility:
-                  (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected
-                    ? "visible"
-                    : "hidden",
-              }}
-            >
-              {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
-            </div>
+            {/* Display only if user tries to select an already selected city */}
+            {error.cityAlreadySelected && (
+              <div className="mt-2 text-sm text-red-600">
+                {error.cityAlreadySelected}
+              </div>
+            )}
           </div>
-
-          {/* {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' ? (
-            cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-                </label>
-                <select
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  // disabled={!newListing && selectedCities.length > 0}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value={0}>{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="flex flex-wrap mt-0">
-                  {selectedCities.map((city) => (
-                    <div key={city.id} className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300">
-                      <span>{city.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeCity(city.id)}
-                        className="text-red-600 ml-2"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                <div
-                  className="mt-2 text-sm text-red-600"
-                  style={{
-                    visibility: (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected ? "visible" : "hidden",
-                  }}
-                >
-                  {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
-                </div>
-              </div>
-            )
-          ) : (
-            cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-                </label>
-                <select
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  autoComplete="country-name"
-                  // disabled={!newListing && selectedCities.length > 0}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value={0}>{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={Number(city.id)} value={Number(city.id)}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-                <div
-                  className="mt-2 text-sm text-red-600"
-                  style={{
-                    visibility: selectedCities.length === 0 && error.cityIds ? "visible" : "hidden",
-                  }}
-                >
-                  {error.cityIds}
-                </div>
-              </div>
-            )
-          )} */}
 
           <div className="relative mb-4">
             <label
@@ -1824,7 +1826,7 @@ function UploadListings() {
                 image.length === 1 &&
                 typeof image[0] === "string" &&
                 image[0].includes("admin/") ? (
-                <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
                     handleRemoveImage={handleRemoveImage}
