@@ -1825,7 +1825,7 @@ function UploadListings() {
                 image.length === 1 &&
                 typeof image[0] === "string" &&
                 image[0].includes("admin/") ? (
-                <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
                     handleRemoveImage={handleRemoveImage}
