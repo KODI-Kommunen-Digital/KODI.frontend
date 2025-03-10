@@ -104,7 +104,7 @@ function SideBar() {
     } else if (booking === "myAppoinment") {
       navigateTo("/AppointmentBooking/AppointmentsUserCreated");
     } else if (booking === "myBooking") {
-      navigateTo("/AppointmentBooking/AppointmentsUserCreated");
+      navigateTo("/AppointmentBooking/MyBookings");
     } else if (container === "SellerScreen") {
       navigateTo("/SellerScreen");
     } else if (container === "customerScreen") {
