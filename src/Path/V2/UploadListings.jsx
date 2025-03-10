@@ -815,7 +815,9 @@ function UploadListings() {
         .replace(/<ul>.*?<\/ul>/gis, "")
         .trim();
 
-      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+      leftoverText = leftoverText
+        .replace(/<p>/gi, "")
+        .replace(/<\/p>/gi, "<br>");
 
       const finalDescription = leftoverText
         ? `${leftoverText}<br/>${listHTML}`
