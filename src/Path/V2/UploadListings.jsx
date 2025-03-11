@@ -42,7 +42,7 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  // const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isFormValid, setIsFormValid] = useState(false);
   const [localImages, setLocalImages] = useState([]);
   const MAX_IMAGES = 8;
@@ -615,9 +615,10 @@ function UploadListings() {
           setListingId(parseInt(listingId));
           setNewListing(false);
 
-          const listingsResponse = isV2Backend
-            ? await getListingsById(null, listingId)
-            : await getListingsById(cityIds, listingId);
+          // const listingsResponse = isV2Backend
+          //   ? await getListingsById(null, listingId)
+          //   : await getListingsById(cityIds, listingId);
+          const listingsResponse = await getListingsById(null, listingId);
 
           const listingData = listingsResponse.data.data;
           const allCities = listingData.allCities || [];
@@ -649,9 +650,11 @@ function UploadListings() {
 
           // Handle appointments
           if (listingData.appointmentId) {
-            const fetchAppointments = isV2Backend
-              ? getAppointments(null, listingData.id, listingData.appointmentId)
-              : getAppointments(cityIds, listingData.id, listingData.appointmentId);
+            // const fetchAppointments = isV2Backend
+            //   ? getAppointments(null, listingData.id, listingData.appointmentId)
+            //   : getAppointments(cityIds, listingData.id, listingData.appointmentId);
+
+            const fetchAppointments = getAppointments(null, listingData.id, listingData.appointmentId);
 
             const appointmentResponse = await fetchAppointments;
             const appointmentData = appointmentResponse.data.data;
@@ -665,9 +668,11 @@ function UploadListings() {
 
             setAppointmentInput(appointmentData);
 
-            const fetchServices = isV2Backend
-              ? getAppointmentServices(null, listingData.id, listingData.appointmentId)
-              : getAppointmentServices(cityIds, listingData.id, listingData.appointmentId);
+            // const fetchServices = isV2Backend
+            //   ? getAppointmentServices(null, listingData.id, listingData.appointmentId)
+            //   : getAppointmentServices(cityIds, listingData.id, listingData.appointmentId);
+
+            const fetchServices = getAppointmentServices(null, listingData.id, listingData.appointmentId);
 
             const servicesResponse = await fetchServices;
             const servicesData = servicesResponse.data.data.map((item) => {
