@@ -32,6 +32,8 @@ function UploadListings() {
   const [listingId, setListingId] = useState(0);
   const [newListing, setNewListing] = useState(true);
   const [updating, setUpdating] = useState(false);
+  
+  // Drag and Drop starts
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
@@ -49,7 +51,6 @@ function UploadListings() {
   const CHARACTER_LIMIT = 255;
 
   const navigate = useNavigate();
-
   const getDefaultEndDate = () => {
     const now = new Date();
     const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
@@ -1945,6 +1946,7 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
             </p>
+            <div className="flex gap-2"> {/* Flex container with gap between buttons */}
             <button
               type="button"
               onClick={handleSubmit}
@@ -1976,11 +1978,21 @@ function UploadListings() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="w-full mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
               >
                 {t("cancel")}
               </button>
             )}
+            {newListing && (
+        <button
+          type="button"
+          onClick={() => navigate(-1)} // Inline navigation
+          className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          {t("Back")}
+        </button>
+      )}
+            </div>
           </div>
           <div className="py-2 mt-1 px-2">
             {successMessage && (
