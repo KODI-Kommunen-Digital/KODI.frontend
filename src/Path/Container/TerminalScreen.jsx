@@ -463,35 +463,8 @@ const TerminalScreen = () => {
                         title="Mobilität"
                     />
                 </div>
-                {/* {isMobilitaetPopupOpen && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
-                        <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
-                            <button
-                                className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
-                                onClick={handleCloseMobilitaetPopup}
-                            >
-                                <span className="sr-only">Close menu</span>
-                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                            <iframe
-                                src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=f3f148d4a18146bb8e72669a42f867e5"
-                                width="100%"
-                                height="600px"
-                                frameBorder="0"
-                                allow="geolocation"
-                                title="HVV Departures">
-                            </iframe>
-                            <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
-                                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
-                            </div>
-                        </div>
-                    </div>
-                )} */}
 
                 <div className="flex flex-col gap-2 h-full">
-                    {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayMaengelmelder && (
                             <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
@@ -543,7 +516,6 @@ const TerminalScreen = () => {
                         </div>
                     )}
 
-                    {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayBuergerbeteiligung && (
                             <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
