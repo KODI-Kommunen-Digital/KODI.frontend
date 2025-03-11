@@ -25,6 +25,15 @@ const TerminalScreen = () => {
     const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
     const [canScrollRight2, setCanScrollRight2] = useState(true);
 
+    const containerRef = useRef(null)
+
+    const handleShiftToMiddle = () => {
+        if (!containerRef.current) return;
+
+        const { clientHeight } = containerRef.current;
+        containerRef.current.style.transform = `translateY(${clientHeight / 2}px)`;
+    };
+
     const handleSlide = (direction, ref, setCanScrollLeft, setCanScrollRight) => {
         if (ref.current) {
             const scrollAmount = direction === "left" ? -300 : 300; // Adjust this value for smoother/faster sliding
@@ -142,10 +151,6 @@ const TerminalScreen = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchSurveys();
-    //   }, []);
-
     const handleOpenSurvey = () => {
         setIsSurveyOpen(true);
         fetchSurveys();
@@ -231,7 +236,7 @@ const TerminalScreen = () => {
     };
 
     return (
-        <div className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center p-1">
+        <div ref={containerRef} className="w-screen h-screen overflow-hidden bg-gray-200 flex flex-col items-center justify-center p-1 transition-transform duration-500">
             <div className="relative w-full basis-[20%] flex-grow-0 overflow-auto shadow-lg grid grid-cols-2 gap-2 items-start justify-center">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
@@ -463,35 +468,8 @@ const TerminalScreen = () => {
                         title="Mobilität"
                     />
                 </div>
-                {/* {isMobilitaetPopupOpen && (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
-                        <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
-                            <button
-                                className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
-                                onClick={handleCloseMobilitaetPopup}
-                            >
-                                <span className="sr-only">Close menu</span>
-                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                            <iframe
-                                src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=f3f148d4a18146bb8e72669a42f867e5"
-                                width="100%"
-                                height="600px"
-                                frameBorder="0"
-                                allow="geolocation"
-                                title="HVV Departures">
-                            </iframe>
-                            <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
-                                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
-                            </div>
-                        </div>
-                    </div>
-                )} */}
 
                 <div className="flex flex-col gap-2 h-full">
-                    {/* Mängelmelder Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayMaengelmelder && (
                             <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
@@ -543,7 +521,6 @@ const TerminalScreen = () => {
                         </div>
                     )}
 
-                    {/* Bürgerbeteiligung Overlay (Only Covers its Container) */}
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayBuergerbeteiligung && (
                             <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
@@ -600,6 +577,21 @@ const TerminalScreen = () => {
                 </div>
             </div>
 
+            <div className="fixed bottom-[1rem] left-1/2 transform -translate-x-1/2 z-[99999]">
+                <button
+                    className="bg-sky-950 text-white p-2 w-20 h-20 rounded-full border border-white flex items-center justify-center"
+                    onClick={handleShiftToMiddle}
+                >
+                    <svg
+                        className="h-8 w-10 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                    >
+                        <path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3L304 256l0-96c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32l0 96-57.7 0C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z" />
+                    </svg>
+                </button>
+            </div>
+
             <div className="fixed bottom-[1rem] right-[1rem] z-[99999]">
                 <button
                     className="bg-sky-950 text-white p-2 w-20 h-20 rounded-full border border-white flex items-center justify-center"
@@ -614,6 +606,7 @@ const TerminalScreen = () => {
                     </svg>
                 </button>
             </div>
+
             {isSurveyOpen && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl h-auto max-h-[90vh] overflow-y-auto flex flex-col">
