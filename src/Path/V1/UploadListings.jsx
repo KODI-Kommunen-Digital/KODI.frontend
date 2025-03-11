@@ -1124,7 +1124,7 @@ function UploadListings() {
 
     setIsFormValid(isValid);
   }, [listingInput, error, categoryId, selectedCities]);
-
+  console.log("newisting",newListing)
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
@@ -1861,6 +1861,7 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
             </p>
+            <div className="flex gap-2"> {/* Flex container with gap between buttons */}
             <button
               type="button"
               onClick={handleSubmit}
@@ -1892,11 +1893,21 @@ function UploadListings() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="w-full mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                className="w-full  bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
               >
                 {t("cancel")}
               </button>
             )}
+            {newListing && (
+        <button
+          type="button"
+          onClick={() => navigate(-1)} // Inline navigation
+          className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          {t("Back")}
+        </button>
+      )}
+          </div>
           </div>
           <div className="py-2 mt-1 px-2">
             {successMessage && (
