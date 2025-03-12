@@ -260,7 +260,7 @@ function SideBar() {
             className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
             onClick={() => {
               handleSegmentClick("listing");
-              handleSubmenuClick("listing", "myEntries");
+              // handleSubmenuClick("listing", "myEntries");
             }}
             
           >
@@ -357,7 +357,9 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("forum");handleSubmenuClick("forum", "createGroup");}}
+                onClick={() => {handleSegmentClick("forum");
+                  // handleSubmenuClick("forum", "createGroup");
+                }}
               >
                 <svg
                   className="h-6 w-10 fill-current"
@@ -438,7 +440,9 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("booking");handleSubmenuClick("booking", "myAppoinment");}}
+                onClick={() => {handleSegmentClick("booking");
+                  // handleSubmenuClick("booking", "myAppoinment");
+                }}
               >
                 <svg
                   className="h-6 w-10 fill-current"
@@ -524,7 +528,9 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("container");handleSubmenuClick("container", "customerScreen");}}
+                onClick={() => {handleSegmentClick("container");
+                  // handleSubmenuClick("container", "customerScreen");
+                }}
               >
                 <svg
                   className="h-6 w-10 fill-current"
