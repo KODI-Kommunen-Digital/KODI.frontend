@@ -23,7 +23,7 @@ function CreateGroup() {
 	const [newGroup, setNewGroup] = useState(true);
 	const [updating, setUpdating] = useState(false);
 	const CHARACTER_LIMIT = 255;
-	//Drag and Drop starts
+	// Drag and Drop starts
 	const [image1, setImage1] = useState(null);
 
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -78,7 +78,7 @@ function CreateGroup() {
 		setInput((prevInput) => ({ ...prevInput, image: null, removeImage: true }));
 	}
 
-	//Sending data to backend starts
+	// Sending data to backend starts
 	const [input, setInput] = useState({
 		forumName: "",
 		description: "",
@@ -143,10 +143,10 @@ function CreateGroup() {
 	}, []);
 
 	const handleCancel = () => {
-    
-        navigate('/MyGroups');
 
-};
+		navigate('/MyGroups');
+
+	};
 
 	const handleImageUpload = async (id) => {
 		const form = new FormData();
@@ -158,9 +158,9 @@ function CreateGroup() {
 		event.preventDefault();
 
 		let valid = true;
-		for (let key in error) {
-			var errorMessage = getErrorMessage(key, input[key]);
-			var newError = error;
+		for (const key in error) {
+			const errorMessage = getErrorMessage(key, input[key]);
+			const newError = error;
 			newError[key] = errorMessage;
 			setError(newError);
 			if (errorMessage) {
@@ -172,7 +172,7 @@ function CreateGroup() {
 			setUpdating(true);
 			event.preventDefault();
 			try {
-				input.isPrivate = input.visibility == "private";
+				input.isPrivate = input.visibility === "private";
 				const response = newGroup
 					? await postForumsData(cityId, input)
 					: await updateForumsData(cityId, input, forumId);
@@ -207,14 +207,14 @@ function CreateGroup() {
 		}
 	};
 
-	useEffect(() => {
-		let valid = true;
-		for (let property in error) {
-			if (error[property]) {
-				valid = false;
-			}
-		}
-	}, [error]);
+	// useEffect(() => {
+	// 	let valid = true;
+	// 	for (const property in error) {
+	// 		if (error[property]) {
+	// 			valid = false;
+	// 		}
+	// 	}
+	// }, [error]);
 
 	const [description, setDescription] = useState("");
 	const onDescriptionChange = (newContent) => {
@@ -302,8 +302,8 @@ function CreateGroup() {
 	};
 
 	const validateInput = (e) => {
-		let { name, value } = e.target;
-		var errorMessage = getErrorMessage(name, value);
+		const { name, value } = e.target;
+		const errorMessage = getErrorMessage(name, value);
 		setError((prevState) => {
 			return { ...prevState, [name]: errorMessage };
 		});
@@ -315,7 +315,7 @@ function CreateGroup() {
 		});
 	}, []);
 
-	//Social Media ends
+	// Social Media ends
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
 	async function onCityChange(e) {
@@ -351,16 +351,16 @@ function CreateGroup() {
 	}, [input, error, cityId]);
 
 	return (
-		<section class="bg-gray-900 body-font relative min-h-screen">
+		<section className="bg-gray-900 body-font relative min-h-screen">
 			<SideBar />
 
-			<div class="container w-auto px-5 py-2 bg-gray-900">
-				<div class="bg-white mt-4 p-6 space-y-10">
+			<div className="container w-auto px-5 py-2 bg-gray-900">
+				<div className="bg-white mt-4 p-6 space-y-10">
 					<h2
 						style={{
 							fontFamily: "Poppins, sans-serif",
 						}}
-						class="text-slate-800 text-lg mb-4 font-medium title-font"
+						className="text-slate-800 text-lg mb-4 font-medium title-font"
 					>
 						{t("createGroup")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
@@ -400,10 +400,10 @@ function CreateGroup() {
 						</div>
 					</div>
 
-					<div class="relative mb-4">
+					<div className="relative mb-4">
 						<label
-							for="cityId"
-							class="block text-sm font-medium text-gray-600"
+							htmlFor="cityId"
+							className="block text-sm font-medium text-gray-600"
 						>
 							{process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
 						</label>
@@ -414,12 +414,12 @@ function CreateGroup() {
 							value={cityId}
 							onChange={onCityChange}
 							disabled={!newGroup}
-							autocomplete="country-name"
-							class="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+							autoComplete="country-name"
+							className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
 						>
 							<option value={0}>{t("select")}</option>
 							{cities.map((city) => (
-								<option value={Number(city.id)}>{city.name}</option>
+								<option key={city.id} value={Number(city.id)}>{city.name}</option>
 							))}
 						</select>
 						<div
@@ -516,9 +516,9 @@ function CreateGroup() {
 				</div>
 			</div>
 
-			<div class="container w-auto px-5 py-2 bg-gray-900">
-				<div class="bg-white mt-4 p-6 space-y-10">
-					<h2 class="text-slate-800 text-lg mb-4 font-medium title-font">
+			<div className="container w-auto px-5 py-2 bg-gray-900">
+				<div className="bg-white mt-4 p-6 space-y-10">
+					<h2 className="text-slate-800 text-lg mb-4 font-medium title-font">
 						{t("uploadLogo")}
 						<div className="my-4 bg-gray-600 h-[1px]"></div>
 					</h2>
@@ -569,7 +569,7 @@ function CreateGroup() {
 									<p className="mt-1 text-sm text-gray-600">
 										{t("dragAndDropImage")}
 									</p>
-									<div class="relative mb-4 mt-8">
+									<div className="relative mb-4 mt-8">
 										<label className="file-upload-btn w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60">
 											<span className="button-label">{t("upload")}</span>
 											<input
@@ -590,33 +590,33 @@ function CreateGroup() {
 			<div className="container w-auto px-5 py-2 bg-gray-900">
 				<div className="bg-white mt-4 p-6">
 					<div className="py-2 mt-1 px-2">
-					<div className="flex gap-2">
-						<button
-							type="button"
-							onClick={handleSubmit}
-							disabled={!isFormValid || updating || isSuccess}
-							class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
-						>
-							{t("saveChanges")}
-						</button>
-						{!newGroup && (
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-              >
-                {t("cancel")}
-              </button>
-            )}
-            {newGroup && (
-        <button
-          type="button"
-          onClick={() => navigate(-1)} // Inline navigation
-          className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-        >
-          {t("Back")}
-        </button>
-      )}
+						<div className="flex gap-2">
+							<button
+								type="button"
+								onClick={handleSubmit}
+								disabled={!isFormValid || updating || isSuccess}
+								className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded disabled:opacity-60"
+							>
+								{t("saveChanges")}
+							</button>
+							{!newGroup && (
+								<button
+									type="button"
+									onClick={handleCancel}
+									className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+								>
+									{t("cancel")}
+								</button>
+							)}
+							{newGroup && (
+								<button
+									type="button"
+									onClick={() => navigate(-1)} // Inline navigation
+									className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+								>
+									{t("Back")}
+								</button>
+							)}
 						</div>
 					</div>
 					<div>
