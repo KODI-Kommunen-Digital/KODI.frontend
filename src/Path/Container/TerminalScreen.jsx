@@ -562,15 +562,12 @@ const TerminalScreen = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                                {/* <iframe
+                                <iframe
                                     src="https://beteiligung.hamburg/navigator/#/"
                                     allow="geolocation"
                                     className="w-full h-full"
                                     title="Bürgerbeteiligung Popup"
-                                /> */}
-                                <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
-                                    Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
-                                </div>
+                                />
                             </div>
                         </div>
                     )}
