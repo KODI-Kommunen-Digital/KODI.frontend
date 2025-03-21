@@ -125,28 +125,7 @@ const LoginPage = () => {
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
-
-			if (process.env.REACT_APP_REGION_NAME === "AUF") {
-				try {
-					const cardResponse = await getCards();
-					if (cardResponse.data.data.length > 0) {
-						navigateTo("/");
-					} else {
-						navigateTo("/CustomerScreen/GetCard");
-					}
-				} catch (cardError) {
-					if (cardError.response && cardError.response.data.errorCode === 5011) {
-						navigateTo("/CustomerScreen/GetCard");
-					} else {
-						console.error("Error fetching card information:", cardError);
-						setAlertInfo(true);
-						setAlertType("danger");
-						setAlertMessage(t("somethingWrong"));
-					}
-				}
-			} else {
-				navigateTo("/");
-			}
+			navigateTo("/");
 		} catch (err) {
 			setLoginLoading(false);
 			setAlertInfo(true);
