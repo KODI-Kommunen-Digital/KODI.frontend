@@ -6,7 +6,6 @@ import HeidiLogo from "../assets/HEIDI_Logo.png";
 import { resetPass, login, sendVerificationEmail } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import errorCodes from "../Constants/errorCodes";
-import { getCards } from "../Services/containerApi";
 
 const LoginPage = () => {
 	const { t } = useTranslation();
