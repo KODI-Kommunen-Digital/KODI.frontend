@@ -153,8 +153,6 @@ const Listing = () => {
   const [sourceId, setSourceId] = useState("");
   const [website, setWebsite] = useState("");
   const [user, setUser] = useState();
-  const [, setSuccessMessage] = useState("");
-  const [, setErrorMessage] = useState("");
   const [listings, setListings] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -369,13 +367,11 @@ const Listing = () => {
         if (favoriteId !== 0) {
           await deleteListingsById(favoriteId);
           setFavoriteId(0);
-          setSuccessMessage(t("list removed from the favorites"));
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
               .then((response) => {
                 setFavoriteId(response.data.id);
-                setSuccessMessage(t("List added to the favorites"));
                 // setHandleClassName(
                 //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
                 // );
@@ -388,7 +384,7 @@ const Listing = () => {
         navigateTo("/login");
       }
     } catch (error) {
-      setErrorMessage(t("Error", error));
+      console.error("Favorite toggle failed", error);
     }
   };
 
