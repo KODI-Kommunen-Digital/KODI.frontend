@@ -22,7 +22,7 @@ function SideBar() {
     container: false,
   });
 
-  const istogglecontainer=JSON.parse(localStorage.getItem("expandedMenus"))?.container;
+  const istogglecontainer = JSON.parse(localStorage.getItem("expandedMenus"))?.container;
 
   const [activeSubmenu, setActiveSubmenu] = useState({
     forum: "",
@@ -66,11 +66,11 @@ function SideBar() {
     localStorage.setItem("activeIndependentMenu", menu);
     localStorage.removeItem("expandedMenus");
     localStorage.removeItem("activeSubmenu");
-   
+
   };
   useEffect(() => {
     const { forum, listing, booking, container } = activeSubmenu;
-  
+
     if (listing === "uploadListings") {
       navigateTo("/UploadListings");
       window.location.reload();
@@ -104,8 +104,8 @@ function SideBar() {
   const navigateTo = (path) => {
     if (path) {
       if (path === "/") {
-        if(expandedMenus){
-        localStorage.removeItem("expandedMenus");
+        if (expandedMenus) {
+          localStorage.removeItem("expandedMenus");
         }
         localStorage.removeItem("activeSubmenu");
         localStorage.removeItem("activeIndependentMenu")
@@ -179,7 +179,7 @@ function SideBar() {
         setLastname(profileResponse.data.data.lastname);
         setUserRole(profileResponse.data.data.roleId);
 
-        
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -193,13 +193,13 @@ function SideBar() {
         const roleResponse = await getUserRoleContainer();
         let roles = roleResponse.data.data;
         roles = roles.map(Number);
-  
+
         if (roles.includes(101)) {
           setIsOwner(true);
         } else {
           console.log("User is not owner");
         }
-  
+
         if (roles.includes(102)) {
           setIsSeller(true);
         } else {
@@ -209,12 +209,12 @@ function SideBar() {
         console.error("Error fetching roles:", error);
       }
     };
-  
+
     if (istogglecontainer) {
       fetchRoles();
     }
-  }, [istogglecontainer]); // Fetch roles when expandedMenus.container changes
-  console.log("seller",isSeller)
+  }, [istogglecontainer]);
+
   return (
     <div>
       <span
@@ -262,7 +262,7 @@ function SideBar() {
               handleSegmentClick("listing");
               // handleSubmenuClick("listing", "myEntries");
             }}
-            
+
           >
             <svg
               className="h-6 w-10 fill-current"
@@ -276,9 +276,8 @@ function SideBar() {
             </span>
 
             <svg
-              className={`h-6 w-6 ml-4 fill-current ${
-                JSON.parse(localStorage.getItem("expandedMenus"))?.listing ? "rotate-180" : ""
-              }`}
+              className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.listing ? "rotate-180" : ""
+                }`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -357,7 +356,8 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("forum");
+                onClick={() => {
+                  handleSegmentClick("forum");
                   // handleSubmenuClick("forum", "createGroup");
                 }}
               >
@@ -440,7 +440,8 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("booking");
+                onClick={() => {
+                  handleSegmentClick("booking");
                   // handleSubmenuClick("booking", "myAppoinment");
                 }}
               >
@@ -528,7 +529,8 @@ function SideBar() {
             <>
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white"
-                onClick={() => {handleSegmentClick("container");
+                onClick={() => {
+                  handleSegmentClick("container");
                   // handleSubmenuClick("container", "customerScreen");
                 }}
               >
@@ -556,7 +558,7 @@ function SideBar() {
                 <>
                   {JSON.parse(localStorage.getItem("expandedMenus")).container && (
                     <div className="ml-4">
-                       <div
+                      <div
                         className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.container === "customerScreen" ? "bg-gray-700" : ""}`}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -625,7 +627,7 @@ function SideBar() {
                         </div>
                       )}
 
-                     
+
                     </div>
                   )}
                 </>
@@ -637,7 +639,7 @@ function SideBar() {
           <div className="bottom-2 w-[280px]">
             <div
               className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") === "profilePage" ? "bg-gray-700" : ""}`}
-              onClick={() => {handleIndependentMenuClick("profilePage");navigateTo("/profilePage")}}
+              onClick={() => { handleIndependentMenuClick("profilePage"); navigateTo("/profilePage") }}
             >
               <svg
                 className="h-6 w-10 fill-current"
@@ -656,8 +658,8 @@ function SideBar() {
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
             <div
-              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu")=== "Account_Settings" ? "bg-gray-700" : ""}`}
-              onClick={() => {handleIndependentMenuClick("Account_Settings");navigateTo("/AccountSettings")}}
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") === "Account_Settings" ? "bg-gray-700" : ""}`}
+              onClick={() => { handleIndependentMenuClick("Account_Settings"); navigateTo("/AccountSettings") }}
             >
               <svg
                 className="h-6 w-10 fill-current"

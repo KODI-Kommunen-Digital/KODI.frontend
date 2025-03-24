@@ -26,6 +26,7 @@ import { createAppointments, updateAppointments, getAppointments, getAppointment
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from 'date-fns';
+import Delta from "quill-delta";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -740,6 +741,18 @@ function UploadListings() {
   };
 
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    const quill = editor.current?.getEditor();
+
+    if (quill) {
+      quill.clipboard.addMatcher("IMG", (node, delta) => {
+        const imageUrl = node.getAttribute("src");
+        return new Delta().insert(imageUrl || "[Image]");
+      });
+    }
+  }, []);
+
   const onDescriptionChange = (newContent) => {
     const hasNumberedList = newContent.includes("<ol>");
     const hasBulletList = newContent.includes("<ul>");
@@ -1125,7 +1138,6 @@ function UploadListings() {
 
     setIsFormValid(isValid);
   }, [listingInput, error, categoryId, selectedCities]);
-  console.log("newisting", newListing)
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
