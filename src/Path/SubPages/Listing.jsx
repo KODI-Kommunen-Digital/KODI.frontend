@@ -21,7 +21,7 @@ import {
   deleteListingsById,
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
-import { getCategory } from "../../Services/CategoryApi";
+import { getCategory,getListingsSubCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import listingSource from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
@@ -158,6 +158,8 @@ const Listing = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isProfileImageLoaded, setIsProfileImageLoaded] = useState(false);
 
@@ -300,6 +302,22 @@ const Listing = () => {
               )
             );
           }
+
+          if (listingsResponse.data.data?.categoryId) {
+            getListingsSubCategory(listingsResponse.data.data.categoryId)
+              .then((subCats) => {
+                const transformedSubCategories = subCats?.data?.data.reduce((acc, subCategory) => {
+                  acc[subCategory.id] = subCategory.name;
+                  return acc;
+                }, {});
+          
+                // Set the transformed subcategories
+                setSubCategories(transformedSubCategories);
+              })
+              .catch((error) => {
+                console.error("Error fetching subcategories:", error);
+              });
+          }
         })
         .catch((error) => {
           console.error("Error fetching listing:", error);
@@ -312,6 +330,7 @@ const Listing = () => {
         const response = await getListings(params);
         const data = response.data.data;
         setListings(data);
+       
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
@@ -543,7 +562,9 @@ const Listing = () => {
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             >
-                              {t(categories[input.categoryId])}
+                           {t(categories[input.categoryId])}
+{input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
+
                             </p>
                           </div>
 
