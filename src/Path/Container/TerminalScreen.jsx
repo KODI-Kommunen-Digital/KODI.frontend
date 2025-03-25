@@ -549,6 +549,9 @@ const TerminalScreen = () => {
                                 }`}
                             title="Bürgerbeteiligung"
                         />
+                        {/* <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                            Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                        </div> */}
                     </div>
                     {isBeteiligungOpen && (
                         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
@@ -562,12 +565,15 @@ const TerminalScreen = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                                <iframe
+                                {/* <iframe
                                     src="https://beteiligung.hamburg/navigator/#/"
                                     allow="geolocation"
                                     className="w-full h-full"
                                     title="Bürgerbeteiligung Popup"
-                                />
+                                /> */}
+                                <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                                    Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                                </div>
                             </div>
                         </div>
                     )}
