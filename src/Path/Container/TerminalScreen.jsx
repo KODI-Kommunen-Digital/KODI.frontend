@@ -84,9 +84,9 @@ const TerminalScreen = () => {
         const resetInactivityTimer = () => {
             clearTimeout(inactivityTimeout);
             inactivityTimeout = setTimeout(() => {
-                // Reload the page after 2 minutes (60,000 ms) of inactivity
+                // Reload the page after 5 minutes (300,000 ms) of inactivity
                 window.location.reload();
-            }, 60000); // 1 minutes
+            }, 300000); // 5 minutes
         };
 
         // Add event listeners for user interactions
