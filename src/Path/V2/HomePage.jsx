@@ -4,12 +4,12 @@ import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
+import { getListingsSubCategory, getCategory } from "../../Services/CategoryApi";
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
 import SearchBar from "../../Components/SearchBar";
-import { getCategory } from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
 import {
   sortByTitleAZ,
@@ -35,9 +35,12 @@ const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listingsCount, setListingsCount] = useState([]);
   const [selectedSortOption, setSelectedSortOption] = useState("");
+  const [selectedSubcategory, setselectedSubcategory] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [hasSubcategories, setHasSubcategories] = useState(false);
+  const [subcategories, setSubcategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [terminalView, setTerminalView] = useState(false);
 
@@ -76,13 +79,32 @@ const HomePage = () => {
 
     getCategory().then((response) => {
       const catList = {};
+      let hasSubcategories = false;
       response?.data?.data
         .filter(cat => !hiddenCategories.includes(cat.id))
         .forEach((cat) => {
           catList[cat.id] = cat.name;
+          if (cat.id === categoryId && cat.noOfSubcategories > 0) {
+            hasSubcategories = true;
+          }
         });
       setCategories(catList);
+      setHasSubcategories(hasSubcategories);
     });
+
+    if (hasSubcategories) {
+      getListingsSubCategory(categoryId).then((response) => {
+        const subcatList = [];
+        response?.data?.data.forEach((subcat) => {
+          subcatList.push({
+            id: subcat.id,
+            name: subcat.name,
+            categoryId: subcat.categoryId,
+          });
+        });
+        setSubcategories(subcatList);
+      });
+    }
 
     document.title = process.env.REACT_APP_REGION_NAME + " " + t("home");
   }, []);
@@ -117,6 +139,12 @@ const HomePage = () => {
       params.categoryId = categoryId;
     } else {
       urlParams.delete("categoryId");
+    }
+    if (parseInt(selectedSubcategory)) {
+      urlParams.set("subcategoryId", selectedSubcategory);
+      params.subcategoryId = selectedSubcategory;
+    } else {
+      urlParams.delete("subcategoryId");
     }
 
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -199,6 +227,13 @@ const HomePage = () => {
     }
   }
 
+  function handleSubcategoryChange(event) {
+    const newValue = event.target.value;
+    if (newValue !== selectedSubcategory) {
+      setselectedSubcategory(newValue);
+    }
+  }
+
   const handleSearch = async (searchQuery) => {
     console.log("Search term:", searchQuery);
     setSearchQuery(searchQuery);
@@ -278,6 +313,7 @@ const HomePage = () => {
             listingsCount={listingsCount}
             t={t}
             getTheListings={getTheListings}
+            setHasSubcategories={setHasSubcategories}
           />
         </div>
       </div>
@@ -313,7 +349,40 @@ const HomePage = () => {
                   <option value="oldest">{t("oldest")}</option>
                 </select>
               </div>
-
+              {
+                hasSubcategories && (
+                  <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
+                    <select
+                      id="Subcategory"
+                      name="Subcategory"
+                      autoComplete="Subcategory-name"
+                      onChange={(e) => {
+                        handleSubcategoryChange(e.target.value);
+                      }}
+                      value={categoryId || 0}
+                      className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <option className="font-sans" value={0} key={0}>
+                        {t("allSubcategories")}
+                      </option>
+                      {subcategories.map((subcategory) => {
+                        return (
+                          <option
+                            className="font-sans"
+                            value={subcategory.id}
+                            key={subcategory.id}
+                          >
+                            {t(subcategory.name)}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )
+              }
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
             </div>
           </div>
