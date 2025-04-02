@@ -1005,7 +1005,9 @@ function UploadListings() {
           return;
         }
 
-        setCities(citiesData);
+        const sortedCities = citiesData.sort((a, b) => a.name.localeCompare(b.name));
+        setCities(sortedCities);
+
         if (citiesData.length === 1) {
           const cityId = citiesData[0].id;
           const cityName = citiesData[0].name;
