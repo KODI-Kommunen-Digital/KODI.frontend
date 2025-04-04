@@ -789,11 +789,6 @@ function UploadListings() {
   }, []);
 
   const onDescriptionChange = (newContent) => {
-    const hasNumberedList = newContent.includes("<ol>");
-    const hasBulletList = newContent.includes("<ul>");
-    let descriptions = [];
-    let listType = "";
-
     const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
     const characterCount = plainText.length;
 
@@ -813,45 +808,82 @@ function UploadListings() {
       }));
     }
 
-    if (hasNumberedList || hasBulletList) {
-      const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(liRegex);
-      if (matches) {
-        descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      }
+    const cleanedContent = newContent
+      .replace(/<p><br><\/p>/g, "")
+      .replace(/<\/?p>/g, "<br>");
 
-      listType = hasNumberedList ? "ol" : "ul";
-
-      const listHTML = `<${listType}>${descriptions
-        .map((item) => `<li>${item}</li>`)
-        .join("")}</${listType}>`;
-
-      let leftoverText = newContent
-        .replace(/<ol>.*?<\/ol>/gis, "")
-        .replace(/<ul>.*?<\/ul>/gis, "")
-        .trim();
-
-      leftoverText = leftoverText
-        .replace(/<p>/gi, "")
-        .replace(/<\/p>/gi, "<br>");
-
-      const finalDescription = leftoverText
-        ? `${leftoverText}<br/>${listHTML}`
-        : listHTML;
-
-      setListingInput((prev) => ({
-        ...prev,
-        description: finalDescription,
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
-      }));
-    }
+    setListingInput((prev) => ({
+      ...prev,
+      description: cleanedContent,
+    }));
 
     setDescription(newContent);
   };
+
+  // const onDescriptionChange = (newContent) => {
+  //   const hasNumberedList = newContent.includes("<ol>");
+  //   const hasBulletList = newContent.includes("<ul>");
+  //   let descriptions = [];
+  //   let listType = "";
+
+  //   const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+  //   const characterCount = plainText.length;
+
+  //   if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       description: t("characterLimitExceeded", {
+  //         limit: CHARACTER_LIMIT_DESCRIPTION,
+  //         count: characterCount,
+  //       }),
+  //     }));
+  //     return;
+  //   } else {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       description: "",
+  //     }));
+  //   }
+
+  //   if (hasNumberedList || hasBulletList) {
+  //     const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
+  //     const matches = newContent.match(liRegex);
+  //     if (matches) {
+  //       descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+  //     }
+
+  //     listType = hasNumberedList ? "ol" : "ul";
+
+  //     const listHTML = `<${listType}>${descriptions
+  //       .map((item) => `<li>${item}</li>`)
+  //       .join("")}</${listType}>`;
+
+  //     let leftoverText = newContent
+  //       .replace(/<ol>.*?<\/ol>/gis, "")
+  //       .replace(/<ul>.*?<\/ul>/gis, "")
+  //       .trim();
+
+  //     leftoverText = leftoverText
+  //       .replace(/<p>/gi, "")
+  //       .replace(/<\/p>/gi, "<br>");
+
+  //     const finalDescription = leftoverText
+  //       ? `${leftoverText}<br/>${listHTML}`
+  //       : listHTML;
+
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       description: finalDescription,
+  //     }));
+  //   } else {
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
+  //     }));
+  //   }
+
+  //   setDescription(newContent);
+  // };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

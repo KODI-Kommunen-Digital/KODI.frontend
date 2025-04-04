@@ -21,7 +21,8 @@ function CreateShelves() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [productLoading, setProductLoading] = useState(false);
-    const CHARACTER_LIMIT = 255;
+    const CHARACTER_LIMIT_TITLE = 255;
+    const CHARACTER_LIMIT_DESCRIPTION = 65535;
 
     const [isOwner, setIsOwner] = useState(null);
     useEffect(() => {
@@ -139,19 +140,18 @@ function CreateShelves() {
     }, []);
 
     const [description, setDescription] = useState("");
-    const onDescriptionChange = (newContent) => {
-        const hasNumberedList = newContent.includes("<ol>");
-        const hasBulletList = newContent.includes("<ul>");
-        let descriptions = [];
-        let listType = "";
 
+    const onDescriptionChange = (newContent) => {
         const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
         const characterCount = plainText.length;
 
-        if (characterCount > CHARACTER_LIMIT) {
+        if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
             setError((prev) => ({
                 ...prev,
-                description: t("characterLimitExceeded", { limit: CHARACTER_LIMIT, count: characterCount }),
+                description: t("characterLimitExceeded", {
+                    limit: CHARACTER_LIMIT_DESCRIPTION,
+                    count: characterCount,
+                }),
             }));
             return;
         } else {
@@ -161,37 +161,15 @@ function CreateShelves() {
             }));
         }
 
-        if (hasNumberedList) {
-            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-            const matches = newContent.match(regex);
-            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-            descriptions = descriptions.map(
-                (description, index) => `${index + 1}. ${description}`
-            );
-            listType = "ol";
-        } else if (hasBulletList) {
-            const regex = /<li>(.*?)(?=<\/li>|$)/gi;
-            const matches = newContent.match(regex);
-            descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-            descriptions = descriptions.map((description) => `- ${description}`);
-            listType = "ul";
-        } else {
-            setInput((prev) => ({
-                ...prev,
-                description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"), // Remove <br> and <p> tags
-            }));
-            setDescription(newContent);
-            return;
-        }
-
-        const listHTML = `<${listType}>${descriptions
-            .map((description) => `<li>${description}</li>`)
-            .join("")}</${listType}>`;
+        const cleanedContent = newContent
+            .replace(/<p><br><\/p>/g, "")
+            .replace(/<\/?p>/g, "<br>");
 
         setInput((prev) => ({
             ...prev,
-            description: listHTML,
+            description: cleanedContent,
         }));
+
         setDescription(newContent);
     };
 
@@ -238,11 +216,11 @@ function CreateShelves() {
 
     const onInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === "title" && value.length > CHARACTER_LIMIT) {
+        if (name === "title" && value.length > CHARACTER_LIMIT_TITLE) {
             setError((prev) => ({
                 ...prev,
                 title: t("characterLimitExceeded", {
-                    limit: CHARACTER_LIMIT,
+                    limit: CHARACTER_LIMIT_TITLE,
                     count: value.length
                 }),
             }));
@@ -416,12 +394,12 @@ function CreateShelves() {
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span
-                                className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_TITLE
                                     ? "mt-2 text-sm text-red-600"
                                     : "mt-2 text-sm text-gray-500"
                                     }`}
                             >
-                                {input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                                {input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_TITLE}
                             </span>
                             {error.title && (
                                 <span className="mt-2 text-sm text-red-600">
@@ -595,12 +573,12 @@ function CreateShelves() {
                         />
                         <div className="flex justify-between text-sm mt-1">
                             <span
-                                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+                                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_DESCRIPTION
                                     ? "mt-2 text-sm text-red-600"
                                     : "mt-2 text-sm text-gray-500"
                                     }`}
                             >
-                                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+                                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_DESCRIPTION}
                             </span>
                             {error.description && (
                                 <span className="mt-2 text-sm text-red-600">
