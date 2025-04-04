@@ -460,9 +460,9 @@ const TerminalScreen = () => {
                 )}
 
                 <iframe
-                    src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+                    src="https://geoportal-hamburg.de/stadtteil-jenfeld/"
                     onClick={() =>
-                        window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")
+                        window.open("https://geoportal-hamburg.de/stadtteil-jenfeld/")
                     }
                     className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"
                         }`}
