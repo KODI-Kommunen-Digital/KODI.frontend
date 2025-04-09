@@ -3,6 +3,7 @@ import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
+import DATEILOGO from "../../assets/Datei.png";
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
 
@@ -631,7 +632,7 @@ const TerminalScreen = () => {
                                     title="Dienster Popup"
                                 /> */}
                                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
-                                    Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                                    <img src={DATEILOGO} alt="Datei Logo" className="max-w-full max-h-full" />
                                 </div>
                             </div>
                         </div>
