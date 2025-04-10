@@ -4,6 +4,7 @@ import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
 import DATEILOGO from "../../assets/Datei.png";
+import AUSWEISAPP from "../../assets/AusweisApp_Plakat_1.jpg"
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
 
@@ -588,6 +589,13 @@ const TerminalScreen = () => {
                             {/* <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                 Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
                             </div> */}
+                            <div className="w-full h-full flex items-center justify-center">
+                                <img
+                                    src={AUSWEISAPP}
+                                    alt="Datei Logo"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                         </div>
                     </div>
 
