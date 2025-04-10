@@ -585,9 +585,9 @@ const TerminalScreen = () => {
                                 className={`w-full h-full relative z-0 ${overlayDienste ? "pointer-events-none" : "pointer-events-auto"}`}
                                 title="Online Dienste"
                             /> */}
-                            <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                            {/* <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                 Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
