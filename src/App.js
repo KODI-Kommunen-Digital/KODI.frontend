@@ -79,7 +79,8 @@ import OrderDetails from "./Path/Container/OrderDetails";
 import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetails";
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
-import TerminalScreen from "./Path/Container/TerminalScreen.jsx";
+import HamburgTerminalScreen from "./Path/TerminalScreens/HamburgTerminalScreen.jsx";
+// import TroisdornTerminalScreen from "./Path/TerminalScreens/TroisdornTerminalScreen.jsx";
 
 import Modal from "react-modal";
 
@@ -93,8 +94,10 @@ const App = () => {
   const inFrame = process.env.REACT_APP_INFRAME === "True";
   const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
-  const isTerminalScreenEnabled =
-    process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
+  const isHamburgTerminalScreenEnabled =
+    process.env.REACT_APP_ENABLE_HAMBURG_TERMINALSCREEN === "True";
+  // const isTroisdorfTerminalScreenEnabled =
+  //   process.env.REACT_APP_ENABLE_TROISDORF_TERMINALSCREEN === "True";
 
   useEffect(() => {
     const link =
@@ -151,9 +154,11 @@ const App = () => {
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
 
-          {isTerminalScreenEnabled ? (
-            <Route path="/" element={<TerminalScreen />} exact />
+          {isHamburgTerminalScreenEnabled ? (
+            <Route path="/" element={<HamburgTerminalScreen />} exact />
           ) : (
+            // ) : isTroisdorfTerminalScreenEnabled ? (
+            //   <Route path="/" element={<TroisdornTerminalScreen />} exact />
             <Route
               path="/"
               element={

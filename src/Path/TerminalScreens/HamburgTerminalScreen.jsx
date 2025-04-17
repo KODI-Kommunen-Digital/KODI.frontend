@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import TerminalListingsCard from "./TerminalListingsCard";
+import HamburgTerminalListingsCard from "./HamburgTerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
@@ -8,7 +8,7 @@ import AUSWEISAPP from "../../assets/AusweisApp_Plakat_1.jpg"
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
 
-const TerminalScreen = () => {
+const HamburgTerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
     const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] =
@@ -310,14 +310,14 @@ const TerminalScreen = () => {
                                     {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
                                         newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                                             <div className="w-full">
-                                                <TerminalListingsCard listing={newsListings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
+                                                <HamburgTerminalListingsCard listing={newsListings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
                                             </div>
                                         ) : (
                                             newsListings
                                                 .filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
                                                     <div key={listing.id} className="w-[40%] flex-shrink-0">
-                                                        <TerminalListingsCard listing={listing} />
+                                                        <HamburgTerminalListingsCard listing={listing} />
                                                     </div>
                                                 ))
                                         )
@@ -393,14 +393,14 @@ const TerminalScreen = () => {
                                     {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
                                         eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                                             <div className="w-full">
-                                                <TerminalListingsCard listing={eventsListings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
+                                                <HamburgTerminalListingsCard listing={eventsListings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
                                             </div>
                                         ) : (
                                             eventsListings
                                                 .filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
                                                     <div key={listing.id} className="w-[40%] flex-shrink-0">
-                                                        <TerminalListingsCard listing={listing} />
+                                                        <HamburgTerminalListingsCard listing={listing} />
                                                     </div>
                                                 ))
                                         )
@@ -765,4 +765,4 @@ const TerminalScreen = () => {
     );
 };
 
-export default TerminalScreen;
+export default HamburgTerminalScreen;

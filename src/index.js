@@ -9,15 +9,15 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 
 // Disable Zoom for Hamburg Terminal
-const enableTerminalScreen =
-  process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
+const enableHamburgTerminalScreen =
+  process.env.REACT_APP_ENABLE_HAMBURG_TERMINALSCREEN === "True";
 const existingMetaViewport = document.querySelector("meta[name=viewport]");
 if (existingMetaViewport) {
   existingMetaViewport.remove();
 }
 const metaViewport = document.createElement("meta");
 metaViewport.name = "viewport";
-metaViewport.content = enableTerminalScreen
+metaViewport.content = enableHamburgTerminalScreen
   ? "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
   : "width=device-width, initial-scale=1";
 
@@ -25,7 +25,7 @@ document.head.appendChild(metaViewport);
 const preventZoom = (event) => {
   event.preventDefault();
 };
-if (enableTerminalScreen) {
+if (enableHamburgTerminalScreen) {
   document.addEventListener(
     "wheel",
     (event) => {

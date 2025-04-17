@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import listingSource from "../../Constants/listingSource";
 
-function TerminalListingsCard({ listing }) {
+function HamburgTerminalListingsCard({ listing }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState(null);
 
@@ -135,8 +135,8 @@ function TerminalListingsCard({ listing }) {
     );
 }
 
-TerminalListingsCard.propTypes = {
+HamburgTerminalListingsCard.propTypes = {
     listing: PropTypes.object.isRequired
 };
 
-export default TerminalListingsCard;
+export default HamburgTerminalListingsCard;
