@@ -1092,14 +1092,15 @@ function UploadListings() {
   }
 
   // Filter out any city already in the multi-city selection
-  const singleDropdownCities = cities.filter(
-    c => !selectedCities.some(mC => mC.id === c.id)
-  );
+  const singleDropdownCities = cities
+    .filter(c => !selectedCities.some(mC => mC.id === c.id))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   // Filter out the single-selected city
-  const multipleDropdownCities = selectedSingleCity
+  const multipleDropdownCities = (selectedSingleCity
     ? cities.filter(c => c.id !== selectedSingleCity.id)
-    : cities;
+    : cities
+  ).sort((a, b) => a.name.localeCompare(b.name));
 
   const toggleSingleDropdown = () => {
     setIsOpenSingle(prev => !prev);
@@ -1733,7 +1734,7 @@ function UploadListings() {
             />
           </div>
 
-          <div className="relative mb-4">
+          <div className="relative mb-0">
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-600"
@@ -1761,10 +1762,6 @@ function UploadListings() {
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
               className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-              style={{
-                position: "relative",
-                zIndex: 1000,
-              }}
             />
             <div className="flex justify-between text-sm mt-1">
               <span

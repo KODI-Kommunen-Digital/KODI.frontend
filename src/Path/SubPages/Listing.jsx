@@ -21,7 +21,7 @@ import {
   deleteListingsById,
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
-import { getCategory,getListingsSubCategory } from "../../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import listingSource from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
@@ -46,6 +46,11 @@ const Description = (props) => {
         return element.textContent.trim();
       } else if (element.nodeName === "BR") {
         return "\n";
+      } else if (element.nodeName === "STRONG") {
+        const strongText = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<b>${strongText}</b>`;
       } else {
         return element.textContent.trim();
       }
@@ -56,7 +61,6 @@ const Description = (props) => {
       .filter((text) => text.trim() !== "")
       .join("\n");
 
-    // Replace newlines with <br> for HTML rendering
     const htmlText = plainText.replace(/\n/g, "<br>");
     return linkify(htmlText);
   }
@@ -310,7 +314,7 @@ const Listing = () => {
                   acc[subCategory.id] = subCategory.name;
                   return acc;
                 }, {});
-          
+
                 // Set the transformed subcategories
                 setSubCategories(transformedSubCategories);
               })
@@ -330,7 +334,7 @@ const Listing = () => {
         const response = await getListings(params);
         const data = response.data.data;
         setListings(data);
-       
+
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
@@ -562,8 +566,8 @@ const Listing = () => {
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             >
-                           {t(categories[input.categoryId])}
-{input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
+                              {t(categories[input.categoryId])}
+                              {input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
 
                             </p>
                           </div>
