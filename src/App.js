@@ -80,7 +80,7 @@ import AllProductRequestsDetails from "./Path/Container/AllProductRequestsDetail
 import OrderDetailsStore from "./Path/Container/OrderDetailsStore";
 import ProductRequests from "./Path/Container/ProductRequests.jsx";
 import HamburgTerminalScreen from "./Path/TerminalScreens/HamburgTerminalScreen.jsx";
-// import TroisdornTerminalScreen from "./Path/TerminalScreens/TroisdornTerminalScreen.jsx";
+import TroisdornTerminalScreen from "./Path/TerminalScreens/TroisdornTerminalScreen.jsx";
 
 import Modal from "react-modal";
 
@@ -96,8 +96,8 @@ const App = () => {
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const isHamburgTerminalScreenEnabled =
     process.env.REACT_APP_ENABLE_HAMBURG_TERMINALSCREEN === "True";
-  // const isTroisdorfTerminalScreenEnabled =
-  //   process.env.REACT_APP_ENABLE_TROISDORF_TERMINALSCREEN === "True";
+  const isTroisdorfTerminalScreenEnabled =
+    process.env.REACT_APP_ENABLE_TROISDORF_TERMINALSCREEN === "True";
 
   useEffect(() => {
     const link =
@@ -156,9 +156,9 @@ const App = () => {
 
           {isHamburgTerminalScreenEnabled ? (
             <Route path="/" element={<HamburgTerminalScreen />} exact />
+          ) : isTroisdorfTerminalScreenEnabled ? (
+            <Route path="/" element={<TroisdornTerminalScreen />} exact />
           ) : (
-            // ) : isTroisdorfTerminalScreenEnabled ? (
-            //   <Route path="/" element={<TroisdornTerminalScreen />} exact />
             <Route
               path="/"
               element={

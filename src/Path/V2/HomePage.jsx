@@ -9,7 +9,7 @@ import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
 import SearchBar from "../../Components/SearchBar";
-import { getCategory,getListingsSubCategory } from "../../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
 import {
   sortByTitleAZ,
@@ -150,23 +150,24 @@ const HomePage = () => {
       setIsLoading(false);
     }
   };
+
   const getTheListings = async (newCategoryId, event) => {
     event.preventDefault();
     setCategoryId(newCategoryId);
-    setSelectedSubCategoryId(null); // Reset subcategory when changing category
-    
+    setSelectedSubCategoryId(null);
+
     try {
       const response = await getListingsSubCategory(newCategoryId);
       setSubCategories(response?.data?.data || []);
-      setIsCategoryMenuOpen(true); // Open the category menu
+      setIsCategoryMenuOpen(true);
     } catch (error) {
       console.error("Error fetching subcategories:", error);
       setSubCategories([]);
     }
-    
+
     clearSearchResults();
   };
- 
+
   useEffect(() => {
     const loadSubCategories = async () => {
       if (categoryId) {
@@ -181,9 +182,9 @@ const HomePage = () => {
         setSubCategories([]);
       }
     };
-  
+
     loadSubCategories();
-  }, [categoryId]); // This will run whenever categoryId changes
+  }, [categoryId]);
 
   useEffect(() => {
     if (selectedSubCategoryId !== null) {
@@ -191,23 +192,21 @@ const HomePage = () => {
         categoryId: categoryId,
         subcategoryId: selectedSubCategoryId,
       };
-  
+
       if (cityId) params.cityId = cityId;
-  
-      // Clear previous listings to show the new ones
       setListings([]);
       setIsLoading(true);
       fetchData(params);
     }
-  }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
-  
+  }, [selectedSubCategoryId, categoryId, cityId]);
+
   const handleSubCategorySelect = (subCategoryId) => {
-    setSelectedSubCategoryId(subCategoryId);  // This will trigger the useEffect above
+    setSelectedSubCategoryId(subCategoryId);
   };
-  
+
   const clearSearchResults = () => {
-    setListings([]); // Clear the listings to remove the search results
-    setSearchQuery(""); // Clear the search query
+    setListings([]);
+    setSearchQuery("");
   };
 
   if (!terminalView) { // Scroll position disabled for Terminl View
@@ -324,14 +323,14 @@ const HomePage = () => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0">
-        
+
           <MostPopularCategories
-           listingsCount={listingsCount}
-           t={t}
-           getTheListings={getTheListings}
-           isMenuOpen={isCategoryMenuOpen}
-           setIsMenuOpen={setIsCategoryMenuOpen}
-            />
+            listingsCount={listingsCount}
+            t={t}
+            getTheListings={getTheListings}
+            isMenuOpen={isCategoryMenuOpen}
+            setIsMenuOpen={setIsCategoryMenuOpen}
+          />
         </div>
       </div>
 
@@ -367,21 +366,21 @@ const HomePage = () => {
                 </select>
               </div>
               {categoryId && subCategories.length > 0 && (
-              <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-              <select
-               value={selectedSubCategoryId || ""}
-               onChange={(e) => handleSubCategorySelect(e.target.value)}
-               className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-               style={{ fontFamily: "Poppins, sans-serif" }}
-               >
-              <option value="">{t("allSubcategories")}</option>
-              {subCategories.map((subCat) => (
-              <option key={subCat.id} value={subCat.id}>
-              {t(subCat.name)}
-              </option>
-               ))}
-             </select>
-             </div>
+                <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
+                  <select
+                    value={selectedSubCategoryId || ""}
+                    onChange={(e) => handleSubCategorySelect(e.target.value)}
+                    className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    <option value="">{t("allSubcategories")}</option>
+                    {subCategories.map((subCat) => (
+                      <option key={subCat.id} value={subCat.id}>
+                        {t(subCat.name)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
             </div>
@@ -510,9 +509,6 @@ const HomePage = () => {
                 </div>
               </div>
 
-              {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
-
-              {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
               <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
                   <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">

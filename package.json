@@ -74,6 +74,7 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",
+    "react-spinners": "^0.17.0",
     "react-spring": "^9.7.3",
     "react-tailwindcss-datepicker": "^1.6.6",
     "react-time-picker": "^6.6.0",
