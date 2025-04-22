@@ -324,7 +324,7 @@ const HomePage = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-75 text-white z--1">
-                <div className="flex flex-col items-start max-w-[90%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 px-5 py-6">
+                <div className="flex flex-col items-start max-w-[90%] lg:px-20 md:px-5 px-5 py-6">
                   <h1
                     className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
                     style={{
