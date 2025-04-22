@@ -9,8 +9,6 @@ import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 function ListingsCard({ listing, terminalView, iFrame = false }) {
-  console.log("PDF URL", process.env.REACT_APP_BUCKET_HOST + listing.pdf);
-
   const { t } = useTranslation();
   const navigate = useNavigate();
   const navigateTo = (path) => {
