@@ -5,25 +5,25 @@
 /*@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;600&display=swap');*/
 
 .cancelButton {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .errorPage {
-    position: relative;
-    top: 5rem;
-    bottom: 5rem;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: 60%;
-    height: 40%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: black;
-    color: white;
-    padding: 50px;
+  position: relative;
+  top: 5rem;
+  bottom: 5rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 60%;
+  height: 40%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: black;
+  color: white;
+  padding: 50px;
 }
 
 /* @keyframes displace {
@@ -45,93 +45,98 @@
 } */
 
 @keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-wheel {
-    border-top: 8px solid #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: rotate 1s linear infinite;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: rotate 1s linear infinite;
 }
 
 #finalbutton:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
 }
 
 .err {
-    color: rgb(255, 0, 0);
-    font-family: sans-serif;
-    font-size: small;
+  color: rgb(255, 0, 0);
+  font-family: sans-serif;
+  font-size: small;
 }
 
 .base-bg-gray-800 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(71 85 105 / var(--tw-bg-opacity));
 }
 
 .category-animation {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
+  display: flex;
+  transition: transform 0.5s ease-in-out;
 }
 
 @layer components {
-    .scrollbar::-webkit-scrollbar {
-        width: 15px;
-        height: 15px;
-    }
+  .scrollbar::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+  }
 
-    .scrollbar::-webkit-scrollbar-track {
-        /* border-radius: 100vh; */
-        background: #ffffff;
-    }
+  .scrollbar::-webkit-scrollbar-track {
+    /* border-radius: 100vh; */
+    background: #ffffff;
+  }
 
-    .scrollbar::-webkit-scrollbar-thumb {
-        background: #f1f5f9;
-        border-radius: 15px;
-        border: 3px solid #ffffff;
-    }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #f1f5f9;
+    border-radius: 15px;
+    border: 3px solid #ffffff;
+  }
 
-    .scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #1e293b;
-    }
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #1e293b;
+  }
 
-    .ql-container {
-        position: relative;
-    }
-    
-    .ql-tooltip {
-        position: fixed !important; /* Center the pop-up relative to the viewport */
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important; /* Center the pop-up */
-        z-index: 1000 !important; /* Ensure it appears above other content, including sidebar */
-    }
+  .ql-container {
+    position: relative;
+  }
+
+  .ql-tooltip {
+    position: fixed !important; /* Center the pop-up relative to the viewport */
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important; /* Center the pop-up */
+    z-index: 1000 !important; /* Ensure it appears above other content, including sidebar */
+  }
 }
 
-ol, ul {
-    margin-left: 20px;
-    list-style-position: inside;
+ol,
+ul {
+  margin-left: 20px;
+  list-style-position: inside;
 }
 
 li {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 @keyframes shimmer {
-    0% { background-position: -200px 0; }
-    100% { background-position: 200px 0; }
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
 }
 
 .shimmer {
-    background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
-    background-size: 400% 100%;
-    animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite;
 }

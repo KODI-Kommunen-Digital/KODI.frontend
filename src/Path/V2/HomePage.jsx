@@ -58,7 +58,10 @@ const HomePage = () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
+      const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setCities(sortedCities);
     });
     const cityId = parseInt(urlParams.get("cityId"));
     if (cityId) {
