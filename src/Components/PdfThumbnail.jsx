@@ -23,7 +23,9 @@ function PdfThumbnail({ pdfUrl }) {
 					pageNumber={1}
 					width={width || 300}
 					onLoadSuccess={onPageLoadSuccess}
-					renderMode="svg"
+					renderMode="canvas"
+					renderTextLayer={false}
+					renderAnnotationLayer={false}
 				/>
 			</Document>
 		</div>
