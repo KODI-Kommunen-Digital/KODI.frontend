@@ -51,6 +51,17 @@ const Description = (props) => {
           .map((child) => processElement(child))
           .join("");
         return `<b>${strongText}</b>`;
+      } else if (element.nodeName === "I" || element.nodeName === "EM") {
+        const italicText = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<i>${italicText}</i>`;
+      } else if (element.nodeName === "U" ||
+        (element.nodeName === "SPAN" && element.style.textDecoration.includes("underline"))) {
+        const underlineText = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<u>${underlineText}</u>`;
       } else {
         return element.textContent.trim();
       }
