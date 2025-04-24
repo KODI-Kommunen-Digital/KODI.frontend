@@ -3,6 +3,8 @@ import TerminalListingsCard from "./TerminalListingsCard";
 import { getListings } from "../../Services/listingsApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import HAMBURGLOGO from "../../assets/Hamburg_Logo.png";
+import DATEILOGO from "../../assets/Datei.png";
+import AUSWEISAPP from "../../assets/AusweisApp_Plakat_1.jpg"
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
 
@@ -11,12 +13,14 @@ const TerminalScreen = () => {
     const [overlayMaengelmelder, setOverlayMaengelmelder] = useState(true);
     const [overlayBuergerbeteiligung, setOverlayBuergerbeteiligung] =
         useState(true);
+    const [overlayDienste, setOverlayDienster] = useState(true);
     const [newsListings, setNewsListings] = useState([]);
     const [eventsListings, setEventsListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isBeteiligungOpen, setIsBeteiligungOpen] = useState(false);
     const [isMaengelmelderPopupOpen, setIsMaengelmelderPopupOpen] =
         useState(false);
+    const [isDiensteOpen, setIsDiensteOpen] = useState(false);
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
     const containerRef1 = useRef(null);
     const containerRef2 = useRef(null);
@@ -72,9 +76,19 @@ const TerminalScreen = () => {
         setIsBeteiligungOpen(true);
     };
 
-    const handleClosePopup = () => {
+    const handleCloseBuergerBeteiligungPopup = () => {
         setIsBeteiligungOpen(false);
         setOverlayBuergerbeteiligung(true);
+    };
+
+    const handleDiensteClick = () => {
+        setOverlayDienster(false);
+        setIsDiensteOpen(true);
+    };
+
+    const handleCloseDienstePopup = () => {
+        setIsDiensteOpen(false);
+        setOverlayDienster(true);
     };
 
     useEffect(() => {
@@ -427,7 +441,7 @@ const TerminalScreen = () => {
                 )}
             </div>
 
-            <div className="relative mt-2 w-full basis-[40%] bg-white p-1 shadow-lg flex items-center justify-center">
+            <div className="relative mt-2 w-full basis-[30%] bg-white p-1 shadow-lg flex items-center justify-center">
                 {overlayMasterportal && (
                     <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
                         <button
@@ -448,9 +462,9 @@ const TerminalScreen = () => {
                 )}
 
                 <iframe
-                    src="https://test.geoportal-hamburg.de/stadtteil-jenfeld/"
+                    src="https://geoportal-hamburg.de/stadtteil-jenfeld/"
                     onClick={() =>
-                        window.open("https://test.geoportal-hamburg.de/stadtteil-jenfeld/")
+                        window.open("https://geoportal-hamburg.de/stadtteil-jenfeld/")
                     }
                     className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"
                         }`}
@@ -459,7 +473,7 @@ const TerminalScreen = () => {
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 w-full basis-[40%] mt-2 flex-grow">
+            <div className="grid grid-cols-2 gap-2 w-full basis-[50%] mt-2 flex-grow">
                 <div className="relative bg-white p-1 shadow-lg h-full">
                     <iframe
                         src="https://www.hvv.de/de/fahrplaene/abruf-fahrplaninfos/abfahrten-auf-ihrem-monitor/abfahrten-anzeige?show=8468ff3fcc034fabbb6c17f2d7503f41"
@@ -470,57 +484,6 @@ const TerminalScreen = () => {
                 </div>
 
                 <div className="flex flex-col gap-2 h-full">
-                    <div className="relative bg-white p-1 shadow-lg flex-grow">
-                        {overlayMaengelmelder && (
-                            <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
-                                <button
-                                    className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
-                                    onClick={handleMaengelmelderClick}
-                                >
-                                    <span>{`Schaden`}</span>
-                                    <br />
-                                    <span>{`melden`}</span>
-                                </button>
-
-                                <img
-                                    src={HAMBURGLOGO}
-                                    alt="Hamburg Logo"
-                                    className="w-30 h-20 m-4"
-                                />
-                            </div>
-                        )}
-                        <iframe
-                            src="https://static.hamburg.de/kartenclient/prod/"
-                            allow="geolocation"
-                            className={`w-full h-full relative z-0 ${overlayMaengelmelder
-                                ? "pointer-events-none"
-                                : "pointer-events-auto"
-                                }`}
-                            title="Mängelmelder"
-                        />
-                    </div>
-                    {isMaengelmelderPopupOpen && (
-                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
-                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
-                                <button
-                                    className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
-                                    onClick={handleCloseMaengelmelderPopup}
-                                >
-                                    <span className="sr-only">Close menu</span>
-                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                                <iframe
-                                    src="https://static.hamburg.de/kartenclient/prod/"
-                                    allow="geolocation"
-                                    className="w-full h-full"
-                                    title="Mängelmelder Popup"
-                                />
-                            </div>
-                        </div>
-                    )}
-
                     <div className="relative bg-white p-1 shadow-lg flex-grow">
                         {overlayBuergerbeteiligung && (
                             <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
@@ -558,7 +521,7 @@ const TerminalScreen = () => {
                             <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
                                 <button
                                     className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
-                                    onClick={handleClosePopup}
+                                    onClick={handleCloseBuergerBeteiligungPopup}
                                 >
                                     <span className="sr-only">Close menu</span>
                                     <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -573,6 +536,111 @@ const TerminalScreen = () => {
                                 /> */}
                                 <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
                                     Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex flex-row gap-2 h-[50%]">
+                        {/* Mängelmelder Section */}
+                        <div className="relative bg-white p-1 shadow-lg flex-1 h-full">
+                            {overlayMaengelmelder && (
+                                <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
+                                    <button
+                                        className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
+                                        onClick={handleMaengelmelderClick}
+                                    >
+                                        <span>{`Schaden`}</span>
+                                        <br />
+                                        <span>{`melden`}</span>
+                                    </button>
+                                    <img src={HAMBURGLOGO} alt="Hamburg Logo" className="w-30 h-20 m-4" />
+                                </div>
+                            )}
+                            <iframe
+                                src="https://static.hamburg.de/kartenclient/prod/"
+                                allow="geolocation"
+                                className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
+                                title="Mängelmelder"
+                            />
+                        </div>
+
+                        {/* Dienste Section */}
+                        <div className="relative bg-white p-1 shadow-lg flex-1 h-full">
+                            {overlayDienste && (
+                                <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
+                                    <button
+                                        className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
+                                        onClick={handleDiensteClick}
+                                    >
+                                        <span>{`Online`}</span>
+                                        <br />
+                                        <span>{`Dienste`}</span>
+                                    </button>
+                                    <img src={HAMBURGLOGO} alt="Hamburg Logo" className="w-30 h-20 m-4" />
+                                </div>
+                            )}
+                            {/* <iframe
+                                src="https://static.hamburg.de/kartenclient/prod/"
+                                allow="geolocation"
+                                className={`w-full h-full relative z-0 ${overlayDienste ? "pointer-events-none" : "pointer-events-auto"}`}
+                                title="Online Dienste"
+                            /> */}
+                            {/* <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                                Hier entsteht ein neuer Service. In Kürze wird dieser hier zu sehen sein.
+                            </div> */}
+                            <div className="w-full h-full flex items-center justify-center">
+                                <img
+                                    src={AUSWEISAPP}
+                                    alt="Datei Logo"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {isMaengelmelderPopupOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
+                                    onClick={handleCloseMaengelmelderPopup}
+                                >
+                                    <span className="sr-only">Close menu</span>
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                <iframe
+                                    src="https://static.hamburg.de/kartenclient/prod/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Mängelmelder Popup"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {isDiensteOpen && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+                                <button
+                                    className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
+                                    onClick={handleCloseDienstePopup}
+                                >
+                                    <span className="sr-only">Close menu</span>
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                {/* <iframe
+                                    src="https://static.hamburg.de/kartenclient/prod/"
+                                    allow="geolocation"
+                                    className="w-full h-full"
+                                    title="Dienster Popup"
+                                /> */}
+                                <div className="flex items-center justify-center flex-grow text-center text-2xl text-gray-500">
+                                    <img src={DATEILOGO} alt="Datei Logo" className="max-w-full max-h-full" />
                                 </div>
                             </div>
                         </div>

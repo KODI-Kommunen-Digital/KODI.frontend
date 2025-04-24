@@ -9,7 +9,7 @@ import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
 import SearchBar from "../../Components/SearchBar";
-import { getCategory,getListingsSubCategory } from "../../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
 import {
   sortByTitleAZ,
@@ -58,7 +58,10 @@ const HomePage = () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
-      setCities(citiesResponse.data.data);
+      const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setCities(sortedCities);
     });
     const cityId = parseInt(urlParams.get("cityId"));
     if (cityId) {
@@ -150,23 +153,36 @@ const HomePage = () => {
       setIsLoading(false);
     }
   };
+
   const getTheListings = async (newCategoryId, event) => {
     event.preventDefault();
+
+    const isSameCategory = newCategoryId === categoryId;
+
     setCategoryId(newCategoryId);
-    setSelectedSubCategoryId(null); // Reset subcategory when changing category
-    
+    setSelectedSubCategoryId(null);
+
     try {
       const response = await getListingsSubCategory(newCategoryId);
       setSubCategories(response?.data?.data || []);
-      setIsCategoryMenuOpen(true); // Open the category menu
+      setIsCategoryMenuOpen(true);
     } catch (error) {
       console.error("Error fetching subcategories:", error);
       setSubCategories([]);
     }
-    
+
     clearSearchResults();
+
+    // Force fetch listings if category hasn't changed
+    if (isSameCategory) {
+      const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+      if (cityId) params.cityId = cityId;
+      if (newCategoryId) params.categoryId = newCategoryId;
+
+      fetchData(params);
+    }
   };
- 
+
   useEffect(() => {
     const loadSubCategories = async () => {
       if (categoryId) {
@@ -181,7 +197,7 @@ const HomePage = () => {
         setSubCategories([]);
       }
     };
-  
+
     loadSubCategories();
   }, [categoryId]); // This will run whenever categoryId changes
 
@@ -191,20 +207,20 @@ const HomePage = () => {
         categoryId: categoryId,
         subcategoryId: selectedSubCategoryId,
       };
-  
+
       if (cityId) params.cityId = cityId;
-  
+
       // Clear previous listings to show the new ones
       setListings([]);
       setIsLoading(true);
       fetchData(params);
     }
   }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
-  
+
   const handleSubCategorySelect = (subCategoryId) => {
     setSelectedSubCategoryId(subCategoryId);  // This will trigger the useEffect above
   };
-  
+
   const clearSearchResults = () => {
     setListings([]); // Clear the listings to remove the search results
     setSearchQuery(""); // Clear the search query
@@ -308,7 +324,7 @@ const HomePage = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-start justify-center bg-gray-800 bg-opacity-75 text-white z--1">
-                <div className="flex flex-col items-start max-w-[90%] md:max-w-[70%] lg:max-w-[60%] lg:px-20 md:px-5 px-5 py-6">
+                <div className="flex flex-col items-start max-w-[90%] lg:px-20 md:px-5 px-5 py-6">
                   <h1
                     className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
                     style={{
@@ -324,14 +340,14 @@ const HomePage = () => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0">
-        
+
           <MostPopularCategories
-           listingsCount={listingsCount}
-           t={t}
-           getTheListings={getTheListings}
-           isMenuOpen={isCategoryMenuOpen}
-           setIsMenuOpen={setIsCategoryMenuOpen}
-            />
+            listingsCount={listingsCount}
+            t={t}
+            getTheListings={getTheListings}
+            isMenuOpen={isCategoryMenuOpen}
+            setIsMenuOpen={setIsCategoryMenuOpen}
+          />
         </div>
       </div>
 
@@ -367,21 +383,21 @@ const HomePage = () => {
                 </select>
               </div>
               {categoryId && subCategories.length > 0 && (
-              <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-              <select
-               value={selectedSubCategoryId || ""}
-               onChange={(e) => handleSubCategorySelect(e.target.value)}
-               className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-               style={{ fontFamily: "Poppins, sans-serif" }}
-               >
-              <option value="">{t("allSubcategories")}</option>
-              {subCategories.map((subCat) => (
-              <option key={subCat.id} value={subCat.id}>
-              {t(subCat.name)}
-              </option>
-               ))}
-             </select>
-             </div>
+                <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
+                  <select
+                    value={selectedSubCategoryId || ""}
+                    onChange={(e) => handleSubCategorySelect(e.target.value)}
+                    className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    <option value="">{t("allSubcategories")}</option>
+                    {subCategories.map((subCat) => (
+                      <option key={subCat.id} value={subCat.id}>
+                        {t(subCat.name)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
               <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
             </div>

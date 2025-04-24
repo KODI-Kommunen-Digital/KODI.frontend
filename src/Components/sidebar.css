@@ -1,6 +1,6 @@
 @media only screen and (max-width: 1023px) {
   .sidebar {
-    display: none
+    display: none;
   }
 }
 
@@ -11,10 +11,5 @@
 }
 
 .visible-sidebar {
-  display: block !important
-}
-.active-menu {
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
-  font-weight: bold; /* Bold text */
+  display: block !important;
 }
