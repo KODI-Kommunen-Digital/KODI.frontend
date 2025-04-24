@@ -635,6 +635,9 @@ function UploadListings() {
             categoryId: listingData.categoryId,
             subcategoryId: listingData.subcategoryId,
             description: listingData.description,
+            startDate: listingData.startDate || "",
+            endDate: listingData.endDate || "",
+            expiryDate: listingData.expiryDate || "",
           });
           setDescription(listingData.description);
           setCategoryId(listingData.categoryId);
