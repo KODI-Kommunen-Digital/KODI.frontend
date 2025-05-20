@@ -6,6 +6,8 @@ import ForumsError from "./Path/ForumsError";
 import ProfilePage from "./Path/ProfilePage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
+import CarParksList from "./Path/CarParksList";
+import CarParkDetail from "./Path/CarParkDetail";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
@@ -127,6 +129,8 @@ const App = () => {
           />
 
           <Route path="/Listing" element={<Listing />} exact />
+          <Route path="/carparksListing" element={<CarParksList />} exact />
+          <Route path="/carparksListing/:id" element={<CarParkDetail />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
