@@ -88,6 +88,7 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const App = () => {
+  const isCarParkInterfaceEnabled = process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isAppointmentEnabled =
     process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
@@ -129,8 +130,6 @@ const App = () => {
           />
 
           <Route path="/Listing" element={<Listing />} exact />
-          <Route path="/carparksListing" element={<CarParksList />} exact />
-          <Route path="/carparksListing/:id" element={<CarParkDetail />} />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
           <Route
@@ -154,6 +153,13 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+
+          {isCarParkInterfaceEnabled && (
+            <React.Fragment>
+              <Route path="/carparksListing" element={<CarParksList />} exact />
+              <Route path="/carparksListing/:id" element={<CarParkDetail />} />
+            </React.Fragment>
+          )}
 
           {isTerminalScreenEnabled ? (
             <Route path="/" element={<TerminalScreen />} exact />
