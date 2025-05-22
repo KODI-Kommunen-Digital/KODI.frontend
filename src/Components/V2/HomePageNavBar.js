@@ -152,14 +152,18 @@ export default function HomePageNavBar() {
                         fontFamily: "Poppins, sans-serif",
                       }}
                     >
-                      <option className="font-sans" value={0} key={0}>
+                      <option
+                        className="text-black hover:text-white font-sans"
+                        value={0}
+                        key={0}
+                      >
                         {t("allCities", {
                           regionName: process.env.REACT_APP_REGION_NAME,
                         })}
                       </option>
                       {cities.map((city) => (
                         <option
-                          className="font-sans"
+                          className="text-black hover:text-white font-sans"
                           value={city.id}
                           key={city.id}
                         >
