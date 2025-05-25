@@ -419,7 +419,7 @@ const HomePage = () => {
                   if (!terminalView) {
                     localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   }
-                  const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
+                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings?categoryId=${categoryId}`;
                   navigateTo(url);
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
