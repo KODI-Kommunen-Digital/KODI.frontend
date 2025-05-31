@@ -6,6 +6,8 @@ import ForumsError from "./Path/ForumsError";
 import ProfilePage from "./Path/ProfilePage";
 import LoginPage from "./Path/LoginPage";
 import Dashboard from "./Path/Dashboard";
+import CarParksList from "./Path/CarParksList";
+import CarParkDetail from "./Path/CarParkDetail";
 import Register from "./Path/Register";
 import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
@@ -86,6 +88,7 @@ import Modal from "react-modal";
 Modal.setAppElement("#root");
 
 const App = () => {
+  const isCarParkInterfaceEnabled = process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isAppointmentEnabled =
     process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
@@ -150,6 +153,13 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+
+          {isCarParkInterfaceEnabled && (
+            <React.Fragment>
+              <Route path="/carparksListing" element={<CarParksList />} exact />
+              <Route path="/carparksListing/:id" element={<CarParkDetail />} />
+            </React.Fragment>
+          )}
 
           {isTerminalScreenEnabled ? (
             <Route path="/" element={<TerminalScreen />} exact />
