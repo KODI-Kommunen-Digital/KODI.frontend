@@ -419,7 +419,7 @@ const HomePage = () => {
                   if (!terminalView) {
                     localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   }
-                  let params = [];
+                  const params = [];
                   if (categoryId && !terminalView) params.push(`categoryId=${categoryId}`);
                   if (cityId && !terminalView) params.push(`cityId=${cityId}`);
                   const query = params.length ? `?${params.join("&")}` : "";
