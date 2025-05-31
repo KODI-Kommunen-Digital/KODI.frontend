@@ -419,7 +419,11 @@ const HomePage = () => {
                   if (!terminalView) {
                     localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   }
-                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings?categoryId=${categoryId}`;
+                  let params = [];
+                  if (categoryId && !terminalView) params.push(`categoryId=${categoryId}`);
+                  if (cityId && !terminalView) params.push(`cityId=${cityId}`);
+                  const query = params.length ? `?${params.join("&")}` : "";
+                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings${query}`;
                   navigateTo(url);
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
