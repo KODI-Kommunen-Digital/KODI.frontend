@@ -3,12 +3,14 @@ import { getUserId } from "./usersApi";
 const axios = instance;
 const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
-export async function getAllListings() {
-	return axios.get(`/listings`);
+export async function getAllListings(params) {
+    params.sortByStartDate = "true";
+	return axios.get(`/listings`,{params});
 }
 
 export async function getListings(params) {
 	params.showExternalListings = "true";
+	params.sortByStartDate ="true";
 	return axios.get(`/listings`, { params });
 }
 export async function getMyListing(params) {
