@@ -110,7 +110,7 @@ const HomePage = () => {
     }
 
     setIsLoading(true);
-    const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+    const params = { pageSize: 12, statusId: 1, pageNo: 1 ,sortByStartDate:true};
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
       params.cityId = cityId;
@@ -123,7 +123,7 @@ const HomePage = () => {
     } else {
       urlParams.delete("categoryId");
     }
-
+    urlParams.set("sortByStartDate", true);
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
 
@@ -423,7 +423,7 @@ const HomePage = () => {
                   if (categoryId && !terminalView) params.push(`categoryId=${categoryId}`);
                   if (cityId && !terminalView) params.push(`cityId=${cityId}`);
                   const query = params.length ? `?${params.join("&")}` : "";
-                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings${query}`;
+                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings${query}?sortByStartDate=true`;
                   navigateTo(url);
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
@@ -496,7 +496,7 @@ const HomePage = () => {
                           onClick={() => {
                             const scrollPosition = window.scrollY;
                             localStorage.setItem("selectedCity", city.name);
-                            navigateTo(`/AllListings?cityId=${city.id}`);
+                            navigateTo(`/AllListings?cityId=${city.id}&sortByStartDate=true`);
                             window.addEventListener("popstate", function () {
                               window.scrollTo(0, scrollPosition);
                             });
