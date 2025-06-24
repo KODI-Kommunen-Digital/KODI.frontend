@@ -7,6 +7,7 @@ import DATEILOGO from "../../assets/Datei.png";
 import AUSWEISAPP from "../../assets/AusweisApp_Plakat_1.jpg"
 import { getSurveyFAQ, postVoteById } from "../../Services/TerminalSurveyAPI";
 import listingSource from "../../Constants/listingSource";
+import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 const TerminalScreen = () => {
     const [overlayMasterportal, setOverlayMasterportal] = useState(true);
@@ -28,8 +29,30 @@ const TerminalScreen = () => {
     const [canScrollRight1, setCanScrollRight1] = useState(true); // Track if right scroll is possible for container 1
     const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
     const [canScrollRight2, setCanScrollRight2] = useState(true);
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
 
     const containerRef = useRef(null)
+
+    const { trackEvent } = useMatomo();
+
+    useEffect(() => {
+        if (!matomoStatus) return;
+        const handleMatomoClick = () => {
+            trackEvent({ category: "Terminal", action: "Click", name: "TerminalScreen" });
+        };
+
+        const refCurrent = containerRef.current;
+
+        if (refCurrent) {
+            refCurrent.addEventListener('click', handleMatomoClick);
+        }
+
+        return () => {
+            if (refCurrent) {
+                refCurrent.removeEventListener('click', handleMatomoClick);
+            }
+        };
+    }, [trackEvent]);
 
     const handleShiftToMiddle = () => {
         if (!containerRef.current) return;
@@ -310,14 +333,14 @@ const TerminalScreen = () => {
                                     {newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
                                         newsListings.filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                                             <div className="w-full">
-                                                <TerminalListingsCard listing={newsListings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
+                                                <TerminalListingsCard category={"News"} listing={newsListings.find((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)} />
                                             </div>
                                         ) : (
                                             newsListings
                                                 .filter((listing) => listing.categoryId === 1 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
                                                     <div key={listing.id} className="w-[40%] flex-shrink-0">
-                                                        <TerminalListingsCard listing={listing} />
+                                                        <TerminalListingsCard category={"News"} listing={listing} />
                                                     </div>
                                                 ))
                                         )
@@ -393,14 +416,14 @@ const TerminalScreen = () => {
                                     {eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length > 0 ? (
                                         eventsListings.filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER).length === 1 ? (
                                             <div className="w-full">
-                                                <TerminalListingsCard listing={eventsListings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
+                                                <TerminalListingsCard category={"Events"} listing={eventsListings.find((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)} />
                                             </div>
                                         ) : (
                                             eventsListings
                                                 .filter((listing) => listing.categoryId === 3 && listing.sourceId === listingSource.SCRAPER)
                                                 .map((listing) => (
                                                     <div key={listing.id} className="w-[40%] flex-shrink-0">
-                                                        <TerminalListingsCard listing={listing} />
+                                                        <TerminalListingsCard category={"Events"} listing={listing} />
                                                     </div>
                                                 ))
                                         )

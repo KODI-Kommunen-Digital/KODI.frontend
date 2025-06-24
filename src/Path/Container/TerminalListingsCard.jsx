@@ -2,10 +2,13 @@ import LISTINGSIMAGE from "../../assets/ListingsImage.jpg";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import listingSource from "../../Constants/listingSource";
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-function TerminalListingsCard({ listing }) {
+function TerminalListingsCard({ listing, category }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedListing, setSelectedListing] = useState(null);
+    const { trackEvent } = useMatomo();
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
 
     if (listing.sourceId !== listingSource.SCRAPER) {
         return null; // Only display scraped data
@@ -33,6 +36,13 @@ function TerminalListingsCard({ listing }) {
     };
 
     const handleListingClick = () => {
+        if (matomoStatus) {
+            trackEvent({
+                category: 'Category', 
+                action: 'Click',
+                name: category
+            });
+        }
         setSelectedListing(listing);
         setIsPopupOpen(true);
     };
@@ -136,7 +146,8 @@ function TerminalListingsCard({ listing }) {
 }
 
 TerminalListingsCard.propTypes = {
-    listing: PropTypes.object.isRequired
+    listing: PropTypes.object.isRequired,
+    category: PropTypes.string.isRequired,
 };
 
 export default TerminalListingsCard;
