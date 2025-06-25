@@ -574,9 +574,9 @@ const TerminalScreen = () => {
                                         className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
                                         onClick={handleMaengelmelderClick}
                                     >
-                                        <span>{`Schaden`}</span>
+                                        <span>{`Melde`}</span>
                                         <br />
-                                        <span>{`melden`}</span>
+                                        <span>{`Michel`}</span>
                                     </button>
                                     <img src={HAMBURGLOGO} alt="Hamburg Logo" className="w-30 h-20 m-4" />
                                 </div>
@@ -754,7 +754,7 @@ const TerminalScreen = () => {
                                                 {option.title}
                                             </div>
 
-                                            <span
+                                            {/* <span
                                                 className={`ml-2 text-sm px-3 py-1 rounded-lg font-bold transition-all transform 
               ${responses[survey.id] === option.id
                                                         ? "text-white bg-sky-950 rounded-xl shadow-xl border-2 border-white scale-110"
@@ -764,7 +764,7 @@ const TerminalScreen = () => {
 
 
                                                 {option.votes} Stimmen
-                                            </span>
+                                            </span> */}
                                         </label>
                                     ))}
                                 </div>
