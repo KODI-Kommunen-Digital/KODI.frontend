@@ -251,9 +251,22 @@ export async function getProducts(storeId, pageNumber, status) {
   );
 }
 
+export async function getProductsBySearch(storeId, pageNumber, status,searchQuery = '') {
+  return axios.get(
+    `/v1/owners/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&search=${searchQuery}
+    &pageSize=9&sort=createdAt&sortDesc=true`
+  );
+}
+
+
 export async function getSellerProducts(storeId, pageNumber, status) {
   return axios.get(
     `/v1/seller/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&pageSize=9&sort=createdAt&sortDesc=true`
+  );
+}
+export async function getSellerProductsBySearch(storeId, pageNumber, status,searchQuery) {
+  return axios.get(
+    `/v1/seller/products?storeId=${storeId}&pageNumber=${pageNumber}&status=${status}&search=${searchQuery}&pageSize=9&sort=createdAt&sortDesc=true`
   );
 }
 

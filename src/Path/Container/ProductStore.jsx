@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getProducts, getOwnerShops, getUserRoleContainer, deleteProduct } from "../../Services/containerApi";
+import { getProducts,getProductsBySearch, getOwnerShops, getUserRoleContainer, deleteProduct } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
@@ -15,7 +15,7 @@ function ProductStore() {
     const pageSize = 9;
     const [products, setProducts] = useState([]);
     const [productCount, setProductsCount] = useState([]);
-
+    const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -40,6 +40,25 @@ function ProductStore() {
 
         return () => controller.abort();
     }, []);
+    const fetchProductsBySearch = useCallback((storeId, pageNumber, selectedStatus,searchQuery) => {
+        if (!storeId) return;
+
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        getProductsBySearch(storeId, pageNumber, selectedStatus,searchQuery, { signal })
+            .then((response) => {
+                setProducts(response.data.data);
+                setProductsCount(response.data.count);
+            })
+            .catch((error) => {
+                if (error.name !== "AbortError") {
+                    console.error(error);
+                }
+            });
+
+        return () => controller.abort();
+    }, [searchQuery]);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -55,6 +74,23 @@ function ProductStore() {
             }
         }
     }, [window.location.search, stores]);
+
+    const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    // Reset to page 1 when searching
+    setPageNumber(1);
+};
+
+// Add this effect to trigger search when query changes
+useEffect(() => {
+    if (storeId) {
+        const timer = setTimeout(() => {
+            fetchProductsBySearch(storeId, pageNumber, selectedStatus, searchQuery);
+        }, 500); // Add debounce to avoid too many API calls
+        
+        return () => clearTimeout(timer);
+    }
+}, [searchQuery, storeId, pageNumber, selectedStatus]);
 
     useEffect(() => {
         if (storeId) {
@@ -106,7 +142,7 @@ function ProductStore() {
             setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1); // Reset page number when a new store is selected
-
+            setSearchQuery('');
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -114,7 +150,12 @@ function ProductStore() {
             fetchProducts(storeId, 1, selectedStatus);
         }
     };
-
+     useEffect(() => {
+        return () => {
+            // This will run when component unmounts
+            setSearchQuery('');
+        };
+    }, []);
     const handleStoreClick = (storeId) => {
         const selectedStore = stores.find(store => store.id === parseInt(storeId));
 
@@ -123,7 +164,7 @@ function ProductStore() {
             setCityId(cityId);
             setStoreId(storeId);
             setPageNumber(1); // Reset page number when a new store is selected
-
+            setSearchQuery('');
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -315,6 +356,19 @@ function ProductStore() {
                                         ))}
                                     </select>
                                 </div>
+
+                                 <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
+        <input
+            type="text"
+            placeholder={t("searchProducts")}
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+            style={{
+                fontFamily: "Poppins, sans-serif",
+            }}
+        />
+    </div>
                             </div>
 
                             <div className="bg-white mt-4 p-0">

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SideBar from "../../Components/SideBar";
 import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getSellerProducts, getSellerShops } from "../../Services/containerApi";
+import { getSellerProducts,getSellerProductsBySearch, getSellerShops } from "../../Services/containerApi";
 import { useTranslation } from 'react-i18next';
 import { status, statusByName } from "../../Constants/containerStatus";
 import RegionColors from "../../Components/RegionColors";
@@ -15,7 +15,7 @@ function AllProducts() {
     const pageSize = 9;
     const [products, setProducts] = useState([]);
     const [productsCount, setProductsCount] = useState([]);
-
+    const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState(statusByName.Active);
     const [storeId, setStoreId] = useState();
     const [stores, setStores] = useState([]);
@@ -30,7 +30,37 @@ function AllProducts() {
             });
         }
     }, []);
-
+    const fetchProductsBySearch = useCallback((storeId, pageNumber, selectedStatus,searchQuery) => {
+        if (storeId) {
+            getSellerProductsBySearch(storeId, pageNumber, selectedStatus,searchQuery).then((response) => {
+                const fetchedProducts = response.data.data;
+                setProducts(fetchedProducts);
+                setProductsCount(response.data.count)
+            });
+        }
+    }, [searchQuery]);
+    
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        // Reset to page 1 when searching
+        setPageNumber(1);
+    };
+     useEffect(() => {
+        return () => {
+            // This will run when component unmounts
+            setSearchQuery('');
+        };
+    }, []); 
+    // Add this effect to trigger search when query changes
+    useEffect(() => {
+        if (storeId) {
+            const timer = setTimeout(() => {
+                fetchProductsBySearch(storeId, pageNumber, selectedStatus, searchQuery);
+            }, 500); // Add debounce to avoid too many API calls
+            
+            return () => clearTimeout(timer);
+        }
+    }, [searchQuery, storeId, pageNumber, selectedStatus]);
     useEffect(() => {
         const accessToken =
             window.localStorage.getItem("accessToken") ||
@@ -97,7 +127,7 @@ function AllProducts() {
             setStoreId(storeId);
             setCityId(selectedStore.cityId);
             setPageNumber(1); // Reset page number when a new store is selected
-
+            setSearchQuery('');
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -113,7 +143,7 @@ function AllProducts() {
             setStoreId(storeId);
             setCityId(selectedStore.cityId);
             setPageNumber(1);
-
+            setSearchQuery('');
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set("storeId", storeId);
             const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
@@ -218,6 +248,18 @@ function AllProducts() {
                                         ))}
                                     </select>
                                 </div>
+                                                      <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full md:w-80">
+        <input
+            type="text"
+            placeholder={t("searchProducts")}
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full text-gray-600"
+            style={{
+                fontFamily: "Poppins, sans-serif",
+            }}
+        />
+    </div>
                             </div>
 
                             <div className="bg-white mt-4 p-0">
