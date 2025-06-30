@@ -43,4 +43,18 @@ const compareDateTime = (a, b) => {
     return 0;
 };
 
-module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst };
+const sortByDay = (arr) => {
+  const grouped = arr?.reduce((acc, item) => {
+    const dateKey = new Date(item.createdAt).toISOString().split("T")[0];
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(item);
+    return acc;
+  }, {});
+  const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+  const sortedByDay = sortedDates && sortedDates.flatMap(date => grouped[date]);
+  return sortedByDay;
+};
+
+module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst, sortByDay };

@@ -16,6 +16,7 @@ import {
   sortByTitleZA,
   sortLatestFirst,
   sortOldestFirst,
+  sortByDay,
 } from "../../Services/helper";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 
@@ -249,6 +250,9 @@ const HomePage = () => {
       case "oldest":
         setListings([...sortOldestFirst(listings)]);
         break;
+      case "byDate":
+        setListings([...sortByDay(listings)]);
+        break;
       default:
         break;
     }
@@ -380,6 +384,7 @@ const HomePage = () => {
                   <option value="titleZA">{t("ztoatitle")}</option>
                   <option value="recent">{t("recent")}</option>
                   <option value="oldest">{t("oldest")}</option>
+                  <option value="byDate">{t("byDate")}</option>
                 </select>
               </div>
               {categoryId && subCategories.length > 0 && (
