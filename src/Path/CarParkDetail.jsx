@@ -104,14 +104,14 @@ const CarParksDetail = () => {
                 <div>
                     <h2 className="text-base sm:text-lg font-bold mt-4">Parkmöglichkeit:</h2>
                     <p className="text-sm sm:text-base mt-2">{`${garage.free || 0} von insg. ${garage.capacity || 0} Parkflächen frei`}</p>
-                    <p className="text-sm sm:text-base">1,60 €/h</p>
+                    <p className="text-sm sm:text-base">1,80 €/h</p>
                     <p className="text-sm sm:text-base">Erste Stunde frei</p>
-                    <p className="text-sm sm:text-base">Zweite Stunde 1,80 €</p>
+                    <p className="text-sm sm:text-base">Zweite Stunde 1,90 €</p>
                 </div>
 
                 <div className="mt-4 space-y-4">
                     <p className="text-sm sm:text-base">
-                        Die erste Stunde ist frei, jede weitere angefangene Stunde 1,60 EUR bzw. 0,80 EUR pro 1/2 Stunde.
+                        Jede weitere angefangene Stunde 1,80 EUR bzw. 0,90 EUR pro 1/2 Stunde.
                     </p>
                     <p className="text-sm sm:text-base">
                         Der Maximalbetrag ist 12,00 EUR / Tag.
