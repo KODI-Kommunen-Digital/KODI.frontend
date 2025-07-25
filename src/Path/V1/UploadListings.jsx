@@ -754,10 +754,6 @@ function UploadListings() {
   }, []);
 
   const onDescriptionChange = (newContent) => {
-    const hasNumberedList = newContent.includes("<ol>");
-    const hasBulletList = newContent.includes("<ul>");
-    let descriptions = [];
-    let listType = "";
 
     const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
     const characterCount = plainText.length;
@@ -778,40 +774,11 @@ function UploadListings() {
       }));
     }
 
-    if (hasNumberedList || hasBulletList) {
-      const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(liRegex);
-      if (matches) {
-        descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      }
-
-      listType = hasNumberedList ? "ol" : "ul";
-
-      const listHTML = `<${listType}>${descriptions
-        .map((item) => `<li>${item}</li>`)
-        .join("")}</${listType}>`;
-
-      let leftoverText = newContent
-        .replace(/<ol>.*?<\/ol>/gis, "")
-        .replace(/<ul>.*?<\/ul>/gis, "")
-        .trim();
-
-      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
-
-      const finalDescription = leftoverText
-        ? `${leftoverText}<br/>${listHTML}`
-        : listHTML;
-
-      setListingInput((prev) => ({
-        ...prev,
-        description: finalDescription,
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
-      }));
-    }
+    // ✅ Don't modify the HTML — send exactly what was typed in the editor
+    setListingInput((prev) => ({
+      ...prev,
+      description: newContent,
+    }));
 
     setDescription(newContent);
   };
