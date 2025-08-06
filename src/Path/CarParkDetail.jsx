@@ -49,6 +49,7 @@ const CarParksDetail = () => {
         return time;
     }
     if (!garage) return null;
+    console.log(garage);
     return (
         <div className="flex flex-col min-h-screen bg-white">
             <div className="text-black p-2 flex items-center">
@@ -112,26 +113,15 @@ const CarParksDetail = () => {
                     </div>
                 </div>
 
-
-                <div>
-                    <h2 className="text-base sm:text-lg font-bold mt-4">Parkmöglichkeit:</h2>
-                    <p className="text-sm sm:text-base mt-2">{`${garage.free || 0} von insg. ${garage.capacity || 0} Parkflächen frei`}</p>
-                    <p className="text-sm sm:text-base">1,60 €/h</p>
-                    <p className="text-sm sm:text-base">Erste Stunde frei</p>
-                    <p className="text-sm sm:text-base">Zweite Stunde 1,80 €</p>
+                <div className="mt-4">
+                    <h2 className="text-base sm:text-lg font-bold">Preise:</h2>
+                    {garage.pricing && garage.pricing.map((price, index) => (
+                        <div key={index} className="text-sm sm:text-base mt-1">
+                            {price}
+                        </div>
+                    ))}
                 </div>
 
-                <div className="mt-4 space-y-4">
-                    <p className="text-sm sm:text-base">
-                        Die erste Stunde ist frei, jede weitere angefangene Stunde 1,60 EUR bzw. 0,80 EUR pro 1/2 Stunde.
-                    </p>
-                    <p className="text-sm sm:text-base">
-                        Der Maximalbetrag ist 12,00 EUR / Tag.
-                    </p>
-                    <p className="text-sm sm:text-base">
-                        Notöffnung (außerhalb der Öffnungszeiten) 20,00 €
-                    </p>
-                </div>
             </div>
             <a
                 href="https://www.ratingen-entdecken.de/parken.html"
