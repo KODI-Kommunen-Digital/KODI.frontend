@@ -105,6 +105,16 @@ const CarParksDetail = () => {
                     </div>
                 </div>
 
+                {/* description */}
+                <div className="mt-4">
+                    <h2 className="text-base sm:text-lg font-bold">Beschreibung:</h2>
+                    {garage.description && garage.description.map((desc, index) => (
+                        <div key={index} className="text-sm sm:text-base mt-1">
+                            {desc}
+                        </div>
+                    ))}
+                </div>
+
                 <div className="mt-4">
                     <h2 className="text-base sm:text-lg font-bold">Preise:</h2>
                     {garage.pricing && garage.pricing.map((price, index) => (
