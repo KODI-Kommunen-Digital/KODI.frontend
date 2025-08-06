@@ -49,7 +49,6 @@ const CarParksDetail = () => {
         return time;
     }
     if (!garage) return null;
-
     return (
         <div className="flex flex-col min-h-screen bg-white">
             <div className="text-black p-2 flex items-center">
@@ -100,6 +99,19 @@ const CarParksDetail = () => {
                         </div>
                     )}
                 </div>
+
+                <div className="mt-4">
+                    <h2 className="text-base sm:text-lg font-bold">Öffnungszeiten:</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-x-4 gap-y-2 mt-2">
+                        {garage.timings?.simplified && Object.entries(garage.timings.simplified).map(([day, time]) => (
+                            <div key={day} className="flex items-center">
+                                <span className="font-semibold mr-2">{day}:</span>
+                                <span className="text-sm sm:text-base">{time}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
 
                 <div>
                     <h2 className="text-base sm:text-lg font-bold mt-4">Parkmöglichkeit:</h2>
