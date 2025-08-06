@@ -67,7 +67,7 @@ const ParkingFinder = () => {
                            </div>
                         </div>
                         <div className="text-[10px] sm:text-xs md:text-sm text-white mt-1 text-left">
-                           1,60 €/h | 1h frei
+                           {location.pricing || '1,60 €/h | 1h frei'}
                         </div>
                      </div>
 
