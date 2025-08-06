@@ -38,18 +38,10 @@ const CarParksDetail = () => {
         window.open(url, '_blank');
     };
 
-    const getFormatTime = (dateTime) => {
-        const date = new Date(dateTime);
-
-        const time = date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-        return time;
-    }
     if (!garage) return null;
-    console.log(garage);
+    const weekdayIndex = new Date().getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+    const weekDay = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][weekdayIndex - 1];
+    const weekdayTimings = garage.timings[weekDay];
     return (
         <div className="flex flex-col min-h-screen bg-white">
             <div className="text-black p-2 flex items-center">
@@ -90,13 +82,13 @@ const CarParksDetail = () => {
                         </svg>
                         <span className="text-sm sm:text-base">{garage.address}</span>
                     </div>
-                    {garage.startTime && garage.endTime && (
+                    {weekdayTimings && (
                         <div className="flex items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                                 <circle cx="12" cy="12" r="10" />
                                 <polyline points="12 6 12 12 16 14" />
                             </svg>
-                            <span className="text-sm sm:text-base font-semibold">geöffnet ({getFormatTime(garage.startTime)}-{getFormatTime(garage.endTime)} Uhr)</span>
+                            <span className="text-sm sm:text-base font-semibold">geöffnet ({weekdayTimings} Uhr)</span>
                         </div>
                     )}
                 </div>
