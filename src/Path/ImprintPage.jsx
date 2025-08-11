@@ -1,9 +1,7 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import Footer from "../Components/Footer";
 
 export default function ImprintPage() {
-  const { t } = useTranslation();
   window.scrollTo(0, 0);
   const version = process.env.REACT_APP_FORNTENDVERSION || '1';
   const HomePageNavBar = require(`../Components/V${version}/HomePageNavBar`).default;
@@ -13,145 +11,108 @@ export default function ImprintPage() {
       <HomePageNavBar />
 
       <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
-        <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
-          {t("Imprint")}
+        <p className="font-sans font-semibold text-black mb-1 text-3xl title-font">
+          Stadtverwaltung Einbeck
         </p>
         <br />
-
-        <p className="font-sans font-bold text-black  mb-1 text-2xl title-font">
-          {t("AngabenGemäß")}
-        </p>
-        <br />
-
-        <p className="font-sans font-semibold text-black  mb-1 text-sm title-font">
-          {process.env.REACT_APP_PROJECT_NAME}
-        </p>
-        <br />
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {process.env.REACT_APP_CONTACT_PERSON}
-        </p>
-        <br />
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {process.env.REACT_APP_ADDRESS_1}
-        </p>
-        <br />
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {process.env.REACT_APP_ADDRESS_2}
-        </p>
-        <br />
-        {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					86925 Fuchstal
-				</p>
-				<br /> */}
 
         <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          {t("contact")} :
+          vertreten durch:
         </p>
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {process.env.REACT_APP_TELEPHONE}
+          Dr. Sabine Michalek<br />
+          Bürgermeisterin<br />
+          Teichenweg 1<br />
+          37574 Einbeck
         </p>
         <br />
-        {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Telefax: 08243 9699-25
-				</p>
-				<br /> */}
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Email")} {process.env.REACT_APP_EMAIL}
-        </p>
-        <br />
-
-        {/* <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-					{t("informationimprint")}
-				</p>
-				<br />
-
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					{t("info1")}
-				</p>
-				<br />
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					{t("info2")}
-				</p>
-				<br />
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Oberdorfstrasse 4
-				</p>
-				<br />
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					59590 Geseke - Langeneicke
-				</p>
-				<br />
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					{t("info3")}
-				</p>
-				<br />
-				<p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					{t("Germany")}
-				</p>
-				<br /> */}
 
         <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          {t("Disputeheading")}
+          Kontakt
         </p>
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Dispute1")}
-          <a href="https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE">
+          Telefon: 05561 916-0
+        </p>
+        <br />
+
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          Email: smartcity@einbeck.de
+        </p>
+        <br />
+
+        <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
+          Streitschlichtung:
+        </p>
+        <br />
+
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:&nbsp;
+          <a
+            href="https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=DE
           </a>
         </p>
         <br />
+
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Dispute2")}
+          Unsere E-Mail-Adresse finden Sie oben im Impressum.
         </p>
         <br />
+
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Dispute3")}
+          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
         </p>
         <br />
 
         <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          {t("LiabilityHeading")}
+          Haftung für Inhalte:
         </p>
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Liability1")}
-        </p>
-        <br />
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Liability2")}
-        </p>
-        <br />
-
-        <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          {t("LiabilityLinksHeading")}
+          Als Diensteanbieter sind wir gemäß § 5 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 7-8 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
         </p>
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("LiabilityLinks1")}
-        </p>
-        <br />
-        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("LiabilityLinks2")}
+          Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
         </p>
         <br />
 
         <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          {t("Copyright")}
+          Haftung für Links:
         </p>
         <br />
 
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Copyright1")}
+          Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
         </p>
         <br />
+
         <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-          {t("Copyright2")}
+          Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+        </p>
+        <br />
+
+        <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
+          Urheberrecht:
+        </p>
+        <br />
+
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
+        </p>
+        <br />
+
+        <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+          Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
         </p>
         <br />
       </div>
