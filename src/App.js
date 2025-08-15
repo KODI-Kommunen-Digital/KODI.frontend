@@ -9,7 +9,7 @@ import Dashboard from "./Path/Dashboard";
 import CarParksList from "./Path/CarParksList";
 import CarParkDetail from "./Path/CarParkDetail";
 import Register from "./Path/Register";
-import ImprintPage from "./Path/ImprintPage";
+import * as Imprints from "./Path/Imprints";
 import Summary from "./Path/AppointmentBooking/Summary";
 import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
 import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
@@ -84,6 +84,10 @@ import ProductRequests from "./Path/Container/ProductRequests.jsx";
 import TerminalScreen from "./Path/Container/TerminalScreen.jsx";
 
 import Modal from "react-modal";
+
+
+const appName = process.env.REACT_APP_REGION_NAME;
+const ImprintPage = Imprints[appName] || Imprints.Default;
 
 Modal.setAppElement("#root");
 
