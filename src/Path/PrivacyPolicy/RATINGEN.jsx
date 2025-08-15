@@ -37,8 +37,17 @@ export default function ImprintPage() {
                     Lintorfer Str. 29<br />
                     40878 Ratingen<br />
                     Deutschland<br />
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     Tel.: 02102 102 650<br />
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     E-Mail: info@ratingen-marketing.de<br />
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     Vertreten durch den Geschäftsführer: Dirk Bongards
                 </p>
                 <br />
@@ -149,52 +158,6 @@ export default function ImprintPage() {
                 <br />
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
                     {t("Dataprotection3")}
-                </p>
-                <br />
-                <p className="font-sans font-bold text-black  mb-1 text-xl title-font">
-                    {t("Noteontheresponsiblebodyheading")}
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {t("Noteontheresponsiblebody1")}
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black  mb-1 text-sm title-font">
-                    {process.env.REACT_APP_PROJECT_NAME}
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {process.env.REACT_APP_CONTACT_PERSON}
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {process.env.REACT_APP_ADDRESS_1}
-                </p>
-                <br />
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {process.env.REACT_APP_ADDRESS_2}
-                </p>
-                <br />
-                {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					86925 Fuchstal
-				</p>
-				<br /> */}
-
-                <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-                    {t("contact")} :
-                </p>
-                <br />
-
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {process.env.REACT_APP_TELEPHONE}
-                </p>
-                <br />
-                {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-					Telefax: 08243 9699-25
-				</p>
-				<br /> */}
-                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {t("Email")} {process.env.REACT_APP_EMAIL}
                 </p>
                 <br />
 

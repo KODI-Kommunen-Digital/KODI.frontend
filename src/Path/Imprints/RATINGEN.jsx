@@ -16,7 +16,7 @@ export default function ImprintPage() {
         <br />
 
         <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
-          Angaben gemäß § 5 TMG:
+          Angaben gemäß § 5 DDG:
         </p>
         <br />
 
