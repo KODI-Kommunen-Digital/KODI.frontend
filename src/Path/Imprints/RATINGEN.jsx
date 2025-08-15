@@ -5,7 +5,6 @@ export default function ImprintPage() {
   window.scrollTo(0, 0);
   const version = process.env.REACT_APP_FORNTENDVERSION || '1';
   const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
-  console.log("Using ratinen")
   return (
     <section className="bg-white body-font relative">
       <HomePageNavBar />

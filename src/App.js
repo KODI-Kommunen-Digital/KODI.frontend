@@ -13,7 +13,8 @@ import * as Imprints from "./Path/Imprints";
 import Summary from "./Path/AppointmentBooking/Summary";
 import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
 import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
-import PrivacyPolicy from "./Path/PrivacyPolicy";
+// import PrivacyPolicy from "./Path/PrivacyPolicy/PrivacyPolicy.jsx";
+import * as PrivacyPolicies from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
@@ -88,6 +89,7 @@ import Modal from "react-modal";
 
 const appName = process.env.REACT_APP_REGION_NAME;
 const ImprintPage = Imprints[appName] || Imprints.Default;
+const PrivacyPolicy = PrivacyPolicies[appName] || PrivacyPolicies.Default;
 
 Modal.setAppElement("#root");
 

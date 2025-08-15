@@ -1,11 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Footer from "../Components/Footer";
+import Footer from "../../Components/Footer";
 
 export default function ImprintPage() {
     const { t } = useTranslation();
     const version = process.env.REACT_APP_FORNTENDVERSION || '1';
-    const HomePageNavBar = require(`../Components/V${version}/HomePageNavBar`).default;
+    const HomePageNavBar = require(`../../Components/V${version}/HomePageNavBar`).default;
 
     return (
         <section className="bg-white body-font relative">
@@ -14,6 +14,50 @@ export default function ImprintPage() {
             <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
                 <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
                     {t("Dataprotection")}
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Diese Datenschutzerklärung gilt für die Erhebung, Verarbeitung und Nutzung Ihrer Daten,
+                    namentlich Ihrer personenbezogenen Daten, auf der Webseite der Ratingen Marketing GmbH
+                    www.ratingen-marketing.de.
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Betreiber dieser Seite ist die Ratingen Marketing GmbH aus Ratingen,
+                    E-Mail: info@ratingen-marketing.de (vgl. Impressum).
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Verantwortliche Stelle im Sinne der Datenschutzgesetze, insbesondere der
+                    EU-Datenschutzgrundverordnung (DSGVO) ist die:
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Ratingen Marketing GmbH<br />
+                    Lintorfer Str. 29<br />
+                    40878 Ratingen<br />
+                    Deutschland<br />
+                    Tel.: 02102 102 650<br />
+                    E-Mail: info@ratingen-marketing.de<br />
+                    Vertreten durch den Geschäftsführer: Dirk Bongards
+                </p>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Unter den angegebenen Kontaktdaten können Sie jederzeit folgende Rechte ausüben:
+                </p>
+                <br />
+                <ul className="list-disc list-inside font-sans font-semibold text-black mb-1 text-sm title-font">
+                    <li>Auskunft über Ihre bei uns gespeicherten Daten und deren Verarbeitung</li>
+                    <li>Berichtigung unrichtiger personenbezogener Daten</li>
+                    <li>Löschung Ihrer bei uns gespeicherten Daten</li>
+                    <li>Einschränkung der Datenverarbeitung, sofern wir Ihre Daten aufgrund gesetzlicher Pflichten noch nicht löschen dürfen</li>
+                    <li>Widerspruch gegen die Verarbeitung Ihrer Daten bei uns</li>
+                    <li>Datenübertragbarkeit, sofern Sie in die Datenverarbeitung eingewilligt haben oder einen Vertrag mit uns abgeschlossen haben</li>
+                </ul>
+                <br />
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    Sofern Sie uns eine Einwilligung erteilt haben, können Sie diese jederzeit mit Wirkung
+                    für die Zukunft widerrufen.
                 </p>
                 <br />
 
