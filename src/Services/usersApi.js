@@ -108,3 +108,18 @@ export async function logoutOfAllDevices() {
 export async function logoutOfOneDevice(id) {
 	return axiosInstance.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }
+
+export const getCurrentUser = async () => {
+	try {
+		const idToken = window.localStorage.getItem("accessToken");
+		const response = await instance.get("/users/currentUser", {
+			headers: {
+				Authorization: `Bearer ${idToken}`,
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching current user:", error);
+		throw error;
+	}
+};

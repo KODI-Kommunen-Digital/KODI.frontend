@@ -1,0 +1,85 @@
+// Dummy data for testing city listings
+const dummyCityListing = [
+    {
+        id: 1,
+        name: "Berlin",
+        parentCity: "Germany",
+        latitude: 52.5200,
+        longitude: 13.4050,
+        image: null,
+    },
+    {
+        id: 2,
+        name: "Munich",
+        parentCity: "Germany",
+        latitude: 48.1351,
+        longitude: 11.5820,
+        image: null,
+    },
+    {
+        id: 3,
+        name: "Hamburg",
+        parentCity: "Germany",
+        latitude: 53.5511,
+        longitude: 9.9937,
+        image: null,
+    },
+    {
+        id: 4,
+        name: "Frankfurt",
+        parentCity: "Germany",
+        latitude: 50.1109,
+        longitude: 8.6821,
+        image: null,
+    },
+    {
+        id: 5,
+        name: "Stuttgart",
+        parentCity: "Germany",
+        latitude: 48.7758,
+        longitude: 9.1829,
+        image: null,
+    },
+    {
+        id: 6,
+        name: "Düsseldorf",
+        parentCity: "Germany",
+        latitude: 51.2277,
+        longitude: 6.7735,
+        image: null,
+    },
+    {
+        id: 7,
+        name: "Dortmund",
+        parentCity: "Germany",
+        latitude: 51.5136,
+        longitude: 7.4653,
+        image: null,
+    },
+    {
+        id: 8,
+        name: "Essen",
+        parentCity: "Germany",
+        latitude: 51.4556,
+        longitude: 7.0116,
+        image: null,
+    },
+    {
+        id: 9,
+        name: "Bremen",
+        parentCity: "Germany",
+        latitude: 53.0793,
+        longitude: 8.8017,
+        image: null,
+    },
+    {
+        id: 10,
+        name: "Dresden",
+        parentCity: "Germany",
+        latitude: 51.0504,
+        longitude: 13.7373,
+        image: null,
+    }
+];
+
+export default dummyCityListing;

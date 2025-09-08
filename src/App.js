@@ -84,7 +84,8 @@ import ProductRequests from "./Path/Container/ProductRequests.jsx";
 import TerminalScreen from "./Path/Container/TerminalScreen.jsx";
 
 import Modal from "react-modal";
-
+import AddCity from "./Path/AddCity.jsx";
+import AllCities from "./Path/AllCities.jsx";
 Modal.setAppElement("#root");
 
 const App = () => {
@@ -153,6 +154,9 @@ const App = () => {
           <Route path="/VerifyEmail" element={<VerifyEmail />} />
           <Route path="*" element={<Error />} />
           <Route path="ForumsError" element={<ForumsError />} />
+          <Route path="/Addcity" element={<AddCity />} />
+          <Route path="/AllCities" element={<AllCities />} exact />
+          <Route path="/Editcity" element={<AddCity />} exact />
 
           {isCarParkInterfaceEnabled && (
             <React.Fragment>
