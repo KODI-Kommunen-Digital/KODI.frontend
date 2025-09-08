@@ -1102,5 +1102,6 @@
     "clear": "Clear",
     "deleteAdmin": "Delete admin",
     "noAdmins": "No city admin added",
-    "noCitiesFound": "No cities found"
+    "noCitiesFound": "No cities found",
+    "Add_City": "Add City"
 }

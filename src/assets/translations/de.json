@@ -1117,5 +1117,6 @@
     "deleteAdmin": "Administrator löschen",
     "noAdmins": "Keine Stadtadministratoren hinzugefügt",
     "noCitiesFound": "Keine Städte gefunden",
-    "select_language": "Wählen Sie Sprache aus"
+    "select_language": "Wählen Sie Sprache aus",
+    "Add_City": "Stadt hinzufügen"
 }
