@@ -88,10 +88,12 @@ import AddCity from "./Path/AddCity.jsx";
 import AllCities from "./Path/AllCities.jsx";
 import CategorySelector from "./Path/CategorySelector.jsx";
 import AddAdmins from "./Path/CityAdmins.jsx";
+import CreatedAdminsList from "./Components/CityAdminList.jsx";
 Modal.setAppElement("#root");
 
 const App = () => {
-  const isCarParkInterfaceEnabled = process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
+  const isCarParkInterfaceEnabled =
+    process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
   const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
   const isAppointmentEnabled =
     process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
@@ -161,7 +163,7 @@ const App = () => {
           <Route path="/Editcity" element={<AddCity />} exact />
           <Route path="/categories" element={<CategorySelector />} exact />
           <Route path="/admins" element={<AddAdmins />} exact />
-
+          <Route path="/admin-list" element={<CreatedAdminsList />} exact />
           {isCarParkInterfaceEnabled && (
             <React.Fragment>
               <Route path="/carparksListing" element={<CarParksList />} exact />
