@@ -2,6 +2,8 @@ const status = {
 	1: "Active",
 	2: "Inactive",
 	3: "Pending",
+	4: "Hidden"
+
 };
 
 const statusByName = {
@@ -11,3 +13,5 @@ const statusByName = {
 };
 
 module.exports = { status, statusByName };
+
+

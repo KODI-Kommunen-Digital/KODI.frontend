@@ -109,6 +109,9 @@ export async function logoutOfOneDevice(id) {
 	return axiosInstance.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }
 
+
+
+
 export const getCurrentUser = async () => {
 	try {
 		const idToken = window.localStorage.getItem("accessToken");
