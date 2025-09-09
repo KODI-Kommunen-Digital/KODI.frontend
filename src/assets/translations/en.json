@@ -1134,5 +1134,6 @@
     "searchbyname": "Search by name",
     "updateCity": "Update City",
     "cityNotFound": "City not found",
-    "confirmDelete": "Are you sure you want to delete this admin?"
+    "confirmDelete": "Are you sure you want to delete this admin?",
+    "noCategoriesSelected": "No categories selected."
 }

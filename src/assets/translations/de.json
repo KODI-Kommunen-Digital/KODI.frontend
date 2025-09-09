@@ -1147,5 +1147,6 @@
     "placeholderuserselect": "Benutzer auswählen/tippen",
     "searchbyname": "Suche nach Name",
     "cityNotFound": "Stadt nicht gefunden",
-    "confirmDelete": "Sind Sie sicher, dass Sie diesen Administrator löschen möchten?"
+    "confirmDelete": "Sind Sie sicher, dass Sie diesen Administrator löschen möchten?",
+    "noCategoriesSelected": "Keine Kategorien ausgewählt."
 }
