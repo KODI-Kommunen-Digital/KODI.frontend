@@ -16,3 +16,10 @@ export async function getCitizenServices() {
 export async function getListingsSubCategory(categoryId) {
   return axios.get(`/categories/${categoryId}/subcategories`);
 }
+export async function postCatgeoryData(cityId, newCategoryDataObj) {
+  return instance.post(`/cities/${cityId}/category`, newCategoryDataObj);
+}
+
+export const deleteCategory = (cityId, data) => {
+  return axios.delete(`/cities/${cityId}/category`, { data });
+};
