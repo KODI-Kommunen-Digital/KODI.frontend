@@ -6,9 +6,10 @@ import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
   getMyListing,
-  updateListingsData,
+  // updateListingsData,
   deleteListing,
   getListingsBySearch,
+  updateListingsStatus
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { role } from "../Constants/role";
@@ -20,7 +21,7 @@ import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { getCities } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
-
+import ManageStatus from "../Components/ManageStatus";
 const Dashboard = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
@@ -32,6 +33,10 @@ const Dashboard = () => {
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+  const [cityStatusModal, setCityStatusModal] = useState({
+    visible: false,
+    listing: null,
+  });
 
   const navigate = useNavigate();
   const navigateTo = (path) => {
@@ -127,17 +132,17 @@ const Dashboard = () => {
     setPageNo(1);
   }, [selectedStatus, viewAllListings]);
 
-  function getStatusClass(statusId) {
-    if (status[statusId] === "Active") {
-      return "bg-green-400";
-    }
-    if (status[statusId] === "Inactive") {
-      return "bg-red-400";
-    }
-    if (status[statusId] === "Pending") {
-      return "bg-yellow-400";
-    }
-  }
+  // function getStatusClass(statusId) {
+  //   if (status[statusId] === "Active") {
+  //     return "bg-green-400";
+  //   }
+  //   if (status[statusId] === "Inactive") {
+  //     return "bg-red-400";
+  //   }
+  //   if (status[statusId] === "Pending") {
+  //     return "bg-yellow-400";
+  //   }
+  // }
 
   const setPageNoAndUpdateURL = (newPageNo) => {
     if (newPageNo < 1) {
@@ -161,17 +166,17 @@ const Dashboard = () => {
     setPageNo(newPageNo);
   };
 
-  function handleChangeInStatus(newStatusId, listing) {
-    updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
-      .then((res) => {
-        // Update the listing status locally without reloading the page
-        const updatedListings = listings.map((item) =>
-          item.id === listing.id ? { ...item, statusId: newStatusId } : item
-        );
-        setListings(updatedListings);
-      })
-      .catch((error) => console.log(error));
-  }
+  // function handleChangeInStatus(newStatusId, listing) {
+  //   updateListingsData(listing.cityId, { statusId: newStatusId }, listing.id)
+  //     .then((res) => {
+  //       // Update the listing status locally without reloading the page
+  //       const updatedListings = listings.map((item) =>
+  //         item.id === listing.id ? { ...item, statusId: newStatusId } : item
+  //       );
+  //       setListings(updatedListings);
+  //     })
+  //     .catch((error) => console.log(error));
+  // }
 
   function goToEditListingsPage(listing) {
     if (listing.categoryId === 18) {
@@ -425,20 +430,31 @@ const Dashboard = () => {
                     >
                       {t("noOfViews")}
                     </th>
+                    {viewAllListings && (
+                      <>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}
+                        >
+                          {t("current status")}
+                        </th>
+
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center"
+                          style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}
+                        >
+                          {t("status")}
+                        </th>
+                      </>
+                    )}
                     <th
                       scope="col"
                       className="px-6 py-4 text-center"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       {t("action")}
-                    </th>
-
-                    <th
-                      scope="col"
-                      className="px-6 py-4 text-center"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {t("status")}
                     </th>
                   </tr>
                 </thead>
@@ -515,6 +531,48 @@ const Dashboard = () => {
                           {listing.viewCount}
                         </td>
 
+
+                        {viewAllListings && (
+                          <td className="px-6 py-4 text-center font-medium text-gray-800 text-sm">
+                            {listing?.cityData?.length > 0 ? (
+                              <div className="space-y-1">
+                                {listing.cityData.map((city) => (
+                                  <div key={city.id}>
+                                    <span className="text-gray-500">{city.name}:</span>{" "}
+                                    <span className="font-semibold">
+                                      {t(status[city.listingStatus]?.toLowerCase() || "unknown")}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="text-gray-400 italic">{t("noData")}</span>
+                            )}
+                          </td>
+                        )}
+                        {viewAllListings && (
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-center">
+                              {/* <div
+                              className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
+                                listing.statusId
+                              )} mr-2`}
+                            ></div> */}
+
+                              <button
+                                onClick={() => setCityStatusModal({ visible: true, listing })}
+                                className="text-sm text-blue-600 hover:underline font-semibold"
+                              >
+                                {t("manageStatus")}
+                              </button>
+                              {/* // ) : (
+                              //   <h1 style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}>
+                              //     {t(status[listing.statusId]?.toLowerCase())}
+                              //   </h1> */}
+
+                            </div>
+                          </td>
+                        )}
                         <td className="px-6 py-4 text-center font-bold">
                           <div className="flex justify-center items-center">
                             <a
@@ -617,7 +675,7 @@ const Dashboard = () => {
                           </div>
                         )}
 
-                        <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
                           <div className="flex items-center justify-center">
                             <div
                               className={`h-2.5 w-2.5 rounded-full ${getStatusClass(
@@ -651,7 +709,20 @@ const Dashboard = () => {
                               </h1>
                             )}
                           </div>
-                        </td>
+                        </td> */}
+                        {cityStatusModal?.visible && (
+
+                          <ManageStatus
+                            cityStatusModal={cityStatusModal}
+                            setCityStatusModal={setCityStatusModal}
+                            updateListingsStatus={updateListingsStatus}
+                            fetchListings={fetchListings}
+                            t={t}
+                            status={status}
+
+                          />
+                        )}
+
                       </tr>
                     );
                   })}
