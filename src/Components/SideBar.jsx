@@ -286,11 +286,10 @@ function SideBar() {
             </span>
 
             <svg
-              className={`h-6 w-6 ml-4 fill-current ${
-                JSON.parse(localStorage.getItem("expandedMenus"))?.listing
-                  ? "rotate-180"
-                  : ""
-              }`}
+              className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.listing
+                ? "rotate-180"
+                : ""
+                }`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -300,12 +299,11 @@ function SideBar() {
           {JSON.parse(localStorage.getItem("expandedMenus"))?.listing && (
             <div className="ml-4">
               <div
-                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                  JSON.parse(localStorage.getItem("activeSubmenu"))?.listing ===
+                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.listing ===
                   "myEntries"
-                    ? "bg-gray-700"
-                    : ""
-                }`}
+                  ? "bg-gray-700"
+                  : ""
+                  }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSubmenuClick("listing", "myEntries");
@@ -323,12 +321,11 @@ function SideBar() {
                 </span>
               </div>
               <div
-                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                  JSON.parse(localStorage.getItem("activeSubmenu"))?.listing ===
+                className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))?.listing ===
                   "uploadListings"
-                    ? "bg-gray-700"
-                    : ""
-                }`}
+                  ? "bg-gray-700"
+                  : ""
+                  }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSubmenuClick("listing", "uploadListings");
@@ -348,14 +345,13 @@ function SideBar() {
                   {t("uploadListings")}
                 </span>
               </div>
-              {userRole === role.Admin && (
+              {(userRole === role.Admin || userRole === role.TerminalAdmin) && (
                 <div
-                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                    JSON.parse(localStorage.getItem("activeSubmenu"))
-                      ?.listing === "allListings"
-                      ? "bg-gray-700"
-                      : ""
-                  }`}
+                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
+                    ?.listing === "allListings"
+                    ? "bg-gray-700"
+                    : ""
+                    }`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSubmenuClick("listing", "allListings");
@@ -399,11 +395,10 @@ function SideBar() {
               </span>
 
               <svg
-                className={`h-6 w-6 ml-4 fill-current ${
-                  JSON.parse(localStorage.getItem("expandedMenus"))?.admin
-                    ? "rotate-180"
-                    : ""
-                }`}
+                className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.admin
+                  ? "rotate-180"
+                  : ""
+                  }`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
               >
@@ -415,12 +410,11 @@ function SideBar() {
                 {JSON.parse(localStorage.getItem("expandedMenus")).admin && (
                   <div className="ml-4">
                     <div
-                      className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                        JSON.parse(localStorage.getItem("activeSubmenu"))
-                          ?.admin === "allcities"
-                          ? "bg-gray-700"
-                          : ""
-                      }`}
+                      className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
+                        ?.admin === "allcities"
+                        ? "bg-gray-700"
+                        : ""
+                        }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleSubmenuClick("admin", "allcities");
@@ -446,12 +440,11 @@ function SideBar() {
                     </div>
                     {userRole === role.Admin && (
                       <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                          JSON.parse(localStorage.getItem("activeSubmenu"))
-                            ?.admin === "addcity"
-                            ? "bg-gray-700"
-                            : ""
-                        }`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
+                          ?.admin === "addcity"
+                          ? "bg-gray-700"
+                          : ""
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("admin", "addcity");
@@ -504,11 +497,10 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${
-                    JSON.parse(localStorage.getItem("expandedMenus"))?.forum
-                      ? "rotate-180"
-                      : ""
-                  }`}
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.forum
+                    ? "rotate-180"
+                    : ""
+                    }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -520,12 +512,11 @@ function SideBar() {
                   {JSON.parse(localStorage.getItem("expandedMenus"))?.forum && (
                     <div className="ml-4">
                       <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                          JSON.parse(localStorage.getItem("activeSubmenu"))
-                            ?.forum === "createGroup"
-                            ? "bg-gray-700"
-                            : ""
-                        }`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
+                          ?.forum === "createGroup"
+                          ? "bg-gray-700"
+                          : ""
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("forum", "createGroup");
@@ -547,12 +538,11 @@ function SideBar() {
                       </div>
 
                       <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                          JSON.parse(localStorage.getItem("activeSubmenu"))
-                            ?.forum === "myGroups"
-                            ? "bg-gray-700"
-                            : ""
-                        }`}
+                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
+                          ?.forum === "myGroups"
+                          ? "bg-gray-700"
+                          : ""
+                          }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSubmenuClick("forum", "myGroups");
@@ -601,11 +591,10 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${
-                    JSON.parse(localStorage.getItem("expandedMenus"))?.booking
-                      ? "rotate-180"
-                      : ""
-                  }`}
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.booking
+                    ? "rotate-180"
+                    : ""
+                    }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -617,66 +606,64 @@ function SideBar() {
                 <>
                   {JSON.parse(localStorage.getItem("expandedMenus"))
                     ?.booking && (
-                    <div className="ml-4">
-                      <div>
-                        <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                            JSON.parse(localStorage.getItem("activeSubmenu"))
+                      <div className="ml-4">
+                        <div>
+                          <div
+                            className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
                               ?.booking === "myAppoinment"
                               ? "bg-gray-700"
                               : ""
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSubmenuClick("booking", "myAppoinment");
-                          }}
-                        >
-                          <svg
-                            className="h-6 w-10 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 496 512"
+                              }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSubmenuClick("booking", "myAppoinment");
+                            }}
                           >
-                            <path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z" />
-                          </svg>
-                          <span
-                            className="text-[15px] ml-4 text-gray-200 font-bold"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {t("myAppoinment")}
-                          </span>
+                            <svg
+                              className="h-6 w-10 fill-current"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 496 512"
+                            >
+                              <path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z" />
+                            </svg>
+                            <span
+                              className="text-[15px] ml-4 text-gray-200 font-bold"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {t("myAppoinment")}
+                            </span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                            JSON.parse(localStorage.getItem("activeSubmenu"))
+                        <div>
+                          <div
+                            className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
                               ?.booking === "myBooking"
                               ? "bg-gray-700"
                               : ""
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSubmenuClick("booking", "myBooking");
-                          }}
-                        >
-                          <svg
-                            className="h-6 w-10 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 496 512"
+                              }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSubmenuClick("booking", "myBooking");
+                            }}
                           >
-                            <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                          </svg>
-                          <span
-                            className="text-[15px] ml-4 text-gray-200 font-bold"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {t("myBooking")}
-                          </span>
+                            <svg
+                              className="h-6 w-10 fill-current"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 496 512"
+                            >
+                              <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                            </svg>
+                            <span
+                              className="text-[15px] ml-4 text-gray-200 font-bold"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {t("myBooking")}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </>
               )}
               <div className="my-2 bg-gray-600 h-[1px]"></div>
@@ -704,11 +691,10 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${
-                    JSON.parse(localStorage.getItem("expandedMenus"))?.container
-                      ? "rotate-180"
-                      : ""
-                  }`}
+                  className={`h-6 w-6 ml-4 fill-current ${JSON.parse(localStorage.getItem("expandedMenus"))?.container
+                    ? "rotate-180"
+                    : ""
+                    }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -719,92 +705,89 @@ function SideBar() {
                 <>
                   {JSON.parse(localStorage.getItem("expandedMenus"))
                     .container && (
-                    <div className="ml-4">
-                      <div
-                        className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                          JSON.parse(localStorage.getItem("activeSubmenu"))
+                      <div className="ml-4">
+                        <div
+                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
                             ?.container === "customerScreen"
                             ? "bg-gray-700"
                             : ""
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSubmenuClick("container", "customerScreen");
-                        }}
-                      >
-                        <svg
-                          className="h-6 w-10 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 496 512"
+                            }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSubmenuClick("container", "customerScreen");
+                          }}
                         >
-                          <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                        </svg>
-                        <span
-                          className="text-[15px] ml-4 text-gray-200 font-bold"
-                          style={{ fontFamily: "Poppins, sans-serif" }}
-                        >
-                          {t("customerScreen")}
-                        </span>
-                      </div>
-                      {(isSeller || isOwner) && (
-                        <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                            JSON.parse(localStorage.getItem("activeSubmenu"))
+                          <svg
+                            className="h-6 w-10 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 496 512"
+                          >
+                            <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                          </svg>
+                          <span
+                            className="text-[15px] ml-4 text-gray-200 font-bold"
+                            style={{ fontFamily: "Poppins, sans-serif" }}
+                          >
+                            {t("customerScreen")}
+                          </span>
+                        </div>
+                        {(isSeller || isOwner) && (
+                          <div
+                            className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
                               ?.container === "SellerScreen"
                               ? "bg-gray-700"
                               : ""
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSubmenuClick("container", "SellerScreen");
-                          }}
-                        >
-                          <svg
-                            className="h-6 w-10 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 496 512"
+                              }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSubmenuClick("container", "SellerScreen");
+                            }}
                           >
-                            <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
-                          </svg>
-                          <span
-                            className="text-[15px] ml-4 text-gray-200 font-bold"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {t("SellerScreen")}
-                          </span>
-                        </div>
-                      )}
+                            <svg
+                              className="h-6 w-10 fill-current"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 496 512"
+                            >
+                              <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z" />
+                            </svg>
+                            <span
+                              className="text-[15px] ml-4 text-gray-200 font-bold"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {t("SellerScreen")}
+                            </span>
+                          </div>
+                        )}
 
-                      {isOwner && (
-                        <div
-                          className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                            JSON.parse(localStorage.getItem("activeSubmenu"))
+                        {isOwner && (
+                          <div
+                            className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${JSON.parse(localStorage.getItem("activeSubmenu"))
                               ?.container === "ownerScreen"
                               ? "bg-gray-700"
                               : ""
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSubmenuClick("container", "ownerScreen");
-                          }}
-                        >
-                          <svg
-                            className="h-6 w-10 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 496 512"
+                              }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSubmenuClick("container", "ownerScreen");
+                            }}
                           >
-                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                          </svg>
-                          <span
-                            className="text-[15px] ml-4 text-gray-200 font-bold"
-                            style={{ fontFamily: "Poppins, sans-serif" }}
-                          >
-                            {t("ownerScreen")}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                            <svg
+                              className="h-6 w-10 fill-current"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 496 512"
+                            >
+                              <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                            </svg>
+                            <span
+                              className="text-[15px] ml-4 text-gray-200 font-bold"
+                              style={{ fontFamily: "Poppins, sans-serif" }}
+                            >
+                              {t("ownerScreen")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </>
               )}
               <div className="my-2 bg-gray-600 h-[1px]"></div>
@@ -813,11 +796,10 @@ function SideBar() {
 
           <div className="bottom-2 w-[280px]">
             <div
-              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                localStorage.getItem("activeIndependentMenu") === "profilePage"
-                  ? "bg-gray-700"
-                  : ""
-              }`}
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") === "profilePage"
+                ? "bg-gray-700"
+                : ""
+                }`}
               onClick={() => {
                 handleIndependentMenuClick("profilePage");
                 navigateTo("/profilePage");
@@ -840,12 +822,11 @@ function SideBar() {
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
             <div
-              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                localStorage.getItem("activeIndependentMenu") ===
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") ===
                 "Account_Settings"
-                  ? "bg-gray-700"
-                  : ""
-              }`}
+                ? "bg-gray-700"
+                : ""
+                }`}
               onClick={() => {
                 handleIndependentMenuClick("Account_Settings");
                 navigateTo("/AccountSettings");
@@ -871,12 +852,11 @@ function SideBar() {
             {userRole === role.Admin && (
               <>
                 <div
-                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${
-                    localStorage.getItem("activeIndependentMenu") ===
+                  className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") ===
                     "adminList"
-                      ? "bg-gray-700"
-                      : ""
-                  }`}
+                    ? "bg-gray-700"
+                    : ""
+                    }`}
                   onClick={(e) => {
                     handleIndependentMenuClick("adminList");
                     navigate("/admin-list");

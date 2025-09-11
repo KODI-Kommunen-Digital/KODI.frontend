@@ -6,7 +6,7 @@ import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
   getMyListing,
-  // updateListingsData,
+  // updateListingsData,  
   deleteListing,
   getListingsBySearch,
   updateListingsStatus
@@ -19,7 +19,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
-import { getCities } from "../Services/citiesApi";
+import { getCitiesByUserId } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import ManageStatus from "../Components/ManageStatus";
 const Dashboard = () => {
@@ -47,7 +47,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    getCities().then((citiesResponse) => {
+    getCitiesByUserId().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
     });
     const cityId = parseInt(urlParams.get("cityId"));
@@ -85,7 +85,7 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
-      if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
+      if (window.location.pathname === "/DashboardAdmin" && (response.data.data.roleId === role.Admin || response.data.data.roleId === role.TerminalAdmin)) {
         setViewAllListings(true);
       } else {
         setViewAllListings(false);
@@ -103,9 +103,16 @@ const Dashboard = () => {
       // Check if cityId exists in the URL before adding it to params
       const urlParams = new URLSearchParams(window.location.search);
       const cityIdParam = urlParams.get("cityId");
+      // if (cityIdParam) {
+      //   const cityId = parseInt(cityIdParam);
+      //   params.cityId = cityId;
+      // }
+
       if (cityIdParam) {
         const cityId = parseInt(cityIdParam);
-        params.cityId = cityId;
+        params.cityIds = cityId;
+      } else {
+        params.cityIds = cities.map((city) => city.id).join(',')
       }
 
       getListings(params).then((response) => {
