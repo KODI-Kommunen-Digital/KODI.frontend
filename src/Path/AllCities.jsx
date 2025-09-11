@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import { useTranslation } from "react-i18next";
 import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
-import { deleteCity } from "../Services/citiesApi";
+import { deleteCity, getCitiesByUserId } from "../Services/citiesApi";
 import { getProfile } from "../Services/usersApi";
 import { role } from "../Constants/role";
 import { FaEye } from "react-icons/fa";
 import RegionColors from "../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
-import CITY_LISTING_DUMMY from "../Constants/cityListingDummy";
+
 const AllCities = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
@@ -45,14 +45,13 @@ const AllCities = () => {
 
   const fetchCities = useCallback(() => {
     // ORIGINAL API CODE - Commented out for testing with dummy data
-    // getCitiesByUserId({ searchQuery }).then((citiesResponse) => {
-    //     setCities(citiesResponse.data.data);
-    // }).catch((error) => {
-    //     console.log("API Error:", error);
-    // });
-
-    // DUMMY DATA FOR TESTING - Remove this block when ready to use real API
-    setCities(CITY_LISTING_DUMMY.data);
+    getCitiesByUserId({ searchQuery })
+      .then((citiesResponse) => {
+        setCities(citiesResponse.data.data);
+      })
+      .catch((error) => {
+        console.log("API Error:", error);
+      });
   }, [searchQuery, pageNo, pageSize]);
 
   useEffect(() => {
@@ -191,54 +190,14 @@ const AllCities = () => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center"
+                        className="px-6 py-4 text-left"
                         style={{
                           fontFamily:
                             "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                          width: "16.67%",
+                          width: "40%",
                         }}
                       >
                         {t("cityName")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 sm:px-3 py-3 hidden lg:table-cell text-center"
-                        style={{
-                          fontFamily:
-                            "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                        }}
-                      >
-                        {t("parentCity")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 hidden lg:table-cell text-center"
-                        style={{
-                          fontFamily:
-                            "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                        }}
-                      >
-                        {t("latitude")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily:
-                            "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                        }}
-                      >
-                        {t("longitude")}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center"
-                        style={{
-                          fontFamily:
-                            "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                        }}
-                      >
-                        {t("action")}
                       </th>
 
                       <th
@@ -249,7 +208,7 @@ const AllCities = () => {
                             "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
                         }}
                       >
-                        {t("viewCategories")}
+                        {t("action")}
                       </th>
 
                       <th
@@ -273,13 +232,15 @@ const AllCities = () => {
                         >
                           <th
                             scope="row"
-                            className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap"
+                            className="flex items-center gap-10 px-6 py-4 text-slate-800 whitespace-nowrap"
                           >
                             {city.image ? (
                               <img
                                 alt="City"
-                                className="w-10 h-10 object-cover rounded-full"
-                                src={city.image}
+                                className="w-10 h-10 object-cover rounded-full flex-shrink-0"
+                                src={
+                                  process.env.REACT_APP_BUCKET_HOST + city.image
+                                }
                                 onLoad={() =>
                                   setImageLoadStatus((prev) => ({
                                     ...prev,
@@ -324,36 +285,6 @@ const AllCities = () => {
                               </div>
                             </div>
                           </th>
-
-                          <td
-                            className="px-6 py-4 hidden lg:table-cell text-center"
-                            style={{
-                              fontFamily:
-                                "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                            }}
-                          >
-                            {city.parentCity}
-                          </td>
-
-                          <td
-                            className="px-6 py-4 hidden lg:table-cell text-center"
-                            style={{
-                              fontFamily:
-                                "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                            }}
-                          >
-                            {city.latitude}
-                          </td>
-
-                          <td
-                            className="px-6 py-4 text-center"
-                            style={{
-                              fontFamily:
-                                "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
-                            }}
-                          >
-                            {city.longitude}
-                          </td>
 
                           <td className="px-6 py-4 text-center font-bold">
                             <div className="flex justify-center items-center">
@@ -463,24 +394,6 @@ const AllCities = () => {
                               </div>
                             </div>
                           )}
-
-                          <td className="px-6 py-4">
-                            <div className="flex items-center justify-center">
-                              <div
-                                className="relative group inline-block"
-                                onClick={() =>
-                                  navigateTo(`/categories?cityId=${city.id}`)
-                                }
-                              >
-                                <FaEye
-                                  className={`text-2xl ${RegionColors.darkTextColor} cursor-pointer`}
-                                />
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                  {t("viewDetails")}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
 
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-center">

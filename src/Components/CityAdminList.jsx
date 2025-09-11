@@ -4,86 +4,7 @@ import SideBar from "../Components/SideBar";
 import { role } from "../Constants/role";
 // import { fetchCreatedAdmins } from "../Services/SuperAdminApi";
 import { useTranslation } from "react-i18next";
-
-// TODO: DELETE IT AFTER API Integration
-const DUMMY_DATA = {
-  status: "success",
-  data: [
-    {
-      email: "mansi@gmail.com",
-      roleId: 1,
-      createdAt: "2025-08-28T07:56:37.000Z",
-      updatedAt: "2025-08-28T07:56:37.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "laxman1@mailinator.com",
-      roleId: 2,
-      createdAt: "2025-08-22T05:24:42.000Z",
-      updatedAt: "2025-08-22T05:31:43.000Z",
-      onBoarded: 1,
-    },
-    {
-      email: "ma@yopmail.com",
-      roleId: 3,
-      createdAt: "2025-08-20T10:14:40.000Z",
-      updatedAt: "2025-08-20T10:14:40.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "abhisheksuryavanshi2809@gmail.com",
-      roleId: 4,
-      createdAt: "2025-07-24T17:16:16.000Z",
-      updatedAt: "2025-07-24T17:16:16.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "smriti123@mailinator.com",
-      roleId: 4,
-      createdAt: "2025-07-14T11:05:14.000Z",
-      updatedAt: "2025-07-14T12:55:00.000Z",
-      onBoarded: 1,
-    },
-    {
-      email: "sase@gmail.com",
-      roleId: 4,
-      createdAt: "2025-07-02T13:05:31.000Z",
-      updatedAt: "2025-07-02T13:05:31.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "srand@gmail.com",
-      roleId: 4,
-      createdAt: "2025-07-02T13:05:01.000Z",
-      updatedAt: "2025-07-02T13:05:01.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "toyoxob394@claspira.com",
-      roleId: 4,
-      createdAt: "2025-06-06T05:25:38.000Z",
-      updatedAt: "2025-06-06T05:33:38.000Z",
-      onBoarded: 1,
-    },
-    {
-      email: "kajem75528@besibalii.com",
-      roleId: 4,
-      createdAt: "2025-06-06T05:24:39.000Z",
-      updatedAt: "2025-06-06T05:24:39.000Z",
-      onBoarded: 0,
-    },
-    {
-      email: "city344@mailinator.com",
-      roleId: 4,
-      createdAt: "2025-06-05T17:40:07.000Z",
-      updatedAt: "2025-06-05T17:41:50.000Z",
-      onBoarded: 1,
-    },
-  ],
-};
-
-const fetchedDummyData = () =>
-  new Promise((resolve) => setTimeout(resolve(DUMMY_DATA), 1000));
+import { fetchCreatedAdmins } from "../Services/SuperAdminApi";
 
 const CreatedAdminsList = () => {
   const [admins, setAdmins] = useState([]);
@@ -92,12 +13,10 @@ const CreatedAdminsList = () => {
 
   const fetchCreatedUserList = async () => {
     try {
-      // const res = await fetchCreatedAdmins();
-      // if (res.data) {
-      //   setAdmins(res?.data?.data);
-      // }
-      const res = await fetchedDummyData();
-      setAdmins(res.data);
+      const res = await fetchCreatedAdmins();
+      if (res.data) {
+        setAdmins(res?.data?.data);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -161,7 +80,7 @@ const CreatedAdminsList = () => {
                           (key) => role[key] === admin.roleId
                         );
                         return roleKey === "TerminalAdmin"
-                          ? "Terminal/City Admin"
+                          ? "City Admin"
                           : roleKey;
                       })()}
                     </td>

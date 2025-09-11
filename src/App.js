@@ -86,7 +86,6 @@ import TerminalScreen from "./Path/Container/TerminalScreen.jsx";
 import Modal from "react-modal";
 import AddCity from "./Path/AddCity.jsx";
 import AllCities from "./Path/AllCities.jsx";
-import CategorySelector from "./Path/CategorySelector.jsx";
 import AddAdmins from "./Path/CityAdmins.jsx";
 import CreatedAdminsList from "./Components/CityAdminList.jsx";
 Modal.setAppElement("#root");
@@ -161,7 +160,6 @@ const App = () => {
           <Route path="/Addcity" element={<AddCity />} />
           <Route path="/AllCities" element={<AllCities />} exact />
           <Route path="/Editcity" element={<AddCity />} exact />
-          <Route path="/categories" element={<CategorySelector />} exact />
           <Route path="/admins" element={<AddAdmins />} exact />
           <Route path="/admin-list" element={<CreatedAdminsList />} exact />
           {isCarParkInterfaceEnabled && (
