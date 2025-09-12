@@ -342,7 +342,7 @@ const Dashboard = () => {
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
-                    {t("approved")}
+                    {t("active")}
                   </div>
                   <div
                     className={`${
@@ -364,7 +364,7 @@ const Dashboard = () => {
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
-                    {t("feedback")}
+                    {t("inactive")}
                   </div>
                 </div>
               </div>

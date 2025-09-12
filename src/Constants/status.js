@@ -1,13 +1,13 @@
 const status = {
-  1: "Approved",
-  2: "Pending",
-  3: "Feedback",
+  1: "Active",
+  2: "Inactive",
+  3: "Pending",
 };
 
 const statusByName = {
-  Approved: 1,
-  Pending: 2,
-  Feedback: 3,
+  Active: 1,
+  Inactive: 2,
+  Pending: 3,
 };
 
 module.exports = { status, statusByName };
