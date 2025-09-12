@@ -110,9 +110,9 @@ const Dashboard = () => {
 
       if (cityIdParam) {
         const cityId = parseInt(cityIdParam);
-        params.cityIds = cityId;
+        params.cityId = cityId;
       } else {
-        params.cityIds = cities.map((city) => city.id).join(',')
+        params.cityId = cities.map((city) => city.id).join(',')
       }
 
       getListings(params).then((response) => {
