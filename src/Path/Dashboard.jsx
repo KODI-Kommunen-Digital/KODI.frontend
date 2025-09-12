@@ -133,7 +133,7 @@ const Dashboard = () => {
         setListings(listingsData);
       });
     }
-  }, [selectedStatus, viewAllListings, pageNo, cityId]);
+  }, [selectedStatus, viewAllListings, pageNo, cityId, cities]);
 
   useEffect(() => {
     fetchListings();
@@ -364,7 +364,7 @@ const Dashboard = () => {
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
-                    {t("inactive")}
+                    {t("feedback")}
                   </div>
                 </div>
               </div>
