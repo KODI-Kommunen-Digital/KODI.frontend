@@ -342,7 +342,7 @@ const Dashboard = () => {
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
-                    {t("active")}
+                    {t("approved")}
                   </div>
                   <div
                     className={`${

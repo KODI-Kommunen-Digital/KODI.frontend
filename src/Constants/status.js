@@ -1,12 +1,12 @@
 const status = {
-  1: "Active",
-  2: "Inactive",
+  1: "Approved",
+  2: "Pending",
   3: "Feedback",
 };
 
 const statusByName = {
-  Active: 1,
-  Inactive: 2,
+  Approved: 1,
+  Pending: 2,
   Feedback: 3,
 };
 
