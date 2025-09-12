@@ -2,14 +2,15 @@
 module.exports = {
     content: [
         "./src/**/*.{js,jsx,ts,tsx}",
+        "./node_modules/react-tailwindcss-select/dist/index.esm.js",
     ],
     theme: {
         extend: {
             scale: {
-                '102':'1.02'
+                '102': '1.02'
             },
             margin: {
-                '5rem':'1rem'
+                '5rem': '1rem'
             }
         },
     },

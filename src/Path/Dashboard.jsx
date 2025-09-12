@@ -108,31 +108,35 @@ const Dashboard = () => {
       // Check if cityId exists in the URL before adding it to params
       const urlParams = new URLSearchParams(window.location.search);
       const cityIdParam = urlParams.get("cityId");
+      // if (cityIdParam) {
+      //   const cityId = parseInt(cityIdParam);
+      //   params.cityId = cityId;
+      // }
+
       if (cityIdParam) {
         const cityId = parseInt(cityIdParam);
         params.cityId = cityId;
+      } else {
+        params.cityId = cities.map((city) => city.id).join(",");
       }
 
       getListings(params).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+
+        setListings(listingsData);
       });
     }
     if (viewAllListings === false) {
-      // getUserListings({
-      //   statusId: selectedStatus,
-      //   pageNo,
-      // }).then((response) => {
-      //   setListings(response.data.data);
-      // });
       getMyListing({
         statusId: selectedStatus,
         pageNo,
       }).then((response) => {
-        setListings(response.data.data);
+        const listingsData = response.data.data;
+        setListings(listingsData);
       });
     }
-  }, [selectedStatus, viewAllListings, pageNo, cityId]);
-
+  }, [selectedStatus, viewAllListings, pageNo, cityId, cities]);
+  console.log(listings, 'check');
   useEffect(() => {
     if (pageNo === 1) {
       fetchListings();
@@ -518,7 +522,7 @@ const Dashboard = () => {
                         className="px-6 py-4 text-blue-600 text-center"
                         style={{ fontFamily: "Poppins, sans-serif" }}
                       >
-                        {listing.viewCount}
+                        {listing.viewsCount || 0}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <a
@@ -700,3 +704,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+
+

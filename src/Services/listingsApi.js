@@ -90,3 +90,6 @@ export async function deleteListing(cityId, listingsId) {
 export async function getListingsCount() {
 	return axios.get(`/categories/listingsCount`);
 }
+export async function updateListingsStatus(listingId, payload = {}) {
+	return axios.patch(`/listings/${listingId}/status`, payload);
+}

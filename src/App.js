@@ -43,8 +43,11 @@ import MemberRequests from "./Path/MyGroups/MemberRequests";
 import ReportedPosts from "./Path/MyGroups/ReportedPosts";
 import IFrame from "./Path/Listings/IFrame";
 import IFrameListing from "./Path/Listings/IFrameListing.jsx";
-
+import AllCities from "./Path/AllCities.jsx";
 import Modal from "react-modal";
+import AddCity from "./Path/AddCity.jsx";
+import CreatedAdminsList from "./Path/CityAdminList.jsx";
+
 Modal.setAppElement("#root");
 
 const App = () => {
@@ -91,6 +94,17 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
+          {
+            process.env.REACT_DISPLAY_CITIES === 'True' && (
+              <>
+                <Route path="/AllCities" element={<AllCities />} exact />
+                <Route path="/Addcity" element={<AddCity />} />
+                <Route path="/Editcity" element={<AddCity />} exact />
+              </>
+            )
+          }
+          <Route path="/admin-list" element={<CreatedAdminsList />} exact />
+
 
           {inFrame && (
             <React.Fragment>

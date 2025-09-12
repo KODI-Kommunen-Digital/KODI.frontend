@@ -23,6 +23,8 @@ import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
 import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
+import { status } from "../Constants/status";
+import { role } from "../Constants/role";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -44,6 +46,8 @@ function UploadListings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [userRole, setUserRole] = useState(role.User);
+
   const navigate = useNavigate();
 
   const getDefaultEndDate = () => {
@@ -77,6 +81,19 @@ function UploadListings() {
     e.stopPropagation();
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profileResponse = await getProfile();
+
+        setUserRole(profileResponse.data.data.roleId);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   function handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -992,7 +1009,7 @@ function UploadListings() {
   const handleInputClick = (e) => {
     e.target.showPicker(); // Programmatically open the date picker
   };
-  
+
   const preventKeyboardInput = (e) => {
     e.preventDefault(); // Prevent any keyboard input
   };
@@ -1516,6 +1533,46 @@ function UploadListings() {
               placeholder={t("enter_website")}
             />
           </div>
+          {userRole === role.Admin && (
+            <div className="relative mb-0 mt-4">
+              <div className="w-full">
+                <label
+                  htmlFor="statusId"
+                  className="block text-sm font-medium text-gray-900"
+                >
+                  {t("Status")}
+                </label>
+                <div className="relative">
+                  <select
+                    id="statusId"
+                    name="statusId"
+                    value={listingInput.statusId}
+                    onChange={onInputChange}
+                    onBlur={validateInput}
+                    className="overflow-y-scroll border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full appearance-none"
+                  >
+                    {Object.entries(status)?.map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {t(value.toLocaleLowerCase())}
+                        {/* Using the status values translated with t() */}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    ▼
+                  </span>
+                </div>
+                <div
+                  className="mt-2 text-sm text-red-600"
+                  style={{
+                    visibility: error.status ? "visible" : "hidden",
+                  }}
+                >
+                  {error.status}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="relative mb-0">
             <label
@@ -1784,3 +1841,6 @@ function UploadListings() {
 }
 
 export default UploadListings;
+
+
+

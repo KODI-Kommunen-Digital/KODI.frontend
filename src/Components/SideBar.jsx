@@ -17,30 +17,42 @@ function SideBar() {
   const [isListingExpanded, setIsListingExpanded] = useState(false);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
   const [isContainerExpanded, setIsContainerExpanded] = useState(false);
+  const [isAdminExpanded, setIsAdminExpanded] = useState(false);
 
   const handleListingSegmentClick = () => {
     setIsListingExpanded(!isListingExpanded);
     setIsForumExpanded(false);
     setIsBookingExpanded(false);
     setIsContainerExpanded(false);
+    setIsAdminExpanded(false);
   };
   const handleForumSegmentClick = () => {
     setIsForumExpanded(!isForumExpanded);
     setIsListingExpanded(false);
     setIsBookingExpanded(false);
     setIsContainerExpanded(false);
+    setIsAdminExpanded(false);
   };
   const handleBookingSegmentClick = () => {
     setIsBookingExpanded(!isBookingExpanded);
     setIsListingExpanded(false);
     setIsForumExpanded(false);
     setIsContainerExpanded(false);
+    setIsAdminExpanded(false);
   };
   const handleContainerSegmentClick = () => {
     setIsContainerExpanded(!isContainerExpanded);
     setIsBookingExpanded(false);
     setIsListingExpanded(false);
     setIsForumExpanded(false);
+    setIsAdminExpanded(false);
+  };
+  const handleIsAdminSegmentClick = () => {
+    setIsContainerExpanded(false);
+    setIsBookingExpanded(false);
+    setIsListingExpanded(false);
+    setIsForumExpanded(false);
+    setIsAdminExpanded(!isAdminExpanded);
   };
 
   const navigate = useNavigate();
@@ -219,6 +231,7 @@ function SideBar() {
                   {t("uploadPost")}
                 </span>
               </div>
+              {/* role.admin   actual */}
               {userRole === role.Admin && (
                 <div
                   className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
@@ -244,8 +257,84 @@ function SideBar() {
               )}
             </div>
           )}
-          <div className="my-2 bg-gray-600 h-[1px]"></div>
+          {process.env.REACT_DISPLAY_CITIES === 'True' && (
+            <>
+              <div className="my-2 bg-gray-600 h-[1px]"></div>
+              <div
+                className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                onClick={handleIsAdminSegmentClick}
+              >
+                <svg
+                  className="h-6 w-10 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 496 512"
+                >
+                  <path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" />{" "}
+                </svg>
+                <span className="text-[15px] ml-4 text-gray-200 font-bold">
+                  {t("Admin")}
+                </span>
 
+                <svg
+                  className={`h-6 w-6 ml-4 fill-current ${isAdminExpanded ? "rotate-180" : ""
+                    }`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </div>
+              {isAdminExpanded && (
+                <div className="ml-4">
+                  <div
+                    className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                    onClick={() => {
+                      navigateTo("/allCities");
+                      window.location.reload();
+                    }}
+                  >
+                    <svg
+                      className="h-6 w-10 fill-current"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                    >
+                      <path d="M320 0L192 128V512H288V400H352V512H448V128L320 0zM112 224H64V512H160V320H224V512H256V224H208V288H144V224H112zM576 512V128H512V512h64z" />
+                    </svg>
+                    <span className="text-[15px] ml-4 text-gray-200 font-bold">
+                      {t("cities")}
+                    </span>
+                  </div>
+                  {userRole === role.Admin && (
+
+                    <div
+                      className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                      onClick={() => {
+                        localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                        navigateTo("/Addcity");
+                        location.reload();
+                      }}
+                    >
+                      <svg
+                        className="h-6 w-10 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 384 512"
+                      >
+                        <path d="M168 0C75 0 0 75 0 168c0 87.3 152.4 304.4 160 315.2 3.2 4.8 8.6 7.8 14.4 7.8s11.2-2.9 14.4-7.8C231.6 472.4 384 255.3 384 168 384 75 309 0 216 0H168zm0 240c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72-32.2 72-72 72z" />
+                      </svg>
+                      <span
+                        className="text-[15px] ml-4 text-gray-200 font-bold"
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                      >
+                        {t("Add_City")}
+                      </span>
+                    </div>
+
+                  )}
+                </div>
+              )}
+            </>
+          )}
+          <div className="my-2 bg-gray-600 h-[1px]"></div>
           {isForumEnabled === "True" && (
             <>
               <div
@@ -534,6 +623,76 @@ function SideBar() {
                 {firstname + " " + lastname}
               </span>
             </div>
+            {/* userRole === role.Admin actual */}
+            {userRole === role.Admin && (
+              <>
+                <div className="my-2 bg-gray-600 h-[1px]"></div>
+                <div
+                  className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
+                  onClick={() => navigateTo("/admin-list")}
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-10 fill-current"
+                  >
+                    <circle cx="6" cy="6" r="3" stroke="#fff" strokeWidth="2" />
+                    <path
+                      d="M1 20c0-2.5 2-4.5 5-4.5s5 2 5 4.5"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="17"
+                      y1="5"
+                      x2="17"
+                      y2="11"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="14"
+                      y1="8"
+                      x2="20"
+                      y2="8"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="12"
+                      y1="16"
+                      x2="22"
+                      y2="16"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="12"
+                      y1="20"
+                      x2="22"
+                      y2="20"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span
+                    className="text-[15px] ml-4 text-gray-200 font-bold"
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t("cityAdmin")}
+                  </span>
+                </div>
+              </>
+            )}
+
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
             <div
@@ -554,8 +713,8 @@ function SideBar() {
                 {t("Account_Settings")}
               </span>
             </div>
-
             <div className="my-2 bg-gray-600 h-[1px]"></div>
+
 
             {loggedIn && (
               <div
@@ -580,6 +739,7 @@ function SideBar() {
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
           </div>
+
         </div>
       </div>
     </div>
