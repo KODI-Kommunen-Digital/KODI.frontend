@@ -6,10 +6,10 @@ import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
   getMyListing,
-  // updateListingsData,  
+  // updateListingsData,
   deleteListing,
   getListingsBySearch,
-  updateListingsStatus
+  updateListingsStatus,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { role } from "../Constants/role";
@@ -85,7 +85,11 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
-      if (window.location.pathname === "/DashboardAdmin" && (response.data.data.roleId === role.Admin || response.data.data.roleId === role.TerminalAdmin)) {
+      if (
+        window.location.pathname === "/DashboardAdmin" &&
+        (response.data.data.roleId === role.Admin ||
+          response.data.data.roleId === role.TerminalAdmin)
+      ) {
         setViewAllListings(true);
       } else {
         setViewAllListings(false);
@@ -112,7 +116,7 @@ const Dashboard = () => {
         const cityId = parseInt(cityIdParam);
         params.cityId = cityId;
       } else {
-        params.cityId = cities.map((city) => city.id).join(',')
+        params.cityId = cities.map((city) => city.id).join(",");
       }
 
       getListings(params).then((response) => {
@@ -188,19 +192,23 @@ const Dashboard = () => {
   function goToEditListingsPage(listing) {
     if (listing.categoryId === 18) {
       navigateTo(
-        isV2Backend ? `/EditListings?listingId=${listing.id}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+        isV2Backend
+          ? `/EditListings?listingId=${listing.id}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
+          : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}&categoryId=${listing.categoryId}&appointmentId=${listing.appointmentId}`
       );
     } else {
       navigateTo(
-        isV2Backend ? `/EditListings?listingId=${listing.id}` : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
+        isV2Backend
+          ? `/EditListings?listingId=${listing.id}`
+          : `/EditListings?listingId=${listing.id}&cityId=${listing.cityId}`
       );
     }
   }
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
-    onConfirm: () => { },
-    onCancel: () => { },
+    onConfirm: () => {},
+    onCancel: () => {},
   });
 
   const fetchUpdatedListings = useCallback(() => {
@@ -241,7 +249,11 @@ const Dashboard = () => {
 
   function goToListingPage(listing) {
     if (listing.sourceId === 1 || listing.showExternal === 0) {
-      navigateTo(isV2Backend ? `/Listing?listingId=${listing.id}` : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}`);
+      navigateTo(
+        isV2Backend
+          ? `/Listing?listingId=${listing.id}`
+          : `/Listing?listingId=${listing.id}&cityId=${listing.cityId}`
+      );
     } else if (listing.website) {
       window.location.href = listing.website;
     } else {
@@ -280,7 +292,9 @@ const Dashboard = () => {
 
   const onCityChange = (e) => {
     const selectedCityId = e.target.value;
-    const selectedCity = cities.find((city) => city.id.toString() === selectedCityId);
+    const selectedCity = cities.find(
+      (city) => city.id.toString() === selectedCityId
+    );
     const urlParams = new URLSearchParams(window.location.search);
 
     if (selectedCity) {
@@ -291,7 +305,7 @@ const Dashboard = () => {
       urlParams.delete("cityId");
     }
     urlParams.delete("pageNo");
-    setPageNoAndUpdateURL(1)
+    setPageNoAndUpdateURL(1);
 
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
@@ -309,32 +323,44 @@ const Dashboard = () => {
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className={`${selectedStatus === null ? "bg-gray-700 text-white" : "text-gray-300"
-                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${
+                      selectedStatus === null
+                        ? "bg-gray-700 text-white"
+                        : "text-gray-300"
+                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("allListings")}
                   </div>
                   <div
-                    className={`${selectedStatus === statusByName.Active ? "bg-gray-700 text-white" : "text-gray-300"
-                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${
+                      selectedStatus === statusByName.Active
+                        ? "bg-gray-700 text-white"
+                        : "text-gray-300"
+                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className={`${selectedStatus === statusByName.Pending ? "bg-gray-700 text-white" : "text-gray-300"
-                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${
+                      selectedStatus === statusByName.Pending
+                        ? "bg-gray-700 text-white"
+                        : "text-gray-300"
+                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
                   </div>
                   <div
-                    className={`${selectedStatus === statusByName.Inactive ? "bg-gray-700 text-white" : "text-gray-300"
-                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${
+                      selectedStatus === statusByName.Inactive
+                        ? "bg-gray-700 text-white"
+                        : "text-gray-300"
+                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
@@ -395,11 +421,13 @@ const Dashboard = () => {
         )}
       </div>
 
-
       <div className="container w-auto px-0 lg:px-5 py-2 bg-gray-900 min-h-screen flex flex-col">
         <div className="h-full">
           <div className="bg-white mt-4 p-0">
-            <h2 className="text-xl font-semibold text-gray-800 text-center px-5 py-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+            <h2
+              className="text-xl font-semibold text-gray-800 text-center px-5 py-2"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               {t("listings")}
             </h2>
             <div className="overflow-x-auto">
@@ -442,7 +470,10 @@ const Dashboard = () => {
                         <th
                           scope="col"
                           className="px-6 py-4 text-center"
-                          style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}
+                          style={{
+                            fontFamily:
+                              "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
+                          }}
                         >
                           {t("current status")}
                         </th>
@@ -450,7 +481,10 @@ const Dashboard = () => {
                         <th
                           scope="col"
                           className="px-6 py-4 text-center"
-                          style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}
+                          style={{
+                            fontFamily:
+                              "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
+                          }}
                         >
                           {t("status")}
                         </th>
@@ -476,26 +510,38 @@ const Dashboard = () => {
                           scope="row"
                           className="flex items-center px-6 py-4 text-slate-800 whitespace-nowrap cursor-pointer"
                           onClick={() => {
-                            if (!hiddenCategories.includes(listing.categoryId)) {
+                            if (
+                              !hiddenCategories.includes(listing.categoryId)
+                            ) {
                               goToListingPage(listing);
                             }
                           }}
                         >
                           {listing.pdf ? (
-                            <div className="object-cover object-center w-10 h-10 rounded-full overflow-hidden"
-                            >
+                            <div className="object-cover object-center w-10 h-10 rounded-full overflow-hidden">
                               <PdfThumbnail
-                                pdfUrl={process.env.REACT_APP_BUCKET_HOST + listing.pdf}
+                                pdfUrl={
+                                  process.env.REACT_APP_BUCKET_HOST +
+                                  listing.pdf
+                                }
                               />
                             </div>
                           ) : listing.logo ? (
                             <img
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
                               src={
-                                listing.sourceId === 1 ? listing.logo ? process.env.REACT_APP_BUCKET_HOST + listing.logo : LISTINGSIMAGE : listing.logo
+                                listing.sourceId === 1
+                                  ? listing.logo
+                                    ? process.env.REACT_APP_BUCKET_HOST +
+                                      listing.logo
+                                    : LISTINGSIMAGE
+                                  : listing.logo
                               }
                               onError={(e) => {
-                                e.target.src = listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE; // Set default image if loading fails
+                                e.target.src =
+                                  listing.appointmentId !== null
+                                    ? APPOINTMENTDEFAULTIMAGE
+                                    : LISTINGSIMAGE; // Set default image if loading fails
                               }}
                               alt="avatar"
                             />
@@ -503,7 +549,11 @@ const Dashboard = () => {
                             <img
                               alt="Listing"
                               className="w-10 h-10 object-cover rounded-full hidden sm:table-cell"
-                              src={listing.appointmentId !== null ? APPOINTMENTDEFAULTIMAGE : LISTINGSIMAGE}
+                              src={
+                                listing.appointmentId !== null
+                                  ? APPOINTMENTDEFAULTIMAGE
+                                  : LISTINGSIMAGE
+                              }
                             />
                           )}
 
@@ -535,9 +585,8 @@ const Dashboard = () => {
                           className="px-6 py-4 font-bold text-blue-600 text-center"
                           style={{ fontFamily: "Poppins, sans-serif" }}
                         >
-                          {listing.viewCount}
+                          {listing.viewCount || 0}
                         </td>
-
 
                         {viewAllListings && (
                           <td className="px-6 py-4 text-center font-medium text-gray-800 text-sm">
@@ -545,15 +594,23 @@ const Dashboard = () => {
                               <div className="space-y-1">
                                 {listing.cityData.map((city) => (
                                   <div key={city.id}>
-                                    <span className="text-gray-500">{city.name}:</span>{" "}
+                                    <span className="text-gray-500">
+                                      {city.name}:
+                                    </span>{" "}
                                     <span className="font-semibold">
-                                      {t(status[city.listingStatus]?.toLowerCase() || "unknown")}
+                                      {t(
+                                        status[
+                                          city.listingStatus
+                                        ]?.toLowerCase() || "unknown"
+                                      )}
                                     </span>
                                   </div>
                                 ))}
                               </div>
                             ) : (
-                              <span className="text-gray-400 italic">{t("noData")}</span>
+                              <span className="text-gray-400 italic">
+                                {t("noData")}
+                              </span>
                             )}
                           </td>
                         )}
@@ -567,7 +624,9 @@ const Dashboard = () => {
                             ></div> */}
 
                               <button
-                                onClick={() => setCityStatusModal({ visible: true, listing })}
+                                onClick={() =>
+                                  setCityStatusModal({ visible: true, listing })
+                                }
                                 className="text-sm text-blue-600 hover:underline font-semibold"
                               >
                                 {t("manageStatus")}
@@ -576,7 +635,6 @@ const Dashboard = () => {
                               //   <h1 style={{ fontFamily: "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif" }}>
                               //     {t(status[listing.statusId]?.toLowerCase())}
                               //   </h1> */}
-
                             </div>
                           </td>
                         )}
@@ -718,7 +776,6 @@ const Dashboard = () => {
                           </div>
                         </td> */}
                         {cityStatusModal?.visible && (
-
                           <ManageStatus
                             cityStatusModal={cityStatusModal}
                             setCityStatusModal={setCityStatusModal}
@@ -726,10 +783,8 @@ const Dashboard = () => {
                             fetchListings={fetchListings}
                             t={t}
                             status={status}
-
                           />
                         )}
-
                       </tr>
                     );
                   })}
@@ -777,7 +832,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </section >
+    </section>
   );
 };
 
