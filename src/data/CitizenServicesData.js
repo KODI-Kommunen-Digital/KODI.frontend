@@ -1,0 +1,85 @@
+import Images from "./Images";
+
+const CitizenServicesData = [
+  {
+    id: 1,
+    title: "Service 4",
+    link: "?categoryId=1",
+    image: Images.service4,
+    isExternalLink: 0,
+    categoryId: 1,
+  },
+  {
+    id: 2,
+    title: "Service 10",
+    link: "CitizenService/AllForums",
+    image: Images.service10,
+    isExternalLink: 0,
+  },
+  {
+    id: 3,
+    title: "Service 5",
+    link: "?categoryId=3",
+    image: Images.service5,
+    isExternalLink: 0,
+    categoryId: 3,
+  },
+  {
+    id: 4,
+    title: "Service 6",
+    link: "?categoryId=4",
+    image: Images.service6,
+    isExternalLink: 0,
+    categoryId: 4,
+  },
+  {
+    id: 5,
+    title: "Service 3",
+    link: "?categoryId=16",
+    image: Images.service3,
+    isExternalLink: 0,
+    categoryId: 16,
+  },
+  {
+    id: 6,
+    title: "Service 8",
+    link: "?categoryId=13",
+    image: Images.service8,
+    isExternalLink: 0,
+    categoryId: 13,
+  },
+  {
+    id: 7,
+    title: "Service 14",
+    link: "CitizenSubServices/14",
+    image: Images.service14,
+    isExternalLink: 0,
+    categoryId: 14,
+  },
+  {
+    id: 8,
+    title: "Service 15",
+    link: "CitizenSubServices/15",
+    image: Images.service15,
+    isExternalLink: 0,
+    categoryId: 15,
+  },
+  {
+    id: 9,
+    title: "Service 17",
+    link: "https://pages.et4.de/de/einbeck/wlan/portal",
+    image: Images.service17,
+    isExternalLink: 1,
+    categoryId: 0,
+  },
+  {
+    id: 10,
+    title: "Service 9",
+    link: "?categoryId=6",
+    image: Images.service9,
+    isExternalLink: 0,
+    categoryId: 6,
+  },
+];
+
+export default CitizenServicesData;

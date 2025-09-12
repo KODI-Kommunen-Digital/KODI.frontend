@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from "react";
 import HomePageNavBar from "../Components/V2/HomePageNavBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../Components/Footer";
 import { getCities } from "../Services/citiesApi";
 import LoadingPage from "../Components/LoadingPage";
 import RegionColors from "../Components/RegionColors";
-import citizenServicesData from "../data/CitizenServicesData";
+import citizenSubServicesData from "../data/CitizenSubServicesData";
 
-const CitizenService = () => {
+const CitizenSubServices = () => {
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+  const [filteredServices, setFilteredServices] = useState([]);
+
+  useEffect(() => {
+    if (id) {
+      const filtered = citizenSubServicesData.filter((service) =>
+        service.id.toString().startsWith(id)
+      );
+      setFilteredServices(filtered);
+    }
+  }, [id]);
   window.scrollTo(0, 0);
   const { t } = useTranslation();
   const [cities, setCities] = useState({});
   const [citizenService, setCitizenServices] = useState({});
-  const [citiesArray, setCitiesArray] = useState([]);
   const [cityId, setCityId] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
       const absolutePath = path.startsWith("/") ? path : `/${path}`;
@@ -25,12 +36,11 @@ const CitizenService = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     const urlParams = new URLSearchParams(window.location.search);
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("citizenService");
     getCities().then((response) => {
-      setCitiesArray(response.data.data);
       const temp = {};
       for (const city of response.data.data) {
         temp[city.id] = {
@@ -51,7 +61,7 @@ const CitizenService = () => {
   const fetchData = async () => {
     try {
       // const response = await getCitizenServices();
-      setCitizenServices(citizenServicesData);
+      setCitizenServices(citizenSubServicesData);
     } catch (error) {
       setCitizenServices([]);
       console.error("Error fetching citizenServices:", error);
@@ -61,22 +71,19 @@ const CitizenService = () => {
   };
 
   const handleLinkClick = (data) => {
-    if (data.isExternalLink) {
-      if (data.link.startsWith("http")) {
-        window.open(data.link, "_blank", "noopener,noreferrer");
-      } else {
-        navigateTo(
-          cityId
-            ? `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}&cityId=${cityId}`
-            : `/CitizenService/CitizenServiceManagement?citizenServiceId=${data.id}`
-        );
-      }
+    if (data.isExternalLink || data.link.startsWith("http")) {
+      window.open(data.link, "_blank", "noopener,noreferrer");
     } else {
+      let finalLink = data.link;
+      if (finalLink.startsWith("CitizenSubServices")) {
+        finalLink = `/CitizenSubServices/${data.categoryId}`;
+      }
       const urlWithCityId = cityId
-        ? data.link.includes("?")
-          ? `${data.link}&cityId=${cityId}`
-          : `${data.link}?cityId=${cityId}`
-        : data.link;
+        ? finalLink.includes("?")
+          ? `${finalLink}&cityId=${cityId}`
+          : `${finalLink}?cityId=${cityId}`
+        : finalLink;
+
       navigateTo(urlWithCityId);
     }
   };
@@ -101,48 +108,12 @@ const CitizenService = () => {
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans">
-                  {process.env.REACT_APP_REGION_NAME === "WALDI" ? (
-                    t("moreService")
-                  ) : (
-                    t("citizenService")
-                  )}
+                  {process.env.REACT_APP_REGION_NAME === "WALDI"
+                    ? t("moreService")
+                    : t("citizenSubServices")}
                 </h1>
 
-                <div className="col-span-6 sm:col-span-1 mt-1 w-auto px-0 mr-0">
-                  <select
-                    id="city"
-                    name="city"
-                    autoComplete="city-name"
-                    onChange={(e) => {
-                      const selectedCityId = e.target.value;
-                      const newUrl = !selectedCityId
-                        ? `${window.location.pathname}`
-                        : `${window.location.pathname}?cityId=${selectedCityId}`;
-                      window.history.replaceState({}, "", newUrl);
-                      setCityId(parseInt(selectedCityId));
-                    }}
-                    value={cityId || 0}
-                    className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    <option className="font-sans" value={0} key={0}>
-                      {t("allCities", {
-                        regionName: process.env.REACT_APP_REGION_NAME,
-                      })}
-                    </option>
-                    {citiesArray.map((city) => (
-                      <option
-                        className="font-sans"
-                        value={city.id}
-                        key={city.id}
-                      >
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              
               </div>
             </div>
           </div>
@@ -156,8 +127,8 @@ const CitizenService = () => {
           {citizenService && citizenService.length > 0 ? (
             <div className="bg-white lg:px-10 md:px-5 sm:px-0 px-2 py-6 mt-10 mb-10 space-y-10 flex flex-col">
               <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-                {citizenService &&
-                  citizenService
+                {filteredServices &&
+                  filteredServices
                     // .filter((data) => data.title !== "forums" || showForum)
                     .map((data, index) => (
                       <div
@@ -225,4 +196,4 @@ const CitizenService = () => {
   );
 };
 
-export default CitizenService;
+export default CitizenSubServices;
