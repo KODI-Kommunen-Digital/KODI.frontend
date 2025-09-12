@@ -1,0 +1,28 @@
+const Images = {
+  service1: require("../assets/images/services-1.png"),
+  service2: require("../assets/images/services-2.png"),
+  service3: require("../assets/images/services-3.png"),
+  service4: require("../assets/images/services-4.png"),
+  service5: require("../assets/images/services-5.png"),
+  service6: require("../assets/images/services-6.png"),
+  service7: require("../assets/images/services-7.png"),
+  service8: require("../assets/images/services-8.png"),
+  service9: require("../assets/images/services-9.png"),
+  service10: require("../assets/images/services-10.png"),
+  service13: require("../assets/images/services-13.png"),
+  service14: require("../assets/images/services-14.png"),
+  service141: require("../assets/images/services-14-1.png"),
+  service142: require("../assets/images/services-14-2.png"),
+  service143: require("../assets/images/services-14-3.png"),
+  service15: require("../assets/images/services-15.png"),
+  service151: require("../assets/images/services-15-1.png"),
+  service152: require("../assets/images/services-15-2.png"),
+  service153: require("../assets/images/services-15-3.png"),
+  service16: require("../assets/images/services-16.png"),
+  service161: require("../assets/images/services-16-1.png"),
+  service162: require("../assets/images/services-16-2.png"),
+  service163: require("../assets/images/services-16-3.png"),
+  service17: require("../assets/images/services-17.png"),
+};
+
+export default Images;

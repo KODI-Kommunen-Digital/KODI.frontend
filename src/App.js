@@ -28,6 +28,7 @@ import Favorites from "./Path/Favorites";
 import Listing from "./Path/SubPages/Listing";
 import ViewProfile from "./Path/SubPages/ViewProfile";
 import CitizenService from "./Path/CitizenService";
+import CitizenSubServices from "./Path/CitizenSubServices";
 import Forum from "./Path/Forums/Forum";
 import UploadPosts from "./Path/Forums/UploadPosts";
 import AllForums from "./Path/CitizenServices/AllForums";
@@ -132,6 +133,10 @@ const App = () => {
           <Route path="/Listing" element={<Listing />} exact />
           <Route path="/ViewProfile/:username" element={<ViewProfile />} />
           <Route path="/CitizenService" element={<CitizenService />} />
+          <Route
+            path="/CitizenSubServices/:id"
+            element={<CitizenSubServices />}
+          />
           <Route
             path="/CitizenService/CitizenServiceManagement"
             element={<CitizenServiceManagement />}
