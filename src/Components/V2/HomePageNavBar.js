@@ -66,7 +66,7 @@ export default function HomePageNavBar() {
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
       logout({ accesToken: accessToken, refreshToken })
-        .then(() => {})
+        .then(() => { })
         .finally(() => {
           clearStorage();
         });
@@ -76,6 +76,22 @@ export default function HomePageNavBar() {
   };
   const handleGotoDashboard = () => {
     navigateTo("/Dashboard");
+    localStorage.setItem("expandedMenus", JSON.stringify({
+      forum: false,
+      listing: true,
+      booking: false,
+      container: false,
+      admin: false
+    }));
+
+    localStorage.setItem("activeSubmenu", JSON.stringify({
+      forum: "",
+      listing: "myEntries",
+      booking: "",
+      container: "",
+      admin: "",
+      appdashboard: ""
+    }));
   };
 
   function clearStorage() {
@@ -116,7 +132,7 @@ export default function HomePageNavBar() {
     <div className="w-full fixed top-0 z-10">
       <Popover
         className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-        // id="scrollablePopover"
+      // id="scrollablePopover"
       >
         <div className="w-full">
           <div
