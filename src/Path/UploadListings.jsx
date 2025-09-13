@@ -442,6 +442,10 @@ function UploadListings() {
           ...listingInput,
           cityIds: selectedCities.map((city) => city.id), // Ensure cityIds is correctly set
         };
+
+        if (!isShowAdminStatus) {
+          delete dataToSubmit.statusId;
+        }
         // Post or update listing data
         const response = await (newListing
           ? postListingsData(dataToSubmit)
@@ -576,8 +580,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-          ? setSuccessMessage(t("listingCreated"))
-          : setSuccessMessage(t("listingUpdated"));
+            ? setSuccessMessage(t("listingCreated"))
+            : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -965,7 +969,7 @@ function UploadListings() {
     const isUserAdmin = [role.Admin, role.TerminalAdmin].includes(userRole);
     if (isUserAdmin) {
       getCitiesByUserId().then((citiesResponse) => {
-        const citiesData = citiesResponse.data.data;
+        const citiesData = citiesResponse.data.data?.map(el => el.id);
         setAdminCities(citiesData);
       });
     }
@@ -1156,107 +1160,107 @@ function UploadListings() {
 
           {process.env.REACT_APP_MULTIPLECITYSELECTION === "True" && newListing
             ? cities.length > 1 && (
-                <div className="relative mb-4">
-                  <label
-                    htmlFor="title"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                      ? t("cluster")
-                      : t("city")}{" "}
-                    *
-                  </label>
-                  <select
-                    id="cityIds"
-                    name="cityIds"
-                    value={cityIds || 0}
-                    onChange={onCityChange}
-                    disabled={!newListing}
-                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                  >
-                    <option value="">{t("select")}</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                    ? t("cluster")
+                    : t("city")}{" "}
+                  *
+                </label>
+                <select
+                  id="cityIds"
+                  name="cityIds"
+                  value={cityIds || 0}
+                  onChange={onCityChange}
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value="">{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
 
-                  <div className="flex flex-wrap mt-0">
-                    {selectedCities.map((city) => (
-                      <div
-                        key={city.id}
-                        className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
+                <div className="flex flex-wrap mt-0">
+                  {selectedCities.map((city) => (
+                    <div
+                      key={city.id}
+                      className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
+                    >
+                      <span>{city.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeCity(city.id)}
+                        className="text-red-600 ml-2"
                       >
-                        <span>{city.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeCity(city.id)}
-                          className="text-red-600 ml-2"
-                        >
-                          &times;
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
 
-                  <div
-                    className="h-[24px] text-red-600"
-                    style={{
-                      visibility:
-                        (selectedCities.length === 0 && error.cityIds) ||
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility:
+                      (selectedCities.length === 0 && error.cityIds) ||
                         error.cityAlreadySelected
-                          ? "visible"
-                          : "hidden",
-                    }}
-                  >
-                    {selectedCities.length === 0
-                      ? error.cityIds
-                      : error.cityAlreadySelected}
-                  </div>
+                        ? "visible"
+                        : "hidden",
+                  }}
+                >
+                  {selectedCities.length === 0
+                    ? error.cityIds
+                    : error.cityAlreadySelected}
                 </div>
-              )
+              </div>
+            )
             : cities.length > 1 && (
-                <div className="relative mb-4">
-                  <label
-                    htmlFor="title"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                      ? t("cluster")
-                      : t("city")}{" "}
-                    *
-                  </label>
-                  <select
-                    type="text"
-                    id="cityIds"
-                    name="cityIds"
-                    value={cityIds || 0}
-                    onChange={onCityChange}
-                    autoComplete="country-name"
-                    disabled={!newListing}
-                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                  >
-                    <option value={0}>{t("select")}</option>
-                    {cities.map((city) => (
-                      <option key={Number(city.id)} value={Number(city.id)}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div
-                    className="h-[24px] text-red-600"
-                    style={{
-                      visibility:
-                        selectedCities.length === 0 && error.cityIds
-                          ? "visible"
-                          : "hidden",
-                    }}
-                  >
-                    {error.cityIds}
-                  </div>
+              <div className="relative mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                    ? t("cluster")
+                    : t("city")}{" "}
+                  *
+                </label>
+                <select
+                  type="text"
+                  id="cityIds"
+                  name="cityIds"
+                  value={cityIds || 0}
+                  onChange={onCityChange}
+                  autoComplete="country-name"
+                  disabled={!newListing}
+                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option value={0}>{t("select")}</option>
+                  {cities.map((city) => (
+                    <option key={Number(city.id)} value={Number(city.id)}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility:
+                      selectedCities.length === 0 && error.cityIds
+                        ? "visible"
+                        : "hidden",
+                  }}
+                >
+                  {error.cityIds}
                 </div>
-              )}
+              </div>
+            )}
 
           <div className="relative mb-4">
             <label
@@ -1772,9 +1776,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1807,9 +1810,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1841,9 +1843,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1914,8 +1915,8 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP"
                 ? t(
-                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
-                  )
+                  "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
+                )
                 : ""}
             </p>
             <button

@@ -8,7 +8,7 @@ import {
   getMyListing,
   updateListingsData,
   deleteListing,
-  getListingsBySearch,
+  // getListingsBySearch,
 } from "../Services/listingsApi";
 import { useNavigate } from "react-router-dom";
 import { role } from "../Constants/role";
@@ -269,12 +269,19 @@ const Dashboard = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+      let response;
+      if (viewAllListings === true) {
+        response = await getListings({
+          searchQuery,
+          ...params,
+        });
+      } else {
+        response = await getMyListing({
+          searchQuery,
+          ...params,
+        });
 
-      const response = await getListingsBySearch({
-        searchQuery,
-        ...params,
-      });
-
+      }
       setListings(response.data.data);
     } catch (error) {
       console.error("Error:", error);
