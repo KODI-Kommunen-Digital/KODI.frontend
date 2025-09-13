@@ -181,8 +181,9 @@ function SideBar() {
             </span>
 
             <svg
-              className={`h-6 w-6 ml-4 fill-current ${isListingExpanded ? "rotate-180" : ""
-                }`}
+              className={`h-6 w-6 ml-4 fill-current ${
+                isListingExpanded ? "rotate-180" : ""
+              }`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -276,8 +277,9 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${isAdminExpanded ? "rotate-180" : ""
-                    }`}
+                  className={`h-6 w-6 ml-4 fill-current ${
+                    isAdminExpanded ? "rotate-180" : ""
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -304,7 +306,7 @@ function SideBar() {
                       {t("cities")}
                     </span>
                   </div>
-                  {userRole === role.Admin && (
+                  {/* {userRole === role.Admin && (
 
                     <div
                       className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
@@ -329,7 +331,7 @@ function SideBar() {
                       </span>
                     </div>
 
-                  )}
+                  )} */}
                 </div>
               )}
             </>
@@ -353,8 +355,9 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${isForumExpanded ? "rotate-180" : ""
-                    }`}
+                  className={`h-6 w-6 ml-4 fill-current ${
+                    isForumExpanded ? "rotate-180" : ""
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -368,7 +371,10 @@ function SideBar() {
                       <div
                         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                         onClick={() => {
-                          localStorage.setItem("selectedItem", t("createGroup"));
+                          localStorage.setItem(
+                            "selectedItem",
+                            t("createGroup")
+                          );
                           navigateTo("/CreateGroup");
                         }}
                       >
@@ -433,8 +439,9 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${isBookingExpanded ? "rotate-180" : ""
-                    }`}
+                  className={`h-6 w-6 ml-4 fill-current ${
+                    isBookingExpanded ? "rotate-180" : ""
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -450,8 +457,13 @@ function SideBar() {
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                           onClick={() => {
-                            localStorage.setItem("selectedItem", t("myBooking"));
-                            navigateTo("/AppointmentBooking/AppointmentsUserCreated");
+                            localStorage.setItem(
+                              "selectedItem",
+                              t("myBooking")
+                            );
+                            navigateTo(
+                              "/AppointmentBooking/AppointmentsUserCreated"
+                            );
                           }}
                         >
                           <svg
@@ -474,7 +486,10 @@ function SideBar() {
                         <div
                           className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                           onClick={() => {
-                            localStorage.setItem("selectedItem", t("myBooking"));
+                            localStorage.setItem(
+                              "selectedItem",
+                              t("myBooking")
+                            );
                             navigateTo("/AppointmentBooking/MyBookings");
                           }}
                         >
@@ -519,8 +534,9 @@ function SideBar() {
                 </span>
 
                 <svg
-                  className={`h-6 w-6 ml-4 fill-current ${isContainerExpanded ? "rotate-180" : ""
-                    }`}
+                  className={`h-6 w-6 ml-4 fill-current ${
+                    isContainerExpanded ? "rotate-180" : ""
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                 >
@@ -556,7 +572,10 @@ function SideBar() {
                       <div
                         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
                         onClick={() => {
-                          localStorage.setItem("selectedItem", t("addNewProduct"));
+                          localStorage.setItem(
+                            "selectedItem",
+                            t("addNewProduct")
+                          );
                           navigateTo("/AddNewProducts");
                         }}
                       >
@@ -715,7 +734,6 @@ function SideBar() {
             </div>
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
-
             {loggedIn && (
               <div
                 className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-slate-600 text-white"
@@ -737,9 +755,7 @@ function SideBar() {
               </div>
             )}
             <div className="my-2 bg-gray-600 h-[1px]"></div>
-
           </div>
-
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "./bodyContainer.css";
 import SideBar from "../Components/SideBar";
@@ -14,7 +14,7 @@ import {
   deleteListingImage,
 } from "../Services/listingsApi";
 import { getProfile } from "../Services/usersApi";
-import { getCities } from "../Services/citiesApi";
+import { getCities, getCitiesByUserId } from "../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../Components/Alert";
 import { getCategory, getNewsSubCategory } from "../Services/CategoryApi";
@@ -22,7 +22,12 @@ import { hiddenCategories } from "../Constants/hiddenCategories";
 import FormImage from "./FormImage";
 import { UploadSVG } from "../assets/icons/upload";
 import ServiceAndTime from "../Components/ServiceAndTime";
-import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../Services/appointmentBookingApi";
+import {
+  createAppointments,
+  updateAppointments,
+  getAppointments,
+  getAppointmentServices,
+} from "../Services/appointmentBookingApi";
 import { status } from "../Constants/status";
 import { role } from "../Constants/role";
 
@@ -167,8 +172,12 @@ function UploadListings() {
     const newFiles = Array.from(event.target.files);
 
     if (image.length > 0) {
-      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+      const validImages = newFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      const invalidFiles = newFiles.filter(
+        (file) => !file.type.startsWith("image/")
+      );
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
@@ -177,7 +186,7 @@ function UploadListings() {
         setImage((prevImages) => [...prevImages, ...validImages]);
       }
     } else {
-      newFiles.forEach(file => {
+      newFiles.forEach((file) => {
         if (file.type === "application/pdf") {
           setLocalImageOrPdf(true);
           setPdf(file);
@@ -197,8 +206,12 @@ function UploadListings() {
     const newFiles = Array.from(e.target.files);
 
     if (image.length > 0) {
-      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+      const validImages = newFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      const invalidFiles = newFiles.filter(
+        (file) => !file.type.startsWith("image/")
+      );
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
@@ -207,7 +220,7 @@ function UploadListings() {
         setImage((prevImages) => [...prevImages, ...validImages]);
       }
     } else {
-      newFiles.forEach(file => {
+      newFiles.forEach((file) => {
         if (file.type === "application/pdf") {
           setLocalImageOrPdf(true);
           setPdf(file);
@@ -258,6 +271,8 @@ function UploadListings() {
   //Sending data to backend starts
   const [cityIds, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
+  const [adminCities, setAdminCities] = useState([]);
+
   const [selectedCities, setSelectedCities] = useState([]);
   const [listingInput, setListingInput] = useState({
     categoryId: 0,
@@ -313,20 +328,28 @@ function UploadListings() {
 
     metadata: {
       holidays: [],
-      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+      openingDates: daysOfWeek.reduce(
+        (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+        {}
+      ),
       maxBookingPerSlot: 5,
     },
-    services: [{
-      name: "",
-      duration: "",
-      // durationUnit: "minutes",
-      slotSameAsAppointment: false,
-      metadata: {
-        holidays: [],
-        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
-        maxBookingPerSlot: 5,
+    services: [
+      {
+        name: "",
+        duration: "",
+        // durationUnit: "minutes",
+        slotSameAsAppointment: false,
+        metadata: {
+          holidays: [],
+          openingDates: daysOfWeek.reduce(
+            (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+            {}
+          ),
+          maxBookingPerSlot: 5,
+        },
       },
-    }],
+    ],
   });
 
   const [appointmentError, setAppointmentError] = useState({
@@ -355,12 +378,17 @@ function UploadListings() {
     // Validate time slots function
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
-        const { duration, metadata: { openingDates } } = service;
+        const {
+          duration,
+          metadata: { openingDates },
+        } = service;
         const durationInMinutes = parseInt(duration, 10);
 
         for (let day in openingDates) {
           for (let slot of openingDates[day]) {
-            const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+            const [startHour, startMinute] = slot.startTime
+              .split(":")
+              .map(Number);
             const [endHour, endMinute] = slot.endTime.split(":").map(Number);
 
             // Skip validation if both startTime and endTime are 00:00
@@ -368,14 +396,15 @@ function UploadListings() {
               continue;
             }
 
-            const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+            const slotDuration =
+              endHour * 60 + endMinute - (startHour * 60 + startMinute);
 
             if (slotDuration < durationInMinutes) {
               return t("slotDurationMismatch", {
                 day,
                 duration,
                 startTime: slot.startTime,
-                endTime: slot.endTime
+                endTime: slot.endTime,
               });
             }
           }
@@ -392,7 +421,7 @@ function UploadListings() {
         return;
       }
     }
-    event.preventDefault();  // Prevent default form submission
+    event.preventDefault(); // Prevent default form submission
 
     // Validate other form errors
     let valid = true;
@@ -411,7 +440,7 @@ function UploadListings() {
       try {
         const dataToSubmit = {
           ...listingInput,
-          cityIds: selectedCities.map(city => city.id),  // Ensure cityIds is correctly set
+          cityIds: selectedCities.map((city) => city.id), // Ensure cityIds is correctly set
         };
         // Post or update listing data
         const response = await (newListing
@@ -419,18 +448,32 @@ function UploadListings() {
           : updateListingsData(cityIds, dataToSubmit, listingId));
 
         let currentListingId = [];
-        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
-          currentListingId = response.data.data.map(item => item.listingId);
+        if (
+          response &&
+          response.data &&
+          response.data.data &&
+          Array.isArray(response.data.data) &&
+          response.data.data.length > 0
+        ) {
+          currentListingId = response.data.data.map((item) => item.listingId);
         }
 
         let cityIdsArray = [];
-        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
-          cityIdsArray = response.data.data.map(item => item.cityId);
+        if (
+          response &&
+          response.data &&
+          response.data.data &&
+          Array.isArray(response.data.data) &&
+          response.data.data.length > 0
+        ) {
+          cityIdsArray = response.data.data.map((item) => item.cityId);
         }
 
         // Filter opening dates for appointmentInput and services before submitting
-        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
-        const filteredServices = appointmentInput.services.map(service => ({
+        const filteredOpeningDates = filterOpeningDates(
+          appointmentInput.metadata.openingDates
+        );
+        const filteredServices = appointmentInput.services.map((service) => ({
           ...service,
           metadata: {
             ...service.metadata,
@@ -471,49 +514,61 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            let allPromises = []
+            let allPromises = [];
             for (let img of imageArray) {
               imageForm.append("image", img);
             }
             for (let index = 0; index < currentListingId.length; index++) {
-              allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+              allPromises.push(
+                uploadListingImage(
+                  imageForm,
+                  cityIdsArray[index],
+                  currentListingId[index]
+                )
+              );
             }
-            await Promise.all(allPromises)
+            await Promise.all(allPromises);
           } else if (pdf) {
-            let allPromises = []
+            let allPromises = [];
             const pdfForm = new FormData();
             const minIterations = Math.min(cityIdsArray.length);
             for (let index = 0; index < minIterations; index++) {
               const cityId = cityIdsArray[index];
               const listingId = currentListingId[index];
               pdfForm.append("pdf", pdf);
-              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId))
+              allPromises.push(uploadListingPDF(pdfForm, cityId, listingId));
             }
-            await Promise.all(allPromises)
+            await Promise.all(allPromises);
           }
         }
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
+            await updateAppointments(
+              cityIds,
+              listingId,
+              listingInput.appointmentId,
+              filteredAppointmentInput
+            );
           } catch (error) {
-            console.error('Error updating appointment:', error);
+            console.error("Error updating appointment:", error);
           }
         } else if (appointmentAdded) {
           const minIterations = Math.min(cityIdsArray.length);
-          let allAppointmentPromises = []
+          let allAppointmentPromises = [];
           for (let index = 0; index < minIterations; index++) {
             const cityId = cityIdsArray[index];
             const listingId = currentListingId[index];
 
             try {
               // await createAppointments(cityId, listingId, filteredAppointmentInput);
-              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+              allAppointmentPromises.push(
+                createAppointments(cityId, listingId, filteredAppointmentInput)
+              );
             } catch (error) {
-              console.error('Error posting appointment:', error);
+              console.error("Error posting appointment:", error);
             }
           }
-
 
           await Promise.all(allAppointmentPromises);
         }
@@ -521,8 +576,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-            ? setSuccessMessage(t("listingCreated"))
-            : setSuccessMessage(t("listingUpdated"));
+          ? setSuccessMessage(t("listingCreated"))
+          : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -543,12 +598,16 @@ function UploadListings() {
   };
 
   const handleCancel = () => {
-    navigate('/Dashboard');
+    navigate("/Dashboard");
   };
 
   const filterOpeningDates = (openingDates) => {
     return Object.keys(openingDates).reduce((acc, day) => {
-      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+      if (
+        openingDates[day].some(
+          (slot) => slot.startTime !== "00:00" || slot.endTime !== "00:00"
+        )
+      ) {
         acc[day] = openingDates[day];
       }
       return acc;
@@ -571,7 +630,7 @@ function UploadListings() {
       const categories = response?.data?.data || [];
 
       const filteredCategories = categories.filter(
-        category => !hiddenCategories.includes(category.id)
+        (category) => !hiddenCategories.includes(category.id)
       );
 
       setCategories(filteredCategories);
@@ -584,7 +643,7 @@ function UploadListings() {
       setSubCategories(subcatList);
     });
     setListingInput((prevInput) => ({ ...prevInput, categoryId }));
-    setAppointmentInput(prevAppointmentInput => ({
+    setAppointmentInput((prevAppointmentInput) => ({
       ...prevAppointmentInput,
       title: listingInput.title,
       description: listingInput.description,
@@ -615,48 +674,55 @@ function UploadListings() {
         }
 
         const appointmentId = listingData.appointmentId;
-        const listingId = listingData.id
+        const listingId = listingData.id;
         if (appointmentId) {
-          getAppointments(cityIds, listingId, appointmentId).then((appointmentResponse) => {
-            const appointmentData = appointmentResponse.data.data;
-            appointmentData.metadata = JSON.parse(appointmentData.metadata);
+          getAppointments(cityIds, listingId, appointmentId)
+            .then((appointmentResponse) => {
+              const appointmentData = appointmentResponse.data.data;
+              appointmentData.metadata = JSON.parse(appointmentData.metadata);
 
-            daysOfWeek.forEach((day) => {
-              if (!appointmentData.metadata.openingDates[day]) {
-                appointmentData.metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
-              }
-            });
-
-            setAppointmentInput(appointmentData);
-            // console.log(appointmentData)
-
-            getAppointmentServices(cityIds, listingId, appointmentId)
-              .then((servicesResponse) => {
-
-                console.log(servicesResponse.data.data)
-                const servicesData = servicesResponse.data.data.map((item) => {
-                  const metadata = JSON.parse(item.metadata);
-
-                  // Ensure all days of the week have at least one time slot
-                  daysOfWeek.forEach((day) => {
-                    if (!metadata.openingDates[day]) {
-                      metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
-                    }
-                  });
-
-                  return { ...item, metadata };
-                });
-                setAppointmentInput(prevState => ({
-                  ...prevState,
-                  services: servicesData
-                }));
-              })
-              .catch((error) => {
-                console.error("Error fetching appointment services:", error);
+              daysOfWeek.forEach((day) => {
+                if (!appointmentData.metadata.openingDates[day]) {
+                  appointmentData.metadata.openingDates[day] = [
+                    { startTime: "00:00", endTime: "00:00" },
+                  ];
+                }
               });
-          }).catch((error) => {
-            console.error("Error fetching appointment details:", error);
-          });
+
+              setAppointmentInput(appointmentData);
+              // console.log(appointmentData)
+
+              getAppointmentServices(cityIds, listingId, appointmentId)
+                .then((servicesResponse) => {
+                  console.log(servicesResponse.data.data);
+                  const servicesData = servicesResponse.data.data.map(
+                    (item) => {
+                      const metadata = JSON.parse(item.metadata);
+
+                      // Ensure all days of the week have at least one time slot
+                      daysOfWeek.forEach((day) => {
+                        if (!metadata.openingDates[day]) {
+                          metadata.openingDates[day] = [
+                            { startTime: "00:00", endTime: "00:00" },
+                          ];
+                        }
+                      });
+
+                      return { ...item, metadata };
+                    }
+                  );
+                  setAppointmentInput((prevState) => ({
+                    ...prevState,
+                    services: servicesData,
+                  }));
+                })
+                .catch((error) => {
+                  console.error("Error fetching appointment services:", error);
+                });
+            })
+            .catch((error) => {
+              console.error("Error fetching appointment details:", error);
+            });
         }
 
         if (listingData.logo && listingData.otherlogos) {
@@ -873,7 +939,7 @@ function UploadListings() {
       const errorMessage = getErrorMessage(name, value);
       setError((prevState) => ({
         ...prevState,
-        [name]: errorMessage
+        [name]: errorMessage,
       }));
     }
   };
@@ -895,11 +961,21 @@ function UploadListings() {
     });
   }, []);
 
+  useEffect(() => {
+    const isUserAdmin = [role.Admin, role.TerminalAdmin].includes(userRole);
+    if (isUserAdmin) {
+      getCitiesByUserId().then((citiesResponse) => {
+        const citiesData = citiesResponse.data.data;
+        setAdminCities(citiesData);
+      });
+    }
+  }, [userRole]);
+
   const onCityChange = async (e) => {
     const selectedCityId = parseInt(e.target.value);
 
-    if (process.env.REACT_APP_MULTIPLECITYSELECTION === 'True') {
-      if (selectedCities.some(city => city.id === selectedCityId)) {
+    if (process.env.REACT_APP_MULTIPLECITYSELECTION === "True") {
+      if (selectedCities.some((city) => city.id === selectedCityId)) {
         setError((prevState) => ({
           ...prevState,
           cityAlreadySelected: t("cityAlreadySelected"),
@@ -912,14 +988,17 @@ function UploadListings() {
         }));
       }
 
-      const selectedCity = cities.find(city => city.id === selectedCityId);
+      const selectedCity = cities.find((city) => city.id === selectedCityId);
       if (selectedCity) {
         setCityId(selectedCityId);
-        const updatedSelectedCities = [...selectedCities, { id: selectedCity.id, name: selectedCity.name }];
+        const updatedSelectedCities = [
+          ...selectedCities,
+          { id: selectedCity.id, name: selectedCity.name },
+        ];
         setSelectedCities(updatedSelectedCities);
         setListingInput((prev) => ({
           ...prev,
-          cityIds: updatedSelectedCities.map(city => city.id),
+          cityIds: updatedSelectedCities.map((city) => city.id),
           villageId: 0,
         }));
       }
@@ -928,37 +1007,38 @@ function UploadListings() {
         validateInput(e);
       }
     } else {
-      const selectedCity = cities.find(city => city.id === selectedCityId);
+      const selectedCity = cities.find((city) => city.id === selectedCityId);
       if (selectedCity) {
         setCityId(selectedCityId);
-        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]);  // Update selectedCities with single city
+        setSelectedCities([{ id: selectedCity.id, name: selectedCity.name }]); // Update selectedCities with single city
         setListingInput((prev) => ({
           ...prev,
           cityIds: [selectedCityId],
           villageId: 0,
         }));
       }
-      if (parseInt(cityIds))
-        validateInput(e);
+      if (parseInt(cityIds)) validateInput(e);
     }
   };
 
   const removeCity = (cityIds) => {
-    const updatedSelectedCities = selectedCities.filter(city => city.id !== cityIds);
+    const updatedSelectedCities = selectedCities.filter(
+      (city) => city.id !== cityIds
+    );
     setSelectedCities(updatedSelectedCities);
     setListingInput((prev) => ({
       ...prev,
-      cityIds: updatedSelectedCities.map(city => city.id),
+      cityIds: updatedSelectedCities.map((city) => city.id),
       villageId: 0,
     }));
 
     if (updatedSelectedCities.length === 0 && cities.length > 1) {
-      setError(prevState => ({
+      setError((prevState) => ({
         ...prevState,
         cityIds: t("pleaseSelectCity"),
       }));
     } else {
-      setError(prevState => ({
+      setError((prevState) => ({
         ...prevState,
         cityIds: "", // Reset the cityIds error when there are selected cities again
       }));
@@ -980,7 +1060,7 @@ function UploadListings() {
       setSubCategories(subcatList);
     }
     if (categoryId == 18) {
-      setAppointmentAdded(true)
+      setAppointmentAdded(true);
     }
     setListingInput((prevInput) => ({ ...prevInput, categoryId }));
     setSubcategoryId(null);
@@ -1027,6 +1107,10 @@ function UploadListings() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
+  const isShowAdminStatus = useMemo(() => {
+    return userRole === role.Admin || adminCities.includes(parseInt(cityIds));
+  }, [cityIds, adminCities]);
+
   return (
     <section className="base-bg-slate-600 body-font relative">
       <SideBar />
@@ -1070,93 +1154,109 @@ function UploadListings() {
             </div>
           </div>
 
-          {process.env.REACT_APP_MULTIPLECITYSELECTION === 'True' && newListing ? (
-            cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-                </label>
-                <select
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  disabled={!newListing}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value="">{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
+          {process.env.REACT_APP_MULTIPLECITYSELECTION === "True" && newListing
+            ? cities.length > 1 && (
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-600"
+                  >
+                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                      ? t("cluster")
+                      : t("city")}{" "}
+                    *
+                  </label>
+                  <select
+                    id="cityIds"
+                    name="cityIds"
+                    value={cityIds || 0}
+                    onChange={onCityChange}
+                    disabled={!newListing}
+                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  >
+                    <option value="">{t("select")}</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
 
-                <div className="flex flex-wrap mt-0">
-                  {selectedCities.map((city) => (
-                    <div key={city.id} className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300">
-                      <span>{city.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeCity(city.id)}
-                        className="text-red-600 ml-2"
+                  <div className="flex flex-wrap mt-0">
+                    {selectedCities.map((city) => (
+                      <div
+                        key={city.id}
+                        className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
                       >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <span>{city.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeCity(city.id)}
+                          className="text-red-600 ml-2"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                  </div>
 
-                <div
-                  className="h-[24px] text-red-600"
-                  style={{
-                    visibility: (selectedCities.length === 0 && error.cityIds) || error.cityAlreadySelected ? "visible" : "hidden",
-                  }}
-                >
-                  {selectedCities.length === 0 ? error.cityIds : error.cityAlreadySelected}
+                  <div
+                    className="h-[24px] text-red-600"
+                    style={{
+                      visibility:
+                        (selectedCities.length === 0 && error.cityIds) ||
+                        error.cityAlreadySelected
+                          ? "visible"
+                          : "hidden",
+                    }}
+                  >
+                    {selectedCities.length === 0
+                      ? error.cityIds
+                      : error.cityAlreadySelected}
+                  </div>
                 </div>
-              </div>
-            )
-          ) : (
-            cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")} *
-                </label>
-                <select
-                  type="text"
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  autoComplete="country-name"
-                  disabled={!newListing}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value={0}>{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={Number(city.id)} value={Number(city.id)}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-                <div
-                  className="h-[24px] text-red-600"
-                  style={{
-                    visibility: selectedCities.length === 0 && error.cityIds ? "visible" : "hidden",
-                  }}
-                >
-                  {error.cityIds}
+              )
+            : cities.length > 1 && (
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-600"
+                  >
+                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                      ? t("cluster")
+                      : t("city")}{" "}
+                    *
+                  </label>
+                  <select
+                    type="text"
+                    id="cityIds"
+                    name="cityIds"
+                    value={cityIds || 0}
+                    onChange={onCityChange}
+                    autoComplete="country-name"
+                    disabled={!newListing}
+                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  >
+                    <option value={0}>{t("select")}</option>
+                    {cities.map((city) => (
+                      <option key={Number(city.id)} value={Number(city.id)}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    className="h-[24px] text-red-600"
+                    style={{
+                      visibility:
+                        selectedCities.length === 0 && error.cityIds
+                          ? "visible"
+                          : "hidden",
+                    }}
+                  >
+                    {error.cityIds}
+                  </div>
                 </div>
-              </div>
-            )
-          )}
+              )}
 
           <div className="relative mb-4">
             <label
@@ -1180,7 +1280,11 @@ function UploadListings() {
               </option>
               {categories.map((category) => {
                 return (
-                  <option className="font-sans" value={category.id} key={category.id}>
+                  <option
+                    className="font-sans"
+                    value={category.id}
+                    key={category.id}
+                  >
                     {t(category.name)} {t(categoryDescription(category.id))}
                   </option>
                 );
@@ -1196,49 +1300,58 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
-            appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
-
-          {(Number(categoryId) === 1 && Object.keys(subCategories).length > 0) && (
-            <div className="relative mb-0">
-              <label
-                htmlFor="subcategoryId"
-                className="block text-sm font-medium text-gray-600"
-              >
-                {t("subCategory")} *
-              </label>
-              <select
-                type="subcategoryId"
-                id="subcategoryId"
-                name="subcategoryId"
-                value={subcategoryId || 0}
-                onChange={handleSubcategoryChange}
-                onBlur={validateInput}
-                required
-                // disabled={!newListing}
-                className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-              >
-                <option className="font-sans" value={0} key={0}>
-                  {t("chooseOneSubCategory")}
-                </option>
-                {Object.keys(subCategories).map((key) => {
-                  return (
-                    <option className="font-sans" value={key} key={key}>
-                      {t(subCategories[key])}
-                    </option>
-                  );
-                })}
-              </select>
-              <div
-                className="h-[24px] text-red-600"
-                style={{
-                  visibility: error.subcategoryId ? "visible" : "hidden",
-                }}
-              >
-                {error.selectedSubCategory}
-              </div>
-            </div>
+          {categoryId == 18 && (
+            <ServiceAndTime
+              appointmentInput={appointmentInput}
+              setAppointmentInput={setAppointmentInput}
+              appointmentError={appointmentError}
+              setAppointmentError={setAppointmentError}
+              daysOfWeek={daysOfWeek}
+              initialTimeSlot={initialTimeSlot}
+            />
           )}
+
+          {Number(categoryId) === 1 &&
+            Object.keys(subCategories).length > 0 && (
+              <div className="relative mb-0">
+                <label
+                  htmlFor="subcategoryId"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  {t("subCategory")} *
+                </label>
+                <select
+                  type="subcategoryId"
+                  id="subcategoryId"
+                  name="subcategoryId"
+                  value={subcategoryId || 0}
+                  onChange={handleSubcategoryChange}
+                  onBlur={validateInput}
+                  required
+                  // disabled={!newListing}
+                  className="overflow-y:scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                >
+                  <option className="font-sans" value={0} key={0}>
+                    {t("chooseOneSubCategory")}
+                  </option>
+                  {Object.keys(subCategories).map((key) => {
+                    return (
+                      <option className="font-sans" value={key} key={key}>
+                        {t(subCategories[key])}
+                      </option>
+                    );
+                  })}
+                </select>
+                <div
+                  className="h-[24px] text-red-600"
+                  style={{
+                    visibility: error.subcategoryId ? "visible" : "hidden",
+                  }}
+                >
+                  {error.selectedSubCategory}
+                </div>
+              </div>
+            )}
 
           {categoryId == 1 && (
             <div className="relative mb-0">
@@ -1341,7 +1454,9 @@ function UploadListings() {
                     id="startDate"
                     name="startDate"
                     value={
-                      listingInput.startDate ? formatDateTime(listingInput.startDate) : null
+                      listingInput.startDate
+                        ? formatDateTime(listingInput.startDate)
+                        : null
                     }
                     onChange={onInputChange}
                     onBlur={validateInput}
@@ -1378,7 +1493,11 @@ function UploadListings() {
                     type="datetime-local"
                     id="endDate"
                     name="endDate"
-                    value={listingInput.endDate ? formatDateTime(listingInput.endDate) : null}
+                    value={
+                      listingInput.endDate
+                        ? formatDateTime(listingInput.endDate)
+                        : null
+                    }
                     onChange={onInputChange}
                     onBlur={validateInput}
                     className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
@@ -1402,7 +1521,9 @@ function UploadListings() {
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("stichworte") : t("streetAddress")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("stichworte")
+                : t("streetAddress")}
             </label>
             <div>
               <input
@@ -1466,7 +1587,9 @@ function UploadListings() {
               htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("personen")
+                : t("telephone")}
             </label>
             <input
               type="text"
@@ -1520,7 +1643,9 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("veranstaltungsinfos") : t("website")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("veranstaltungsinfos")
+                : t("website")}
             </label>
             <input
               type="text"
@@ -1533,46 +1658,47 @@ function UploadListings() {
               placeholder={t("enter_website")}
             />
           </div>
-          {userRole === role.Admin && (
-            <div className="relative mb-0 mt-4">
-              <div className="w-full">
-                <label
-                  htmlFor="statusId"
-                  className="block text-sm font-medium text-gray-900"
-                >
-                  {t("Status")}
-                </label>
-                <div className="relative">
-                  <select
-                    id="statusId"
-                    name="statusId"
-                    value={listingInput.statusId}
-                    onChange={onInputChange}
-                    onBlur={validateInput}
-                    className="overflow-y-scroll border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full appearance-none"
+          {(userRole === role.Admin || userRole === role.TerminalAdmin) &&
+            isShowAdminStatus && (
+              <div className="relative mb-0 mt-4">
+                <div className="w-full">
+                  <label
+                    htmlFor="statusId"
+                    className="block text-sm font-medium text-gray-900"
                   >
-                    {Object.entries(status)?.map(([key, value]) => (
-                      <option key={key} value={key}>
-                        {t(value.toLocaleLowerCase())}
-                        {/* Using the status values translated with t() */}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                    ▼
-                  </span>
-                </div>
-                <div
-                  className="mt-2 text-sm text-red-600"
-                  style={{
-                    visibility: error.status ? "visible" : "hidden",
-                  }}
-                >
-                  {error.status}
+                    {t("Status")}
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="statusId"
+                      name="statusId"
+                      value={listingInput.statusId}
+                      onChange={onInputChange}
+                      onBlur={validateInput}
+                      className="overflow-y-scroll border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full appearance-none"
+                    >
+                      {Object.entries(status)?.map(([key, value]) => (
+                        <option key={key} value={key}>
+                          {t(value.toLocaleLowerCase())}
+                          {/* Using the status values translated with t() */}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                      ▼
+                    </span>
+                  </div>
+                  <div
+                    className="mt-2 text-sm text-red-600"
+                    style={{
+                      visibility: error.status ? "visible" : "hidden",
+                    }}
+                  >
+                    {error.status}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div className="relative mb-0">
             <label
@@ -1623,9 +1749,7 @@ function UploadListings() {
             <label className="block text-sm font-medium text-gray-700">
               {t("addFileHere")}
             </label>
-            <div
-              className="h-[24px] text-red-600"
-            >
+            <div className="h-[24px] text-red-600">
               {t("maxFileSizeAllert")}
             </div>
 
@@ -1648,8 +1772,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1682,8 +1807,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1715,8 +1841,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1776,11 +1903,7 @@ function UploadListings() {
               )}
             </div>
 
-            <div
-              className="h-[24px] text-red-600"
-            >
-              {t("imagePdfWarning")}
-            </div>
+            <div className="h-[24px] text-red-600">{t("imagePdfWarning")}</div>
           </div>
         </div>
       </div>
@@ -1789,7 +1912,11 @@ function UploadListings() {
         <div className="bg-white mt-4 p-6">
           <div className="py-2 mt-1 px-2">
             <p className="pb-2">
-              {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
+              {process.env.REACT_APP_NAME == "WALDI APP"
+                ? t(
+                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
+                  )
+                : ""}
             </p>
             <button
               type="button"
@@ -1841,6 +1968,3 @@ function UploadListings() {
 }
 
 export default UploadListings;
-
-
-
