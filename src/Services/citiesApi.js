@@ -4,18 +4,19 @@ export async function getCities(params) {
 	return instance.get(`/cities`, { params });
 }
 
+export async function getCitiesByUserId(params) {
+	const userId =
+		window.localStorage.getItem("userId") ||
+		window.sessionStorage.getItem("userId");
+	return instance.get(`admin/${userId}/cityAdmin`, { params });
+}
+
 export async function getCitizenServices(params) {
 	return instance.get("/citizenServices", { params });
 }
 
 export async function getcitizenServiceData(params) {
 	return instance.get("/citizenServices/citizenServiceData", { params });
-}
-export async function getCitiesByUserId(params) {
-	const userId =
-		window.localStorage.getItem("userId") ||
-		window.sessionStorage.getItem("userId");
-	return instance.get(`cities/${userId}/cityAdmin`, { params });
 }
 export async function deleteCity(cityId) {
 	return instance.delete(`cities/${cityId}`);
