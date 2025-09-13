@@ -47,6 +47,7 @@ import AllCities from "./Path/AllCities.jsx";
 import Modal from "react-modal";
 import AddCity from "./Path/AddCity.jsx";
 import CreatedAdminsList from "./Path/CityAdminList.jsx";
+import AddAdmins from "./Path/CityAdmins.jsx";
 
 Modal.setAppElement("#root");
 
@@ -94,17 +95,11 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/TermsOfUse" element={<TermsOfUse />} />
           <Route path="/EditListings" element={<UploadListings />} exact />
-          {
-            process.env.REACT_DISPLAY_CITIES === 'True' && (
-              <>
-                <Route path="/AllCities" element={<AllCities />} exact />
-                <Route path="/Addcity" element={<AddCity />} />
-                <Route path="/Editcity" element={<AddCity />} exact />
-              </>
-            )
-          }
+          <Route path="/AllCities" element={<AllCities />} exact />
+          {/* <Route path="/Addcity" element={<AddCity />} /> */}
+          <Route path="/Editcity" element={<AddCity />} exact />
           <Route path="/admin-list" element={<CreatedAdminsList />} exact />
-
+          <Route path="/admins" element={<AddAdmins />} exact />
 
           {inFrame && (
             <React.Fragment>

@@ -18,7 +18,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
-import { getCities } from "../Services/citiesApi";
+import { getCitiesByUserId } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 
 const Dashboard = () => {
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    getCities().then((citiesResponse) => {
+    getCitiesByUserId().then((citiesResponse) => {
       setCities(citiesResponse.data.data);
     });
     const cityId = parseInt(urlParams.get("cityId"));
@@ -88,7 +88,7 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
-      if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
+      if (window.location.pathname === "/DashboardAdmin" && (response.data.data.roleId === role.Admin || response.data.data.roleId === role.TerminalAdmin)) {
         setViewAllListings(true);
       } else {
         setViewAllListings(false);
