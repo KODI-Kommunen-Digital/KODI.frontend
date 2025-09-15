@@ -297,6 +297,7 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    isAllDayEvent: false,
   });
 
   const [error, setError] = useState({
@@ -580,8 +581,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-            ? setSuccessMessage(t("listingCreated"))
-            : setSuccessMessage(t("listingUpdated"));
+          ? setSuccessMessage(t("listingCreated"))
+          : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -969,7 +970,7 @@ function UploadListings() {
     const isUserAdmin = [role.Admin, role.TerminalAdmin].includes(userRole);
     if (isUserAdmin) {
       getCitiesByUserId().then((citiesResponse) => {
-        const citiesData = citiesResponse.data.data?.map(el => el.id);
+        const citiesData = citiesResponse.data.data?.map((el) => el.id);
         setAdminCities(citiesData);
       });
     }
@@ -1066,7 +1067,12 @@ function UploadListings() {
     if (categoryId == 18) {
       setAppointmentAdded(true);
     }
-    setListingInput((prevInput) => ({ ...prevInput, categoryId }));
+    setListingInput((prevInput) => ({
+      ...prevInput,
+      categoryId,
+      subcategoryId: 0,
+      isAllDayEvent: false,
+    }));
     setSubcategoryId(null);
     validateInput(event);
 
@@ -1080,7 +1086,11 @@ function UploadListings() {
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
     setSubcategoryId(subcategoryId);
-    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setListingInput((prevInput) => ({
+      ...prevInput,
+      subcategoryId,
+      isAllDayEvent: false,
+    }));
     validateInput(event);
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("subcategoryId", subcategoryId);
@@ -1110,6 +1120,30 @@ function UploadListings() {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
+
+  const handleIsAllDayChange = (e) => {
+    const isChecked = e.target.checked;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+    const milliseconds = String(today.getMilliseconds()).padStart(3, "0");
+
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+
+    setListingInput((prev) => {
+      return {
+        ...prev,
+        isAllDayEvent: isChecked,
+        startDate: isChecked ? formattedDate : "",
+        endDate: isChecked ? "" : prev.endDate,
+      };
+    });
+  };
 
   const isShowAdminStatus = useMemo(() => {
     return userRole === role.Admin || adminCities.includes(parseInt(cityIds));
@@ -1160,107 +1194,107 @@ function UploadListings() {
 
           {process.env.REACT_APP_MULTIPLECITYSELECTION === "True" && newListing
             ? cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                    ? t("cluster")
-                    : t("city")}{" "}
-                  *
-                </label>
-                <select
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  disabled={!newListing}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value="">{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-600"
+                  >
+                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                      ? t("cluster")
+                      : t("city")}{" "}
+                    *
+                  </label>
+                  <select
+                    id="cityIds"
+                    name="cityIds"
+                    value={cityIds || 0}
+                    onChange={onCityChange}
+                    disabled={!newListing}
+                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  >
+                    <option value="">{t("select")}</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
 
-                <div className="flex flex-wrap mt-0">
-                  {selectedCities.map((city) => (
-                    <div
-                      key={city.id}
-                      className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
-                    >
-                      <span>{city.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeCity(city.id)}
-                        className="text-red-600 ml-2"
+                  <div className="flex flex-wrap mt-0">
+                    {selectedCities.map((city) => (
+                      <div
+                        key={city.id}
+                        className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
                       >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <span>{city.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeCity(city.id)}
+                          className="text-red-600 ml-2"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                  </div>
 
-                <div
-                  className="h-[24px] text-red-600"
-                  style={{
-                    visibility:
-                      (selectedCities.length === 0 && error.cityIds) ||
+                  <div
+                    className="h-[24px] text-red-600"
+                    style={{
+                      visibility:
+                        (selectedCities.length === 0 && error.cityIds) ||
                         error.cityAlreadySelected
-                        ? "visible"
-                        : "hidden",
-                  }}
-                >
-                  {selectedCities.length === 0
-                    ? error.cityIds
-                    : error.cityAlreadySelected}
+                          ? "visible"
+                          : "hidden",
+                    }}
+                  >
+                    {selectedCities.length === 0
+                      ? error.cityIds
+                      : error.cityAlreadySelected}
+                  </div>
                 </div>
-              </div>
-            )
+              )
             : cities.length > 1 && (
-              <div className="relative mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                    ? t("cluster")
-                    : t("city")}{" "}
-                  *
-                </label>
-                <select
-                  type="text"
-                  id="cityIds"
-                  name="cityIds"
-                  value={cityIds || 0}
-                  onChange={onCityChange}
-                  autoComplete="country-name"
-                  disabled={!newListing}
-                  className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
-                >
-                  <option value={0}>{t("select")}</option>
-                  {cities.map((city) => (
-                    <option key={Number(city.id)} value={Number(city.id)}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-                <div
-                  className="h-[24px] text-red-600"
-                  style={{
-                    visibility:
-                      selectedCities.length === 0 && error.cityIds
-                        ? "visible"
-                        : "hidden",
-                  }}
-                >
-                  {error.cityIds}
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-600"
+                  >
+                    {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                      ? t("cluster")
+                      : t("city")}{" "}
+                    *
+                  </label>
+                  <select
+                    type="text"
+                    id="cityIds"
+                    name="cityIds"
+                    value={cityIds || 0}
+                    onChange={onCityChange}
+                    autoComplete="country-name"
+                    disabled={!newListing}
+                    className="overflow-y-scroll w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md disabled:bg-gray-400"
+                  >
+                    <option value={0}>{t("select")}</option>
+                    {cities.map((city) => (
+                      <option key={Number(city.id)} value={Number(city.id)}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    className="h-[24px] text-red-600"
+                    style={{
+                      visibility:
+                        selectedCities.length === 0 && error.cityIds
+                          ? "visible"
+                          : "hidden",
+                    }}
+                  >
+                    {error.cityIds}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
           <div className="relative mb-4">
             <label
@@ -1436,87 +1470,101 @@ function UploadListings() {
 
           {categoryId == 3 && (
             <div className="relative mb-0">
-              <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative">
-                  <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    ></svg>
-                  </div>
-                  <label
-                    htmlFor="startDate"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {t("eventStartDate")} *
-                  </label>
+              <div className="mb-4">
+                <label className="inline-flex items-center">
                   <input
-                    type="datetime-local"
-                    id="startDate"
-                    name="startDate"
-                    value={
-                      listingInput.startDate
-                        ? formatDateTime(listingInput.startDate)
-                        : null
-                    }
-                    onChange={onInputChange}
-                    onBlur={validateInput}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder="Start Date"
+                    type="checkbox"
+                    className="form-checkbox h-5 w-5 text-indigo-600"
+                    checked={listingInput.isAllDayEvent || false}
+                    onChange={handleIsAllDayChange}
                   />
-                  <div
-                    className="h-[24px] text-red-600"
-                    style={{
-                      visibility: error.startDate ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.startDate}
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    ></svg>
-                  </div>
-                  <label
-                    htmlFor="endDate"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {t("eventEndDate")}
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="endDate"
-                    name="endDate"
-                    value={
-                      listingInput.endDate
-                        ? formatDateTime(listingInput.endDate)
-                        : null
-                    }
-                    onChange={onInputChange}
-                    onBlur={validateInput}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder="End Date"
-                  />
-                  <div
-                    className="h-[24px] text-red-600"
-                    style={{
-                      visibility: error.endDate ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.endDate}
-                  </div>
-                </div>
+                  <span className="ml-2 text-gray-700">{t("allDayEvent")}</span>
+                </label>
               </div>
+
+              {listingInput.isAllDayEvent ? null : (
+                <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="relative">
+                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      ></svg>
+                    </div>
+                    <label
+                      htmlFor="startDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventStartDate")} *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      id="startDate"
+                      name="startDate"
+                      value={
+                        listingInput.startDate
+                          ? formatDateTime(listingInput.startDate)
+                          : null
+                      }
+                      onChange={onInputChange}
+                      onBlur={validateInput}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder="Start Date"
+                    />
+                    <div
+                      className="h-[24px] text-red-600"
+                      style={{
+                        visibility: error.startDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.startDate}
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      ></svg>
+                    </div>
+                    <label
+                      htmlFor="endDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventEndDate")}
+                    </label>
+                    <input
+                      type="datetime-local"
+                      id="endDate"
+                      name="endDate"
+                      value={
+                        listingInput.endDate
+                          ? formatDateTime(listingInput.endDate)
+                          : null
+                      }
+                      onChange={onInputChange}
+                      onBlur={validateInput}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder="End Date"
+                    />
+                    <div
+                      className="h-[24px] text-red-600"
+                      style={{
+                        visibility: error.endDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.endDate}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -1776,8 +1824,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1810,8 +1859,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1843,8 +1893,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1915,8 +1966,8 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP"
                 ? t(
-                  "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
-                )
+                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
+                  )
                 : ""}
             </p>
             <button
