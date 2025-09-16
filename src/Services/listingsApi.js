@@ -8,9 +8,11 @@ export async function getAllListings(params) {
 	return axios.get(`/listings`,{params});
 }
 
-export async function getListings(params) {
+export async function getListings(params, disableSortByStartDate = false) {
 	params.showExternalListings = "true";
-	params.sortByStartDate ="true";
+	  if (!disableSortByStartDate) {
+        params.sortByStartDate = "true";
+    }
 	return axios.get(`/listings`, { params });
 }
 export async function getMyListing(params) {
