@@ -137,6 +137,9 @@ const HomePage = () => {
     if (selectedSubCategoryId) {
       params.subcategoryId = selectedSubCategoryId;
     }
+    if (params?.categoryId === 3) {
+      params.sortByStartDate = true;
+    }
     try {
       const response = await getListings(params);
       const listings = response?.data?.data || [];
