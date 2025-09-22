@@ -96,6 +96,8 @@ class ProfilePage extends React.Component {
     getProfile()
       .then((response) => {
         const newState = Object.assign({}, this.state);
+        // @NOTE: resetting the phone number
+        response.data.data.phoneNumber = "";
         newState.profile = response.data.data;
         newState.pageLoading = false;
         this.setState(newState);
@@ -323,7 +325,7 @@ class ProfilePage extends React.Component {
     }
 
     updatePassword({ currentPassword, newPassword })
-      .then((response) => { })
+      .then((response) => {})
       .catch((error) => {
         console.error(error);
       });
@@ -485,7 +487,7 @@ class ProfilePage extends React.Component {
                             src={
                               this.state.profile.image
                                 ? process.env.REACT_APP_BUCKET_HOST +
-                                this.state.profile.image
+                                  this.state.profile.image
                                 : PROFILEIMAGE
                             }
                             alt="profile"
