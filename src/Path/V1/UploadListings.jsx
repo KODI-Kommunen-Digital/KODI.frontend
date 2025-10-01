@@ -1581,7 +1581,7 @@ function UploadListings() {
                     }
                   }}
                   className="border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full"
-                  placeholder={t("selectDateTime") || "Select date and time"}
+                  placeholder={t("selectDateTime")}
                 />
                 {error.scheduledDateTime && (
                   <div className="mt-2 text-sm text-red-600">

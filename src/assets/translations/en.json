@@ -1050,5 +1050,6 @@
     "pleaseSelectDateTime": "Please select a date and time",
     "scheduledDateMustBeFuture": "The selected date must be later than the current time.",
     "scheduledDateTime": "Scheduled Date and Time",
-    "schedulePost": "Schedule Post"
+    "schedulePost": "Schedule Post",
+    "selectDateTime": "Select Date and Time"
 }

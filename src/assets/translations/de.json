@@ -1062,5 +1062,6 @@
     "pleaseSelectDateTime": "Bitte wählen Sie ein Datum und eine Uhrzeit aus",
     "scheduledDateMustBeFuture": "das ausgewählte Datum muss nach der aktuellen Uhrzeit liegen.",
     "scheduledDateTime": "Geplantes Datum und Uhrzeit",
-    "schedulePost": "Beitrag planen"
+    "schedulePost": "Beitrag planen",
+    "selectDateTime": "Wählen Sie Datum und Uhrzeit aus"
 }
