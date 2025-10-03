@@ -123,6 +123,7 @@
     "imprint": "Impressum",
     "inactive": "Inaktiv",
     "pending": "in Überprüfung",
+    "schedule" : "Zeitplan",
     "information": "Informationen",
     "invalidData": "Du hast ungültige Daten eingegeben. Bitte korrigiere den Fehler und versuche es erneut",
     "itemsFound": "Gefundene Beiträge",
@@ -1063,5 +1064,6 @@
     "scheduledDateMustBeFuture": "das ausgewählte Datum muss nach der aktuellen Uhrzeit liegen.",
     "scheduledDateTime": "Geplantes Datum und Uhrzeit",
     "schedulePost": "Beitrag planen",
-    "selectDateTime": "Wählen Sie Datum und Uhrzeit aus"
+    "selectDateTime": "Wählen Sie Datum und Uhrzeit aus",
+    "ScheduledAt" : "Geplant um"
 }

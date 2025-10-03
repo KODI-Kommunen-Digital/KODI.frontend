@@ -169,6 +169,7 @@
     "password": "Password",
     "passwordsDoNotMatch": "Password and Confirm Password does not match",
     "pending": "Pending",
+    "ScheduledAt": "Scheduled At",
     "personalInformation": "Personal Information",
     "phoneNumber": "Phone Number",
     "photo": "Photo",

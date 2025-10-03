@@ -1670,7 +1670,7 @@ function UploadListings() {
                     htmlFor="scheduledAt"
                     className="block text-sm font-medium text-gray-900"
                   >
-                    {t("scheduledAt")} *
+                    {t("ScheduledAt")} *
                   </label>
                   <Flatpickr
                     id="scheduledAt"
