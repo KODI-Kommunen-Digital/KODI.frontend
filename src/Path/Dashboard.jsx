@@ -331,17 +331,19 @@ const Dashboard = () => {
                   >
                     {t("inactive")}
                   </div>
-                  <div
-                    className={`${
-                      selectedStatus === statusByName.Schedule
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
-                    onClick={() => setSelectedStatus(statusByName.Schedule)}
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {t("schedule")}
-                  </div>
+                  {role === "Admin" && (
+                    <div
+                      className={`${
+                        selectedStatus === statusByName.Schedule
+                          ? "bg-gray-700 text-white"
+                          : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      onClick={() => setSelectedStatus(statusByName.Schedule)}
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t("schedule")}
+                    </div>
+                  )}
                 </div>
               </div>
 
