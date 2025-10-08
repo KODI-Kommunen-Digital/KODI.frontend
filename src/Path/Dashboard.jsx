@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
+  const [userRoleId, setUserRoleId] = useState(null);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const navigate = useNavigate();
@@ -80,6 +81,9 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
+      const currentRoleId = response.data.data.roleId;
+      setUserRoleId(currentRoleId);
+
       if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
         setViewAllListings(true);
       } else {
@@ -331,7 +335,7 @@ const Dashboard = () => {
                   >
                     {t("inactive")}
                   </div>
-                  {role === "Admin" && (
+                  {userRoleId === role.Admin && (
                     <div
                       className={`${
                         selectedStatus === statusByName.Schedule
