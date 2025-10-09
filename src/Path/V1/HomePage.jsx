@@ -188,7 +188,7 @@ const HomePage = () => {
               <img
                 alt="ecommerce"
                 className="object-cover object-center h-full w-full"
-                src={process.env.REACT_APP_BUCKET_HOST + "admin/Homepage.jpg"}
+                src={process.env.REACT_APP_BUCKET_HOST + "admin/HomePageWeb.jpg"}
                 loading="lazy"
               />
               <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
