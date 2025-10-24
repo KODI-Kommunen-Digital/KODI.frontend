@@ -139,18 +139,22 @@ export default function ImprintPage() {
                 <p className="font-sans font-bold text-black mb-1 text-2xl title-font">
                     {t("contact")} :
                 </p>
-                <br />
-
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {process.env.REACT_APP_TELEPHONE}
+                    {/* {process.env.REACT_APP_TELEPHONE} */}
+                    {t("PrivacyPhone")}
                 </p>
-                <br />
                 {/* <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
 					Telefax: 08243 9699-25
 				</p>
 				<br /> */}
                 <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
-                    {t("Email")} {process.env.REACT_APP_EMAIL}
+                    {t("Email")}
+                    <a
+                        href={`mailto:${t("PrivacyEmail")}`}
+                        className="text-blue-600 hover:underline"
+                    >
+                        {t("PrivacyEmail")}
+                    </a>
                 </p>
                 <br />
 
