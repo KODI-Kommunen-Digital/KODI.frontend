@@ -110,7 +110,7 @@ const HomePage = () => {
     }
 
     setIsLoading(true);
-    const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+    const params = { pageSize: 12, statusId: 1, pageNo: 1};
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
       params.cityId = cityId;
@@ -123,7 +123,7 @@ const HomePage = () => {
     } else {
       urlParams.delete("categoryId");
     }
-
+    urlParams.set("sortByStartDate", true);
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
 
@@ -133,12 +133,17 @@ const HomePage = () => {
   }, [cities, cityId, categoryId]);
 
   const fetchData = async (params) => {
-    params.showExternalListings = "false";
-    if (selectedSubCategoryId) {
-      params.subcategoryId = selectedSubCategoryId;
-    }
+  const queryParams = {
+    ...params,
+    showExternalListings: "false",
+  };
+  if (selectedSubCategoryId) {
+    queryParams.subcategoryId = selectedSubCategoryId;
+  }
+
+  const disableSortByStartDate = !queryParams.categoryId;
     try {
-      const response = await getListings(params);
+      const response = await getListings(params, disableSortByStartDate);
       const listings = response?.data?.data || [];
 
       const filteredListings = listings.filter(
@@ -419,7 +424,11 @@ const HomePage = () => {
                   if (!terminalView) {
                     localStorage.setItem("selectedItem", t("chooseOneCategory"));
                   }
-                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings?categoryId=${categoryId}`;
+                  const params = [];
+                  if (categoryId && !terminalView) params.push(`categoryId=${categoryId}`);
+                  if (cityId && !terminalView) params.push(`cityId=${cityId}`);
+                  const query = params.length ? `?${params.join("&")}` : "";
+                  const url = terminalView ? "/AllListings?terminalView=true" : `/AllListings${query}?sortByStartDate=true`;
                   navigateTo(url);
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
@@ -492,7 +501,7 @@ const HomePage = () => {
                           onClick={() => {
                             const scrollPosition = window.scrollY;
                             localStorage.setItem("selectedCity", city.name);
-                            navigateTo(`/AllListings?cityId=${city.id}`);
+                            navigateTo(`/AllListings?cityId=${city.id}&sortByStartDate=true`);
                             window.addEventListener("popstate", function () {
                               window.scrollTo(0, scrollPosition);
                             });

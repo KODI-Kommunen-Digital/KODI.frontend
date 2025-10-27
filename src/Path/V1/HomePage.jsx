@@ -123,9 +123,9 @@ const HomePage = () => {
   };
 
   function goToAllListingsPage(category) {
-    let navUrl = `/AllListings?categoryId=${category}`;
+    let navUrl = `/AllListings?categoryId=${category}&sortByStartDate=true`;
     if (cityId)
-      navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}`;
+      navUrl = `/AllListings?categoryId=${category}` + `&cityId=${cityId}&sortByStartDate=true`;
     navigateTo(navUrl);
   }
 
@@ -352,7 +352,7 @@ const HomePage = () => {
                       key={city.id}
                       onClick={() => {
                         const scrollPosition = window.scrollY;
-                        navigateTo(`/AllListings?cityId=${city.id}`);
+                        navigateTo(`/AllListings?cityId=${city.id}&sortByStartDate=true`);
                         window.addEventListener("popstate", function () {
                           window.scrollTo(0, scrollPosition);
                         });
@@ -417,7 +417,7 @@ const HomePage = () => {
               type="submit"
               onClick={() => {
                 localStorage.setItem("selectedItem", t("chooseOneCategory"));
-                const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
+                const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings?sortByStartDate=true";
                 navigateTo(url);
               }}
               className="w-full rounded-xl sm:w-80 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
