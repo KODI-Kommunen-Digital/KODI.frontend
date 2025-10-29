@@ -26,6 +26,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from 'date-fns';
 import Delta from "quill-delta";
+import { getProfile } from "../../Services/usersApi";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ function UploadListings() {
   const [pdf, setPdf] = useState(null);
   const [localImageOrPdf, setLocalImageOrPdf] = useState(false);
   const [appointmentAdded, setAppointmentAdded] = useState(false);
-  const [isAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -281,6 +282,9 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    isScheduled: false,
+    scheduledAt: "",
+
   });
 
   const [error, setError] = useState({
@@ -292,6 +296,7 @@ function UploadListings() {
     cityAlreadySelected: "",
     startDate: "",
     endDate: "",
+    scheduledAt: "",
   });
 
   const daysOfWeek = [
@@ -417,9 +422,12 @@ function UploadListings() {
 
       try {
         const cityIdsToSubmit = listingInput.cityIds;
+
         const dataToSubmit = {
           ...listingInput,
           cityIds: cityIdsToSubmit,
+          statusId: isAdmin && listingInput?.isScheduled ? 4 : 1
+
         };
 
         const response = newListing
@@ -609,7 +617,9 @@ function UploadListings() {
           subcatList[subCat.id] = subCat.name;
         });
         setSubCategories(subcatList);
-
+        getProfile().then((response) => {
+          setIsAdmin(response.data.data.roleId === 1);
+        });
         if (listingId) {
           setListingId(parseInt(listingId));
           setNewListing(false);
@@ -620,6 +630,8 @@ function UploadListings() {
           const listingsResponse = await getListingsById(null, listingId);
 
           const listingData = listingsResponse.data.data;
+          listingData.isScheduled = listingData.isScheduled || false;
+          listingData.scheduledAt = listingData.scheduledAt || "";
           const allCities = listingData.allCities || [];
 
           const [firstCityId, ...otherCityIds] = allCities;
@@ -638,6 +650,9 @@ function UploadListings() {
             startDate: listingData.startDate || "",
             endDate: listingData.endDate || "",
             expiryDate: listingData.expiryDate || "",
+            isScheduled: listingData.statusId === 4 && listingData?.scheduledAt ? true : false,
+            scheduledAt: listingData?.scheduledAt,
+            statusId: listingData.statusId,
           });
           setDescription(listingData.description);
           setCategoryId(listingData.categoryId);
@@ -649,6 +664,7 @@ function UploadListings() {
               disableDates: true,
             }));
           }
+
 
           // Handle appointments
           if (listingData.appointmentId) {
@@ -829,6 +845,18 @@ function UploadListings() {
 
   const getErrorMessage = (name, value) => {
     switch (name) {
+      case "scheduledAt":
+        if (listingInput.isScheduled && !value) {
+          return t("pleaseSelectDateTime") || "Please select a date and time";
+        }
+        if (value) {
+          const selectedDate = new Date(value);
+          const now = new Date();
+          if (selectedDate < now) {
+            return t("scheduledDateMustBeFuture") || "Scheduled date must be in the future";
+          }
+        }
+        return "";
       case "title":
         if (!value) {
           return t("pleaseEnterTitle");
@@ -1160,13 +1188,17 @@ function UploadListings() {
       categoryId === 3 ? listingInput.startDate : true;
 
     const checkFormValidity = () => {
+      const isScheduledValid = listingInput.isScheduled ?
+        (listingInput.scheduledAt && !error.scheduledAt) : true;
+
       const requiredFields = [
         listingInput.title,
         listingInput.description,
         categoryId,
         selectedSingleCity,
-        !(error.title || error.description || error.categoryId),
+        !(error.title || error.description || error.categoryId || error.scheduledAt),
         isCategorySpecificValid,
+        isScheduledValid
       ];
 
       return requiredFields.every(Boolean);
@@ -1565,6 +1597,106 @@ function UploadListings() {
               </div>
             </div>
           )}
+          {isAdmin ?
+            <div className="relative mb-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isScheduled"
+                  name="isScheduled"
+                  checked={listingInput.isScheduled}
+                  disabled={listingId && listingInput?.statusId !== 4}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setListingInput((prev) => ({
+                      ...prev,
+                      isScheduled: isChecked,
+                      scheduledAt: isChecked ? prev.scheduledAt : "",
+                    }));
+                    if (!isChecked) {
+                      setError((prev) => ({
+                        ...prev,
+                        scheduledAt: "",
+                      }));
+                    }
+                  }}
+                  className="h-4 w-4 text-black border-gray-300 rounded focus:ring-black"
+                />
+                <label
+                  htmlFor="isScheduled"
+                  className="text-sm font-medium text-gray-900"
+                >
+                  {t("schedulePost") || "Schedule Post"}
+                </label>
+              </div>
+
+              {listingInput.isScheduled && (
+                <div className="mt-3">
+                  <label
+                    htmlFor="scheduledAt"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    {t("ScheduledAt")} *
+                  </label>
+                  <Flatpickr
+                    id="scheduledAt"
+                    name="scheduledAt"
+                    value={listingInput.scheduledAt}
+                    options={{
+                      enableTime: true,
+                      dateFormat: "Y-m-d H:i:S",
+                      minDate: "today",
+                      time_24hr: true,
+                    }}
+                    disabled={listingId && listingInput?.statusId !== 4}
+                    onChange={(date) => {
+                      if (date && date[0]) {
+                        const formatted = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                        setListingInput((prev) => ({
+                          ...prev,
+                          scheduledAt: formatted,
+                        }));
+
+                        // Validation
+                        const selectedDate = new Date(date[0]);
+                        const now = new Date();
+
+                        if (selectedDate < now) {
+                          setError((prev) => ({
+                            ...prev,
+                            scheduledAt: t("scheduledDateMustBeFuture"),
+                          }));
+                        } else {
+                          setError((prev) => ({
+                            ...prev,
+                            scheduledAt: "",
+                          }));
+                        }
+                      } else {
+                        setListingInput((prev) => ({
+                          ...prev,
+                          scheduledAt: "",
+                        }));
+                        setError((prev) => ({
+                          ...prev,
+                          scheduledAt: t("pleaseSelectDateTime"),
+                        }));
+                      }
+                    }}
+                    className="border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full"
+                    placeholder={t("selectDateTime")}
+                  />
+                  {error.scheduledAt && (
+                    <div className="mt-2 text-sm text-red-600">
+                      {error.scheduledAt}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            : ""
+          }
+
 
           <div className="relative mb-4">
             <label

@@ -284,6 +284,8 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    isScheduled: false,
+    scheduledDateTime: "",
   });
 
   const [error, setError] = useState({
@@ -292,6 +294,7 @@ function UploadListings() {
     title: "",
     description: "",
     cityIds: "",
+    scheduledDateTime: "",
     cityAlreadySelected: "",
     startDate: "",
     endDate: "",
@@ -617,6 +620,9 @@ function UploadListings() {
       getListingsById(cityIds, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
         listingData.cityIds = cityIds;
+        // Set default values for scheduling if not present in backend data
+        listingData.isScheduled = listingData.isScheduled || false;
+        listingData.scheduledDateTime = listingData.scheduledDateTime || "";
         setListingInput(listingData);
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
@@ -790,6 +796,18 @@ function UploadListings() {
 
   const getErrorMessage = (name, value) => {
     switch (name) {
+      case "scheduledDateTime":
+        if (listingInput.isScheduled && !value) {
+          return t("pleaseSelectDateTime") || "Please select a date and time";
+        }
+        if (value) {
+          const selectedDate = new Date(value);
+          const now = new Date();
+          if (selectedDate < now) {
+            return t("scheduledDateMustBeFuture") || "Scheduled date must be in the future";
+          }
+        }
+        return "";
       case "title":
         if (!value) {
           return t("pleaseEnterTitle");
@@ -1088,14 +1106,18 @@ function UploadListings() {
 
   useEffect(() => {
     const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
+    const isScheduledValid = listingInput.isScheduled ?
+      (listingInput.scheduledDateTime && !error.scheduledDateTime) : true;
+
     const checkFormValidity = () => {
       const requiredFields = [
         listingInput.title,
         listingInput.description,
         categoryId,
         cityIds || selectedCities.length > 0,
-        !(error.title || error.description || error.categoryId),
+        !(error.title || error.description || error.categoryId || error.scheduledDateTime),
         isCategorySpecificValid,
+        isScheduledValid,
       ];
 
       return requiredFields.every(Boolean);
@@ -1473,6 +1495,102 @@ function UploadListings() {
               </div>
             </div>
           )}
+
+          {/* Schedule Post Section */}
+          <div className="relative mb-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isScheduled"
+                name="isScheduled"
+                checked={listingInput.isScheduled}
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  setListingInput((prev) => ({
+                    ...prev,
+                    isScheduled: isChecked,
+                    scheduledDateTime: isChecked ? prev.scheduledDateTime : "",
+                  }));
+                  if (!isChecked) {
+                    setError((prev) => ({
+                      ...prev,
+                      scheduledDateTime: "",
+                    }));
+                  }
+                }}
+                className="h-4 w-4 text-black border-gray-300 rounded focus:ring-black"
+              />
+              <label
+                htmlFor="isScheduled"
+                className="text-sm font-medium text-gray-900"
+              >
+                {t("schedulePost") || "Schedule Post"}
+              </label>
+            </div>
+
+            {listingInput.isScheduled && (
+              <div className="mt-3">
+                <label
+                  htmlFor="scheduledDateTime"
+                  className="block text-sm font-medium text-gray-900"
+                >
+                  {t("scheduledDateTime")} *
+                </label>
+                <Flatpickr
+                  id="scheduledDateTime"
+                  name="scheduledDateTime"
+                  value={listingInput.scheduledDateTime}
+                  options={{
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    minDate: "today",
+                    time_24hr: true,
+                  }}
+                  onChange={(date) => {
+                    if (date && date[0]) {
+                      const formatted = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                      setListingInput((prev) => ({
+                        ...prev,
+                        scheduledDateTime: formatted,
+                      }));
+
+                      // Validation
+                      const selectedDate = new Date(date[0]);
+                      const now = new Date();
+
+                      if (selectedDate < now) {
+                        setError((prev) => ({
+                          ...prev,
+                          scheduledDateTime: t("scheduledDateMustBeFuture"),
+                        }));
+                      } else {
+                        setError((prev) => ({
+                          ...prev,
+                          scheduledDateTime: "",
+                        }));
+                      }
+                    } else {
+                      setListingInput((prev) => ({
+                        ...prev,
+                        scheduledDateTime: "",
+                      }));
+                      setError((prev) => ({
+                        ...prev,
+                        scheduledDateTime: t("pleaseSelectDateTime"),
+                      }));
+                    }
+                  }}
+                  className="border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full"
+                  placeholder={t("selectDateTime")}
+                />
+                {error.scheduledDateTime && (
+                  <div className="mt-2 text-sm text-red-600">
+                    {error.scheduledDateTime}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <div className="relative mb-4">
             <label
