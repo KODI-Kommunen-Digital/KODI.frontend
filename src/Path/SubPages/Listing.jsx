@@ -37,15 +37,21 @@ const Description = (props) => {
       if (element.nodeName === "OL") {
         return Array.from(element.children)
           .map((child, index) => `${index + 1}. ${processElement(child)}`)
-          .join("\n");
+          .join("<br>");
       } else if (element.nodeName === "UL") {
         return Array.from(element.children)
           .map((child) => `\u2022  ${processElement(child)}`)
-          .join("\n");
+          .join("<br>");
       } else if (element.nodeName === "LI") {
         return element.textContent.trim();
       } else if (element.nodeName === "BR") {
-        return "\n";
+        return "<br>";
+      } else if (element.nodeName === "P") {
+        // Handle paragraph tags - preserve empty paragraphs as line breaks
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return content.trim() === "" ? "<br>" : content;
       } else if (element.nodeName === "STRONG") {
         const strongText = Array.from(element.childNodes)
           .map((child) => processElement(child))
@@ -57,23 +63,26 @@ const Description = (props) => {
           .join("");
         return `<i>${italicText}</i>`;
       } else if (element.nodeName === "U" ||
-        (element.nodeName === "SPAN" && element.style.textDecoration.includes("underline"))) {
+        (element.nodeName === "SPAN" && element.style.textDecoration && element.style.textDecoration.includes("underline"))) {
         const underlineText = Array.from(element.childNodes)
           .map((child) => processElement(child))
           .join("");
         return `<u>${underlineText}</u>`;
+      } else if (element.nodeType === Node.TEXT_NODE) {
+        return element.textContent;
       } else {
-        return element.textContent.trim();
+        return Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
       }
     }
 
-    const plainText = Array.from(container.childNodes)
+    // Process all child nodes and preserve the structure
+    const processedContent = Array.from(container.childNodes)
       .map((node) => processElement(node))
-      .filter((text) => text.trim() !== "")
-      .join("\n");
+      .join("<br>");
 
-    const htmlText = plainText.replace(/\n/g, "<br>");
-    return linkify(htmlText);
+    return linkify(processedContent);
   }
 
   const linkify = (text) => {
@@ -177,7 +186,6 @@ const Listing = () => {
 
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isProfileImageLoaded, setIsProfileImageLoaded] = useState(false);
-
   const [input, setInput] = useState({
     categoryId: 0,
     subcategoryId: 0,

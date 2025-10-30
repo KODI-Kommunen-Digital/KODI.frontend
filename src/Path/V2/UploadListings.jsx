@@ -780,6 +780,16 @@ function UploadListings() {
 
   const [description, setDescription] = useState("");
 
+  // Helper function to extract plain text while preserving spaces
+  const getPlainTextLength = (htmlContent) => {
+    if (!htmlContent) return 0;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+    return plainText.length;
+  };
+
+
   useEffect(() => {
     const quill = editor.current?.getEditor();
 
@@ -788,14 +798,16 @@ function UploadListings() {
         const imageUrl = node.getAttribute("src");
         return new Delta().insert(imageUrl || "[Image]");
       });
+
+      // Configure Quill to preserve whitespace
+      const editorElement = quill.root;
+      editorElement.style.whiteSpace = 'pre-wrap';
     }
   }, []);
 
 
   const onDescriptionChange = (newContent) => {
-
-    const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
-    const characterCount = plainText.length;
+    const characterCount = getPlainTextLength(newContent);
 
     if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
       setError((prev) => ({
@@ -1720,26 +1732,28 @@ function UploadListings() {
               onBlur={() => {
                 const quillInstance = editor.current?.getEditor();
                 if (quillInstance) {
+                  // Keep the HTML formatting but sanitize it for saving
+                  const sanitizedContent = quillInstance.root.innerHTML.replace(/<\/?p>/gi, "<br>");
                   validateInput({
                     target: {
                       name: "description",
-                      value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+                      value: sanitizedContent,
                     },
                   });
                 }
               }}
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md preserve-whitespace"
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_DESCRIPTION
+                className={`${getPlainTextLength(description) > CHARACTER_LIMIT_DESCRIPTION
                   ? "mt-2 text-sm text-red-600"
                   : "mt-2 text-sm text-gray-500"
                   }`}
               >
-                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_DESCRIPTION}
+                {getPlainTextLength(description)}/{CHARACTER_LIMIT_DESCRIPTION}
               </span>
               {error.description && (
                 <span className="mt-2 text-sm text-red-600">
