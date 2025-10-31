@@ -1139,5 +1139,6 @@
   "cityAdmin": "City Admin",
   "selectCity": "Select Cities",
   "onboarded": "Onboarded",
-  "feedback": "Feedback"
+  "feedback": "Feedback",
+  "current_status": "Current Status"
 }

@@ -207,8 +207,8 @@ const Dashboard = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   const fetchUpdatedListings = useCallback(() => {
@@ -323,44 +323,40 @@ const Dashboard = () => {
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className={`${
-                      selectedStatus === null
+                    className={`${selectedStatus === null
                         ? "bg-gray-700 text-white"
                         : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("allListings")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Active
+                    className={`${selectedStatus === statusByName.Active
                         ? "bg-gray-700 text-white"
                         : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Pending
+                    className={`${selectedStatus === statusByName.Pending
                         ? "bg-gray-700 text-white"
                         : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Inactive
+                    className={`${selectedStatus === statusByName.Inactive
                         ? "bg-gray-700 text-white"
                         : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
@@ -475,7 +471,7 @@ const Dashboard = () => {
                               "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
                           }}
                         >
-                          {t("current status")}
+                          {t("current_status")}
                         </th>
 
                         <th
@@ -533,7 +529,7 @@ const Dashboard = () => {
                                 listing.sourceId === 1
                                   ? listing.logo
                                     ? process.env.REACT_APP_BUCKET_HOST +
-                                      listing.logo
+                                    listing.logo
                                     : LISTINGSIMAGE
                                   : listing.logo
                               }

@@ -36,6 +36,7 @@ import { format } from "date-fns";
 import Delta from "quill-delta";
 import { role } from "../../Constants/role";
 import { status } from "../../Constants/status";
+import { German } from "flatpickr/dist/l10n/de.js";
 
 import { getProfile } from "../../Services/usersApi";
 function UploadListings() {
@@ -64,6 +65,7 @@ function UploadListings() {
   const CHARACTER_LIMIT_DESCRIPTION = 65535;
 
   const navigate = useNavigate();
+  const locale = process.env.REACT_APP_LANG = "de" ? German : 'default';
   const getDefaultEndDate = () => {
     const now = new Date();
     const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
@@ -281,7 +283,7 @@ function UploadListings() {
 
   const [listingInput, setListingInput] = useState({
     categoryId: 0,
-    subcategoryId: 0,
+    // subcategoryId: 0,
     cityIds: [],
     statusId: 1,
     title: "",
@@ -306,7 +308,7 @@ function UploadListings() {
 
   const [error, setError] = useState({
     categoryId: "",
-    subcategoryId: "",
+    // subcategoryId: "",
     title: "",
     description: "",
     cityIds: "",
@@ -596,8 +598,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-          ? setSuccessMessage(t("listingCreated"))
-          : setSuccessMessage(t("listingUpdated"));
+            ? setSuccessMessage(t("listingCreated"))
+            : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -704,7 +706,7 @@ function UploadListings() {
             cityIds: allCities.length > 0 ? allCities : [listingData.cityId],
             title: listingData.title || "",
             categoryId: listingData.categoryId,
-            subcategoryId: listingData.subcategoryId,
+            // subcategoryId: listingData.subcategoryId,
             description: listingData.description,
             startDate: listingData.startDate || "",
             endDate: listingData.endDate || "",
@@ -712,7 +714,7 @@ function UploadListings() {
           });
           setDescription(listingData.description);
           setCategoryId(listingData.categoryId);
-          setSubcategoryId(listingData.subcategoryId);
+          // setSubcategoryId(listingData.subcategoryId);
 
           if (listingData.categoryId === 1 && !listingData.expiryDate) {
             setListingInput((prevState) => ({
@@ -1125,7 +1127,7 @@ function UploadListings() {
   }, []);
 
   const [categoryId, setCategoryId] = useState(0);
-  const [subcategoryId, setSubcategoryId] = useState(0);
+  // const [subcategoryId, setSubcategoryId] = useState(0);
 
   const handleCategoryChange = async (event) => {
     const selectedCategoryId = parseInt(event.target.value, 10);
@@ -1137,7 +1139,7 @@ function UploadListings() {
     setListingInput((prevInput) => ({
       ...prevInput,
       categoryId: selectedCategoryId,
-      subcategoryId: 0,
+      // subcategoryId: 0,
     }));
 
     if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
@@ -1162,24 +1164,24 @@ function UploadListings() {
     }
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("categoryId", selectedCategoryId);
-    urlParams.delete("subcategoryId");
+    // urlParams.delete("subcategoryId");
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
   };
 
-  const handleSubcategoryChange = (event) => {
-    let subcategoryId = event.target.value;
-    setSubcategoryId(subcategoryId);
-    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
-    validateInput(event);
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("subcategoryId", subcategoryId);
-    if (subcategoryId === 0) {
-      urlParams.delete("subCategoryId");
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.replaceState({}, "", newUrl);
-  };
+  // const handleSubcategoryChange = (event) => {
+  //   // let subcategoryId = event.target.value;
+  //   // setSubcategoryId(subcategoryId);
+  //   // setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
+  //   validateInput(event);
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   urlParams.set("subcategoryId", subcategoryId);
+  //   if (subcategoryId === 0) {
+  //     urlParams.delete("subCategoryId");
+  //   }
+  //   const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  //   window.history.replaceState({}, "", newUrl);
+  // };
 
   function formatDateTime(dateTime) {
     const date = new Date(dateTime.replace("Z", ""));
@@ -1360,12 +1362,11 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${
-                  listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
+                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
                   CHARACTER_LIMIT_TITLE
-                    ? "mt-2 text-sm text-red-600"
-                    : "mt-2 text-sm text-gray-500"
-                }`}
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
+                  }`}
               >
                 {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_TITLE}
@@ -1416,11 +1417,10 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectSingleCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
-                      selectedSingleCity?.id === city.id
-                        ? "text-teal-700"
-                        : "text-gray-700"
-                    }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id
+                      ? "text-teal-700"
+                      : "text-gray-700"
+                      }`}
                   >
                     {city.name}
                   </div>
@@ -1482,11 +1482,10 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
-                      selectedCities.some((sC) => sC.id === city.id)
-                        ? "text-teal-700"
-                        : "text-gray-700"
-                    }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
+                      ? "text-teal-700"
+                      : "text-gray-700"
+                      }`}
                   >
                     {city.name}
                   </div>
@@ -1553,7 +1552,7 @@ function UploadListings() {
               initialTimeSlot={initialTimeSlot}
             />
           )}
-
+          {/* 
           {Object.keys(subCategories).length > 0 && (
             <div className="relative mb-0">
               <label
@@ -1583,7 +1582,7 @@ function UploadListings() {
                 </div>
               )}
             </div>
-          )}
+          )} */}
 
           {categoryId == 1 && (
             <div className="relative mb-0">
@@ -1622,6 +1621,7 @@ function UploadListings() {
                             : getDefaultEndDate()
                         }
                         options={{
+                          locale: locale,
                           enableTime: true,
                           dateFormat: "Y-m-d H:i",
                           time_24hr: true,
@@ -1702,6 +1702,7 @@ function UploadListings() {
                     name="startDate"
                     value={listingInput.startDate}
                     options={{
+                      locale: locale,
                       enableTime: true,
                       dateFormat: "Y-m-d H:i",
                       time_24hr: true,
@@ -1754,6 +1755,7 @@ function UploadListings() {
                     name="endDate"
                     value={listingInput.endDate}
                     options={{
+                      locale: locale,
                       enableTime: true,
                       dateFormat: "Y-m-d H:i",
                       time_24hr: true,
@@ -2006,12 +2008,11 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${
-                  description.replace(/(<([^>]+)>)/gi, "").length >
+                className={`${description.replace(/(<([^>]+)>)/gi, "").length >
                   CHARACTER_LIMIT_DESCRIPTION
-                    ? "mt-2 text-sm text-red-600"
-                    : "mt-2 text-sm text-gray-500"
-                }`}
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
+                  }`}
               >
                 {description.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_DESCRIPTION}
@@ -2060,9 +2061,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2095,9 +2095,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2129,9 +2128,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2205,8 +2203,8 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP"
                 ? t(
-                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
-                  )
+                  "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent"
+                )
                 : ""}
             </p>
             <div className="flex gap-2">

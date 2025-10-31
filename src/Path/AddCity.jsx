@@ -113,8 +113,8 @@ function AddCity() {
         isAdmin
           ? setSuccessMessage(t("cityUpdatedAdmin"))
           : newCity
-          ? setSuccessMessage(t("cityCreated"))
-          : setSuccessMessage(t("cityUpdated"));
+            ? setSuccessMessage(t("cityCreated"))
+            : setSuccessMessage(t("cityUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -274,7 +274,7 @@ function AddCity() {
                 onChange={(event) => {
                   setQuery(event.target.value);
                 }}
-                // className="w-full border border-gray-300 rounded-md p-3 mb-4 text-gray-700"
+              // className="w-full border border-gray-300 rounded-md p-3 mb-4 text-gray-700"
               />
               {suggestions.length > 0 && (
                 <Combobox.Options
@@ -286,8 +286,7 @@ function AddCity() {
                       key={place.place_id}
                       value={place}
                       className={({ active }) =>
-                        `px-4 py-2 text-gray-900 cursor-pointer ${
-                          active ? "bg-gray-100" : ""
+                        `px-4 py-2 text-gray-900 cursor-pointer ${active ? "bg-gray-100" : ""
                         }`
                       }
                     >
@@ -446,7 +445,7 @@ const UploadCityImage = ({ image, setImage, removeImage }) => {
                         ? URL.createObjectURL(image)
                         : image)
                     }
-                    alt="City preview"
+                    alt={t("cities")}
                     className="h-64 w-full object-cover rounded-xl"
                   />
 
