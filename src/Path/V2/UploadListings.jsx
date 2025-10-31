@@ -65,7 +65,7 @@ function UploadListings() {
   const CHARACTER_LIMIT_DESCRIPTION = 65535;
 
   const navigate = useNavigate();
-  const locale = process.env.REACT_APP_LANG = "de" ? German : 'default';
+  const locale = process.env.REACT_APP_LANG === "de" ? German : 'default';
   const getDefaultEndDate = () => {
     const now = new Date();
     const twoWeeksLater = new Date(now.getTime() + 2 * 7 * 24 * 60 * 60 * 1000); // 2 weeks in milliseconds
