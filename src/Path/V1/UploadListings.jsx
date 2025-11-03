@@ -284,6 +284,7 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    isAllDayEvent: false,
   });
 
   const [error, setError] = useState({
@@ -1063,7 +1064,7 @@ function UploadListings() {
     setCategoryId(selectedCategoryId);
     const selectedCategory = categories.find(category => category.id === selectedCategoryId);
     setSubcategoryId(null);
-    setListingInput((prevInput) => ({ ...prevInput, categoryId: selectedCategoryId, subcategoryId: 0 }));
+    setListingInput((prevInput) => ({ ...prevInput, categoryId: selectedCategoryId, subcategoryId: 0, isAllDayEvent: false }));
 
     if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
       try {
@@ -1095,7 +1096,7 @@ function UploadListings() {
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
     setSubcategoryId(subcategoryId);
-    setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
+    setListingInput((prevInput) => ({ ...prevInput, subcategoryId, isAllDayEvent: false }));
     validateInput(event);
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("subcategoryId", subcategoryId);
@@ -1138,6 +1139,23 @@ function UploadListings() {
 
     setIsFormValid(isValid);
   }, [listingInput, error, categoryId, selectedCities]);
+
+  const handleIsAllDayChange = (e) => {
+    const isChecked = e.target.checked;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const formattedDate = format(today, "yyyy-MM-dd'T'HH:mm");
+
+    setListingInput(prev => {
+      return {
+        ...prev,
+        isAllDayEvent: isChecked,
+        startDate: isChecked ? formattedDate : "",
+        endDate: isChecked ? '' : prev.endDate
+      };
+    });
+  };
+
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
@@ -1423,7 +1441,18 @@ function UploadListings() {
 
           {categoryId == 3 && (
             <div className="relative mb-0">
-              <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mb-4">
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox h-5 w-5 text-indigo-600"
+                    checked={listingInput.isAllDayEvent || false}
+                    onChange={handleIsAllDayChange}
+                  />
+                  <span className="ml-2 text-gray-700">{t("allDayEvent")}</span>
+                </label>
+              </div>
+              {listingInput.isAllDayEvent ? null : <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
                   <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
                     <svg
@@ -1503,7 +1532,7 @@ function UploadListings() {
                     {error.endDate}
                   </div>
                 </div>
-              </div>
+              </div>}
             </div>
           )}
 
