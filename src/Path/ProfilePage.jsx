@@ -520,6 +520,66 @@ class ProfilePage extends React.Component {
                         disabled={true}
                       />
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="mt-1 px-2">
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium text-gray-600"
+                        >
+                          {t("emailId")}
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          id="email"
+                          className={`w-full rounded border border-gray-300 focus:border-indigo-500 focus:ring-2
+                             focus:ring-indigo-200 text-base outline-none
+                              text-gray-700 py-1 px-3 leading-8 transition-colors 
+                              duration-200 ease-in-out ${this.state.profile?.roleId === 1 ? "bg-white" : "bg-gray-200"
+                            }`}
+                          placeholder={t("enter_email")}
+                          defaultValue={this.state.profile.email || ""}
+                          onChange={this.handleProfileChange}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                          disabled={this.state.profile?.roleId !== 1}
+                        />
+                        {this.state.showError.email && (
+                          <div className="text-red-600 h-[24px]">
+                            {this.state.errorMessage.email}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-1 px-2">
+                        <label
+                          htmlFor="phoneNumber"
+                          className="block text-sm font-medium text-gray-600"
+                        >
+                          {t("phoneNumber")}
+                        </label>
+                        <input
+                          type="text"
+                          name="phoneNumber"
+                          id="phoneNumber"
+                          className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                          placeholder={t("enter_phone")}
+                          defaultValue={this.state.profile.phoneNumber || ""}
+                          onChange={this.handleProfileChange}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        />
+                        {this.state.showError.phoneNumber && (
+                          <div className="text-red-600 h-[24px]">
+                            {this.state.errorMessage.phoneNumber}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                   </div>
                   <div className="py-3 grid grid-cols-1">
                     <div className="mt-1 px-2">

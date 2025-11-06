@@ -1443,7 +1443,7 @@ function UploadListings() {
             >
               {process.env.REACT_APP_REGION_NAME === "HIVADA"
                 ? t("cluster")
-                : t("city")}
+                : t("acrross_towns")}
             </label>
             <div
               className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
