@@ -1176,5 +1176,7 @@
   "noUsers": "Keine Benutzer gefunden",
   "confirmDeleteMessageUser": "Möchtest du diesen Ortschaft benutzer wirklich löschen??",
   "userdeletedsuccessfully": "Benutzer erfolgreich gelöscht",
-  "failedtodeleteuser": "Benutzer konnte nicht gelöscht werden"
+  "failedtodeleteuser": "Benutzer konnte nicht gelöscht werden",
+  "userAlreadyAdmin": "Fehler: Der Benutzer ist bereits Moderator, Administrator oder Ortschaftadministrator",
+  "push_notification": "Push-Benachrichtigung"
 }

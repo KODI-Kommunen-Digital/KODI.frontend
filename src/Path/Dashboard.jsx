@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
-import { getProfile } from "../Services/usersApi";
+import { getProfile, getUserId } from "../Services/usersApi";
 import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
@@ -19,9 +19,10 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
-import { getCitiesByUserId } from "../Services/citiesApi";
+import { getCitiesByUserId, getModeratorProfile } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import ManageStatus from "../Components/ManageStatus";
+
 const Dashboard = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
@@ -37,8 +38,12 @@ const Dashboard = () => {
     visible: false,
     listing: null,
   });
+  const [modratorPermissions, setModratorPermissions] = useState('');
+
 
   const navigate = useNavigate();
+  const cityAdminUserId = getUserId();
+
   const navigateTo = (path) => {
     if (path) {
       navigate(path);
@@ -312,6 +317,16 @@ const Dashboard = () => {
     setCityId(selectedCityId || 0);
   };
 
+  const cityUserPermisssions = useCallback(async (cityAdminUserId) => {
+
+    const { data } = await getModeratorProfile(cityAdminUserId);
+    setModratorPermissions(data)
+  }, [])
+
+  useEffect(() => {
+    cityUserPermisssions(cityAdminUserId)
+  }, [cityAdminUserId])
+  console.log(cities, modratorPermissions, 'show me cities')
   return (
     <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
@@ -324,8 +339,8 @@ const Dashboard = () => {
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
                     className={`${selectedStatus === null
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
                       } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -334,8 +349,8 @@ const Dashboard = () => {
                   </div>
                   <div
                     className={`${selectedStatus === statusByName.Active
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
                       } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -344,8 +359,8 @@ const Dashboard = () => {
                   </div>
                   <div
                     className={`${selectedStatus === statusByName.Pending
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
                       } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
@@ -354,8 +369,8 @@ const Dashboard = () => {
                   </div>
                   <div
                     className={`${selectedStatus === statusByName.Inactive
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
                       } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}

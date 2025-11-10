@@ -57,8 +57,14 @@ export async function createCityUsersPermissions(newCitysDataObj) {
   return instance.post('/moderators', newCitysDataObj);
 
 }
-export async function getCityUsersPermissions() {
-  return instance.get("/moderators/my");
+export async function getCityUsersPermissions(searchQuery, pageNo, pageSize) {
+  return instance.get("/moderators/my", {
+    params: {
+      searchQuery,
+      pageNo,
+      pageSize,
+    },
+  });
 }
 
 export async function updateCityUserPermissions(newCitysDataObj) {
@@ -68,4 +74,9 @@ export async function deleteCityUsers(userId) {
   return instance.delete(`/moderators`, {
     data: { userId }
   });
+}
+
+export async function getModeratorProfile(userId) {
+  return instance.get(`/moderators/${userId}/profile`)
+
 }

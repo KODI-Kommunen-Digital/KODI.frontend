@@ -588,7 +588,7 @@ function CityAdmins() {
                 <div>
                   <div className="relative mb-4" ref={dropdownRef}>
                     <div
-                      className="mt-1 border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2"
+                      className="mt-1 border p-3 pr-10 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2 relative"
                       onClick={() => setIsDropdownOpen(true)}
                     >
                       {newAdmin.name ? (
@@ -618,6 +618,9 @@ function CityAdmins() {
                           className="flex-1 bg-transparent outline-none placeholder:text-base"
                         />
                       )}
+                      <svg className={`w-5 h-5 transition-transform absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
                     </div>
 
                     {isDropdownOpen && (
@@ -637,7 +640,7 @@ function CityAdmins() {
                                 );
                                 setIsDropdownOpen(false);
                               }}
-                              className="cursor-pointer px-3 py-2 bg-gray-100 hover:bg-teal-100 text-gray-800"
+                              className="cursor-pointer px-3 py-2 bg-gray-100 text-gray-800"
                             >
                               {user.name || user.username}
                             </div>

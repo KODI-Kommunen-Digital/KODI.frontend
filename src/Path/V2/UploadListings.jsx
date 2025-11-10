@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../bodyContainer.css";
 import SideBar from "../../Components/SideBar";
@@ -35,10 +35,12 @@ import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 import Delta from "quill-delta";
 import { role } from "../../Constants/role";
+import { categoryAccessMap } from "../../Constants/categories";
 import { status } from "../../Constants/status";
 import { German } from "flatpickr/dist/l10n/de.js";
+import { getModeratorProfile, getCityByCityAdmins } from "../../Services/citiesApi";
+import { getProfile, getUserId } from "../../Services/usersApi";
 
-import { getProfile } from "../../Services/usersApi";
 function UploadListings() {
   const { t } = useTranslation();
   const editor = useRef(null);
@@ -56,13 +58,16 @@ function UploadListings() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [userRole, setUserRole] = useState(role.User);
-
+  const [modratorPermissions, setModratorPermissions] = useState('');
   // const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
   const [isFormValid, setIsFormValid] = useState(false);
   const [localImages, setLocalImages] = useState([]);
   const MAX_IMAGES = 8;
   const CHARACTER_LIMIT_TITLE = 255;
   const CHARACTER_LIMIT_DESCRIPTION = 65535;
+
+  const cityAdminUserId = getUserId();
+
 
   const navigate = useNavigate();
   const locale = process.env.REACT_APP_LANG === "de" ? German : 'default';
@@ -79,6 +84,16 @@ function UploadListings() {
     // Format: yyyy-MM-ddThh:mm
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
+
+  const getuserPermission = useCallback(async (userId) => {
+    const { data } = await getModeratorProfile(userId);
+    setModratorPermissions(data)
+
+  }, []);
+
+  useEffect(() => {
+    getuserPermission(cityAdminUserId);
+  }, [cityAdminUserId]);
 
   function handleDragEnter(e) {
     e.preventDefault();
@@ -280,7 +295,6 @@ function UploadListings() {
   const [selectedCities, setSelectedCities] = useState([]);
   const [isOpenMultiple, setIsOpenMultiple] = useState(false);
   const multipleDropdownRef = useRef(null);
-
   const [listingInput, setListingInput] = useState({
     categoryId: 0,
     // subcategoryId: 0,
@@ -304,6 +318,7 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    notify: false,
   });
 
   const [error, setError] = useState({
@@ -462,7 +477,6 @@ function UploadListings() {
         const response = newListing
           ? await postListingsData(dataToSubmit)
           : await updateListingsData(cityIdsToSubmit, dataToSubmit, listingId);
-
         let currentListingId = [];
         let cityIdsArray = [];
         if (
@@ -654,16 +668,14 @@ function UploadListings() {
 
       const cityIds = searchParams.get("cityId");
       const listingId = searchParams.get("listingId");
-
       try {
         // Fetch all required data
         const [citiesResponse, categoriesResponse, subcategoriesResponse] =
           await Promise.all([
-            getCities(),
+            userRole === role.Admin ? getCities() : getCityByCityAdmins(cityAdminUserId),
             getCategory(),
             getListingsSubCategory(),
           ]);
-
         const citiesData = citiesResponse?.data?.data || [];
         setCities(citiesData);
 
@@ -711,6 +723,7 @@ function UploadListings() {
             startDate: listingData.startDate || "",
             endDate: listingData.endDate || "",
             expiryDate: listingData.expiryDate || "",
+            notify: listingData.notify,
           });
           setDescription(listingData.description);
           setCategoryId(listingData.categoryId);
@@ -821,7 +834,6 @@ function UploadListings() {
       }
     }
   }, [error]);
-
   const onInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (name === "title" && value.length > CHARACTER_LIMIT_TITLE) {
@@ -1094,7 +1106,7 @@ function UploadListings() {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const citiesResponse = await getCities();
+        const citiesResponse = userRole === role.Admin ? await getCities() : await getCityByCityAdmins(cityAdminUserId);
         const citiesData = citiesResponse?.data?.data || [];
 
         if (!Array.isArray(citiesData) || citiesData.length === 0) {
@@ -1107,17 +1119,17 @@ function UploadListings() {
         );
         setCities(sortedCities);
 
-        if (citiesData.length === 1) {
-          const cityId = citiesData[0].id;
-          const cityName = citiesData[0].name;
+        // if (citiesData.length === 1) {
+        //   const cityId = citiesData[0].id;
+        //   const cityName = citiesData[0].name;
 
-          setSelectedCities([{ id: cityId, name: cityName }]);
-          setListingInput((prev) => ({
-            ...prev,
-            cityIds: [cityId],
-            villageId: 0,
-          }));
-        }
+        //   setSelectedCities([{ id: cityId, name: cityName }]);
+        //   setListingInput((prev) => ({
+        //     ...prev,
+        //     cityIds: [cityId],
+        //     villageId: 0,
+        //   }));
+        // }
       } catch (error) {
         console.error("Error fetching cities:", error);
       }
@@ -1135,7 +1147,7 @@ function UploadListings() {
     const selectedCategory = categories.find(
       (category) => category.id === selectedCategoryId
     );
-    setSubcategoryId(null);
+    // setSubcategoryId(null);
     setListingInput((prevInput) => ({
       ...prevInput,
       categoryId: selectedCategoryId,
@@ -1195,12 +1207,10 @@ function UploadListings() {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
-
   // Filter out any city already in the multi-city selection
   const singleDropdownCities = cities
     .filter((c) => !selectedCities.some((mC) => mC.id === c.id))
     .sort((a, b) => a.name.localeCompare(b.name));
-
   // Filter out the single-selected city
   const multipleDropdownCities = (
     selectedSingleCity
@@ -1327,6 +1337,19 @@ function UploadListings() {
     fetchData();
   }, []);
 
+  const filteredCategories = useMemo(() => {
+    if (userRole === role.Admin || userRole === role.TerminalAdmin) {
+      return categories; // return full list
+    }
+
+    return categories?.filter((category) =>
+      modratorPermissions?.data?.permissions?.some(
+        (perm) => categoryAccessMap[perm] === category.id
+      )
+    );
+  }, [userRole, categories, modratorPermissions]);
+
+
   return (
     <section className="bg-slate-600 body-font relative">
       <SideBar />
@@ -1436,69 +1459,71 @@ function UploadListings() {
           </div>
 
           {/* MULTIPLE CITY DROPDOWN */}
-          <div className="relative mb-4" ref={multipleDropdownRef}>
-            <label
-              htmlFor="multipleCity"
-              className="block text-sm font-medium text-gray-600"
-            >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA"
-                ? t("cluster")
-                : t("acrross_towns")}
-            </label>
-            <div
-              className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              onClick={toggleMultipleDropdown}
-            >
-              <div className="flex flex-wrap">
-                {selectedCities.map((city) => (
-                  <div
-                    key={city.id}
-                    className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
-                  >
-                    <span>{city.name}</span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveCity(city.id);
-                      }}
-                      className="text-red-600 ml-2"
+          {cities?.length > 1 &&
+            <div className="relative mb-4" ref={multipleDropdownRef}>
+              <label
+                htmlFor="multipleCity"
+                className="block text-sm font-medium text-gray-600"
+              >
+                {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                  ? t("cluster")
+                  : t("acrross_towns")}
+              </label>
+              <div
+                className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                onClick={toggleMultipleDropdown}
+              >
+                <div className="flex flex-wrap">
+                  {selectedCities.map((city) => (
+                    <div
+                      key={city.id}
+                      className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-teal-700 bg-teal-100 border border-teal-300"
                     >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-                <input
-                  type="text"
-                  placeholder={selectedCities.length === 0 ? t("select") : ""}
-                  className="bg-transparent outline-none flex-1 cursor-pointer"
-                  readOnly
-                />
+                      <span>{city.name}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveCity(city.id);
+                        }}
+                        className="text-red-600 ml-2"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                  <input
+                    type="text"
+                    placeholder={selectedCities.length === 0 ? t("select") : ""}
+                    className="bg-transparent outline-none flex-1 cursor-pointer"
+                    readOnly
+                  />
+                </div>
               </div>
+              {isOpenMultiple && (
+                <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
+                  {multipleDropdownCities.map((city) => (
+                    <div
+                      key={city.id}
+                      onClick={() => handleSelectCity(city)}
+                      className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
+                        ? "text-teal-700"
+                        : "text-gray-700"
+                        }`}
+                    >
+                      {city.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Display only if user tries to select an already selected city */}
+              {error.cityAlreadySelected && (
+                <div className="mt-2 text-sm text-red-600">
+                  {error.cityAlreadySelected}
+                </div>
+              )}
             </div>
-            {isOpenMultiple && (
-              <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
-                {multipleDropdownCities.map((city) => (
-                  <div
-                    key={city.id}
-                    onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
-                      ? "text-teal-700"
-                      : "text-gray-700"
-                      }`}
-                  >
-                    {city.name}
-                  </div>
-                ))}
-              </div>
-            )}
-            {/* Display only if user tries to select an already selected city */}
-            {error.cityAlreadySelected && (
-              <div className="mt-2 text-sm text-red-600">
-                {error.cityAlreadySelected}
-              </div>
-            )}
-          </div>
+          }
 
           <div className="relative mb-4">
             <label
@@ -1520,7 +1545,7 @@ function UploadListings() {
               <option className="font-sans" value={0} key={0}>
                 {t("chooseOneCategory")}
               </option>
-              {categories.map((category) => {
+              {filteredCategories?.map((category) => {
                 return (
                   <option
                     className="font-sans"
@@ -1810,6 +1835,34 @@ function UploadListings() {
                 className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 placeholder={t("enterAddress")}
               />
+            </div>
+          </div>
+
+
+          <div className="relative mb-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="notify"
+                name="notify"
+                checked={listingInput.notify}
+                // disabled={listingId && listingInput?.statusId !== 4}
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  setListingInput((prev) => ({
+                    ...prev,
+                    notify: isChecked,
+                  }));
+
+                }}
+                className="h-4 w-4 text-black border-gray-300 rounded focus:ring-black"
+              />
+              <label
+                htmlFor="pushNotification"
+                className="text-sm font-medium text-gray-900"
+              >
+                {t("push_notification")}
+              </label>
             </div>
           </div>
 
@@ -2264,7 +2317,7 @@ function UploadListings() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
 

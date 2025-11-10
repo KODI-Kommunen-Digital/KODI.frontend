@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import SideBar from "../Components/SideBar";
-import { getCityByCityAdmins, createCityUsersPermissions, getCityUsersPermissions, updateCityUserPermissions, deleteCityUsers } from "../Services/citiesApi";
+import { getCityByCityAdmins, createCityUsersPermissions, getCityUsersPermissions, updateCityUserPermissions, deleteCityUsers, getModeratorProfile } from "../Services/citiesApi";
 import { fetchUsers, getUserId } from "../Services/usersApi";
 import Alert from "../Components/Alert";
 import { useTranslation } from "react-i18next";
 import CityDropDown from "../Components/CityDropDown";
+
 function CreateUsers() {
     const { t } = useTranslation();
     const [cities, setCities] = useState([]);
@@ -131,6 +132,15 @@ function CreateUsers() {
         });
     }, [cities, editCityDropdownInput]);
 
+    const cityUserPermisssions = useCallback(async (cityAdminUserId) => {
+
+        const value = await getModeratorProfile(cityAdminUserId);
+        return value;
+    }, [])
+
+    useEffect(() => {
+        cityUserPermisssions(cityAdminUserId)
+    }, [cityAdminUserId])
     // dropdown outside click handler
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -157,15 +167,16 @@ function CreateUsers() {
     }, []);
 
 
-    const getCityUsers = useCallback(async () => {
+    const getCityUsers = useCallback(async (searchTerm = "", page = 1, pageSize = 5) => {
         try {
             setLoading(true);
-            const response = await getCityUsersPermissions();
+            const response = await getCityUsersPermissions(searchTerm, page, pageSize);
             const adminsData = response?.data?.data || [];
             const total = response?.data?.count;
 
             setAdmins(adminsData);
             setFilteredAdmins(adminsData);
+
             setTotalPages(Math.ceil(total / pageSize));
         } catch (err) {
             setError(t("failedtoloadusers"));
@@ -175,8 +186,10 @@ function CreateUsers() {
     }, [getCityUsersPermissions, pageSize, t]); // dependencies
 
     useEffect(() => {
-        getCityUsers();
-    }, [getCityUsers]);
+        // if (cityId) {
+        getCityUsers(searchTerm, currentPage, pageSize);
+        // }
+    }, [searchTerm, currentPage, pageSize]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -367,13 +380,17 @@ function CreateUsers() {
             } setSelectedNewsEvent(null); // Reset dropdown selection
             setSuccess(t("userPermissionsUpdated"));
         } catch (err) {
-            if (err?.message === "Request failed with status code 500") {
+            if (err?.response?.data?.message === "Request failed with status code 500") {
                 setError(t("userPermissionsError"));
 
+            }
+            else if (err?.response?.data?.message === "Error: User is already a moderator, admin, or city admin") {
+                setError(t("userAlreadyAdmin"));
             }
             else {
                 setError(err.message || t("failedtoaddPermission"));
             }
+
         } finally {
             setLoading(false);
             setNewAdmin({ userId: "", name: "", username: "", email: "", permissions: [] });
@@ -394,12 +411,12 @@ function CreateUsers() {
                 try {
                     setLoading(true);
                     await deleteCityUsers(userId);
+
                     await getCityUsers();
 
                     setSuccess(t("userdeletedsuccessfully"));
                 } catch (err) {
                     setError(err.response?.data?.message || t("failedtodeleteuser"));
-                    console.error("Error deleting admin:", err);
                 } finally {
                     setLoading(false);
                     setShowConfirmationModal({
@@ -473,7 +490,10 @@ function CreateUsers() {
                 onConfirm: null,
                 onCancel: null,
             });
+            setCurrentPage(1);
+            setSearchTerm("");
             await getCityUsers();
+
             setSuccess(t("user_updated_successfully") || "User updated successfully");
         } catch (err) {
             setError(err.response?.data?.message || t("failedtoupdateuser") || "Failed to update User");
@@ -749,69 +769,70 @@ function CreateUsers() {
                                 <label className="block text-sm font-medium text-gray-700">
                                     {t("user")}
                                 </label>
-                                <div>
-                                    <div className="relative mb-4" ref={dropdownRef}>
-                                        <div
-                                            className="mt-1 border p-3 bg-white text-gray-800 border-gray-300 shadow-md duration-300 rounded-lg w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2"
-                                            onClick={() => setIsDropdownOpen(true)}
-                                        >
-                                            {newAdmin.name ? (
-                                                <span className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-300">
-                                                    {newAdmin.name}
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleUserSelect(null);
-                                                            setDropdownInput("");
-                                                        }}
-                                                        className="ml-2 text-blue-600 hover:text-blue-800"
-                                                    >
-                                                        ×
-                                                    </button>
-                                                </span>
-                                            ) : (
-                                                <input
-                                                    type="text"
-                                                    value={dropdownInput}
-                                                    onChange={(e) => {
-                                                        setDropdownInput(e.target.value);
-                                                        setIsDropdownOpen(true);
+                                <div className="relative mb-4" ref={dropdownRef}>
+                                    <div
+                                        className="mt-1 border p-3 pr-10 bg-white text-gray-800 border-gray-300 shadow-md duration-300 rounded-lg w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2 relative"
+                                        onClick={() => setIsDropdownOpen(true)}
+                                    >
+                                        {newAdmin.name ? (
+                                            <span className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-300">
+                                                {newAdmin.name}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleUserSelect(null);
+                                                        setDropdownInput("");
                                                     }}
-                                                    onFocus={() => setIsDropdownOpen(true)}
-                                                    placeholder={t("placeholderuserselect")}
-                                                    name="userSearchCityAdmin"
-                                                    id="userSearchCityAdmin"
-                                                    className="flex-1 bg-transparent outline-none placeholder:text-base"
-                                                />
+                                                    className="ml-2 text-blue-600 hover:text-blue-800"
+                                                >
+                                                    ×
+                                                </button>
+                                            </span>
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                value={dropdownInput}
+                                                onChange={(e) => {
+                                                    setDropdownInput(e.target.value);
+                                                    setIsDropdownOpen(true);
+                                                }}
+                                                onFocus={() => setIsDropdownOpen(true)}
+                                                placeholder={t("placeholderuserselect")}
+                                                name="userSearchCityAdmin"
+                                                id="userSearchCityAdmin"
+                                                className="flex-1 bg-transparent outline-none placeholder:text-base"
+                                            />
+                                        )}
+                                        <svg className={`w-5 h-5 transition-transform absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+
+                                    {isDropdownOpen && (
+                                        <div className="absolute top-full mt-1 w-full bg-white rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-700">
+                                            {filteredUsers?.length === 0 ? (
+                                                <div className="px-3 py-2 text-gray-500 italic">
+                                                    {t("noUserFound")}
+                                                </div>
+                                            ) : (
+                                                filteredUsers?.map((user) => (
+                                                    <div
+                                                        key={user.id}
+                                                        onClick={() => {
+                                                            handleUserSelect({ value: user.id });
+                                                            setDropdownInput(
+                                                                user.name || user.username || ""
+                                                            );
+                                                            setIsDropdownOpen(false);
+                                                        }}
+                                                        className={`cursor-pointer px-3 py-2 border-b border-gray-200 ${newAdmin.userId === user.id ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}
+                                                    >
+                                                        {user.name || user.username}
+                                                    </div>
+                                                ))
                                             )}
                                         </div>
-
-                                        {isDropdownOpen && (
-                                            <div className="absolute top-full mt-1 w-full bg-white rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-700">
-                                                {filteredUsers?.length === 0 ? (
-                                                    <div className="px-3 py-2 text-gray-500 italic">
-                                                        {t("noUserFound")}
-                                                    </div>
-                                                ) : (
-                                                    filteredUsers?.map((user) => (
-                                                        <div
-                                                            key={user.id}
-                                                            onClick={() => {
-                                                                handleUserSelect({ value: user.id });
-                                                                setDropdownInput(
-                                                                    user.name || user.username || ""
-                                                                );
-                                                                setIsDropdownOpen(false);
-                                                            }}
-                                                            className={`cursor-pointer px-3 py-2 border-b border-gray-200 ${newAdmin.userId === user.id ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}
-                                                        >
-                                                            {user.name || user.username}
-                                                        </div>
-                                                    ))
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                             <div>

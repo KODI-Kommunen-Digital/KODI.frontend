@@ -1162,5 +1162,7 @@
   "noUsers": "No Users Found",
   "confirmDeleteMessageUser": "Do you really want to delete this city user?",
   "userdeletedsuccessfully": "User deleted successfully",
-  "failedtodeleteUser": "Failed to delete user"
+  "failedtodeleteUser": "Failed to delete user",
+  "userAlreadyAdmin": "Error: User is already a moderator, admin, or city admin",
+  "push_notification": "Push Notification"
 }

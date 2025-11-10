@@ -26,8 +26,8 @@ const CityDropDown = ({
                         setCityDropdownInput(""); // Clear search when opening
                     }}
                     className={[
-                        "mt-1 border p-3 bg-white text-gray-800 border-gray-300 duration-300",
-                        "w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2",
+                        "mt-1 border p-3 pr-10 bg-white text-gray-800 border-gray-300 duration-300",
+                        "w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2 relative",
                         !isModal ? "shadow-md rounded-lg" : "rounded"
                     ].join(" ")}
                 >
@@ -56,6 +56,11 @@ const CityDropDown = ({
                             {t("search_Cities")}
                         </span>
                     )}
+                    {cities?.length > 1 &&
+                        (< svg className={`w-5 h-5 transition-transform absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isCityDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>)
+                    }
                 </div>
 
                 {isCityDropdownOpen && cities?.length > 1 && (

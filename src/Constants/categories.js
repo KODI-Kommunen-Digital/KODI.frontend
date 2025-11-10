@@ -88,4 +88,11 @@ const categoryById = {
   42: "Project",
 };
 
-module.exports = { categoryByName, categoryById };
+/* eslint-disable camelcase */
+const categoryAccessMap = {
+  create_news: 1,
+  create_event: 3,
+};
+/* eslint-disable camelcase */
+
+module.exports = { categoryByName, categoryById, categoryAccessMap };
