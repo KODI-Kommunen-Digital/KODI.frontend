@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SideBar";
 import SearchBar from "../Components/SearchBar";
-import { getProfile, getUserId } from "../Services/usersApi";
+import { getProfile } from "../Services/usersApi";
 import { deleteAppointments } from "../Services/appointmentBookingApi";
 import {
   getListings,
@@ -19,7 +19,7 @@ import LISTINGSIMAGE from "../assets/ListingsImage.jpg";
 import { getCategory } from "../Services/CategoryApi";
 import PdfThumbnail from "../Components/PdfThumbnail";
 import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
-import { getCitiesByUserId, getModeratorProfile } from "../Services/citiesApi";
+import { getCitiesByUserId } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import ManageStatus from "../Components/ManageStatus";
 
@@ -38,11 +38,9 @@ const Dashboard = () => {
     visible: false,
     listing: null,
   });
-  const [modratorPermissions, setModratorPermissions] = useState('');
 
 
   const navigate = useNavigate();
-  const cityAdminUserId = getUserId();
 
   const navigateTo = (path) => {
     if (path) {
@@ -317,16 +315,8 @@ const Dashboard = () => {
     setCityId(selectedCityId || 0);
   };
 
-  const cityUserPermisssions = useCallback(async (cityAdminUserId) => {
 
-    const { data } = await getModeratorProfile(cityAdminUserId);
-    setModratorPermissions(data)
-  }, [])
 
-  useEffect(() => {
-    cityUserPermisssions(cityAdminUserId)
-  }, [cityAdminUserId])
-  console.log(cities, modratorPermissions, 'show me cities')
   return (
     <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />

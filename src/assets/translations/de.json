@@ -1178,5 +1178,6 @@
   "userdeletedsuccessfully": "Benutzer erfolgreich gelöscht",
   "failedtodeleteuser": "Benutzer konnte nicht gelöscht werden",
   "userAlreadyAdmin": "Fehler: Der Benutzer ist bereits Moderator, Administrator oder Ortschaftadministrator",
-  "push_notification": "Push-Benachrichtigung"
+  "push_notification": "Push-Benachrichtigung",
+  "city_staf_management": "Personalverwaltung der Ortschaft"
 }

@@ -743,7 +743,7 @@ function CreateUsers() {
             <div className="container w-auto px-5 py-2 bg-slate-900">
                 <div className="bg-white mt-4 p-6 space-y-6">
                     <h1 className="text-2xl font-bold text-gray-900">
-                        {t("user_management_title")}
+                        {t("city_staf_management")}
                     </h1>
                     <h2 className="text-xl font-semibold mb-2">{t("cityInfo")}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

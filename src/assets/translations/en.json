@@ -1164,5 +1164,6 @@
   "userdeletedsuccessfully": "User deleted successfully",
   "failedtodeleteUser": "Failed to delete user",
   "userAlreadyAdmin": "Error: User is already a moderator, admin, or city admin",
-  "push_notification": "Push Notification"
+  "push_notification": "Push Notification",
+  "city_staf_management": "City Staff Management"
 }
