@@ -109,9 +109,6 @@ export async function logoutOfOneDevice(id) {
 	return axiosInstance.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }
 
-
-
-
 export const getCurrentUser = async () => {
 	try {
 		const idToken = window.localStorage.getItem("accessToken");
@@ -126,3 +123,15 @@ export const getCurrentUser = async () => {
 		throw error;
 	}
 };
+
+export async function updateUsersBlock(userId) {
+	return axiosInstance.post(`users/${userId}/block`);
+}
+export async function unblockUsers(userId) {
+	return axiosInstance.post(`users/${userId}/unblock`);
+}
+export async function deleteUsers(userId) {
+	return axiosInstance.delete(`/users/${userId}`);
+}
+
+

@@ -1179,5 +1179,16 @@
   "failedtodeleteuser": "Benutzer konnte nicht gelöscht werden",
   "userAlreadyAdmin": "Fehler: Der Benutzer ist bereits Moderator, Administrator oder Ortschaftadministrator",
   "push_notification": "Push-Benachrichtigung",
-  "city_staf_management": "Personalverwaltung der Ortschaft"
+  "city_staf_management": "Personalverwaltung der Ortschaft",
+  "discription": "Beschreibung",
+  "Unblock": "Entsperren",
+  "block": "Blocken",
+  "user_unblocked_successfully": "Benutzer  wurde entsperrtt",
+  "user_blocked_successfully": "Benutzer  wurde blockiert",
+  "Failed_unblock_user": "Benutzer konnte nicht entsperrt werden",
+  "Failed_block_user": "Benutzer konnte nicht blockiert werden",
+  "user_Deleted_successfully": "Benutzer erfolgreich gelöscht",
+  "Failed_delete_user": "Benutzer konnte nicht gelöscht werden",
+  "block_yourself": "Sie können sich nicht selbst blockieren",
+  "unblock_yourself": "Sie können sich nicht selbst entsperren"
 }

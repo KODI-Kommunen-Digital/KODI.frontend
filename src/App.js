@@ -89,6 +89,7 @@ import AllCities from "./Path/AllCities.jsx";
 import AddAdmins from "./Path/CityAdmins.jsx";
 import CreatedAdminsList from "./Components/CityAdminList.jsx";
 import CreateUsers from "./Path/CreateUsers.jsx";
+import UserManagement from "./Path/UserManagement.jsx";
 Modal.setAppElement("#root");
 
 const App = () => {
@@ -163,6 +164,8 @@ const App = () => {
           <Route path="/Editcity" element={<AddCity />} exact />
           <Route path="/admins" element={<AddAdmins />} exact />
           <Route path="/createUser" element={<CreateUsers />} exact />
+          <Route path="/usersManagement" element={<UserManagement />} exact />
+
 
 
           <Route path="/admin-list" element={<CreatedAdminsList />} exact />

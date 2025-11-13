@@ -1165,5 +1165,16 @@
   "failedtodeleteUser": "Failed to delete user",
   "userAlreadyAdmin": "Error: User is already a moderator, admin, or city admin",
   "push_notification": "Push Notification",
-  "city_staf_management": "City Staff Management"
+  "city_staf_management": "City Staff Management",
+  "discription": "Description",
+  "Unblock": "UnBlock",
+  "block": "Block",
+  "user_unblocked_successfully": "User  has been unblocked",
+  "user_blocked_successfully": "User  has been blocked",
+  "Failed_unblock_user": "User cannot be unblocked",
+  "Failed_block_user": "User cannot be blocked",
+  "user_Deleted_successfully": "User deleted successfully",
+  "Failed_delete_user": "User cannot be deleted",
+  "block_yourself": "You cannot block yourself",
+  "unblock_yourself": "You cannot unblock yourself"
 }
