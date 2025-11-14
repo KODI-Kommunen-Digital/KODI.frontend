@@ -32,6 +32,12 @@ function CityAdmins() {
     onConfirm: null,
     onCancel: null,
   });
+  const [showEditModal, setShowEditModal] = useState({
+    visible: false,
+    userId: null,
+    onConfirm: null,
+    onCancel: null,
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -222,6 +228,41 @@ function CityAdmins() {
       },
     });
   };
+  const handleEditModal = (userId) => {
+    setShowEditModal({
+      visible: true,
+      userId: userId,
+      onConfirm: async () => {
+        try {
+          // setLoading(true);
+          // await deleteAdmin(cityId, userId);
+          // await fetchAdmins(cityId);
+
+          // setSuccess(t("admindeletedsuccessfully"));
+        } catch (err) {
+          // setError(err.response?.data?.message || t("failedtodeleteadmin"));
+          console.error("Error deleting admin:", err);
+        } finally {
+          setLoading(false);
+          setShowEditModal({
+            visible: false,
+            userId: null,
+            onConfirm: null,
+            onCancel: null,
+          });
+        }
+      },
+      onCancel: () => {
+        setShowEditModal({
+          visible: false,
+          userId: null,
+          onConfirm: null,
+          onCancel: null,
+        });
+      },
+    });
+  };
+
 
   const renderAdminList = () => {
     if (filteredAdmins.length === 0) {
@@ -274,6 +315,20 @@ function CityAdmins() {
                   <td className="px-6 py-4 text-center">{admin.email}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-end space-x-3">
+                      <a
+                        className={`font-medium text-green-600 px-2 cursor-pointer`}
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        onClick={() => handleEditModal(admin.userId)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 640 512"
+                          className="w-6 h-6 fill-current transition-transform duration-300 transform hover:scale-110"
+                        >
+                          <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                        </svg>
+                      </a>
                       <button
                         onClick={() => handleDeleteAdmin(admin.userId)}
                         className="font-medium text-red-600 hover:text-red-800"
@@ -359,6 +414,60 @@ function CityAdmins() {
                       </div>
                     </div>
                   )}
+
+                  {
+                    showEditModal.visible && (
+                      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center px-5 md:px-10 lg:px-[5rem] xl:px-[10rem] 2xl:px-[20rem] z-50">
+                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                          <h2 className="text-xl font-bold mb-4">{t("editAdmin")}</h2>
+                          {/* 
+                    {cityStatusModal?.listing?.cityData?.map((city, index) => (
+                        <div key={city?.id} className="mb-4">
+                            <label className="block font-medium text-gray-700">
+                                {city?.name}
+                            </label>
+                            <select
+                                value={city?.listingStatus}
+                                onChange={(e) => {
+                                    const updatedCityData = cityStatusModal?.listing?.cityData?.map((c) =>
+                                        c.id === city.id
+                                            ? { ...c, listingStatus: parseInt(e.target.value) }
+                                            : c
+                                    );
+                                    setCityStatusModal((prev) => ({
+                                        ...prev,
+                                        listing: { ...prev.listing, cityData: updatedCityData },
+                                    }));
+                                }}
+                                className="w-full mt-1 border border-gray-300 rounded px-3 py-2"
+                            >
+                                {Object.entries(status).map(([id, name]) => (
+                                    <option key={id} value={id}>
+                                        {t(name.toLowerCase())}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    ))} */}
+
+                          <div className="flex justify-end mt-6 space-x-3">
+                            <button
+                              onClick={showEditModal.onCancel}
+                              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 sm:mt-0 sm:w-auto sm:text-sm"
+                            >
+                              {t("cancel")}
+                            </button>
+                            <button
+                              onClick={showEditModal.onConfirm}
+                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-800 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
+                            >
+                              {t("saveChanges")}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
                 </tr>
               ))}
           </tbody>
@@ -457,12 +566,13 @@ function CityAdmins() {
                   {" "}
                   {t("cityName")}
                 </label>
-                <input
-                  type="text"
-                  value={city.name || ""}
-                  readOnly
-                  className="mt-1 border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full"
-                />
+                <div className="mt-1 border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full min-h-[48px] flex flex-wrap items-center gap-2">
+                  {city?.name && (
+                    <span className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-300">
+                      {city.name}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -477,28 +587,41 @@ function CityAdmins() {
                 </label>
                 <div>
                   <div className="relative mb-4" ref={dropdownRef}>
-                    <input
-                      type="text"
-                      value={dropdownInput}
-                      onChange={(e) => {
-                        setDropdownInput(e.target.value);
-                        setIsDropdownOpen(true);
-                      }}
-                      onFocus={() => setIsDropdownOpen(true)}
-                      placeholder={t("placeholderuserselect")}
-                      className="mt-1 border p-3 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full"
-                    />
-                    {newAdmin.name && (
-                      <div
-                        className="absolute right-3 top-3 cursor-pointer text-red-600"
-                        onClick={() => {
-                          handleUserSelect(null);
-                          setDropdownInput("");
-                        }}
-                      >
-                        &times;
-                      </div>
-                    )}
+                    <div
+                      className="mt-1 border p-3 pr-10 bg-white text-gray-800 border-gray-700 shadow-md placeholder:text-base duration-300 border-gray-300 rounded-lg w-full cursor-pointer min-h-[48px] flex flex-wrap items-center gap-2 relative"
+                      onClick={() => setIsDropdownOpen(true)}
+                    >
+                      {newAdmin.name ? (
+                        <span className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-300">
+                          {newAdmin.name}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUserSelect(null);
+                              setDropdownInput("");
+                            }}
+                            className="ml-2 text-blue-600 hover:text-blue-800"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={dropdownInput}
+                          onChange={(e) => {
+                            setDropdownInput(e.target.value);
+                            setIsDropdownOpen(true);
+                          }}
+                          onFocus={() => setIsDropdownOpen(true)}
+                          placeholder={t("placeholderuserselect")}
+                          className="flex-1 bg-transparent outline-none placeholder:text-base"
+                        />
+                      )}
+                      <svg className={`w-5 h-5 transition-transform absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
 
                     {isDropdownOpen && (
                       <div className="absolute top-full mt-1 w-full bg-white rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-700">
@@ -517,7 +640,7 @@ function CityAdmins() {
                                 );
                                 setIsDropdownOpen(false);
                               }}
-                              className="cursor-pointer px-3 py-2 bg-gray-100 hover:bg-teal-100 text-gray-800"
+                              className="cursor-pointer px-3 py-2 bg-gray-100 text-gray-800"
                             >
                               {user.name || user.username}
                             </div>

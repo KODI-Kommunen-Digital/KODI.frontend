@@ -75,8 +75,8 @@ const AllCities = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     city: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   function goToEditCityPage(city) {
@@ -237,7 +237,7 @@ const AllCities = () => {
                           >
                             {city.image ? (
                               <img
-                                alt="City"
+                                alt={t("cities")}
                                 className="w-10 h-10 object-cover rounded-full flex-shrink-0"
                                 src={
                                   process.env.REACT_APP_BUCKET_HOST + city.image
@@ -257,7 +257,7 @@ const AllCities = () => {
                               />
                             ) : (
                               <img
-                                alt="City"
+                                alt={t("cities")}
                                 className="w-10 h-10 object-cover rounded-full"
                                 src={LISTINGSIMAGE}
                                 onLoad={() =>

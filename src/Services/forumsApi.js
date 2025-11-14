@@ -1,5 +1,7 @@
 import { getUserId } from "./usersApi";
-import { forumInstance } from "../api/axiosInstance";
+import { forumInstance, instance } from "../api/axiosInstance";
+
+
 const axios = forumInstance;
 
 export async function getUserForums(params) {
@@ -225,5 +227,30 @@ export async function adminStatusChange(
 	return axios.patch(
 		`/cities/${cityId}/forums/${forumsId}/members/${memberId}`,
 		{ isAdmin: newAdminValue }
+	);
+}
+
+export async function fetchForums(pageNo, pageSize) {
+	return instance.get("/forums", {
+		params: {
+			pageNo,
+			pageSize,
+		}
+	});
+}
+
+export async function deleteForumsById(id) {
+	return instance.delete(`/forums/${id}`);
+}
+
+export async function updateForumStatus(forumId, approvalStatus) {
+	return instance.patch(
+		`/forums/${forumId}/approval-status`,
+		{ approvalStatus }, // request body
+		{
+			headers: {
+				Authorization: `Bearer YOUR_TOKEN_HERE`,
+			},
+		}
 	);
 }

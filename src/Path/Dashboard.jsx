@@ -22,6 +22,7 @@ import APPOINTMENTDEFAULTIMAGE from "../assets/Appointments.png";
 import { getCitiesByUserId } from "../Services/citiesApi";
 import { hiddenCategories } from "../Constants/hiddenCategories";
 import ManageStatus from "../Components/ManageStatus";
+
 const Dashboard = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
@@ -38,7 +39,9 @@ const Dashboard = () => {
     listing: null,
   });
 
+
   const navigate = useNavigate();
+
   const navigateTo = (path) => {
     if (path) {
       navigate(path);
@@ -207,8 +210,8 @@ const Dashboard = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState({
     visible: false,
     listing: null,
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => { },
+    onCancel: () => { },
   });
 
   const fetchUpdatedListings = useCallback(() => {
@@ -312,6 +315,8 @@ const Dashboard = () => {
     setCityId(selectedCityId || 0);
   };
 
+
+
   return (
     <section className="bg-gray-900 body-font relative min-h-screen">
       <SideBar />
@@ -323,44 +328,40 @@ const Dashboard = () => {
               <div className="hidden lg:block">
                 <div className="w-full h-full flex items-center justify-end xl:justify-center lg:justify-center md:justify-end sm:justify-end border-gray-100 md:space-x-10">
                   <div
-                    className={`${
-                      selectedStatus === null
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${selectedStatus === null
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(null)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("allListings")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Active
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${selectedStatus === statusByName.Active
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Active)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("active")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Pending
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${selectedStatus === statusByName.Pending
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Pending)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t("pending")}
                   </div>
                   <div
-                    className={`${
-                      selectedStatus === statusByName.Inactive
-                        ? "bg-gray-700 text-white"
-                        : "text-gray-300"
-                    } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                    className={`${selectedStatus === statusByName.Inactive
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
                     onClick={() => setSelectedStatus(statusByName.Inactive)}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
@@ -475,7 +476,7 @@ const Dashboard = () => {
                               "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
                           }}
                         >
-                          {t("current status")}
+                          {t("current_status")}
                         </th>
 
                         <th
@@ -533,7 +534,7 @@ const Dashboard = () => {
                                 listing.sourceId === 1
                                   ? listing.logo
                                     ? process.env.REACT_APP_BUCKET_HOST +
-                                      listing.logo
+                                    listing.logo
                                     : LISTINGSIMAGE
                                   : listing.logo
                               }
