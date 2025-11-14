@@ -12,18 +12,23 @@ const UserManagement = () => {
     const { t } = useTranslation();
 
     const tabs = [
-        { id: "users", label: "Users" },
-        { id: "forums", label: "Forums" },
-        { id: "channels", label: "Channels" },
+        { id: "users", label: t("users") },
+        { id: "forums", label: t("forums") },
+        { id: "channels", label: t("channels") },
     ];
 
-    const [activeTab, setActiveTab] = useState(tabs[0].id);
-    const [selectedRequest, setSelectedRequest] = useState(null);
+    const [activeTab, setActiveTab] = useState("users");
 
     const [users, setUsers] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: "", type: "" });
     const [forums, setForums] = useState([]);
     const [channels, setChannels] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [channelCurrentPage, setChannelCurrentPage] = useState(1);
+    const [channelTotalPages, setChannelTotalPages] = useState(1);
+
+    const [totalPages, setTotalPages] = useState(1);
+    const pageSize = 10;
 
 
     const showNotification = (message, type) => {
@@ -85,201 +90,98 @@ const UserManagement = () => {
     }, [getAllUsers]);
 
 
-    const getForums = useCallback(async () => {
+    const getForums = useCallback(async (page = 1) => {
         try {
-            const { data } = await fetchForums(10, 1);
+            const { data } = await fetchForums(pageSize, page);
             setForums(data?.data || []);
+            // Calculate total pages from response
+            const total = data?.total;
+            setTotalPages(Math.ceil(total / pageSize));
         }
         catch (error) {
             console.error("Error fetching forums:", error);
         }
-    }, []);
+    }, [pageSize]);
 
     useEffect(() => {
-        getForums();
-    }, [getForums]);
+        getForums(currentPage);
+    }, [getForums, currentPage]);
 
 
     const updateForumStatusById = useCallback(async (forumId, approvalStatus) => {
         try {
             await updateForumStatus(forumId, approvalStatus);
-            getForums();
+            getForums(currentPage);
             showNotification(t('forum_status_updated'), "success");
         }
         catch (error) {
             console.error("Error updating forum status:", error);
             showNotification(t("forum_status_updated_failed"), "error");
         }
-    }, [getForums]);
+    }, [getForums, currentPage, t]);
 
     const deleteForumById = useCallback(async (forumId) => {
         try {
             await deleteForumsById(forumId);
-            getForums();
+            // After deleting, if we're on a page with only one item, go back to previous page
+            if (forums.length === 1 && currentPage > 1) {
+                setCurrentPage(prev => prev - 1);
+            } else {
+                getForums(currentPage);
+            }
             showNotification(t("forum_deleted_successfully"), "success");
         }
         catch (error) {
             console.error("Error deleting forum:", error);
             showNotification(t("forum_deleted_failed"), "error");
         }
-    }, [getForums]);
+    }, [getForums, currentPage, forums.length, t]);
 
 
-    const fetchAllChannels = useCallback(async () => {
+    const fetchAllChannels = useCallback(async (pageNo = 1) => {
         try {
-            const { data } = await fetchAllChannel();
+            const { data } = await fetchAllChannel(pageNo, pageSize);
+            const total = data?.total;
+            setChannelTotalPages(Math.ceil(total / pageSize));
             setChannels(data?.data || []);
         }
         catch (error) {
             console.error("Error fetching channels:", error);
         }
-    }, []);
+    }, [pageSize]);
 
     useEffect(() => {
-        fetchAllChannels();
-    }, [fetchAllChannels]);
+        fetchAllChannels(channelCurrentPage);
+    }, [fetchAllChannels, channelCurrentPage]);
 
     const updateChannelStatusById = useCallback(async (channelId, approvalStatus) => {
         try {
             await updateChannelStatus(channelId, approvalStatus);
-            fetchAllChannels();
+            fetchAllChannels(channelCurrentPage);
             showNotification(t('channel_status_updated'), "success");
         }
         catch (error) {
             console.error("Error updating channel status:", error);
             showNotification(t("channel_status_updated_failed"), "error");
         }
-    }, [fetchAllChannels]);
+    }, [fetchAllChannels, channelCurrentPage, t]);
     const deleteChannelById = useCallback(async (channelId) => {
         try {
             await deleteChannel(channelId);
-            fetchAllChannels();
+            // After deleting, if we're on a page with only one item, go back to previous page
+            if (channels.length === 1 && channelCurrentPage > 1) {
+                setChannelCurrentPage(prev => prev - 1);
+            } else {
+                fetchAllChannels(channelCurrentPage);
+            }
             showNotification(t("channel_deleted_successfully"), "success");
         }
         catch (error) {
             console.error("Error deleting channel:", error);
             showNotification(t("channel_deleted_failed"), "error");
         }
-    })
+    }, [fetchAllChannels, channelCurrentPage, channels.length, t]);
 
-    const renderModalContent = () => {
-        // const accordionMaxHeight = "max-h-96";
-
-        switch (activeTab) {
-            case "users":
-                return (
-                    <div className="space-y-3">
-                        <div className="border rounded p-4 bg-gray-50">
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Username:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.username || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Email:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.email || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Description:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.description || "-"}</p>
-                            </div>
-                        </div>
-                    </div>
-                );
-
-            case "forums":
-                return (
-                    <div className="space-y-3">
-                        <div className="border rounded p-4 bg-gray-50">
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Forum Name:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.name || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Category:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.category || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Description:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.description || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Status:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.isApproved || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">City:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.cityName || "-"}</p>
-                            </div>
-                        </div>
-                    </div>
-                );
-
-            case "channels":
-                return (
-                    <div className="space-y-3">
-                        <div className="border rounded p-4 bg-gray-50">
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Channel Name:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.name || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Category:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.categoryName || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Description:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.description || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">Status:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.approval_status || "-"}</p>
-                            </div>
-                            <div className="mb-3">
-                                <span className="font-semibold text-gray-700">City:</span>
-                                <p className="text-gray-900 mt-1">{selectedRequest?.cityName || "-"}</p>
-                            </div>
-                        </div>
-                    </div>
-                );
-
-            default:
-                return null;
-        }
-    };
-
-    const renderModal = () => {
-        if (!selectedRequest) return null;
-
-        return (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="bg-white p-6 rounded-2xl max-w-lg w-full relative flex flex-col max-h-[90vh]">
-                    <button
-                        className="absolute top-3 right-4 text-gray-500 hover:text-black text-2xl"
-                        onClick={() => setSelectedRequest(null)}
-                    >
-                        &times;
-                    </button>
-                    <div className="flex-shrink-0">
-                        <h2 className="text-xl font-bold mb-2">
-                            {activeTab === "users"
-                                ? selectedRequest.username
-                                : activeTab === "forums"
-                                    ? selectedRequest.name
-                                    : activeTab === "channels"
-                                        ? selectedRequest.name
-                                        : selectedRequest.title}
-                        </h2>
-                        {selectedRequest.createdAt && (
-                            <p className="text-sm text-gray-500 mb-4">
-                                {t("createdAt")}: {selectedRequest.createdAt}
-                            </p>
-                        )}
-                    </div>
-                    <div className="overflow-y-auto flex-1 mb-6">{renderModalContent()}</div>
-                </div>
-            </div>
-        );
-    };
 
     return (
         <div className="bg-gray-800 body-font relative min-h-screen">
@@ -298,7 +200,12 @@ const UserManagement = () => {
                                         ? "border-b-2 border-blue-500 text-blue-600"
                                         : "text-white hover:text-blue-500"
                                         }`}
-                                    onClick={() => setActiveTab(tab.id)}
+                                    onClick={() => {
+                                        setActiveTab(tab.id);
+                                        // Reset to page 1 when switching tabs
+                                        setCurrentPage(1);
+                                        setChannelCurrentPage(1)
+                                    }}
                                 >
                                     {tab.label}
                                 </button>
@@ -590,10 +497,105 @@ const UserManagement = () => {
                                 </table>
                             </div>
                         </div>
+
+                        {/* Pagination - Only show for forums tab */}
+                        {activeTab === "forums" && forums.length > 0 && (
+                            <div className="flex justify-center mt-4 p-4 space-x-2">
+                                <button
+                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 flex items-center"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <span className="px-4 py-1 text-sm text-slate-50">
+                                    {t("page")} {currentPage} {t("of")} {totalPages}
+                                </span>
+
+                                <button
+                                    onClick={() =>
+                                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                                    }
+                                    disabled={currentPage === totalPages}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 flex items-center"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+                        {activeTab === "channels" && channels.length > 0 && (
+                            <div className="flex justify-center mt-4 p-4 space-x-2">
+                                <button
+                                    onClick={() => setChannelCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={channelCurrentPage === 1}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 flex items-center"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <span className="px-4 py-1 text-sm text-slate-50">
+                                    {t("page")} {channelCurrentPage} {t("of")} {channelTotalPages}
+                                </span>
+
+                                <button
+                                    onClick={() =>
+                                        setChannelCurrentPage((prev) => Math.min(prev + 1, channelTotalPages))
+                                    }
+                                    disabled={channelCurrentPage === channelTotalPages}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 flex items-center"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Modal */}
-                    {selectedRequest && renderModal()}
+
 
                     {/* Notification */}
                     {notification.show && (

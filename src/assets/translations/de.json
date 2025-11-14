@@ -1209,5 +1209,8 @@
   "channel-rejected": "Kanal abgelehnt",
   "Delete_channel": "Kanal löschen",
   "channel_deleted_successfully": "Kanal erfolgreich gelöscht",
-  "channel_deleted_failed": "Kanal konnte nicht gelöscht werden"
+  "channel_deleted_failed": "Kanal konnte nicht gelöscht werden",
+  "users": "Benutzer",
+  "forums": "Foren",
+  "channels": "Kanäle"
 }
