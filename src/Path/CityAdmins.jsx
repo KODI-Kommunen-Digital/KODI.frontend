@@ -32,12 +32,12 @@ function CityAdmins() {
     onConfirm: null,
     onCancel: null,
   });
-  const [showEditModal, setShowEditModal] = useState({
-    visible: false,
-    userId: null,
-    onConfirm: null,
-    onCancel: null,
-  });
+  // const [showEditModal, setShowEditModal] = useState({
+  //   visible: false,
+  //   userId: null,
+  //   onConfirm: null,
+  //   onCancel: null,
+  // });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -228,40 +228,40 @@ function CityAdmins() {
       },
     });
   };
-  const handleEditModal = (userId) => {
-    setShowEditModal({
-      visible: true,
-      userId: userId,
-      onConfirm: async () => {
-        try {
-          // setLoading(true);
-          // await deleteAdmin(cityId, userId);
-          // await fetchAdmins(cityId);
+  // const handleEditModal = (userId) => {
+  //   setShowEditModal({
+  //     visible: true,
+  //     userId: userId,
+  //     onConfirm: async () => {
+  //       try {
+  //         // setLoading(true);
+  //         // await deleteAdmin(cityId, userId);
+  //         // await fetchAdmins(cityId);
 
-          // setSuccess(t("admindeletedsuccessfully"));
-        } catch (err) {
-          // setError(err.response?.data?.message || t("failedtodeleteadmin"));
-          console.error("Error deleting admin:", err);
-        } finally {
-          setLoading(false);
-          setShowEditModal({
-            visible: false,
-            userId: null,
-            onConfirm: null,
-            onCancel: null,
-          });
-        }
-      },
-      onCancel: () => {
-        setShowEditModal({
-          visible: false,
-          userId: null,
-          onConfirm: null,
-          onCancel: null,
-        });
-      },
-    });
-  };
+  //         // setSuccess(t("admindeletedsuccessfully"));
+  //       } catch (err) {
+  //         // setError(err.response?.data?.message || t("failedtodeleteadmin"));
+  //         console.error("Error deleting admin:", err);
+  //       } finally {
+  //         setLoading(false);
+  //         setShowEditModal({
+  //           visible: false,
+  //           userId: null,
+  //           onConfirm: null,
+  //           onCancel: null,
+  //         });
+  //       }
+  //     },
+  //     onCancel: () => {
+  //       setShowEditModal({
+  //         visible: false,
+  //         userId: null,
+  //         onConfirm: null,
+  //         onCancel: null,
+  //       });
+  //     },
+  //   });
+  // };
 
 
   const renderAdminList = () => {
@@ -315,7 +315,7 @@ function CityAdmins() {
                   <td className="px-6 py-4 text-center">{admin.email}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-end space-x-3">
-                      <a
+                      {/* <a
                         className={`font-medium text-green-600 px-2 cursor-pointer`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         onClick={() => handleEditModal(admin.userId)}
@@ -328,7 +328,7 @@ function CityAdmins() {
                         >
                           <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
                         </svg>
-                      </a>
+                      </a> */}
                       <button
                         onClick={() => handleDeleteAdmin(admin.userId)}
                         className="font-medium text-red-600 hover:text-red-800"
@@ -415,40 +415,12 @@ function CityAdmins() {
                     </div>
                   )}
 
-                  {
+                  {/* {
                     showEditModal.visible && (
                       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center px-5 md:px-10 lg:px-[5rem] xl:px-[10rem] 2xl:px-[20rem] z-50">
                         <div className="bg-white rounded-lg p-6 w-full max-w-md">
                           <h2 className="text-xl font-bold mb-4">{t("editAdmin")}</h2>
-                          {/* 
-                    {cityStatusModal?.listing?.cityData?.map((city, index) => (
-                        <div key={city?.id} className="mb-4">
-                            <label className="block font-medium text-gray-700">
-                                {city?.name}
-                            </label>
-                            <select
-                                value={city?.listingStatus}
-                                onChange={(e) => {
-                                    const updatedCityData = cityStatusModal?.listing?.cityData?.map((c) =>
-                                        c.id === city.id
-                                            ? { ...c, listingStatus: parseInt(e.target.value) }
-                                            : c
-                                    );
-                                    setCityStatusModal((prev) => ({
-                                        ...prev,
-                                        listing: { ...prev.listing, cityData: updatedCityData },
-                                    }));
-                                }}
-                                className="w-full mt-1 border border-gray-300 rounded px-3 py-2"
-                            >
-                                {Object.entries(status).map(([id, name]) => (
-                                    <option key={id} value={id}>
-                                        {t(name.toLowerCase())}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    ))} */}
+              
 
                           <div className="flex justify-end mt-6 space-x-3">
                             <button
@@ -467,7 +439,7 @@ function CityAdmins() {
                         </div>
                       </div>
                     )
-                  }
+                  } */}
                 </tr>
               ))}
           </tbody>
