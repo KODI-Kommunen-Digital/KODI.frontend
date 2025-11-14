@@ -1,6 +1,7 @@
-import { instance } from "../api/axiosInstance";
+import { instance, forumInstanceV2 } from "../api/axiosInstance";
 import UAParser from "ua-parser-js";
 const axiosInstance = instance;
+const forumInstance = forumInstanceV2
 
 const parser = new UAParser();
 const userAgent = parser.getResult();
@@ -109,9 +110,6 @@ export async function logoutOfOneDevice(id) {
 	return axiosInstance.delete(`/users/${getUserId()}/loginDevices?id=${id}`);
 }
 
-
-
-
 export const getCurrentUser = async () => {
 	try {
 		const idToken = window.localStorage.getItem("accessToken");
@@ -126,3 +124,41 @@ export const getCurrentUser = async () => {
 		throw error;
 	}
 };
+
+export async function updateUsersBlock(userId) {
+	return axiosInstance.post(`users/${userId}/block`);
+}
+export async function unblockUsers(userId) {
+	return axiosInstance.post(`users/${userId}/unblock`);
+}
+export async function deleteUsers(userId) {
+	return axiosInstance.delete(`/users/${userId}`);
+}
+
+export async function fetchForums(pageSize, pageNo) {
+	return forumInstance.get("/forums", { params: { pageSize, pageNo } });
+}
+export async function updateForumStatus(id, status) {
+	return forumInstance.patch(
+		`/forums/${id}/approval-status`,
+		{ approvalStatus: status }
+	);
+}
+
+export async function deleteForumsById(id) {
+	return forumInstance.delete(`/forums/${id}`);
+}
+export async function fetchAllChannel(pageNo, pageSize, search) {
+	return forumInstance.get("/channels", { params: { pageNo, pageSize, search } });
+}
+export async function updateChannelStatus(id, status) {
+	return forumInstance.patch(
+		`/channels/${id}/approval-status`,
+		{ approvalStatus: status }
+	);
+}
+export async function deleteChannel(id) {
+	return forumInstance.delete(`/channels/${id}`);
+}
+
+

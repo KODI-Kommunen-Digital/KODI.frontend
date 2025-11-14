@@ -3,6 +3,7 @@ const role = {
   User: 3,
   CityAdmin: 2,
   TerminalAdmin: 4,
+  moderator: 5,
 };
 
 module.exports = { role };

@@ -48,3 +48,35 @@ export async function getCitiesByUserId(params) {
 export async function deleteCity(cityId) {
   return instance.delete(`cities/${cityId}`);
 }
+export async function getCityByCityAdmins(userId) {
+  return instance.get(`/cities/${userId}/cityAdmin`);
+
+}
+
+export async function createCityUsersPermissions(newCitysDataObj) {
+  return instance.post('/moderators', newCitysDataObj);
+
+}
+export async function getCityUsersPermissions(searchQuery, pageNo, pageSize) {
+  return instance.get("/moderators/my", {
+    params: {
+      searchQuery,
+      pageNo,
+      pageSize,
+    },
+  });
+}
+
+export async function updateCityUserPermissions(newCitysDataObj) {
+  return instance.put("/moderators", newCitysDataObj);
+}
+export async function deleteCityUsers(userId) {
+  return instance.delete(`/moderators`, {
+    data: { userId }
+  });
+}
+
+export async function getModeratorProfile(userId) {
+  return instance.get(`/moderators/${userId}/profile`)
+
+}

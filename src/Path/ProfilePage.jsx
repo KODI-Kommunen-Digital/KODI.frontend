@@ -9,6 +9,7 @@ import {
   updateProfile,
   updatePassword,
   uploadProfilePic,
+  deleteAccount,
 } from "../Services/usersApi";
 
 import { useTranslation, withTranslation } from "react-i18next";
@@ -73,11 +74,18 @@ class ProfilePage extends React.Component {
       data: {
         socialMedia: {},
       },
+      showConfirmationModal: {
+        visible: false,
+        onConfirm: () => { },
+        onCancel: () => { },
+      },
     };
     this.handleProfileChange = this.handleProfileChange.bind(this);
     this.updateChanges = this.updateChanges.bind(this);
     this.setProfile = this.setProfile.bind(this);
     this.setSocialMedia = this.setSocialMedia.bind(this);
+    this.deleteAccountOnClick = this.deleteAccountOnClick.bind(this);
+    this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
   }
 
   componentDidMount() {
@@ -329,6 +337,49 @@ class ProfilePage extends React.Component {
       });
   };
 
+  navigateTo = (path) => {
+    window.location.href = path;
+  };
+
+  deleteAccountOnClick() {
+    this.setState({
+      showConfirmationModal: {
+        visible: true,
+        onConfirm: () => this.handleDeleteAccount(),
+        onCancel: () => this.setState({
+          showConfirmationModal: {
+            visible: false,
+            onConfirm: () => { },
+            onCancel: () => { },
+          }
+        }),
+      },
+    });
+  }
+
+  handleDeleteAccount() {
+    deleteAccount()
+      .then(() => {
+        window.localStorage.removeItem("accessToken");
+        window.localStorage.removeItem("refreshToken");
+        window.localStorage.removeItem("userId");
+        window.sessionStorage.removeItem("accessToken");
+        window.sessionStorage.removeItem("refreshToken");
+        window.sessionStorage.removeItem("userId");
+        window.location.href = "/";
+        this.setState({
+          showConfirmationModal: {
+            visible: false,
+            onConfirm: () => { },
+            onCancel: () => { },
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   render() {
     const { t } = this.props;
     return (
@@ -355,8 +406,8 @@ class ProfilePage extends React.Component {
           </div>
         ) : (
           <div>
-            <div className="container w-auto px-5 py-2">
-              <div className="bg-white mt-4 p-6">
+            <div className="container w-auto px-5">
+              <div className="bg-white p-6">
                 <h2
                   className="text-slate-800 text-lg mb-4 font-medium title-font"
                   style={{
@@ -469,6 +520,66 @@ class ProfilePage extends React.Component {
                         disabled={true}
                       />
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="mt-1 px-2">
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium text-gray-600"
+                        >
+                          {t("emailId")}
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          id="email"
+                          className={`w-full rounded border border-gray-300 focus:border-indigo-500 focus:ring-2
+                             focus:ring-indigo-200 text-base outline-none
+                              text-gray-700 py-1 px-3 leading-8 transition-colors 
+                              duration-200 ease-in-out ${this.state.profile?.roleId === 1 ? "bg-white" : "bg-gray-200"
+                            }`}
+                          placeholder={t("enter_email")}
+                          defaultValue={this.state.profile.email || ""}
+                          onChange={this.handleProfileChange}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                          disabled={this.state.profile?.roleId !== 1}
+                        />
+                        {this.state.showError.email && (
+                          <div className="text-red-600 h-[24px]">
+                            {this.state.errorMessage.email}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-1 px-2">
+                        <label
+                          htmlFor="phoneNumber"
+                          className="block text-sm font-medium text-gray-600"
+                        >
+                          {t("phoneNumber")}
+                        </label>
+                        <input
+                          type="text"
+                          name="phoneNumber"
+                          id="phoneNumber"
+                          className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                          placeholder={t("enter_phone")}
+                          defaultValue={this.state.profile.phoneNumber || ""}
+                          onChange={this.handleProfileChange}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        />
+                        {this.state.showError.phoneNumber && (
+                          <div className="text-red-600 h-[24px]">
+                            {this.state.errorMessage.phoneNumber}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                   </div>
                   <div className="py-3 grid grid-cols-1">
                     <div className="mt-1 px-2">
@@ -566,8 +677,8 @@ class ProfilePage extends React.Component {
               </div>
             </div>
             <SocialMedia setSocialMedia={this.setSocialMedia.bind(this)} />
-            <div className="container w-auto px-5 py-2 bg-gray-900">
-              <div className="bg-white mt-4 p-6">
+            <div className="container w-auto px-5 bg-gray-900">
+              <div className="bg-white p-6">
                 <div className="py-2 mt-1 px-2">
                   <button
                     className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
@@ -613,6 +724,165 @@ class ProfilePage extends React.Component {
             </div>
           </div>
         )}
+
+        {/* Password Update Section - Outside Loader */}
+        <div className="container w-auto px-5 py-2 bg-gray-900">
+          <div className="bg-white mt-4 p-6">
+            <h2
+              className="text-slate-800 text-lg mb-4 font-medium title-font"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("updatePassword")}
+              <div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+              <label
+                className="block px-2 text-sm font-medium text-gray-500"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("Need_to_change_your_password")}
+              </label>
+            </h2>
+            <div className="py-2 mt-1 px-2">
+              <button
+                id="finalbutton"
+                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+                onClick={() => {
+                  this.navigateTo("/PasswordUpdate");
+                }}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("updatePassword")}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* All Devices Section - Outside Loader */}
+        <div className="container w-auto px-5 py-2 bg-gray-900">
+          <div className="bg-white mt-4 p-6">
+            <h2
+              className="text-slate-800 text-lg mb-4 font-medium title-font"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("allDevices")}
+              <div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+              <label
+                className="block px-2 text-sm font-medium text-gray-500"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("alldevicesdescription")}
+              </label>
+            </h2>
+            <div className="py-2 mt-1 px-2">
+              <button
+                // className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+                id="finalbutton"
+                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+                onClick={() => this.navigateTo("/AllDevices")}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("devices")}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Delete Account Section - Outside Loader */}
+        <div className="container w-auto px-5 py-2 bg-gray-900">
+          <div className="bg-white mt-4 p-6">
+            <h2
+              className="text-slate-800 text-lg mb-4 font-medium title-font"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
+              {t("deleteAccount")}
+              <div className="my-4 bg-gray-600 text-base h-[1px]"></div>
+              <label
+                className="block px-2 text-sm font-medium text-gray-500"
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("need_to_delete_account")}
+              </label>
+            </h2>
+            <div className="py-2 mt-1 px-2">
+              <button
+                // className="w-full hover:bg-gray-800 text-white font-bold py-2 px-4 rounded bg-black disabled:opacity-60"
+                id="finalbutton"
+                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-2 px-4 mt-4 rounded-md"
+                onClick={this.deleteAccountOnClick}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                {t("deleteAccount")}{" "}
+              </button>
+              {this.state.showConfirmationModal.visible && (
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                  <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div
+                      className="fixed inset-0 transition-opacity"
+                      aria-hidden="true"
+                    >
+                      <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                    </div>
+                    <span
+                      className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                      aria-hidden="true"
+                    >
+                      &#8203;
+                    </span>
+                    <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div className="sm:flex sm:items-start">
+                          <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg
+                              className="h-6 w-6 text-red-600"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </div>
+                          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 className="text-lg leading-6 font-medium text-slate-800">
+                              {t("areyousure")}
+                            </h3>
+                            <div className="mt-2">
+                              <p className="text-sm text-gray-500">
+                                {t("doyoureallywanttodeleteAccount")}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button
+                          onClick={this.state.showConfirmationModal.onConfirm}
+                          type="button"
+                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                        >
+                          {t("delete")}
+                        </button>
+
+                        <button
+                          onClick={this.state.showConfirmationModal.onCancel}
+                          type="button"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                        >
+                          {t("cancel")}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

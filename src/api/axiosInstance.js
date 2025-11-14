@@ -146,6 +146,8 @@ const baseURL = isV2Backend
 const instance = createInstance(baseURL);
 const forumInstance = createInstance(process.env.REACT_APP_API_FORUM_URL);
 const carParkApiInterfaceInstance = createInstance(process.env.REACT_APP_CAR_PARK_API_INTERFACE_URL);
+const forumInstanceV2 = createInstance(process.env.REACT_APP_FORUM_API_BASE_URL_V2)
+
 const appointmentInstance = createInstance(
   process.env.REACT_APP_API_APPOINTMENT_URL
 );
@@ -153,4 +155,4 @@ const containerInstance = createInstance(
   process.env.REACT_APP_API_CONTAINER_URL
 );
 
-export { instance, forumInstance, appointmentInstance, containerInstance, carParkApiInterfaceInstance };
+export { instance, forumInstance, appointmentInstance, containerInstance, carParkApiInterfaceInstance, forumInstanceV2 };
