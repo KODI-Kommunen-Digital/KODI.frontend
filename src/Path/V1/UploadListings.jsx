@@ -753,14 +753,15 @@ function UploadListings() {
     }
   }, []);
 
+  const getPlainTextLength = (htmlContent) => {
+    if (!htmlContent) return 0;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+    return plainText.length;
+  };
   const onDescriptionChange = (newContent) => {
-    const hasNumberedList = newContent.includes("<ol>");
-    const hasBulletList = newContent.includes("<ul>");
-    let descriptions = [];
-    let listType = "";
-
-    const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
-    const characterCount = plainText.length;
+    const characterCount = getPlainTextLength(newContent);
 
     if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
       setError((prev) => ({
@@ -778,43 +779,93 @@ function UploadListings() {
       }));
     }
 
-    if (hasNumberedList || hasBulletList) {
-      const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
-      const matches = newContent.match(liRegex);
-      if (matches) {
-        descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-      }
-
-      listType = hasNumberedList ? "ol" : "ul";
-
-      const listHTML = `<${listType}>${descriptions
-        .map((item) => `<li>${item}</li>`)
-        .join("")}</${listType}>`;
-
-      let leftoverText = newContent
-        .replace(/<ol>.*?<\/ol>/gis, "")
-        .replace(/<ul>.*?<\/ul>/gis, "")
-        .trim();
-
-      leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
-
-      const finalDescription = leftoverText
-        ? `${leftoverText}<br/>${listHTML}`
-        : listHTML;
-
-      setListingInput((prev) => ({
-        ...prev,
-        description: finalDescription,
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
-      }));
-    }
+    // ✅ Don't modify the HTML — send exactly what was typed in the editor
+    setListingInput((prev) => ({
+      ...prev,
+      description: newContent,
+    }));
 
     setDescription(newContent);
   };
+
+
+  useEffect(() => {
+    const quill = editor.current?.getEditor();
+
+    if (quill) {
+      quill.clipboard.addMatcher("IMG", (node, delta) => {
+        const imageUrl = node.getAttribute("src");
+        return new Delta().insert(imageUrl || "[Image]");
+      });
+
+      // Configure Quill to preserve whitespace
+      const editorElement = quill.root;
+      editorElement.style.whiteSpace = 'pre-wrap';
+    }
+  }, []);
+
+  // const onDescriptionChange = (newContent) => {
+  //   const hasNumberedList = newContent.includes("<ol>");
+  //   const hasBulletList = newContent.includes("<ul>");
+  //   let descriptions = [];
+  //   let listType = "";
+
+  //   const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
+  //   const characterCount = plainText.length;
+
+  //   if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       description: t("characterLimitExceeded", {
+  //         limit: CHARACTER_LIMIT_DESCRIPTION,
+  //         count: characterCount,
+  //       }),
+  //     }));
+  //     return;
+  //   } else {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       description: "",
+  //     }));
+  //   }
+
+  //   if (hasNumberedList || hasBulletList) {
+  //     const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
+  //     const matches = newContent.match(liRegex);
+  //     if (matches) {
+  //       descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
+  //     }
+
+  //     listType = hasNumberedList ? "ol" : "ul";
+
+  //     const listHTML = `<${listType}>${descriptions
+  //       .map((item) => `<li>${item}</li>`)
+  //       .join("")}</${listType}>`;
+
+  //     let leftoverText = newContent
+  //       .replace(/<ol>.*?<\/ol>/gis, "")
+  //       .replace(/<ul>.*?<\/ul>/gis, "")
+  //       .trim();
+
+  //     leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
+
+  //     const finalDescription = leftoverText
+  //       ? `${leftoverText}<br/>${listHTML}`
+  //       : listHTML;
+
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       description: finalDescription,
+  //     }));
+  //   } else {
+  //     setListingInput((prev) => ({
+  //       ...prev,
+  //       description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
+  //     }));
+  //   }
+
+  //   setDescription(newContent);
+  // };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1661,17 +1712,20 @@ function UploadListings() {
               onBlur={() => {
                 const quillInstance = editor.current?.getEditor();
                 if (quillInstance) {
+                  const sanitizedContent = quillInstance.root.innerHTML.replace(/<\/?p>/gi, "<br>");
+
+
                   validateInput({
                     target: {
                       name: "description",
-                      value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+                      value: sanitizedContent,
                     },
                   });
                 }
               }}
               placeholder={t("writeSomethingHere")}
               readOnly={updating || isSuccess}
-              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+              className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-0 px-0 leading-8 transition-colors duration-200 ease-in-out shadow-md preserve-whitespace"
               style={{
                 position: "relative",
                 zIndex: 1000,
@@ -1679,12 +1733,13 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_DESCRIPTION
+                className={`${getPlainTextLength(description).length > CHARACTER_LIMIT_DESCRIPTION
                   ? "mt-2 text-sm text-red-600"
                   : "mt-2 text-sm text-gray-500"
                   }`}
               >
-                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_DESCRIPTION}
+                {getPlainTextLength(description).length}/{CHARACTER_LIMIT_DESCRIPTION}
+
               </span>
               {error.description && (
                 <span className="mt-2 text-sm text-red-600">
