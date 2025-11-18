@@ -506,7 +506,7 @@ function SideBar() {
                                 "'Space Grotesk', Helvetica, Arial, Lucida, sans-serif",
                             }}
                           >
-                            {t("user_management")}
+                            {t("city_staf_management")}
                           </span>
                         </div>
                       )}
