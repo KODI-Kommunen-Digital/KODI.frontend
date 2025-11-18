@@ -236,7 +236,7 @@ const UserManagement = () => {
                                                             ? t("category")
                                                             : t("email")}
                                             </th>
-                                            <th className="border px-4 py-2">
+                                            {/* <th className="border px-4 py-2">
                                                 {activeTab === "users"
                                                     ? t("description")
                                                     : activeTab === "forums"
@@ -244,7 +244,7 @@ const UserManagement = () => {
                                                         : activeTab === "channels"
                                                             ? t("description")
                                                             : t("description")}
-                                            </th>
+                                            </th> */}
                                             <th className="border px-4 py-2">{t("action")}</th>
                                         </tr>
                                     </thead>
@@ -255,9 +255,9 @@ const UserManagement = () => {
                                                     <tr key={user.id}>
                                                         <td className="border px-4 py-2">{user.username || "-"}</td>
                                                         <td className="border px-4 py-2">{user.email || "-"}</td>
-                                                        <td className="border px-4 py-2 text-sm text-gray-500">
+                                                        {/* <td className="border px-4 py-2 text-sm text-gray-500">
                                                             {user.description || "-"}
-                                                        </td>
+                                                        </td> */}
                                                         <td className="border px-4 py-2">
                                                             <div className="flex gap-2 items-center justify-center">
                                                                 {/* Conditional Block/Unblock Button */}
