@@ -218,34 +218,56 @@ const UserManagement = () => {
                                 <table className="table-auto w-full text-left border-collapse">
                                     <thead className="sticky top-0 bg-white z-10">
                                         <tr>
-                                            <th className="border px-4 py-2">
-                                                {activeTab === "users"
-                                                    ? t("username")
-                                                    : activeTab === "forums"
-                                                        ? t("Forum_name")
-                                                        : activeTab === "channels"
-                                                            ? t("Channel_name")
-                                                            : t("title")}
-                                            </th>
-                                            <th className="border px-4 py-2">
-                                                {activeTab === "users"
-                                                    ? t("email")
-                                                    : activeTab === "forums"
-                                                        ? t("category")
-                                                        : activeTab === "channels"
-                                                            ? t("category")
-                                                            : t("email")}
-                                            </th>
-                                            {/* <th className="border px-4 py-2">
-                                                {activeTab === "users"
-                                                    ? t("description")
-                                                    : activeTab === "forums"
-                                                        ? t("description")
-                                                        : activeTab === "channels"
-                                                            ? t("description")
-                                                            : t("description")}
-                                            </th> */}
-                                            <th className="border px-4 py-2">{t("action")}</th>
+                                            {activeTab === "users" && (
+                                                <>
+                                                    <th className="border px-4 py-2">
+                                                        {t("firstName")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("lastName")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("email")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("action")}
+                                                    </th>
+                                                </>
+                                            )}
+
+                                            {activeTab === "forums" && (
+                                                <>
+                                                    <th className="border px-4 py-2">
+                                                        {t("Forum_name")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("category")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("description")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("action")}
+                                                    </th>
+                                                </>
+                                            )}
+
+                                            {activeTab === "channels" && (
+                                                <>
+                                                    <th className="border px-4 py-2">
+                                                        {t("Channel_name")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("category")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("description")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("action")}
+                                                    </th>
+                                                </>
+                                            )}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -253,11 +275,9 @@ const UserManagement = () => {
                                             users && users.length > 0 ? (
                                                 users.map((user) => (
                                                     <tr key={user.id}>
-                                                        <td className="border px-4 py-2">{user.username || "-"}</td>
+                                                        <td className="border px-4 py-2">{user.firstname || "-"}</td>
+                                                        <td className="border px-4 py-2">{user.lastname || "-"}</td>
                                                         <td className="border px-4 py-2">{user.email || "-"}</td>
-                                                        {/* <td className="border px-4 py-2 text-sm text-gray-500">
-                                                            {user.description || "-"}
-                                                        </td> */}
                                                         <td className="border px-4 py-2">
                                                             <div className="flex gap-2 items-center justify-center">
                                                                 {/* Conditional Block/Unblock Button */}
@@ -622,7 +642,7 @@ const UserManagement = () => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
