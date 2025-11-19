@@ -920,7 +920,7 @@ function SideBar() {
 
             <div className="my-2 bg-gray-600 h-[1px]"></div>
 
-            {userRole === role.Admin && (
+            {/* {userRole === role.Admin && (
               <>
                 <div
                   className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white ${localStorage.getItem("activeIndependentMenu") ===
@@ -994,7 +994,7 @@ function SideBar() {
                 </div>
                 <div className="my-2 bg-gray-600 h-[1px]"></div>
               </>
-            )}
+            )} */}
 
             {loggedIn && (
               <div
