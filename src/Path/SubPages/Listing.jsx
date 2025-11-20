@@ -33,14 +33,38 @@ const Description = (props) => {
     const container = document.createElement("div");
     container.innerHTML = input;
 
-    function processElement(element) {
+    function processElement(element, parentList = null) {
       if (element.nodeName === "OL") {
         return Array.from(element.children)
-          .map((child, index) => `${index + 1}. ${processElement(child)}`)
+          .map((child, index) => {
+            const content = processElement(child, "OL");
+            // Check if child has indent class
+            let indentPrefix = "";
+            if (child.className) {
+              const indentMatch = child.className.match(/ql-indent-(\d+)/);
+              if (indentMatch) {
+                const indentLevel = parseInt(indentMatch[1]);
+                indentPrefix = "&nbsp;".repeat(indentLevel * 6); // 6 spaces per indent level
+              }
+            }
+            return `${indentPrefix}${index + 1}. ${content}`;
+          })
           .join("<br>");
       } else if (element.nodeName === "UL") {
         return Array.from(element.children)
-          .map((child) => `\u2022  ${processElement(child)}`)
+          .map((child) => {
+            const content = processElement(child, "UL");
+            // Check if child has indent class
+            let indentPrefix = "";
+            if (child.className) {
+              const indentMatch = child.className.match(/ql-indent-(\d+)/);
+              if (indentMatch) {
+                const indentLevel = parseInt(indentMatch[1]);
+                indentPrefix = "&nbsp;".repeat(indentLevel * 6); // 6 spaces per indent level
+              }
+            }
+            return `${indentPrefix}\u2022  ${content}`;
+          })
           .join("<br>");
       } else if (element.nodeName === "LI") {
         // Process LI children to preserve formatting like <strong>
@@ -48,17 +72,7 @@ const Description = (props) => {
           .map((child) => processElement(child))
           .join("");
 
-        // Handle indentation classes (ql-indent-1, ql-indent-2, etc.)
-        let indentStyle = "";
-        if (element.className) {
-          const indentMatch = element.className.match(/ql-indent-(\d+)/);
-          if (indentMatch) {
-            const indentLevel = parseInt(indentMatch[1]);
-            indentStyle = ` style="padding-left: ${indentLevel * 3}em;"`;
-          }
-        }
-
-        return `<span${indentStyle}>${content.trim()}</span>`;
+        return content.trim();
       } else if (element.nodeName === "BR") {
         return "<br>";
       }
