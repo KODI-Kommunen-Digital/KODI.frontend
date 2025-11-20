@@ -1205,12 +1205,13 @@
   "no_forums_found": "Keine Foren gefunden",
   "channel_status_updated": "Der Kanalstatus wurde erfolgreich aktualisiert",
   "channel_status_updated_failed": "Kanalstatus konnte nicht aktualisiert werden",
-  "channel-approved": "Kanal genehmigt",
-  "channel-rejected": "Kanal abgelehnt",
-  "Delete_channel": "Kanal löschen",
-  "channel_deleted_successfully": "Kanal erfolgreich gelöscht",
-  "channel_deleted_failed": "Kanal konnte nicht gelöscht werden",
+  "channel-approved": "Channel genehmigt",
+  "channel-rejected": "Channel abgelehnt",
+  "Delete_channel": "Channel löschen",
+  "channel_deleted_successfully": "Channel erfolgreich gelöscht",
+  "channel_deleted_failed": "Channel konnte nicht gelöscht werden",
   "users": "Benutzer",
   "forums": "Foren",
-  "channels": "Kanäle"
+  "channels": "Channels",
+  "Channel_name": "Channels Name"
 }

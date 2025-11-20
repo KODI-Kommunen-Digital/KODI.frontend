@@ -397,6 +397,7 @@ function CreateUsers() {
             if (selectedCityForDropdown?.length > 1) {
                 setSelectedCityForDropdown([])
             }
+            setCurrentPage(1);
             setSelectedNewsEvent(null)
             setDropdownInput("");
         }

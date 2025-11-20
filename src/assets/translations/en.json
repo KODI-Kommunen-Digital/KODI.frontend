@@ -1197,5 +1197,6 @@
   "channel_deleted_failed": "Channel cannot be deleted",
   "users": "Users",
   "forums": "Forums",
-  "channels": "Channels"
+  "channels": "Channels",
+  "Channel_name": "Channels Name"
 }
