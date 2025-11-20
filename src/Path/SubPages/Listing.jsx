@@ -43,7 +43,11 @@ const Description = (props) => {
           .map((child) => `\u2022  ${processElement(child)}`)
           .join("<br>");
       } else if (element.nodeName === "LI") {
-        return element.textContent.trim();
+        // Process LI children to preserve formatting like <strong>
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return content.trim();
       } else if (element.nodeName === "BR") {
         return "<br>";
       }
@@ -53,6 +57,31 @@ const Description = (props) => {
           .map((child) => processElement(child))
           .join("");
         return content.trim() === "" ? "<br>" : content;
+      }
+      // Handle formatting tags - preserve them in the output
+      else if (element.nodeName === "STRONG" || element.nodeName === "B") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<strong>${content}</strong>`;
+      }
+      else if (element.nodeName === "EM" || element.nodeName === "I") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<em>${content}</em>`;
+      }
+      else if (element.nodeName === "U") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<u>${content}</u>`;
+      }
+      else if (element.nodeName === "S" || element.nodeName === "STRIKE") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<s>${content}</s>`;
       }
       else if (element.nodeType === Node.TEXT_NODE) {
         return element.textContent;
