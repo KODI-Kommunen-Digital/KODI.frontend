@@ -21,7 +21,7 @@ import {
   deleteListingsById,
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
-import { getCategory,getListingsSubCategory } from "../../Services/CategoryApi";
+import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import listingSource from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
@@ -37,28 +37,69 @@ const Description = (props) => {
       if (element.nodeName === "OL") {
         return Array.from(element.children)
           .map((child, index) => `${index + 1}. ${processElement(child)}`)
-          .join("\n");
+          .join("<br>");
       } else if (element.nodeName === "UL") {
         return Array.from(element.children)
           .map((child) => `\u2022  ${processElement(child)}`)
-          .join("\n");
+          .join("<br>");
       } else if (element.nodeName === "LI") {
-        return element.textContent.trim();
+        // Process LI children to preserve formatting like <strong>
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return content.trim();
       } else if (element.nodeName === "BR") {
-        return "\n";
-      } else {
-        return element.textContent.trim();
+        return "<br>";
+      }
+      else if (element.nodeName === "P") {
+        // Handle paragraph tags - preserve empty paragraphs as line breaks
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return content.trim() === "" ? "<br>" : content;
+      }
+      // Handle formatting tags - preserve them in the output
+      else if (element.nodeName === "STRONG" || element.nodeName === "B") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<strong>${content}</strong>`;
+      }
+      else if (element.nodeName === "EM" || element.nodeName === "I") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<em>${content}</em>`;
+      }
+      else if (element.nodeName === "U") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<u>${content}</u>`;
+      }
+      else if (element.nodeName === "S" || element.nodeName === "STRIKE") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<s>${content}</s>`;
+      }
+      else if (element.nodeType === Node.TEXT_NODE) {
+        return element.textContent;
+      }
+      else {
+        return Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");;
       }
     }
 
-    const plainText = Array.from(container.childNodes)
-      .map((node) => processElement(node))
-      .filter((text) => text.trim() !== "")
-      .join("\n");
+    // const plainText = Array.from(container.childNodes)
+    const processedContent = Array.from(container.childNodes)
+      .map((node) => processElement(node)).join("<br>");
 
     // Replace newlines with <br> for HTML rendering
-    const htmlText = plainText.replace(/\n/g, "<br>");
-    return linkify(htmlText);
+    // const htmlText = plainText.replace(/\n/g, "<br>");
+    return linkify(processedContent);
   }
 
   const linkify = (text) => {
@@ -310,7 +351,7 @@ const Listing = () => {
                   acc[subCategory.id] = subCategory.name;
                   return acc;
                 }, {});
-          
+
                 // Set the transformed subcategories
                 setSubCategories(transformedSubCategories);
               })
@@ -330,7 +371,7 @@ const Listing = () => {
         const response = await getListings(params);
         const data = response.data.data;
         setListings(data);
-       
+
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
@@ -562,8 +603,8 @@ const Listing = () => {
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             >
-                           {t(categories[input.categoryId])}
-{input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
+                              {t(categories[input.categoryId])}
+                              {input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
 
                             </p>
                           </div>
