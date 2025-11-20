@@ -47,9 +47,57 @@ const Description = (props) => {
         const content = Array.from(element.childNodes)
           .map((child) => processElement(child))
           .join("");
-        return content.trim();
+
+        // Handle indentation classes (ql-indent-1, ql-indent-2, etc.)
+        let indentStyle = "";
+        if (element.className) {
+          const indentMatch = element.className.match(/ql-indent-(\d+)/);
+          if (indentMatch) {
+            const indentLevel = parseInt(indentMatch[1]);
+            indentStyle = ` style="padding-left: ${indentLevel * 3}em;"`;
+          }
+        }
+
+        return `<span${indentStyle}>${content.trim()}</span>`;
       } else if (element.nodeName === "BR") {
         return "<br>";
+      }
+      // Handle heading tags
+      else if (element.nodeName === "H1") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h1 class="text-3xl font-bold my-4">${content}</h1>`;
+      }
+      else if (element.nodeName === "H2") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h2 class="text-2xl font-bold my-3">${content}</h2>`;
+      }
+      else if (element.nodeName === "H3") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h3 class="text-xl font-bold my-2">${content}</h3>`;
+      }
+      else if (element.nodeName === "H4") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h4 class="text-lg font-bold my-2">${content}</h4>`;
+      }
+      else if (element.nodeName === "H5") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h5 class="text-base font-bold my-1">${content}</h5>`;
+      }
+      else if (element.nodeName === "H6") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        return `<h6 class="text-sm font-bold my-1">${content}</h6>`;
       }
       else if (element.nodeName === "P") {
         // Handle paragraph tags - preserve empty paragraphs as line breaks
@@ -57,6 +105,16 @@ const Description = (props) => {
           .map((child) => processElement(child))
           .join("");
         return content.trim() === "" ? "<br>" : content;
+      }
+      // Handle anchor tags (links)
+      else if (element.nodeName === "A") {
+        const content = Array.from(element.childNodes)
+          .map((child) => processElement(child))
+          .join("");
+        const href = element.getAttribute("href") || "#";
+        const target = element.getAttribute("target") || "_blank";
+        const rel = element.getAttribute("rel") || "noopener noreferrer";
+        return `<a href="${href}" target="${target}" rel="${rel}" class="underline text-blue-600">${content}</a>`;
       }
       // Handle formatting tags - preserve them in the output
       else if (element.nodeName === "STRONG" || element.nodeName === "B") {
