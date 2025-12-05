@@ -9,11 +9,11 @@ import Dashboard from "./Path/Dashboard";
 import CarParksList from "./Path/CarParksList";
 import CarParkDetail from "./Path/CarParkDetail";
 import Register from "./Path/Register";
-import ImprintPage from "./Path/ImprintPage";
+// import ImprintPage from "./Path/ImprintPage";
 import Summary from "./Path/AppointmentBooking/Summary";
 import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
 import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
-import PrivacyPolicy from "./Path/PrivacyPolicy";
+// import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
@@ -93,353 +93,446 @@ import UserManagement from "./Path/UserManagement.jsx";
 Modal.setAppElement("#root");
 
 const App = () => {
-  const isCarParkInterfaceEnabled =
-    process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
-  const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
-  const isAppointmentEnabled =
-    process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
-  const isContainerEnabled = process.env.REACT_APP_ENABLE_CONTAINER === "True";
-  const inFrame = process.env.REACT_APP_INFRAME === "True";
-  const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
-  const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
-  const isTerminalScreenEnabled =
-    process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
+    const isCarParkInterfaceEnabled =
+        process.env.REACT_APP_CAR_PARK_INTERFACE_ENABLED === "True";
+    const isForumEnabled = process.env.REACT_APP_ENABLE_FORUM === "True";
+    const isAppointmentEnabled =
+        process.env.REACT_APP_ENABLE_APPOINMENT_BOOKING === "True";
+    const isContainerEnabled =
+        process.env.REACT_APP_ENABLE_CONTAINER === "True";
+    const inFrame = process.env.REACT_APP_INFRAME === "True";
+    const frontendVersion = process.env.REACT_APP_FORNTENDVERSION || "1";
+    const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
+    const isTerminalScreenEnabled =
+        process.env.REACT_APP_ENABLE_TERMINALSCREEN === "True";
 
-  useEffect(() => {
-    const link =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement("link");
-    link.type = "image/x-icon";
-    link.rel = "shortcut icon";
-    link.href = HeidiLogo;
-    document.getElementsByTagName("head")[0].appendChild(link);
-  }, []);
+    useEffect(() => {
+        const link =
+            document.querySelector("link[rel*='icon']") ||
+            document.createElement("link");
+        link.type = "image/x-icon";
+        link.rel = "shortcut icon";
+        link.href = HeidiLogo;
+        document.getElementsByTagName("head")[0].appendChild(link);
+    }, []);
 
-  return (
-    <BrowserRouter>
-      <div>
-        <Routes>
-          <Route
-            path="/AllListings"
-            element={
-              frontendVersion === "1" ? <AllListingsV1 /> : <AllListingsV2 />
-            }
-          />
-          <Route
-            path="/UploadListings"
-            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
-          />
-          <Route
-            path="/EditListings"
-            element={isV2Backend ? <UploadListingsV2 /> : <UploadListingsV1 />}
-            exact
-          />
+    return (
+        <BrowserRouter>
+            <div>
+                <Routes>
+                    <Route
+                        path="/AllListings"
+                        element={
+                            frontendVersion === "1" ? (
+                                <AllListingsV1 />
+                            ) : (
+                                <AllListingsV2 />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/UploadListings"
+                        element={
+                            isV2Backend ? (
+                                <UploadListingsV2 />
+                            ) : (
+                                <UploadListingsV1 />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/EditListings"
+                        element={
+                            isV2Backend ? (
+                                <UploadListingsV2 />
+                            ) : (
+                                <UploadListingsV1 />
+                            )
+                        }
+                        exact
+                    />
 
-          <Route path="/Listing" element={<Listing />} exact />
-          <Route path="/ViewProfile/:username" element={<ViewProfile />} />
-          <Route path="/CitizenService" element={<CitizenService />} />
-          <Route
-            path="/CitizenService/CitizenServiceManagement"
-            element={<CitizenServiceManagement />}
-          />
-          <Route path="/Dashboard" element={<Dashboard />} exact />
-          <Route path="/DashboardAdmin" element={<Dashboard />} exact />
-          <Route path="/AccountSettings" element={<AccountSettings />} exact />
-          <Route path="/AllDevices" element={<AllDevices />} exact />
-          <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/PasswordForgot" element={<PasswordForgot />} />
-          <Route path="/PasswordUpdate" element={<PasswordUpdate />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/ImprintPage" element={<ImprintPage />} />
-          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-          <Route path="/TermsOfUse" element={<TermsOfUse />} />
-          <Route path="/Favorite" element={<Favorites />} />
-          <Route path="/LogoutSuccessPage" element={<LogoutSuccessPage />} />
-          <Route path="/VerifyEmail" element={<VerifyEmail />} />
-          <Route path="*" element={<Error />} />
-          <Route path="ForumsError" element={<ForumsError />} />
-          <Route path="/Addcity" element={<AddCity />} />
-          <Route path="/AllCities" element={<AllCities />} exact />
-          <Route path="/Editcity" element={<AddCity />} exact />
-          <Route path="/admins" element={<AddAdmins />} exact />
-          <Route path="/createUser" element={<CreateUsers />} exact />
-          <Route path="/usersManagement" element={<UserManagement />} exact />
+                    <Route path="/Listing" element={<Listing />} exact />
+                    <Route
+                        path="/ViewProfile/:username"
+                        element={<ViewProfile />}
+                    />
+                    <Route
+                        path="/CitizenService"
+                        element={<CitizenService />}
+                    />
+                    <Route
+                        path="/CitizenService/CitizenServiceManagement"
+                        element={<CitizenServiceManagement />}
+                    />
+                    <Route path="/Dashboard" element={<Dashboard />} exact />
+                    <Route
+                        path="/DashboardAdmin"
+                        element={<Dashboard />}
+                        exact
+                    />
+                    <Route
+                        path="/AccountSettings"
+                        element={<AccountSettings />}
+                        exact
+                    />
+                    <Route path="/AllDevices" element={<AllDevices />} exact />
+                    <Route path="/ProfilePage" element={<ProfilePage />} />
+                    <Route
+                        path="/PasswordForgot"
+                        element={<PasswordForgot />}
+                    />
+                    <Route
+                        path="/PasswordUpdate"
+                        element={<PasswordUpdate />}
+                    />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/Register" element={<Register />} />
+                    {/* <Route path="/ImprintPage" element={<ImprintPage />} /> */}
+                    {/* <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} /> */}
+                    <Route path="/TermsOfUse" element={<TermsOfUse />} />
+                    <Route path="/Favorite" element={<Favorites />} />
+                    <Route
+                        path="/LogoutSuccessPage"
+                        element={<LogoutSuccessPage />}
+                    />
+                    <Route path="/VerifyEmail" element={<VerifyEmail />} />
+                    <Route path="*" element={<Error />} />
+                    <Route path="ForumsError" element={<ForumsError />} />
+                    <Route path="/Addcity" element={<AddCity />} />
+                    <Route path="/AllCities" element={<AllCities />} exact />
+                    <Route path="/Editcity" element={<AddCity />} exact />
+                    <Route path="/admins" element={<AddAdmins />} exact />
+                    <Route path="/createUser" element={<CreateUsers />} exact />
+                    <Route
+                        path="/usersManagement"
+                        element={<UserManagement />}
+                        exact
+                    />
 
+                    <Route
+                        path="/admin-list"
+                        element={<CreatedAdminsList />}
+                        exact
+                    />
+                    {isCarParkInterfaceEnabled && (
+                        <React.Fragment>
+                            <Route
+                                path="/carparksListing"
+                                element={<CarParksList />}
+                                exact
+                            />
+                            <Route
+                                path="/carparksListing/:id"
+                                element={<CarParkDetail />}
+                            />
+                        </React.Fragment>
+                    )}
 
+                    {isTerminalScreenEnabled ? (
+                        <Route path="/" element={<TerminalScreen />} exact />
+                    ) : (
+                        <Route
+                            path="/"
+                            element={
+                                frontendVersion === "1" ? (
+                                    <HomePageV1 />
+                                ) : (
+                                    <HomePageV2 />
+                                )
+                            }
+                        />
+                    )}
 
-          <Route path="/admin-list" element={<CreatedAdminsList />} exact />
-          {isCarParkInterfaceEnabled && (
-            <React.Fragment>
-              <Route path="/carparksListing" element={<CarParksList />} exact />
-              <Route path="/carparksListing/:id" element={<CarParkDetail />} />
-            </React.Fragment>
-          )}
+                    {inFrame && (
+                        <React.Fragment>
+                            <Route
+                                path="/IFrame"
+                                element={
+                                    <IFrame
+                                        cityId={
+                                            process.env
+                                                .REACT_APP_INFRAME_CITYID || "1"
+                                        }
+                                    />
+                                }
+                                exact
+                            />
+                            <Route
+                                path="/IFrameListing"
+                                element={<IFrameListing />}
+                                exact
+                            />
+                        </React.Fragment>
+                    )}
 
-          {isTerminalScreenEnabled ? (
-            <Route path="/" element={<TerminalScreen />} exact />
-          ) : (
-            <Route
-              path="/"
-              element={
-                frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />
-              }
-            />
-          )}
+                    {isForumEnabled && (
+                        <React.Fragment>
+                            <Route
+                                path="/Forum/ViewPost"
+                                element={<ViewPost />}
+                            />
+                            <Route path="/Forum" element={<Forum />} />
+                            <Route
+                                path="/UploadPosts"
+                                element={<UploadPosts />}
+                            />
+                            <Route
+                                path="/CreateGroup"
+                                element={<CreateGroup />}
+                                exact
+                            />
+                            <Route
+                                path="/MyGroups"
+                                element={<MyGroups />}
+                                exact
+                            />
+                            <Route
+                                path="/MyGroups/GroupMembers"
+                                element={<GroupMembers />}
+                                exact
+                            />
+                            <Route
+                                path="/MyGroups/MemberRequests"
+                                element={<MemberRequests />}
+                                exact
+                            />
+                            <Route
+                                path="/MyGroups/ReportedPosts"
+                                element={<ReportedPosts />}
+                                exact
+                            />
+                            <Route
+                                path="/CitizenService/AllForums"
+                                element={<AllForums />}
+                            />
+                        </React.Fragment>
+                    )}
 
-          {inFrame && (
-            <React.Fragment>
-              <Route
-                path="/IFrame"
-                element={
-                  <IFrame
-                    cityId={process.env.REACT_APP_INFRAME_CITYID || "1"}
-                  />
-                }
-                exact
-              />
-              <Route path="/IFrameListing" element={<IFrameListing />} exact />
-            </React.Fragment>
-          )}
+                    {isAppointmentEnabled && (
+                        <React.Fragment>
+                            <Route
+                                path="/AppointmentBooking/MyAppointments"
+                                element={<MyAppointments />}
+                                exact
+                            />
+                            <Route
+                                path="/AppointmentBooking/MyBookings"
+                                element={<MyBookings />}
+                                exact
+                            />
+                            <Route
+                                path="/AppointmentBooking/AppointmentsUserCreated"
+                                element={<AppointmentsUserCreated />}
+                                exact
+                            />
+                            <Route
+                                path="/Listings/BookAppointments"
+                                element={<BookMyAppointments />}
+                                exact
+                            />
+                            <Route
+                                path="/AppointmentBooking/BookAppointments/Summary"
+                                element={<Summary />}
+                            />
+                            <Route
+                                path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
+                                element={<BookingSuccessConfirmation />}
+                            />
 
-          {isForumEnabled && (
-            <React.Fragment>
-              <Route path="/Forum/ViewPost" element={<ViewPost />} />
-              <Route path="/Forum" element={<Forum />} />
-              <Route path="/UploadPosts" element={<UploadPosts />} />
-              <Route path="/CreateGroup" element={<CreateGroup />} exact />
-              <Route path="/MyGroups" element={<MyGroups />} exact />
-              <Route
-                path="/MyGroups/GroupMembers"
-                element={<GroupMembers />}
-                exact
-              />
-              <Route
-                path="/MyGroups/MemberRequests"
-                element={<MemberRequests />}
-                exact
-              />
-              <Route
-                path="/MyGroups/ReportedPosts"
-                element={<ReportedPosts />}
-                exact
-              />
-              <Route path="/CitizenService/AllForums" element={<AllForums />} />
-            </React.Fragment>
-          )}
+                            <Route
+                                path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
+                                element={<BookingErrorConfirmation />}
+                            />
+                        </React.Fragment>
+                    )}
 
-          {isAppointmentEnabled && (
-            <React.Fragment>
-              <Route
-                path="/AppointmentBooking/MyAppointments"
-                element={<MyAppointments />}
-                exact
-              />
-              <Route
-                path="/AppointmentBooking/MyBookings"
-                element={<MyBookings />}
-                exact
-              />
-              <Route
-                path="/AppointmentBooking/AppointmentsUserCreated"
-                element={<AppointmentsUserCreated />}
-                exact
-              />
-              <Route
-                path="/Listings/BookAppointments"
-                element={<BookMyAppointments />}
-                exact
-              />
-              <Route
-                path="/AppointmentBooking/BookAppointments/Summary"
-                element={<Summary />}
-              />
-              <Route
-                path="/AppointmentBooking/BookAppointments/BookingSuccessConfirmation"
-                element={<BookingSuccessConfirmation />}
-              />
+                    {isContainerEnabled && (
+                        <React.Fragment>
+                            <Route
+                                path="/OwnerScreen"
+                                element={<OwnerScreen />}
+                                exact
+                            />
 
-              <Route
-                path="/AppointmentBooking/BookAppointments/BookingErrorConfirmation"
-                element={<BookingErrorConfirmation />}
-              />
-            </React.Fragment>
-          )}
+                            <Route
+                                path="/SellerScreen"
+                                element={<SellerScreen />}
+                                exact
+                            />
 
-          {isContainerEnabled && (
-            <React.Fragment>
-              <Route path="/OwnerScreen" element={<OwnerScreen />} exact />
+                            <Route
+                                path="/CustomerScreen"
+                                element={<CustomerScreen />}
+                                exact
+                            />
 
-              <Route path="/SellerScreen" element={<SellerScreen />} exact />
+                            <Route
+                                path="/SellerScreen/SellerRequestPage"
+                                element={<SellerRequestPage />}
+                                exact
+                            />
 
-              <Route
-                path="/CustomerScreen"
-                element={<CustomerScreen />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/SellerRequests"
+                                element={<SellerRequests />}
+                                exact
+                            />
+                            <Route
+                                path="/SellerScreen/PeriodSelection"
+                                element={<PeriodSelection />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/SellerRequestPage"
-                element={<SellerRequestPage />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/OrdersSold"
+                                element={<OrdersSold />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/SellerRequests"
-                element={<SellerRequests />}
-                exact
-              />
-              <Route
-                path="/SellerScreen/PeriodSelection"
-                element={<PeriodSelection />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/AddNewProducts"
+                                element={<AddNewProducts />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/OrdersSold"
-                element={<OrdersSold />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/AllProducts"
+                                element={<AllProducts />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/AddNewProducts"
-                element={<AddNewProducts />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/AllProductsDetailsPage"
+                                element={<AllProductsDetailsPage />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/AllProducts"
-                element={<AllProducts />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/ProductRequests"
+                                element={<ProductRequests />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/AllProductsDetailsPage"
-                element={<AllProductsDetailsPage />}
-                exact
-              />
+                            <Route
+                                path="/SellerScreen/ProductRequestsDetails"
+                                element={<AllProductRequestsDetails />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/ProductRequests"
-                element={<ProductRequests />}
-                exact
-              />
+                            <Route
+                                path="/CustomerScreen/MyOrders"
+                                element={<MyOrders />}
+                                exact
+                            />
 
-              <Route
-                path="/SellerScreen/ProductRequestsDetails"
-                element={<AllProductRequestsDetails />}
-                exact
-              />
+                            <Route
+                                path="/CustomerScreen/PaymentStatus"
+                                element={<PaymentStatus />}
+                                exact
+                            />
 
-              <Route
-                path="/CustomerScreen/MyOrders"
-                element={<MyOrders />}
-                exact
-              />
+                            <Route
+                                path="/CustomerScreen/GetCard"
+                                element={<GetCard />}
+                                exact
+                            />
 
-              <Route
-                path="/CustomerScreen/PaymentStatus"
-                element={<PaymentStatus />}
-                exact
-              />
+                            <Route
+                                path="/CustomerScreen/OrderDetails"
+                                element={<OrderDetails />}
+                                exact
+                            />
 
-              <Route
-                path="/CustomerScreen/GetCard"
-                element={<GetCard />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/StoreDetails"
+                                element={<StoreDetails />}
+                                exact
+                            />
 
-              <Route
-                path="/CustomerScreen/OrderDetails"
-                element={<OrderDetails />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/ViewCategories"
+                                element={<ViewCategories />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/StoreDetails"
-                element={<StoreDetails />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/AddCategory"
+                                element={<AddCategoryAndSubCategory />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/ViewCategories"
-                element={<ViewCategories />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/AddSubCategory"
+                                element={<AddCategoryAndSubCategory />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/AddCategory"
-                element={<AddCategoryAndSubCategory />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/ProductStore"
+                                element={<ProductStore />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/AddSubCategory"
-                element={<AddCategoryAndSubCategory />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/ProductDetailsStore"
+                                element={<ProductDetailsStore />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/ProductStore"
-                element={<ProductStore />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/AllProductRequestsDetails"
+                                element={<AllProductRequestsDetails />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/ProductDetailsStore"
-                element={<ProductDetailsStore />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/SellerDetailsStore"
+                                element={<SellerDetailsStore />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/AllProductRequestsDetails"
-                element={<AllProductRequestsDetails />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/Shelves"
+                                element={<Shelves />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/SellerDetailsStore"
-                element={<SellerDetailsStore />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/AllOrders"
+                                element={<AllOrders />}
+                                exact
+                            />
 
-              <Route path="/OwnerScreen/Shelves" element={<Shelves />} exact />
+                            <Route
+                                path="/OwnerScreen/AllProductRequests"
+                                element={<AllProductRequests />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/AllOrders"
-                element={<AllOrders />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/CreateShelves"
+                                element={<CreateShelves />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/AllProductRequests"
-                element={<AllProductRequests />}
-                exact
-              />
+                            <Route
+                                path="/OwnerScreen/SellerRequestsApproval"
+                                element={<SellerRequestsApproval />}
+                                exact
+                            />
 
-              <Route
-                path="/OwnerScreen/CreateShelves"
-                element={<CreateShelves />}
-                exact
-              />
-
-              <Route
-                path="/OwnerScreen/SellerRequestsApproval"
-                element={<SellerRequestsApproval />}
-                exact
-              />
-
-              <Route
-                path="/OwnerScreen/OrderDetailsStore"
-                element={<OrderDetailsStore />}
-                exact
-              />
-            </React.Fragment>
-          )}
-        </Routes>
-      </div>
-    </BrowserRouter>
-  );
+                            <Route
+                                path="/OwnerScreen/OrderDetailsStore"
+                                element={<OrderDetailsStore />}
+                                exact
+                            />
+                        </React.Fragment>
+                    )}
+                </Routes>
+            </div>
+        </BrowserRouter>
+    );
 };
 
 export default App;
