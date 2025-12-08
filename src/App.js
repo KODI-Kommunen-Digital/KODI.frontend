@@ -14,7 +14,7 @@ import Summary from "./Path/AppointmentBooking/Summary";
 import BookingSuccessConfirmation from "./Path/AppointmentBooking/BookingSuccessConfirmation";
 import BookingErrorConfirmation from "./Path/AppointmentBooking/BookingErrorConfirmation";
 // import PrivacyPolicy from "./Path/PrivacyPolicy";
-import TermsOfUse from "./Path/TermsOfUse";
+// import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
 import HomePageV1 from "./Path/V1/HomePage";
@@ -190,7 +190,7 @@ const App = () => {
                     <Route path="/Register" element={<Register />} />
                     {/* <Route path="/ImprintPage" element={<ImprintPage />} /> */}
                     {/* <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} /> */}
-                    <Route path="/TermsOfUse" element={<TermsOfUse />} />
+                    {/* <Route path="/TermsOfUse" element={<TermsOfUse />} /> */}
                     <Route path="/Favorite" element={<Favorites />} />
                     <Route
                         path="/LogoutSuccessPage"
