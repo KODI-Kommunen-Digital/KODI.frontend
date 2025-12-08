@@ -162,7 +162,7 @@ function Footer() {
                         ) : (
                             <p className={`${footerClass} mb-4`}>
                                 <a
-                                    href="/TermsOfUse"
+                                    href="https://www.rottenburg.de/nutzungsbedingungen+rottenburgapp.149798.htm?Inav=149765s"
                                     className="text-gray-600 font-sans"
                                 >
                                     {t("termsofuse")}
