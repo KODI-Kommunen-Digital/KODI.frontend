@@ -273,6 +273,12 @@ const UserManagement = () => {
                                                         {t("description")}
                                                     </th>
                                                     <th className="border px-4 py-2">
+                                                        {t("purpose")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("committee")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
                                                         {t("action")}
                                                     </th>
                                                 </>
@@ -451,7 +457,15 @@ const UserManagement = () => {
                                                                 "-"}
                                                         </td>
                                                         <td className="border px-4 py-2 text-sm text-gray-500">
+                                                            {forum.purpose ||
+                                                                "-"}
+                                                        </td>
+                                                        <td className="border px-4 py-2 text-sm text-gray-500">
                                                             {forum.description ||
+                                                                "-"}
+                                                        </td>
+                                                        <td className="border px-4 py-2 text-sm text-gray-500">
+                                                            {forum.municipalInstitution ||
                                                                 "-"}
                                                         </td>
                                                         <td className="border px-4 py-2">

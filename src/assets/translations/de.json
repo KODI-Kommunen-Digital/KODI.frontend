@@ -1196,6 +1196,8 @@
   "forum_deleted_successfully": "Forum erfolgreich gelöscht",
   "forum_deleted_failed": "Forum konnte nicht gelöscht werden",
   "Forum_name": "Forumname",
+  "purpose": "Zweck",
+  "committee": "Verein/Gremium",
   "forum-approved": "Forum genehmigt",
   "forum-rejected": "Forum abgelehnt",
   "user_unblock": "Nutzer ist gesperrt – Zum Entsperren hier klicken",
