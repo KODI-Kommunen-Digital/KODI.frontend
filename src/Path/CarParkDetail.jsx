@@ -17,12 +17,22 @@ const CarParksDetail = () => {
             .catch((error) => {
                 console.error("Error fetching details:", error);
             });
-    }, []);
-    useEffect(() => {
-        fetchGarage();
-    }, [
+    }, [id]);
 
-    ]);
+    useEffect(() => {
+        if (!id) return;
+
+        fetchGarage();
+
+        const intervalId = setInterval(() => {
+            fetchGarage();
+        }, 60 * 1000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [fetchGarage, id]);
+
     const navigate = useNavigate();
     const navigateTo = (path) => {
         if (path) {

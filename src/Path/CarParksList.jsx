@@ -17,9 +17,15 @@ const ParkingFinder = () => {
 
    useEffect(() => {
       fetchGarageList();
-   }, [
 
-   ]);
+      const intervalId = setInterval(() => {
+         fetchGarageList();
+      }, 60 * 1000);
+
+      return () => {
+         clearInterval(intervalId);
+      };
+   }, [fetchGarageList]);
 
    const colorMapping = {
       1: "red",
