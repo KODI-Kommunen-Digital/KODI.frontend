@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [cityId, setCityId] = useState();
+  const [userRoleId, setUserRoleId] = useState(null);
   const isV2Backend = process.env.REACT_APP_V2_BACKEND === "True";
 
   const navigate = useNavigate();
@@ -80,6 +81,9 @@ const Dashboard = () => {
       setCategories(catList);
     });
     getProfile().then((response) => {
+      const currentRoleId = response.data.data.roleId;
+      setUserRoleId(currentRoleId);
+
       if (window.location.pathname === "/DashboardAdmin" && response.data.data.roleId === role.Admin) {
         setViewAllListings(true);
       } else {
@@ -136,6 +140,9 @@ const Dashboard = () => {
     }
     if (status[statusId] === "Pending") {
       return "bg-yellow-400";
+    }
+    if(status[statusId] === "Schedule"){
+      return "bg-blue-400";
     }
   }
 
@@ -328,6 +335,19 @@ const Dashboard = () => {
                   >
                     {t("inactive")}
                   </div>
+                  {userRoleId === role.Admin && (
+                    <div
+                      className={`${
+                        selectedStatus === statusByName.Schedule
+                          ? "bg-gray-700 text-white"
+                          : "text-gray-300"
+                      } hover:bg-gray-700 hover:text-white rounded-md p-4 text-sm font-bold cursor-pointer`}
+                      onClick={() => setSelectedStatus(statusByName.Schedule)}
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t("schedule")}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -627,24 +647,36 @@ const Dashboard = () => {
                             {viewAllListings ? (
                               <select
                                 className="border font-sans border-gray-300 text-gray-500 sm:text-sm rounded-xl p-2.5 w-full"
-                                onChange={(e) =>
-                                  handleChangeInStatus(e.target.value, listing)
-                                }
+                                onChange={(e) => {
+                                  const selectedStatus = e.target.value;
+                                  if (listing.statusId === statusByName.Schedule) return;
+
+                                  handleChangeInStatus(selectedStatus, listing);
+                                }}
                                 value={listing.statusId || 0}
                                 style={{ fontFamily: "Poppins, sans-serif" }}
+                                disabled={listing.statusId === statusByName.Schedule}
                               >
                                 {Object.keys(status).map((state, index) => {
+                                  const statusId = String(state);
+                                    const listingStatusId = String(listing.statusId);
+                                  if (
+                                    (listingStatusId === String(statusByName.Active) ||
+                                      listingStatusId === String(statusByName.Inactive) ||
+                                      listingStatusId === String(statusByName.Pending)) &&
+                                    statusId === String(statusByName.Schedule)
+                                  ) {
+                                    return null;
+                                  }
                                   return (
-                                    <option
-                                      className="p-0"
-                                      key={index}
-                                      value={state}
-                                    >
-                                      {t(status[state]?.toLowerCase())}
+                                    <option className="p-0" key={index} value={statusId}>
+                                      {t(status[statusId]?.toLowerCase())}
                                     </option>
                                   );
+                                 
                                 })}
                               </select>
+
                             ) : (
                               <h1 style={{ fontFamily: "Poppins, sans-serif" }}>
                                 {t(status[listing.statusId]?.toLowerCase())}

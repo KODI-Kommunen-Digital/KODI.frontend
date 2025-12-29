@@ -110,7 +110,7 @@ const HomePage = () => {
     }
 
     setIsLoading(true);
-    const params = { pageSize: 12, statusId: 1, pageNo: 1};
+    const params = { pageSize: 12, statusId: 1, pageNo: 1 };
     if (parseInt(cityId)) {
       urlParams.set("cityId", cityId);
       params.cityId = cityId;
@@ -133,15 +133,15 @@ const HomePage = () => {
   }, [cities, cityId, categoryId]);
 
   const fetchData = async (params) => {
-  const queryParams = {
-    ...params,
-    showExternalListings: "false",
-  };
-  if (selectedSubCategoryId) {
-    queryParams.subcategoryId = selectedSubCategoryId;
-  }
+    const queryParams = {
+      ...params,
+      showExternalListings: "false",
+    };
+    if (selectedSubCategoryId) {
+      queryParams.subcategoryId = selectedSubCategoryId;
+    }
 
-  const disableSortByStartDate = !queryParams.categoryId;
+    const disableSortByStartDate = !queryParams.categoryId;
     try {
       const response = await getListings(params, disableSortByStartDate);
       const listings = response?.data?.data || [];
