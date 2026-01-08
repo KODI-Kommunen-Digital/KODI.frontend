@@ -18,6 +18,7 @@ import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import RegionColors from "../../Components/RegionColors";
+import HeidiLogo from "../../assets/shareicon.png";
 
 const AllListings = () => {
   window.scrollTo(0, 0);
@@ -400,6 +401,20 @@ const AllListings = () => {
               </svg>
             </a>
 
+            {/* Click here to go to the website Button */}
+            {parseInt(cityId) === 7 && (
+              <a
+                href="https://www.perlesreut.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center w-80 text-white border bg-blue-600 py-2 px-6 gap-2 rounded-lg cursor-pointer`}
+                style={{ fontFamily: "Poppins, sans-serif" }}
+              >
+                <span>{t("clickHereYouGoToTheWebsite")}</span>
+                <img src={HeidiLogo} alt="icon" className="w-5 h-5 ml-1" />
+              </a>
+            )}
+            
             {/* Go Back Button */}
             <a
               onClick={() => {
