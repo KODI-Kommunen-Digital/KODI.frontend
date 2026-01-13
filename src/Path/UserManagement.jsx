@@ -456,12 +456,13 @@ const UserManagement = () => {
                                                             {forum.categoryName ||
                                                                 "-"}
                                                         </td>
+
                                                         <td className="border px-4 py-2 text-sm text-gray-500">
-                                                            {forum.purpose ||
+                                                            {forum.description ||
                                                                 "-"}
                                                         </td>
                                                         <td className="border px-4 py-2 text-sm text-gray-500">
-                                                            {forum.description ||
+                                                            {forum.purpose ||
                                                                 "-"}
                                                         </td>
                                                         <td className="border px-4 py-2 text-sm text-gray-500">
