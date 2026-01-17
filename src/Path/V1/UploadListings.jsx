@@ -875,6 +875,9 @@ function UploadListings() {
         return "";
 
       case "expiryDate":
+        if (listingInput.disableDates) {
+          return "";
+        }
         if (!value && parseInt(listingInput.categoryId) === 1) {
           return t("pleaseEnterExpiryDate");
         }
