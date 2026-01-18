@@ -27,10 +27,11 @@ function UploadPosts() {
 	const [cityId, setCityId] = useState(0);
 	const [cities, setCities] = useState([]);
 	const [isSuccess, setIsSuccess] = useState(false);
-	// Drag and Drop starts
+
 	const [image1, setImage1] = useState(null);
 	const [, setDragging] = useState(false);
-	const CHARACTER_LIMIT = 255;
+	const CHARACTER_LIMIT_TITLE = 255;
+	const CHARACTER_LIMIT_DESCRIPTION = 65535;
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigate = useNavigate();
@@ -216,11 +217,11 @@ function UploadPosts() {
 
 	const onInputChange = (e) => {
 		const { name, value } = e.target;
-		if (name === "title" && value.length > CHARACTER_LIMIT) {
+		if (name === "title" && value.length > CHARACTER_LIMIT_TITLE) {
 			setError((prev) => ({
 				...prev,
 				title: t("characterLimitExceeded", {
-					limit: CHARACTER_LIMIT,
+					limit: CHARACTER_LIMIT_TITLE,
 					count: value.length
 				}),
 			}));
@@ -234,20 +235,16 @@ function UploadPosts() {
 	};
 
 	const [description, setDescription] = useState("");
-	const onDescriptionChange = (newContent) => {
-		const hasNumberedList = newContent.includes("<ol>");
-		const hasBulletList = newContent.includes("<ul>");
-		let descriptions = [];
-		let listType = "";
 
+	const onDescriptionChange = (newContent) => {
 		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
 		const characterCount = plainText.length;
 
-		if (characterCount > CHARACTER_LIMIT) {
+		if (characterCount > CHARACTER_LIMIT_DESCRIPTION) {
 			setError((prev) => ({
 				...prev,
 				description: t("characterLimitExceeded", {
-					limit: CHARACTER_LIMIT,
+					limit: CHARACTER_LIMIT_DESCRIPTION,
 					count: characterCount,
 				}),
 			}));
@@ -259,44 +256,17 @@ function UploadPosts() {
 			}));
 		}
 
-		if (hasNumberedList || hasBulletList) {
-			const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(liRegex);
-			if (matches) {
-				descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			}
+		const cleanedContent = newContent
+			.replace(/<p><br><\/p>/g, "")
+			.replace(/<\/?p>/g, "<br>");
 
-			listType = hasNumberedList ? "ol" : "ul";
-
-			const listHTML = `<${listType}>${descriptions
-				.map((item) => `<li>${item}</li>`)
-				.join("")}</${listType}>`;
-
-			let leftoverText = newContent
-				.replace(/<ol>.*?<\/ol>/gis, "")
-				.replace(/<ul>.*?<\/ul>/gis, "")
-				.trim();
-
-			leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
-
-			const finalDescription = leftoverText
-				? `${leftoverText}<br/>${listHTML}`
-				: listHTML;
-
-			setInput((prev) => ({
-				...prev,
-				description: finalDescription,
-			}));
-		} else {
-			setInput((prev) => ({
-				...prev,
-				description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
-			}));
-		}
+		setInput((prev) => ({
+			...prev,
+			description: cleanedContent,
+		}));
 
 		setDescription(newContent);
 	};
-
 	const getErrorMessage = (name, value) => {
 		switch (name) {
 			case "title":
@@ -410,12 +380,12 @@ function UploadPosts() {
 						/>
 						<div className="flex justify-between text-sm mt-1">
 							<span
-								className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+								className={`${input.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_TITLE
 									? "mt-2 text-sm text-red-600"
 									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
-								{input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+								{input.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_TITLE}
 							</span>
 							{error.title && (
 								<span className="mt-2 text-sm text-red-600">
@@ -530,12 +500,12 @@ function UploadPosts() {
 						/>
 						<div className="flex justify-between text-sm mt-1">
 							<span
-								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT
+								className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_DESCRIPTION
 									? "mt-2 text-sm text-red-600"
 									: "mt-2 text-sm text-gray-500"
 									}`}
 							>
-								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT}
+								{description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_DESCRIPTION}
 							</span>
 							{error.description && (
 								<span className="mt-2 text-sm text-red-600">
