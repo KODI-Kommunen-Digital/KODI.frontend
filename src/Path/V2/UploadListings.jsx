@@ -16,16 +16,25 @@ import {
 import { getCities } from "../../Services/citiesApi";
 import FormData from "form-data";
 import Alert from "../../Components/Alert";
-import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
+import {
+  getCategory,
+  getListingsSubCategory,
+} from "../../Services/CategoryApi";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import FormImage from "../FormImage";
 import { UploadSVG } from "../../assets/icons/upload";
 import ServiceAndTime from "../../Components/ServiceAndTime";
-import { createAppointments, updateAppointments, getAppointments, getAppointmentServices } from "../../Services/appointmentBookingApi";
+import {
+  createAppointments,
+  updateAppointments,
+  getAppointments,
+  getAppointmentServices,
+} from "../../Services/appointmentBookingApi";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import Delta from "quill-delta";
+import { daysOfWeek } from "../../Services/helper";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -153,8 +162,12 @@ function UploadListings() {
     const newFiles = Array.from(event.target.files);
 
     if (image.length > 0) {
-      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+      const validImages = newFiles.filter((file) =>
+        file.type.startsWith("image/"),
+      );
+      const invalidFiles = newFiles.filter(
+        (file) => !file.type.startsWith("image/"),
+      );
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
@@ -169,7 +182,7 @@ function UploadListings() {
         }
       }
     } else {
-      newFiles.forEach(file => {
+      newFiles.forEach((file) => {
         if (file.type === "application/pdf") {
           setLocalImageOrPdf(true);
           setPdf(file);
@@ -189,8 +202,12 @@ function UploadListings() {
     const newFiles = Array.from(e.target.files);
 
     if (image.length > 0) {
-      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
-      const invalidFiles = newFiles.filter(file => !file.type.startsWith("image/"));
+      const validImages = newFiles.filter((file) =>
+        file.type.startsWith("image/"),
+      );
+      const invalidFiles = newFiles.filter(
+        (file) => !file.type.startsWith("image/"),
+      );
 
       if (invalidFiles.length > 0) {
         alert(t("imagePdfAlert"));
@@ -200,7 +217,7 @@ function UploadListings() {
         setLocalImageOrPdf(true);
       }
     } else {
-      newFiles.forEach(file => {
+      newFiles.forEach((file) => {
         if (file.type === "application/pdf") {
           setLocalImageOrPdf(true);
           setPdf(file);
@@ -281,6 +298,12 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
+    isRecurring: false, // Checkbox for recurring events
+    recurringType: "", // "daily", "weekly", "monthly"
+    recurringDays: [], // ["Monday", "Tuesday"]
+    repeatUntil: "",
+    recurringEndTime: "", // Full date-time string for Flatpickr
+    exceptionDates: [], // Array of exception dates for recurring events
   });
 
   const [error, setError] = useState({
@@ -292,17 +315,12 @@ function UploadListings() {
     cityAlreadySelected: "",
     startDate: "",
     endDate: "",
+    recurringType: "",
+    recurringDays: "",
+    repeatUntil: "",
+    recurringEndTime: "",
   });
 
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
   const initialTimeSlot = { startTime: "00:00", endTime: "00:00" };
 
   const [appointmentInput, setAppointmentInput] = useState({
@@ -312,20 +330,28 @@ function UploadListings() {
 
     metadata: {
       holidays: [],
-      openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
+      openingDates: daysOfWeek?.reduce(
+        (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+        {},
+      ),
       maxBookingPerSlot: 5,
     },
-    services: [{
-      name: "",
-      duration: "",
-      // durationUnit: "minutes",
-      slotSameAsAppointment: false,
-      metadata: {
-        holidays: [],
-        openingDates: daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [initialTimeSlot] }), {}),
-        maxBookingPerSlot: 5,
+    services: [
+      {
+        name: "",
+        duration: "",
+        // durationUnit: "minutes",
+        slotSameAsAppointment: false,
+        metadata: {
+          holidays: [],
+          openingDates: daysOfWeek.reduce(
+            (acc, day) => ({ ...acc, [day]: [initialTimeSlot] }),
+            {},
+          ),
+          maxBookingPerSlot: 5,
+        },
       },
-    }],
+    ],
   });
 
   const [appointmentError, setAppointmentError] = useState({
@@ -340,6 +366,74 @@ function UploadListings() {
     },
   });
 
+  // Format recurring event data for API submission
+  const formatRecurringEventData = () => {
+    if (!listingInput.isRecurring || !listingInput.recurringType) {
+      return null;
+    }
+
+    const startDateTime = new Date(listingInput.startDate);
+    // recurringEndTime is now a full date-time string, not just time
+    const endDateTime = listingInput.recurringEndTime
+      ? new Date(listingInput.recurringEndTime)
+      : new Date(startDateTime);
+
+    // Format dates to "YYYY-MM-DD HH:mm:ss"
+    const formatToDateTime = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+
+    const start = formatToDateTime(startDateTime);
+    const end = formatToDateTime(endDateTime);
+    const repeatUntil = listingInput.repeatUntil
+      ? formatToDateTime(new Date(listingInput.repeatUntil))
+      : null;
+
+    let freq = "";
+    if (listingInput.recurringType === "daily") {
+      freq = "Daily";
+    } else if (listingInput.recurringType === "weekly") {
+      freq = "Weekly";
+    } else if (listingInput.recurringType === "monthly") {
+      freq = "Monthly";
+    }
+
+    const recurringData = {
+      freq: freq,
+      interval: 1, // Default interval is 1 as per requirement
+      start: start,
+      end: end,
+      repeatUntil: repeatUntil,
+    };
+
+    // Add weekdays for weekly recurrence
+    if (
+      listingInput.recurringType === "weekly" &&
+      listingInput.recurringDays &&
+      listingInput.recurringDays.length > 0
+    ) {
+      recurringData.weekdays = listingInput.recurringDays.map((day) => {
+        // Capitalize first letter to match format: Monday, Tuesday, etc.
+        return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+      });
+    }
+
+    // Add exception dates if any - Format: [{ "date": "YYYY-MM-DD" }]
+    if (listingInput.exceptionDates && listingInput.exceptionDates.length > 0) {
+      recurringData.exceptions = listingInput.exceptionDates.map((date) => ({
+        date: date, // Already in YYYY-MM-DD format
+      }));
+    }
+
+    return [recurringData];
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -352,12 +446,17 @@ function UploadListings() {
 
     const validateTimeSlots = () => {
       for (let service of appointmentInput.services) {
-        const { duration, metadata: { openingDates } } = service;
+        const {
+          duration,
+          metadata: { openingDates },
+        } = service;
         const durationInMinutes = parseInt(duration, 10);
 
         for (let day in openingDates) {
           for (let slot of openingDates[day]) {
-            const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+            const [startHour, startMinute] = slot.startTime
+              .split(":")
+              .map(Number);
             const [endHour, endMinute] = slot.endTime.split(":").map(Number);
 
             // Skip validation if both startTime and endTime are 00:00
@@ -365,14 +464,15 @@ function UploadListings() {
               continue;
             }
 
-            const slotDuration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+            const slotDuration =
+              endHour * 60 + endMinute - (startHour * 60 + startMinute);
 
             if (slotDuration < durationInMinutes) {
               return t("slotDurationMismatch", {
                 day,
                 duration,
                 startTime: slot.startTime,
-                endTime: slot.endTime
+                endTime: slot.endTime,
               });
             }
           }
@@ -417,10 +517,23 @@ function UploadListings() {
 
       try {
         const cityIdsToSubmit = listingInput.cityIds;
+        // Format recurring event data if applicable
+        const recurringEventData = formatRecurringEventData();
+
         const dataToSubmit = {
           ...listingInput,
           cityIds: cityIdsToSubmit,
+          ...(listingInput?.isRecurring
+            ? { startDate: undefined, endDate: undefined }
+            : {}),
         };
+
+        // Add recurring event data if isRecurring is checked
+        if (recurringEventData && listingInput.isRecurring) {
+          dataToSubmit.recurrenceRules = recurringEventData;
+          // For recurring events, we might not need endDate in the same format
+          // Keep endDate for backward compatibility but recurrenceRules takes precedence
+        }
 
         const response = newListing
           ? await postListingsData(dataToSubmit)
@@ -428,16 +541,24 @@ function UploadListings() {
 
         let currentListingId = [];
         let cityIdsArray = [];
-        if (response && response.data && response.data.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
-          currentListingId = response.data.data.map(item => item.listingId);
-          cityIdsArray = response.data.data.map(item => item.cityId);
+        if (
+          response &&
+          response.data &&
+          response.data.data &&
+          Array.isArray(response.data.data) &&
+          response.data.data.length > 0
+        ) {
+          currentListingId = response.data.data.map((item) => item.listingId);
+          cityIdsArray = response.data.data.map((item) => item.cityId);
         } else {
           console.error("Invalid response structure. Response:", response);
           throw new Error("Unable to retrieve listing and city IDs");
         }
         // Filter opening dates for appointmentInput and services before submitting
-        const filteredOpeningDates = filterOpeningDates(appointmentInput.metadata.openingDates);
-        const filteredServices = appointmentInput.services.map(service => ({
+        const filteredOpeningDates = filterOpeningDates(
+          appointmentInput.metadata.openingDates,
+        );
+        const filteredServices = appointmentInput.services.map((service) => ({
           ...service,
           metadata: {
             ...service.metadata,
@@ -468,7 +589,7 @@ function UploadListings() {
               await uploadListingImage(
                 imageForm,
                 cityIds,
-                response.data.id || listingId
+                response.data.id || listingId,
               );
             }
           }
@@ -478,27 +599,41 @@ function UploadListings() {
           if (image && image.length > 0) {
             const imageArray = Array.from(image);
             const imageForm = new FormData();
-            let allPromises = []
+            let allPromises = [];
             for (let img of imageArray) {
               imageForm.append("image", img);
             }
             if (process.env.REACT_APP_V2_BACKEND === "True") {
-              await uploadListingImage(imageForm, null, newListing ? currentListingId[0] : listingId)
+              await uploadListingImage(
+                imageForm,
+                null,
+                newListing ? currentListingId[0] : listingId,
+              );
             } else {
               for (let index = 0; index < currentListingId.length; index++) {
-                allPromises.push(uploadListingImage(imageForm, cityIdsArray[index], currentListingId[index]))
+                allPromises.push(
+                  uploadListingImage(
+                    imageForm,
+                    cityIdsArray[index],
+                    currentListingId[index],
+                  ),
+                );
               }
-              await Promise.all(allPromises)
+              await Promise.all(allPromises);
             }
           } else if (pdf) {
             const pdfForm = new FormData();
             pdfForm.append("pdf", pdf); // Append the PDF only once
 
             if (process.env.REACT_APP_V2_BACKEND === "True") {
-              await uploadListingPDF(pdfForm, null, newListing ? currentListingId[0] : listingId);
+              await uploadListingPDF(
+                pdfForm,
+                null,
+                newListing ? currentListingId[0] : listingId,
+              );
             } else {
               const allPromises = currentListingId.map((listingId, index) =>
-                uploadListingPDF(pdfForm, cityIdsArray[index], listingId)
+                uploadListingPDF(pdfForm, cityIdsArray[index], listingId),
               );
               await Promise.all(allPromises);
             }
@@ -507,25 +642,31 @@ function UploadListings() {
 
         if (!newListing && listingInput.appointmentId) {
           try {
-            await updateAppointments(cityIds, listingId, listingInput.appointmentId, filteredAppointmentInput);
+            await updateAppointments(
+              cityIds,
+              listingId,
+              listingInput.appointmentId,
+              filteredAppointmentInput,
+            );
           } catch (error) {
-            console.error('Error updating appointment:', error);
+            console.error("Error updating appointment:", error);
           }
         } else if (appointmentAdded) {
           const minIterations = Math.min(cityIdsArray.length);
-          let allAppointmentPromises = []
+          let allAppointmentPromises = [];
           for (let index = 0; index < minIterations; index++) {
             const cityId = cityIdsArray[index];
             const listingId = currentListingId[index];
 
             try {
               // await createAppointments(cityId, listingId, filteredAppointmentInput);
-              allAppointmentPromises.push(createAppointments(cityId, listingId, filteredAppointmentInput))
+              allAppointmentPromises.push(
+                createAppointments(cityId, listingId, filteredAppointmentInput),
+              );
             } catch (error) {
-              console.error('Error posting appointment:', error);
+              console.error("Error posting appointment:", error);
             }
           }
-
 
           await Promise.all(allAppointmentPromises);
         }
@@ -533,8 +674,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-            ? setSuccessMessage(t("listingCreated"))
-            : setSuccessMessage(t("listingUpdated"));
+          ? setSuccessMessage(t("listingCreated"))
+          : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -556,12 +697,16 @@ function UploadListings() {
   };
 
   const handleCancel = () => {
-    navigate('/Dashboard');
+    navigate("/Dashboard");
   };
 
   const filterOpeningDates = (openingDates) => {
     return Object.keys(openingDates).reduce((acc, day) => {
-      if (openingDates[day].some(slot => slot.startTime !== "00:00" || slot.endTime !== "00:00")) {
+      if (
+        openingDates[day].some(
+          (slot) => slot.startTime !== "00:00" || slot.endTime !== "00:00",
+        )
+      ) {
         acc[day] = openingDates[day];
       }
       return acc;
@@ -588,18 +733,19 @@ function UploadListings() {
 
       try {
         // Fetch all required data
-        const [citiesResponse, categoriesResponse, subcategoriesResponse] = await Promise.all([
-          getCities(),
-          getCategory(),
-          getListingsSubCategory(),
-        ]);
+        const [citiesResponse, categoriesResponse, subcategoriesResponse] =
+          await Promise.all([
+            getCities(),
+            getCategory(),
+            getListingsSubCategory(),
+          ]);
 
         const citiesData = citiesResponse?.data?.data || [];
         setCities(citiesData);
 
         const categories = categoriesResponse?.data?.data || [];
         const filteredCategories = categories.filter(
-          (category) => !hiddenCategories.includes(category.id)
+          (category) => !hiddenCategories.includes(category.id),
         );
         setCategories(filteredCategories);
 
@@ -623,8 +769,11 @@ function UploadListings() {
           const allCities = listingData.allCities || [];
 
           const [firstCityId, ...otherCityIds] = allCities;
-          const singleCityObject = citiesData.find((c) => c.id === firstCityId) || null;
-          const multiCityObjects = citiesData.filter((c) => otherCityIds.includes(c.id));
+          const singleCityObject =
+            citiesData.find((c) => c.id === firstCityId) || null;
+          const multiCityObjects = citiesData.filter((c) =>
+            otherCityIds.includes(c.id),
+          );
           setSelectedSingleCity(singleCityObject);
           setSelectedCities(multiCityObjects);
 
@@ -656,7 +805,11 @@ function UploadListings() {
             //   ? getAppointments(null, listingData.id, listingData.appointmentId)
             //   : getAppointments(cityIds, listingData.id, listingData.appointmentId);
 
-            const fetchAppointments = getAppointments(null, listingData.id, listingData.appointmentId);
+            const fetchAppointments = getAppointments(
+              null,
+              listingData.id,
+              listingData.appointmentId,
+            );
 
             const appointmentResponse = await fetchAppointments;
             const appointmentData = appointmentResponse.data.data;
@@ -664,7 +817,9 @@ function UploadListings() {
 
             daysOfWeek.forEach((day) => {
               if (!appointmentData.metadata.openingDates[day]) {
-                appointmentData.metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                appointmentData.metadata.openingDates[day] = [
+                  { startTime: "00:00", endTime: "00:00" },
+                ];
               }
             });
 
@@ -674,7 +829,11 @@ function UploadListings() {
             //   ? getAppointmentServices(null, listingData.id, listingData.appointmentId)
             //   : getAppointmentServices(cityIds, listingData.id, listingData.appointmentId);
 
-            const fetchServices = getAppointmentServices(null, listingData.id, listingData.appointmentId);
+            const fetchServices = getAppointmentServices(
+              null,
+              listingData.id,
+              listingData.appointmentId,
+            );
 
             const servicesResponse = await fetchServices;
             const servicesData = servicesResponse.data.data.map((item) => {
@@ -682,7 +841,9 @@ function UploadListings() {
 
               daysOfWeek.forEach((day) => {
                 if (!metadata.openingDates[day]) {
-                  metadata.openingDates[day] = [{ startTime: "00:00", endTime: "00:00" }];
+                  metadata.openingDates[day] = [
+                    { startTime: "00:00", endTime: "00:00" },
+                  ];
                 }
               });
 
@@ -744,7 +905,7 @@ function UploadListings() {
         ...prev,
         title: t("characterLimitExceeded", {
           limit: CHARACTER_LIMIT_TITLE,
-          count: value.length
+          count: value.length,
         }),
       }));
       return;
@@ -878,7 +1039,11 @@ function UploadListings() {
         }
 
       case "subCategoryId":
-        if (categories.find(cat => cat.id === parseInt(listingInput.categoryId))?.noOfSubcategories > 0 && !value) {
+        if (
+          categories.find((cat) => cat.id === parseInt(listingInput.categoryId))
+            ?.noOfSubcategories > 0 &&
+          !value
+        ) {
           return t("pleaseSelectSubcategory");
         } else {
           return "";
@@ -900,8 +1065,78 @@ function UploadListings() {
         return "";
 
       case "endDate":
-        if (listingInput.startDate && new Date(listingInput.startDate) > new Date(value)) {
-          return t("endDateBeforeStartDate");
+        // For non-recurring events, just validate that end >= start
+        if (
+          !listingInput.isRecurring &&
+          listingInput.startDate &&
+          value &&
+          new Date(listingInput.startDate) > new Date(value)
+        ) {
+          return t("endDateMustBeGreaterThanOrEqualToStartDate");
+        }
+        return "";
+
+      case "recurringType":
+        if (!value && listingInput.isRecurring) {
+          return t("pleaseSelectRecurringType");
+        }
+        return "";
+
+      case "repeatUntil":
+        if (!value && listingInput.isRecurring) {
+          return t("pleaseEnterRepeatUntilDate");
+        }
+        if (value && listingInput.startDate) {
+          const startDate = new Date(listingInput.startDate);
+          const repeatUntilDate = new Date(value);
+          if (repeatUntilDate < startDate) {
+            return t("repeatUntilMustBeGreaterThanOrEqualToStartDate");
+          }
+        }
+        return "";
+
+      case "recurringEndTime":
+        if (!value && listingInput.isRecurring) {
+          return t("pleaseEnterEndTime");
+        }
+        if (value && listingInput.startDate) {
+          const startDateTime = new Date(listingInput.startDate);
+          const endDateTime = new Date(value);
+
+          // Check if same day
+          const startDateOnly = new Date(
+            startDateTime.getFullYear(),
+            startDateTime.getMonth(),
+            startDateTime.getDate(),
+          );
+          const endDateOnly = new Date(
+            endDateTime.getFullYear(),
+            endDateTime.getMonth(),
+            endDateTime.getDate(),
+          );
+
+          if (startDateOnly.getTime() !== endDateOnly.getTime()) {
+            return t("startAndEndDateMustBeSameDay");
+          }
+
+          // Check if end time is greater than start time
+          if (endDateTime <= startDateTime) {
+            return t("endTimeMustBeGreaterThanStartTime");
+          }
+        }
+        return "";
+
+      case "recurringDays":
+        if (
+          listingInput.isRecurring &&
+          listingInput.recurringType === "weekly"
+        ) {
+          if (
+            !listingInput.recurringDays ||
+            listingInput.recurringDays.length === 0
+          ) {
+            return t("pleaseSelectAtLeastOneWeekday");
+          }
         }
         return "";
 
@@ -961,19 +1196,67 @@ function UploadListings() {
       }));
 
       const inputDate = new Date(value);
-      if (name === "startDate" || name === "endDate") {
-        const startDate = name === "startDate" ? inputDate : new Date(listingInput.startDate);
-        const endDate = name === "endDate" ? inputDate : new Date(listingInput.endDate);
 
-        if (startDate && endDate && startDate > endDate) {
+      // Validate startDate for monthly recurrence (no past dates)
+      if (
+        name === "startDate" &&
+        listingInput.isRecurring &&
+        listingInput.recurringType === "monthly"
+      ) {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        if (inputDate && inputDate < now) {
           setError((prevState) => ({
             ...prevState,
-            endDate: t("endDateBeforeStartDate"),
+            startDate: t("cannotSelectPastDate"),
+          }));
+          return;
+        }
+      }
+
+      // Validate recurring end time
+      if (name === "recurringEndTime" && listingInput.startDate && value) {
+        const startDateTime = new Date(listingInput.startDate);
+        const endDateTime = new Date(value);
+
+        // Check if same day
+        const startDateOnly = new Date(
+          startDateTime.getFullYear(),
+          startDateTime.getMonth(),
+          startDateTime.getDate(),
+        );
+        const endDateOnly = new Date(
+          endDateTime.getFullYear(),
+          endDateTime.getMonth(),
+          endDateTime.getDate(),
+        );
+
+        if (startDateOnly.getTime() !== endDateOnly.getTime()) {
+          setError((prevState) => ({
+            ...prevState,
+            recurringEndTime: t("startAndEndDateMustBeSameDay"),
+          }));
+        } else if (endDateTime <= startDateTime) {
+          setError((prevState) => ({
+            ...prevState,
+            recurringEndTime: t("endTimeMustBeGreaterThanStartTime"),
           }));
         } else {
           setError((prevState) => ({
             ...prevState,
-            endDate: "",
+            recurringEndTime: "",
+          }));
+        }
+      }
+
+      // Validate repeat until date
+      if (name === "repeatUntil" && listingInput.startDate) {
+        const startDate = new Date(listingInput.startDate);
+        const repeatUntilDate = new Date(value);
+        if (repeatUntilDate < startDate) {
+          setError((prevState) => ({
+            ...prevState,
+            repeatUntil: t("repeatUntilMustBeGreaterThanOrEqualToStartDate"),
           }));
         }
       }
@@ -1008,7 +1291,9 @@ function UploadListings() {
           return;
         }
 
-        const sortedCities = citiesData.sort((a, b) => a.name.localeCompare(b.name));
+        const sortedCities = citiesData.sort((a, b) =>
+          a.name.localeCompare(b.name),
+        );
         setCities(sortedCities);
 
         if (citiesData.length === 1) {
@@ -1036,9 +1321,15 @@ function UploadListings() {
   const handleCategoryChange = async (event) => {
     const selectedCategoryId = parseInt(event.target.value, 10);
     setCategoryId(selectedCategoryId);
-    const selectedCategory = categories.find(category => category.id === selectedCategoryId);
+    const selectedCategory = categories.find(
+      (category) => category.id === selectedCategoryId,
+    );
     setSubcategoryId(null);
-    setListingInput((prevInput) => ({ ...prevInput, categoryId: selectedCategoryId, subcategoryId: 0 }));
+    setListingInput((prevInput) => ({
+      ...prevInput,
+      categoryId: selectedCategoryId,
+      subcategoryId: 0,
+    }));
 
     if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
       try {
@@ -1096,22 +1387,23 @@ function UploadListings() {
 
   // Filter out any city already in the multi-city selection
   const singleDropdownCities = cities
-    .filter(c => !selectedCities.some(mC => mC.id === c.id))
+    .filter((c) => !selectedCities.some((mC) => mC.id === c.id))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   // Filter out the single-selected city
-  const multipleDropdownCities = (selectedSingleCity
-    ? cities.filter(c => c.id !== selectedSingleCity.id)
-    : cities
+  const multipleDropdownCities = (
+    selectedSingleCity
+      ? cities.filter((c) => c.id !== selectedSingleCity.id)
+      : cities
   ).sort((a, b) => a.name.localeCompare(b.name));
 
   const toggleSingleDropdown = () => {
-    setIsOpenSingle(prev => !prev);
+    setIsOpenSingle((prev) => !prev);
   };
 
   const handleSelectSingleCity = (city) => {
     setSelectedSingleCity(city);
-    setError(prev => ({ ...prev, singleCity: "" }));
+    setError((prev) => ({ ...prev, singleCity: "" }));
   };
 
   const handleRemoveSingleCity = () => {
@@ -1126,9 +1418,9 @@ function UploadListings() {
     if (!selectedCities.some((selectedCity) => selectedCity.id === city.id)) {
       const updatedCities = [...selectedCities, city];
       setSelectedCities(updatedCities);
-      setError(prev => ({ ...prev, cityAlreadySelected: "" }));
+      setError((prev) => ({ ...prev, cityAlreadySelected: "" }));
     } else {
-      setError(prev => ({
+      setError((prev) => ({
         ...prev,
         cityAlreadySelected: t("cityAlreadySelected"),
       }));
@@ -1136,7 +1428,7 @@ function UploadListings() {
   };
 
   const handleRemoveCity = (cityId) => {
-    const updatedCities = selectedCities.filter(city => city.id !== cityId);
+    const updatedCities = selectedCities.filter((city) => city.id !== cityId);
     setSelectedCities(updatedCities);
   };
 
@@ -1190,17 +1482,82 @@ function UploadListings() {
   }, []);
 
   useEffect(() => {
-    const isCategorySpecificValid =
-      categoryId === 3 ? listingInput.startDate : true;
-
     const checkFormValidity = () => {
+      // Basic required fields
+      const hasTitle = listingInput.title && listingInput.title.trim() !== "";
+      // Description might contain HTML tags, so remove them before checking
+      const plainDescription = listingInput.description
+        ? listingInput.description.replace(/<[^>]*>/g, "").trim()
+        : "";
+      const hasDescription =
+        plainDescription !== "" && plainDescription !== "<br>";
+      const hasCategory = categoryId && categoryId !== 0;
+      const hasCity = selectedSingleCity || selectedCities.length > 0;
+
+      // Check for basic errors - only check if error has actual text (not empty string)
+      const hasBasicErrors =
+        (error.title && error.title !== "") ||
+        (error.description && error.description !== "") ||
+        (error.categoryId && error.categoryId !== "");
+
+      // Category-specific validation
+      let isCategoryValid = true;
+
+      if (categoryId === 3) {
+        // Event category validation
+        const hasStartDate =
+          listingInput.startDate && listingInput.startDate !== "";
+
+        if (!hasStartDate) {
+          isCategoryValid = false;
+        }
+
+        // For non-recurring events, end date is optional
+        // For recurring events
+        if (listingInput.isRecurring) {
+          const hasRecurringType =
+            listingInput.recurringType && listingInput.recurringType !== "";
+          const hasRecurringEndTime =
+            listingInput.recurringEndTime &&
+            listingInput.recurringEndTime !== "";
+          const hasRepeatUntil =
+            listingInput.repeatUntil && listingInput.repeatUntil !== "";
+
+          if (!hasRecurringType || !hasRecurringEndTime || !hasRepeatUntil) {
+            isCategoryValid = false;
+          }
+
+          // For weekly recurring, need weekdays
+          if (listingInput.recurringType === "weekly") {
+            const hasWeekdays =
+              listingInput.recurringDays &&
+              listingInput.recurringDays.length > 0;
+            if (!hasWeekdays) {
+              isCategoryValid = false;
+            }
+          }
+        }
+
+        // Check for event-specific errors
+        if (
+          error.startDate ||
+          error.endDate ||
+          error.recurringType ||
+          error.recurringEndTime ||
+          error.repeatUntil ||
+          error.recurringDays
+        ) {
+          isCategoryValid = false;
+        }
+      }
+
       const requiredFields = [
-        listingInput.title,
-        listingInput.description,
-        categoryId,
-        selectedSingleCity,
-        !(error.title || error.description || error.categoryId),
-        isCategorySpecificValid,
+        hasTitle,
+        hasDescription,
+        hasCategory,
+        hasCity,
+        !hasBasicErrors,
+        isCategoryValid,
       ];
 
       return requiredFields.every(Boolean);
@@ -1245,24 +1602,28 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_TITLE
-                  ? "mt-2 text-sm text-red-600"
-                  : "mt-2 text-sm text-gray-500"
-                  }`}
+                className={`${
+                  listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
+                  CHARACTER_LIMIT_TITLE
+                    ? "mt-2 text-sm text-red-600"
+                    : "mt-2 text-sm text-gray-500"
+                }`}
               >
-                {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_TITLE}
+                {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/
+                {CHARACTER_LIMIT_TITLE}
               </span>
               {error.title && (
-                <span className="mt-2 text-sm text-red-600">
-                  {error.title}
-                </span>
+                <span className="mt-2 text-sm text-red-600">{error.title}</span>
               )}
             </div>
           </div>
 
           {/* SINGLE CITY DROPDOWN */}
           <div className="relative mb-4" ref={singleDropdownRef}>
-            <label htmlFor="singleCity" className="block text-sm font-medium text-gray-600">
+            <label
+              htmlFor="singleCity"
+              className="block text-sm font-medium text-gray-600"
+            >
               {t("myCommunity")} *
             </label>
             <div
@@ -1285,18 +1646,23 @@ function UploadListings() {
                     </button>
                   </div>
                 ) : (
-                  <span className="bg-transparent outline-none flex-1 cursor-pointer">{t("select")}</span>
+                  <span className="bg-transparent outline-none flex-1 cursor-pointer">
+                    {t("select")}
+                  </span>
                 )}
               </div>
             </div>
             {isOpenSingle && (
               <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
-                {singleDropdownCities.map(city => (
+                {singleDropdownCities.map((city) => (
                   <div
                     key={city.id}
                     onClick={() => handleSelectSingleCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id ? "text-teal-700" : "text-gray-700"
-                      }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
+                      selectedSingleCity?.id === city.id
+                        ? "text-teal-700"
+                        : "text-gray-700"
+                    }`}
                   >
                     {city.name}
                   </div>
@@ -1313,8 +1679,13 @@ function UploadListings() {
 
           {/* MULTIPLE CITY DROPDOWN */}
           <div className="relative mb-4" ref={multipleDropdownRef}>
-            <label htmlFor="multipleCity" className="block text-sm font-medium text-gray-600">
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("cluster") : t("city")}
+            <label
+              htmlFor="multipleCity"
+              className="block text-sm font-medium text-gray-600"
+            >
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("cluster")
+                : t("city")}
             </label>
             <div
               className="shadow-md w-full bg-white rounded border border-gray-300 focus:border-black  text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -1349,12 +1720,15 @@ function UploadListings() {
             </div>
             {isOpenMultiple && (
               <div className="absolute top-full mt-2 w-full bg-white rounded shadow-lg z-10 max-h-40 overflow-y-auto border border-gray-300">
-                {multipleDropdownCities.map(city => (
+                {multipleDropdownCities.map((city) => (
                   <div
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some(sC => sC.id === city.id) ? "text-teal-700" : "text-gray-700"
-                      }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
+                      selectedCities.some((sC) => sC.id === city.id)
+                        ? "text-teal-700"
+                        : "text-gray-700"
+                    }`}
                   >
                     {city.name}
                   </div>
@@ -1391,7 +1765,11 @@ function UploadListings() {
               </option>
               {categories.map((category) => {
                 return (
-                  <option className="font-sans" value={category.id} key={category.id}>
+                  <option
+                    className="font-sans"
+                    value={category.id}
+                    key={category.id}
+                  >
                     {t(category.name)} {t(categoryDescription(category.id))}
                   </option>
                 );
@@ -1407,12 +1785,23 @@ function UploadListings() {
             </div>
           </div>
 
-          {categoryId == 18 && <ServiceAndTime appointmentInput={appointmentInput} setAppointmentInput={setAppointmentInput}
-            appointmentError={appointmentError} setAppointmentError={setAppointmentError} daysOfWeek={daysOfWeek} initialTimeSlot={initialTimeSlot} />}
+          {categoryId == 18 && (
+            <ServiceAndTime
+              appointmentInput={appointmentInput}
+              setAppointmentInput={setAppointmentInput}
+              appointmentError={appointmentError}
+              setAppointmentError={setAppointmentError}
+              daysOfWeek={daysOfWeek}
+              initialTimeSlot={initialTimeSlot}
+            />
+          )}
 
           {Object.keys(subCategories).length > 0 && (
             <div className="relative mb-0">
-              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-600">
+              <label
+                htmlFor="subcategoryId"
+                className="block text-sm font-medium text-gray-600"
+              >
                 {t("subCategory")} *
               </label>
               <select
@@ -1431,7 +1820,9 @@ function UploadListings() {
                 ))}
               </select>
               {error.subcategoryId && (
-                <div className="mt-2 text-sm text-red-600">{error.subcategoryId}</div>
+                <div className="mt-2 text-sm text-red-600">
+                  {error.subcategoryId}
+                </div>
               )}
             </div>
           )}
@@ -1472,11 +1863,26 @@ function UploadListings() {
                             ? formatDateTime(listingInput.expiryDate)
                             : getDefaultEndDate()
                         }
-                        options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
+                        options={{
+                          enableTime: true,
+                          dateFormat: "Y-m-d H:i",
+                          time_24hr: true,
+                        }}
                         onChange={(date) => {
-                          const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
-                          setListingInput(prev => ({ ...prev, expiryDate: formattedDate }));
-                          validateInput({ target: { name: "expiryDate", value: formattedDate } });
+                          const formattedDate = format(
+                            date[0],
+                            "yyyy-MM-dd'T'HH:mm",
+                          );
+                          setListingInput((prev) => ({
+                            ...prev,
+                            expiryDate: formattedDate,
+                          }));
+                          validateInput({
+                            target: {
+                              name: "expiryDate",
+                              value: formattedDate,
+                            },
+                          });
                         }}
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("expiryDate")}
@@ -1516,87 +1922,715 @@ function UploadListings() {
 
           {categoryId == 3 && (
             <div className="relative mb-0">
-              <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative">
-                  <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    ></svg>
+              {/* Start and End Date - Shown based on recurring checkbox */}
+              {!listingInput.isRecurring ? (
+                /* Non-recurring events: Show both Start and End Date */
+                <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="relative">
+                    <label
+                      htmlFor="startDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventStartDate")} *
+                    </label>
+                    <Flatpickr
+                      id="startDate"
+                      name="startDate"
+                      value={listingInput.startDate}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        clickOpens: true,
+                        allowInput: false,
+                        minDate: new Date(),
+                        onClose: function (selectedDates, dateStr, instance) {
+                          // Validate only after date picker closes
+                          if (dateStr) {
+                            validateInput({
+                              target: {
+                                name: "startDate",
+                                value: dateStr.replace(" ", "T"),
+                              },
+                            });
+                          }
+                        },
+                      }}
+                      onChange={(date) => {
+                        const formattedDate = format(
+                          date[0],
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+
+                        // Auto-fill end date if empty or same day
+                        const startDateTime = new Date(formattedDate);
+                        const autoEndDateTime = new Date(startDateTime);
+                        // Add 1 hour to start time as default
+                        autoEndDateTime.setHours(startDateTime.getHours() + 1);
+                        const autoEndDate = format(
+                          autoEndDateTime,
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+
+                        setListingInput((prev) => ({
+                          ...prev,
+                          startDate: formattedDate,
+                          // Auto-fill end date only if it's empty or if we want to update it
+                          endDate: !prev.endDate ? autoEndDate : prev.endDate,
+                        }));
+                        // Clear error when user is selecting a date
+                        setError((prev) => ({ ...prev, startDate: "" }));
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("eventStartDate")}
+                    />
+                    <div
+                      className="mt-2 text-sm text-red-600"
+                      style={{
+                        visibility: error.startDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.startDate}
+                    </div>
                   </div>
-                  <label
-                    htmlFor="startDate"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {t("eventStartDate")} *
-                  </label>
-                  <Flatpickr
-                    id="startDate"
-                    name="startDate"
-                    value={listingInput.startDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
-                    onChange={(date) => {
-                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
-                      setListingInput(prev => ({ ...prev, startDate: formattedDate }));
-                      validateInput({ target: { name: "startDate", value: formattedDate } });
-                    }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder={t("eventStartDate")}
-                    onBlur={validateInput}
-                  />
-                  <div
-                    className="mt-2 text-sm text-red-600"
-                    style={{
-                      visibility: error.startDate ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.startDate}
+
+                  <div className="relative">
+                    <label
+                      htmlFor="endDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventEndDate")}
+                    </label>
+                    <Flatpickr
+                      id="endDate"
+                      name="endDate"
+                      value={listingInput.endDate}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        clickOpens: true,
+                        allowInput: false,
+                        minDate: new Date(),
+                        onClose: function (selectedDates, dateStr, instance) {
+                          // Validate only after date picker closes
+                          if (dateStr) {
+                            validateInput({
+                              target: {
+                                name: "endDate",
+                                value: dateStr.replace(" ", "T"),
+                              },
+                            });
+                          }
+                        },
+                      }}
+                      onChange={(date) => {
+                        const formattedDate = format(
+                          date[0],
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+                        setListingInput((prev) => ({
+                          ...prev,
+                          endDate: formattedDate,
+                        }));
+                        // Clear error when user is selecting a date
+                        setError((prev) => ({ ...prev, endDate: "" }));
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("eventEndDate")}
+                    />
+                    <div
+                      className="mt-2 text-sm text-red-600"
+                      style={{
+                        visibility: error.endDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.endDate}
+                    </div>
                   </div>
                 </div>
+              ) : null}
 
-                <div className="relative">
-                  <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    ></svg>
-                  </div>
+              {/* Recurring Checkbox */}
+              <div className="relative mb-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isRecurring"
+                    name="isRecurring"
+                    checked={listingInput.isRecurring}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setListingInput((prev) => ({
+                        ...prev,
+                        isRecurring: isChecked,
+                        // Clear all recurring fields when unchecking
+                        recurringType: "",
+                        recurringDays: [],
+                        repeatUntil: "",
+                        recurringEndTime: "",
+                        exceptionDates: [],
+                        // Also clear startDate when unchecking to avoid confusion
+                        startDate: isChecked ? prev.startDate : "",
+                      }));
+                      if (!isChecked) {
+                        setError((prevError) => ({
+                          ...prevError,
+                          recurringType: "",
+                          recurringDays: "",
+                          repeatUntil: "",
+                          recurringEndTime: "",
+                          startDate: "",
+                          endDate: "",
+                          exceptionDates: "",
+                        }));
+                      }
+                    }}
+                    className="mr-2"
+                  />
                   <label
-                    htmlFor="endDate"
+                    htmlFor="isRecurring"
                     className="block text-sm font-medium text-gray-600"
                   >
-                    {t("eventEndDate")}
+                    {t("recurring")}
                   </label>
-                  <Flatpickr
-                    id="endDate"
-                    name="endDate"
-                    value={listingInput.endDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
-                    onChange={(date) => {
-                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
-                      setListingInput(prev => ({ ...prev, endDate: formattedDate }));
-                      validateInput({ target: { name: "endDate", value: formattedDate } });
-                    }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder={t("eventEndDate")}
-                    onBlur={validateInput}
-                  />
-                  <div
-                    className="mt-2 text-sm text-red-600"
-                    style={{
-                      visibility: error.endDate ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.endDate}
-                  </div>
                 </div>
               </div>
+
+              {listingInput.isRecurring && (
+                <div className="relative mb-4">
+                  <label className="block text-sm font-medium text-gray-600">
+                    {t("recurringType")} *
+                  </label>
+
+                  <select
+                    name="recurringType"
+                    value={listingInput.recurringType || ""}
+                    onChange={(e) => {
+                      const newRecurringType = e.target.value;
+                      setListingInput((prev) => {
+                        // Clear all recurring-related date fields when recurringType changes
+                        return {
+                          ...prev,
+                          recurringType: newRecurringType,
+                          startDate: "",
+                          recurringEndTime: "",
+                          repeatUntil: "",
+                          recurringDays: [],
+                          exceptionDates: [], // Clear exception dates when type changes
+                        };
+                      });
+                      // Clear related errors
+                      setError((prevError) => ({
+                        ...prevError,
+                        recurringType: "",
+                        startDate: "",
+                        recurringEndTime: "",
+                        repeatUntil: "",
+                        recurringDays: "",
+                      }));
+                      validateInput({
+                        target: {
+                          name: "recurringType",
+                          value: newRecurringType,
+                        },
+                      });
+                    }}
+                    onBlur={validateInput}
+                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                  >
+                    <option value="">{t("chooseRecurringType")}</option>
+                    <option value="daily">{t("daily")}</option>
+                    <option value="weekly">{t("weekly")}</option>
+                    <option value="monthly">{t("monthly")}</option>
+                  </select>
+                  <div
+                    className="mt-2 text-sm text-red-600"
+                    style={{
+                      visibility: error.recurringType ? "visible" : "hidden",
+                    }}
+                  >
+                    {error.recurringType}
+                  </div>
+                </div>
+              )}
+
+              {listingInput?.recurringType === "weekly" && (
+                <div className="relative mb-4">
+                  <label className="block text-sm font-medium text-gray-600">
+                    {t("selectDays")} *
+                  </label>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {daysOfWeek?.map((day) => (
+                      <div key={day} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={day}
+                          name={day}
+                          checked={
+                            listingInput?.recurringDays
+                              ? listingInput?.recurringDays?.includes(day)
+                              : false
+                          }
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            setListingInput((prev) => {
+                              let updatedDays = prev.recurringDays || [];
+                              if (isChecked) {
+                                updatedDays = [...updatedDays, day];
+                              } else {
+                                updatedDays = updatedDays?.filter(
+                                  (d) => d !== day,
+                                );
+                              }
+                              const updatedState = {
+                                ...prev,
+                                recurringDays: updatedDays,
+                              };
+
+                              // Validate weekday selection
+                              let errorMessage = "";
+                              if (
+                                prev.isRecurring &&
+                                prev.recurringType === "weekly"
+                              ) {
+                                if (!updatedDays || updatedDays.length === 0) {
+                                  errorMessage = t(
+                                    "pleaseSelectAtLeastOneWeekday",
+                                  );
+                                }
+                              }
+
+                              // Update error state
+                              setError((prevError) => ({
+                                ...prevError,
+                                recurringDays: errorMessage,
+                              }));
+
+                              return updatedState;
+                            });
+                          }}
+                          className="mr-2"
+                        />
+                        <label htmlFor={day} className="text-gray-700">
+                          {t(day)}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div
+                    className="mt-2 text-sm text-red-600"
+                    style={{
+                      visibility: error.recurringDays ? "visible" : "hidden",
+                    }}
+                  >
+                    {error.recurringDays}
+                  </div>
+                </div>
+              )}
+
+              {/* Recurring Events - Show when recurring checkbox is checked */}
+              {listingInput.isRecurring && listingInput.recurringType && (
+                <div className="items-stretch py-2 space-y-4">
+                  {/* Start Date & Time and End Time in single row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                        <svg
+                          aria-hidden="true"
+                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        ></svg>
+                      </div>
+                      <label
+                        htmlFor="startDate"
+                        className="block text-sm font-medium text-gray-600"
+                      >
+                        {t("eventStartDate")} *
+                      </label>
+                      <Flatpickr
+                        id="startDate"
+                        name="startDate"
+                        value={listingInput.startDate}
+                        options={{
+                          enableTime: true,
+                          dateFormat: "Y-m-d H:i",
+                          time_24hr: true,
+                          clickOpens: true,
+                          allowInput: false,
+                          minDate:
+                            listingInput.recurringType === "monthly"
+                              ? new Date()
+                              : undefined,
+                          onClose: function (selectedDates, dateStr, instance) {
+                            // Validate only after date picker closes
+                            if (dateStr) {
+                              validateInput({
+                                target: {
+                                  name: "startDate",
+                                  value: dateStr.replace(" ", "T"),
+                                },
+                              });
+                              // Also validate recurringEndTime if it exists
+                              if (listingInput.recurringEndTime) {
+                                setTimeout(() => {
+                                  validateInput({
+                                    target: {
+                                      name: "recurringEndTime",
+                                      value: listingInput.recurringEndTime,
+                                    },
+                                  });
+                                }, 100);
+                              }
+                            }
+                          },
+                        }}
+                        onChange={(date) => {
+                          const formattedDate = format(
+                            date[0],
+                            "yyyy-MM-dd'T'HH:mm",
+                          );
+
+                          setListingInput((prev) => {
+                            let updatedState = {
+                              ...prev,
+                              startDate: formattedDate,
+                            };
+
+                            // Auto-fill recurringEndTime if it's empty or adjust if it exists
+                            const startDateTime = new Date(formattedDate);
+
+                            if (!prev.recurringEndTime) {
+                              // Auto-fill with start time + 1 hour (same day)
+                              const autoEndDateTime = new Date(startDateTime);
+                              autoEndDateTime.setHours(
+                                startDateTime.getHours() + 1,
+                              );
+                              updatedState.recurringEndTime = format(
+                                autoEndDateTime,
+                                "yyyy-MM-dd'T'HH:mm",
+                              );
+                            } else if (
+                              prev.recurringEndTime &&
+                              prev.isRecurring
+                            ) {
+                              // If recurringEndTime exists, adjust it to same day as new startDate
+                              const oldEndDateTime = new Date(
+                                prev.recurringEndTime,
+                              );
+                              const newStartDateTime = new Date(formattedDate);
+
+                              // Keep the time from old endTime but set date to match new startDate
+                              const adjustedEndDate = new Date(
+                                newStartDateTime,
+                              );
+                              adjustedEndDate.setHours(
+                                oldEndDateTime.getHours(),
+                                oldEndDateTime.getMinutes(),
+                                0,
+                                0,
+                              );
+
+                              updatedState.recurringEndTime = format(
+                                adjustedEndDate,
+                                "yyyy-MM-dd'T'HH:mm",
+                              );
+                            }
+
+                            return updatedState;
+                          });
+                          // Clear errors when user is selecting a date
+                          setError((prev) => ({
+                            ...prev,
+                            startDate: "",
+                            recurringEndTime: "",
+                          }));
+                        }}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder={t("eventStartDate")}
+                      />
+                      <div
+                        className="mt-2 text-sm text-red-600"
+                        style={{
+                          visibility: error.startDate ? "visible" : "hidden",
+                        }}
+                      >
+                        {error.startDate}
+                      </div>
+                    </div>
+
+                    {/* End Date & Time (same day) */}
+                    <div className="relative">
+                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                        <svg
+                          aria-hidden="true"
+                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        ></svg>
+                      </div>
+                      <label
+                        htmlFor="recurringEndTime"
+                        className="block text-sm font-medium text-gray-600"
+                      >
+                        {t("eventEndTime")} *
+                      </label>
+                      <Flatpickr
+                        id="recurringEndTime"
+                        name="recurringEndTime"
+                        value={
+                          listingInput.recurringEndTime ||
+                          (listingInput.startDate ? listingInput.startDate : "")
+                        }
+                        options={{
+                          enableTime: true,
+                          dateFormat: "Y-m-d H:i",
+                          time_24hr: true,
+                          clickOpens: true,
+                          allowInput: false,
+                          closeOnSelect: true,
+                          defaultDate: listingInput.startDate
+                            ? new Date(listingInput.startDate)
+                            : undefined,
+                          minDate: listingInput.startDate
+                            ? (() => {
+                                const startDate = new Date(
+                                  listingInput.startDate,
+                                );
+                                return new Date(
+                                  startDate.getFullYear(),
+                                  startDate.getMonth(),
+                                  startDate.getDate(),
+                                  0,
+                                  0,
+                                  0,
+                                );
+                              })()
+                            : undefined,
+                          maxDate: listingInput.startDate
+                            ? (() => {
+                                const startDate = new Date(
+                                  listingInput.startDate,
+                                );
+                                return new Date(
+                                  startDate.getFullYear(),
+                                  startDate.getMonth(),
+                                  startDate.getDate(),
+                                  23,
+                                  59,
+                                  59,
+                                );
+                              })()
+                            : undefined,
+                          onClose: function (selectedDates, dateStr, instance) {
+                            // Validate only after date picker closes
+                            if (dateStr) {
+                              validateInput({
+                                target: {
+                                  name: "recurringEndTime",
+                                  value: dateStr.replace(" ", "T"),
+                                },
+                              });
+                            }
+                          },
+                        }}
+                        onChange={(date) => {
+                          if (
+                            date &&
+                            date.length > 0 &&
+                            listingInput.startDate
+                          ) {
+                            const selectedDate = date[0];
+                            const startDateTime = new Date(
+                              listingInput.startDate,
+                            );
+
+                            // Ensure end date is on the same day as start date
+                            const selectedDateOnly = new Date(
+                              selectedDate.getFullYear(),
+                              selectedDate.getMonth(),
+                              selectedDate.getDate(),
+                            );
+                            const startDateOnly = new Date(
+                              startDateTime.getFullYear(),
+                              startDateTime.getMonth(),
+                              startDateTime.getDate(),
+                            );
+
+                            let finalDate = selectedDate;
+
+                            // If selected date is different from start date, adjust to same day with selected time
+                            if (
+                              selectedDateOnly.getTime() !==
+                              startDateOnly.getTime()
+                            ) {
+                              finalDate = new Date(startDateOnly);
+                              finalDate.setHours(
+                                selectedDate.getHours(),
+                                selectedDate.getMinutes(),
+                                0,
+                                0,
+                              );
+                            }
+
+                            const formattedDate = format(
+                              finalDate,
+                              "yyyy-MM-dd'T'HH:mm",
+                            );
+                            setListingInput((prev) => ({
+                              ...prev,
+                              recurringEndTime: formattedDate,
+                            }));
+                            // Clear error when user is selecting a time
+                            setError((prev) => ({
+                              ...prev,
+                              recurringEndTime: "",
+                            }));
+                          }
+                        }}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder={t("eventEndTime")}
+                      />
+                      <div
+                        className="mt-2 text-sm text-red-600"
+                        style={{
+                          visibility: error.recurringEndTime
+                            ? "visible"
+                            : "hidden",
+                        }}
+                      >
+                        {error.recurringEndTime}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Repeat Until Date */}
+                  <div className="relative">
+                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      ></svg>
+                    </div>
+                    <label
+                      htmlFor="repeatUntil"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("repeatUntil")} *
+                    </label>
+                    <Flatpickr
+                      id="repeatUntil"
+                      name="repeatUntil"
+                      value={listingInput.repeatUntil || ""}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        clickOpens: true,
+                        allowInput: false,
+                        minDate: listingInput.startDate
+                          ? new Date(listingInput.startDate)
+                          : undefined,
+                        onClose: function (selectedDates, dateStr, instance) {
+                          // Validate only after date picker closes
+                          if (dateStr) {
+                            validateInput({
+                              target: {
+                                name: "repeatUntil",
+                                value: dateStr.replace(" ", "T"),
+                              },
+                            });
+                          }
+                        },
+                      }}
+                      onChange={(date) => {
+                        const formattedDate = format(
+                          date[0],
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+                        setListingInput((prev) => ({
+                          ...prev,
+                          repeatUntil: formattedDate,
+                        }));
+                        // Clear error when user is selecting a date
+                        setError((prev) => ({ ...prev, repeatUntil: "" }));
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("repeatUntil")}
+                    />
+                    <div
+                      className="mt-2 text-sm text-red-600"
+                      style={{
+                        visibility: error.repeatUntil ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.repeatUntil}
+                    </div>
+                  </div>
+                  {/* Exception Dates - Only show if both start date and repeat until are set */}
+                  {listingInput?.startDate && listingInput?.repeatUntil && (
+                    <div className="relative">
+                      <label
+                        htmlFor="exceptionDates"
+                        className="block text-sm font-medium text-gray-600"
+                      >
+                        {t("exceptionDates")} ({t("optional")})
+                      </label>
+                      <Flatpickr
+                        id="exceptionDates"
+                        name="exceptionDates"
+                        value={listingInput.exceptionDates}
+                        options={{
+                          mode: "multiple",
+                          dateFormat: "Y-m-d",
+                          clickOpens: true,
+                          allowInput: false,
+                          // Extract date-only for proper comparison (ignore time)
+                          minDate: format(
+                            new Date(listingInput.startDate),
+                            "yyyy-MM-dd",
+                          ),
+                          maxDate: format(
+                            new Date(listingInput.repeatUntil),
+                            "yyyy-MM-dd",
+                          ),
+                        }}
+                        onChange={(dates) => {
+                          // All selected dates are valid since Flatpickr handles min/max
+                          const formattedDates = dates.map((date) =>
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          setListingInput((prev) => ({
+                            ...prev,
+                            exceptionDates: formattedDates,
+                          }));
+                        }}
+                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                        placeholder={t("selectExceptionDates")}
+                      />
+                      <div className="mt-1 text-xs text-gray-500">
+                        {t("selectDatesToExcludeFromRecurring")} ({t("Between")}{" "}
+                        {format(
+                          new Date(listingInput.startDate),
+                          "MMM dd, yyyy",
+                        )}{" "}
+                        -{" "}
+                        {format(
+                          new Date(listingInput.repeatUntil),
+                          "MMM dd, yyyy",
+                        )}
+                        ) - {t("startDateEndDateSelectable")}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -1605,7 +2639,9 @@ function UploadListings() {
               htmlFor="address"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("stichworte") : t("streetAddress")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("stichworte")
+                : t("streetAddress")}
             </label>
             <div>
               <input
@@ -1669,7 +2705,9 @@ function UploadListings() {
               htmlFor="phone"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("personen") : t("telephone")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("personen")
+                : t("telephone")}
             </label>
             <input
               type="text"
@@ -1723,7 +2761,9 @@ function UploadListings() {
               htmlFor="place"
               className="block text-sm font-medium text-gray-600"
             >
-              {process.env.REACT_APP_REGION_NAME === "HIVADA" ? t("veranstaltungsinfos") : t("website")}
+              {process.env.REACT_APP_REGION_NAME === "HIVADA"
+                ? t("veranstaltungsinfos")
+                : t("website")}
             </label>
             <input
               type="text"
@@ -1757,7 +2797,10 @@ function UploadListings() {
                   validateInput({
                     target: {
                       name: "description",
-                      value: quillInstance.root.innerHTML.replace(/(<br>|<\/?p>)/gi, ""),
+                      value: quillInstance.root.innerHTML.replace(
+                        /(<br>|<\/?p>)/gi,
+                        "",
+                      ),
                     },
                   });
                 }
@@ -1768,12 +2811,15 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${description.replace(/(<([^>]+)>)/gi, "").length > CHARACTER_LIMIT_DESCRIPTION
-                  ? "mt-2 text-sm text-red-600"
-                  : "mt-2 text-sm text-gray-500"
-                  }`}
+                className={`${
+                  description.replace(/(<([^>]+)>)/gi, "").length >
+                  CHARACTER_LIMIT_DESCRIPTION
+                    ? "mt-2 text-sm text-red-600"
+                    : "mt-2 text-sm text-gray-500"
+                }`}
               >
-                {description.replace(/(<([^>]+)>)/gi, "").length}/{CHARACTER_LIMIT_DESCRIPTION}
+                {description.replace(/(<([^>]+)>)/gi, "").length}/
+                {CHARACTER_LIMIT_DESCRIPTION}
               </span>
               {error.description && (
                 <span className="mt-2 text-sm text-red-600">
@@ -1796,9 +2842,7 @@ function UploadListings() {
             <label className="block text-sm font-medium text-gray-700">
               {t("addFileHere")}
             </label>
-            <div
-              className="mt-2 text-sm text-green-600"
-            >
+            <div className="mt-2 text-sm text-green-600">
               {t("maxFileSizeAllert")} & {t("imageNumberAlertListings")}
             </div>
 
@@ -1821,8 +2865,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1855,8 +2900,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1888,8 +2934,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -1911,7 +2958,9 @@ function UploadListings() {
                     <a
                       target="_blank"
                       rel="noreferrer"
-                      href={localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link}
+                      href={
+                        localImageOrPdf ? URL.createObjectURL(pdf) : pdf.link
+                      }
                     >
                       {pdf.name}
                     </a>
@@ -1948,9 +2997,7 @@ function UploadListings() {
               )}
             </div>
 
-            <div
-              className="mt-2 text-sm text-green-600"
-            >
+            <div className="mt-2 text-sm text-green-600">
               {t("imagePdfWarning")}
             </div>
           </div>
@@ -1961,9 +3008,15 @@ function UploadListings() {
         <div className="bg-white mt-4 p-6">
           <div className="py-2 mt-1 px-2">
             <p className="pb-2">
-              {process.env.REACT_APP_NAME == "WALDI APP" ? t("byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent") : ""}
+              {process.env.REACT_APP_NAME == "WALDI APP"
+                ? t(
+                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent",
+                  )
+                : ""}
             </p>
-            <div className="flex gap-2"> {/* Flex container with gap between buttons */}
+            <div className="flex gap-2">
+              {" "}
+              {/* Flex container with gap between buttons */}
               <button
                 type="button"
                 onClick={handleSubmit}
@@ -1990,7 +3043,6 @@ function UploadListings() {
                   </svg>
                 )}
               </button>
-
               {!newListing && (
                 <button
                   type="button"

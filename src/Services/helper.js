@@ -42,5 +42,14 @@ const compareDateTime = (a, b) => {
     }
     return 0;
 };
+const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
-module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst };
+module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst ,daysOfWeek};
