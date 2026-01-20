@@ -35,6 +35,7 @@ import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 import Delta from "quill-delta";
 import { daysOfWeek } from "../../Services/helper";
+import FlatPickerCommponent from "../../Components/FlatPickerCommponent";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -1927,126 +1928,32 @@ function UploadListings() {
                 /* Non-recurring events: Show both Start and End Date */
                 <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="relative">
-                    <label
-                      htmlFor="startDate"
-                      className="block text-sm font-medium text-gray-600"
-                    >
-                      {t("eventStartDate")} *
-                    </label>
-                    <Flatpickr
+                    <FlatPickerCommponent
                       id="startDate"
                       name="startDate"
-                      value={listingInput.startDate}
-                      options={{
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        time_24hr: true,
-                        clickOpens: true,
-                        allowInput: false,
-                        minDate: new Date(),
-                        onClose: function (selectedDates, dateStr, instance) {
-                          // Validate only after date picker closes
-                          if (dateStr) {
-                            validateInput({
-                              target: {
-                                name: "startDate",
-                                value: dateStr.replace(" ", "T"),
-                              },
-                            });
-                          }
-                        },
-                      }}
-                      onChange={(date) => {
-                        const formattedDate = format(
-                          date[0],
-                          "yyyy-MM-dd'T'HH:mm",
-                        );
-
-                        // Auto-fill end date if empty or same day
-                        const startDateTime = new Date(formattedDate);
-                        const autoEndDateTime = new Date(startDateTime);
-                        // Add 1 hour to start time as default
-                        autoEndDateTime.setHours(startDateTime.getHours() + 1);
-                        const autoEndDate = format(
-                          autoEndDateTime,
-                          "yyyy-MM-dd'T'HH:mm",
-                        );
-
-                        setListingInput((prev) => ({
-                          ...prev,
-                          startDate: formattedDate,
-                          // Auto-fill end date only if it's empty or if we want to update it
-                          endDate: !prev.endDate ? autoEndDate : prev.endDate,
-                        }));
-                        // Clear error when user is selecting a date
-                        setError((prev) => ({ ...prev, startDate: "" }));
-                      }}
-                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      validateInput={validateInput}
+                      setListingInput={setListingInput}
+                      setError={setError}
+                      error={error}
+                      listingInput={listingInput}
                       placeholder={t("eventStartDate")}
+                      t={t}
                     />
-                    <div
-                      className="mt-2 text-sm text-red-600"
-                      style={{
-                        visibility: error.startDate ? "visible" : "hidden",
-                      }}
-                    >
-                      {error.startDate}
-                    </div>
                   </div>
 
                   <div className="relative">
-                    <label
-                      htmlFor="endDate"
-                      className="block text-sm font-medium text-gray-600"
-                    >
-                      {t("eventEndDate")}
-                    </label>
-                    <Flatpickr
+                    <FlatPickerCommponent
                       id="endDate"
                       name="endDate"
-                      value={listingInput.endDate}
-                      options={{
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        time_24hr: true,
-                        clickOpens: true,
-                        allowInput: false,
-                        minDate: new Date(),
-                        onClose: function (selectedDates, dateStr, instance) {
-                          // Validate only after date picker closes
-                          if (dateStr) {
-                            validateInput({
-                              target: {
-                                name: "endDate",
-                                value: dateStr.replace(" ", "T"),
-                              },
-                            });
-                          }
-                        },
-                      }}
-                      onChange={(date) => {
-                        const formattedDate = format(
-                          date[0],
-                          "yyyy-MM-dd'T'HH:mm",
-                        );
-                        setListingInput((prev) => ({
-                          ...prev,
-                          endDate: formattedDate,
-                        }));
-                        // Clear error when user is selecting a date
-                        setError((prev) => ({ ...prev, endDate: "" }));
-                      }}
-                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      validateInput={validateInput}
+                      setListingInput={setListingInput}
+                      setError={setError}
+                      error={error}
+                      listingInput={listingInput}
                       placeholder={t("eventEndDate")}
+                      t={t}
+                      required={false}
                     />
-                    <div
-                      className="mt-2 text-sm text-red-600"
-                      style={{
-                        visibility: error.endDate ? "visible" : "hidden",
-                      }}
-                    >
-                      {error.endDate}
-                    </div>
                   </div>
                 </div>
               ) : null}
@@ -2058,7 +1965,7 @@ function UploadListings() {
                     type="checkbox"
                     id="isRecurring"
                     name="isRecurring"
-                    checked={listingInput.isRecurring}
+                    checked={listingInput?.isRecurring}
                     onChange={(e) => {
                       const isChecked = e.target.checked;
                       setListingInput((prev) => ({
@@ -2097,7 +2004,7 @@ function UploadListings() {
                 </div>
               </div>
 
-              {listingInput.isRecurring && (
+              {listingInput?.isRecurring && (
                 <div className="relative mb-4">
                   <label className="block text-sm font-medium text-gray-600">
                     {t("recurringType")} *
@@ -2105,7 +2012,7 @@ function UploadListings() {
 
                   <select
                     name="recurringType"
-                    value={listingInput.recurringType || ""}
+                    value={listingInput?.recurringType || ""}
                     onChange={(e) => {
                       const newRecurringType = e.target.value;
                       setListingInput((prev) => {
@@ -2147,7 +2054,7 @@ function UploadListings() {
                   <div
                     className="mt-2 text-sm text-red-600"
                     style={{
-                      visibility: error.recurringType ? "visible" : "hidden",
+                      visibility: error?.recurringType ? "visible" : "hidden",
                     }}
                   >
                     {error.recurringType}
@@ -2230,7 +2137,7 @@ function UploadListings() {
               )}
 
               {/* Recurring Events - Show when recurring checkbox is checked */}
-              {listingInput.isRecurring && listingInput.recurringType && (
+              {listingInput?.isRecurring && listingInput?.recurringType && (
                 <div className="items-stretch py-2 space-y-4">
                   {/* Start Date & Time and End Time in single row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2244,50 +2151,22 @@ function UploadListings() {
                           xmlns="http://www.w3.org/2000/svg"
                         ></svg>
                       </div>
-                      <label
-                        htmlFor="startDate"
-                        className="block text-sm font-medium text-gray-600"
-                      >
-                        {t("eventStartDate")} *
-                      </label>
-                      <Flatpickr
+                      <FlatPickerCommponent
                         id="startDate"
                         name="startDate"
-                        value={listingInput.startDate}
-                        options={{
-                          enableTime: true,
-                          dateFormat: "Y-m-d H:i",
-                          time_24hr: true,
-                          clickOpens: true,
-                          allowInput: false,
-                          minDate:
-                            listingInput.recurringType === "monthly"
-                              ? new Date()
-                              : undefined,
-                          onClose: function (selectedDates, dateStr, instance) {
-                            // Validate only after date picker closes
-                            if (dateStr) {
-                              validateInput({
-                                target: {
-                                  name: "startDate",
-                                  value: dateStr.replace(" ", "T"),
-                                },
-                              });
-                              // Also validate recurringEndTime if it exists
-                              if (listingInput.recurringEndTime) {
-                                setTimeout(() => {
-                                  validateInput({
-                                    target: {
-                                      name: "recurringEndTime",
-                                      value: listingInput.recurringEndTime,
-                                    },
-                                  });
-                                }, 100);
-                              }
-                            }
-                          },
-                        }}
-                        onChange={(date) => {
+                        validateInput={validateInput}
+                        setListingInput={setListingInput}
+                        setError={setError}
+                        error={error}
+                        listingInput={listingInput}
+                        placeholder={t("eventStartDate")}
+                        t={t}
+                        minDate={
+                          listingInput.recurringType === "monthly"
+                            ? new Date()
+                            : undefined
+                        }
+                        customOnChange={(date) => {
                           const formattedDate = format(
                             date[0],
                             "yyyy-MM-dd'T'HH:mm",
@@ -2348,17 +2227,28 @@ function UploadListings() {
                             recurringEndTime: "",
                           }));
                         }}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder={t("eventStartDate")}
-                      />
-                      <div
-                        className="mt-2 text-sm text-red-600"
-                        style={{
-                          visibility: error.startDate ? "visible" : "hidden",
+                        customOnClose={(selectedDates, dateStr) => {
+                          if (dateStr) {
+                            validateInput({
+                              target: {
+                                name: "startDate",
+                                value: dateStr.replace(" ", "T"),
+                              },
+                            });
+                            // Also validate recurringEndTime if it exists
+                            if (listingInput.recurringEndTime) {
+                              setTimeout(() => {
+                                validateInput({
+                                  target: {
+                                    name: "recurringEndTime",
+                                    value: listingInput.recurringEndTime,
+                                  },
+                                });
+                              }, 100);
+                            }
+                          }
                         }}
-                      >
-                        {error.startDate}
-                      </div>
+                      />
                     </div>
 
                     {/* End Date & Time (same day) */}
@@ -2372,30 +2262,18 @@ function UploadListings() {
                           xmlns="http://www.w3.org/2000/svg"
                         ></svg>
                       </div>
-                      <label
-                        htmlFor="recurringEndTime"
-                        className="block text-sm font-medium text-gray-600"
-                      >
-                        {t("eventEndTime")} *
-                      </label>
-                      <Flatpickr
+                      <FlatPickerCommponent
                         id="recurringEndTime"
                         name="recurringEndTime"
-                        value={
-                          listingInput.recurringEndTime ||
-                          (listingInput.startDate ? listingInput.startDate : "")
-                        }
-                        options={{
-                          enableTime: true,
-                          dateFormat: "Y-m-d H:i",
-                          time_24hr: true,
-                          clickOpens: true,
-                          allowInput: false,
-                          closeOnSelect: true,
-                          defaultDate: listingInput.startDate
-                            ? new Date(listingInput.startDate)
-                            : undefined,
-                          minDate: listingInput.startDate
+                        validateInput={validateInput}
+                        setListingInput={setListingInput}
+                        setError={setError}
+                        error={error}
+                        listingInput={listingInput}
+                        placeholder={t("eventEndTime")}
+                        t={t}
+                        minDate={
+                          listingInput.startDate
                             ? (() => {
                                 const startDate = new Date(
                                   listingInput.startDate,
@@ -2409,8 +2287,10 @@ function UploadListings() {
                                   0,
                                 );
                               })()
-                            : undefined,
-                          maxDate: listingInput.startDate
+                            : undefined
+                        }
+                        maxDate={
+                          listingInput.startDate
                             ? (() => {
                                 const startDate = new Date(
                                   listingInput.startDate,
@@ -2424,20 +2304,15 @@ function UploadListings() {
                                   59,
                                 );
                               })()
+                            : undefined
+                        }
+                        additionalOptions={{
+                          closeOnSelect: true,
+                          defaultDate: listingInput?.startDate
+                            ? new Date(listingInput.startDate)
                             : undefined,
-                          onClose: function (selectedDates, dateStr, instance) {
-                            // Validate only after date picker closes
-                            if (dateStr) {
-                              validateInput({
-                                target: {
-                                  name: "recurringEndTime",
-                                  value: dateStr.replace(" ", "T"),
-                                },
-                              });
-                            }
-                          },
                         }}
-                        onChange={(date) => {
+                        customOnChange={(date) => {
                           if (
                             date &&
                             date.length > 0 &&
@@ -2491,87 +2366,28 @@ function UploadListings() {
                             }));
                           }
                         }}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder={t("eventEndTime")}
                       />
-                      <div
-                        className="mt-2 text-sm text-red-600"
-                        style={{
-                          visibility: error.recurringEndTime
-                            ? "visible"
-                            : "hidden",
-                        }}
-                      >
-                        {error.recurringEndTime}
-                      </div>
                     </div>
                   </div>
 
                   {/* Repeat Until Date */}
                   <div className="relative">
-                    <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                      <svg
-                        aria-hidden="true"
-                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      ></svg>
-                    </div>
-                    <label
-                      htmlFor="repeatUntil"
-                      className="block text-sm font-medium text-gray-600"
-                    >
-                      {t("repeatUntil")} *
-                    </label>
-                    <Flatpickr
+                    <FlatPickerCommponent
                       id="repeatUntil"
                       name="repeatUntil"
-                      value={listingInput.repeatUntil || ""}
-                      options={{
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        time_24hr: true,
-                        clickOpens: true,
-                        allowInput: false,
-                        minDate: listingInput.startDate
-                          ? new Date(listingInput.startDate)
-                          : undefined,
-                        onClose: function (selectedDates, dateStr, instance) {
-                          // Validate only after date picker closes
-                          if (dateStr) {
-                            validateInput({
-                              target: {
-                                name: "repeatUntil",
-                                value: dateStr.replace(" ", "T"),
-                              },
-                            });
-                          }
-                        },
-                      }}
-                      onChange={(date) => {
-                        const formattedDate = format(
-                          date[0],
-                          "yyyy-MM-dd'T'HH:mm",
-                        );
-                        setListingInput((prev) => ({
-                          ...prev,
-                          repeatUntil: formattedDate,
-                        }));
-                        // Clear error when user is selecting a date
-                        setError((prev) => ({ ...prev, repeatUntil: "" }));
-                      }}
-                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      validateInput={validateInput}
+                      setListingInput={setListingInput}
+                      setError={setError}
+                      error={error}
+                      listingInput={listingInput}
                       placeholder={t("repeatUntil")}
+                      t={t}
+                      minDate={
+                        listingInput.startDate
+                          ? new Date(listingInput.startDate)
+                          : undefined
+                      }
                     />
-                    <div
-                      className="mt-2 text-sm text-red-600"
-                      style={{
-                        visibility: error.repeatUntil ? "visible" : "hidden",
-                      }}
-                    >
-                      {error.repeatUntil}
-                    </div>
                   </div>
                   {/* Exception Dates - Only show if both start date and repeat until are set */}
                   {listingInput?.startDate && listingInput?.repeatUntil && (
