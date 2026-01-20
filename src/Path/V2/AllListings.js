@@ -587,24 +587,24 @@ const AllListings = () => {
         ) : (
           <div>
             {/* Event Tabs - Only for Events (categoryId 3) */}
-            {(Number(categoryId) === 3 || categoryId === "3") && (
-              <div className="bg-white lg:px-10 md:px-5 px-5 py-6 mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {categoryId === 3 && (
+              <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
+                <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">
                   {eventTabOptions?.map((tab, index) => (
                     <button
                       key={tab.id}
                       onClick={() => setEventTab(tab.id)}
-                      className={`px-14 py-2.5 rounded-full font-semibold transition-all text-base md:text-lg ${
+                      className={`px-6 sm:px-10 md:px-14 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
                         eventTab === tab.id
                           ? "bg-blue-600 text-white shadow-lg"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
                       } ${
                         index === 0
-                          ? "justify-self-start"
+                          ? "md:justify-self-start"
                           : index === 1
-                          ? "justify-self-center"
-                          : "justify-self-end"
-                      } w-full md:w-auto min-w-[350px]`}
+                          ? "md:justify-self-center"
+                          : "md:justify-self-end"
+                      } w-full md:w-auto md:min-w-[300px] lg:min-w-[264px]`}
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
                       {t(tab?.label)}

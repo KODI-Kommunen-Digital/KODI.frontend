@@ -60,7 +60,6 @@ const HomePage = () => {
 
   // Event tab options array
 
-
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     setTerminalView(queryParams.get("terminalView") === "true");
@@ -567,21 +566,23 @@ const HomePage = () => {
 
           {/* Event Tabs - Only for Events (categoryId 3) */}
           {categoryId === 3 && (
-            <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
+              <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">
                 {eventTabOptions?.map((tab, index) => (
                   <button
                     key={tab.id}
                     onClick={() => setEventTab(tab.id)}
-                    className={`px-14 py-2.5 rounded-full font-semibold transition-all text-base md:text-lg ${eventTab === tab.id
-                      ? "bg-blue-600 text-white shadow-lg"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
-                      } ${index === 0
-                        ? "justify-self-start"
+                    className={`px-6 sm:px-10 md:px-14 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
+                      eventTab === tab.id
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
+                    } ${
+                      index === 0
+                        ? "md:justify-self-start"
                         : index === 1
-                          ? "justify-self-center"
-                          : "justify-self-end"
-                      } w-full md:w-auto min-w-[350px]`}
+                        ? "md:justify-self-center"
+                        : "md:justify-self-end"
+                    } w-full md:w-auto md:min-w-[300px] lg:min-w-[264px]`}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t(tab?.label)}
@@ -622,20 +623,23 @@ const HomePage = () => {
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${terminalView ? "bg-green-600" : "bg-gray-900"
-                    } group-hover:-translate-x-0 group-hover:-translate-y-0`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${
+                    terminalView ? "bg-green-600" : "bg-gray-900"
+                  } group-hover:-translate-x-0 group-hover:-translate-y-0`}
                 ></span>
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView
-                    ? "border-green-600 group-hover:bg-green-600"
-                    : "border-gray-900 group-hover:bg-gray-900"
-                    }`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${
+                    terminalView
+                      ? "border-green-600 group-hover:bg-green-600"
+                      : "border-gray-900 group-hover:bg-gray-900"
+                  }`}
                 ></span>
                 <span
-                  className={`relative ${terminalView
-                    ? "text-green-600 group-hover:text-white"
-                    : "text-gray-900 group-hover:text-white"
-                    }`}
+                  className={`relative ${
+                    terminalView
+                      ? "text-green-600 group-hover:text-white"
+                      : "text-gray-900 group-hover:text-white"
+                  }`}
                 >
                   {t("viewMore")}
                 </span>
@@ -708,7 +712,7 @@ const HomePage = () => {
                               src={
                                 city.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                  city.image
+                                    city.image
                                   : CITYIMAGE
                               }
                               onError={(e) => {
