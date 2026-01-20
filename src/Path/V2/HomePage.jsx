@@ -3,21 +3,32 @@ import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
+import {
+  getListings,
+  getListingsCount,
+  getListingsBySearch,
+} from "../../Services/listingsApi";
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
 import ListingsCard from "../../Components/ListingsCard";
 import SearchBar from "../../Components/SearchBar";
-import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
+import {
+  getCategory,
+  getListingsSubCategory,
+} from "../../Services/CategoryApi";
 import LoadingPage from "../../Components/LoadingPage";
 import {
+  eventTabOptions,
   sortByTitleAZ,
   sortByTitleZA,
   sortLatestFirst,
   sortOldestFirst,
 } from "../../Services/helper";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
+import { format } from "date-fns";
 
 import CITYIMAGE from "../../assets/City.png";
 import CITYDEFAULTIMAGE from "../../assets/CityDefault.png";
@@ -43,14 +54,24 @@ const HomePage = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+  const [eventTab, setEventTab] = useState("single"); // single, multi, recurring
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  // Event tab options array
+
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     setTerminalView(queryParams.get("terminalView") === "true");
   }, []);
 
   useEffect(() => {
-    if (!terminalView) { // Skip Popup if terminalView is true
-      const hasAcceptedPrivacyPolicy = localStorage.getItem("privacyPolicyAccepted");
+    if (!terminalView) {
+      // Skip Popup if terminalView is true
+      const hasAcceptedPrivacyPolicy = localStorage.getItem(
+        "privacyPolicyAccepted",
+      );
       if (!hasAcceptedPrivacyPolicy) {
         setShowPopup(true);
       }
@@ -59,7 +80,7 @@ const HomePage = () => {
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
       const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
       setCities(sortedCities);
     });
@@ -74,7 +95,7 @@ const HomePage = () => {
     getListingsCount().then((response) => {
       const data = response?.data?.data || [];
       const sortedData = data.sort(
-        (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
+        (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount),
       );
       setListingsCount(sortedData);
     });
@@ -82,7 +103,7 @@ const HomePage = () => {
     getCategory().then((response) => {
       const catList = {};
       response?.data?.data
-        .filter(cat => !hiddenCategories.includes(cat.id))
+        .filter((cat) => !hiddenCategories.includes(cat.id))
         .forEach((cat) => {
           catList[cat.id] = cat.name;
         });
@@ -95,7 +116,8 @@ const HomePage = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
 
-    if (!terminalView) { // Skip cookie storage if terminalView is true
+    if (!terminalView) {
+      // Skip cookie storage if terminalView is true
       const accessToken =
         window.localStorage.getItem("accessToken") ||
         window.sessionStorage.getItem("accessToken");
@@ -137,12 +159,28 @@ const HomePage = () => {
     if (selectedSubCategoryId) {
       params.subcategoryId = selectedSubCategoryId;
     }
+    // Add event-specific params
+    if (categoryId === 3) {
+      if (eventTab === "single") {
+        params.eventType = "single";
+      } else if (eventTab === "multi") {
+        params.eventType = "multi";
+      } else if (eventTab === "recurring") {
+        params.eventType = "recurring";
+      }
+      if (startDate) {
+        params.startDate = startDate;
+      }
+      if (endDate) {
+        params.endDate = endDate;
+      }
+    }
     try {
       const response = await getListings(params);
       const listings = response?.data?.data || [];
 
       const filteredListings = listings.filter(
-        listing => !hiddenCategories.includes(listing.categoryId)
+        (listing) => !hiddenCategories.includes(listing.categoryId),
       );
 
       setListings(filteredListings);
@@ -217,8 +255,23 @@ const HomePage = () => {
     }
   }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
 
+  // Trigger fetchData when event filters change
+  useEffect(() => {
+    if (categoryId === 3 && !isLoading) {
+      const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+      if (cityId) params.cityId = cityId;
+      if (categoryId) params.categoryId = categoryId;
+      setListings([]);
+      setIsLoading(true);
+      setTimeout(() => {
+        fetchData(params);
+      }, 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventTab, startDate, endDate]);
+
   const handleSubCategorySelect = (subCategoryId) => {
-    setSelectedSubCategoryId(subCategoryId);  // This will trigger the useEffect above
+    setSelectedSubCategoryId(subCategoryId); // This will trigger the useEffect above
   };
 
   const clearSearchResults = () => {
@@ -226,14 +279,14 @@ const HomePage = () => {
     setSearchQuery(""); // Clear the search query
   };
 
-  if (!terminalView) { // Scroll position disabled for Terminl View
+  if (!terminalView) {
+    // Scroll position disabled for Terminl View
     window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
 
     window.addEventListener("beforeunload", () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
     });
   }
-
 
   useEffect(() => {
     switch (selectedSortOption) {
@@ -276,18 +329,18 @@ const HomePage = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const params = { statusId: 1 };
 
-      const cityId = urlParams.get('cityId');
+      const cityId = urlParams.get("cityId");
       if (cityId && parseInt(cityId)) {
         params.cityId = parseInt(cityId);
       }
 
-      const categoryId = urlParams.get('categoryId');
+      const categoryId = urlParams.get("categoryId");
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
       const response = await getListingsBySearch({
         searchQuery,
-        ...params
+        ...params,
       });
       setListings(response.data.data);
     } catch (error) {
@@ -340,7 +393,6 @@ const HomePage = () => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0">
-
           <MostPopularCategories
             listingsCount={listingsCount}
             t={t}
@@ -355,9 +407,12 @@ const HomePage = () => {
         <LoadingPage />
       ) : (
         <>
-          <div className="grid md:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-4 gap-2 relative mt-10 justify-between">
-            <div className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold"
-              style={{ fontFamily: "Poppins, sans-serif" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12 lg:gap-2 md:gap-2 gap-2 relative mt-10">
+            {/* ✅ Left Title (Reduced Width) */}
+            <div
+              className="md:col-span-3 text-slate-800 lg:px-10 md:px-5 px-5 py-3 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold lg:pl-[5rem]"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+            >
               {categoryId ? (
                 <h2>{t(categories[categoryId])}</h2>
               ) : (
@@ -365,15 +420,114 @@ const HomePage = () => {
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row lg:gap-4 md:gap-4 gap-2 relative justify-center place-items-center lg:px-20 md:px-5 px-5 py-6">
+            {/* ✅ Right Filters (More Space) */}
+            <div className="md:col-span-9 flex flex-col md:flex-row lg:gap-2 md:gap-2 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 px-5 py-3">
+              {/* Event Tabs and Date Picker - Only for Events (categoryId 3) */}
+              {categoryId === 3 && (
+                <>
+                  {/* ✅ Start Date Flatpickr */}
+                  <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full relative">
+                    <Flatpickr
+                      value={startDate}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true, // eslint-disable-line camelcase
+                        allowInput: true,
+                      }}
+                      onChange={(date) => {
+                        if (date[0]) {
+                          const formattedDate = format(
+                            date[0],
+                            "yyyy-MM-dd'T'HH:mm",
+                          );
+                          setStartDate(formattedDate);
+                        }
+                      }}
+                      className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      placeholder={t("startDate") || "Start Date"}
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    />
+
+                    {startDate && (
+                      <button
+                        onClick={() => setStartDate("")}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        style={{ zIndex: 10 }}
+                        type="button"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* ✅ End Date Flatpickr */}
+                  <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full relative">
+                    <Flatpickr
+                      value={endDate}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true, // eslint-disable-line camelcase
+                        allowInput: true,
+                      }}
+                      onChange={(date) => {
+                        if (date[0]) {
+                          const formattedDate = format(
+                            date[0],
+                            "yyyy-MM-dd'T'HH:mm",
+                          );
+                          setEndDate(formattedDate);
+                        }
+                      }}
+                      className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+                      placeholder={t("endDate") || "End Date"}
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    />
+
+                    {endDate && (
+                      <button
+                        onClick={() => setEndDate("")}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        style={{ zIndex: 10 }}
+                        type="button"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* ✅ Sort Dropdown */}
               <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
                 <select
                   value={selectedSortOption}
                   onChange={handleSortOptionChange}
                   className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                  }}
+                  style={{ fontFamily: "Poppins, sans-serif" }}
                 >
                   <option value="">{t("sort")}</option>
                   <option value="titleAZ">{t("atoztitle")}</option>
@@ -382,6 +536,8 @@ const HomePage = () => {
                   <option value="oldest">{t("oldest")}</option>
                 </select>
               </div>
+
+              {/* ✅ Subcategory Dropdown */}
               {categoryId && subCategories.length > 0 && (
                 <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
                   <select
@@ -399,16 +555,52 @@ const HomePage = () => {
                   </select>
                 </div>
               )}
-              <SearchBar onSearch={handleSearch} searchBarClassName="w-full" searchQuery={searchQuery} />
+
+              {/* ✅ Search Bar */}
+              <SearchBar
+                onSearch={handleSearch}
+                searchBarClassName="w-full"
+                searchQuery={searchQuery}
+              />
             </div>
           </div>
+
+          {/* Event Tabs - Only for Events (categoryId 3) */}
+          {categoryId === 3 && (
+            <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {eventTabOptions?.map((tab, index) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setEventTab(tab.id)}
+                    className={`px-14 py-2.5 rounded-full font-semibold transition-all text-base md:text-lg ${eventTab === tab.id
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
+                      } ${index === 0
+                        ? "justify-self-start"
+                        : index === 1
+                          ? "justify-self-center"
+                          : "justify-self-end"
+                      } w-full md:w-auto min-w-[350px]`}
+                    style={{ fontFamily: "Poppins, sans-serif" }}
+                  >
+                    {t(tab?.label)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {listings && listings.length > 0 ? (
             <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
               <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
                 {listings &&
                   listings.map((listing, index) => (
-                    <ListingsCard listing={listing} terminalView={terminalView} key={index} />
+                    <ListingsCard
+                      listing={listing}
+                      terminalView={terminalView}
+                      key={index}
+                    />
                   ))}
               </div>
 
@@ -417,9 +609,14 @@ const HomePage = () => {
                 type="submit"
                 onClick={() => {
                   if (!terminalView) {
-                    localStorage.setItem("selectedItem", t("chooseOneCategory"));
+                    localStorage.setItem(
+                      "selectedItem",
+                      t("chooseOneCategory"),
+                    );
                   }
-                  const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
+                  const url = terminalView
+                    ? "/AllListings?terminalView=true"
+                    : "/AllListings";
                   navigateTo(url);
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
@@ -429,11 +626,15 @@ const HomePage = () => {
                     } group-hover:-translate-x-0 group-hover:-translate-y-0`}
                 ></span>
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView ? "border-green-600 group-hover:bg-green-600" : "border-gray-900 group-hover:bg-gray-900"
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView
+                    ? "border-green-600 group-hover:bg-green-600"
+                    : "border-gray-900 group-hover:bg-gray-900"
                     }`}
                 ></span>
                 <span
-                  className={`relative ${terminalView ? "text-green-600 group-hover:text-white" : "text-gray-900 group-hover:text-white"
+                  className={`relative ${terminalView
+                    ? "text-green-600 group-hover:text-white"
+                    : "text-gray-900 group-hover:text-white"
                     }`}
                 >
                   {t("viewMore")}
@@ -484,7 +685,8 @@ const HomePage = () => {
 
               <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-                  {(cities ?? []).map((city) => { // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
+                  {(cities ?? []).map((city) => {
+                    // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
                     if (city.id !== Number(cityId)) {
                       return (
                         <div
@@ -505,15 +707,25 @@ const HomePage = () => {
                               className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
                               src={
                                 city.image
-                                  ? process.env.REACT_APP_BUCKET_HOST + city.image
+                                  ? process.env.REACT_APP_BUCKET_HOST +
+                                  city.image
                                   : CITYIMAGE
                               }
                               onError={(e) => {
                                 e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
                               }}
                             />
-                            <div className="absolute inset-0 flex flex-col justify-end text-white z--1" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }}>
-                              <h1 className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4" style={{ fontFamily: "Poppins, sans-serif" }}>
+                            <div
+                              className="absolute inset-0 flex flex-col justify-end text-white z--1"
+                              style={{
+                                background:
+                                  "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+                              }}
+                            >
+                              <h1
+                                className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4"
+                                style={{ fontFamily: "Poppins, sans-serif" }}
+                              >
                                 {city.name}
                               </h1>
                             </div>
@@ -615,7 +827,9 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}>
+              <div
+                className={`mx-auto lg:px-20 md:px-5 px-5 py-6 flex justify-center lg:h-[28rem] sm:h-[35rem] ${RegionColors.lightBgColor}`}
+              >
                 <div className="flex flex-wrap items-center">
                   <div className="w-full md:w-1/2 px-4">
                     <h2
@@ -634,12 +848,18 @@ const HomePage = () => {
                     <a
                       onClick={() => goToCitizensPage()}
                       className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
-                      style={{ fontFamily: "Poppins, sans-serif" }}>
-                      <span>
-                        {t("clickHereToFind")}
-                      </span>
-                      <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                        viewBox="0 0 24 24" className="w-6 h-6 ml-2">
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      <span>{t("clickHereToFind")}</span>
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        className="w-6 h-6 ml-2"
+                      >
                         <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                       </svg>
                     </a>
@@ -648,7 +868,8 @@ const HomePage = () => {
                   <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
                     <img
                       src={
-                        process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
+                        process.env.REACT_APP_BUCKET_HOST +
+                        "admin/CitizenService2.png"
                       }
                       alt="Image 1"
                       className="w-full md:w-98 mb-2"
@@ -657,7 +878,9 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}>
+              <div
+                className={`${RegionColors.darkBgColor} lg:px-20 md:px-5 px-5 py-6 flex justify-start`}
+              >
                 <style>
                   {`
 								@media (max-width: 280px) {
@@ -679,9 +902,11 @@ const HomePage = () => {
                       className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
                       onClick={() => {
                         if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                          window.location.href = process.env.REACT_APP_APPLESTORE;
+                          window.location.href =
+                            process.env.REACT_APP_APPLESTORE;
                         } else {
-                          window.location.href = process.env.REACT_APP_APPLESTORE;
+                          window.location.href =
+                            process.env.REACT_APP_APPLESTORE;
                         }
                       }}
                     >
@@ -753,7 +978,6 @@ const HomePage = () => {
           <Footer />
         </div>
       )}
-
     </section>
   );
 };

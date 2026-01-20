@@ -51,5 +51,10 @@ const daysOfWeek = [
     "Saturday",
     "Sunday",
 ];
+const eventTabOptions = [
+    { id: "single", label: "Single Day" },
+    { id: "multi", label: "Multi Day" },
+    { id: "recurring", label: "Recurring" },
+];
 
-module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst, daysOfWeek };
+module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst, daysOfWeek, eventTabOptions };
