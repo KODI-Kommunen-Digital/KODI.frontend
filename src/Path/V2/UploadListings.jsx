@@ -304,7 +304,10 @@ function UploadListings() {
     recurringSchedules: [
       {
         recurringType: "", // "daily", "weekly", "monthly"
-        recurringDays: [], // ["Monday", "Tuesday"]
+        recurringDays: [], // ["Monday", "Tuesday"] for weekly
+        monthlyWeekday: "", // Single weekday for monthly (e.g., "Wednesday")
+        dayOrdinal: "", // For monthly: 1, 2, 3, 4, -1 (1st, 2nd, 3rd, 4th, last)
+        interval: 1, // Repeat interval: 1 (every), 2 (every 2nd), 3 (every 3rd), 4 (every 4th)
         startDate: "",
         endDate: "", // For compatibility - same as recurringEndTime
         recurringEndTime: "", // Full date-time string for Flatpickr
@@ -327,6 +330,8 @@ function UploadListings() {
       {
         recurringType: "",
         recurringDays: "",
+        monthlyWeekday: "",
+        dayOrdinal: "",
         startDate: "",
         repeatUntil: "",
         recurringEndTime: "",
@@ -426,7 +431,7 @@ function UploadListings() {
 
         const recurringData = {
           freq: freq,
-          interval: 1, // Default interval is 1 as per requirement
+          interval: schedule.interval || 1, // Use selected interval, default to 1
           start: start,
           end: end,
           repeatUntil: repeatUntil,
@@ -442,6 +447,19 @@ function UploadListings() {
             // Capitalize first letter to match format: Monday, Tuesday, etc.
             return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
           });
+        }
+
+        // Add weekday and dayOrdinal for monthly recurrence
+        if (
+          schedule.recurringType === "monthly" &&
+          schedule.monthlyWeekday &&
+          schedule.dayOrdinal
+        ) {
+          recurringData.weekdays = [
+            schedule.monthlyWeekday.charAt(0).toUpperCase() +
+            schedule.monthlyWeekday.slice(1).toLowerCase(),
+          ];
+          recurringData.dayOrdinal = parseInt(schedule.dayOrdinal);
         }
 
         // Add exception dates if any - Format: [{ "date": "YYYY-MM-DD" }]
@@ -541,6 +559,13 @@ function UploadListings() {
         // Format recurring event data if applicable
         const recurringEventData = formatRecurringEventData();
 
+        // Helper function to convert local datetime to UTC format for API
+        const convertLocalToUTC = (localDateStr) => {
+          if (!localDateStr) return null;
+          const date = new Date(localDateStr);
+          return date.toISOString();
+        };
+
         // Exclude recurringSchedules from submission (we send recurrenceRules instead)
         const { recurringSchedules, ...listingDataToSubmit } = listingInput;
 
@@ -549,7 +574,11 @@ function UploadListings() {
           cityIds: cityIdsToSubmit,
           ...(listingInput?.isRecurrence
             ? { startDate: undefined, endDate: undefined }
-            : {}),
+            : {
+              // Convert local dates back to UTC for non-recurring events
+              startDate: convertLocalToUTC(listingInput.startDate),
+              endDate: convertLocalToUTC(listingInput.endDate),
+            }),
         };
 
         // Add recurring event data if isRecurrence is checked
@@ -760,12 +789,10 @@ function UploadListings() {
 
       try {
         // Fetch all required data
-        const [citiesResponse, categoriesResponse, subcategoriesResponse] =
-          await Promise.all([
-            getCities(),
-            getCategory(),
-            getListingsSubCategory(),
-          ]);
+        const [citiesResponse, categoriesResponse] = await Promise.all([
+          getCities(),
+          getCategory(),
+        ]);
 
         const citiesData = citiesResponse?.data?.data || [];
         setCities(citiesData);
@@ -776,13 +803,6 @@ function UploadListings() {
         );
         setCategories(filteredCategories);
 
-        const subcategories = subcategoriesResponse?.data?.data || [];
-        const subcatList = {};
-        subcategories.forEach((subCat) => {
-          subcatList[subCat.id] = subCat.name;
-        });
-        setSubCategories(subcatList);
-
         if (listingId) {
           setListingId(parseInt(listingId));
           setNewListing(false);
@@ -791,6 +811,16 @@ function UploadListings() {
           //   ? await getListingsById(null, listingId)
           //   : await getListingsById(cityIds, listingId);
           const listingsResponse = await getListingsById(null, listingId);
+          const subcategoriesResponse = await getListingsSubCategory(
+            listingsResponse?.data?.data?.categoryId,
+          );
+
+          const subcategories = subcategoriesResponse?.data?.data || [];
+          const subcatList = {};
+          subcategories.forEach((subCat) => {
+            subcatList[subCat.id] = subCat.name;
+          });
+          setSubCategories(subcatList);
 
           const listingData = listingsResponse.data.data;
           const allCities = listingData.allCities || [];
@@ -804,6 +834,18 @@ function UploadListings() {
           setSelectedSingleCity(singleCityObject);
           setSelectedCities(multiCityObjects);
 
+          // Helper function to format UTC date to local timezone for input field
+          const formatUTCToLocal = (utcDateStr) => {
+            if (!utcDateStr) return "";
+            const date = new Date(utcDateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+          };
+
           // Transform recurrenceRules from API format to component format
           const transformRecurrenceRules = (recurrenceRules) => {
             if (!recurrenceRules || recurrenceRules.length === 0) {
@@ -811,6 +853,9 @@ function UploadListings() {
                 {
                   recurringType: "",
                   recurringDays: [],
+                  monthlyWeekday: "",
+                  dayOrdinal: "",
+                  interval: 1,
                   startDate: "",
                   endDate: "",
                   recurringEndTime: "",
@@ -831,11 +876,25 @@ function UploadListings() {
               // Convert freq from "Daily"/"Weekly"/"Monthly" to lowercase
               const recurringType = rule.freq ? rule.freq.toLowerCase() : "";
 
-              // Keep weekdays as-is (capitalized like "Monday")
-              // The daysOfWeek array uses capitalized names
-              const recurringDays = Array.isArray(rule.weekdays)
-                ? rule.weekdays
-                : [];
+              // Handle weekdays based on recurring type
+              // For weekly: array of weekdays
+              // For monthly: single weekday with dayOrdinal
+              const recurringDays =
+                recurringType === "weekly" && Array.isArray(rule.weekdays)
+                  ? rule.weekdays
+                  : [];
+
+              const monthlyWeekday =
+                recurringType === "monthly" &&
+                  Array.isArray(rule.weekdays) &&
+                  rule.weekdays.length > 0
+                  ? rule.weekdays[0]
+                  : "";
+
+              const dayOrdinal = rule.dayOrdinal || "";
+
+              // Get interval from API, default to 1 if not present
+              const interval = rule.interval || 1;
 
               // Convert exceptions from [{id: 1, date: "2026-01-30"}] to ["2026-01-30"]
               const exceptionDates = Array.isArray(rule.exceptions)
@@ -845,6 +904,9 @@ function UploadListings() {
               return {
                 recurringType,
                 recurringDays,
+                monthlyWeekday,
+                dayOrdinal,
+                interval,
                 startDate: formatDateTimeForInput(rule.start),
                 endDate: formatDateTimeForInput(rule.end), // For compatibility
                 recurringEndTime: formatDateTimeForInput(rule.end),
@@ -866,10 +928,15 @@ function UploadListings() {
             categoryId: listingData.categoryId,
             subcategoryId: listingData.subcategoryId,
             description: listingData.description,
-            startDate: listingData.startDate || "",
-            endDate: listingData.endDate || "",
+            startDate: formatUTCToLocal(listingData.startDate) || "",
+            endDate: formatUTCToLocal(listingData.endDate) || "",
             expiryDate: listingData.expiryDate || "",
             isRecurrence: hasRecurrenceRules,
+            address: listingData.address || "",
+            place: listingData.place || "",
+            phone: listingData.phone || "",
+            website: listingData.website || "",
+            email: listingData.email || "",
             recurringSchedules: transformRecurrenceRules(
               listingData.recurrenceRules,
             ),
@@ -880,9 +947,11 @@ function UploadListings() {
 
           // Initialize error state for recurring schedules
           if (hasRecurrenceRules) {
-            const initialErrors = listingData.recurrenceRules.map(() => ({
+            const initialErrors = listingData?.recurrenceRules?.map(() => ({
               recurringType: "",
               recurringDays: "",
+              monthlyWeekday: "",
+              dayOrdinal: "",
               startDate: "",
               repeatUntil: "",
               recurringEndTime: "",
@@ -940,7 +1009,7 @@ function UploadListings() {
             const servicesData = servicesResponse.data.data.map((item) => {
               const metadata = JSON.parse(item.metadata);
 
-              daysOfWeek.forEach((day) => {
+              daysOfWeek?.forEach((day) => {
                 if (!metadata.openingDates[day]) {
                   metadata.openingDates[day] = [
                     { startTime: "00:00", endTime: "00:00" },
@@ -1258,6 +1327,16 @@ function UploadListings() {
       return false;
     }
 
+    // For monthly, check if weekday and ordinal are selected
+    if (schedule.recurringType === "monthly") {
+      if (!schedule.monthlyWeekday) {
+        return false;
+      }
+      if (!schedule.dayOrdinal) {
+        return false;
+      }
+    }
+
     // Check if startDate is filled
     if (!schedule.startDate) {
       return false;
@@ -1453,6 +1532,7 @@ function UploadListings() {
 
   const handleSubcategoryChange = (event) => {
     let subcategoryId = event.target.value;
+    console.log("Selected subcategoryId:", subcategoryId);
     setSubcategoryId(subcategoryId);
     setListingInput((prevInput) => ({ ...prevInput, subcategoryId }));
     validateInput(event);
@@ -1587,11 +1667,25 @@ function UploadListings() {
       const hasCategory = categoryId && categoryId !== 0;
       const hasCity = selectedSingleCity || selectedCities.length > 0;
 
+      // Check if subcategory is required and filled
+      const selectedCategory = categories.find(
+        (cat) => cat.id === parseInt(categoryId),
+      );
+      const hasSubcategoryIfRequired =
+        !selectedCategory ||
+        selectedCategory.noOfSubcategories === 0 ||
+        (selectedCategory.noOfSubcategories > 0 &&
+          listingInput.subcategoryId &&
+          listingInput.subcategoryId !== 0 &&
+          listingInput.subcategoryId !== "0" &&
+          listingInput.subcategoryId !== "");
+
       // Check for basic errors - only check if error has actual text (not empty string)
       const hasBasicErrors =
         (error.title && error.title !== "") ||
         (error.description && error.description !== "") ||
-        (error.categoryId && error.categoryId !== "");
+        (error.categoryId && error.categoryId !== "") ||
+        (error.subcategoryId && error.subcategoryId !== "");
 
       // Category-specific validation
       let isCategoryValid = true;
@@ -1623,12 +1717,15 @@ function UploadListings() {
               schedule.recurringEndTime && schedule.recurringEndTime !== "";
             const hasRepeatUntil =
               schedule.repeatUntil && schedule.repeatUntil !== "";
+            const hasValidInterval =
+              schedule.interval && schedule.interval >= 1;
 
             if (
               !hasRecurringType ||
               !hasStartDate ||
               !hasRecurringEndTime ||
-              !hasRepeatUntil
+              !hasRepeatUntil ||
+              !hasValidInterval
             ) {
               isCategoryValid = false;
               break;
@@ -1643,25 +1740,43 @@ function UploadListings() {
                 break;
               }
             }
+
+            // For monthly recurring, need monthlyWeekday and dayOrdinal
+            if (schedule.recurringType === "monthly") {
+              const hasMonthlyWeekday =
+                schedule.monthlyWeekday && schedule.monthlyWeekday !== "";
+              const hasDayOrdinal =
+                schedule.dayOrdinal && schedule.dayOrdinal !== "";
+              if (!hasMonthlyWeekday || !hasDayOrdinal) {
+                isCategoryValid = false;
+                break;
+              }
+            }
           }
         }
 
         // Check for event-specific errors
         // Only check startDate/endDate errors for non-recurring events
-        if (!listingInput.isRecurrence && (error.startDate || error.endDate)) {
+        if (
+          !listingInput?.isRecurrence &&
+          (error?.startDate || error?.endDate)
+        ) {
           isCategoryValid = false;
         }
 
         // Check for recurring schedule errors
-        if (listingInput.isRecurrence && error.recurringSchedules) {
-          for (let i = 0; i < error.recurringSchedules.length; i++) {
-            const scheduleError = error.recurringSchedules[i];
+        if (listingInput?.isRecurrence && error?.recurringSchedules) {
+          for (let i = 0; i < error?.recurringSchedules.length; i++) {
+            const scheduleError = error?.recurringSchedules[i];
             if (
               scheduleError.recurringType ||
               scheduleError.startDate ||
               scheduleError.recurringEndTime ||
               scheduleError.repeatUntil ||
-              scheduleError.recurringDays
+              scheduleError.recurringDays ||
+              scheduleError.monthlyWeekday ||
+              scheduleError.dayOrdinal ||
+              scheduleError.interval
             ) {
               isCategoryValid = false;
               break;
@@ -1675,6 +1790,7 @@ function UploadListings() {
         hasDescription,
         hasCategory,
         hasCity,
+        hasSubcategoryIfRequired,
         !hasBasicErrors,
         isCategoryValid,
       ];
@@ -1722,9 +1838,9 @@ function UploadListings() {
             <div className="flex justify-between text-sm mt-1">
               <span
                 className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
-                    CHARACTER_LIMIT_TITLE
-                    ? "mt-2 text-sm text-red-600"
-                    : "mt-2 text-sm text-gray-500"
+                  CHARACTER_LIMIT_TITLE
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
                   }`}
               >
                 {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/
@@ -1777,8 +1893,8 @@ function UploadListings() {
                     key={city.id}
                     onClick={() => handleSelectSingleCity(city)}
                     className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id
-                        ? "text-teal-700"
-                        : "text-gray-700"
+                      ? "text-teal-700"
+                      : "text-gray-700"
                       }`}
                   >
                     {city.name}
@@ -1842,8 +1958,8 @@ function UploadListings() {
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
                     className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
-                        ? "text-teal-700"
-                        : "text-gray-700"
+                      ? "text-teal-700"
+                      : "text-gray-700"
                       }`}
                   >
                     {city.name}
@@ -1911,8 +2027,7 @@ function UploadListings() {
               initialTimeSlot={initialTimeSlot}
             />
           )}
-
-          {Object.keys(subCategories).length > 0 && (
+          {Object.keys(subCategories)?.length > 0 && (
             <div className="relative mb-0">
               <label
                 htmlFor="subcategoryId"
@@ -2003,6 +2118,7 @@ function UploadListings() {
                         className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                         placeholder={t("expiryDate")}
                         onBlur={validateInput}
+                        defaultValue={getDefaultEndDate()}
                       />
                       <div
                         className="mt-2 text-sm text-red-600"
@@ -2264,9 +2380,9 @@ function UploadListings() {
             <div className="flex justify-between text-sm mt-1">
               <span
                 className={`${description.replace(/(<([^>]+)>)/gi, "").length >
-                    CHARACTER_LIMIT_DESCRIPTION
-                    ? "mt-2 text-sm text-red-600"
-                    : "mt-2 text-sm text-gray-500"
+                  CHARACTER_LIMIT_DESCRIPTION
+                  ? "mt-2 text-sm text-red-600"
+                  : "mt-2 text-sm text-gray-500"
                   }`}
               >
                 {description.replace(/(<([^>]+)>)/gi, "").length}/

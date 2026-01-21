@@ -65,26 +65,11 @@ const FlatPickerCommponent = ({
 
     const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
 
-    // Auto-fill end date if this is startDate
-    if (name === "startDate") {
-      const startDateTime = new Date(formattedDate);
-      const autoEndDateTime = new Date(startDateTime);
-      // Add 1 hour to start time as default
-      autoEndDateTime.setHours(startDateTime.getHours() + 1);
-      const autoEndDate = format(autoEndDateTime, "yyyy-MM-dd'T'HH:mm");
-
-      setListingInput((prev) => ({
-        ...prev,
-        [name]: formattedDate,
-        // Auto-fill end date only if it's empty
-        endDate: !prev.endDate ? autoEndDate : prev.endDate,
-      }));
-    } else {
-      setListingInput((prev) => ({
-        ...prev,
-        [name]: formattedDate,
-      }));
-    }
+    // Set the selected date without auto-filling other fields
+    setListingInput((prev) => ({
+      ...prev,
+      [name]: formattedDate,
+    }));
 
     // Clear error when user is selecting a date
     setError((prev) => ({ ...prev, [name]: "" }));
@@ -168,7 +153,7 @@ FlatPickerCommponent.propTypes = {
 FlatPickerCommponent.defaultProps = {
   t: null,
   required: true,
-  minDate: new Date(),
+  minDate: null,
   maxDate: null,
   enableTime: true,
   dateFormat: "Y-m-d H:i",

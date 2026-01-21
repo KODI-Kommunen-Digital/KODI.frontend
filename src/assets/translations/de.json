@@ -1094,5 +1094,18 @@
     "Thursday": "Donnerstag",
     "Friday": "Freitag",
     "Saturday": "Samstag",
-    "Sunday": "Sonntag"
+    "Sunday": "Sonntag",
+    "recurringSchedule": "Wiederkehrender Zeitplan",
+    "addAnotherRecurringSchedule": "Wiederkehrenden Zeitplan hinzufügen",
+    "pleaseCompleteAllMandatoryFieldsBeforeAddingNewSchedule": "Bitte füllen Sie alle Pflichtfelder aus, bevor Sie einen neuen Zeitplan hinzufügen.",
+    "selectOrdinal": "Ordinal auswählen",
+    "chooseOrdinal": "Ordinal wählen",
+    "first": "Erste",
+    "second": "Zweite",
+    "third": "Dritte",
+    "fourth": "Vierte",
+    "last": "Letzte",
+    "pleaseEnterValidInterval": "Bitte geben Sie ein gültiges Intervall größer als 0 ein",
+    "repeatUntilMustBeGreaterThanStartDate": "Das Datum „Wiederholen bis“ muss nach dem Startdatum liegen",
+    "interval": "Intervall"
 }

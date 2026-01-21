@@ -1082,5 +1082,18 @@
     "Thursday": "Thursday",
     "Friday": "Friday",
     "Saturday": "Saturday",
-    "Sunday": "Sunday"
+    "Sunday": "Sunday",
+    "recurringSchedule": "Recurring Schedule",
+    "addAnotherRecurringSchedule": "Add Recurring Schedule",
+    "pleaseCompleteAllMandatoryFieldsBeforeAddingNewSchedule": "Please complete all mandatory fields before adding a new schedule",
+    "selectOrdinal": "Select Ordinal",
+    "chooseOrdinal": "Choose Ordinal",
+    "first": "First",
+    "second": "Second",
+    "third": "Third",
+    "fourth": "Fourth",
+    "last": "Last",
+    "pleaseEnterValidInterval": "Please enter a valid interval greater than 0",
+    "repeatUntilMustBeGreaterThanStartDate": "Repeat until date must be greater than start date",
+    "interval": "Interval"
 }
