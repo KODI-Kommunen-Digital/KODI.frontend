@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
@@ -24,7 +24,7 @@ const FlatPickerCommponent = ({
   validateInput,
   placeholder,
   required = true,
-  minDate = new Date(),
+  minDate,
   maxDate,
   enableTime = true,
   dateFormat = "Y-m-d H:i",
@@ -34,8 +34,25 @@ const FlatPickerCommponent = ({
 }) => {
   const value = listingInput[name];
   const errorMessage = error[name];
+  const flatpickrRef = useRef(null);
 
+  // Use null for minDate/maxDate if undefined to avoid restrictions when editing
+  const effectiveMinDate = minDate === undefined ? null : minDate;
+  const effectiveMaxDate = maxDate === undefined ? null : maxDate;
 
+  // Update Flatpickr when value changes (e.g., from API)
+  useEffect(() => {
+    if (flatpickrRef.current && flatpickrRef.current.flatpickr) {
+      const fpInstance = flatpickrRef.current.flatpickr;
+      if (value) {
+        // Set the date in Flatpickr instance
+        fpInstance.setDate(value, false); // false = don't trigger onChange
+      } else {
+        // Clear the date if value is empty
+        fpInstance.clear();
+      }
+    }
+  }, [value, name]);
 
   const handleChange = (date, dateStr, instance) => {
     // If custom onChange is provided, use it instead
@@ -97,6 +114,7 @@ const FlatPickerCommponent = ({
         {placeholder} {required && "*"}
       </label>
       <Flatpickr
+        ref={flatpickrRef}
         id={id}
         name={name}
         value={value}
@@ -106,8 +124,8 @@ const FlatPickerCommponent = ({
           time_24hr: true, // eslint-disable-line camelcase
           clickOpens: true,
           allowInput: false,
-          minDate,
-          ...(maxDate && { maxDate }),
+          ...(effectiveMinDate && { minDate: effectiveMinDate }),
+          ...(effectiveMaxDate && { maxDate: effectiveMaxDate }),
           onClose: handleClose,
           ...additionalOptions,
         }}

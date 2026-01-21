@@ -36,6 +36,7 @@ import { format } from "date-fns";
 import Delta from "quill-delta";
 import { daysOfWeek } from "../../Services/helper";
 import FlatPickerCommponent from "../../Components/FlatPickerCommponent";
+import RecurringSchedule from "../../Components/RecurringSchedule";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -299,12 +300,18 @@ function UploadListings() {
     removePdf: false,
     hasImage: false,
     hasAttachment: false,
-    isRecurring: false, // Checkbox for recurring events
-    recurringType: "", // "daily", "weekly", "monthly"
-    recurringDays: [], // ["Monday", "Tuesday"]
-    repeatUntil: "",
-    recurringEndTime: "", // Full date-time string for Flatpickr
-    exceptionDates: [], // Array of exception dates for recurring events
+    isRecurrence: false, // Checkbox for recurring events
+    recurringSchedules: [
+      {
+        recurringType: "", // "daily", "weekly", "monthly"
+        recurringDays: [], // ["Monday", "Tuesday"]
+        startDate: "",
+        endDate: "", // For compatibility - same as recurringEndTime
+        recurringEndTime: "", // Full date-time string for Flatpickr
+        repeatUntil: "",
+        exceptionDates: [], // Array of exception dates for recurring events
+      },
+    ],
   });
 
   const [error, setError] = useState({
@@ -316,10 +323,15 @@ function UploadListings() {
     cityAlreadySelected: "",
     startDate: "",
     endDate: "",
-    recurringType: "",
-    recurringDays: "",
-    repeatUntil: "",
-    recurringEndTime: "",
+    recurringSchedules: [
+      {
+        recurringType: "",
+        recurringDays: "",
+        startDate: "",
+        repeatUntil: "",
+        recurringEndTime: "",
+      },
+    ],
   });
 
   const initialTimeSlot = { startTime: "00:00", endTime: "00:00" };
@@ -369,15 +381,13 @@ function UploadListings() {
 
   // Format recurring event data for API submission
   const formatRecurringEventData = () => {
-    if (!listingInput.isRecurring || !listingInput.recurringType) {
+    if (
+      !listingInput.isRecurrence ||
+      !listingInput.recurringSchedules ||
+      listingInput.recurringSchedules.length === 0
+    ) {
       return null;
     }
-
-    const startDateTime = new Date(listingInput.startDate);
-    // recurringEndTime is now a full date-time string, not just time
-    const endDateTime = listingInput.recurringEndTime
-      ? new Date(listingInput.recurringEndTime)
-      : new Date(startDateTime);
 
     // Format dates to "YYYY-MM-DD HH:mm:ss"
     const formatToDateTime = (date) => {
@@ -390,49 +400,59 @@ function UploadListings() {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
-    const start = formatToDateTime(startDateTime);
-    const end = formatToDateTime(endDateTime);
-    const repeatUntil = listingInput.repeatUntil
-      ? formatToDateTime(new Date(listingInput.repeatUntil))
-      : null;
+    // Map each schedule to the required format
+    return listingInput.recurringSchedules
+      .filter((schedule) => schedule.recurringType) // Only include schedules with a type selected
+      .map((schedule) => {
+        const startDateTime = new Date(schedule.startDate);
+        const endDateTime = schedule.recurringEndTime
+          ? new Date(schedule.recurringEndTime)
+          : new Date(startDateTime);
 
-    let freq = "";
-    if (listingInput.recurringType === "daily") {
-      freq = "Daily";
-    } else if (listingInput.recurringType === "weekly") {
-      freq = "Weekly";
-    } else if (listingInput.recurringType === "monthly") {
-      freq = "Monthly";
-    }
+        const start = formatToDateTime(startDateTime);
+        const end = formatToDateTime(endDateTime);
+        const repeatUntil = schedule.repeatUntil
+          ? formatToDateTime(new Date(schedule.repeatUntil))
+          : null;
 
-    const recurringData = {
-      freq: freq,
-      interval: 1, // Default interval is 1 as per requirement
-      start: start,
-      end: end,
-      repeatUntil: repeatUntil,
-    };
+        let freq = "";
+        if (schedule.recurringType === "daily") {
+          freq = "Daily";
+        } else if (schedule.recurringType === "weekly") {
+          freq = "Weekly";
+        } else if (schedule.recurringType === "monthly") {
+          freq = "Monthly";
+        }
 
-    // Add weekdays for weekly recurrence
-    if (
-      listingInput.recurringType === "weekly" &&
-      listingInput.recurringDays &&
-      listingInput.recurringDays.length > 0
-    ) {
-      recurringData.weekdays = listingInput.recurringDays.map((day) => {
-        // Capitalize first letter to match format: Monday, Tuesday, etc.
-        return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+        const recurringData = {
+          freq: freq,
+          interval: 1, // Default interval is 1 as per requirement
+          start: start,
+          end: end,
+          repeatUntil: repeatUntil,
+        };
+
+        // Add weekdays for weekly recurrence
+        if (
+          schedule.recurringType === "weekly" &&
+          schedule.recurringDays &&
+          schedule.recurringDays.length > 0
+        ) {
+          recurringData.weekdays = schedule.recurringDays.map((day) => {
+            // Capitalize first letter to match format: Monday, Tuesday, etc.
+            return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+          });
+        }
+
+        // Add exception dates if any - Format: [{ "date": "YYYY-MM-DD" }]
+        if (schedule.exceptionDates && schedule.exceptionDates.length > 0) {
+          recurringData.exceptions = schedule.exceptionDates.map((date) => ({
+            date: date, // Already in YYYY-MM-DD format
+          }));
+        }
+
+        return recurringData;
       });
-    }
-
-    // Add exception dates if any - Format: [{ "date": "YYYY-MM-DD" }]
-    if (listingInput.exceptionDates && listingInput.exceptionDates.length > 0) {
-      recurringData.exceptions = listingInput.exceptionDates.map((date) => ({
-        date: date, // Already in YYYY-MM-DD format
-      }));
-    }
-
-    return [recurringData];
   };
 
   const handleSubmit = async (event) => {
@@ -521,19 +541,25 @@ function UploadListings() {
         // Format recurring event data if applicable
         const recurringEventData = formatRecurringEventData();
 
+        // Exclude recurringSchedules from submission (we send recurrenceRules instead)
+        const { recurringSchedules, ...listingDataToSubmit } = listingInput;
+
         const dataToSubmit = {
-          ...listingInput,
+          ...listingDataToSubmit,
           cityIds: cityIdsToSubmit,
-          ...(listingInput?.isRecurring
+          ...(listingInput?.isRecurrence
             ? { startDate: undefined, endDate: undefined }
             : {}),
         };
 
-        // Add recurring event data if isRecurring is checked
-        if (recurringEventData && listingInput.isRecurring) {
+        // Add recurring event data if isRecurrence is checked
+        if (recurringEventData && listingInput.isRecurrence) {
           dataToSubmit.recurrenceRules = recurringEventData;
           // For recurring events, we might not need endDate in the same format
           // Keep endDate for backward compatibility but recurrenceRules takes precedence
+        } else {
+          // When isRecurrence is unchecked, explicitly send empty array to clear existing rules
+          dataToSubmit.recurrenceRules = [];
         }
 
         const response = newListing
@@ -675,8 +701,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-          ? setSuccessMessage(t("listingCreated"))
-          : setSuccessMessage(t("listingUpdated"));
+            ? setSuccessMessage(t("listingCreated"))
+            : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -778,6 +804,61 @@ function UploadListings() {
           setSelectedSingleCity(singleCityObject);
           setSelectedCities(multiCityObjects);
 
+          // Transform recurrenceRules from API format to component format
+          const transformRecurrenceRules = (recurrenceRules) => {
+            if (!recurrenceRules || recurrenceRules.length === 0) {
+              return [
+                {
+                  recurringType: "",
+                  recurringDays: [],
+                  startDate: "",
+                  endDate: "",
+                  recurringEndTime: "",
+                  repeatUntil: "",
+                  exceptionDates: [],
+                },
+              ];
+            }
+
+            return recurrenceRules.map((rule) => {
+              // Convert date format from "YYYY-MM-DD HH:mm:ss" to "YYYY-MM-DDTHH:mm"
+              const formatDateTimeForInput = (dateStr) => {
+                if (!dateStr) return "";
+                // Replace space with T and remove seconds
+                return dateStr.replace(" ", "T").substring(0, 16);
+              };
+
+              // Convert freq from "Daily"/"Weekly"/"Monthly" to lowercase
+              const recurringType = rule.freq ? rule.freq.toLowerCase() : "";
+
+              // Keep weekdays as-is (capitalized like "Monday")
+              // The daysOfWeek array uses capitalized names
+              const recurringDays = Array.isArray(rule.weekdays)
+                ? rule.weekdays
+                : [];
+
+              // Convert exceptions from [{id: 1, date: "2026-01-30"}] to ["2026-01-30"]
+              const exceptionDates = Array.isArray(rule.exceptions)
+                ? rule.exceptions.map((ex) => ex.date)
+                : [];
+
+              return {
+                recurringType,
+                recurringDays,
+                startDate: formatDateTimeForInput(rule.start),
+                endDate: formatDateTimeForInput(rule.end), // For compatibility
+                recurringEndTime: formatDateTimeForInput(rule.end),
+                repeatUntil: formatDateTimeForInput(rule.repeatUntil),
+                exceptionDates,
+              };
+            });
+          };
+
+          const hasRecurrenceRules =
+            listingData.recurrenceRules &&
+            Array.isArray(listingData.recurrenceRules) &&
+            listingData.recurrenceRules.length > 0;
+
           setListingInput({
             ...listingInput,
             cityIds: allCities.length > 0 ? allCities : [listingData.cityId],
@@ -788,10 +869,29 @@ function UploadListings() {
             startDate: listingData.startDate || "",
             endDate: listingData.endDate || "",
             expiryDate: listingData.expiryDate || "",
+            isRecurrence: hasRecurrenceRules,
+            recurringSchedules: transformRecurrenceRules(
+              listingData.recurrenceRules,
+            ),
           });
           setDescription(listingData.description);
           setCategoryId(listingData.categoryId);
           setSubcategoryId(listingData.subcategoryId);
+
+          // Initialize error state for recurring schedules
+          if (hasRecurrenceRules) {
+            const initialErrors = listingData.recurrenceRules.map(() => ({
+              recurringType: "",
+              recurringDays: "",
+              startDate: "",
+              repeatUntil: "",
+              recurringEndTime: "",
+            }));
+            setError((prev) => ({
+              ...prev,
+              recurringSchedules: initialErrors,
+            }));
+          }
 
           if (listingData.categoryId === 1 && !listingData.expiryDate) {
             setListingInput((prevState) => ({
@@ -1058,7 +1158,12 @@ function UploadListings() {
         }
 
       case "startDate":
-        if (!value && parseInt(listingInput.categoryId) === 3) {
+        // Only require startDate for non-recurring events in category 3
+        if (
+          !value &&
+          parseInt(listingInput.categoryId) === 3 &&
+          !listingInput.isRecurrence
+        ) {
           return t("pleaseEnterStartDate");
         } else if (value) {
           return "";
@@ -1066,79 +1171,23 @@ function UploadListings() {
         return "";
 
       case "endDate":
-        // For non-recurring events, just validate that end >= start
-        if (
-          !listingInput.isRecurring &&
-          listingInput.startDate &&
-          value &&
-          new Date(listingInput.startDate) > new Date(value)
-        ) {
-          return t("endDateMustBeGreaterThanOrEqualToStartDate");
-        }
-        return "";
-
-      case "recurringType":
-        if (!value && listingInput.isRecurring) {
-          return t("pleaseSelectRecurringType");
-        }
-        return "";
-
-      case "repeatUntil":
-        if (!value && listingInput.isRecurring) {
-          return t("pleaseEnterRepeatUntilDate");
-        }
-        if (value && listingInput.startDate) {
-          const startDate = new Date(listingInput.startDate);
-          const repeatUntilDate = new Date(value);
-          if (repeatUntilDate < startDate) {
-            return t("repeatUntilMustBeGreaterThanOrEqualToStartDate");
-          }
-        }
-        return "";
-
-      case "recurringEndTime":
-        if (!value && listingInput.isRecurring) {
-          return t("pleaseEnterEndTime");
-        }
-        if (value && listingInput.startDate) {
+        // For non-recurring events, validate that end > start
+        if (!listingInput.isRecurrence && listingInput.startDate && value) {
           const startDateTime = new Date(listingInput.startDate);
           const endDateTime = new Date(value);
 
-          // Check if same day
-          const startDateOnly = new Date(
-            startDateTime.getFullYear(),
-            startDateTime.getMonth(),
-            startDateTime.getDate(),
-          );
-          const endDateOnly = new Date(
-            endDateTime.getFullYear(),
-            endDateTime.getMonth(),
-            endDateTime.getDate(),
-          );
-
-          if (startDateOnly.getTime() !== endDateOnly.getTime()) {
-            return t("startAndEndDateMustBeSameDay");
-          }
-
-          // Check if end time is greater than start time
           if (endDateTime <= startDateTime) {
             return t("endTimeMustBeGreaterThanStartTime");
           }
         }
         return "";
 
+      case "recurringType":
+      case "repeatUntil":
+      case "recurringEndTime":
       case "recurringDays":
-        if (
-          listingInput.isRecurring &&
-          listingInput.recurringType === "weekly"
-        ) {
-          if (
-            !listingInput.recurringDays ||
-            listingInput.recurringDays.length === 0
-          ) {
-            return t("pleaseSelectAtLeastOneWeekday");
-          }
-        }
+        // These fields are now handled per-schedule in recurringSchedules array
+        // Validation is done directly in the UI for each schedule
         return "";
 
       case "expiryDate":
@@ -1187,9 +1236,72 @@ function UploadListings() {
     }
   };
 
+  // Check if a recurring schedule has all mandatory fields filled
+  const isRecurringScheduleComplete = (schedule, scheduleIndex) => {
+    // Safety check: ensure schedule exists
+    if (!schedule) {
+      return false;
+    }
+
+    const errors = error?.recurringSchedules?.[scheduleIndex] || {};
+
+    // Check if recurringType is selected
+    if (!schedule.recurringType) {
+      return false;
+    }
+
+    // For weekly, check if at least one day is selected
+    if (
+      schedule.recurringType === "weekly" &&
+      (!schedule.recurringDays || schedule.recurringDays.length === 0)
+    ) {
+      return false;
+    }
+
+    // Check if startDate is filled
+    if (!schedule.startDate) {
+      return false;
+    }
+
+    // Check if recurringEndTime is filled
+    if (!schedule.recurringEndTime) {
+      return false;
+    }
+
+    // Check if repeatUntil is filled
+    if (!schedule.repeatUntil) {
+      return false;
+    }
+
+    // Check if there are any validation errors for this schedule
+    if (
+      errors.recurringType ||
+      errors.recurringDays ||
+      errors.startDate ||
+      errors.recurringEndTime ||
+      errors.repeatUntil
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   const validateInput = (e) => {
     if (e && e.target) {
       const { name, value } = e.target;
+
+      // Skip validation for old recurring fields that are now handled per-schedule
+      const oldRecurringFields = [
+        "recurringType",
+        "recurringEndTime",
+        "repeatUntil",
+        "recurringDays",
+      ];
+      if (oldRecurringFields.includes(name)) {
+        return; // Don't set error for these fields
+      }
+
       const errorMessage = getErrorMessage(name, value);
       setError((prevState) => ({
         ...prevState,
@@ -1198,67 +1310,47 @@ function UploadListings() {
 
       const inputDate = new Date(value);
 
-      // Validate startDate for monthly recurrence (no past dates)
-      if (
-        name === "startDate" &&
-        listingInput.isRecurring &&
-        listingInput.recurringType === "monthly"
-      ) {
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        if (inputDate && inputDate < now) {
-          setError((prevState) => ({
-            ...prevState,
-            startDate: t("cannotSelectPastDate"),
-          }));
-          return;
+      // Note: Recurring field validations are now handled per-schedule in the UI
+      // These validations are kept for backward compatibility with non-recurring startDate/endDate
+
+      // Validate non-recurring event dates
+      if (name === "startDate" && !listingInput.isRecurrence) {
+        // When startDate changes, re-validate endDate if it exists
+        if (listingInput.endDate) {
+          const startDateTime = new Date(value);
+          const endDateTime = new Date(listingInput.endDate);
+
+          if (endDateTime <= startDateTime) {
+            setError((prevState) => ({
+              ...prevState,
+              endDate: t("endTimeMustBeGreaterThanStartTime"),
+            }));
+          } else {
+            setError((prevState) => ({
+              ...prevState,
+              endDate: "",
+            }));
+          }
         }
       }
 
-      // Validate recurring end time
-      if (name === "recurringEndTime" && listingInput.startDate && value) {
-        const startDateTime = new Date(listingInput.startDate);
-        const endDateTime = new Date(value);
+      if (name === "endDate" && !listingInput.isRecurrence) {
+        // When endDate changes, validate against startDate
+        if (listingInput.startDate && value) {
+          const startDateTime = new Date(listingInput.startDate);
+          const endDateTime = new Date(value);
 
-        // Check if same day
-        const startDateOnly = new Date(
-          startDateTime.getFullYear(),
-          startDateTime.getMonth(),
-          startDateTime.getDate(),
-        );
-        const endDateOnly = new Date(
-          endDateTime.getFullYear(),
-          endDateTime.getMonth(),
-          endDateTime.getDate(),
-        );
-
-        if (startDateOnly.getTime() !== endDateOnly.getTime()) {
-          setError((prevState) => ({
-            ...prevState,
-            recurringEndTime: t("startAndEndDateMustBeSameDay"),
-          }));
-        } else if (endDateTime <= startDateTime) {
-          setError((prevState) => ({
-            ...prevState,
-            recurringEndTime: t("endTimeMustBeGreaterThanStartTime"),
-          }));
-        } else {
-          setError((prevState) => ({
-            ...prevState,
-            recurringEndTime: "",
-          }));
-        }
-      }
-
-      // Validate repeat until date
-      if (name === "repeatUntil" && listingInput.startDate) {
-        const startDate = new Date(listingInput.startDate);
-        const repeatUntilDate = new Date(value);
-        if (repeatUntilDate < startDate) {
-          setError((prevState) => ({
-            ...prevState,
-            repeatUntil: t("repeatUntilMustBeGreaterThanOrEqualToStartDate"),
-          }));
+          if (endDateTime <= startDateTime) {
+            setError((prevState) => ({
+              ...prevState,
+              endDate: t("endTimeMustBeGreaterThanStartTime"),
+            }));
+          } else {
+            setError((prevState) => ({
+              ...prevState,
+              endDate: "",
+            }));
+          }
         }
       }
 
@@ -1506,49 +1598,75 @@ function UploadListings() {
 
       if (categoryId === 3) {
         // Event category validation
-        const hasStartDate =
-          listingInput.startDate && listingInput.startDate !== "";
 
-        if (!hasStartDate) {
-          isCategoryValid = false;
-        }
+        // For non-recurring events, check if startDate is filled
+        if (!listingInput.isRecurrence) {
+          const hasStartDate =
+            listingInput.startDate && listingInput.startDate !== "";
 
-        // For non-recurring events, end date is optional
-        // For recurring events
-        if (listingInput.isRecurring) {
-          const hasRecurringType =
-            listingInput.recurringType && listingInput.recurringType !== "";
-          const hasRecurringEndTime =
-            listingInput.recurringEndTime &&
-            listingInput.recurringEndTime !== "";
-          const hasRepeatUntil =
-            listingInput.repeatUntil && listingInput.repeatUntil !== "";
-
-          if (!hasRecurringType || !hasRecurringEndTime || !hasRepeatUntil) {
+          if (!hasStartDate) {
             isCategoryValid = false;
           }
+        }
 
-          // For weekly recurring, need weekdays
-          if (listingInput.recurringType === "weekly") {
-            const hasWeekdays =
-              listingInput.recurringDays &&
-              listingInput.recurringDays.length > 0;
-            if (!hasWeekdays) {
+        // For recurring events
+        if (listingInput.isRecurrence) {
+          // Check if all recurring schedules are valid
+          for (let i = 0; i < listingInput.recurringSchedules.length; i++) {
+            const schedule = listingInput.recurringSchedules[i];
+
+            const hasRecurringType =
+              schedule.recurringType && schedule.recurringType !== "";
+            const hasStartDate =
+              schedule.startDate && schedule.startDate !== "";
+            const hasRecurringEndTime =
+              schedule.recurringEndTime && schedule.recurringEndTime !== "";
+            const hasRepeatUntil =
+              schedule.repeatUntil && schedule.repeatUntil !== "";
+
+            if (
+              !hasRecurringType ||
+              !hasStartDate ||
+              !hasRecurringEndTime ||
+              !hasRepeatUntil
+            ) {
               isCategoryValid = false;
+              break;
+            }
+
+            // For weekly recurring, need weekdays
+            if (schedule.recurringType === "weekly") {
+              const hasWeekdays =
+                schedule.recurringDays && schedule.recurringDays.length > 0;
+              if (!hasWeekdays) {
+                isCategoryValid = false;
+                break;
+              }
             }
           }
         }
 
         // Check for event-specific errors
-        if (
-          error.startDate ||
-          error.endDate ||
-          error.recurringType ||
-          error.recurringEndTime ||
-          error.repeatUntil ||
-          error.recurringDays
-        ) {
+        // Only check startDate/endDate errors for non-recurring events
+        if (!listingInput.isRecurrence && (error.startDate || error.endDate)) {
           isCategoryValid = false;
+        }
+
+        // Check for recurring schedule errors
+        if (listingInput.isRecurrence && error.recurringSchedules) {
+          for (let i = 0; i < error.recurringSchedules.length; i++) {
+            const scheduleError = error.recurringSchedules[i];
+            if (
+              scheduleError.recurringType ||
+              scheduleError.startDate ||
+              scheduleError.recurringEndTime ||
+              scheduleError.repeatUntil ||
+              scheduleError.recurringDays
+            ) {
+              isCategoryValid = false;
+              break;
+            }
+          }
         }
       }
 
@@ -1603,12 +1721,11 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${
-                  listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
-                  CHARACTER_LIMIT_TITLE
+                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
+                    CHARACTER_LIMIT_TITLE
                     ? "mt-2 text-sm text-red-600"
                     : "mt-2 text-sm text-gray-500"
-                }`}
+                  }`}
               >
                 {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_TITLE}
@@ -1659,11 +1776,10 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectSingleCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
-                      selectedSingleCity?.id === city.id
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id
                         ? "text-teal-700"
                         : "text-gray-700"
-                    }`}
+                      }`}
                   >
                     {city.name}
                   </div>
@@ -1725,11 +1841,10 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
-                      selectedCities.some((sC) => sC.id === city.id)
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
                         ? "text-teal-700"
                         : "text-gray-700"
-                    }`}
+                      }`}
                   >
                     {city.name}
                   </div>
@@ -1924,7 +2039,7 @@ function UploadListings() {
           {categoryId == 3 && (
             <div className="relative mb-0">
               {/* Start and End Date - Shown based on recurring checkbox */}
-              {!listingInput.isRecurring ? (
+              {!listingInput.isRecurrence ? (
                 /* Non-recurring events: Show both Start and End Date */
                 <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="relative">
@@ -1959,494 +2074,15 @@ function UploadListings() {
               ) : null}
 
               {/* Recurring Checkbox */}
-              <div className="relative mb-4">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="isRecurring"
-                    name="isRecurring"
-                    checked={listingInput?.isRecurring}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setListingInput((prev) => ({
-                        ...prev,
-                        isRecurring: isChecked,
-                        // Clear all recurring fields when unchecking
-                        recurringType: "",
-                        recurringDays: [],
-                        repeatUntil: "",
-                        recurringEndTime: "",
-                        exceptionDates: [],
-                        // Also clear startDate when unchecking to avoid confusion
-                        startDate: isChecked ? prev.startDate : "",
-                      }));
-                      if (!isChecked) {
-                        setError((prevError) => ({
-                          ...prevError,
-                          recurringType: "",
-                          recurringDays: "",
-                          repeatUntil: "",
-                          recurringEndTime: "",
-                          startDate: "",
-                          endDate: "",
-                          exceptionDates: "",
-                        }));
-                      }
-                    }}
-                    className="mr-2"
-                  />
-                  <label
-                    htmlFor="isRecurring"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    {t("recurring")}
-                  </label>
-                </div>
-              </div>
-
-              {listingInput?.isRecurring && (
-                <div className="relative mb-4">
-                  <label className="block text-sm font-medium text-gray-600">
-                    {t("recurringType")} *
-                  </label>
-
-                  <select
-                    name="recurringType"
-                    value={listingInput?.recurringType || ""}
-                    onChange={(e) => {
-                      const newRecurringType = e.target.value;
-                      setListingInput((prev) => {
-                        // Clear all recurring-related date fields when recurringType changes
-                        return {
-                          ...prev,
-                          recurringType: newRecurringType,
-                          startDate: "",
-                          recurringEndTime: "",
-                          repeatUntil: "",
-                          recurringDays: [],
-                          exceptionDates: [], // Clear exception dates when type changes
-                        };
-                      });
-                      // Clear related errors
-                      setError((prevError) => ({
-                        ...prevError,
-                        recurringType: "",
-                        startDate: "",
-                        recurringEndTime: "",
-                        repeatUntil: "",
-                        recurringDays: "",
-                      }));
-                      validateInput({
-                        target: {
-                          name: "recurringType",
-                          value: newRecurringType,
-                        },
-                      });
-                    }}
-                    onBlur={validateInput}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                  >
-                    <option value="">{t("chooseRecurringType")}</option>
-                    <option value="daily">{t("daily")}</option>
-                    <option value="weekly">{t("weekly")}</option>
-                    <option value="monthly">{t("monthly")}</option>
-                  </select>
-                  <div
-                    className="mt-2 text-sm text-red-600"
-                    style={{
-                      visibility: error?.recurringType ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.recurringType}
-                  </div>
-                </div>
-              )}
-
-              {listingInput?.recurringType === "weekly" && (
-                <div className="relative mb-4">
-                  <label className="block text-sm font-medium text-gray-600">
-                    {t("selectDays")} *
-                  </label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {daysOfWeek?.map((day) => (
-                      <div key={day} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={day}
-                          name={day}
-                          checked={
-                            listingInput?.recurringDays
-                              ? listingInput?.recurringDays?.includes(day)
-                              : false
-                          }
-                          onChange={(e) => {
-                            const isChecked = e.target.checked;
-                            setListingInput((prev) => {
-                              let updatedDays = prev.recurringDays || [];
-                              if (isChecked) {
-                                updatedDays = [...updatedDays, day];
-                              } else {
-                                updatedDays = updatedDays?.filter(
-                                  (d) => d !== day,
-                                );
-                              }
-                              const updatedState = {
-                                ...prev,
-                                recurringDays: updatedDays,
-                              };
-
-                              // Validate weekday selection
-                              let errorMessage = "";
-                              if (
-                                prev.isRecurring &&
-                                prev.recurringType === "weekly"
-                              ) {
-                                if (!updatedDays || updatedDays.length === 0) {
-                                  errorMessage = t(
-                                    "pleaseSelectAtLeastOneWeekday",
-                                  );
-                                }
-                              }
-
-                              // Update error state
-                              setError((prevError) => ({
-                                ...prevError,
-                                recurringDays: errorMessage,
-                              }));
-
-                              return updatedState;
-                            });
-                          }}
-                          className="mr-2"
-                        />
-                        <label htmlFor={day} className="text-gray-700">
-                          {t(day)}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className="mt-2 text-sm text-red-600"
-                    style={{
-                      visibility: error.recurringDays ? "visible" : "hidden",
-                    }}
-                  >
-                    {error.recurringDays}
-                  </div>
-                </div>
-              )}
-
-              {/* Recurring Events - Show when recurring checkbox is checked */}
-              {listingInput?.isRecurring && listingInput?.recurringType && (
-                <div className="items-stretch py-2 space-y-4">
-                  {/* Start Date & Time and End Time in single row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="relative">
-                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                        <svg
-                          aria-hidden="true"
-                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        ></svg>
-                      </div>
-                      <FlatPickerCommponent
-                        id="startDate"
-                        name="startDate"
-                        validateInput={validateInput}
-                        setListingInput={setListingInput}
-                        setError={setError}
-                        error={error}
-                        listingInput={listingInput}
-                        placeholder={t("eventStartDate")}
-                        t={t}
-                        minDate={
-                          listingInput.recurringType === "monthly"
-                            ? new Date()
-                            : undefined
-                        }
-                        customOnChange={(date) => {
-                          const formattedDate = format(
-                            date[0],
-                            "yyyy-MM-dd'T'HH:mm",
-                          );
-
-                          setListingInput((prev) => {
-                            let updatedState = {
-                              ...prev,
-                              startDate: formattedDate,
-                            };
-
-                            // Auto-fill recurringEndTime if it's empty or adjust if it exists
-                            const startDateTime = new Date(formattedDate);
-
-                            if (!prev.recurringEndTime) {
-                              // Auto-fill with start time + 1 hour (same day)
-                              const autoEndDateTime = new Date(startDateTime);
-                              autoEndDateTime.setHours(
-                                startDateTime.getHours() + 1,
-                              );
-                              updatedState.recurringEndTime = format(
-                                autoEndDateTime,
-                                "yyyy-MM-dd'T'HH:mm",
-                              );
-                            } else if (
-                              prev.recurringEndTime &&
-                              prev.isRecurring
-                            ) {
-                              // If recurringEndTime exists, adjust it to same day as new startDate
-                              const oldEndDateTime = new Date(
-                                prev.recurringEndTime,
-                              );
-                              const newStartDateTime = new Date(formattedDate);
-
-                              // Keep the time from old endTime but set date to match new startDate
-                              const adjustedEndDate = new Date(
-                                newStartDateTime,
-                              );
-                              adjustedEndDate.setHours(
-                                oldEndDateTime.getHours(),
-                                oldEndDateTime.getMinutes(),
-                                0,
-                                0,
-                              );
-
-                              updatedState.recurringEndTime = format(
-                                adjustedEndDate,
-                                "yyyy-MM-dd'T'HH:mm",
-                              );
-                            }
-
-                            return updatedState;
-                          });
-                          // Clear errors when user is selecting a date
-                          setError((prev) => ({
-                            ...prev,
-                            startDate: "",
-                            recurringEndTime: "",
-                          }));
-                        }}
-                        customOnClose={(selectedDates, dateStr) => {
-                          if (dateStr) {
-                            validateInput({
-                              target: {
-                                name: "startDate",
-                                value: dateStr.replace(" ", "T"),
-                              },
-                            });
-                            // Also validate recurringEndTime if it exists
-                            if (listingInput.recurringEndTime) {
-                              setTimeout(() => {
-                                validateInput({
-                                  target: {
-                                    name: "recurringEndTime",
-                                    value: listingInput.recurringEndTime,
-                                  },
-                                });
-                              }, 100);
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-
-                    {/* End Date & Time (same day) */}
-                    <div className="relative">
-                      <div className="flex absolute inset-y-0 items-center pl-3 pointer-events-none">
-                        <svg
-                          aria-hidden="true"
-                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        ></svg>
-                      </div>
-                      <FlatPickerCommponent
-                        id="recurringEndTime"
-                        name="recurringEndTime"
-                        validateInput={validateInput}
-                        setListingInput={setListingInput}
-                        setError={setError}
-                        error={error}
-                        listingInput={listingInput}
-                        placeholder={t("eventEndTime")}
-                        t={t}
-                        minDate={
-                          listingInput.startDate
-                            ? (() => {
-                                const startDate = new Date(
-                                  listingInput.startDate,
-                                );
-                                return new Date(
-                                  startDate.getFullYear(),
-                                  startDate.getMonth(),
-                                  startDate.getDate(),
-                                  0,
-                                  0,
-                                  0,
-                                );
-                              })()
-                            : undefined
-                        }
-                        maxDate={
-                          listingInput.startDate
-                            ? (() => {
-                                const startDate = new Date(
-                                  listingInput.startDate,
-                                );
-                                return new Date(
-                                  startDate.getFullYear(),
-                                  startDate.getMonth(),
-                                  startDate.getDate(),
-                                  23,
-                                  59,
-                                  59,
-                                );
-                              })()
-                            : undefined
-                        }
-                        additionalOptions={{
-                          closeOnSelect: true,
-                          defaultDate: listingInput?.startDate
-                            ? new Date(listingInput.startDate)
-                            : undefined,
-                        }}
-                        customOnChange={(date) => {
-                          if (
-                            date &&
-                            date.length > 0 &&
-                            listingInput.startDate
-                          ) {
-                            const selectedDate = date[0];
-                            const startDateTime = new Date(
-                              listingInput.startDate,
-                            );
-
-                            // Ensure end date is on the same day as start date
-                            const selectedDateOnly = new Date(
-                              selectedDate.getFullYear(),
-                              selectedDate.getMonth(),
-                              selectedDate.getDate(),
-                            );
-                            const startDateOnly = new Date(
-                              startDateTime.getFullYear(),
-                              startDateTime.getMonth(),
-                              startDateTime.getDate(),
-                            );
-
-                            let finalDate = selectedDate;
-
-                            // If selected date is different from start date, adjust to same day with selected time
-                            if (
-                              selectedDateOnly.getTime() !==
-                              startDateOnly.getTime()
-                            ) {
-                              finalDate = new Date(startDateOnly);
-                              finalDate.setHours(
-                                selectedDate.getHours(),
-                                selectedDate.getMinutes(),
-                                0,
-                                0,
-                              );
-                            }
-
-                            const formattedDate = format(
-                              finalDate,
-                              "yyyy-MM-dd'T'HH:mm",
-                            );
-                            setListingInput((prev) => ({
-                              ...prev,
-                              recurringEndTime: formattedDate,
-                            }));
-                            // Clear error when user is selecting a time
-                            setError((prev) => ({
-                              ...prev,
-                              recurringEndTime: "",
-                            }));
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Repeat Until Date */}
-                  <div className="relative">
-                    <FlatPickerCommponent
-                      id="repeatUntil"
-                      name="repeatUntil"
-                      validateInput={validateInput}
-                      setListingInput={setListingInput}
-                      setError={setError}
-                      error={error}
-                      listingInput={listingInput}
-                      placeholder={t("repeatUntil")}
-                      t={t}
-                      minDate={
-                        listingInput.startDate
-                          ? new Date(listingInput.startDate)
-                          : undefined
-                      }
-                    />
-                  </div>
-                  {/* Exception Dates - Only show if both start date and repeat until are set */}
-                  {listingInput?.startDate && listingInput?.repeatUntil && (
-                    <div className="relative">
-                      <label
-                        htmlFor="exceptionDates"
-                        className="block text-sm font-medium text-gray-600"
-                      >
-                        {t("exceptionDates")} ({t("optional")})
-                      </label>
-                      <Flatpickr
-                        id="exceptionDates"
-                        name="exceptionDates"
-                        value={listingInput.exceptionDates}
-                        options={{
-                          mode: "multiple",
-                          dateFormat: "Y-m-d",
-                          clickOpens: true,
-                          allowInput: false,
-                          // Extract date-only for proper comparison (ignore time)
-                          minDate: format(
-                            new Date(listingInput.startDate),
-                            "yyyy-MM-dd",
-                          ),
-                          maxDate: format(
-                            new Date(listingInput.repeatUntil),
-                            "yyyy-MM-dd",
-                          ),
-                        }}
-                        onChange={(dates) => {
-                          // All selected dates are valid since Flatpickr handles min/max
-                          const formattedDates = dates.map((date) =>
-                            format(date, "yyyy-MM-dd"),
-                          );
-                          setListingInput((prev) => ({
-                            ...prev,
-                            exceptionDates: formattedDates,
-                          }));
-                        }}
-                        className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                        placeholder={t("selectExceptionDates")}
-                      />
-                      <div className="mt-1 text-xs text-gray-500">
-                        {t("selectDatesToExcludeFromRecurring")} ({t("Between")}{" "}
-                        {format(
-                          new Date(listingInput.startDate),
-                          "MMM dd, yyyy",
-                        )}{" "}
-                        -{" "}
-                        {format(
-                          new Date(listingInput.repeatUntil),
-                          "MMM dd, yyyy",
-                        )}
-                        ) - {t("startDateEndDateSelectable")}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              <RecurringSchedule
+                listingInput={listingInput}
+                setListingInput={setListingInput}
+                error={error}
+                setError={setError}
+                validateInput={validateInput}
+                t={t}
+                isRecurringScheduleComplete={isRecurringScheduleComplete}
+              />
             </div>
           )}
 
@@ -2627,12 +2263,11 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${
-                  description.replace(/(<([^>]+)>)/gi, "").length >
-                  CHARACTER_LIMIT_DESCRIPTION
+                className={`${description.replace(/(<([^>]+)>)/gi, "").length >
+                    CHARACTER_LIMIT_DESCRIPTION
                     ? "mt-2 text-sm text-red-600"
                     : "mt-2 text-sm text-gray-500"
-                }`}
+                  }`}
               >
                 {description.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_DESCRIPTION}
@@ -2681,9 +2316,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2716,9 +2350,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2750,9 +2383,8 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
-                        image.length < 8 ? "bg-slate-200" : ""
-                      }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
+                        }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2826,8 +2458,8 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP"
                 ? t(
-                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent",
-                  )
+                  "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent",
+                )
                 : ""}
             </p>
             <div className="flex gap-2">
