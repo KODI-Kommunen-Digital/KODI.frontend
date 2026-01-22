@@ -42,7 +42,7 @@ export default function HomePageNavBar() {
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
       const sortedCities = citiesResponse.data.data.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
       setCities(sortedCities);
     });

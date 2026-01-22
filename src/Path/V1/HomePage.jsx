@@ -3,7 +3,11 @@ import HomePageNavBar from "../../Components/V1/HomePageNavBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../Components/SearchBar";
-import { getListings, getListingsCount, getListingsBySearch } from "../../Services/listingsApi";
+import {
+  getListings,
+  getListingsCount,
+  getListingsBySearch,
+} from "../../Services/listingsApi";
 import { getCities } from "../../Services/citiesApi";
 import Footer from "../../Components/Footer";
 import PrivacyPolicyPopup from "../PrivacyPolicyPopup";
@@ -35,7 +39,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
-      "privacyPolicyAccepted"
+      "privacyPolicyAccepted",
     );
 
     if (!hasAcceptedPrivacyPolicy) {
@@ -44,7 +48,7 @@ const HomePage = () => {
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
       const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
       setCities(sortedCities);
     });
@@ -56,7 +60,7 @@ const HomePage = () => {
     getListingsCount().then((response) => {
       const data = response?.data?.data || [];
       const sortedData = data.sort(
-        (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
+        (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount),
       );
       setListingsCount(sortedData);
     });
@@ -91,7 +95,7 @@ const HomePage = () => {
     getListings(params).then((response) => {
       const listings = response?.data?.data || [];
       const filteredListings = listings.filter(
-        (listing) => !hiddenCategories.includes(listing.categoryId)
+        (listing) => !hiddenCategories.includes(listing.categoryId),
       );
       setListings(filteredListings);
     });
@@ -106,7 +110,7 @@ const HomePage = () => {
   const onCityChange = (e) => {
     const selectedCityId = e.target.value;
     const selectedCity = cities.find(
-      (city) => city.id.toString() === selectedCityId
+      (city) => city.id.toString() === selectedCityId,
     );
 
     if (selectedCity) {
@@ -114,9 +118,10 @@ const HomePage = () => {
       navigate(`?cityId=${selectedCityId}`);
       setCityId(parseInt(selectedCityId));
     } else {
-      const defaultCityName = process.env.REACT_APP_REGION_NAME === "HIVADA"
-        ? t("allClusters")
-        : t("allCities");
+      const defaultCityName =
+        process.env.REACT_APP_REGION_NAME === "HIVADA"
+          ? t("allClusters")
+          : t("allCities");
       localStorage.setItem("selectedCity", defaultCityName);
       setCityId(0);
     }
@@ -137,7 +142,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const hasAcceptedPrivacyPolicy = localStorage.getItem(
-      "privacyPolicyAccepted"
+      "privacyPolicyAccepted",
     );
 
     if (!hasAcceptedPrivacyPolicy) {
@@ -215,14 +220,21 @@ const HomePage = () => {
                       }}
                     >
                       <option className="font-sans" value={0} key={0}>
-                        {t(process.env.REACT_APP_REGION_NAME === "HIVADA"
-                          ? "allClusters"
-                          : "allCities", {
-                          regionName: process.env.REACT_APP_REGION_NAME,
-                        })}
+                        {t(
+                          process.env.REACT_APP_REGION_NAME === "HIVADA"
+                            ? "allClusters"
+                            : "allCities",
+                          {
+                            regionName: process.env.REACT_APP_REGION_NAME,
+                          },
+                        )}
                       </option>
                       {(cities ?? []).map((city) => (
-                        <option className="font-sans" value={city.id} key={city.id}>
+                        <option
+                          className="font-sans"
+                          value={city.id}
+                          key={city.id}
+                        >
                           {city.name}
                         </option>
                       ))}
@@ -317,7 +329,11 @@ const HomePage = () => {
             {t("mostPopularCategories")}
           </h2>
 
-          <MostPopularCategories listingsCount={listingsCount} t={t} goToAllListingsPage={goToAllListingsPage} />
+          <MostPopularCategories
+            listingsCount={listingsCount}
+            t={t}
+            goToAllListingsPage={goToAllListingsPage}
+          />
 
           {process.env.REACT_APP_REGION_NAME === "WALDI" && (
             <div className="bg-white lg:px-10 md:px-5 px-2 py-5 space-y-10 flex flex-col">
@@ -345,8 +361,10 @@ const HomePage = () => {
 
           <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-              {(cities ?? []).map((city) => { // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
-                if (city.id !== Number(cityId)) { // Ensure current city is not displayed
+              {(cities ?? []).map((city) => {
+                // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
+                if (city.id !== Number(cityId)) {
+                  // Ensure current city is not displayed
                   return (
                     <div
                       key={city.id}
@@ -417,7 +435,9 @@ const HomePage = () => {
               type="submit"
               onClick={() => {
                 localStorage.setItem("selectedItem", t("chooseOneCategory"));
-                const url = terminalView ? "/AllListings?terminalView=true" : "/AllListings";
+                const url = terminalView
+                  ? "/AllListings?terminalView=true"
+                  : "/AllListings";
                 navigateTo(url);
               }}
               className="w-full rounded-xl sm:w-80 mx-auto bg-blue-800 px-8 py-2 text-base font-semibold text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] cursor-pointer font-sans"
@@ -577,7 +597,8 @@ const HomePage = () => {
               <div className="w-full md:w-1/2 flex flex-wrap lg:mt-0 md:mt-6 mt-6">
                 <img
                   src={
-                    process.env.REACT_APP_BUCKET_HOST + "admin/CitizenService2.png"
+                    process.env.REACT_APP_BUCKET_HOST +
+                    "admin/CitizenService2.png"
                   }
                   alt="Image 1"
                   className="w-full md:w-98 mb-2"

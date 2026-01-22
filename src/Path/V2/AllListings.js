@@ -43,7 +43,7 @@ const AllListings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [eventTab, setEventTab] = useState("single"); // single, multi, recurring
+  const [eventTab, setEventTab] = useState("singleDay"); // single, multi, recurring
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const navigate = useNavigate();
@@ -178,10 +178,10 @@ const AllListings = () => {
     params.showExternalListings = "false";
     // Add event-specific params
     if (categoryId === 3) {
-      if (eventTab === "single") {
-        params.eventType = "single";
-      } else if (eventTab === "multi") {
-        params.eventType = "multi";
+      if (eventTab === "singleDay") {
+        params.eventType = "singleDay";
+      } else if (eventTab === "multiDay") {
+        params.eventType = "multiDay";
       } else if (eventTab === "recurring") {
         params.eventType = "recurring";
       }
@@ -587,29 +587,26 @@ const AllListings = () => {
         ) : (
           <div>
             {/* Event Tabs - Only for Events (categoryId 3) */}
-            {categoryId === 3 && (
+            {(Number(categoryId) === 3 || categoryId === "3") && (
               <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
-                <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">
-                  {eventTabOptions?.map((tab, index) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setEventTab(tab.id)}
-                      className={`px-6 sm:px-10 md:px-14 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
-                        eventTab === tab.id
-                          ? "bg-gray-600 text-white shadow-lg"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
-                      } ${
-                        index === 0
-                          ? "md:justify-self-start"
-                          : index === 1
-                          ? "md:justify-self-center"
-                          : "md:justify-self-end"
-                      } w-full md:w-auto md:min-w-[300px] lg:min-w-[264px]`}
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    >
-                      {t(tab?.label)}
-                    </button>
-                  ))}
+                <div className="flex justify-center">
+                  <div className="flex w-full md:w-fit overflow-hidden rounded-xl border border-gray-300 bg-gray-100 shadow-sm">
+                    {eventTabOptions?.map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => setEventTab(tab.id)}
+                        className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${
+                          eventTab === tab.id
+                            ? "bg-gray-600 text-white"
+                            : "bg-transparent text-gray-600 hover:bg-gray-200"
+                        }`}
+                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        type="button"
+                      >
+                        {t(tab?.label)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
