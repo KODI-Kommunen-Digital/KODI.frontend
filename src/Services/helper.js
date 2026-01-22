@@ -1,60 +1,67 @@
 const sortByTitleAZ = (arr) => {
-    arr.sort(function (a, b) {
-        const titleA = a.title.toLowerCase();
-        const titleB = b.title.toLowerCase();
-        if (titleA < titleB) return -1;
-        if (titleA > titleB) return 1;
-        return 0;
-    });
-    return arr;
+  arr.sort(function (a, b) {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    if (titleA < titleB) return -1;
+    if (titleA > titleB) return 1;
+    return 0;
+  });
+  return arr;
 };
 
 const sortByTitleZA = (arr) => {
-    arr.sort(function (a, b) {
-        const titleA = a.title.toLowerCase();
-        const titleB = b.title.toLowerCase();
-        if (titleA < titleB) return -1;
-        if (titleA > titleB) return 1;
-        return 0;
-    });
-    arr.reverse();
-    return arr;
+  arr.sort(function (a, b) {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    if (titleA < titleB) return -1;
+    if (titleA > titleB) return 1;
+    return 0;
+  });
+  arr.reverse();
+  return arr;
 };
 
 const sortLatestFirst = (arr) => {
-    arr.sort(compareDateTime);
-    return arr.reverse()
-}
+  arr.sort(compareDateTime);
+  return arr.reverse();
+};
 
 const sortOldestFirst = (arr) => {
-    arr.sort(compareDateTime);
-    return arr
-}
+  arr.sort(compareDateTime);
+  return arr;
+};
 const compareDateTime = (a, b) => {
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
+  const dateA = new Date(a.createdAt);
+  const dateB = new Date(b.createdAt);
 
-    if (dateA < dateB) {
-        return -1;
-    }
-    if (dateA > dateB) {
-        return 1;
-    }
-    return 0;
+  if (dateA < dateB) {
+    return -1;
+  }
+  if (dateA > dateB) {
+    return 1;
+  }
+  return 0;
 };
 const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 const eventTabOptions = [
-    { id: "single", label: "Single Day" },
-    { id: "multi", label: "Multi Day" },
-    { id: "recurring", label: "Recurring" },
+  { id: "singleDay", label: "Single Day" },
+  { id: "multiDay", label: "Multi Day" },
+  { id: "recurring", label: "Recurring" },
 ];
 
-module.exports = { sortByTitleAZ, sortByTitleZA, sortLatestFirst, sortOldestFirst, daysOfWeek, eventTabOptions };
+module.exports = {
+  sortByTitleAZ,
+  sortByTitleZA,
+  sortLatestFirst,
+  sortOldestFirst,
+  daysOfWeek,
+  eventTabOptions,
+};

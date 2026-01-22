@@ -54,7 +54,7 @@ const HomePage = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-  const [eventTab, setEventTab] = useState("single"); // single, multi, recurring
+  const [eventTab, setEventTab] = useState("singleDay"); // single, multi, recurring
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -160,10 +160,10 @@ const HomePage = () => {
     }
     // Add event-specific params
     if (categoryId === 3) {
-      if (eventTab === "single") {
-        params.eventType = "single";
-      } else if (eventTab === "multi") {
-        params.eventType = "multi";
+      if (eventTab === "singleDay") {
+        params.eventType = "singleDay";
+      } else if (eventTab === "multiDay") {
+        params.eventType = "multiDay";
       } else if (eventTab === "recurring") {
         params.eventType = "recurring";
       }
@@ -572,9 +572,9 @@ const HomePage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setEventTab(tab.id)}
-                    className={`px-6 sm:px-10 md:px-14 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
+                    className={`w-full md:w-[228px] lg:min-w-[264px] px-6 sm:px-10 md:px-6 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
                       eventTab === tab.id
-                        ? "bg-blue-600 text-white shadow-lg"
+                        ? "bg-gray-600 text-white shadow-lg"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
                     } ${
                       index === 0
@@ -582,7 +582,7 @@ const HomePage = () => {
                         : index === 1
                         ? "md:justify-self-center"
                         : "md:justify-self-end"
-                    } w-full md:w-auto md:min-w-[300px] lg:min-w-[264px]`}
+                    } max-h-16`}
                     style={{ fontFamily: "Poppins, sans-serif" }}
                   >
                     {t(tab?.label)}
@@ -618,7 +618,7 @@ const HomePage = () => {
                   const url = terminalView
                     ? "/AllListings?terminalView=true"
                     : "/AllListings";
-                  navigateTo(url);
+                  navigateTo(url, { replace: true });
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
