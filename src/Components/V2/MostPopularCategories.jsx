@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { getCategory } from "../../Services/CategoryApi";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import { hiddenCategories } from "../../Constants/hiddenCategories";
 import { categoryIcons } from "../../Constants/categoryIcons";
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
-
     MostPopularCategories.propTypes = {
         listingsCount: PropTypes.array.isRequired,
         t: PropTypes.func.isRequired,
@@ -17,13 +16,14 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const { trackEvent } = useMatomo();
-    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
+    const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === "True";
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const categoryIdParam = searchParams.get('categoryId');
+        const categoryIdParam = searchParams.get("categoryId");
         if (categoryIdParam) {
             const selectedCategoryName = categories[categoryIdParam];
             if (selectedCategoryName) {
@@ -38,7 +38,7 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
         getCategory().then((response) => {
             const catList = {};
             response?.data?.data
-                .filter(cat => !hiddenCategories.includes(cat.id))
+                .filter((cat) => !hiddenCategories.includes(cat.id))
                 .forEach((cat) => {
                     catList[cat.id] = cat.name;
                 });
@@ -48,18 +48,37 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
 
     const handleCategoryClick = (categoryId, categoryName, e) => {
         setSelectedCategory(categoryName);
+
+        // Get current URL params and preserve only cityId
+        const searchParams = new URLSearchParams(location.search);
+        const cityIdParam = searchParams.get("cityId");
+
+        // Create new URL params with only cityId and categoryId (remove all filters)
+        const newUrlParams = new URLSearchParams();
+        if (cityIdParam) {
+            newUrlParams.set("cityId", cityIdParam);
+        }
+        if (categoryId) {
+            newUrlParams.set("categoryId", categoryId);
+        }
+
+        // Navigate with only cityId and categoryId, removing all other filters
+        const queryString = newUrlParams.toString();
+        const newUrl = queryString ? `/?${queryString}` : "/";
+        navigate(newUrl, { replace: true });
+
         getTheListings(categoryId, e);
 
         if (matomoStatus) {
             trackEvent({
-                category: 'Category',
-                action: 'Click',
+                category: "Category",
+                action: "Click",
                 name: categoryName,
                 value: categoryId,
             });
         }
 
-        console.log('Category clicked:', categoryName);
+        console.log("Category clicked:", categoryName);
     };
 
     return (
@@ -69,8 +88,14 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                     <div className="flex overflow-x-scroll">
                         <div className="flex flex-nowrap md:gap-20 gap-8">
                             <h2
-                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === "allCategories" ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
-                                style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
+                                className={`flex font-bold gap-4 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === "allCategories"
+                                        ? "bg-slate-100 text-slate-800"
+                                        : "text-white"
+                                    } rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                style={{
+                                    fontFamily: "Poppins, sans-serif",
+                                    transition: "background-color 0.3s, color 0.3s",
+                                }}
                                 onClick={(e) => handleCategoryClick(null, "allCategories", e)}
                             >
                                 <svg
@@ -89,15 +114,26 @@ const MostPopularCategories = ({ listingsCount, t, getTheListings }) => {
                                 }
 
                                 const categoryDetails = categoryIcons[listing.categoryId];
-                                const categoryName = categories[listing.categoryId] || t("unknownCategory");
-                                const categoryIcon = categoryDetails ? categoryDetails.svgIcon : null;
+                                const categoryName =
+                                    categories[listing.categoryId] || t("unknownCategory");
+                                const categoryIcon = categoryDetails
+                                    ? categoryDetails.svgIcon
+                                    : null;
 
                                 return (
                                     <h2
-                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === categoryName ? 'bg-slate-100 text-slate-800' : 'text-white'} rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
-                                        style={{ fontFamily: "Poppins, sans-serif", transition: "background-color 0.3s, color 0.3s" }}
+                                        className={`flex font-bold gap-2 p-2 md:p-4 hover:text-slate-500 ${selectedCategory === categoryName
+                                                ? "bg-slate-100 text-slate-800"
+                                                : "text-white"
+                                            } rounded-t-xl inline-flex text-sm md:text-md lg:text-md items-center justify-center whitespace-nowrap cursor-pointer`}
+                                        style={{
+                                            fontFamily: "Poppins, sans-serif",
+                                            transition: "background-color 0.3s, color 0.3s",
+                                        }}
                                         key={listing.categoryId}
-                                        onClick={(e) => handleCategoryClick(listing.categoryId, categoryName, e)}
+                                        onClick={(e) =>
+                                            handleCategoryClick(listing.categoryId, categoryName, e)
+                                        }
                                         value={listing.categoryId}
                                     >
                                         {categoryIcon && (

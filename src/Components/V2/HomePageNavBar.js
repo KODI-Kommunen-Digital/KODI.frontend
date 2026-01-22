@@ -66,7 +66,7 @@ export default function HomePageNavBar() {
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
       logout({ accesToken: accessToken, refreshToken })
-        .then(() => {})
+        .then(() => { })
         .finally(() => {
           clearStorage();
         });
@@ -93,30 +93,35 @@ export default function HomePageNavBar() {
 
   const onCityChange = (e) => {
     const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
-    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
+    const urlParams = new URLSearchParams(window.location.search);
 
     if (selectedCityId === 0) {
       setCityId(0);
-      window.location.href = "/";
+      // Remove cityId but preserve all other filters
+      urlParams.delete("cityId");
+      const queryString = urlParams.toString();
+      const newUrl = queryString ? `/?${queryString}` : "/";
+      navigate(newUrl, { replace: true });
     } else {
       const selectedCity = cities.find((city) => city.id === selectedCityId);
 
       if (selectedCity) {
         setCityId(selectedCityId);
-        if (selectedCategoryId) {
-          window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-        } else {
-          window.location.href = `?cityId=${selectedCityId}`;
-        }
+        // Update cityId while preserving all existing URL parameters (filters)
+        // Preserve: categoryId, startDate, endDate, sort, eventTab, and any other params
+        urlParams.set("cityId", selectedCityId);
+        const queryString = urlParams.toString();
+        const newUrl = `/?${queryString}`;
+        navigate(newUrl, { replace: true });
       }
     }
   };
-
+  console.log(categoryId);
   return (
     <div className="w-full fixed top-0 z-10">
       <Popover
         className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-        // id="scrollablePopover"
+      // id="scrollablePopover"
       >
         <div className="w-full">
           <div

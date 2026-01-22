@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import RegionColors from "../../Components/RegionColors";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   getListings,
@@ -39,6 +39,7 @@ import MostPopularCategories from "../../Components/V2/MostPopularCategories";
 
 const HomePage = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const [cityId, setCityId] = useState();
   const [categoryId, setCategoryId] = useState();
   const [cities, setCities] = useState([]);
@@ -65,6 +66,66 @@ const HomePage = () => {
     setTerminalView(queryParams.get("terminalView") === "true");
   }, []);
 
+  // Sync state with URL parameters when location changes (for navigation from navbar)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+
+    // Update cityId from URL if different
+    const urlCityId = parseInt(urlParams.get("cityId"));
+    if (urlCityId && urlCityId !== cityId) {
+      setCityId(urlCityId);
+    } else if (!urlCityId && cityId !== undefined) {
+      setCityId(undefined);
+    }
+
+    // Update categoryId from URL if different
+    const urlCategoryId = parseInt(urlParams.get("categoryId"));
+    if (urlCategoryId && urlCategoryId !== categoryId) {
+      setCategoryId(urlCategoryId);
+    } else if (!urlCategoryId && categoryId !== undefined) {
+      setCategoryId(undefined);
+    }
+
+    // Update startDate from URL if different
+    const urlStartDate = urlParams.get("startDate") || "";
+    if (urlStartDate !== startDate) {
+      setStartDate(urlStartDate);
+    }
+
+    // Update endDate from URL if different
+    const urlEndDate = urlParams.get("endDate") || "";
+    if (urlEndDate !== endDate) {
+      setEndDate(urlEndDate);
+    }
+
+    // Update sort from URL if different
+    const urlSort = urlParams.get("sort") || "";
+    if (urlSort !== selectedSortOption) {
+      setSelectedSortOption(urlSort);
+    }
+
+    // Update eventTab from URL if different (only for category 3)
+    const urlEventTab = urlParams.get("eventTab");
+    const currentCategoryId = parseInt(urlParams.get("categoryId"));
+    if (currentCategoryId === 3 || currentCategoryId === "3") {
+      if (urlEventTab && urlEventTab !== eventTab) {
+        setEventTab(urlEventTab);
+      } else if (!urlEventTab && eventTab !== "singleDay") {
+        setEventTab("singleDay");
+      }
+    }
+
+    // Update subcategoryId from URL if different
+    const urlSubCategoryId = urlParams.get("subcategoryId");
+    const parsedSubCategoryId = urlSubCategoryId ? parseInt(urlSubCategoryId) : null;
+    if (parsedSubCategoryId && parsedSubCategoryId !== selectedSubCategoryId) {
+      setSelectedSubCategoryId(parsedSubCategoryId);
+    } else if (!parsedSubCategoryId && selectedSubCategoryId !== null && selectedSubCategoryId !== undefined) {
+      setSelectedSubCategoryId(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
   useEffect(() => {
     if (!terminalView) {
       // Skip Popup if terminalView is true
@@ -90,6 +151,28 @@ const HomePage = () => {
     const categoryId = parseInt(urlParams.get("categoryId"));
     if (categoryId) {
       setCategoryId(categoryId);
+    }
+    // Initialize filters from URL params
+    const startDateParam = urlParams.get("startDate");
+    if (startDateParam) {
+      setStartDate(startDateParam);
+    }
+    const endDateParam = urlParams.get("endDate");
+    if (endDateParam) {
+      setEndDate(endDateParam);
+    }
+    const sortParam = urlParams.get("sort");
+    if (sortParam) {
+      setSelectedSortOption(sortParam);
+    }
+    const eventTabParam = urlParams.get("eventTab");
+    if (eventTabParam) {
+      setEventTab(eventTabParam);
+    }
+    // Initialize subcategoryId from URL params
+    const subCategoryIdParam = urlParams.get("subcategoryId");
+    if (subCategoryIdParam) {
+      setSelectedSubCategoryId(parseInt(subCategoryIdParam));
     }
     getListingsCount().then((response) => {
       const data = response?.data?.data || [];
@@ -144,6 +227,39 @@ const HomePage = () => {
     } else {
       urlParams.delete("categoryId");
     }
+    // Update URL params for filters
+    if (startDate) {
+      urlParams.set("startDate", startDate);
+    } else {
+      urlParams.delete("startDate");
+    }
+    if (endDate) {
+      urlParams.set("endDate", endDate);
+    } else {
+      urlParams.delete("endDate");
+    }
+    if (selectedSortOption) {
+      urlParams.set("sort", selectedSortOption);
+      params.sort = selectedSortOption; // Add sort to API params
+    } else {
+      urlParams.delete("sort");
+    }
+    // Only add eventTab to URL if category is 3 (Events)
+    if (categoryId === 3 || categoryId === "3") {
+      if (eventTab) {
+        urlParams.set("eventTab", eventTab);
+      } else {
+        urlParams.delete("eventTab");
+      }
+    } else {
+      urlParams.delete("eventTab");
+    }
+    // Update subcategoryId in URL
+    if (selectedSubCategoryId) {
+      urlParams.set("subcategoryId", selectedSubCategoryId);
+    } else {
+      urlParams.delete("subcategoryId");
+    }
 
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     window.history.replaceState({}, "", newUrl);
@@ -151,12 +267,26 @@ const HomePage = () => {
     setTimeout(() => {
       fetchData(params);
     }, 1000);
-  }, [cities, cityId, categoryId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    cities,
+    cityId,
+    categoryId,
+    startDate,
+    endDate,
+    selectedSortOption,
+    eventTab,
+    selectedSubCategoryId,
+  ]);
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
     if (selectedSubCategoryId) {
       params.subcategoryId = selectedSubCategoryId;
+    }
+    // Add sort parameter to API if selected
+    if (selectedSortOption) {
+      params.sort = selectedSortOption;
     }
     // Add event-specific params
     if (categoryId === 3) {
@@ -198,6 +328,16 @@ const HomePage = () => {
 
     setCategoryId(newCategoryId);
     setSelectedSubCategoryId(null);
+
+    // Clear all filters when category changes
+    setStartDate("");
+    setEndDate("");
+    setSelectedSortOption("");
+
+    // Clear eventTab if category is not 3 (Events)
+    if (newCategoryId !== 3 && newCategoryId !== "3") {
+      setEventTab("singleDay");
+    }
 
     try {
       const response = await getListingsSubCategory(newCategoryId);
@@ -253,6 +393,15 @@ const HomePage = () => {
       fetchData(params);
     }
   }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
+
+  // Clear filters when eventTab changes
+  useEffect(() => {
+    if (categoryId === 3) {
+      setStartDate("");
+      setEndDate("");
+      setSelectedSortOption("");
+    }
+  }, [eventTab, categoryId]);
 
   // Trigger fetchData when event filters change
   useEffect(() => {
@@ -570,30 +719,6 @@ const HomePage = () => {
 
           {/* Event Tabs - Only for Events (categoryId 3) */}
           {categoryId === 3 && (
-            // <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
-            //   <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">
-            //     {eventTabOptions?.map((tab, index) => (
-            //       <button
-            //         key={tab.id}
-            //         onClick={() => setEventTab(tab.id)}
-            //         className={`w-full md:w-[228px] lg:min-w-[264px] px-6 sm:px-10 md:px-6 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
-            //           eventTab === tab.id
-            //             ? "bg-gray-600 text-white shadow-lg"
-            //             : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
-            //         } ${
-            //           index === 0
-            //             ? "md:justify-self-start"
-            //             : index === 1
-            //             ? "md:justify-self-center"
-            //             : "md:justify-self-end"
-            //         } max-h-16`}
-            //         style={{ fontFamily: "Poppins, sans-serif" }}
-            //       >
-            //         {t(tab?.label)}
-            //       </button>
-            //     ))}
-            //   </div>
-            // </div>
             <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
               <div className="flex justify-center">
                 <div className="flex w-full md:w-fit overflow-hidden rounded-xl border border-gray-300 bg-gray-100 shadow-sm">
@@ -601,11 +726,10 @@ const HomePage = () => {
                     <button
                       key={tab.id}
                       onClick={() => setEventTab(tab.id)}
-                      className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${
-                        eventTab === tab.id
-                          ? "bg-gray-600 text-white"
-                          : "bg-transparent text-gray-600 hover:bg-gray-200"
-                      }`}
+                      className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${eventTab === tab.id
+                        ? "bg-gray-600 text-white"
+                        : "bg-transparent text-gray-600 hover:bg-gray-200"
+                        }`}
                       style={{ fontFamily: "Poppins, sans-serif" }}
                       type="button"
                     >
@@ -648,23 +772,20 @@ const HomePage = () => {
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${
-                    terminalView ? "bg-green-600" : "bg-gray-900"
-                  } group-hover:-translate-x-0 group-hover:-translate-y-0`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${terminalView ? "bg-green-600" : "bg-gray-900"
+                    } group-hover:-translate-x-0 group-hover:-translate-y-0`}
                 ></span>
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${
-                    terminalView
-                      ? "border-green-600 group-hover:bg-green-600"
-                      : "border-gray-900 group-hover:bg-gray-900"
-                  }`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView
+                    ? "border-green-600 group-hover:bg-green-600"
+                    : "border-gray-900 group-hover:bg-gray-900"
+                    }`}
                 ></span>
                 <span
-                  className={`relative ${
-                    terminalView
-                      ? "text-green-600 group-hover:text-white"
-                      : "text-gray-900 group-hover:text-white"
-                  }`}
+                  className={`relative ${terminalView
+                    ? "text-green-600 group-hover:text-white"
+                    : "text-gray-900 group-hover:text-white"
+                    }`}
                 >
                   {t("viewMore")}
                 </span>
@@ -737,7 +858,7 @@ const HomePage = () => {
                               src={
                                 city.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                    city.image
+                                  city.image
                                   : CITYIMAGE
                               }
                               onError={(e) => {
