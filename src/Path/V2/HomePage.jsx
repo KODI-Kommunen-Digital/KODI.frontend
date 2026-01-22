@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -117,10 +117,16 @@ const HomePage = () => {
 
     // Update subcategoryId from URL if different
     const urlSubCategoryId = urlParams.get("subcategoryId");
-    const parsedSubCategoryId = urlSubCategoryId ? parseInt(urlSubCategoryId) : null;
+    const parsedSubCategoryId = urlSubCategoryId
+      ? parseInt(urlSubCategoryId)
+      : null;
     if (parsedSubCategoryId && parsedSubCategoryId !== selectedSubCategoryId) {
       setSelectedSubCategoryId(parsedSubCategoryId);
-    } else if (!parsedSubCategoryId && selectedSubCategoryId !== null && selectedSubCategoryId !== undefined) {
+    } else if (
+      !parsedSubCategoryId &&
+      selectedSubCategoryId !== null &&
+      selectedSubCategoryId !== undefined
+    ) {
       setSelectedSubCategoryId(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -395,28 +401,28 @@ const HomePage = () => {
   }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
 
   // Clear filters when eventTab changes
-  useEffect(() => {
-    if (categoryId === 3) {
-      setStartDate("");
-      setEndDate("");
-      setSelectedSortOption("");
-    }
-  }, [eventTab, categoryId]);
+  // useEffect(() => {
+  //   if (categoryId === 3) {
+  //     setStartDate("");
+  //     setEndDate("");
+  //     setSelectedSortOption("");
+  //   }
+  // }, [eventTab, categoryId]);
 
   // Trigger fetchData when event filters change
-  useEffect(() => {
-    if (categoryId === 3 && !isLoading) {
-      const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-      if (cityId) params.cityId = cityId;
-      if (categoryId) params.categoryId = categoryId;
-      setListings([]);
-      setIsLoading(true);
-      setTimeout(() => {
-        fetchData(params);
-      }, 500);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventTab, startDate, endDate]);
+  // useEffect(() => {
+  //   if (categoryId === 3 && !isLoading) {
+  //     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+  //     if (cityId) params.cityId = cityId;
+  //     if (categoryId) params.categoryId = categoryId;
+  //     setListings([]);
+  //     setIsLoading(true);
+  //     setTimeout(() => {
+  //       fetchData(params);
+  //     }, 500);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [eventTab, startDate, endDate]);
 
   const handleSubCategorySelect = (subCategoryId) => {
     setSelectedSubCategoryId(subCategoryId); // This will trigger the useEffect above
@@ -509,6 +515,51 @@ const HomePage = () => {
     setShowPopup(false);
   };
 
+  const handleEventTabChange = useCallback(
+    (id) => {
+      // Clear all filters when event tab changes
+      setStartDate("");
+      setEndDate("");
+      setSelectedSortOption("");
+      setEventTab(id);
+      setSearchQuery("");
+
+      // Update URL to remove filters
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.delete("startDate");
+      urlParams.delete("endDate");
+      urlParams.delete("sort");
+      if (categoryId === 3 || categoryId === "3") {
+        urlParams.set("eventTab", id);
+      } else {
+        urlParams.delete("eventTab");
+      }
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      window.history.replaceState({}, "", newUrl);
+
+      // Call API with new event tab (filters are cleared, so they won't be added)
+      if (categoryId === 3) {
+        setIsLoading(true);
+        setListings([]);
+        const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+        if (cityId) params.cityId = cityId;
+        if (categoryId) params.categoryId = categoryId;
+        if (id === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (id === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (id === "recurring") {
+          params.eventType = "recurring";
+        }
+        // Don't add startDate, endDate, or sort since we cleared them
+        setTimeout(() => {
+          fetchData(params);
+        }, 500);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [categoryId, cityId],
+  );
   return (
     <section className="text-gray-600 body-font relative">
       <HomePageNavBar />
@@ -725,11 +776,12 @@ const HomePage = () => {
                   {eventTabOptions?.map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setEventTab(tab.id)}
-                      className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${eventTab === tab.id
-                        ? "bg-gray-600 text-white"
-                        : "bg-transparent text-gray-600 hover:bg-gray-200"
-                        }`}
+                      onClick={() => handleEventTabChange(tab.id)}
+                      className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${
+                        eventTab === tab.id
+                          ? "bg-gray-600 text-white"
+                          : "bg-transparent text-gray-600 hover:bg-gray-200"
+                      }`}
                       style={{ fontFamily: "Poppins, sans-serif" }}
                       type="button"
                     >
@@ -764,28 +816,48 @@ const HomePage = () => {
                       t("chooseOneCategory"),
                     );
                   }
-                  const url = terminalView
-                    ? "/AllListings?terminalView=true"
+                  // Get all current URL parameters
+                  const urlParams = new URLSearchParams(window.location.search);
+
+                  // Build the AllListings URL with all current parameters
+                  const allListingsParams = new URLSearchParams();
+
+                  // Preserve all existing URL parameters
+                  urlParams.forEach((value, key) => {
+                    allListingsParams.set(key, value);
+                  });
+
+                  // Add terminalView if needed
+                  if (terminalView) {
+                    allListingsParams.set("terminalView", "true");
+                  }
+
+                  const queryString = allListingsParams.toString();
+                  const url = queryString
+                    ? `/AllListings?${queryString}`
                     : "/AllListings";
                   navigateTo(url, { replace: true });
                 }}
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${terminalView ? "bg-green-600" : "bg-gray-900"
-                    } group-hover:-translate-x-0 group-hover:-translate-y-0`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${
+                    terminalView ? "bg-green-600" : "bg-gray-900"
+                  } group-hover:-translate-x-0 group-hover:-translate-y-0`}
                 ></span>
                 <span
-                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${terminalView
-                    ? "border-green-600 group-hover:bg-green-600"
-                    : "border-gray-900 group-hover:bg-gray-900"
-                    }`}
+                  className={`absolute inset-0 w-full sm:w-80 h-full bg-white border-2 ${
+                    terminalView
+                      ? "border-green-600 group-hover:bg-green-600"
+                      : "border-gray-900 group-hover:bg-gray-900"
+                  }`}
                 ></span>
                 <span
-                  className={`relative ${terminalView
-                    ? "text-green-600 group-hover:text-white"
-                    : "text-gray-900 group-hover:text-white"
-                    }`}
+                  className={`relative ${
+                    terminalView
+                      ? "text-green-600 group-hover:text-white"
+                      : "text-gray-900 group-hover:text-white"
+                  }`}
                 >
                   {t("viewMore")}
                 </span>
@@ -858,7 +930,7 @@ const HomePage = () => {
                               src={
                                 city.image
                                   ? process.env.REACT_APP_BUCKET_HOST +
-                                  city.image
+                                    city.image
                                   : CITYIMAGE
                               }
                               onError={(e) => {

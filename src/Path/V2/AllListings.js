@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import SearchBar from "../../Components/SearchBar";
 import ListingsCard from "../../Components/ListingsCard";
@@ -117,11 +117,92 @@ const AllListings = () => {
           }
         } else urlParams.delete("categoryId");
       }
+      // Initialize filters from URL params and add to API params
+      const startDateParam = urlParams.get("startDate");
+      if (startDateParam) {
+        setStartDate(startDateParam);
+        // Add to API params if category is 3
+        if (parseInt(categoryIdParam) === 3) {
+          params.startDate = startDateParam;
+        }
+      }
+      const endDateParam = urlParams.get("endDate");
+      if (endDateParam) {
+        setEndDate(endDateParam);
+        // Add to API params if category is 3
+        if (parseInt(categoryIdParam) === 3) {
+          params.endDate = endDateParam;
+        }
+      }
+      const sortParam = urlParams.get("sort");
+      if (sortParam) {
+        setSelectedSortOption(sortParam);
+        params.sort = sortParam; // Add sort to API params
+      }
+      const eventTabParam = urlParams.get("eventTab");
+      if (eventTabParam) {
+        setEventTab(eventTabParam);
+        // Add eventType to API params if category is 3
+        if (parseInt(categoryIdParam) === 3) {
+          if (eventTabParam === "singleDay") {
+            params.eventType = "singleDay";
+          } else if (eventTabParam === "multiDay") {
+            params.eventType = "multiDay";
+          } else if (eventTabParam === "recurring") {
+            params.eventType = "recurring";
+          }
+        }
+      }
       setTimeout(() => {
         fetchData(params);
+        setIsLoading(false);
       }, 1000);
     });
   }, []);
+
+  // Sync state with URL parameters when location changes
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+
+    // Update startDate from URL if different
+    const urlStartDate = urlParams.get("startDate") || "";
+    if (urlStartDate && urlStartDate !== startDate) {
+      setStartDate(urlStartDate);
+    } else if (!urlStartDate && startDate) {
+      setStartDate("");
+    }
+
+    // Update endDate from URL if different
+    const urlEndDate = urlParams.get("endDate") || "";
+    if (urlEndDate && urlEndDate !== endDate) {
+      setEndDate(urlEndDate);
+    } else if (!urlEndDate && endDate) {
+      setEndDate("");
+    }
+
+    // Update sort from URL if different
+    const urlSort = urlParams.get("sort") || "";
+    if (urlSort && urlSort !== selectedSortOption) {
+      setSelectedSortOption(urlSort);
+    } else if (!urlSort && selectedSortOption) {
+      setSelectedSortOption("");
+    }
+
+    // Update eventTab from URL if different (only for category 3)
+    const urlEventTab = urlParams.get("eventTab");
+    const currentCategoryId = parseInt(urlParams.get("categoryId"));
+    if (currentCategoryId === 3 || currentCategoryId === "3") {
+      if (urlEventTab && urlEventTab !== eventTab) {
+        setEventTab(urlEventTab);
+      } else if (!urlEventTab && eventTab !== "singleDay") {
+        setEventTab("singleDay");
+      }
+    } else if (eventTab !== "singleDay") {
+      // Reset eventTab if category is not 3
+      setEventTab("singleDay");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -155,6 +236,32 @@ const AllListings = () => {
         params.pageNo = 1;
         urlParams.delete("pageNo");
       }
+      // Update URL params for filters
+      if (startDate) {
+        urlParams.set("startDate", startDate);
+      } else {
+        urlParams.delete("startDate");
+      }
+      if (endDate) {
+        urlParams.set("endDate", endDate);
+      } else {
+        urlParams.delete("endDate");
+      }
+      if (selectedSortOption) {
+        urlParams.set("sort", selectedSortOption);
+      } else {
+        urlParams.delete("sort");
+      }
+      // Only add eventTab to URL if category is 3 (Events)
+      if (categoryId === 3 || categoryId === "3") {
+        if (eventTab) {
+          urlParams.set("eventTab", eventTab);
+        } else {
+          urlParams.delete("eventTab");
+        }
+      } else {
+        urlParams.delete("eventTab");
+      }
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.history.replaceState({}, "", newUrl);
       if (parseInt(categoryId) === 3) {
@@ -164,7 +271,15 @@ const AllListings = () => {
         fetchData(params);
       }, 1000);
     }
-  }, [categoryId, cityId, pageNo]);
+  }, [
+    categoryId,
+    cityId,
+    pageNo,
+    startDate,
+    endDate,
+    selectedSortOption,
+    eventTab,
+  ]);
 
   const handleCityChange = (newCityId) => {
     setIsLoading(true);
@@ -176,19 +291,25 @@ const AllListings = () => {
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
-    // Add event-specific params
+    // Add sort parameter to API if selected (use params if already set, otherwise use state)
+    if (!params.sort && selectedSortOption) {
+      params.sort = selectedSortOption;
+    }
+    // Add event-specific params (use params if already set, otherwise use state)
     if (categoryId === 3) {
-      if (eventTab === "singleDay") {
-        params.eventType = "singleDay";
-      } else if (eventTab === "multiDay") {
-        params.eventType = "multiDay";
-      } else if (eventTab === "recurring") {
-        params.eventType = "recurring";
+      if (!params.eventType) {
+        if (eventTab === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (eventTab === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (eventTab === "recurring") {
+          params.eventType = "recurring";
+        }
       }
-      if (startDate) {
+      if (!params.startDate && startDate) {
         params.startDate = startDate;
       }
-      if (endDate) {
+      if (!params.endDate && endDate) {
         params.endDate = endDate;
       }
     }
@@ -241,10 +362,19 @@ const AllListings = () => {
   const handleCategoryChange = (newCategoryId) => {
     setCategoryId(newCategoryId);
     clearSearchResults();
+
+    // Clear all filters when category changes (except cityId)
+    setStartDate("");
+    setEndDate("");
+    setSelectedSortOption("");
+
+    // Clear eventTab if category is not 3 (Events)
+    if (newCategoryId !== 3 && newCategoryId !== "3") {
+      setEventTab("singleDay");
+    }
   };
 
   const handleSearch = async (searchQuery) => {
-    console.log("Search term:", searchQuery);
     setSearchQuery(searchQuery); // Save the search query
 
     try {
@@ -260,6 +390,34 @@ const AllListings = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+
+      // Pass filters to search API
+      const startDateParam = urlParams.get("startDate");
+      if (startDateParam) {
+        params.startDate = startDateParam;
+      }
+
+      const endDateParam = urlParams.get("endDate");
+      if (endDateParam) {
+        params.endDate = endDateParam;
+      }
+
+      const sortParam = urlParams.get("sort");
+      if (sortParam) {
+        params.sort = sortParam;
+      }
+
+      const eventTabParam = urlParams.get("eventTab");
+      if (eventTabParam && parseInt(categoryId) === 3) {
+        if (eventTabParam === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (eventTabParam === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (eventTabParam === "recurring") {
+          params.eventType = "recurring";
+        }
+      }
+
       const response = await getListingsBySearch({
         searchQuery,
         ...params,
@@ -276,20 +434,67 @@ const AllListings = () => {
     setSearchQuery(""); // Clear the search query
   };
 
+  // Clear filters when eventTab changes
+
   // Trigger fetchData when event filters change
-  useEffect(() => {
-    if (categoryId === 3 && !isLoading) {
-      const params = { pageSize, statusId: 1, pageNo: 1 };
-      if (cityId) params.cityId = cityId;
-      if (categoryId) params.categoryId = categoryId;
-      setListings([]);
-      setIsLoading(true);
-      setTimeout(() => {
-        fetchData(params);
-      }, 500);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventTab, startDate, endDate]);
+  // useEffect(() => {
+  //   if (categoryId === 3 && !isLoading) {
+  //     const params = { pageSize, statusId: 1, pageNo: 1 };
+  //     if (cityId) params.cityId = cityId;
+  //     if (categoryId) params.categoryId = categoryId;
+  //     setListings([]);
+  //     setIsLoading(true);
+  //     setTimeout(() => {
+  //       fetchData(params);
+  //     }, 500);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [eventTab, startDate, endDate]);
+  const handleEventTabChange = useCallback(
+    (id) => {
+      // Clear all filters when event tab changes
+      setStartDate("");
+      setEndDate("");
+      setSelectedSortOption("");
+      setEventTab(id);
+      setSearchQuery("");
+
+      // Update URL to remove filters
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.delete("startDate");
+      urlParams.delete("endDate");
+      urlParams.delete("sort");
+      if (categoryId === 3 || categoryId === "3") {
+        urlParams.set("eventTab", id);
+      } else {
+        urlParams.delete("eventTab");
+      }
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      window.history.replaceState({}, "", newUrl);
+
+      // Call API with new event tab (filters are cleared, so they won't be added)
+      if (categoryId === 3) {
+        setIsLoading(true);
+        setListings([]);
+        const params = { pageSize, statusId: 1, pageNo: 1 };
+        if (cityId) params.cityId = cityId;
+        if (categoryId) params.categoryId = categoryId;
+        if (id === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (id === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (id === "recurring") {
+          params.eventType = "recurring";
+        }
+        // Don't add startDate, endDate, or sort since we cleared them
+        setTimeout(() => {
+          fetchData(params);
+        }, 500);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [categoryId, cityId, pageSize],
+  );
 
   return (
     <section className="text-gray-600 body-font relative">
@@ -594,12 +799,11 @@ const AllListings = () => {
                     {eventTabOptions?.map((tab) => (
                       <button
                         key={tab.id}
-                        onClick={() => setEventTab(tab.id)}
-                        className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${
-                          eventTab === tab.id
-                            ? "bg-gray-600 text-white"
-                            : "bg-transparent text-gray-600 hover:bg-gray-200"
-                        }`}
+                        onClick={() => handleEventTabChange(tab.id)}
+                        className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${eventTab === tab.id
+                          ? "bg-gray-600 text-white"
+                          : "bg-transparent text-gray-600 hover:bg-gray-200"
+                          }`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         type="button"
                       >
@@ -662,13 +866,12 @@ const AllListings = () => {
           </div>
         )}
         <div
-          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${
-            process.env.REACT_APP_NAME === "Salzkotten APP"
-              ? "bg-yellow-600 hover:bg-yellow-400"
-              : process.env.REACT_APP_NAME === "FICHTEL"
+          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === "Salzkotten APP"
+            ? "bg-yellow-600 hover:bg-yellow-400"
+            : process.env.REACT_APP_NAME === "FICHTEL"
               ? "bg-lime-700 hover:bg-lime-300"
               : "bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-          } px-8 py-2 text-base font-semibold cursor-pointer`}
+            } px-8 py-2 text-base font-semibold cursor-pointer`}
         >
           {pageNo !== 1 ? (
             <span
