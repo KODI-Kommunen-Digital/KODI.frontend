@@ -95,7 +95,11 @@ const FlatPickerCommponent = ({
 
   return (
     <>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-600">
+      <label
+        htmlFor={id}
+        className="block text-sm font-medium text-gray-600"
+        onClick={(e) => e.preventDefault()}
+      >
         {placeholder} {required && "*"}
       </label>
       <Flatpickr

@@ -15,6 +15,14 @@ const RecurringSchedule = ({
   t,
   isRecurringScheduleComplete,
 }) => {
+  // Ensure error.recurringSchedules is always an array
+  const safeError = {
+    ...error,
+    recurringSchedules: Array.isArray(error?.recurringSchedules)
+      ? error.recurringSchedules
+      : [],
+  };
+
   return (
     <div className="relative mb-4">
       <div className="relative mb-4">
@@ -150,6 +158,7 @@ const RecurringSchedule = ({
                       monthlyWeekday: "",
                       dayOrdinal: "",
                       exceptionDates: [],
+                      interval: 1,
                     };
                     return {
                       ...prev,
@@ -158,7 +167,10 @@ const RecurringSchedule = ({
                   });
                   // Clear related errors
                   setError((prevError) => {
-                    const updatedErrors = [...prevError.recurringSchedules];
+                    const prevSchedules = Array.isArray(prevError?.recurringSchedules)
+                      ? prevError.recurringSchedules
+                      : [];
+                    const updatedErrors = [...prevSchedules];
                     updatedErrors[scheduleIndex] = {
                       ...updatedErrors[scheduleIndex],
                       recurringType: "",
@@ -193,13 +205,13 @@ const RecurringSchedule = ({
               <div
                 className="mt-2 text-sm text-red-600"
                 style={{
-                  visibility: error?.recurringSchedules?.[scheduleIndex]
+                  visibility: safeError.recurringSchedules?.[scheduleIndex]
                     ?.recurringType
                     ? "visible"
                     : "hidden",
                 }}
               >
-                {error?.recurringSchedules?.[scheduleIndex]?.recurringType}
+                {safeError.recurringSchedules?.[scheduleIndex]?.recurringType}
               </div>
             </div>
 
@@ -260,13 +272,13 @@ const RecurringSchedule = ({
                 <div
                   className="mt-2 text-sm text-red-600"
                   style={{
-                    visibility: error?.recurringSchedules?.[scheduleIndex]
+                    visibility: safeError.recurringSchedules?.[scheduleIndex]
                       ?.interval
                       ? "visible"
                       : "hidden",
                   }}
                 >
-                  {error?.recurringSchedules?.[scheduleIndex]?.interval}
+                  {safeError.recurringSchedules?.[scheduleIndex]?.interval}
                 </div>
               </div>
             )}
@@ -356,13 +368,13 @@ const RecurringSchedule = ({
                 <div
                   className="mt-2 text-sm text-red-600"
                   style={{
-                    visibility: error?.recurringSchedules?.[scheduleIndex]
+                    visibility: safeError.recurringSchedules?.[scheduleIndex]
                       ?.recurringDays
                       ? "visible"
                       : "hidden",
                   }}
                 >
-                  {error?.recurringSchedules?.[scheduleIndex]?.recurringDays}
+                  {safeError.recurringSchedules?.[scheduleIndex]?.recurringDays}
                 </div>
               </div>
             )}
@@ -371,7 +383,7 @@ const RecurringSchedule = ({
             {schedule.recurringType === "monthly" && (
               <div className="relative mb-4">
                 <label className="block text-sm font-medium text-gray-600">
-                  {t("selectDays")} *
+                  {t("selectDays")} ({t("optional")})
                 </label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {daysOfWeek?.map((day) => (
@@ -430,13 +442,13 @@ const RecurringSchedule = ({
                 <div
                   className="mt-2 text-sm text-red-600"
                   style={{
-                    visibility: error?.recurringSchedules?.[scheduleIndex]
+                    visibility: safeError.recurringSchedules?.[scheduleIndex]
                       ?.monthlyWeekday
                       ? "visible"
                       : "hidden",
                   }}
                 >
-                  {error?.recurringSchedules?.[scheduleIndex]?.monthlyWeekday}
+                  {safeError.recurringSchedules?.[scheduleIndex]?.monthlyWeekday}
                 </div>
               </div>
             )}
@@ -499,13 +511,13 @@ const RecurringSchedule = ({
                   <div
                     className="mt-2 text-sm text-red-600"
                     style={{
-                      visibility: error?.recurringSchedules?.[scheduleIndex]
+                      visibility: safeError.recurringSchedules?.[scheduleIndex]
                         ?.dayOrdinal
                         ? "visible"
                         : "hidden",
                     }}
                   >
-                    {error?.recurringSchedules?.[scheduleIndex]?.dayOrdinal}
+                    {safeError.recurringSchedules?.[scheduleIndex]?.dayOrdinal}
                   </div>
                 </div>
               )}
@@ -552,7 +564,7 @@ const RecurringSchedule = ({
                       setError={setError}
                       error={{
                         startDate:
-                          error?.recurringSchedules?.[scheduleIndex]
+                          safeError.recurringSchedules?.[scheduleIndex]
                             ?.startDate || "",
                       }}
                       listingInput={{
@@ -566,23 +578,19 @@ const RecurringSchedule = ({
                       t={t}
                       minDate={null}
                       customOnChange={(date) => {
-                        if (!date || date.length === 0 || !date[0]) {
-                          return;
-                        }
+                        if (!date || date.length === 0 || !date[0]) return;
 
+                        const selectedDate = date[0];
                         const formattedDate = format(
-                          date[0],
+                          selectedDate,
                           "yyyy-MM-dd'T'HH:mm",
                         );
 
+                        // ✅ Update startDate
                         setListingInput((prev) => {
                           const updatedSchedules = [...prev.recurringSchedules];
-                          const currentSchedule =
-                            updatedSchedules[scheduleIndex];
-
-                          // Set start date without auto-filling end time
                           updatedSchedules[scheduleIndex] = {
-                            ...currentSchedule,
+                            ...updatedSchedules[scheduleIndex],
                             startDate: formattedDate,
                           };
 
@@ -592,14 +600,55 @@ const RecurringSchedule = ({
                           };
                         });
 
-                        // Clear errors when user is selecting a date
+                        // ✅ Re-validate all dependent fields
+                        let startDateError = "";
+                        let endDateError = "";
+                        let repeatUntilError = "";
+
+                        // ✅ Check startDate < endDate
+                        if (schedule.endDate) {
+                          const endDateTime = new Date(schedule.endDate);
+                          if (selectedDate >= endDateTime) {
+                            startDateError = t(
+                              "startTimeMustbelessThanEndTime",
+                            );
+                            endDateError = t(
+                              "endTimeMustBeGreaterThanStartTime",
+                            );
+                          }
+                        }
+
+                        // ✅ Check startDate < repeatUntil
+                        if (schedule.repeatUntil) {
+                          const repeatUntilTime = new Date(
+                            schedule.repeatUntil,
+                          );
+                          if (selectedDate >= repeatUntilTime) {
+                            startDateError = t(
+                              "startDateMustBeLessThanRepeatUntil",
+                            );
+                            repeatUntilError = t(
+                              "repeatUntilMustBeGreaterThanStartDate",
+                            );
+                          }
+                        }
+
+                        // ✅ Update errors (clear automatically when valid)
                         setError((prev) => {
                           const updatedErrors = [...prev.recurringSchedules];
                           updatedErrors[scheduleIndex] = {
                             ...updatedErrors[scheduleIndex],
-                            startDate: "",
-                            recurringEndTime: "",
+
+                            // ✅ startDate validation
+                            startDate: startDateError,
+
+                            // ✅ clear/set endDate error
+                            recurringEndTime: endDateError,
+
+                            // ✅ clear/set repeatUntil error
+                            repeatUntil: repeatUntilError,
                           };
+
                           return {
                             ...prev,
                             recurringSchedules: updatedErrors,
@@ -667,7 +716,7 @@ const RecurringSchedule = ({
                       setError={setError}
                       error={{
                         recurringEndTime:
-                          error?.recurringSchedules?.[scheduleIndex]
+                          safeError.recurringSchedules?.[scheduleIndex]
                             ?.recurringEndTime || "",
                       }}
                       listingInput={{
@@ -680,51 +729,75 @@ const RecurringSchedule = ({
                       minDate={null}
                       maxDate={null}
                       customOnChange={(date) => {
-                        if (date && date.length > 0) {
-                          const selectedDate = date[0];
-                          const formattedDate = format(
-                            selectedDate,
-                            "yyyy-MM-dd'T'HH:mm",
+                        if (!date || date.length === 0 || !date[0]) return;
+
+                        const selectedDate = date[0];
+                        const formattedDate = format(
+                          selectedDate,
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+
+                        // ✅ Update endDate + recurringEndTime
+                        setListingInput((prev) => {
+                          const updatedSchedules = [...prev.recurringSchedules];
+                          updatedSchedules[scheduleIndex] = {
+                            ...updatedSchedules[scheduleIndex],
+                            endDate: formattedDate,
+                            recurringEndTime: formattedDate,
+                          };
+                          return {
+                            ...prev,
+                            recurringSchedules: updatedSchedules,
+                          };
+                        });
+
+                        // ✅ Re-validate errors properly
+                        let startDateError = "";
+                        let endDateError = "";
+                        let repeatUntilError = "";
+
+                        // ✅ endDate > startDate
+                        if (schedule.startDate) {
+                          const startDateTime = new Date(schedule.startDate);
+                          if (selectedDate <= startDateTime) {
+                            endDateError = t(
+                              "endTimeMustBeGreaterThanStartTime",
+                            );
+                            startDateError = t(
+                              "startTimeMustbelessThanEndTime",
+                            );
+                          }
+                        }
+
+                        // ✅ validate repeatUntil > startDate (in case startDate already exists)
+                        if (schedule.startDate && schedule.repeatUntil) {
+                          const startDateTime = new Date(schedule.startDate);
+                          const repeatUntilTime = new Date(
+                            schedule.repeatUntil,
                           );
 
-                          setListingInput((prev) => {
-                            const updatedSchedules = [
-                              ...prev.recurringSchedules,
-                            ];
-                            updatedSchedules[scheduleIndex] = {
-                              ...updatedSchedules[scheduleIndex],
-                              endDate: formattedDate,
-                              recurringEndTime: formattedDate,
-                            };
-                            return {
-                              ...prev,
-                              recurringSchedules: updatedSchedules,
-                            };
-                          });
-
-                          // Validate that end time is after start time (only if start date exists)
-                          let errorMessage = "";
-                          if (schedule.startDate) {
-                            const startDateTime = new Date(schedule.startDate);
-                            if (selectedDate <= startDateTime) {
-                              errorMessage = t(
-                                "endTimeMustBeGreaterThanStartTime",
-                              );
-                            }
+                          if (repeatUntilTime <= startDateTime) {
+                            repeatUntilError = t(
+                              "repeatUntilMustBeGreaterThanStartDate",
+                            );
                           }
-
-                          setError((prev) => {
-                            const updatedErrors = [...prev.recurringSchedules];
-                            updatedErrors[scheduleIndex] = {
-                              ...updatedErrors[scheduleIndex],
-                              recurringEndTime: errorMessage,
-                            };
-                            return {
-                              ...prev,
-                              recurringSchedules: updatedErrors,
-                            };
-                          });
                         }
+
+                        // ✅ Set errors (auto clear when valid)
+                        setError((prev) => {
+                          const updatedErrors = [...prev.recurringSchedules];
+                          updatedErrors[scheduleIndex] = {
+                            ...updatedErrors[scheduleIndex],
+                            startDate: startDateError, // ✅ clear/set startDate error
+                            recurringEndTime: endDateError, // ✅ clear/set endDate error
+                            repeatUntil: repeatUntilError, // ✅ clear/set repeatUntil error
+                          };
+
+                          return {
+                            ...prev,
+                            recurringSchedules: updatedErrors,
+                          };
+                        });
                       }}
                       customOnClose={(selectedDates, dateStr) => {
                         if (dateStr && schedule.startDate) {
@@ -785,7 +858,7 @@ const RecurringSchedule = ({
                     setError={setError}
                     error={{
                       repeatUntil:
-                        error?.recurringSchedules?.[scheduleIndex]
+                        safeError.recurringSchedules?.[scheduleIndex]
                           ?.repeatUntil || "",
                     }}
                     listingInput={{
@@ -798,48 +871,71 @@ const RecurringSchedule = ({
                     t={t}
                     minDate={null}
                     customOnChange={(date) => {
-                      if (date && date.length > 0) {
-                        const selectedDate = date[0];
-                        const formattedDate = format(
-                          selectedDate,
-                          "yyyy-MM-dd'T'HH:mm",
-                        );
+                      if (!date || date.length === 0 || !date[0]) return;
 
-                        setListingInput((prev) => {
-                          const updatedSchedules = [...prev.recurringSchedules];
-                          updatedSchedules[scheduleIndex] = {
-                            ...updatedSchedules[scheduleIndex],
-                            repeatUntil: formattedDate,
-                          };
-                          return {
-                            ...prev,
-                            recurringSchedules: updatedSchedules,
-                          };
-                        });
+                      const selectedDate = date[0];
+                      const formattedDate = format(
+                        selectedDate,
+                        "yyyy-MM-dd'T'HH:mm",
+                      );
 
-                        // Validate that repeat until is after start date
-                        let errorMessage = "";
-                        if (schedule.startDate) {
-                          const startDateTime = new Date(schedule.startDate);
-                          if (selectedDate <= startDateTime) {
-                            errorMessage = t(
-                              "repeatUntilMustBeGreaterThanStartDate",
-                            );
-                          }
+                      // ✅ Update repeatUntil
+                      setListingInput((prev) => {
+                        const updatedSchedules = [...prev.recurringSchedules];
+                        updatedSchedules[scheduleIndex] = {
+                          ...updatedSchedules[scheduleIndex],
+                          repeatUntil: formattedDate,
+                        };
+                        return {
+                          ...prev,
+                          recurringSchedules: updatedSchedules,
+                        };
+                      });
+
+                      // ✅ Re-validate errors
+                      let startDateError = "";
+                      let repeatUntilError = "";
+                      let endDateError = "";
+
+                      // ✅ repeatUntil > startDate
+                      if (schedule.startDate) {
+                        const startDateTime = new Date(schedule.startDate);
+
+                        if (selectedDate <= startDateTime) {
+                          repeatUntilError = t(
+                            "repeatUntilMustBeGreaterThanStartDate",
+                          );
+                          startDateError = t(
+                            "startDateMustBeLessThanRepeatUntil",
+                          );
                         }
-
-                        setError((prev) => {
-                          const updatedErrors = [...prev.recurringSchedules];
-                          updatedErrors[scheduleIndex] = {
-                            ...updatedErrors[scheduleIndex],
-                            repeatUntil: errorMessage,
-                          };
-                          return {
-                            ...prev,
-                            recurringSchedules: updatedErrors,
-                          };
-                        });
                       }
+
+                      // ✅ endDate should still be > startDate (if already exists)
+                      if (schedule.startDate && schedule.endDate) {
+                        const startDateTime = new Date(schedule.startDate);
+                        const endDateTime = new Date(schedule.endDate);
+
+                        if (endDateTime <= startDateTime) {
+                          endDateError = t("endTimeMustBeGreaterThanStartTime");
+                        }
+                      }
+
+                      // ✅ Set errors (auto clear when valid)
+                      setError((prev) => {
+                        const updatedErrors = [...prev.recurringSchedules];
+                        updatedErrors[scheduleIndex] = {
+                          ...updatedErrors[scheduleIndex],
+                          startDate: startDateError, // ✅ clear/set startDate error
+                          repeatUntil: repeatUntilError, // ✅ clear/set repeatUntil error
+                          recurringEndTime: endDateError, // ✅ keep end validation consistent
+                        };
+
+                        return {
+                          ...prev,
+                          recurringSchedules: updatedErrors,
+                        };
+                      });
                     }}
                   />
                 </div>
@@ -850,6 +946,7 @@ const RecurringSchedule = ({
                     <label
                       htmlFor={`exceptionDates-${scheduleIndex}`}
                       className="block text-sm font-medium text-gray-600"
+                      onClick={(e) => e.preventDefault()}
                     >
                       {t("exceptionDates")} ({t("optional")})
                     </label>
@@ -1000,8 +1097,8 @@ RecurringSchedule.propTypes = {
         recurringType: PropTypes.string,
         recurringDays: PropTypes.arrayOf(PropTypes.string),
         monthlyWeekday: PropTypes.string,
-        dayOrdinal: PropTypes.string,
-        interval: PropTypes.number,
+        dayOrdinal: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        interval: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         startDate: PropTypes.string,
         endDate: PropTypes.string,
         recurringEndTime: PropTypes.string,
@@ -1018,7 +1115,7 @@ RecurringSchedule.propTypes = {
         recurringDays: PropTypes.string,
         monthlyWeekday: PropTypes.string,
         dayOrdinal: PropTypes.string,
-        interval: PropTypes.string,
+        interval: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         startDate: PropTypes.string,
         recurringEndTime: PropTypes.string,
         repeatUntil: PropTypes.string,

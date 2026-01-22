@@ -739,8 +739,12 @@ function UploadListings() {
           navigate("/Dashboard");
         }, 5000);
       } catch (error) {
-        console.error("Error during submission:", error);
-        setErrorMessage(t("changesNotSaved"));
+        console.error("Error during submission:", error.response.errorCode);
+        if (error?.response?.data?.errorCode == "INVALID_RECURRENCE_RULE") {
+          setErrorMessage(t("invalidRecurrenceRule") || t("changesNotSaved"));
+        } else {
+          setErrorMessage(t("changesNotSaved"));
+        }
         setTimeout(() => setErrorMessage(false), 5000);
       } finally {
         setUpdating(false);
@@ -1329,10 +1333,10 @@ function UploadListings() {
 
     // For monthly, check if weekday and ordinal are selected
     if (schedule.recurringType === "monthly") {
-      if (!schedule.monthlyWeekday) {
-        return false;
-      }
-      if (!schedule.dayOrdinal) {
+      // if (!schedule.monthlyWeekday) {
+      //   return false;
+      // }
+      if (schedule.monthlyWeekday && !schedule.dayOrdinal) {
         return false;
       }
     }
@@ -1657,10 +1661,10 @@ function UploadListings() {
   useEffect(() => {
     const checkFormValidity = () => {
       // Basic required fields
-      const hasTitle = listingInput.title && listingInput.title.trim() !== "";
+      const hasTitle = listingInput?.title && listingInput?.title.trim() !== "";
       // Description might contain HTML tags, so remove them before checking
-      const plainDescription = listingInput.description
-        ? listingInput.description.replace(/<[^>]*>/g, "").trim()
+      const plainDescription = listingInput?.description
+        ? listingInput?.description.replace(/<[^>]*>/g, "").trim()
         : "";
       const hasDescription =
         plainDescription !== "" && plainDescription !== "<br>";
@@ -1675,17 +1679,17 @@ function UploadListings() {
         !selectedCategory ||
         selectedCategory.noOfSubcategories === 0 ||
         (selectedCategory.noOfSubcategories > 0 &&
-          listingInput.subcategoryId &&
-          listingInput.subcategoryId !== 0 &&
-          listingInput.subcategoryId !== "0" &&
-          listingInput.subcategoryId !== "");
+          listingInput?.subcategoryId &&
+          listingInput?.subcategoryId !== 0 &&
+          listingInput?.subcategoryId !== "0" &&
+          listingInput?.subcategoryId !== "");
 
       // Check for basic errors - only check if error has actual text (not empty string)
       const hasBasicErrors =
-        (error.title && error.title !== "") ||
-        (error.description && error.description !== "") ||
-        (error.categoryId && error.categoryId !== "") ||
-        (error.subcategoryId && error.subcategoryId !== "");
+        (error?.title && error?.title !== "") ||
+        (error?.description && error?.description !== "") ||
+        (error?.categoryId && error?.categoryId !== "") ||
+        (error?.subcategoryId && error?.subcategoryId !== "");
 
       // Category-specific validation
       let isCategoryValid = true;
@@ -1694,9 +1698,9 @@ function UploadListings() {
         // Event category validation
 
         // For non-recurring events, check if startDate is filled
-        if (!listingInput.isRecurrence) {
+        if (!listingInput?.isRecurrence) {
           const hasStartDate =
-            listingInput.startDate && listingInput.startDate !== "";
+            listingInput?.startDate && listingInput?.startDate !== "";
 
           if (!hasStartDate) {
             isCategoryValid = false;
@@ -1704,21 +1708,21 @@ function UploadListings() {
         }
 
         // For recurring events
-        if (listingInput.isRecurrence) {
+        if (listingInput?.isRecurrence) {
           // Check if all recurring schedules are valid
-          for (let i = 0; i < listingInput.recurringSchedules.length; i++) {
+          for (let i = 0; i < listingInput?.recurringSchedules?.length; i++) {
             const schedule = listingInput.recurringSchedules[i];
 
             const hasRecurringType =
-              schedule.recurringType && schedule.recurringType !== "";
+              schedule?.recurringType && schedule?.recurringType !== "";
             const hasStartDate =
-              schedule.startDate && schedule.startDate !== "";
+              schedule?.startDate && schedule?.startDate !== "";
             const hasRecurringEndTime =
-              schedule.recurringEndTime && schedule.recurringEndTime !== "";
+              schedule?.recurringEndTime && schedule?.recurringEndTime !== "";
             const hasRepeatUntil =
-              schedule.repeatUntil && schedule.repeatUntil !== "";
+              schedule?.repeatUntil && schedule?.repeatUntil !== "";
             const hasValidInterval =
-              schedule.interval && schedule.interval >= 1;
+              schedule?.interval && schedule?.interval >= 1;
 
             if (
               !hasRecurringType ||
@@ -1732,7 +1736,7 @@ function UploadListings() {
             }
 
             // For weekly recurring, need weekdays
-            if (schedule.recurringType === "weekly") {
+            if (schedule?.recurringType === "weekly") {
               const hasWeekdays =
                 schedule.recurringDays && schedule.recurringDays.length > 0;
               if (!hasWeekdays) {
@@ -1742,15 +1746,19 @@ function UploadListings() {
             }
 
             // For monthly recurring, need monthlyWeekday and dayOrdinal
-            if (schedule.recurringType === "monthly") {
+            if (schedule?.recurringType === "monthly") {
               const hasMonthlyWeekday =
                 schedule.monthlyWeekday && schedule.monthlyWeekday !== "";
+
               const hasDayOrdinal =
                 schedule.dayOrdinal && schedule.dayOrdinal !== "";
-              if (!hasMonthlyWeekday || !hasDayOrdinal) {
+              // ✅ If weekday is selected, then dayOrdinal is compulsory
+              if (hasMonthlyWeekday && !hasDayOrdinal) {
                 isCategoryValid = false;
                 break;
               }
+
+              // ✅ If weekday is not selected, no error required
             }
           }
         }
@@ -1769,14 +1777,15 @@ function UploadListings() {
           for (let i = 0; i < error?.recurringSchedules.length; i++) {
             const scheduleError = error?.recurringSchedules[i];
             if (
-              scheduleError.recurringType ||
-              scheduleError.startDate ||
-              scheduleError.recurringEndTime ||
-              scheduleError.repeatUntil ||
-              scheduleError.recurringDays ||
-              scheduleError.monthlyWeekday ||
-              scheduleError.dayOrdinal ||
-              scheduleError.interval
+              scheduleError &&
+              (scheduleError?.recurringType ||
+                scheduleError?.startDate ||
+                scheduleError?.recurringEndTime ||
+                scheduleError?.repeatUntil ||
+                scheduleError?.recurringDays ||
+                scheduleError?.monthlyWeekday ||
+                scheduleError?.dayOrdinal ||
+                scheduleError?.interval)
             ) {
               isCategoryValid = false;
               break;
