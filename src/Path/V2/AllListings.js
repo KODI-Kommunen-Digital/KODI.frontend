@@ -4,6 +4,7 @@ import SearchBar from "../../Components/SearchBar";
 import ListingsCard from "../../Components/ListingsCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
+  eventTabOptions,
   sortByTitleAZ,
   sortByTitleZA,
   sortLatestFirst,
@@ -18,6 +19,9 @@ import Footer from "../../Components/Footer";
 import LoadingPage from "../../Components/LoadingPage";
 import { getCategory } from "../../Services/CategoryApi";
 import RegionColors from "../../Components/RegionColors";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
+import { format } from "date-fns";
 
 const AllListings = () => {
   window.scrollTo(0, 0);
@@ -30,7 +34,7 @@ const AllListings = () => {
   const [selectedCity, setCityName] = useState(
     t("allCities", {
       regionName: process.env.REACT_APP_REGION_NAME,
-    })
+    }),
   );
   const [selectedSortOption, setSelectedSortOption] = useState("");
   const [listings, setListings] = useState([]);
@@ -39,6 +43,9 @@ const AllListings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [eventTab, setEventTab] = useState("single"); // single, multi, recurring
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const navigate = useNavigate();
   const navigateTo = (path) => {
     if (path) {
@@ -73,7 +80,7 @@ const AllListings = () => {
       setCities(response[0].data.data);
 
       const filteredCategories = response[1]?.data?.data.filter(
-        (category) => !hiddenCategories.includes(category.id)
+        (category) => !hiddenCategories.includes(category.id),
       );
 
       setCategories(filteredCategories || []);
@@ -90,7 +97,7 @@ const AllListings = () => {
       if (cityIdParam) {
         const cityId = parseInt(cityIdParam);
         const city = response[0].data.data.find(
-          (c) => c.id === parseInt(cityIdParam)
+          (c) => c.id === parseInt(cityIdParam),
         );
         if (city) {
           setCityName(city.name);
@@ -129,7 +136,7 @@ const AllListings = () => {
         setCityName(
           t("allCities", {
             regionName: process.env.REACT_APP_REGION_NAME,
-          })
+          }),
         );
         urlParams.delete("cityId");
       }
@@ -169,12 +176,28 @@ const AllListings = () => {
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
+    // Add event-specific params
+    if (categoryId === 3) {
+      if (eventTab === "single") {
+        params.eventType = "single";
+      } else if (eventTab === "multi") {
+        params.eventType = "multi";
+      } else if (eventTab === "recurring") {
+        params.eventType = "recurring";
+      }
+      if (startDate) {
+        params.startDate = startDate;
+      }
+      if (endDate) {
+        params.endDate = endDate;
+      }
+    }
     try {
       const response = await getListings(params);
       const listings = response.data.data;
 
       const filteredListings = listings.filter(
-        (listing) => !hiddenCategories.includes(listing.categoryId)
+        (listing) => !hiddenCategories.includes(listing.categoryId),
       );
 
       setListings(filteredListings);
@@ -253,8 +276,30 @@ const AllListings = () => {
     setSearchQuery(""); // Clear the search query
   };
 
+  // Trigger fetchData when event filters change
+  useEffect(() => {
+    if (categoryId === 3 && !isLoading) {
+      const params = { pageSize, statusId: 1, pageNo: 1 };
+      if (cityId) params.cityId = cityId;
+      if (categoryId) params.categoryId = categoryId;
+      setListings([]);
+      setIsLoading(true);
+      setTimeout(() => {
+        fetchData(params);
+      }, 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventTab, startDate, endDate]);
+
   return (
     <section className="text-gray-600 body-font relative">
+      <style>
+        {`
+          .flatpickr-calendar {
+            z-index: 30 !important;
+          }
+        `}
+      </style>
       {<HomePageNavBar />}
       <div
         className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
@@ -370,7 +415,112 @@ const AllListings = () => {
                     searchBarClassName="w-full"
                     searchQuery={searchQuery}
                   />
+                  {(Number(categoryId) === 3 || categoryId === "3") && (
+                    <div className="flex flex-row gap-1 pl-40 sm:pl-0 col-span-6 sm:col-span-4 justify-center items-center">
+                      <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full relative gap-1">
+                        <Flatpickr
+                          value={startDate}
+                          options={{
+                            enableTime: true,
+                            dateFormat: "Y-m-d H:i",
+                            time_24hr: true, // eslint-disable-line camelcase
+                            allowInput: true,
+                          }}
+                          onChange={(date) => {
+                            if (date[0]) {
+                              const formattedDate = format(
+                                date[0],
+                                "yyyy-MM-dd'T'HH:mm",
+                              );
+                              setStartDate(formattedDate);
+                            }
+                          }}
+                          className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-48 text-gray-600 relative"
+                          placeholder={t("startDate") || "Start Date"}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            zIndex: 1,
+                          }}
+                        />
+                        {startDate && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setStartDate("");
+                            }}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-50"
+                            type="button"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full relative">
+                        <Flatpickr
+                          value={endDate}
+                          options={{
+                            enableTime: true,
+                            dateFormat: "Y-m-d H:i",
+                            time_24hr: true, // eslint-disable-line camelcase
+                            allowInput: true,
+                          }}
+                          onChange={(date) => {
+                            if (date[0]) {
+                              const formattedDate = format(
+                                date[0],
+                                "yyyy-MM-dd'T'HH:mm",
+                              );
+                              setEndDate(formattedDate);
+                            }
+                          }}
+                          className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-48 text-gray-600 relative"
+                          placeholder={t("endDate") || "End Date"}
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            zIndex: 1,
+                          }}
+                        />
+                        {endDate && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEndDate("");
+                            }}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-50"
+                            type="button"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* Date Range Picker - Only for Events (categoryId 3) */}
               </div>
             </div>
           </div>
@@ -436,6 +586,34 @@ const AllListings = () => {
           <LoadingPage />
         ) : (
           <div>
+            {/* Event Tabs - Only for Events (categoryId 3) */}
+            {categoryId === 3 && (
+              <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
+                <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-6">
+                  {eventTabOptions?.map((tab, index) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setEventTab(tab.id)}
+                      className={`px-6 sm:px-10 md:px-14 py-2.5 rounded-full font-semibold transition-all text-sm sm:text-base md:text-lg ${
+                        eventTab === tab.id
+                          ? "bg-gray-600 text-white shadow-lg"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md"
+                      } ${
+                        index === 0
+                          ? "md:justify-self-start"
+                          : index === 1
+                          ? "md:justify-self-center"
+                          : "md:justify-self-end"
+                      } w-full md:w-auto md:min-w-[300px] lg:min-w-[264px]`}
+                      style={{ fontFamily: "Poppins, sans-serif" }}
+                    >
+                      {t(tab?.label)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {listings && listings.length > 0 ? (
               <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
                 <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
@@ -472,7 +650,7 @@ const AllListings = () => {
                     onClick={() => {
                       localStorage.setItem(
                         "selectedItem",
-                        "Choose one category"
+                        "Choose one category",
                       );
                       isLoggedIn
                         ? navigateTo("/UploadListings")

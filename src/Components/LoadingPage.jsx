@@ -6,7 +6,7 @@ const LoadingPage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className={location.pathname === '/' ? "relative h-full flex items-center justify-center bg-white" : "fixed inset-0 flex items-center justify-center bg-white"}>
+    <div className={location.pathname === '/' ? "relative h-full flex items-center justify-center bg-white" : "fixed inset-0 flex items-center justify-center bg-white z-50"}>
 
       <div className="text-center">
         <h1 className={`text-2xl md:text-4xl lg:text-6xl text-center font-bold py-20 font-sans bg-clip-text ${RegionColors.darkTextColor}`}>
