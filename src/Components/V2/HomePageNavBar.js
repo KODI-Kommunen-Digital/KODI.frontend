@@ -12,9 +12,9 @@ export default function HomePageNavBar() {
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const [cityId, setCityId] = useState();
+  const [cityId, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
-  const [categoryId, setCategoryId] = useState();
+  // const [categoryId, setCategoryId] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -47,15 +47,17 @@ export default function HomePageNavBar() {
       setCities(sortedCities);
     });
 
-    const cityId = parseInt(urlParams.get("cityId"));
-    if (cityId) {
-      setCityId(cityId);
+    const cityIdParam = urlParams.get("cityId");
+    if (cityIdParam !== null) {
+      const parsedCityId = Number(cityIdParam);
+      setCityId(!Number.isNaN(parsedCityId) ? parsedCityId : 0);
     }
-    const categoryId = parseInt(urlParams.get("categoryId"));
-    if (categoryId) {
-      setCategoryId(categoryId);
-    }
-  }, []);
+
+    // const categoryId = parseInt(urlParams.get("categoryId"));
+    // if (categoryId) {
+    //   setCategoryId(categoryId);
+    // }
+  }, [location.search]);
 
   const handleLoginLogout = () => {
     if (isLoggedIn) {
@@ -66,7 +68,7 @@ export default function HomePageNavBar() {
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
       logout({ accesToken: accessToken, refreshToken })
-        .then(() => { })
+        .then(() => {})
         .finally(() => {
           clearStorage();
         });
@@ -94,7 +96,6 @@ export default function HomePageNavBar() {
   const onCityChange = (e) => {
     const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
     const urlParams = new URLSearchParams(window.location.search);
-
     if (selectedCityId === 0) {
       setCityId(0);
       // Remove cityId but preserve all other filters
@@ -116,12 +117,11 @@ export default function HomePageNavBar() {
       }
     }
   };
-  console.log(categoryId);
   return (
     <div className="w-full fixed top-0 z-10">
       <Popover
         className="relative bg-gradient-to-b from-black to-transparent mr-0 ml-0 px-5 md:px-10 py-5"
-      // id="scrollablePopover"
+        // id="scrollablePopover"
       >
         <div className="w-full">
           <div

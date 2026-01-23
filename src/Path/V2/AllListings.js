@@ -137,7 +137,7 @@ const AllListings = () => {
       const sortParam = urlParams.get("sort");
       if (sortParam) {
         setSelectedSortOption(sortParam);
-        params.sort = sortParam; // Add sort to API params
+        // Sort is done on frontend only, not passed to API
       }
       const eventTabParam = urlParams.get("eventTab");
       if (eventTabParam) {
@@ -271,15 +271,19 @@ const AllListings = () => {
         fetchData(params);
       }, 1000);
     }
-  }, [
-    categoryId,
-    cityId,
-    pageNo,
-    startDate,
-    endDate,
-    selectedSortOption,
-    eventTab,
-  ]);
+  }, [categoryId, cityId, pageNo, startDate, endDate, eventTab]);
+
+  // Update URL when sort changes (without calling API)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (selectedSortOption) {
+      urlParams.set("sort", selectedSortOption);
+    } else {
+      urlParams.delete("sort");
+    }
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSortOption]);
 
   const handleCityChange = (newCityId) => {
     setIsLoading(true);
@@ -291,10 +295,7 @@ const AllListings = () => {
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
-    // Add sort parameter to API if selected (use params if already set, otherwise use state)
-    if (!params.sort && selectedSortOption) {
-      params.sort = selectedSortOption;
-    }
+
     // Add event-specific params (use params if already set, otherwise use state)
     if (categoryId === 3) {
       if (!params.eventType) {
@@ -402,10 +403,7 @@ const AllListings = () => {
         params.endDate = endDateParam;
       }
 
-      const sortParam = urlParams.get("sort");
-      if (sortParam) {
-        params.sort = sortParam;
-      }
+      // Sort is done on frontend only, not passed to search API
 
       const eventTabParam = urlParams.get("eventTab");
       if (eventTabParam && parseInt(categoryId) === 3) {
@@ -434,22 +432,6 @@ const AllListings = () => {
     setSearchQuery(""); // Clear the search query
   };
 
-  // Clear filters when eventTab changes
-
-  // Trigger fetchData when event filters change
-  // useEffect(() => {
-  //   if (categoryId === 3 && !isLoading) {
-  //     const params = { pageSize, statusId: 1, pageNo: 1 };
-  //     if (cityId) params.cityId = cityId;
-  //     if (categoryId) params.categoryId = categoryId;
-  //     setListings([]);
-  //     setIsLoading(true);
-  //     setTimeout(() => {
-  //       fetchData(params);
-  //     }, 500);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [eventTab, startDate, endDate]);
   const handleEventTabChange = useCallback(
     (id) => {
       // Clear all filters when event tab changes
@@ -800,10 +782,11 @@ const AllListings = () => {
                       <button
                         key={tab.id}
                         onClick={() => handleEventTabChange(tab.id)}
-                        className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${eventTab === tab.id
-                          ? "bg-gray-600 text-white"
-                          : "bg-transparent text-gray-600 hover:bg-gray-200"
-                          }`}
+                        className={`flex-1 md:flex-none px-6 py-2.5 text-sm sm:text-base font-semibold transition-all ${
+                          eventTab === tab.id
+                            ? "bg-gray-600 text-white"
+                            : "bg-transparent text-gray-600 hover:bg-gray-200"
+                        }`}
                         style={{ fontFamily: "Poppins, sans-serif" }}
                         type="button"
                       >
@@ -866,12 +849,13 @@ const AllListings = () => {
           </div>
         )}
         <div
-          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${process.env.REACT_APP_NAME === "Salzkotten APP"
-            ? "bg-yellow-600 hover:bg-yellow-400"
-            : process.env.REACT_APP_NAME === "FICHTEL"
+          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${
+            process.env.REACT_APP_NAME === "Salzkotten APP"
+              ? "bg-yellow-600 hover:bg-yellow-400"
+              : process.env.REACT_APP_NAME === "FICHTEL"
               ? "bg-lime-700 hover:bg-lime-300"
               : "bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-            } px-8 py-2 text-base font-semibold cursor-pointer`}
+          } px-8 py-2 text-base font-semibold cursor-pointer`}
         >
           {pageNo !== 1 ? (
             <span

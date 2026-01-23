@@ -457,7 +457,7 @@ function UploadListings() {
         ) {
           recurringData.weekdays = [
             schedule.monthlyWeekday.charAt(0).toUpperCase() +
-            schedule.monthlyWeekday.slice(1).toLowerCase(),
+              schedule.monthlyWeekday.slice(1).toLowerCase(),
           ];
           recurringData.dayOrdinal = parseInt(schedule.dayOrdinal);
         }
@@ -575,10 +575,10 @@ function UploadListings() {
           ...(listingInput?.isRecurrence
             ? { startDate: undefined, endDate: undefined }
             : {
-              // Convert local dates back to UTC for non-recurring events
-              startDate: convertLocalToUTC(listingInput.startDate),
-              endDate: convertLocalToUTC(listingInput.endDate),
-            }),
+                // Convert local dates back to UTC for non-recurring events
+                startDate: convertLocalToUTC(listingInput.startDate),
+                endDate: convertLocalToUTC(listingInput.endDate),
+              }),
         };
 
         // Add recurring event data if isRecurrence is checked
@@ -730,8 +730,8 @@ function UploadListings() {
         isAdmin
           ? setSuccessMessage(t("listingUpdatedAdmin"))
           : newListing
-            ? setSuccessMessage(t("listingCreated"))
-            : setSuccessMessage(t("listingUpdated"));
+          ? setSuccessMessage(t("listingCreated"))
+          : setSuccessMessage(t("listingUpdated"));
 
         setIsSuccess(true);
         setTimeout(() => {
@@ -890,8 +890,8 @@ function UploadListings() {
 
               const monthlyWeekday =
                 recurringType === "monthly" &&
-                  Array.isArray(rule.weekdays) &&
-                  rule.weekdays.length > 0
+                Array.isArray(rule.weekdays) &&
+                rule.weekdays.length > 0
                   ? rule.weekdays[0]
                   : "";
 
@@ -1505,6 +1505,26 @@ function UploadListings() {
       ...prevInput,
       categoryId: selectedCategoryId,
       subcategoryId: 0,
+      isRecurrence: false,
+      // Always clear non-recurring startDate and endDate when toggling checkbox
+      // This ensures clean state whether checking or unchecking
+      startDate: "",
+      endDate: "",
+      // Reset to single empty schedule when unchecking or checking
+      recurringSchedules: [
+        {
+          recurringType: "",
+          recurringDays: [],
+          monthlyWeekday: "",
+          dayOrdinal: "",
+          interval: 1,
+          startDate: "",
+          endDate: "",
+          recurringEndTime: "",
+          repeatUntil: "",
+          exceptionDates: [],
+        },
+      ],
     }));
 
     if (selectedCategory && selectedCategory.noOfSubcategories > 0) {
@@ -1846,11 +1866,12 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
+                className={`${
+                  listingInput.title.replace(/(<([^>]+)>)/gi, "").length >
                   CHARACTER_LIMIT_TITLE
-                  ? "mt-2 text-sm text-red-600"
-                  : "mt-2 text-sm text-gray-500"
-                  }`}
+                    ? "mt-2 text-sm text-red-600"
+                    : "mt-2 text-sm text-gray-500"
+                }`}
               >
                 {listingInput.title.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_TITLE}
@@ -1901,10 +1922,11 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectSingleCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedSingleCity?.id === city.id
-                      ? "text-teal-700"
-                      : "text-gray-700"
-                      }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
+                      selectedSingleCity?.id === city.id
+                        ? "text-teal-700"
+                        : "text-gray-700"
+                    }`}
                   >
                     {city.name}
                   </div>
@@ -1966,10 +1988,11 @@ function UploadListings() {
                   <div
                     key={city.id}
                     onClick={() => handleSelectCity(city)}
-                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${selectedCities.some((sC) => sC.id === city.id)
-                      ? "text-teal-700"
-                      : "text-gray-700"
-                      }`}
+                    className={`cursor-pointer px-3 py-2 hover:bg-teal-100 ${
+                      selectedCities.some((sC) => sC.id === city.id)
+                        ? "text-teal-700"
+                        : "text-gray-700"
+                    }`}
                   >
                     {city.name}
                   </div>
@@ -2388,11 +2411,12 @@ function UploadListings() {
             />
             <div className="flex justify-between text-sm mt-1">
               <span
-                className={`${description.replace(/(<([^>]+)>)/gi, "").length >
+                className={`${
+                  description.replace(/(<([^>]+)>)/gi, "").length >
                   CHARACTER_LIMIT_DESCRIPTION
-                  ? "mt-2 text-sm text-red-600"
-                  : "mt-2 text-sm text-gray-500"
-                  }`}
+                    ? "mt-2 text-sm text-red-600"
+                    : "mt-2 text-sm text-gray-500"
+                }`}
               >
                 {description.replace(/(<([^>]+)>)/gi, "").length}/
                 {CHARACTER_LIMIT_DESCRIPTION}
@@ -2441,8 +2465,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full m-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full m-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2475,8 +2500,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2508,8 +2534,9 @@ function UploadListings() {
                   {image.length < 8 && (
                     <label
                       htmlFor="file-upload"
-                      className={`object-cover h-64 w-full mb-4 rounded-xl ${image.length < 8 ? "bg-slate-200" : ""
-                        }`}
+                      className={`object-cover h-64 w-full mb-4 rounded-xl ${
+                        image.length < 8 ? "bg-slate-200" : ""
+                      }`}
                     >
                       <div className="h-full flex items-center justify-center">
                         <div className="text-8xl text-black">+</div>
@@ -2583,8 +2610,8 @@ function UploadListings() {
             <p className="pb-2">
               {process.env.REACT_APP_NAME == "WALDI APP"
                 ? t(
-                  "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent",
-                )
+                    "byUploadingIConfirmTheTermsOfUseInParticularThatIHaveTheRightsToPublishTheContent",
+                  )
                 : ""}
             </p>
             <div className="flex gap-2">

@@ -1096,7 +1096,7 @@
     "pleaseEnterValidInterval": "Please enter a valid interval greater than 0",
     "repeatUntilMustBeGreaterThanStartDate": "Repeat until date must be greater than start date",
     "interval": "Interval",
-    "startTimeMustbelessThanEndTime": "Die Startzeit muss vor der Endzeit liegen.",
+    "startTimeMustbelessThanEndTime": "The start date must be before the end date.",
     "startDateMustBeLessThanRepeatUntil": "Start date must be less than repeat until date",
     "invalidRecurrenceRule": "Invalid recurrence rule: Recurrence duration cannot exceed 2 years"
 }

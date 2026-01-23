@@ -246,7 +246,6 @@ const HomePage = () => {
     }
     if (selectedSortOption) {
       urlParams.set("sort", selectedSortOption);
-      params.sort = selectedSortOption; // Add sort to API params
     } else {
       urlParams.delete("sort");
     }
@@ -280,10 +279,21 @@ const HomePage = () => {
     categoryId,
     startDate,
     endDate,
-    selectedSortOption,
     eventTab,
     selectedSubCategoryId,
   ]);
+
+  // Update URL when sort changes (without calling API)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (selectedSortOption) {
+      urlParams.set("sort", selectedSortOption);
+    } else {
+      urlParams.delete("sort");
+    }
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSortOption]);
 
   const fetchData = async (params) => {
     params.showExternalListings = "false";
@@ -291,9 +301,7 @@ const HomePage = () => {
       params.subcategoryId = selectedSubCategoryId;
     }
     // Add sort parameter to API if selected
-    if (selectedSortOption) {
-      params.sort = selectedSortOption;
-    }
+
     // Add event-specific params
     if (categoryId === 3) {
       if (eventTab === "singleDay") {
