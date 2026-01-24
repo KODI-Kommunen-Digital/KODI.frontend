@@ -134,11 +134,11 @@ const AllListings = () => {
           params.endDate = endDateParam;
         }
       }
-      const sortParam = urlParams.get("sort");
-      if (sortParam) {
-        setSelectedSortOption(sortParam);
-        // Sort is done on frontend only, not passed to API
-      }
+      // const sortParam = urlParams.get("sort");
+      // if (sortParam) {
+      //   setSelectedSortOption(sortParam);
+      //   // Sort is done on frontend only, not passed to API
+      // }
       const eventTabParam = urlParams.get("eventTab");
       if (eventTabParam) {
         setEventTab(eventTabParam);
@@ -181,12 +181,12 @@ const AllListings = () => {
     }
 
     // Update sort from URL if different
-    const urlSort = urlParams.get("sort") || "";
-    if (urlSort && urlSort !== selectedSortOption) {
-      setSelectedSortOption(urlSort);
-    } else if (!urlSort && selectedSortOption) {
-      setSelectedSortOption("");
-    }
+    // const urlSort = urlParams.get("sort") || "";
+    // if (urlSort && urlSort !== selectedSortOption) {
+    //   setSelectedSortOption(urlSort);
+    // } else if (!urlSort && selectedSortOption) {
+    //   setSelectedSortOption("");
+    // }
 
     // Update eventTab from URL if different (only for category 3)
     const urlEventTab = urlParams.get("eventTab");
@@ -229,6 +229,7 @@ const AllListings = () => {
         setCategoryName(t("allCategories"));
         urlParams.delete("categoryId");
       }
+      console.log("params", pageNo);
       if (pageNo > 1) {
         params.pageNo = pageNo;
         urlParams.set("pageNo", pageNo);
@@ -247,11 +248,11 @@ const AllListings = () => {
       } else {
         urlParams.delete("endDate");
       }
-      if (selectedSortOption) {
-        urlParams.set("sort", selectedSortOption);
-      } else {
-        urlParams.delete("sort");
-      }
+      // if (selectedSortOption) {
+      //   urlParams.set("sort", selectedSortOption);
+      // } else {
+      //   urlParams.delete("sort");
+      // }
       // Only add eventTab to URL if category is 3 (Events)
       if (categoryId === 3 || categoryId === "3") {
         if (eventTab) {
@@ -274,16 +275,16 @@ const AllListings = () => {
   }, [categoryId, cityId, pageNo, startDate, endDate, eventTab]);
 
   // Update URL when sort changes (without calling API)
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (selectedSortOption) {
-      urlParams.set("sort", selectedSortOption);
-    } else {
-      urlParams.delete("sort");
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.replaceState({}, "", newUrl);
-  }, [selectedSortOption]);
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   if (selectedSortOption) {
+  //     urlParams.set("sort", selectedSortOption);
+  //   } else {
+  //     urlParams.delete("sort");
+  //   }
+  //   const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  //   window.history.replaceState({}, "", newUrl);
+  // }, [selectedSortOption]);
 
   const handleCityChange = (newCityId) => {
     setIsLoading(true);
@@ -294,10 +295,12 @@ const AllListings = () => {
   };
 
   const fetchData = async (params) => {
+    clearSearchResults();
+
     params.showExternalListings = "false";
 
     // Add event-specific params (use params if already set, otherwise use state)
-    if (categoryId === 3) {
+    if (categoryId === 3 || categoryId === "3") {
       if (!params.eventType) {
         if (eventTab === "singleDay") {
           params.eventType = "singleDay";
@@ -376,6 +379,7 @@ const AllListings = () => {
   };
 
   const handleSearch = async (searchQuery) => {
+    setPageNo(1);
     setSearchQuery(searchQuery); // Save the search query
 
     try {
@@ -395,12 +399,12 @@ const AllListings = () => {
       // Pass filters to search API
       const startDateParam = urlParams.get("startDate");
       if (startDateParam) {
-        params.startDate = startDateParam;
+        params.startAfterDate = startDateParam;
       }
 
       const endDateParam = urlParams.get("endDate");
       if (endDateParam) {
-        params.endDate = endDateParam;
+        params.endBeforeDate = endDateParam;
       }
 
       // Sort is done on frontend only, not passed to search API
@@ -415,13 +419,17 @@ const AllListings = () => {
           params.eventType = "recurring";
         }
       }
-
-      const response = await getListingsBySearch({
-        searchQuery,
-        ...params,
-      });
-      const listingsData = response.data.data;
-      setListings(listingsData);
+      if (searchQuery) {
+        const response = await getListingsBySearch({
+          searchQuery,
+          ...params,
+        });
+        const listingsData = response.data.data;
+        setListings(listingsData);
+      } else {
+        const params = { pageSize };
+        await fetchData(params);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -435,44 +443,45 @@ const AllListings = () => {
   const handleEventTabChange = useCallback(
     (id) => {
       // Clear all filters when event tab changes
+      setEventTab(id);
       setStartDate("");
       setEndDate("");
       setSelectedSortOption("");
-      setEventTab(id);
       setSearchQuery("");
 
       // Update URL to remove filters
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.delete("startDate");
       urlParams.delete("endDate");
-      urlParams.delete("sort");
+      // urlParams.delete("sort");
       if (categoryId === 3 || categoryId === "3") {
         urlParams.set("eventTab", id);
       } else {
         urlParams.delete("eventTab");
       }
+      setPageNo(1);
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.history.replaceState({}, "", newUrl);
 
       // Call API with new event tab (filters are cleared, so they won't be added)
-      if (categoryId === 3) {
-        setIsLoading(true);
-        setListings([]);
-        const params = { pageSize, statusId: 1, pageNo: 1 };
-        if (cityId) params.cityId = cityId;
-        if (categoryId) params.categoryId = categoryId;
-        if (id === "singleDay") {
-          params.eventType = "singleDay";
-        } else if (id === "multiDay") {
-          params.eventType = "multiDay";
-        } else if (id === "recurring") {
-          params.eventType = "recurring";
-        }
-        // Don't add startDate, endDate, or sort since we cleared them
-        setTimeout(() => {
-          fetchData(params);
-        }, 500);
-      }
+      // if (categoryId === 3) {
+      //   setIsLoading(true);
+      //   setListings([]);
+      //   const params = { pageSize, statusId: 1, pageNo: 1 };
+      //   if (cityId) params.cityId = cityId;
+      //   if (categoryId) params.categoryId = categoryId;
+      //   if (id === "singleDay") {
+      //     params.eventType = "singleDay";
+      //   } else if (id === "multiDay") {
+      //     params.eventType = "multiDay";
+      //   } else if (id === "recurring") {
+      //     params.eventType = "recurring";
+      //   }
+      //   // Don't add startDate, endDate, or sort since we cleared them
+      //   // setTimeout(() => {
+      //   //   fetchData(params);
+      //   // }, 500);
+      // }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [categoryId, cityId, pageSize],

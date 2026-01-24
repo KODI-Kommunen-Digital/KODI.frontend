@@ -99,10 +99,10 @@ const HomePage = () => {
     }
 
     // Update sort from URL if different
-    const urlSort = urlParams.get("sort") || "";
-    if (urlSort !== selectedSortOption) {
-      setSelectedSortOption(urlSort);
-    }
+    // const urlSort = urlParams.get("sort") || "";
+    // if (urlSort !== selectedSortOption) {
+    //   setSelectedSortOption(urlSort);
+    // }
 
     // Update eventTab from URL if different (only for category 3)
     const urlEventTab = urlParams.get("eventTab");
@@ -167,10 +167,10 @@ const HomePage = () => {
     if (endDateParam) {
       setEndDate(endDateParam);
     }
-    const sortParam = urlParams.get("sort");
-    if (sortParam) {
-      setSelectedSortOption(sortParam);
-    }
+    // const sortParam = urlParams.get("sort");
+    // if (sortParam) {
+    //   setSelectedSortOption(sortParam);
+    // }
     const eventTabParam = urlParams.get("eventTab");
     if (eventTabParam) {
       setEventTab(eventTabParam);
@@ -244,11 +244,11 @@ const HomePage = () => {
     } else {
       urlParams.delete("endDate");
     }
-    if (selectedSortOption) {
-      urlParams.set("sort", selectedSortOption);
-    } else {
-      urlParams.delete("sort");
-    }
+    // if (selectedSortOption) {
+    //   urlParams.set("sort", selectedSortOption);
+    // } else {
+    //   urlParams.delete("sort");
+    // }
     // Only add eventTab to URL if category is 3 (Events)
     if (categoryId === 3 || categoryId === "3") {
       if (eventTab) {
@@ -274,7 +274,7 @@ const HomePage = () => {
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    cities,
+    // cities,
     cityId,
     categoryId,
     startDate,
@@ -284,18 +284,19 @@ const HomePage = () => {
   ]);
 
   // Update URL when sort changes (without calling API)
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (selectedSortOption) {
-      urlParams.set("sort", selectedSortOption);
-    } else {
-      urlParams.delete("sort");
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.replaceState({}, "", newUrl);
-  }, [selectedSortOption]);
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   if (selectedSortOption) {
+  //     urlParams.set("sort", selectedSortOption);
+  //   } else {
+  //     urlParams.delete("sort");
+  //   }
+  //   const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  //   window.history.replaceState({}, "", newUrl);
+  // }, [selectedSortOption]);
 
   const fetchData = async (params) => {
+    setSearchQuery("");
     params.showExternalListings = "false";
     if (selectedSubCategoryId) {
       params.subcategoryId = selectedSubCategoryId;
@@ -303,7 +304,7 @@ const HomePage = () => {
     // Add sort parameter to API if selected
 
     // Add event-specific params
-    if (categoryId === 3) {
+    if (categoryId === 3 || categoryId === "3") {
       if (eventTab === "singleDay") {
         params.eventType = "singleDay";
       } else if (eventTab === "multiDay") {
@@ -312,10 +313,10 @@ const HomePage = () => {
         params.eventType = "recurring";
       }
       if (startDate) {
-        params.startDate = startDate;
+        params.startAfterDate = startDate;
       }
       if (endDate) {
-        params.endDate = endDate;
+        params.endBeforeDate = endDate;
       }
     }
     try {
@@ -433,6 +434,7 @@ const HomePage = () => {
   // }, [eventTab, startDate, endDate]);
 
   const handleSubCategorySelect = (subCategoryId) => {
+    clearSearchResults();
     setSelectedSubCategoryId(subCategoryId); // This will trigger the useEffect above
   };
 
@@ -500,6 +502,29 @@ const HomePage = () => {
       if (categoryId && parseInt(categoryId)) {
         params.categoryId = parseInt(categoryId);
       }
+
+      const startDateParam = urlParams.get("startDate");
+      if (startDateParam) {
+        params.startAfterDate = startDateParam;
+      }
+
+      const endDateParam = urlParams.get("endDate");
+      if (endDateParam) {
+        params.endBeforeDate = endDateParam;
+      }
+
+      // Sort is done on frontend only, not passed to search API
+
+      const eventTabParam = urlParams.get("eventTab");
+      if (eventTabParam && parseInt(categoryId) === 3) {
+        if (eventTabParam === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (eventTabParam === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (eventTabParam === "recurring") {
+          params.eventType = "recurring";
+        }
+      }
       const response = await getListingsBySearch({
         searchQuery,
         ...params,
@@ -526,17 +551,17 @@ const HomePage = () => {
   const handleEventTabChange = useCallback(
     (id) => {
       // Clear all filters when event tab changes
+      setEventTab(id);
       setStartDate("");
       setEndDate("");
       setSelectedSortOption("");
-      setEventTab(id);
       setSearchQuery("");
 
       // Update URL to remove filters
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.delete("startDate");
       urlParams.delete("endDate");
-      urlParams.delete("sort");
+      // urlParams.delete("sort");
       if (categoryId === 3 || categoryId === "3") {
         urlParams.set("eventTab", id);
       } else {
@@ -546,24 +571,24 @@ const HomePage = () => {
       window.history.replaceState({}, "", newUrl);
 
       // Call API with new event tab (filters are cleared, so they won't be added)
-      if (categoryId === 3) {
-        setIsLoading(true);
-        setListings([]);
-        const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-        if (cityId) params.cityId = cityId;
-        if (categoryId) params.categoryId = categoryId;
-        if (id === "singleDay") {
-          params.eventType = "singleDay";
-        } else if (id === "multiDay") {
-          params.eventType = "multiDay";
-        } else if (id === "recurring") {
-          params.eventType = "recurring";
-        }
-        // Don't add startDate, endDate, or sort since we cleared them
-        setTimeout(() => {
-          fetchData(params);
-        }, 500);
-      }
+      // if (categoryId === 3) {
+      //   setIsLoading(true);
+      //   setListings([]);
+      //   const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+      //   if (cityId) params.cityId = cityId;
+      //   if (categoryId) params.categoryId = categoryId;
+      //   if (id === "singleDay") {
+      //     params.eventType = "singleDay";
+      //   } else if (id === "multiDay") {
+      //     params.eventType = "multiDay";
+      //   } else if (id === "recurring") {
+      //     params.eventType = "recurring";
+      //   }
+      //   // Don't add startDate, endDate, or sort since we cleared them
+      //   // setTimeout(() => {
+      //   //   fetchData(params);
+      //   // }, 500);
+      // }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [categoryId, cityId],
@@ -645,16 +670,13 @@ const HomePage = () => {
                       value={startDate}
                       options={{
                         enableTime: true,
-                        dateFormat: "Y-m-d H:i",
+                        dateFormat: "Y-m-d",
                         time_24hr: true, // eslint-disable-line camelcase
                         allowInput: true,
                       }}
                       onChange={(date) => {
                         if (date[0]) {
-                          const formattedDate = format(
-                            date[0],
-                            "yyyy-MM-dd'T'HH:mm",
-                          );
+                          const formattedDate = format(date[0], "yyyy-MM-dd");
                           setStartDate(formattedDate);
                         }
                       }}
@@ -692,16 +714,13 @@ const HomePage = () => {
                       value={endDate}
                       options={{
                         enableTime: true,
-                        dateFormat: "Y-m-d H:i",
+                        dateFormat: "Y-m-d",
                         time_24hr: true, // eslint-disable-line camelcase
                         allowInput: true,
                       }}
                       onChange={(date) => {
                         if (date[0]) {
-                          const formattedDate = format(
-                            date[0],
-                            "yyyy-MM-dd'T'HH:mm",
-                          );
+                          const formattedDate = format(date[0], "yyyy-MM-dd");
                           setEndDate(formattedDate);
                         }
                       }}
