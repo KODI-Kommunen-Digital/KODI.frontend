@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import RegionColors from "../../Components/RegionColors";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -37,9 +37,103 @@ import TWOIMAGE from "../../assets/02.png";
 import THREEIMAGE from "../../assets/03.png";
 import MostPopularCategories from "../../Components/V2/MostPopularCategories";
 
+// Constants
+const EVENTS_CATEGORY_ID = 3;
+const DEFAULT_PAGE_SIZE = 12;
+const DEFAULT_STATUS_ID = 1;
+const DEFAULT_PAGE_NO = 1;
+const FETCH_DELAY = 1000;
+const POPPINS_FONT = "Poppins, sans-serif";
+
+// Helper functions
+const isEventsCategory = (categoryId) => {
+  return categoryId === EVENTS_CATEGORY_ID || categoryId === String(EVENTS_CATEGORY_ID);
+};
+
+const parseUrlParam = (urlParams, key, parser = parseInt) => {
+  const value = urlParams.get(key);
+  return value ? parser(value) : null;
+};
+
+const updateUrlParams = (params) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== "") {
+      urlParams.set(key, value);
+    } else {
+      urlParams.delete(key);
+    }
+  });
+  const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  window.history.replaceState({}, "", newUrl);
+};
+
+// DatePicker Component
+// eslint-disable-next-line react/prop-types
+const DatePicker = ({ value, onChange, placeholder, t }) => {
+  const handleDateChange = useCallback(
+    (date) => {
+      if (date[0]) {
+        const formattedDate = format(date[0], "yyyy-MM-dd");
+        onChange(formattedDate);
+      }
+    },
+    [onChange]
+  );
+
+  const handleClear = useCallback(() => {
+    onChange("");
+  }, [onChange]);
+
+  const flatpickrOptions = useMemo(
+    () => ({
+      dateFormat: "Y-m-d",
+      allowInput: true,
+    }),
+    []
+  );
+
+  return (
+    <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full relative">
+      <Flatpickr
+        value={value}
+        options={flatpickrOptions}
+        onChange={handleDateChange}
+        className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
+        placeholder={placeholder}
+        style={{ fontFamily: POPPINS_FONT }}
+      />
+      {value && (
+        <button
+          onClick={handleClear}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          style={{ zIndex: 10 }}
+          type="button"
+          aria-label="Clear date"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+};
+
 const HomePage = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [cityId, setCityId] = useState();
   const [categoryId, setCategoryId] = useState();
   const [cities, setCities] = useState([]);
@@ -55,59 +149,67 @@ const HomePage = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-  const [eventTab, setEventTab] = useState("singleDay"); // single, multi, recurring
+  const [eventTab, setEventTab] = useState("singleDay");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // Event tab options array
+  // Memoized values
+  const isEvents = useMemo(() => isEventsCategory(categoryId), [categoryId]);
+  const sortedListings = useMemo(() => {
+    if (!selectedSortOption || !listings.length) return listings;
+    
+    const listingsCopy = [...listings];
+    switch (selectedSortOption) {
+      case "titleAZ":
+        return sortByTitleAZ(listingsCopy);
+      case "titleZA":
+        return sortByTitleZA(listingsCopy);
+      case "recent":
+        return sortLatestFirst(listingsCopy);
+      case "oldest":
+        return sortOldestFirst(listingsCopy);
+      default:
+        return listingsCopy;
+    }
+  }, [listings, selectedSortOption]);
 
+  // Initialize terminalView
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     setTerminalView(queryParams.get("terminalView") === "true");
   }, []);
 
-  // Sync state with URL parameters when location changes (for navigation from navbar)
+  // Sync state with URL parameters when location changes
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
 
-    // Update cityId from URL if different
-    const urlCityId = parseInt(urlParams.get("cityId"));
+    const urlCityId = parseUrlParam(urlParams, "cityId");
     if (urlCityId && urlCityId !== cityId) {
       setCityId(urlCityId);
     } else if (!urlCityId && cityId !== undefined) {
       setCityId(undefined);
     }
 
-    // Update categoryId from URL if different
-    const urlCategoryId = parseInt(urlParams.get("categoryId"));
+    const urlCategoryId = parseUrlParam(urlParams, "categoryId");
     if (urlCategoryId && urlCategoryId !== categoryId) {
       setCategoryId(urlCategoryId);
     } else if (!urlCategoryId && categoryId !== undefined) {
       setCategoryId(undefined);
     }
 
-    // Update startDate from URL if different
     const urlStartDate = urlParams.get("startDate") || "";
     if (urlStartDate !== startDate) {
       setStartDate(urlStartDate);
     }
 
-    // Update endDate from URL if different
     const urlEndDate = urlParams.get("endDate") || "";
     if (urlEndDate !== endDate) {
       setEndDate(urlEndDate);
     }
 
-    // Update sort from URL if different
-    // const urlSort = urlParams.get("sort") || "";
-    // if (urlSort !== selectedSortOption) {
-    //   setSelectedSortOption(urlSort);
-    // }
-
-    // Update eventTab from URL if different (only for category 3)
     const urlEventTab = urlParams.get("eventTab");
-    const currentCategoryId = parseInt(urlParams.get("categoryId"));
-    if (currentCategoryId === 3 || currentCategoryId === "3") {
+    const currentCategoryId = parseUrlParam(urlParams, "categoryId");
+    if (isEventsCategory(currentCategoryId)) {
       if (urlEventTab && urlEventTab !== eventTab) {
         setEventTab(urlEventTab);
       } else if (!urlEventTab && eventTab !== "singleDay") {
@@ -115,28 +217,31 @@ const HomePage = () => {
       }
     }
 
-    // Update subcategoryId from URL if different
-    const urlSubCategoryId = urlParams.get("subcategoryId");
-    const parsedSubCategoryId = urlSubCategoryId
-      ? parseInt(urlSubCategoryId)
-      : null;
-    if (parsedSubCategoryId && parsedSubCategoryId !== selectedSubCategoryId) {
-      setSelectedSubCategoryId(parsedSubCategoryId);
+    const urlSubCategoryId = parseUrlParam(urlParams, "subcategoryId");
+    if (urlSubCategoryId && urlSubCategoryId !== selectedSubCategoryId) {
+      setSelectedSubCategoryId(urlSubCategoryId);
     } else if (
-      !parsedSubCategoryId &&
+      !urlSubCategoryId &&
       selectedSubCategoryId !== null &&
       selectedSubCategoryId !== undefined
     ) {
       setSelectedSubCategoryId(null);
     }
+
+    const urlSort = urlParams.get("sort") || "";
+    if (urlSort && urlSort !== selectedSortOption) {
+      setSelectedSortOption(urlSort);
+    } else if (!urlSort && selectedSortOption) {
+      setSelectedSortOption("");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
+  // Initial data load
   useEffect(() => {
     if (!terminalView) {
-      // Skip Popup if terminalView is true
       const hasAcceptedPrivacyPolicy = localStorage.getItem(
-        "privacyPolicyAccepted",
+        "privacyPolicyAccepted"
       );
       if (!hasAcceptedPrivacyPolicy) {
         setShowPopup(true);
@@ -144,237 +249,145 @@ const HomePage = () => {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    getCities().then((citiesResponse) => {
-      const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
-        a.name.localeCompare(b.name),
-      );
-      setCities(sortedCities);
-    });
-    const cityId = parseInt(urlParams.get("cityId"));
-    if (cityId) {
-      setCityId(cityId);
-    }
-    const categoryId = parseInt(urlParams.get("categoryId"));
-    if (categoryId) {
-      setCategoryId(categoryId);
-    }
-    // Initialize filters from URL params
+    
+    // Load cities
+    getCities()
+      .then((citiesResponse) => {
+        const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCities(sortedCities);
+      })
+      .catch((error) => {
+        console.error("Error fetching cities:", error);
+      });
+
+    // Initialize from URL params
+    const initialCityId = parseUrlParam(urlParams, "cityId");
+    if (initialCityId) setCityId(initialCityId);
+
+    const initialCategoryId = parseUrlParam(urlParams, "categoryId");
+    if (initialCategoryId) setCategoryId(initialCategoryId);
+
     const startDateParam = urlParams.get("startDate");
-    if (startDateParam) {
-      setStartDate(startDateParam);
-    }
+    if (startDateParam) setStartDate(startDateParam);
+
     const endDateParam = urlParams.get("endDate");
-    if (endDateParam) {
-      setEndDate(endDateParam);
-    }
-    // const sortParam = urlParams.get("sort");
-    // if (sortParam) {
-    //   setSelectedSortOption(sortParam);
-    // }
+    if (endDateParam) setEndDate(endDateParam);
+
     const eventTabParam = urlParams.get("eventTab");
-    if (eventTabParam) {
-      setEventTab(eventTabParam);
-    }
-    // Initialize subcategoryId from URL params
+    if (eventTabParam) setEventTab(eventTabParam);
+
     const subCategoryIdParam = urlParams.get("subcategoryId");
     if (subCategoryIdParam) {
       setSelectedSubCategoryId(parseInt(subCategoryIdParam));
     }
-    getListingsCount().then((response) => {
-      const data = response?.data?.data || [];
-      const sortedData = data.sort(
-        (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount),
-      );
-      setListingsCount(sortedData);
-    });
 
-    getCategory().then((response) => {
-      const catList = {};
-      response?.data?.data
-        .filter((cat) => !hiddenCategories.includes(cat.id))
-        .forEach((cat) => {
-          catList[cat.id] = cat.name;
-        });
-      setCategories(catList);
-    });
+    const sortParam = urlParams.get("sort");
+    if (sortParam) {
+      setSelectedSortOption(sortParam);
+    }
 
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("home");
-  }, []);
+    // Load listings count
+    getListingsCount()
+      .then((response) => {
+        const data = response?.data?.data || [];
+        const sortedData = data.sort(
+          (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
+        );
+        setListingsCount(sortedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching listings count:", error);
+      });
 
+    // Load categories
+    getCategory()
+      .then((response) => {
+        const catList = {};
+        response?.data?.data
+          .filter((cat) => !hiddenCategories.includes(cat.id))
+          .forEach((cat) => {
+            catList[cat.id] = cat.name;
+          });
+        setCategories(catList);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
+    document.title = `${process.env.REACT_APP_REGION_NAME} ${t("home")}`;
+  }, [t, terminalView]);
+
+  // Check login status and fetch listings
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-
     if (!terminalView) {
-      // Skip cookie storage if terminalView is true
       const accessToken =
         window.localStorage.getItem("accessToken") ||
         window.sessionStorage.getItem("accessToken");
-
       const refreshToken =
         window.localStorage.getItem("refreshToken") ||
         window.sessionStorage.getItem("refreshToken");
-
-      if (accessToken || refreshToken) {
-        setIsLoggedIn(true);
-      }
+      setIsLoggedIn(!!(accessToken || refreshToken));
     }
 
     setIsLoading(true);
-    const params = { pageSize: 12, statusId: 1, pageNo: 1 };
+    const params = {
+      pageSize: DEFAULT_PAGE_SIZE,
+      statusId: DEFAULT_STATUS_ID,
+      pageNo: DEFAULT_PAGE_NO,
+    };
+
+    const urlParams = {};
     if (parseInt(cityId)) {
-      urlParams.set("cityId", cityId);
+      urlParams.cityId = cityId;
       params.cityId = cityId;
-    } else {
-      urlParams.delete("cityId");
     }
     if (parseInt(categoryId)) {
-      urlParams.set("categoryId", categoryId);
+      urlParams.categoryId = categoryId;
       params.categoryId = categoryId;
-    } else {
-      urlParams.delete("categoryId");
     }
-    // Update URL params for filters
     if (startDate) {
-      urlParams.set("startDate", startDate);
-    } else {
-      urlParams.delete("startDate");
+      urlParams.startDate = startDate;
     }
     if (endDate) {
-      urlParams.set("endDate", endDate);
-    } else {
-      urlParams.delete("endDate");
+      urlParams.endDate = endDate;
     }
-    // if (selectedSortOption) {
-    //   urlParams.set("sort", selectedSortOption);
-    // } else {
-    //   urlParams.delete("sort");
-    // }
-    // Only add eventTab to URL if category is 3 (Events)
-    if (categoryId === 3 || categoryId === "3") {
+    if (isEvents) {
       if (eventTab) {
-        urlParams.set("eventTab", eventTab);
-      } else {
-        urlParams.delete("eventTab");
+        urlParams.eventTab = eventTab;
       }
-    } else {
-      urlParams.delete("eventTab");
     }
-    // Update subcategoryId in URL
     if (selectedSubCategoryId) {
-      urlParams.set("subcategoryId", selectedSubCategoryId);
+      urlParams.subcategoryId = selectedSubCategoryId;
+    }
+    if (selectedSortOption) {
+      urlParams.sort = selectedSortOption;
     } else {
-      urlParams.delete("subcategoryId");
+      urlParams.sort = null;
     }
 
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.replaceState({}, "", newUrl);
+    updateUrlParams(urlParams);
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       fetchData(params);
-    }, 1000);
+    }, FETCH_DELAY);
+
+    return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    // cities,
     cityId,
     categoryId,
     startDate,
     endDate,
     eventTab,
     selectedSubCategoryId,
+    selectedSortOption,
+    terminalView,
+    isEvents,
   ]);
 
-  // Update URL when sort changes (without calling API)
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   if (selectedSortOption) {
-  //     urlParams.set("sort", selectedSortOption);
-  //   } else {
-  //     urlParams.delete("sort");
-  //   }
-  //   const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-  //   window.history.replaceState({}, "", newUrl);
-  // }, [selectedSortOption]);
-
-  const fetchData = async (params) => {
-    setSearchQuery("");
-    params.showExternalListings = "false";
-    if (selectedSubCategoryId) {
-      params.subcategoryId = selectedSubCategoryId;
-    }
-    // Add sort parameter to API if selected
-
-    // Add event-specific params
-    if (categoryId === 3 || categoryId === "3") {
-      if (eventTab === "singleDay") {
-        params.eventType = "singleDay";
-      } else if (eventTab === "multiDay") {
-        params.eventType = "multiDay";
-      } else if (eventTab === "recurring") {
-        params.eventType = "recurring";
-      }
-      if (startDate) {
-        params.startAfterDate = startDate;
-      }
-      if (endDate) {
-        params.endBeforeDate = endDate;
-      }
-    }
-    try {
-      const response = await getListings(params);
-      const listings = response?.data?.data || [];
-
-      const filteredListings = listings.filter(
-        (listing) => !hiddenCategories.includes(listing.categoryId),
-      );
-
-      setListings(filteredListings);
-    } catch (error) {
-      setListings([]);
-      console.error("Error fetching listings:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getTheListings = async (newCategoryId, event) => {
-    event.preventDefault();
-
-    const isSameCategory = newCategoryId === categoryId;
-
-    setCategoryId(newCategoryId);
-    setSelectedSubCategoryId(null);
-
-    // Clear all filters when category changes
-    setStartDate("");
-    setEndDate("");
-    setSelectedSortOption("");
-
-    // Clear eventTab if category is not 3 (Events)
-    if (newCategoryId !== 3 && newCategoryId !== "3") {
-      setEventTab("singleDay");
-    }
-
-    try {
-      const response = await getListingsSubCategory(newCategoryId);
-      setSubCategories(response?.data?.data || []);
-      setIsCategoryMenuOpen(true);
-    } catch (error) {
-      console.error("Error fetching subcategories:", error);
-      setSubCategories([]);
-    }
-
-    clearSearchResults();
-
-    // Force fetch listings if category hasn't changed
-    if (isSameCategory) {
-      const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-      if (cityId) params.cityId = cityId;
-      if (newCategoryId) params.categoryId = newCategoryId;
-
-      fetchData(params);
-    }
-  };
-
+  // Load subcategories when category changes
   useEffect(() => {
     const loadSubCategories = async () => {
       if (categoryId) {
@@ -391,208 +404,257 @@ const HomePage = () => {
     };
 
     loadSubCategories();
-  }, [categoryId]); // This will run whenever categoryId changes
+  }, [categoryId]);
 
+  // Scroll position management
   useEffect(() => {
-    if (selectedSubCategoryId !== null) {
-      const params = {
-        categoryId: categoryId,
-        subcategoryId: selectedSubCategoryId,
+    if (!terminalView) {
+      const savedPosition = sessionStorage.getItem("scrollPosition");
+      if (savedPosition) {
+        window.scrollTo(0, parseInt(savedPosition));
+      }
+
+      const handleBeforeUnload = () => {
+        sessionStorage.setItem("scrollPosition", window.scrollY);
       };
 
-      if (cityId) params.cityId = cityId;
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }
+  }, [terminalView]);
 
-      // Clear previous listings to show the new ones
+  const fetchData = useCallback(
+    async (params) => {
+      setSearchQuery("");
+      params.showExternalListings = "false";
+      
+      if (selectedSubCategoryId) {
+        params.subcategoryId = selectedSubCategoryId;
+      }
+
+      if (isEvents) {
+        if (eventTab === "singleDay") {
+          params.eventType = "singleDay";
+        } else if (eventTab === "multiDay") {
+          params.eventType = "multiDay";
+        } else if (eventTab === "recurring") {
+          params.eventType = "recurring";
+        }
+        if (startDate) {
+          params.startAfterDate = startDate;
+        }
+        if (endDate) {
+          params.endBeforeDate = endDate;
+        }
+      }
+
+      try {
+        const response = await getListings(params);
+        const listings = response?.data?.data || [];
+        const filteredListings = listings.filter(
+          (listing) => !hiddenCategories.includes(listing.categoryId)
+        );
+        setListings(filteredListings);
+      } catch (error) {
+        setListings([]);
+        console.error("Error fetching listings:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [selectedSubCategoryId, isEvents, eventTab, startDate, endDate]
+  );
+
+  const getTheListings = useCallback(
+    async (newCategoryId, event) => {
+      event.preventDefault();
+
+      const isSameCategory = newCategoryId === categoryId;
+      setCategoryId(newCategoryId);
+      setSelectedSubCategoryId(null);
+      setStartDate("");
+      setEndDate("");
+      setSelectedSortOption("");
+
+      if (!isEventsCategory(newCategoryId)) {
+        setEventTab("singleDay");
+      }
+
+      try {
+        const response = await getListingsSubCategory(newCategoryId);
+        setSubCategories(response?.data?.data || []);
+        setIsCategoryMenuOpen(true);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+        setSubCategories([]);
+      }
+
       setListings([]);
-      setIsLoading(true);
-      fetchData(params);
-    }
-  }, [selectedSubCategoryId, categoryId, cityId]); // Trigger fetchData when subcategoryId, categoryId or cityId changes
+      setSearchQuery("");
 
-  // Clear filters when eventTab changes
-  // useEffect(() => {
-  //   if (categoryId === 3) {
-  //     setStartDate("");
-  //     setEndDate("");
-  //     setSelectedSortOption("");
-  //   }
-  // }, [eventTab, categoryId]);
+      if (isSameCategory) {
+        const params = {
+          pageSize: DEFAULT_PAGE_SIZE,
+          statusId: DEFAULT_STATUS_ID,
+          pageNo: DEFAULT_PAGE_NO,
+        };
+        if (cityId) params.cityId = cityId;
+        if (newCategoryId) params.categoryId = newCategoryId;
+        fetchData(params);
+      }
+    },
+    [categoryId, cityId, fetchData]
+  );
 
-  // Trigger fetchData when event filters change
-  // useEffect(() => {
-  //   if (categoryId === 3 && !isLoading) {
-  //     const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-  //     if (cityId) params.cityId = cityId;
-  //     if (categoryId) params.categoryId = categoryId;
-  //     setListings([]);
-  //     setIsLoading(true);
-  //     setTimeout(() => {
-  //       fetchData(params);
-  //     }, 500);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [eventTab, startDate, endDate]);
 
-  const handleSubCategorySelect = (subCategoryId) => {
-    clearSearchResults();
-    setSelectedSubCategoryId(subCategoryId); // This will trigger the useEffect above
-  };
+  const handleSubCategorySelect = useCallback(
+    (subCategoryId) => {
+      setListings([]);
+      setSearchQuery("");
+      setSelectedSubCategoryId(subCategoryId);
+    },
+    []
+  );
 
-  const clearSearchResults = () => {
-    setListings([]); // Clear the listings to remove the search results
-    setSearchQuery(""); // Clear the search query
-  };
-
-  if (!terminalView) {
-    // Scroll position disabled for Terminl View
-    window.scrollTo(0, sessionStorage.getItem("scrollPosition"));
-
-    window.addEventListener("beforeunload", () => {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
-    });
-  }
-
-  useEffect(() => {
-    switch (selectedSortOption) {
-      case "titleAZ":
-        setListings([...sortByTitleAZ(listings)]);
-        break;
-      case "titleZA":
-        setListings([...sortByTitleZA(listings)]);
-        break;
-      case "recent":
-        setListings([...sortLatestFirst(listings)]);
-        break;
-      case "oldest":
-        setListings([...sortOldestFirst(listings)]);
-        break;
-      default:
-        break;
-    }
-  }, [selectedSortOption]); // We removed [selectedSortOption, listings] due to Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render
-
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-
-  function handleSortOptionChange(event) {
+  const handleSortOptionChange = useCallback((event) => {
     const newValue = event.target.value;
     if (newValue !== selectedSortOption) {
       setSelectedSortOption(newValue);
     }
-  }
+  }, [selectedSortOption]);
 
-  const handleSearch = async (searchQuery) => {
-    console.log("Search term:", searchQuery);
-    setSearchQuery(searchQuery);
+  const handleSearch = useCallback(
+    async (searchQuery) => {
+      setSearchQuery(searchQuery);
 
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = { statusId: 1 };
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = { statusId: DEFAULT_STATUS_ID };
 
-      const cityId = urlParams.get("cityId");
-      if (cityId && parseInt(cityId)) {
-        params.cityId = parseInt(cityId);
-      }
+        const cityIdParam = parseUrlParam(urlParams, "cityId");
+        if (cityIdParam) params.cityId = cityIdParam;
 
-      const categoryId = urlParams.get("categoryId");
-      if (categoryId && parseInt(categoryId)) {
-        params.categoryId = parseInt(categoryId);
-      }
+        const categoryIdParam = parseUrlParam(urlParams, "categoryId");
+        if (categoryIdParam) params.categoryId = categoryIdParam;
 
-      const startDateParam = urlParams.get("startDate");
-      if (startDateParam) {
-        params.startAfterDate = startDateParam;
-      }
+        const startDateParam = urlParams.get("startDate");
+        if (startDateParam) params.startAfterDate = startDateParam;
 
-      const endDateParam = urlParams.get("endDate");
-      if (endDateParam) {
-        params.endBeforeDate = endDateParam;
-      }
+        const endDateParam = urlParams.get("endDate");
+        if (endDateParam) params.endBeforeDate = endDateParam;
 
-      // Sort is done on frontend only, not passed to search API
-
-      const eventTabParam = urlParams.get("eventTab");
-      if (eventTabParam && parseInt(categoryId) === 3) {
-        if (eventTabParam === "singleDay") {
-          params.eventType = "singleDay";
-        } else if (eventTabParam === "multiDay") {
-          params.eventType = "multiDay";
-        } else if (eventTabParam === "recurring") {
-          params.eventType = "recurring";
+        const eventTabParam = urlParams.get("eventTab");
+        if (eventTabParam && categoryIdParam === EVENTS_CATEGORY_ID) {
+          if (eventTabParam === "singleDay") {
+            params.eventType = "singleDay";
+          } else if (eventTabParam === "multiDay") {
+            params.eventType = "multiDay";
+          } else if (eventTabParam === "recurring") {
+            params.eventType = "recurring";
+          }
         }
+
+        const response = await getListingsBySearch({
+          searchQuery,
+          ...params,
+        });
+        setListings(response.data.data);
+      } catch (error) {
+        console.error("Error:", error);
+        setListings([]);
       }
-      const response = await getListingsBySearch({
-        searchQuery,
-        ...params,
-      });
-      setListings(response.data.data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    },
+    []
+  );
 
-  function goToCitizensPage() {
-    let navUrl = `/CitizenService`;
-    if (cityId) navUrl = `/CitizenService?cityId=${cityId}`;
-    navigateTo(navUrl);
-  }
+  const goToCitizensPage = useCallback(() => {
+    const navUrl = cityId
+      ? `/CitizenService?cityId=${cityId}`
+      : `/CitizenService`;
+    navigate(navUrl);
+  }, [cityId, navigate]);
 
-  const handlePrivacyPolicyAccept = () => {
+  const handlePrivacyPolicyAccept = useCallback(() => {
     if (!terminalView) {
       localStorage.setItem("privacyPolicyAccepted", "true");
     }
     setShowPopup(false);
-  };
+  }, [terminalView]);
 
   const handleEventTabChange = useCallback(
     (id) => {
-      // Clear all filters when event tab changes
       setEventTab(id);
       setStartDate("");
       setEndDate("");
       setSelectedSortOption("");
       setSearchQuery("");
 
-      // Update URL to remove filters
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.delete("startDate");
-      urlParams.delete("endDate");
-      // urlParams.delete("sort");
-      if (categoryId === 3 || categoryId === "3") {
-        urlParams.set("eventTab", id);
+      const urlParams = {};
+      urlParams.startDate = null;
+      urlParams.endDate = null;
+      if (isEvents) {
+        urlParams.eventTab = id;
       } else {
-        urlParams.delete("eventTab");
+        urlParams.eventTab = null;
       }
-      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-      window.history.replaceState({}, "", newUrl);
-
-      // Call API with new event tab (filters are cleared, so they won't be added)
-      // if (categoryId === 3) {
-      //   setIsLoading(true);
-      //   setListings([]);
-      //   const params = { pageSize: 12, statusId: 1, pageNo: 1 };
-      //   if (cityId) params.cityId = cityId;
-      //   if (categoryId) params.categoryId = categoryId;
-      //   if (id === "singleDay") {
-      //     params.eventType = "singleDay";
-      //   } else if (id === "multiDay") {
-      //     params.eventType = "multiDay";
-      //   } else if (id === "recurring") {
-      //     params.eventType = "recurring";
-      //   }
-      //   // Don't add startDate, endDate, or sort since we cleared them
-      //   // setTimeout(() => {
-      //   //   fetchData(params);
-      //   // }, 500);
-      // }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      updateUrlParams(urlParams);
     },
-    [categoryId, cityId],
+    [isEvents]
   );
+
+  const navigateTo = useCallback(
+    (path) => {
+      if (path) {
+        navigate(path);
+      }
+    },
+    [navigate]
+  );
+
+  const handleViewMore = useCallback(() => {
+    if (!terminalView) {
+      localStorage.setItem("selectedItem", t("chooseOneCategory"));
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const allListingsParams = new URLSearchParams();
+    urlParams.forEach((value, key) => {
+      allListingsParams.set(key, value);
+    });
+    if (terminalView) {
+      allListingsParams.set("terminalView", "true");
+    }
+    const queryString = allListingsParams.toString();
+    const url = queryString ? `/AllListings?${queryString}` : "/AllListings";
+    navigateTo(url);
+  }, [terminalView, t, navigateTo]);
+
+  const handleCityClick = useCallback(
+    (city) => {
+      const scrollPosition = window.scrollY;
+      localStorage.setItem("selectedCity", city.name);
+      navigateTo(`/AllListings?cityId=${city.id}`);
+      window.addEventListener("popstate", function () {
+        window.scrollTo(0, scrollPosition);
+      });
+    },
+    [navigateTo]
+  );
+
+  const handleUploadClick = useCallback(() => {
+    localStorage.setItem("selectedItem", "Choose one category");
+    navigateTo(isLoggedIn ? "/UploadListings" : "/login");
+  }, [isLoggedIn, navigateTo]);
+
+  const handleAppStoreClick = useCallback(() => {
+    window.location.href = process.env.REACT_APP_APPLESTORE;
+  }, []);
+
+  const handlePlayStoreClick = useCallback(() => {
+    window.location.href = process.env.REACT_APP_GOOGLEPLAYSTORE;
+  }, []);
+
   return (
     <section className="text-gray-600 body-font relative">
       <HomePageNavBar />
@@ -612,9 +674,7 @@ const HomePage = () => {
                 <div className="flex flex-col items-start max-w-[90%] lg:px-20 md:px-5 px-5 py-6">
                   <h1
                     className="font-sans mb-8 lg:mb-12 text-4xl md:text-6xl lg:text-7xl font-bold tracking-wide"
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                    }}
+                    style={{ fontFamily: POPPINS_FONT }}
                   >
                     {t("homePageHeading")}
                   </h1>
@@ -640,126 +700,45 @@ const HomePage = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-12 lg:gap-2 md:gap-2 gap-2 relative mt-10">
-            {/* ✅ Left Title (Reduced Width) */}
             <div
-              className={`text-slate-800 lg:px-10 md:px-5 px-5 py-3 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold lg:pl-[5rem]
-      ${categoryId === 3 ? "md:col-span-3" : "md:col-span-6"}
-    `}
-              style={{ fontFamily: "Poppins, sans-serif" }}
+              className={`text-slate-800 lg:px-10 md:px-5 px-5 py-3 text-xl md:text-3xl lg:text-3xl title-font text-start font-sans font-bold lg:pl-[5rem] ${
+                isEvents ? "md:col-span-3" : "md:col-span-6"
+              }`}
+              style={{ fontFamily: POPPINS_FONT }}
             >
-              {categoryId ? (
-                <h2>{t(categories[categoryId])}</h2>
-              ) : (
-                <h2>{t("allCategories")}</h2>
-              )}
+              <h2>
+                {categoryId ? t(categories[categoryId]) : t("allCategories")}
+              </h2>
             </div>
 
-            {/* ✅ Right Filters (More Space) */}
             <div
-              className={`flex flex-col md:flex-row lg:gap-2 md:gap-2 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 px-5 py-3
-      ${categoryId === 3 ? "md:col-span-9" : "md:col-span-6"}
-    `}
+              className={`flex flex-col md:flex-row lg:gap-2 md:gap-2 gap-2 relative justify-center place-items-center lg:px-10 md:px-5 px-5 py-3 ${
+                isEvents ? "md:col-span-9" : "md:col-span-6"
+              }`}
             >
-              {" "}
-              {/* Event Tabs and Date Picker - Only for Events (categoryId 3) */}
-              {(Number(categoryId) === 3 || categoryId === "3") && (
+              {isEvents && (
                 <>
-                  {/* ✅ Start Date Flatpickr */}
-                  <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full relative">
-                    <Flatpickr
-                      value={startDate}
-                      options={{
-                        enableTime: true,
-                        dateFormat: "Y-m-d",
-                        time_24hr: true, // eslint-disable-line camelcase
-                        allowInput: true,
-                      }}
-                      onChange={(date) => {
-                        if (date[0]) {
-                          const formattedDate = format(date[0], "yyyy-MM-dd");
-                          setStartDate(formattedDate);
-                        }
-                      }}
-                      className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                      placeholder={t("startDate") || "Start Date"}
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    />
-
-                    {startDate && (
-                      <button
-                        onClick={() => setStartDate("")}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        style={{ zIndex: 10 }}
-                        type="button"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-
-                  {/* ✅ End Date Flatpickr */}
-                  <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full relative">
-                    <Flatpickr
-                      value={endDate}
-                      options={{
-                        enableTime: true,
-                        dateFormat: "Y-m-d",
-                        time_24hr: true, // eslint-disable-line camelcase
-                        allowInput: true,
-                      }}
-                      onChange={(date) => {
-                        if (date[0]) {
-                          const formattedDate = format(date[0], "yyyy-MM-dd");
-                          setEndDate(formattedDate);
-                        }
-                      }}
-                      className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                      placeholder={t("endDate") || "End Date"}
-                      style={{ fontFamily: "Poppins, sans-serif" }}
-                    />
-
-                    {endDate && (
-                      <button
-                        onClick={() => setEndDate("")}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        style={{ zIndex: 10 }}
-                        type="button"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
+                  <DatePicker
+                    value={startDate}
+                    onChange={setStartDate}
+                    placeholder={t("startDate") || "Start Date"}
+                    t={t}
+                  />
+                  <DatePicker
+                    value={endDate}
+                    onChange={setEndDate}
+                    placeholder={t("endDate") || "End Date"}
+                    t={t}
+                  />
                 </>
               )}
-              {/* ✅ Sort Dropdown */}
+
               <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
                 <select
                   value={selectedSortOption}
                   onChange={handleSortOptionChange}
                   className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  style={{ fontFamily: POPPINS_FONT }}
                 >
                   <option value="">{t("sort")}</option>
                   <option value="titleAZ">{t("atoztitle")}</option>
@@ -768,14 +747,14 @@ const HomePage = () => {
                   <option value="oldest">{t("oldest")}</option>
                 </select>
               </div>
-              {/* ✅ Subcategory Dropdown */}
+
               {categoryId && subCategories.length > 0 && (
                 <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
                   <select
                     value={selectedSubCategoryId || ""}
                     onChange={(e) => handleSubCategorySelect(e.target.value)}
                     className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
+                    style={{ fontFamily: POPPINS_FONT }}
                   >
                     <option value="">{t("allSubcategories")}</option>
                     {subCategories.map((subCat) => (
@@ -786,7 +765,7 @@ const HomePage = () => {
                   </select>
                 </div>
               )}
-              {/* ✅ Search Bar */}
+
               <SearchBar
                 onSearch={handleSearch}
                 searchBarClassName="w-full"
@@ -795,8 +774,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Event Tabs - Only for Events (categoryId 3) */}
-          {categoryId === 3 && (
+          {isEvents && (
             <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
               <div className="flex justify-center">
                 <div className="flex w-full md:w-fit overflow-hidden rounded-xl border border-gray-300 bg-gray-100 shadow-sm">
@@ -809,7 +787,7 @@ const HomePage = () => {
                           ? "bg-gray-600 text-white"
                           : "bg-transparent text-gray-600 hover:bg-gray-200"
                       }`}
-                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      style={{ fontFamily: POPPINS_FONT }}
                       type="button"
                     >
                       {t(tab?.label)}
@@ -820,52 +798,23 @@ const HomePage = () => {
             </div>
           )}
 
-          {listings && listings.length > 0 ? (
+          {sortedListings && sortedListings.length > 0 ? (
             <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
               <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
-                {listings &&
-                  listings.map((listing, index) => (
-                    <ListingsCard
-                      listing={listing}
-                      terminalView={terminalView}
-                      key={index}
-                    />
-                  ))}
+                {sortedListings.map((listing, index) => (
+                  <ListingsCard
+                    listing={listing}
+                    terminalView={terminalView}
+                    key={listing.id || index}
+                  />
+                ))}
               </div>
 
               <a
-                className={`relative w-full sm:w-80 cursor-pointer items-center justify-center inline-block px-4 py-2 font-medium group`}
+                className="relative w-full sm:w-80 cursor-pointer items-center justify-center inline-block px-4 py-2 font-medium group"
                 type="submit"
-                onClick={() => {
-                  if (!terminalView) {
-                    localStorage.setItem(
-                      "selectedItem",
-                      t("chooseOneCategory"),
-                    );
-                  }
-                  // Get all current URL parameters
-                  const urlParams = new URLSearchParams(window.location.search);
-
-                  // Build the AllListings URL with all current parameters
-                  const allListingsParams = new URLSearchParams();
-
-                  // Preserve all existing URL parameters
-                  urlParams.forEach((value, key) => {
-                    allListingsParams.set(key, value);
-                  });
-
-                  // Add terminalView if needed
-                  if (terminalView) {
-                    allListingsParams.set("terminalView", "true");
-                  }
-
-                  const queryString = allListingsParams.toString();
-                  const url = queryString
-                    ? `/AllListings?${queryString}`
-                    : "/AllListings";
-                  navigateTo(url, { replace: true });
-                }}
-                style={{ fontFamily: "Poppins, sans-serif" }}
+                onClick={handleViewMore}
+                style={{ fontFamily: POPPINS_FONT }}
               >
                 <span
                   className={`absolute inset-0 w-full sm:w-80 h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 ${
@@ -894,8 +843,8 @@ const HomePage = () => {
             <div>
               <div className="flex items-center justify-center">
                 <h1
-                  className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  className="m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+                  style={{ fontFamily: POPPINS_FONT }}
                 >
                   {t("currently_no_listings")}
                 </h1>
@@ -903,19 +852,14 @@ const HomePage = () => {
               <div className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl">
                 <span
                   className="font-sans text-black"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  style={{ fontFamily: POPPINS_FONT }}
                 >
                   {t("to_upload_new_listing")}
                 </span>
                 <a
                   className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
-                  style={{ fontFamily: "Poppins, sans-serif" }}
-                  onClick={() => {
-                    localStorage.setItem("selectedItem", "Choose one category");
-                    isLoggedIn
-                      ? navigateTo("/UploadListings")
-                      : navigateTo("/login");
-                  }}
+                  style={{ fontFamily: POPPINS_FONT }}
+                  onClick={handleUploadClick}
                 >
                   {t("click_here")}
                 </a>
@@ -927,152 +871,100 @@ const HomePage = () => {
             <>
               <h2
                 className="text-slate-800 lg:px-20 md:px-5 px-5 py-6 text-xl md:text-3xl mt-10 lg:text-3xl title-font text-start font-sans font-bold"
-                style={{ fontFamily: "Poppins, sans-serif" }}
+                style={{ fontFamily: POPPINS_FONT }}
               >
                 {t("discoverMorePlaces")}
               </h2>
 
               <div className="bg-white lg:px-20 md:px-5 px-5 py-6 mt-0 mb-10 space-y-10 flex flex-col">
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 relative mb-4 justify-center place-items-center">
-                  {(cities ?? []).map((city) => {
-                    // This ensures that cities is always an array, preventing errors like "Cannot read properties of undefined (reading 'map')"
-                    if (city.id !== Number(cityId)) {
-                      return (
-                        <div
-                          key={city.id}
-                          onClick={() => {
-                            const scrollPosition = window.scrollY;
-                            localStorage.setItem("selectedCity", city.name);
-                            navigateTo(`/AllListings?cityId=${city.id}`);
-                            window.addEventListener("popstate", function () {
-                              window.scrollTo(0, scrollPosition);
-                            });
-                          }}
-                          className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
-                        >
-                          <div className="relative h-80 rounded overflow-hidden">
-                            <img
-                              alt="ecommerce"
-                              className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
-                              src={
-                                city.image
-                                  ? process.env.REACT_APP_BUCKET_HOST +
-                                    city.image
-                                  : CITYIMAGE
-                              }
-                              onError={(e) => {
-                                e.target.src = CITYDEFAULTIMAGE; // Set default image if loading fails
-                              }}
-                            />
-                            <div
-                              className="absolute inset-0 flex flex-col justify-end text-white z--1"
-                              style={{
-                                background:
-                                  "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
-                              }}
+                  {cities
+                    .filter((city) => city.id !== Number(cityId))
+                    .map((city) => (
+                      <div
+                        key={city.id}
+                        onClick={() => handleCityClick(city)}
+                        className="h-80 w-full rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2"
+                      >
+                        <div className="relative h-80 rounded overflow-hidden">
+                          <img
+                            alt={city.name}
+                            className="object-cover object-center h-full w-full hover:scale-125 transition-all duration-500"
+                            src={
+                              city.image
+                                ? process.env.REACT_APP_BUCKET_HOST + city.image
+                                : CITYIMAGE
+                            }
+                            onError={(e) => {
+                              e.target.src = CITYDEFAULTIMAGE;
+                            }}
+                          />
+                          <div
+                            className="absolute inset-0 flex flex-col justify-end text-white z--1"
+                            style={{
+                              background:
+                                "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+                            }}
+                          >
+                            <h1
+                              className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4"
+                              style={{ fontFamily: POPPINS_FONT }}
                             >
-                              <h1
-                                className="text-xl pb-5 md:text-3xl font-sans font-bold mb-0 ml-4"
-                                style={{ fontFamily: "Poppins, sans-serif" }}
-                              >
-                                {city.name}
-                              </h1>
-                            </div>
+                              {city.name}
+                            </h1>
                           </div>
                         </div>
-                      );
-                    }
-                    return null;
-                  })}
+                      </div>
+                    ))}
                 </div>
               </div>
 
-              {/* <div className="my-4 bg-gray-200 h-[1px]"></div> */}
-
-              {/* <div className="bg-slate-500 lg:px-20 md:px-5 px-5 py-6 mt-10 mb-10 space-y-10 flex flex-col"> */}
               <div className="bg-white lg:px-20 md:px-5 px-5 py-6 space-y-10 flex flex-col">
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 relative mb-4 justify-center gap-4 place-items-center">
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={ONEIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("createAnAccount")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("createAnAccountDescription")}
-                        </p>
+                  {[
+                    {
+                      image: ONEIMAGE,
+                      title: t("createAnAccount"),
+                      description: t("createAnAccountDescription"),
+                    },
+                    {
+                      image: TWOIMAGE,
+                      title: t("getVerified"),
+                      description: t("getVerifiedDescription"),
+                    },
+                    {
+                      image: THREEIMAGE,
+                      title: t("start"),
+                      description: t("startDescription"),
+                    },
+                  ].map((step, index) => (
+                    <div
+                      key={index}
+                      className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer"
+                    >
+                      <div className="relative h-96 rounded overflow-hidden w-auto">
+                        <img
+                          alt={step.title}
+                          className="object-cover object-center h-48 w-48 m-auto"
+                          src={step.image}
+                        />
+                        <div className="p-6">
+                          <h2
+                            className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
+                            style={{ fontFamily: POPPINS_FONT }}
+                          >
+                            {step.title}
+                          </h2>
+                          <p
+                            className="text-slate-800 title-font text-lg font-bold text-start font-sans"
+                            style={{ fontFamily: POPPINS_FONT }}
+                          >
+                            {step.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={TWOIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("getVerified")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("getVerifiedDescription")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pb-10 w-full mb-4 bg-slate-100 rounded-xl cursor-pointer">
-                    <div className="relative h-96 w-96 rounded overflow-hidden w-auto">
-                      <img
-                        alt="ecommerce"
-                        className="object-cover object-center h-48 w-48 m-auto"
-                        src={THREEIMAGE}
-                      />
-                      <div className="p-6">
-                        <h2
-                          className="text-slate-800 mb-2 text-2xl md:text-2xl lg:text-3xl mt-2 title-font text-start font-bold font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("start")}
-                        </h2>
-                        <p
-                          className="text-slate-800 title-font text-lg font-bold text-start font-sans"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                          {t("startDescription")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -1083,21 +975,21 @@ const HomePage = () => {
                   <div className="w-full md:w-1/2 px-4">
                     <h2
                       className="text-4xl text-white font-bold mb-4 font-sans"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       {t("citizenService")}
                     </h2>
                     <p
                       className="mb-4 text-slate-800 text-lg font-bold font-sans"
-                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       {t("findBestCitizenServicesInTheCity")}
                     </p>
 
                     <a
-                      onClick={() => goToCitizensPage()}
+                      onClick={goToCitizensPage}
                       className={`flex items-center ${RegionColors.darkTextColor} border ${RegionColors.darkBorderColor} py-2 px-6 gap-2 rounded inline-flex items-center cursor-pointer`}
-                      style={{ fontFamily: "Poppins, sans-serif" }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       <span>{t("clickHereToFind")}</span>
                       <svg
@@ -1120,7 +1012,7 @@ const HomePage = () => {
                         process.env.REACT_APP_BUCKET_HOST +
                         "admin/CitizenService2.png"
                       }
-                      alt="Image 1"
+                      alt="Citizen Service"
                       className="w-full md:w-98 mb-2"
                     />
                   </div>
@@ -1132,32 +1024,24 @@ const HomePage = () => {
               >
                 <style>
                   {`
-								@media (max-width: 280px) {
-									.galaxy-fold {
-										flex-direction: column; /* Adjust the margin value as needed */
-									}
-								}
-							`}
+                    @media (max-width: 280px) {
+                      .galaxy-fold {
+                        flex-direction: column;
+                      }
+                    }
+                  `}
                 </style>
                 <div className="flex flex-col md:flex-row place-items-center justify-start">
                   <p
                     className="flex mt-4 px-4 py-2 text-white items-center cursor-pointer text-lg font-bold font-sans"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
+                    style={{ fontFamily: POPPINS_FONT }}
                   >
                     {t("downloadUs")}
                   </p>
                   <div className="flex mt-4 px-4 py-2 md:gap-4 gap-4 items-center cursor-pointer galaxy-fold">
                     <div
                       className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                      onClick={() => {
-                        if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                          window.location.href =
-                            process.env.REACT_APP_APPLESTORE;
-                        } else {
-                          window.location.href =
-                            process.env.REACT_APP_APPLESTORE;
-                        }
-                      }}
+                      onClick={handleAppStoreClick}
                     >
                       <div className="mr-2">
                         <svg viewBox="0 0 384 512" width="20">
@@ -1177,15 +1061,7 @@ const HomePage = () => {
 
                     <div
                       className="flex mt-0 w-36 h-10 bg-white text-black rounded-lg items-center justify-center transition duration-300 transform hover:scale-105"
-                      onClick={() => {
-                        if (process.env.REACT_APP_REGION_NAME === "WALDI") {
-                          window.location.href =
-                            process.env.REACT_APP_GOOGLEPLAYSTORE;
-                        } else {
-                          window.location.href =
-                            process.env.REACT_APP_GOOGLEPLAYSTORE;
-                        }
-                      }}
+                      onClick={handlePlayStoreClick}
                     >
                       <div className="mr-2">
                         <svg viewBox="30 336.7 120.9 129.2" width="20">

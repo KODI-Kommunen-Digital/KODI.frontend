@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import HomePageNavBar from "../../Components/V2/HomePageNavBar";
 import SearchBar from "../../Components/SearchBar";
 import ListingsCard from "../../Components/ListingsCard";
@@ -23,10 +29,127 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 
+// Constants
+const EVENTS_CATEGORY_ID = 3;
+const OFFICIAL_NOTIFICATION_CATEGORY_ID = 16;
+const DEFAULT_STATUS_ID = 1;
+const FETCH_DELAY = 1000;
+const POPPINS_FONT = "Poppins, sans-serif";
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_PAGE_SIZE = 8;
+const DESKTOP_PAGE_SIZE = 12;
+
+// Helper functions
+const isEventsCategory = (categoryId) => {
+  return (
+    categoryId === EVENTS_CATEGORY_ID ||
+    categoryId === String(EVENTS_CATEGORY_ID)
+  );
+};
+
+const parseUrlParam = (urlParams, key, parser = parseInt) => {
+  const value = urlParams.get(key);
+  return value ? parser(value) : null;
+};
+
+const updateUrlParams = (params) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== "") {
+      urlParams.set(key, value);
+    } else {
+      urlParams.delete(key);
+    }
+  });
+  const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  window.history.replaceState({}, "", newUrl);
+};
+
+const getEventType = (eventTab) => {
+  if (eventTab === "singleDay") return "singleDay";
+  if (eventTab === "multiDay") return "multiDay";
+  if (eventTab === "recurring") return "recurring";
+  return null;
+};
+
+// DatePicker Component
+// eslint-disable-next-line react/prop-types
+const DatePicker = ({ value, onChange, placeholder, t, className = "" }) => {
+  const handleDateChange = useCallback(
+    (date) => {
+      if (date[0]) {
+        const formattedDate = format(date[0], "yyyy-MM-dd");
+        onChange(formattedDate);
+      }
+    },
+    [onChange],
+  );
+
+  const handleClear = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onChange("");
+    },
+    [onChange],
+  );
+
+  const flatpickrOptions = useMemo(
+    () => ({
+      dateFormat: "Y-m-d",
+      allowInput: true,
+    }),
+    [],
+  );
+
+  return (
+    <div className={`relative ${className}`}>
+      <Flatpickr
+        value={value}
+        options={flatpickrOptions}
+        onChange={handleDateChange}
+        className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-48 text-gray-600 relative"
+        placeholder={placeholder}
+        style={{ fontFamily: POPPINS_FONT, zIndex: 1 }}
+      />
+      {value && (
+        <button
+          onClick={handleClear}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-50"
+          type="button"
+          aria-label="Clear date"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+};
+
 const AllListings = () => {
   window.scrollTo(0, 0);
-  const pageSize = window.innerWidth <= 768 ? 8 : 12;
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const pageSize = useMemo(
+    () =>
+      window.innerWidth <= MOBILE_BREAKPOINT
+        ? MOBILE_PAGE_SIZE
+        : DESKTOP_PAGE_SIZE,
+    [],
+  );
+
   const [cityId, setCityId] = useState("");
   const [cities, setCities] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
@@ -43,128 +166,153 @@ const AllListings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [eventTab, setEventTab] = useState("singleDay"); // single, multi, recurring
+  const [eventTab, setEventTab] = useState("singleDay");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const navigate = useNavigate();
-  const navigateTo = (path) => {
-    if (path) {
-      navigate(path);
-    }
-  };
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const terminalViewParam = searchParams.get("terminalView");
-  const mtClass = terminalViewParam === "true" ? "mt-0" : "mt-0";
-  const pyClass = terminalViewParam === "true" ? "py-0" : "py-0";
   const [terminalView, setTerminalView] = useState(false);
+  const isInitialMount = useRef(true);
+
+  // Memoized values
+  const isEvents = useMemo(() => isEventsCategory(categoryId), [categoryId]);
+  const terminalViewParam = useMemo(
+    () => new URLSearchParams(location.search).get("terminalView") === "true",
+    [location.search],
+  );
+
+  const sortedListings = useMemo(() => {
+    if (!selectedSortOption || !listings.length) return listings;
+
+    const listingsCopy = [...listings];
+    switch (selectedSortOption) {
+      case "titleAZ":
+        return sortByTitleAZ(listingsCopy);
+      case "titleZA":
+        return sortByTitleZA(listingsCopy);
+      case "recent":
+        return sortLatestFirst(listingsCopy);
+      case "oldest":
+        return sortOldestFirst(listingsCopy);
+      default:
+        return listingsCopy;
+    }
+  }, [listings, selectedSortOption]);
+
+  // Initialize terminalView
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     setTerminalView(queryParams.get("terminalView") === "true");
   }, []);
 
+  // Initial data load
   useEffect(() => {
-    document.title = process.env.REACT_APP_REGION_NAME + " " + t("allEvents");
+    document.title = `${process.env.REACT_APP_REGION_NAME} ${t("allEvents")}`;
     const urlParams = new URLSearchParams(window.location.search);
+
     const accessToken =
       window.localStorage.getItem("accessToken") ||
       window.sessionStorage.getItem("accessToken");
     const refreshToken =
       window.localStorage.getItem("refreshToken") ||
       window.sessionStorage.getItem("refreshToken");
-    if (accessToken && refreshToken) {
-      setIsLoggedIn(true);
-    }
+    setIsLoggedIn(!!(accessToken && refreshToken));
+
     setIsLoading(true);
-    Promise.all([getCities(), getCategory()]).then((response) => {
-      setCities(response[0].data.data);
+    Promise.all([getCities(), getCategory()])
+      .then((response) => {
+        setCities(response[0].data.data);
 
-      const filteredCategories = response[1]?.data?.data.filter(
-        (category) => !hiddenCategories.includes(category.id),
-      );
-
-      setCategories(filteredCategories || []);
-      const params = { pageSize, statusId: 1 };
-      const pageNoParam = parseInt(urlParams.get("pageNo"));
-      if (pageNoParam > 1) {
-        params.pageNo = pageNoParam;
-        urlParams.set("pageNo", pageNo);
-        setPageNo(pageNoParam);
-      } else {
-        urlParams.delete("pageNo");
-      }
-      const cityIdParam = urlParams.get("cityId");
-      if (cityIdParam) {
-        const cityId = parseInt(cityIdParam);
-        const city = response[0].data.data.find(
-          (c) => c.id === parseInt(cityIdParam),
+        const filteredCategories = response[1]?.data?.data.filter(
+          (category) => !hiddenCategories.includes(category.id),
         );
-        if (city) {
-          setCityName(city.name);
-          setCityId(parseInt(cityIdParam));
-          params.cityId = cityId;
-        } else urlParams.delete("cityId");
-      }
-      const categoryIdParam = urlParams.get("categoryId");
-      if (categoryIdParam) {
-        const categoryId = parseInt(categoryIdParam);
-        if (categoryById[categoryId]) {
-          setCategoryId(categoryId);
-          setCategoryName(t(categoryById[categoryId]));
-          params.categoryId = categoryId;
-          if (categoryId === 3) {
+        setCategories(filteredCategories || []);
+
+        const params = { pageSize, statusId: DEFAULT_STATUS_ID };
+
+        const pageNoParam = parseUrlParam(urlParams, "pageNo");
+        if (pageNoParam > 1) {
+          params.pageNo = pageNoParam;
+          setPageNo(pageNoParam);
+        }
+
+        const cityIdParam = parseUrlParam(urlParams, "cityId");
+        if (cityIdParam) {
+          const city = response[0].data.data.find((c) => c.id === cityIdParam);
+          if (city) {
+            setCityName(city.name);
+            setCityId(cityIdParam);
+            params.cityId = cityIdParam;
+          }
+        }
+
+        const categoryIdParam = parseUrlParam(urlParams, "categoryId");
+        if (categoryIdParam && categoryById[categoryIdParam]) {
+          setCategoryId(categoryIdParam);
+          setCategoryName(t(categoryById[categoryIdParam]));
+          params.categoryId = categoryIdParam;
+          if (categoryIdParam === EVENTS_CATEGORY_ID) {
             params.sortByStartDate = true;
           }
-        } else urlParams.delete("categoryId");
-      }
-      // Initialize filters from URL params and add to API params
-      const startDateParam = urlParams.get("startDate");
-      if (startDateParam) {
-        setStartDate(startDateParam);
-        // Add to API params if category is 3
-        if (parseInt(categoryIdParam) === 3) {
-          params.startDate = startDateParam;
         }
-      }
-      const endDateParam = urlParams.get("endDate");
-      if (endDateParam) {
-        setEndDate(endDateParam);
-        // Add to API params if category is 3
-        if (parseInt(categoryIdParam) === 3) {
-          params.endDate = endDateParam;
-        }
-      }
-      // const sortParam = urlParams.get("sort");
-      // if (sortParam) {
-      //   setSelectedSortOption(sortParam);
-      //   // Sort is done on frontend only, not passed to API
-      // }
-      const eventTabParam = urlParams.get("eventTab");
-      if (eventTabParam) {
-        setEventTab(eventTabParam);
-        // Add eventType to API params if category is 3
-        if (parseInt(categoryIdParam) === 3) {
-          if (eventTabParam === "singleDay") {
-            params.eventType = "singleDay";
-          } else if (eventTabParam === "multiDay") {
-            params.eventType = "multiDay";
-          } else if (eventTabParam === "recurring") {
-            params.eventType = "recurring";
+
+        const startDateParam = urlParams.get("startDate");
+        if (startDateParam) {
+          setStartDate(startDateParam);
+          if (categoryIdParam === EVENTS_CATEGORY_ID) {
+            params.startDate = startDateParam;
           }
         }
-      }
-      setTimeout(() => {
-        fetchData(params);
+
+        const endDateParam = urlParams.get("endDate");
+        if (endDateParam) {
+          setEndDate(endDateParam);
+          if (categoryIdParam === EVENTS_CATEGORY_ID) {
+            params.endDate = endDateParam;
+          }
+        }
+
+        const eventTabParam = urlParams.get("eventTab");
+        if (eventTabParam) {
+          setEventTab(eventTabParam);
+          if (categoryIdParam === EVENTS_CATEGORY_ID) {
+            const eventType = getEventType(eventTabParam);
+            if (eventType) {
+              params.eventType = eventType;
+            }
+          }
+        }
+
+        const sortParam = urlParams.get("sort");
+        if (sortParam) {
+          setSelectedSortOption(sortParam);
+        }
+
+        setTimeout(async () => {
+          try {
+            params.showExternalListings = "false";
+            const response = await getListings(params);
+            const listings = response.data.data;
+            const filteredListings = listings.filter(
+              (listing) => !hiddenCategories.includes(listing.categoryId),
+            );
+            setListings(filteredListings);
+          } catch (error) {
+            console.error("Error fetching listings:", error);
+            setListings([]);
+          } finally {
+            setIsLoading(false);
+          }
+        }, FETCH_DELAY);
+      })
+      .catch((error) => {
+        console.error("Error loading initial data:", error);
         setIsLoading(false);
-      }, 1000);
-    });
-  }, []);
+      });
+  }, [t, pageSize]);
 
   // Sync state with URL parameters when location changes
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
 
-    // Update startDate from URL if different
     const urlStartDate = urlParams.get("startDate") || "";
     if (urlStartDate && urlStartDate !== startDate) {
       setStartDate(urlStartDate);
@@ -172,7 +320,6 @@ const AllListings = () => {
       setStartDate("");
     }
 
-    // Update endDate from URL if different
     const urlEndDate = urlParams.get("endDate") || "";
     if (urlEndDate && urlEndDate !== endDate) {
       setEndDate(urlEndDate);
@@ -180,312 +327,285 @@ const AllListings = () => {
       setEndDate("");
     }
 
-    // Update sort from URL if different
-    // const urlSort = urlParams.get("sort") || "";
-    // if (urlSort && urlSort !== selectedSortOption) {
-    //   setSelectedSortOption(urlSort);
-    // } else if (!urlSort && selectedSortOption) {
-    //   setSelectedSortOption("");
-    // }
-
-    // Update eventTab from URL if different (only for category 3)
     const urlEventTab = urlParams.get("eventTab");
-    const currentCategoryId = parseInt(urlParams.get("categoryId"));
-    if (currentCategoryId === 3 || currentCategoryId === "3") {
+    const currentCategoryId = parseUrlParam(urlParams, "categoryId");
+    if (isEventsCategory(currentCategoryId)) {
       if (urlEventTab && urlEventTab !== eventTab) {
         setEventTab(urlEventTab);
       } else if (!urlEventTab && eventTab !== "singleDay") {
         setEventTab("singleDay");
       }
     } else if (eventTab !== "singleDay") {
-      // Reset eventTab if category is not 3
       setEventTab("singleDay");
+    }
+
+    const urlSort = urlParams.get("sort") || "";
+    if (urlSort && urlSort !== selectedSortOption) {
+      setSelectedSortOption(urlSort);
+    } else if (!urlSort && selectedSortOption) {
+      setSelectedSortOption("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
+  // Update URL and fetch data when filters change
   useEffect(() => {
-    if (!isLoading) {
-      setIsLoading(true);
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = { pageSize, statusId: 1 };
-      if (parseInt(cityId)) {
-        setCityName(cities.find((c) => parseInt(cityId) === c.id)?.name);
-        urlParams.set("cityId", cityId);
-        params.cityId = cityId;
-      } else {
-        setCityName(
-          t("allCities", {
-            regionName: process.env.REACT_APP_REGION_NAME,
-          }),
-        );
-        urlParams.delete("cityId");
-      }
-      if (parseInt(categoryId)) {
-        setCategoryName(t(categoryById[categoryId]));
-        params.categoryId = parseInt(categoryId);
-        urlParams.set("categoryId", parseInt(categoryId));
-      } else {
-        setCategoryName(t("allCategories"));
-        urlParams.delete("categoryId");
-      }
-      console.log("params", pageNo);
-      if (pageNo > 1) {
-        params.pageNo = pageNo;
-        urlParams.set("pageNo", pageNo);
-      } else {
-        params.pageNo = 1;
-        urlParams.delete("pageNo");
-      }
-      // Update URL params for filters
-      if (startDate) {
-        urlParams.set("startDate", startDate);
-      } else {
-        urlParams.delete("startDate");
-      }
-      if (endDate) {
-        urlParams.set("endDate", endDate);
-      } else {
-        urlParams.delete("endDate");
-      }
-      // if (selectedSortOption) {
-      //   urlParams.set("sort", selectedSortOption);
-      // } else {
-      //   urlParams.delete("sort");
-      // }
-      // Only add eventTab to URL if category is 3 (Events)
-      if (categoryId === 3 || categoryId === "3") {
-        if (eventTab) {
-          urlParams.set("eventTab", eventTab);
-        } else {
-          urlParams.delete("eventTab");
-        }
-      } else {
-        urlParams.delete("eventTab");
-      }
-      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-      window.history.replaceState({}, "", newUrl);
-      if (parseInt(categoryId) === 3) {
-        params.sortByStartDate = true;
-      }
-      setTimeout(() => {
-        fetchData(params);
-      }, 1000);
+    // Skip on initial mount - initial load is handled by the first useEffect
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
     }
-  }, [categoryId, cityId, pageNo, startDate, endDate, eventTab]);
 
-  // Update URL when sort changes (without calling API)
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   if (selectedSortOption) {
-  //     urlParams.set("sort", selectedSortOption);
-  //   } else {
-  //     urlParams.delete("sort");
-  //   }
-  //   const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-  //   window.history.replaceState({}, "", newUrl);
-  // }, [selectedSortOption]);
-
-  const handleCityChange = (newCityId) => {
     setIsLoading(true);
-    setCityId(newCityId);
-    clearSearchResults();
-    setIsLoading(false);
-    setPageNo(1);
-  };
+    const params = { pageSize, statusId: DEFAULT_STATUS_ID };
 
-  const fetchData = async (params) => {
-    clearSearchResults();
+    const urlParams = {};
+    if (parseInt(cityId)) {
+      const city = cities.find((c) => parseInt(cityId) === c.id);
+      if (city) {
+        setCityName(city.name);
+        urlParams.cityId = cityId;
+        params.cityId = cityId;
+      }
+    } else {
+      setCityName(
+        t("allCities", {
+          regionName: process.env.REACT_APP_REGION_NAME,
+        }),
+      );
+      urlParams.cityId = null;
+    }
 
-    params.showExternalListings = "false";
+    if (parseInt(categoryId)) {
+      setCategoryName(t(categoryById[categoryId]));
+      params.categoryId = parseInt(categoryId);
+      urlParams.categoryId = parseInt(categoryId);
+    } else {
+      setCategoryName(t("allCategories"));
+      urlParams.categoryId = null;
+    }
 
-    // Add event-specific params (use params if already set, otherwise use state)
-    if (categoryId === 3 || categoryId === "3") {
-      if (!params.eventType) {
-        if (eventTab === "singleDay") {
-          params.eventType = "singleDay";
-        } else if (eventTab === "multiDay") {
-          params.eventType = "multiDay";
-        } else if (eventTab === "recurring") {
-          params.eventType = "recurring";
+    if (pageNo > 1) {
+      params.pageNo = pageNo;
+      urlParams.pageNo = pageNo;
+    } else {
+      params.pageNo = 1;
+      urlParams.pageNo = null;
+    }
+
+    if (startDate) {
+      urlParams.startDate = startDate;
+    } else {
+      urlParams.startDate = null;
+    }
+
+    if (endDate) {
+      urlParams.endDate = endDate;
+    } else {
+      urlParams.endDate = null;
+    }
+
+    if (isEvents) {
+      if (eventTab) {
+        urlParams.eventTab = eventTab;
+      } else {
+        urlParams.eventTab = null;
+      }
+    } else {
+      urlParams.eventTab = null;
+    }
+
+    if (selectedSortOption) {
+      urlParams.sort = selectedSortOption;
+    } else {
+      urlParams.sort = null;
+    }
+
+    updateUrlParams(urlParams);
+
+    if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
+      params.sortByStartDate = true;
+    }
+
+    const timeoutId = setTimeout(() => {
+      fetchData(params);
+    }, FETCH_DELAY);
+
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    categoryId,
+    cityId,
+    pageNo,
+    startDate,
+    endDate,
+    eventTab,
+    selectedSortOption,
+    cities,
+    t,
+    isEvents,
+    pageSize,
+  ]);
+
+  const fetchData = useCallback(
+    async (params) => {
+      setListings([]);
+      setSearchQuery("");
+      params.showExternalListings = "false";
+
+      if (isEvents) {
+        if (!params.eventType) {
+          const eventType = getEventType(eventTab);
+          if (eventType) {
+            params.eventType = eventType;
+          }
+        }
+        if (!params.startDate && startDate) {
+          params.startDate = startDate;
+        }
+        if (!params.endDate && endDate) {
+          params.endDate = endDate;
         }
       }
-      if (!params.startDate && startDate) {
-        params.startDate = startDate;
+
+      try {
+        const response = await getListings(params);
+        const listings = response.data.data;
+        const filteredListings = listings.filter(
+          (listing) => !hiddenCategories.includes(listing.categoryId),
+        );
+        setListings(filteredListings);
+      } catch (error) {
+        setListings([]);
+        console.error("Error fetching listings:", error);
+      } finally {
+        setIsLoading(false);
       }
-      if (!params.endDate && endDate) {
-        params.endDate = endDate;
-      }
-    }
-    try {
-      const response = await getListings(params);
-      const listings = response.data.data;
+    },
+    [isEvents, eventTab, startDate, endDate],
+  );
 
-      const filteredListings = listings.filter(
-        (listing) => !hiddenCategories.includes(listing.categoryId),
-      );
+  const handleCityChange = useCallback((newCityId) => {
+    setCityId(newCityId);
+    setListings([]);
+    setSearchQuery("");
+    setPageNo(1);
+  }, []);
 
-      setListings(filteredListings);
-    } catch (error) {
-      setListings([]);
-      console.error("Error fetching listings:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSortOptionChange = (event) => {
-    setSelectedSortOption(event.target.value);
-    // clearSearchResults();
-  };
-
-  const handleOfficialNotificationButton = () => {
-    setCategoryId(16);
-    navigateTo("/AllListings?terminalView=true&categoryId=16");
-  };
-
-  useEffect(() => {
-    switch (selectedSortOption) {
-      case "titleAZ":
-        setListings([...sortByTitleAZ(listings)]);
-        break;
-      case "titleZA":
-        setListings([...sortByTitleZA(listings)]);
-        break;
-      case "recent":
-        setListings([...sortLatestFirst(listings)]);
-        break;
-      case "oldest":
-        setListings([...sortOldestFirst(listings)]);
-        break;
-      default:
-        break;
-    }
-  }, [selectedSortOption]);
-
-  const handleCategoryChange = (newCategoryId) => {
+  const handleCategoryChange = useCallback((newCategoryId) => {
     setCategoryId(newCategoryId);
-    clearSearchResults();
-
-    // Clear all filters when category changes (except cityId)
+    setListings([]);
+    setSearchQuery("");
     setStartDate("");
     setEndDate("");
     setSelectedSortOption("");
+    setPageNo(1);
 
-    // Clear eventTab if category is not 3 (Events)
-    if (newCategoryId !== 3 && newCategoryId !== "3") {
+    if (!isEventsCategory(newCategoryId)) {
       setEventTab("singleDay");
     }
-  };
+  }, []);
 
-  const handleSearch = async (searchQuery) => {
-    setPageNo(1);
-    setSearchQuery(searchQuery); // Save the search query
+  const handleSortOptionChange = useCallback((event) => {
+    setSelectedSortOption(event.target.value);
+  }, []);
 
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = { statusId: 1 };
+  const handleSearch = useCallback(
+    async (searchQuery) => {
+      setPageNo(1);
+      setSearchQuery(searchQuery);
 
-      const cityId = urlParams.get("cityId");
-      if (cityId && parseInt(cityId)) {
-        params.cityId = parseInt(cityId);
-      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = { statusId: DEFAULT_STATUS_ID };
 
-      const categoryId = urlParams.get("categoryId");
-      if (categoryId && parseInt(categoryId)) {
-        params.categoryId = parseInt(categoryId);
-      }
+        const cityIdParam = parseUrlParam(urlParams, "cityId");
+        if (cityIdParam) params.cityId = cityIdParam;
 
-      // Pass filters to search API
-      const startDateParam = urlParams.get("startDate");
-      if (startDateParam) {
-        params.startAfterDate = startDateParam;
-      }
+        const categoryIdParam = parseUrlParam(urlParams, "categoryId");
+        if (categoryIdParam) params.categoryId = categoryIdParam;
 
-      const endDateParam = urlParams.get("endDate");
-      if (endDateParam) {
-        params.endBeforeDate = endDateParam;
-      }
-
-      // Sort is done on frontend only, not passed to search API
-
-      const eventTabParam = urlParams.get("eventTab");
-      if (eventTabParam && parseInt(categoryId) === 3) {
-        if (eventTabParam === "singleDay") {
-          params.eventType = "singleDay";
-        } else if (eventTabParam === "multiDay") {
-          params.eventType = "multiDay";
-        } else if (eventTabParam === "recurring") {
-          params.eventType = "recurring";
+        const startDateParam = urlParams.get("startDate");
+        if (startDateParam) {
+          params.startAfterDate = startDateParam;
         }
-      }
-      if (searchQuery) {
-        const response = await getListingsBySearch({
-          searchQuery,
-          ...params,
-        });
-        const listingsData = response.data.data;
-        setListings(listingsData);
-      } else {
-        const params = { pageSize };
-        await fetchData(params);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
-  const clearSearchResults = () => {
-    setListings([]); // Clear the listings to remove the search results
-    setSearchQuery(""); // Clear the search query
-  };
+        const endDateParam = urlParams.get("endDate");
+        if (endDateParam) {
+          params.endBeforeDate = endDateParam;
+        }
+
+        const eventTabParam = urlParams.get("eventTab");
+        if (eventTabParam && categoryIdParam === EVENTS_CATEGORY_ID) {
+          const eventType = getEventType(eventTabParam);
+          if (eventType) {
+            params.eventType = eventType;
+          }
+        }
+
+        if (searchQuery) {
+          const response = await getListingsBySearch({
+            searchQuery,
+            ...params,
+          });
+          setListings(response.data.data);
+        } else {
+          await fetchData({ pageSize });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setListings([]);
+      }
+    },
+    [fetchData, pageSize],
+  );
 
   const handleEventTabChange = useCallback(
     (id) => {
-      // Clear all filters when event tab changes
       setEventTab(id);
       setStartDate("");
       setEndDate("");
       setSelectedSortOption("");
       setSearchQuery("");
-
-      // Update URL to remove filters
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.delete("startDate");
-      urlParams.delete("endDate");
-      // urlParams.delete("sort");
-      if (categoryId === 3 || categoryId === "3") {
-        urlParams.set("eventTab", id);
-      } else {
-        urlParams.delete("eventTab");
-      }
       setPageNo(1);
-      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-      window.history.replaceState({}, "", newUrl);
 
-      // Call API with new event tab (filters are cleared, so they won't be added)
-      // if (categoryId === 3) {
-      //   setIsLoading(true);
-      //   setListings([]);
-      //   const params = { pageSize, statusId: 1, pageNo: 1 };
-      //   if (cityId) params.cityId = cityId;
-      //   if (categoryId) params.categoryId = categoryId;
-      //   if (id === "singleDay") {
-      //     params.eventType = "singleDay";
-      //   } else if (id === "multiDay") {
-      //     params.eventType = "multiDay";
-      //   } else if (id === "recurring") {
-      //     params.eventType = "recurring";
-      //   }
-      //   // Don't add startDate, endDate, or sort since we cleared them
-      //   // setTimeout(() => {
-      //   //   fetchData(params);
-      //   // }, 500);
-      // }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const urlParams = {};
+      urlParams.startDate = null;
+      urlParams.endDate = null;
+      if (isEvents) {
+        urlParams.eventTab = id;
+      } else {
+        urlParams.eventTab = null;
+      }
+      updateUrlParams(urlParams);
     },
-    [categoryId, cityId, pageSize],
+    [isEvents],
   );
+
+  const handleOfficialNotificationButton = useCallback(() => {
+    setCategoryId(OFFICIAL_NOTIFICATION_CATEGORY_ID);
+    navigate(
+      `/AllListings?terminalView=true&categoryId=${OFFICIAL_NOTIFICATION_CATEGORY_ID}`,
+    );
+  }, [navigate]);
+
+  const navigateTo = useCallback(
+    (path) => {
+      if (path) {
+        navigate(path);
+      }
+    },
+    [navigate],
+  );
+
+  const handleUploadClick = useCallback(() => {
+    localStorage.setItem("selectedItem", "Choose one category");
+    navigateTo(isLoggedIn ? "/UploadListings" : "/login");
+  }, [isLoggedIn, navigateTo]);
+
+  const handlePageChange = useCallback((newPageNo) => {
+    setPageNo(newPageNo);
+  }, []);
 
   return (
     <section className="text-gray-600 body-font relative">
@@ -496,12 +616,10 @@ const AllListings = () => {
           }
         `}
       </style>
-      {<HomePageNavBar />}
-      <div
-        className={`container-fluid py-0 mr-0 ml-0 w-full flex flex-col ${mtClass}`}
-      >
+      <HomePageNavBar />
+      <div className="container-fluid py-0 mr-0 ml-0 w-full flex flex-col mt-0">
         <div className="w-full mr-0 ml-0">
-          <div className={`lg:h-full h-[30rem] overflow-hidden ${pyClass}`}>
+          <div className="lg:h-full h-[30rem] overflow-hidden py-0">
             <div className="relative h-[30rem]">
               <img
                 alt="ecommerce"
@@ -511,16 +629,16 @@ const AllListings = () => {
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 text-white z--1">
                 <h1
                   className="text-4xl mt-4 md:text-6xl lg:text-7xl text-center font-bold mb-4 font-sans galaxy-fold"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  style={{ fontFamily: POPPINS_FONT }}
                 >
                   <style>
                     {`
-													@media (max-width: 280px) {
-														.galaxy-fold {
-															font-size: 30px;
-														}
-													}
-												`}
+                      @media (max-width: 280px) {
+                        .galaxy-fold {
+                          font-size: 30px;
+                        }
+                      }
+                    `}
                   </style>
                   {selectedCity} : {selectedCategory}
                 </h1>
@@ -531,14 +649,10 @@ const AllListings = () => {
                       id="city"
                       name="city"
                       autoComplete="city-name"
-                      onChange={(e) => {
-                        handleCityChange(e.target.value);
-                      }}
+                      onChange={(e) => handleCityChange(e.target.value)}
                       value={cityId}
                       className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       <option className="font-sans" value={0} key={0}>
                         {t("allCities", {
@@ -561,29 +675,23 @@ const AllListings = () => {
                       id="category"
                       name="category"
                       autoComplete="category-name"
-                      onChange={(e) => {
-                        handleCategoryChange(e.target.value);
-                      }}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
                       value={categoryId || 0}
                       className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       <option className="font-sans" value={0} key={0}>
                         {t("allCategories")}
                       </option>
-                      {categories.map((category) => {
-                        return (
-                          <option
-                            className="font-sans"
-                            value={category.id}
-                            key={category.id}
-                          >
-                            {t(category.name)}
-                          </option>
-                        );
-                      })}
+                      {categories.map((category) => (
+                        <option
+                          className="font-sans"
+                          value={category.id}
+                          key={category.id}
+                        >
+                          {t(category.name)}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full">
@@ -594,9 +702,7 @@ const AllListings = () => {
                       onChange={handleSortOptionChange}
                       autoComplete="country-name"
                       className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
+                      style={{ fontFamily: POPPINS_FONT }}
                     >
                       <option value="">{t("sort")}</option>
                       <option value="titleAZ">{t("atoztitle")}</option>
@@ -611,112 +717,25 @@ const AllListings = () => {
                     searchBarClassName="w-full"
                     searchQuery={searchQuery}
                   />
-                  {(Number(categoryId) === 3 || categoryId === "3") && (
+                  {isEvents && (
                     <div className="flex flex-row gap-1 pl-40 sm:pl-0 col-span-6 sm:col-span-4 justify-center items-center">
-                      <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full relative gap-1">
-                        <Flatpickr
-                          value={startDate}
-                          options={{
-                            enableTime: true,
-                            dateFormat: "Y-m-d H:i",
-                            time_24hr: true, // eslint-disable-line camelcase
-                            allowInput: true,
-                          }}
-                          onChange={(date) => {
-                            if (date[0]) {
-                              const formattedDate = format(
-                                date[0],
-                                "yyyy-MM-dd'T'HH:mm",
-                              );
-                              setStartDate(formattedDate);
-                            }
-                          }}
-                          className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-48 text-gray-600 relative"
-                          placeholder={t("startDate") || "Start Date"}
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                            zIndex: 1,
-                          }}
-                        />
-                        {startDate && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setStartDate("");
-                            }}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-50"
-                            type="button"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full relative">
-                        <Flatpickr
-                          value={endDate}
-                          options={{
-                            enableTime: true,
-                            dateFormat: "Y-m-d H:i",
-                            time_24hr: true, // eslint-disable-line camelcase
-                            allowInput: true,
-                          }}
-                          onChange={(date) => {
-                            if (date[0]) {
-                              const formattedDate = format(
-                                date[0],
-                                "yyyy-MM-dd'T'HH:mm",
-                              );
-                              setEndDate(formattedDate);
-                            }
-                          }}
-                          className="bg-white h-10 border-2 border-gray-500 px-4 pr-10 rounded-xl text-sm focus:outline-none w-48 text-gray-600 relative"
-                          placeholder={t("endDate") || "End Date"}
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                            zIndex: 1,
-                          }}
-                        />
-                        {endDate && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEndDate("");
-                            }}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-50"
-                            type="button"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </div>
+                      <DatePicker
+                        value={startDate}
+                        onChange={setStartDate}
+                        placeholder={t("startDate") || "Start Date"}
+                        t={t}
+                        className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full gap-1"
+                      />
+                      <DatePicker
+                        value={endDate}
+                        onChange={setEndDate}
+                        placeholder={t("endDate") || "End Date"}
+                        t={t}
+                        className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full"
+                      />
                     </div>
                   )}
                 </div>
-
-                {/* Date Range Picker - Only for Events (categoryId 3) */}
               </div>
             </div>
           </div>
@@ -724,13 +743,21 @@ const AllListings = () => {
       </div>
 
       <div className="mt-5 mb-20 customproview py-6">
+        <style>
+          {`
+            @media (min-height: 1293px) {
+              .customproview {
+                margin-bottom: 10rem;
+              }
+            }
+          `}
+        </style>
         {terminalViewParam && (
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4 mb-4">
-            {/* Official Notification Button */}
             <a
               onClick={handleOfficialNotificationButton}
               className={`flex items-center w-80 text-white border ${RegionColors.darkBgColor} py-2 px-6 gap-2 rounded-lg cursor-pointer`}
-              style={{ fontFamily: "Poppins, sans-serif" }}
+              style={{ fontFamily: POPPINS_FONT }}
             >
               <span>{t("officialnotification")}</span>
               <svg
@@ -746,13 +773,10 @@ const AllListings = () => {
               </svg>
             </a>
 
-            {/* Go Back Button */}
             <a
-              onClick={() => {
-                navigateTo("/?terminalView=true");
-              }}
+              onClick={() => navigateTo("/?terminalView=true")}
               className="flex items-center w-80 text-white bg-green-600 py-2 px-6 gap-2 rounded-lg cursor-pointer"
-              style={{ fontFamily: "Poppins, sans-serif" }}
+              style={{ fontFamily: POPPINS_FONT }}
             >
               <svg
                 fill="none"
@@ -769,21 +793,11 @@ const AllListings = () => {
             </a>
           </div>
         )}
-        <style>
-          {`
-							@media (min-height: 1293px) {
-							.customproview {
-								margin-bottom: 10rem;
-							}
-							}
-						`}
-        </style>
         {isLoading ? (
           <LoadingPage />
         ) : (
           <div>
-            {/* Event Tabs - Only for Events (categoryId 3) */}
-            {(Number(categoryId) === 3 || categoryId === "3") && (
+            {isEvents && (
               <div className="bg-white lg:px-20 md:px-5 px-3 py-4 md:py-6 mt-0">
                 <div className="flex justify-center">
                   <div className="flex w-full md:w-fit overflow-hidden rounded-xl border border-gray-300 bg-gray-100 shadow-sm">
@@ -796,7 +810,7 @@ const AllListings = () => {
                             ? "bg-gray-600 text-white"
                             : "bg-transparent text-gray-600 hover:bg-gray-200"
                         }`}
-                        style={{ fontFamily: "Poppins, sans-serif" }}
+                        style={{ fontFamily: POPPINS_FONT }}
                         type="button"
                       >
                         {t(tab?.label)}
@@ -807,48 +821,39 @@ const AllListings = () => {
               </div>
             )}
 
-            {listings && listings.length > 0 ? (
+            {sortedListings && sortedListings.length > 0 ? (
               <div className="bg-white lg:px-10 md:px-5 px-2 py-5 mt-5 mb-5 space-y-10 flex flex-col">
                 <div className="relative place-items-center bg-white mb-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10 justify-start">
-                  {listings &&
-                    listings.map((listing, index) => (
-                      <ListingsCard
-                        listing={listing}
-                        terminalView={terminalViewParam}
-                        key={index}
-                      />
-                    ))}
+                  {sortedListings.map((listing, index) => (
+                    <ListingsCard
+                      listing={listing}
+                      terminalView={terminalViewParam}
+                      key={listing.id || index}
+                    />
+                  ))}
                 </div>
               </div>
             ) : (
               <div>
                 <div className="flex items-center justify-center">
                   <h1
-                    className=" m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
+                    className="m-auto mt-20 text-center font-sans font-bold text-2xl text-black"
+                    style={{ fontFamily: POPPINS_FONT }}
                   >
                     {t("currently_no_listings")}
                   </h1>
                 </div>
                 <div
                   className="m-auto mt-10 mb-40 text-center font-sans font-bold text-xl"
-                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  style={{ fontFamily: POPPINS_FONT }}
                 >
                   <span className="font-sans text-black">
                     {t("to_upload_new_listing")}
                   </span>
                   <a
                     className={`m-auto mt-20 text-center font-sans font-bold text-xl cursor-pointer ${RegionColors.lightTextColor}`}
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                    onClick={() => {
-                      localStorage.setItem(
-                        "selectedItem",
-                        "Choose one category",
-                      );
-                      isLoggedIn
-                        ? navigateTo("/UploadListings")
-                        : navigateTo("/login");
-                    }}
+                    style={{ fontFamily: POPPINS_FONT }}
+                    onClick={handleUploadClick}
                   >
                     {t("click_here")}
                   </a>
@@ -858,7 +863,7 @@ const AllListings = () => {
           </div>
         )}
         <div
-          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap rounded-md border border-transparent ${
+          className={`mt-20 mb-20 rounded-xl w-fit mx-auto text-center text-white whitespace-nowrap border border-transparent ${
             process.env.REACT_APP_NAME === "Salzkotten APP"
               ? "bg-yellow-600 hover:bg-yellow-400"
               : process.env.REACT_APP_NAME === "FICHTEL"
@@ -866,28 +871,23 @@ const AllListings = () => {
               : "bg-blue-800 hover:bg-blue-400 shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
           } px-8 py-2 text-base font-semibold cursor-pointer`}
         >
-          {pageNo !== 1 ? (
+          {pageNo !== 1 && (
             <span
               className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer`}
-              style={{ fontFamily: "Poppins, sans-serif" }}
-              onClick={() => setPageNo(pageNo - 1)}
+              style={{ fontFamily: POPPINS_FONT }}
+              onClick={() => handlePageChange(pageNo - 1)}
             >
               {"<"}{" "}
             </span>
-          ) : (
-            <span />
           )}
-          <span
-            className="text-lg px-3"
-            style={{ fontFamily: "Poppins, sans-serif" }}
-          >
+          <span className="text-lg px-3" style={{ fontFamily: POPPINS_FONT }}>
             {t("page")} {pageNo}
           </span>
           {listings.length >= pageSize && (
             <span
               className={`text-lg px-3 ${RegionColors.lightHoverColor} cursor-pointer rounded-lg`}
-              style={{ fontFamily: "Poppins, sans-serif" }}
-              onClick={() => setPageNo(pageNo + 1)}
+              style={{ fontFamily: POPPINS_FONT }}
+              onClick={() => handlePageChange(pageNo + 1)}
             >
               {">"}
             </span>
