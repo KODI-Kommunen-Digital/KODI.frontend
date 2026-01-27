@@ -206,6 +206,7 @@ const Listing = () => {
     discountedPrice: "",
     upcomingDates: [],
   });
+  const [showCount, setShowCount] = useState(5);
 
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
@@ -221,7 +222,9 @@ const Listing = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userSocial, setUserSocial] = useState([]);
-
+  const sortedDates = [...(input?.upcomingDates || [])].sort(
+    (a, b) => new Date(b.startDate) - new Date(a.startDate),
+  );
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
@@ -502,7 +505,7 @@ const Listing = () => {
                 <div className="lg:w-full md:w-full h-full">
                   <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
                     <div className="mt-5 md:col-span-2 md:mt-0">
-                      <form method="POST">
+                      <form method="POST" onSubmit={(e) => e.preventDefault()}>
                         <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
                           <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                             <span
@@ -678,11 +681,11 @@ const Listing = () => {
                           {/* RIGHT SIDE */}
                           {input?.id &&
                           Number(input?.categoryId) === 3 &&
-                          input?.upcomingDates?.length > 0 ? (
+                          sortedDates.length > 0 ? (
                             <div className="flex flex-col items-start gap-1">
-                              {(input?.upcomingDates || [])
-                                ?.slice(0, 5)
-                                ?.map((dateItem, idx) => (
+                              {sortedDates
+                                .slice(0, showCount)
+                                .map((dateItem, idx) => (
                                   <p
                                     key={idx}
                                     className="leading-relaxed text-base dark:text-slate-800 font-bold whitespace-nowrap"
@@ -693,8 +696,8 @@ const Listing = () => {
                                     <span>
                                       {new Date(
                                         dateItem.startDate.slice(0, 10),
-                                      ).toLocaleDateString("de-DE")}{" "}
-                                      (
+                                      ).toLocaleDateString("de-DE")}
+                                      {" ("}
                                       {new Date(
                                         dateItem.startDate.replace("Z", ""),
                                       ).toLocaleTimeString("de-DE", {
@@ -702,11 +705,11 @@ const Listing = () => {
                                         minute: "2-digit",
                                         timeZone: "Europe/Berlin",
                                       })}
-                                      )
+                                      {")"}
                                     </span>
 
                                     <span
-                                      className={`${RegionColors.lightTextColor}`}
+                                      className={RegionColors.lightTextColor}
                                     >
                                       {" "}
                                       {t("To")}{" "}
@@ -715,8 +718,8 @@ const Listing = () => {
                                     <span>
                                       {new Date(
                                         dateItem.endDate.slice(0, 10),
-                                      ).toLocaleDateString("de-DE")}{" "}
-                                      (
+                                      ).toLocaleDateString("de-DE")}
+                                      {" ("}
                                       {new Date(
                                         dateItem.endDate.replace("Z", ""),
                                       ).toLocaleTimeString("de-DE", {
@@ -724,10 +727,47 @@ const Listing = () => {
                                         minute: "2-digit",
                                         timeZone: "Europe/Berlin",
                                       })}
-                                      )
+                                      {")"}
                                     </span>
                                   </p>
                                 ))}
+
+                              {/* Buttons */}
+                              {sortedDates.length > 5 && (
+                                <div className="relative flex items-center justify-center my-3 w-full">
+                                  {/* Left divider */}
+                                  <div className="flex-grow border-t border-gray-300"></div>
+
+                                  {/* Button */}
+                                  {showCount === 5 ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowCount(10)}
+                                      className="mx-3 px-4 py-1.5 text-sm font-semibold rounded-full
+                                      bg-white border border-gray-400 text-gray-700
+                                      hover:bg-gray-100 hover:border-gray-600
+                                      transition-all duration-200 shadow-sm"
+                                    >
+                                      {t("viewMores")} +
+                                      {Math.min(5, sortedDates.length - 5)}
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowCount(5)}
+                                      className="mx-3 px-4 py-1.5 text-sm font-semibold rounded-full
+                                     bg-white border border-gray-400 text-gray-700
+                                     hover:bg-gray-100 hover:border-gray-600
+                                     transition-all duration-200 shadow-sm"
+                                    >
+                                      {t("viewLess")}
+                                    </button>
+                                  )}
+
+                                  {/* Right divider */}
+                                  <div className="flex-grow border-t border-gray-300"></div>
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <div />

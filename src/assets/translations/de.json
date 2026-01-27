@@ -1111,5 +1111,7 @@
     "startTimeMustbelessThanEndTime": "Das Startdatum muss vor dem Enddatum liegen.",
     "startDateMustBeLessThanRepeatUntil": "Das Startdatum muss vor dem Wiederholungsdatum liegen.",
     "invalidRecurrenceRule": "Ungültige Wiederholungsregel: Die Wiederholungsdauer darf 2 Jahre nicht überschreiten.",
-    "upcommingEvent": "Bevorstehende Veranstaltungen"
+    "upcommingEvent": "Bevorstehende Veranstaltungen",
+    "viewLess": "Weniger anzeigen",
+    "viewMores": "Mehr anzeigen"
 }

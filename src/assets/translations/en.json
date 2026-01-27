@@ -1099,5 +1099,7 @@
     "startTimeMustbelessThanEndTime": "The start date must be before the end date.",
     "startDateMustBeLessThanRepeatUntil": "Start date must be less than repeat until date",
     "invalidRecurrenceRule": "Invalid recurrence rule: Recurrence duration cannot exceed 2 years",
-    "upcommingEvent": "UpComming Events"
+    "upcommingEvent": "UpComming Events",
+    "viewLess": "View Less",
+    "viewMores": "View More"
 }
