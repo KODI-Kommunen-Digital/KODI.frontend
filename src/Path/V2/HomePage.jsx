@@ -47,7 +47,10 @@ const POPPINS_FONT = "Poppins, sans-serif";
 
 // Helper functions
 const isEventsCategory = (categoryId) => {
-  return categoryId === EVENTS_CATEGORY_ID || categoryId === String(EVENTS_CATEGORY_ID);
+  return (
+    categoryId === EVENTS_CATEGORY_ID ||
+    categoryId === String(EVENTS_CATEGORY_ID)
+  );
 };
 
 const parseUrlParam = (urlParams, key, parser = parseInt) => {
@@ -78,7 +81,7 @@ const DatePicker = ({ value, onChange, placeholder, t }) => {
         onChange(formattedDate);
       }
     },
-    [onChange]
+    [onChange],
   );
 
   const handleClear = useCallback(() => {
@@ -90,7 +93,7 @@ const DatePicker = ({ value, onChange, placeholder, t }) => {
       dateFormat: "Y-m-d",
       allowInput: true,
     }),
-    []
+    [],
   );
 
   return (
@@ -157,7 +160,7 @@ const HomePage = () => {
   const isEvents = useMemo(() => isEventsCategory(categoryId), [categoryId]);
   const sortedListings = useMemo(() => {
     if (!selectedSortOption || !listings.length) return listings;
-    
+
     const listingsCopy = [...listings];
     switch (selectedSortOption) {
       case "titleAZ":
@@ -234,6 +237,11 @@ const HomePage = () => {
     } else if (!urlSort && selectedSortOption) {
       setSelectedSortOption("");
     }
+
+    const urlSearch = urlParams.get("search") || "";
+    if (urlSearch !== searchQuery) {
+      setSearchQuery(urlSearch);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
@@ -241,7 +249,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!terminalView) {
       const hasAcceptedPrivacyPolicy = localStorage.getItem(
-        "privacyPolicyAccepted"
+        "privacyPolicyAccepted",
       );
       if (!hasAcceptedPrivacyPolicy) {
         setShowPopup(true);
@@ -249,12 +257,12 @@ const HomePage = () => {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    
+
     // Load cities
     getCities()
       .then((citiesResponse) => {
         const sortedCities = [...citiesResponse.data.data].sort((a, b) =>
-          a.name.localeCompare(b.name)
+          a.name.localeCompare(b.name),
         );
         setCities(sortedCities);
       })
@@ -288,12 +296,17 @@ const HomePage = () => {
       setSelectedSortOption(sortParam);
     }
 
+    const searchParam = urlParams.get("search") || "";
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+
     // Load listings count
     getListingsCount()
       .then((response) => {
         const data = response?.data?.data || [];
         const sortedData = data.sort(
-          (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount)
+          (a, b) => parseInt(b.totalCount) - parseInt(a.totalCount),
         );
         setListingsCount(sortedData);
       })
@@ -347,6 +360,9 @@ const HomePage = () => {
       urlParams.categoryId = categoryId;
       params.categoryId = categoryId;
     }
+    if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
+      params.sortByStartDate = true;
+    }
     if (startDate) {
       urlParams.startDate = startDate;
     }
@@ -367,10 +383,56 @@ const HomePage = () => {
       urlParams.sort = null;
     }
 
+    if (searchQuery) {
+      urlParams.search = searchQuery;
+    } else {
+      urlParams.search = null;
+    }
+
     updateUrlParams(urlParams);
 
-    const timeoutId = setTimeout(() => {
-      fetchData(params);
+    const timeoutId = setTimeout(async () => {
+      if (searchQuery) {
+        setListings([]);
+        const searchParams = {
+          searchQuery,
+          pageSize: DEFAULT_PAGE_SIZE,
+          pageNo: DEFAULT_PAGE_NO,
+          statusId: DEFAULT_STATUS_ID,
+          showExternalListings: "false",
+        };
+        if (parseInt(cityId)) searchParams.cityId = cityId;
+        if (parseInt(categoryId)) {
+          searchParams.categoryId = categoryId;
+          if (categoryId === EVENTS_CATEGORY_ID) {
+            searchParams.sortByStartDate = true;
+            if (eventTab === "singleDay") searchParams.eventType = "singleDay";
+            else if (eventTab === "multiDay")
+              searchParams.eventType = "multiDay";
+            else if (eventTab === "recurring")
+              searchParams.eventType = "recurring";
+            if (startDate) searchParams.startAfterDate = startDate;
+            if (endDate) searchParams.endBeforeDate = endDate;
+          }
+        }
+        if (selectedSubCategoryId)
+          searchParams.subcategoryId = selectedSubCategoryId;
+        try {
+          const response = await getListingsBySearch(searchParams);
+          const data = response?.data?.data || [];
+          const filtered = data.filter(
+            (listing) => !hiddenCategories.includes(listing.categoryId),
+          );
+          setListings(filtered);
+        } catch (err) {
+          console.error("Error fetching search results:", err);
+          setListings([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        await fetchData(params);
+      }
     }, FETCH_DELAY);
 
     return () => clearTimeout(timeoutId);
@@ -383,6 +445,7 @@ const HomePage = () => {
     eventTab,
     selectedSubCategoryId,
     selectedSortOption,
+    searchQuery,
     terminalView,
     isEvents,
   ]);
@@ -429,7 +492,7 @@ const HomePage = () => {
     async (params) => {
       setSearchQuery("");
       params.showExternalListings = "false";
-      
+
       if (selectedSubCategoryId) {
         params.subcategoryId = selectedSubCategoryId;
       }
@@ -454,7 +517,7 @@ const HomePage = () => {
         const response = await getListings(params);
         const listings = response?.data?.data || [];
         const filteredListings = listings.filter(
-          (listing) => !hiddenCategories.includes(listing.categoryId)
+          (listing) => !hiddenCategories.includes(listing.categoryId),
         );
         setListings(filteredListings);
       } catch (error) {
@@ -464,110 +527,52 @@ const HomePage = () => {
         setIsLoading(false);
       }
     },
-    [selectedSubCategoryId, isEvents, eventTab, startDate, endDate]
+    [selectedSubCategoryId, isEvents, eventTab, startDate, endDate],
   );
 
-  const getTheListings = useCallback(
-    async (newCategoryId, event) => {
-      event.preventDefault();
+  const getTheListings = useCallback(async (newCategoryId, event) => {
+    event.preventDefault();
 
-      const isSameCategory = newCategoryId === categoryId;
-      setCategoryId(newCategoryId);
-      setSelectedSubCategoryId(null);
-      setStartDate("");
-      setEndDate("");
-      setSelectedSortOption("");
+    setCategoryId(newCategoryId);
+    setSelectedSubCategoryId(null);
+    setStartDate("");
+    setEndDate("");
+    setSelectedSortOption("");
 
-      if (!isEventsCategory(newCategoryId)) {
-        setEventTab("singleDay");
-      }
-
-      try {
-        const response = await getListingsSubCategory(newCategoryId);
-        setSubCategories(response?.data?.data || []);
-        setIsCategoryMenuOpen(true);
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-        setSubCategories([]);
-      }
-
-      setListings([]);
-      setSearchQuery("");
-
-      if (isSameCategory) {
-        const params = {
-          pageSize: DEFAULT_PAGE_SIZE,
-          statusId: DEFAULT_STATUS_ID,
-          pageNo: DEFAULT_PAGE_NO,
-        };
-        if (cityId) params.cityId = cityId;
-        if (newCategoryId) params.categoryId = newCategoryId;
-        fetchData(params);
-      }
-    },
-    [categoryId, cityId, fetchData]
-  );
-
-
-  const handleSubCategorySelect = useCallback(
-    (subCategoryId) => {
-      setListings([]);
-      setSearchQuery("");
-      setSelectedSubCategoryId(subCategoryId);
-    },
-    []
-  );
-
-  const handleSortOptionChange = useCallback((event) => {
-    const newValue = event.target.value;
-    if (newValue !== selectedSortOption) {
-      setSelectedSortOption(newValue);
+    if (!isEventsCategory(newCategoryId)) {
+      setEventTab("singleDay");
     }
-  }, [selectedSortOption]);
 
-  const handleSearch = useCallback(
-    async (searchQuery) => {
-      setSearchQuery(searchQuery);
+    try {
+      const response = await getListingsSubCategory(newCategoryId);
+      setSubCategories(response?.data?.data || []);
+      setIsCategoryMenuOpen(true);
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+      setSubCategories([]);
+    }
 
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const params = { statusId: DEFAULT_STATUS_ID };
+    setListings([]);
+  }, []);
 
-        const cityIdParam = parseUrlParam(urlParams, "cityId");
-        if (cityIdParam) params.cityId = cityIdParam;
+  const handleSubCategorySelect = useCallback((subCategoryId) => {
+    setListings([]);
+    setSelectedSubCategoryId(subCategoryId);
+  }, []);
 
-        const categoryIdParam = parseUrlParam(urlParams, "categoryId");
-        if (categoryIdParam) params.categoryId = categoryIdParam;
-
-        const startDateParam = urlParams.get("startDate");
-        if (startDateParam) params.startAfterDate = startDateParam;
-
-        const endDateParam = urlParams.get("endDate");
-        if (endDateParam) params.endBeforeDate = endDateParam;
-
-        const eventTabParam = urlParams.get("eventTab");
-        if (eventTabParam && categoryIdParam === EVENTS_CATEGORY_ID) {
-          if (eventTabParam === "singleDay") {
-            params.eventType = "singleDay";
-          } else if (eventTabParam === "multiDay") {
-            params.eventType = "multiDay";
-          } else if (eventTabParam === "recurring") {
-            params.eventType = "recurring";
-          }
-        }
-
-        const response = await getListingsBySearch({
-          searchQuery,
-          ...params,
-        });
-        setListings(response.data.data);
-      } catch (error) {
-        console.error("Error:", error);
-        setListings([]);
+  const handleSortOptionChange = useCallback(
+    (event) => {
+      const newValue = event.target.value;
+      if (newValue !== selectedSortOption) {
+        setSelectedSortOption(newValue);
       }
     },
-    []
+    [selectedSortOption],
   );
+
+  const handleSearch = useCallback((query) => {
+    setSearchQuery(query);
+  }, []);
 
   const goToCitizensPage = useCallback(() => {
     const navUrl = cityId
@@ -594,6 +599,7 @@ const HomePage = () => {
       const urlParams = {};
       urlParams.startDate = null;
       urlParams.endDate = null;
+      urlParams.search = null;
       if (isEvents) {
         urlParams.eventTab = id;
       } else {
@@ -601,7 +607,7 @@ const HomePage = () => {
       }
       updateUrlParams(urlParams);
     },
-    [isEvents]
+    [isEvents],
   );
 
   const navigateTo = useCallback(
@@ -610,7 +616,7 @@ const HomePage = () => {
         navigate(path);
       }
     },
-    [navigate]
+    [navigate],
   );
 
   const handleViewMore = useCallback(() => {
@@ -639,7 +645,7 @@ const HomePage = () => {
         window.scrollTo(0, scrollPosition);
       });
     },
-    [navigateTo]
+    [navigateTo],
   );
 
   const handleUploadClick = useCallback(() => {

@@ -28,7 +28,7 @@ import RegionColors from "../../Components/RegionColors";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
-
+import PropTypes from "prop-types";
 // Constants
 const EVENTS_CATEGORY_ID = 3;
 const OFFICIAL_NOTIFICATION_CATEGORY_ID = 16;
@@ -73,24 +73,32 @@ const getEventType = (eventTab) => {
 };
 
 // DatePicker Component
-// eslint-disable-next-line react/prop-types
-const DatePicker = ({ value, onChange, placeholder, t, className = "" }) => {
+const DatePicker = ({
+  value,
+  onChange,
+  placeholder,
+  t,
+  className = "",
+  setPageNo = 1,
+}) => {
   const handleDateChange = useCallback(
     (date) => {
+      setPageNo(1);
       if (date[0]) {
         const formattedDate = format(date[0], "yyyy-MM-dd");
         onChange(formattedDate);
       }
     },
-    [onChange],
+    [onChange, setPageNo],
   );
 
   const handleClear = useCallback(
     (e) => {
       e.stopPropagation();
+      setPageNo(1);
       onChange("");
     },
-    [onChange],
+    [onChange, setPageNo],
   );
 
   const flatpickrOptions = useMemo(
@@ -135,7 +143,22 @@ const DatePicker = ({ value, onChange, placeholder, t, className = "" }) => {
     </div>
   );
 };
+DatePicker.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  t: PropTypes.func,
+  className: PropTypes.string,
+  setPageNo: PropTypes.func,
+};
 
+DatePicker.defaultProps = {
+  value: "",
+  placeholder: "",
+  className: "",
+  t: () => {},
+  setPageNo: () => {},
+};
 const AllListings = () => {
   window.scrollTo(0, 0);
   const { t } = useTranslation();
@@ -171,6 +194,7 @@ const AllListings = () => {
   const [endDate, setEndDate] = useState("");
   const [terminalView, setTerminalView] = useState(false);
   const isInitialMount = useRef(true);
+  const initialLoadComplete = useRef(false);
 
   // Memoized values
   const isEvents = useMemo(() => isEventsCategory(categoryId), [categoryId]);
@@ -286,25 +310,58 @@ const AllListings = () => {
           setSelectedSortOption(sortParam);
         }
 
+        const searchParam = urlParams.get("search") || "";
+        if (searchParam) {
+          setSearchQuery(searchParam);
+        }
+
         setTimeout(async () => {
           try {
             params.showExternalListings = "false";
-            const response = await getListings(params);
-            const listings = response.data.data;
-            const filteredListings = listings.filter(
-              (listing) => !hiddenCategories.includes(listing.categoryId),
-            );
-            setListings(filteredListings);
+            if (searchParam) {
+              const searchParams = {
+                searchQuery: searchParam,
+                pageSize,
+                pageNo: params.pageNo || 1,
+                statusId: DEFAULT_STATUS_ID,
+                showExternalListings: "false",
+              };
+              if (params.cityId) searchParams.cityId = params.cityId;
+              if (params.categoryId) {
+                searchParams.categoryId = params.categoryId;
+                if (params.categoryId === EVENTS_CATEGORY_ID) {
+                  searchParams.sortByStartDate = true;
+                  if (params.eventType) searchParams.eventType = params.eventType;
+                  if (params.startDate) searchParams.startAfterDate = params.startDate;
+                  if (params.endDate) searchParams.endBeforeDate = params.endDate;
+                }
+              }
+              const response = await getListingsBySearch(searchParams);
+              const listings = response.data.data || [];
+              const filteredListings = listings.filter(
+                (listing) => !hiddenCategories.includes(listing.categoryId),
+              );
+              setListings(filteredListings);
+            } else {
+              const response = await getListings(params);
+              const listings = response.data.data;
+              const filteredListings = listings.filter(
+                (listing) => !hiddenCategories.includes(listing.categoryId),
+              );
+              setListings(filteredListings);
+            }
           } catch (error) {
             console.error("Error fetching listings:", error);
             setListings([]);
           } finally {
+            initialLoadComplete.current = true;
             setIsLoading(false);
           }
         }, FETCH_DELAY);
       })
       .catch((error) => {
         console.error("Error loading initial data:", error);
+        initialLoadComplete.current = true;
         setIsLoading(false);
       });
   }, [t, pageSize]);
@@ -345,6 +402,11 @@ const AllListings = () => {
     } else if (!urlSort && selectedSortOption) {
       setSelectedSortOption("");
     }
+
+    const urlSearch = urlParams.get("search") || "";
+    if (urlSearch !== searchQuery) {
+      setSearchQuery(urlSearch);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
@@ -353,6 +415,10 @@ const AllListings = () => {
     // Skip on initial mount - initial load is handled by the first useEffect
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      return;
+    }
+    // Skip until initial load has finished (avoids calling listings API when search in URL)
+    if (!initialLoadComplete.current) {
       return;
     }
 
@@ -421,14 +487,55 @@ const AllListings = () => {
       urlParams.sort = null;
     }
 
+    if (searchQuery) {
+      urlParams.search = searchQuery;
+    } else {
+      urlParams.search = null;
+    }
+
     updateUrlParams(urlParams);
 
     if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
       params.sortByStartDate = true;
     }
 
-    const timeoutId = setTimeout(() => {
-      fetchData(params);
+    const timeoutId = setTimeout(async () => {
+      if (searchQuery) {
+        setListings([]);
+        const searchParams = {
+          searchQuery,
+          pageSize,
+          pageNo: params.pageNo || 1,
+          statusId: DEFAULT_STATUS_ID,
+          showExternalListings: "false",
+        };
+        if (parseInt(cityId)) searchParams.cityId = cityId;
+        if (parseInt(categoryId)) {
+          searchParams.categoryId = parseInt(categoryId);
+          if (categoryId === EVENTS_CATEGORY_ID) {
+            searchParams.sortByStartDate = true;
+            const eventType = getEventType(eventTab);
+            if (eventType) searchParams.eventType = eventType;
+            if (startDate) searchParams.startAfterDate = startDate;
+            if (endDate) searchParams.endBeforeDate = endDate;
+          }
+        }
+        try {
+          const response = await getListingsBySearch(searchParams);
+          const data = response.data.data || [];
+          const filtered = data.filter(
+            (listing) => !hiddenCategories.includes(listing.categoryId),
+          );
+          setListings(filtered);
+        } catch (err) {
+          console.error("Error fetching search results:", err);
+          setListings([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        await fetchData(params);
+      }
     }, FETCH_DELAY);
 
     return () => clearTimeout(timeoutId);
@@ -441,6 +548,7 @@ const AllListings = () => {
     endDate,
     eventTab,
     selectedSortOption,
+    searchQuery,
     cities,
     t,
     isEvents,
@@ -466,6 +574,7 @@ const AllListings = () => {
         if (!params.endDate && endDate) {
           params.endDate = endDate;
         }
+        params.sortByStartDate = true;
       }
 
       try {
@@ -488,7 +597,6 @@ const AllListings = () => {
   const handleCityChange = useCallback((newCityId) => {
     setCityId(newCityId);
     setListings([]);
-    setSearchQuery("");
     setPageNo(1);
   }, []);
 
@@ -510,55 +618,10 @@ const AllListings = () => {
     setSelectedSortOption(event.target.value);
   }, []);
 
-  const handleSearch = useCallback(
-    async (searchQuery) => {
-      setPageNo(1);
-      setSearchQuery(searchQuery);
-
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const params = { statusId: DEFAULT_STATUS_ID };
-
-        const cityIdParam = parseUrlParam(urlParams, "cityId");
-        if (cityIdParam) params.cityId = cityIdParam;
-
-        const categoryIdParam = parseUrlParam(urlParams, "categoryId");
-        if (categoryIdParam) params.categoryId = categoryIdParam;
-
-        const startDateParam = urlParams.get("startDate");
-        if (startDateParam) {
-          params.startAfterDate = startDateParam;
-        }
-
-        const endDateParam = urlParams.get("endDate");
-        if (endDateParam) {
-          params.endBeforeDate = endDateParam;
-        }
-
-        const eventTabParam = urlParams.get("eventTab");
-        if (eventTabParam && categoryIdParam === EVENTS_CATEGORY_ID) {
-          const eventType = getEventType(eventTabParam);
-          if (eventType) {
-            params.eventType = eventType;
-          }
-        }
-
-        if (searchQuery) {
-          const response = await getListingsBySearch({
-            searchQuery,
-            ...params,
-          });
-          setListings(response.data.data);
-        } else {
-          await fetchData({ pageSize });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        setListings([]);
-      }
-    },
-    [fetchData, pageSize],
-  );
+  const handleSearch = useCallback((query) => {
+    setPageNo(1);
+    setSearchQuery(query);
+  }, []);
 
   const handleEventTabChange = useCallback(
     (id) => {
@@ -572,6 +635,7 @@ const AllListings = () => {
       const urlParams = {};
       urlParams.startDate = null;
       urlParams.endDate = null;
+      urlParams.search = null;
       if (isEvents) {
         urlParams.eventTab = id;
       } else {
@@ -725,6 +789,7 @@ const AllListings = () => {
                         placeholder={t("startDate") || "Start Date"}
                         t={t}
                         className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full gap-1"
+                        setPageNo={setPageNo}
                       />
                       <DatePicker
                         value={endDate}
@@ -732,6 +797,7 @@ const AllListings = () => {
                         placeholder={t("endDate") || "End Date"}
                         t={t}
                         className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full"
+                        setPageNo={setPageNo}
                       />
                     </div>
                   )}
