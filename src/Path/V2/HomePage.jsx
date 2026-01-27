@@ -754,23 +754,24 @@ const HomePage = () => {
                 </select>
               </div>
 
-              {categoryId && subCategories.length > 0 && (
-                <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
-                  <select
-                    value={selectedSubCategoryId || ""}
-                    onChange={(e) => handleSubCategorySelect(e.target.value)}
-                    className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
-                    style={{ fontFamily: POPPINS_FONT }}
-                  >
-                    <option value="">{t("allSubcategories")}</option>
-                    {subCategories.map((subCat) => (
-                      <option key={subCat.id} value={subCat.id}>
-                        {t(subCat.name)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {(categoryId === 1 || categoryId === "1") &&
+                subCategories.length > 0 && (
+                  <div className="col-span-6 sm:col-span-1 mt-0 mb-0 px-0 mr-0 w-full">
+                    <select
+                      value={selectedSubCategoryId || ""}
+                      onChange={(e) => handleSubCategorySelect(e.target.value)}
+                      className="bg-white h-10 border-2 border-gray-500 px-5 pr-10 rounded-xl text-sm focus:outline-none w-full text-gray-600 cursor-pointer"
+                      style={{ fontFamily: POPPINS_FONT }}
+                    >
+                      <option value="">{t("allSubcategories")}</option>
+                      {subCategories.map((subCat) => (
+                        <option key={subCat.id} value={subCat.id}>
+                          {t(subCat.name)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
               <SearchBar
                 onSearch={handleSearch}
