@@ -222,9 +222,8 @@ const Listing = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userSocial, setUserSocial] = useState([]);
-  const sortedDates = [...(input?.upcomingDates || [])].sort(
-    (a, b) => new Date(b.startDate) - new Date(a.startDate),
-  );
+  const sortedDates = input?.upcomingDates || [];
+
   useEffect(() => {
     document.title =
       process.env.REACT_APP_REGION_NAME + " " + t("eventDetails");
