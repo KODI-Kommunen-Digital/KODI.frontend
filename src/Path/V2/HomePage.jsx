@@ -200,12 +200,14 @@ const HomePage = () => {
       setCategoryId(undefined);
     }
 
-    const urlStartDate = urlParams.get("startDate") || "";
+    const urlStartDate =
+      urlParams.get("startAfterDate") || urlParams.get("startDate") || "";
     if (urlStartDate !== startDate) {
       setStartDate(urlStartDate);
     }
 
-    const urlEndDate = urlParams.get("endDate") || "";
+    const urlEndDate =
+      urlParams.get("endBeforeDate") || urlParams.get("endDate") || "";
     if (urlEndDate !== endDate) {
       setEndDate(urlEndDate);
     }
@@ -277,10 +279,12 @@ const HomePage = () => {
     const initialCategoryId = parseUrlParam(urlParams, "categoryId");
     if (initialCategoryId) setCategoryId(initialCategoryId);
 
-    const startDateParam = urlParams.get("startDate");
+    const startDateParam =
+      urlParams.get("startAfterDate") || urlParams.get("startDate");
     if (startDateParam) setStartDate(startDateParam);
 
-    const endDateParam = urlParams.get("endDate");
+    const endDateParam =
+      urlParams.get("endBeforeDate") || urlParams.get("endDate");
     if (endDateParam) setEndDate(endDateParam);
 
     const eventTabParam = urlParams.get("eventTab");
@@ -364,10 +368,10 @@ const HomePage = () => {
       params.sortByStartDate = true;
     }
     if (startDate) {
-      urlParams.startDate = startDate;
+      urlParams.startAfterDate = startDate;
     }
     if (endDate) {
-      urlParams.endDate = endDate;
+      urlParams.endBeforeDate = endDate;
     }
     if (isEvents) {
       if (eventTab) {
@@ -597,8 +601,8 @@ const HomePage = () => {
       setSearchQuery("");
 
       const urlParams = {};
-      urlParams.startDate = null;
-      urlParams.endDate = null;
+      urlParams.startAfterDate = null;
+      urlParams.endBeforeDate = null;
       urlParams.search = null;
       if (isEvents) {
         urlParams.eventTab = id;

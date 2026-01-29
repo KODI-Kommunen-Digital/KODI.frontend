@@ -195,6 +195,7 @@ const AllListings = () => {
   const [terminalView, setTerminalView] = useState(false);
   const isInitialMount = useRef(true);
   const initialLoadComplete = useRef(false);
+  const postInitialEffectSkipped = useRef(false);
 
   // Memoized values
   const isEvents = useMemo(() => isEventsCategory(categoryId), [categoryId]);
@@ -278,19 +279,21 @@ const AllListings = () => {
           }
         }
 
-        const startDateParam = urlParams.get("startDate");
+        const startDateParam =
+          urlParams.get("startAfterDate") || urlParams.get("startDate");
         if (startDateParam) {
           setStartDate(startDateParam);
           if (categoryIdParam === EVENTS_CATEGORY_ID) {
-            params.startDate = startDateParam;
+            params.startAfterDate = startDateParam;
           }
         }
 
-        const endDateParam = urlParams.get("endDate");
+        const endDateParam =
+          urlParams.get("endBeforeDate") || urlParams.get("endDate");
         if (endDateParam) {
           setEndDate(endDateParam);
           if (categoryIdParam === EVENTS_CATEGORY_ID) {
-            params.endDate = endDateParam;
+            params.endBeforeDate = endDateParam;
           }
         }
 
@@ -331,9 +334,12 @@ const AllListings = () => {
                 searchParams.categoryId = params.categoryId;
                 if (params.categoryId === EVENTS_CATEGORY_ID) {
                   searchParams.sortByStartDate = true;
-                  if (params.eventType) searchParams.eventType = params.eventType;
-                  if (params.startDate) searchParams.startAfterDate = params.startDate;
-                  if (params.endDate) searchParams.endBeforeDate = params.endDate;
+                  if (params.eventType)
+                    searchParams.eventType = params.eventType;
+                  if (params.startAfterDate)
+                    searchParams.startAfterDate = params.startAfterDate;
+                  if (params.endBeforeDate)
+                    searchParams.endBeforeDate = params.endBeforeDate;
                 }
               }
               const response = await getListingsBySearch(searchParams);
@@ -370,14 +376,16 @@ const AllListings = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
 
-    const urlStartDate = urlParams.get("startDate") || "";
+    const urlStartDate =
+      urlParams.get("startAfterDate") || urlParams.get("startDate") || "";
     if (urlStartDate && urlStartDate !== startDate) {
       setStartDate(urlStartDate);
     } else if (!urlStartDate && startDate) {
       setStartDate("");
     }
 
-    const urlEndDate = urlParams.get("endDate") || "";
+    const urlEndDate =
+      urlParams.get("endBeforeDate") || urlParams.get("endDate") || "";
     if (urlEndDate && urlEndDate !== endDate) {
       setEndDate(urlEndDate);
     } else if (!urlEndDate && endDate) {
@@ -415,6 +423,12 @@ const AllListings = () => {
     // Skip on initial mount - initial load is handled by the first useEffect
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      return;
+    }
+    // Skip the first run after the initial load has completed
+    // to avoid an extra API call on page open.
+    if (!postInitialEffectSkipped.current) {
+      postInitialEffectSkipped.current = true;
       return;
     }
     // Skip until initial load has finished (avoids calling listings API when search in URL)
@@ -460,15 +474,15 @@ const AllListings = () => {
     }
 
     if (startDate) {
-      urlParams.startDate = startDate;
+      urlParams.startAfterDate = startDate;
     } else {
-      urlParams.startDate = null;
+      urlParams.startAfterDate = null;
     }
 
     if (endDate) {
-      urlParams.endDate = endDate;
+      urlParams.endBeforeDate = endDate;
     } else {
-      urlParams.endDate = null;
+      urlParams.endBeforeDate = null;
     }
 
     if (isEvents) {
@@ -568,11 +582,11 @@ const AllListings = () => {
             params.eventType = eventType;
           }
         }
-        if (!params.startDate && startDate) {
-          params.startDate = startDate;
+        if (!params.startAfterDate && startDate) {
+          params.startAfterDate = startDate;
         }
-        if (!params.endDate && endDate) {
-          params.endDate = endDate;
+        if (!params.endBeforeDate && endDate) {
+          params.endBeforeDate = endDate;
         }
         params.sortByStartDate = true;
       }
@@ -633,8 +647,8 @@ const AllListings = () => {
       setPageNo(1);
 
       const urlParams = {};
-      urlParams.startDate = null;
-      urlParams.endDate = null;
+      urlParams.startAfterDate = null;
+      urlParams.endBeforeDate = null;
       urlParams.search = null;
       if (isEvents) {
         urlParams.eventTab = id;
