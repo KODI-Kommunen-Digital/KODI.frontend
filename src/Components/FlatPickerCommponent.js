@@ -116,6 +116,19 @@ const FlatPickerCommponent = ({
           ...(effectiveMinDate && { minDate: effectiveMinDate }),
           ...(effectiveMaxDate && { maxDate: effectiveMaxDate }),
           onClose: handleClose,
+          // Custom parseDate to handle UTC strings without timezone conversion
+          parseDate: (dateStr) => {
+            if (!dateStr) return null;
+            // If date ends with 'Z', treat it as the literal time (not UTC)
+            // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
+            let d = dateStr;
+            if (d.endsWith('Z')) {
+              d = d.slice(0, -1);
+            }
+            // Remove milliseconds if present
+            d = d.replace(/\.\d{3}/, '');
+            return new Date(d);
+          },
           ...additionalOptions,
         }}
         onChange={handleChange}

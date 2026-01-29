@@ -576,8 +576,8 @@ function UploadListings() {
             ? { startDate: undefined, endDate: undefined }
             : {
                 // Convert local dates back to UTC for non-recurring events
-                startDate: convertLocalToUTC(listingInput.startDate),
-                endDate: convertLocalToUTC(listingInput.endDate),
+                startDate: listingInput.startDate,
+                endDate: listingInput.endDate,
               }),
         };
 
@@ -932,8 +932,9 @@ function UploadListings() {
             categoryId: listingData.categoryId,
             subcategoryId: listingData.subcategoryId,
             description: listingData.description,
-            startDate: formatUTCToLocal(listingData.startDate) || "",
-            endDate: formatUTCToLocal(listingData.endDate) || "",
+            // Pass dates as-is from API - FlatPickerCommponent handles UTC parsing
+            startDate: listingData.startDate || "",
+            endDate: listingData.endDate || "",
             expiryDate: listingData.expiryDate || "",
             isRecurrence: hasRecurrenceRules,
             address: listingData.address || "",
