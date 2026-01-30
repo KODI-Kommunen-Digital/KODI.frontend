@@ -367,12 +367,9 @@ const HomePage = () => {
     if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
       params.sortByStartDate = true;
     }
-    if (startDate) {
-      urlParams.startAfterDate = startDate;
-    }
-    if (endDate) {
-      urlParams.endBeforeDate = endDate;
-    }
+    // Always set date params (null if empty) so they can be removed from URL
+    urlParams.startAfterDate = startDate || null;
+    urlParams.endBeforeDate = endDate || null;
     if (isEvents) {
       if (eventTab) {
         urlParams.eventTab = eventTab;
@@ -408,7 +405,7 @@ const HomePage = () => {
         if (parseInt(cityId)) searchParams.cityId = cityId;
         if (parseInt(categoryId)) {
           searchParams.categoryId = categoryId;
-          if (categoryId === EVENTS_CATEGORY_ID) {
+          if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
             searchParams.sortByStartDate = true;
             if (eventTab === "singleDay") searchParams.eventType = "singleDay";
             else if (eventTab === "multiDay")

@@ -526,7 +526,7 @@ const AllListings = () => {
         if (parseInt(cityId)) searchParams.cityId = cityId;
         if (parseInt(categoryId)) {
           searchParams.categoryId = parseInt(categoryId);
-          if (categoryId === EVENTS_CATEGORY_ID) {
+          if (parseInt(categoryId) === EVENTS_CATEGORY_ID) {
             searchParams.sortByStartDate = true;
             const eventType = getEventType(eventTab);
             if (eventType) searchParams.eventType = eventType;
