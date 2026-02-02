@@ -1197,6 +1197,20 @@ function UploadListings() {
     return emailRegex.test(email);
   };
 
+  // Helper function to normalize date strings for comparison
+  // Removes UTC 'Z' and milliseconds to ensure consistent comparison
+  const normalizeDateString = (dateStr) => {
+    if (!dateStr) return dateStr;
+    let normalized = dateStr;
+    // Remove 'Z' if present
+    if (normalized.endsWith('Z')) {
+      normalized = normalized.slice(0, -1);
+    }
+    // Remove milliseconds if present
+    normalized = normalized.replace(/\.\d{3}/, '');
+    return normalized;
+  };
+
   const getErrorMessage = (name, value) => {
     switch (name) {
       case "title":
@@ -1247,8 +1261,8 @@ function UploadListings() {
       case "endDate":
         // For non-recurring events, validate that end > start
         if (!listingInput.isRecurrence && listingInput.startDate && value) {
-          const startDateTime = new Date(listingInput.startDate);
-          const endDateTime = new Date(value);
+          const startDateTime = new Date(normalizeDateString(listingInput.startDate));
+          const endDateTime = new Date(normalizeDateString(value));
 
           if (endDateTime <= startDateTime) {
             return t("endTimeMustBeGreaterThanStartTime");
@@ -1412,8 +1426,8 @@ function UploadListings() {
 
         // When startDate changes, re-validate endDate if it exists
         if (listingInput.endDate) {
-          const startDateTime = new Date(value);
-          const endDateTime = new Date(listingInput.endDate);
+          const startDateTime = new Date(normalizeDateString(value));
+          const endDateTime = new Date(normalizeDateString(listingInput.endDate));
 
           if (endDateTime <= startDateTime) {
             setError((prevState) => ({
@@ -1446,8 +1460,8 @@ function UploadListings() {
           }));
         } else {
           // Both dates exist - validate that endDate > startDate
-          const startDateTime = new Date(listingInput.startDate);
-          const endDateTime = new Date(value);
+          const startDateTime = new Date(normalizeDateString(listingInput.startDate));
+          const endDateTime = new Date(normalizeDateString(value));
 
           if (endDateTime <= startDateTime) {
             setError((prevState) => ({
@@ -2218,32 +2232,150 @@ function UploadListings() {
                 /* Non-recurring events: Show both Start and End Date */
                 <div className="items-stretch py-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="relative">
-                    <FlatPickerCommponent
+                    <label
+                      htmlFor="startDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventStartDate")} *
+                    </label>
+                    <Flatpickr
                       id="startDate"
                       name="startDate"
-                      validateInput={validateInput}
-                      setListingInput={setListingInput}
-                      setError={setError}
-                      error={error}
-                      listingInput={listingInput}
+                      value={listingInput.startDate || ""}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        clickOpens: true,
+                        allowInput: false,
+                        // Custom parseDate to handle UTC strings without timezone conversion
+                        parseDate: (dateStr) => {
+                          if (!dateStr) return null;
+                          // If date ends with 'Z', treat it as the literal time (not UTC)
+                          // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
+                          let d = dateStr;
+                          if (d.endsWith('Z')) {
+                            d = d.slice(0, -1);
+                          }
+                          // Remove milliseconds if present
+                          d = d.replace(/\.\d{3}/, '');
+                          return new Date(d);
+                        },
+                      }}
+                      onChange={(date) => {
+                        // Handle date clearing
+                        if (!date || date.length === 0) {
+                          setListingInput((prev) => ({
+                            ...prev,
+                            startDate: "",
+                          }));
+                          // Validate to show required error
+                          validateInput({
+                            target: {
+                              name: "startDate",
+                              value: "",
+                            },
+                          });
+                          return;
+                        }
+
+                        const formattedDate = format(
+                          date[0],
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+                        setListingInput((prev) => ({
+                          ...prev,
+                          startDate: formattedDate,
+                        }));
+                        validateInput({
+                          target: {
+                            name: "startDate",
+                            value: formattedDate,
+                          },
+                        });
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                       placeholder={t("eventStartDate")}
-                      t={t}
                     />
+                    <div
+                      className="mt-2 text-sm text-red-600"
+                      style={{
+                        visibility: error.startDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.startDate}
+                    </div>
                   </div>
 
                   <div className="relative">
-                    <FlatPickerCommponent
+                    <label
+                      htmlFor="endDate"
+                      className="block text-sm font-medium text-gray-600"
+                    >
+                      {t("eventEndDate")}
+                    </label>
+                    <Flatpickr
                       id="endDate"
                       name="endDate"
-                      validateInput={validateInput}
-                      setListingInput={setListingInput}
-                      setError={setError}
-                      error={error}
-                      listingInput={listingInput}
+                      value={listingInput.endDate || ""}
+                      options={{
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        clickOpens: true,
+                        allowInput: false,
+                        // Custom parseDate to handle UTC strings without timezone conversion
+                        parseDate: (dateStr) => {
+                          if (!dateStr) return null;
+                          // If date ends with 'Z', treat it as the literal time (not UTC)
+                          // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
+                          let d = dateStr;
+                          if (d.endsWith('Z')) {
+                            d = d.slice(0, -1);
+                          }
+                          // Remove milliseconds if present
+                          d = d.replace(/\.\d{3}/, '');
+                          return new Date(d);
+                        },
+                      }}
+                      onChange={(date) => {
+                        // Handle date clearing (end date is optional)
+                        if (!date || date.length === 0) {
+                          setListingInput((prev) => ({
+                            ...prev,
+                            endDate: "",
+                          }));
+                          // Clear error for optional field
+                          setError((prev) => ({ ...prev, endDate: "" }));
+                          return;
+                        }
+
+                        const formattedDate = format(
+                          date[0],
+                          "yyyy-MM-dd'T'HH:mm",
+                        );
+                        setListingInput((prev) => ({
+                          ...prev,
+                          endDate: formattedDate,
+                        }));
+                        validateInput({
+                          target: {
+                            name: "endDate",
+                            value: formattedDate,
+                          },
+                        });
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
                       placeholder={t("eventEndDate")}
-                      t={t}
-                      required={false}
                     />
+                    <div
+                      className="mt-2 text-sm text-red-600"
+                      style={{
+                        visibility: error.endDate ? "visible" : "hidden",
+                      }}
+                    >
+                      {error.endDate}
+                    </div>
                   </div>
                 </div>
               ) : null}

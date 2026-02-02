@@ -61,16 +61,24 @@ const FlatPickerCommponent = ({
       return;
     }
 
-    // Handle date clearing - update state to empty string and clear error
+    // Handle date clearing - update state to empty string
     if (!date || date.length === 0) {
       setListingInput((prev) => ({
         ...prev,
         [name]: "",
       }));
-      // Clear error when date is removed
-      setError((prev) => ({ ...prev, [name]: "" }));
-      // Don't call validateInput here to avoid showing "required" errors
-      // The error is already cleared, and cross-field validation will happen in handleClose
+      
+      // If field is required, validate to show error; otherwise clear error
+      if (required && validateInput) {
+        validateInput({
+          target: {
+            name,
+            value: "",
+          },
+        });
+      } else {
+        setError((prev) => ({ ...prev, [name]: "" }));
+      }
       return;
     }
 

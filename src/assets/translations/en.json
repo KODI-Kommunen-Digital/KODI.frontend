@@ -1101,5 +1101,6 @@
     "invalidRecurrenceRule": "Invalid recurrence rule: Recurrence duration cannot exceed 2 years",
     "upcommingEvent": "UpComming Events",
     "viewLess": "View Less",
-    "viewMores": "View More"
+    "viewMores": "View More",
+    "pleaseEnterRepeatUntil": "Please enter repeat until date"
 }

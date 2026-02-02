@@ -578,7 +578,57 @@ const RecurringSchedule = ({
                       t={t}
                       minDate={null}
                       customOnChange={(date) => {
-                        if (!date || date.length === 0 || !date[0]) return;
+                        // Handle date clearing (startDate is required for recurring)
+                        if (!date || date.length === 0 || !date[0]) {
+                          const previousValue = schedule.startDate;
+                          
+                          setListingInput((prev) => {
+                            const updatedSchedules = [...prev.recurringSchedules];
+                            updatedSchedules[scheduleIndex] = {
+                              ...updatedSchedules[scheduleIndex],
+                              startDate: "",
+                            };
+                            return {
+                              ...prev,
+                              recurringSchedules: updatedSchedules,
+                            };
+                          });
+
+                          // Only set error if field previously had a value (user actively cleared it)
+                          // Don't show error on initial empty state
+                          if (previousValue) {
+                            setError((prev) => {
+                              const updatedErrors = [...prev.recurringSchedules];
+                              updatedErrors[scheduleIndex] = {
+                                ...updatedErrors[scheduleIndex],
+                                startDate: t("pleaseEnterStartDate"),
+                                // Clear cross-validation errors
+                                recurringEndTime: "",
+                                repeatUntil: "",
+                              };
+                              return {
+                                ...prev,
+                                recurringSchedules: updatedErrors,
+                              };
+                            });
+                          } else {
+                            // Just clear errors if field was already empty
+                            setError((prev) => {
+                              const updatedErrors = [...prev.recurringSchedules];
+                              updatedErrors[scheduleIndex] = {
+                                ...updatedErrors[scheduleIndex],
+                                startDate: "",
+                                recurringEndTime: "",
+                                repeatUntil: "",
+                              };
+                              return {
+                                ...prev,
+                                recurringSchedules: updatedErrors,
+                              };
+                            });
+                          }
+                          return;
+                        }
 
                         const selectedDate = date[0];
                         const formattedDate = format(
@@ -729,7 +779,52 @@ const RecurringSchedule = ({
                       minDate={null}
                       maxDate={null}
                       customOnChange={(date) => {
-                        if (!date || date.length === 0 || !date[0]) return;
+                        // Handle date clearing (end time is required for recurring)
+                        if (!date || date.length === 0 || !date[0]) {
+                          const previousValue = schedule.recurringEndTime || schedule.endDate;
+                          
+                          setListingInput((prev) => {
+                            const updatedSchedules = [...prev.recurringSchedules];
+                            updatedSchedules[scheduleIndex] = {
+                              ...updatedSchedules[scheduleIndex],
+                              endDate: "",
+                              recurringEndTime: "",
+                            };
+                            return {
+                              ...prev,
+                              recurringSchedules: updatedSchedules,
+                            };
+                          });
+
+                          // Only set error if field previously had a value (user actively cleared it)
+                          if (previousValue) {
+                            setError((prev) => {
+                              const updatedErrors = [...prev.recurringSchedules];
+                              updatedErrors[scheduleIndex] = {
+                                ...updatedErrors[scheduleIndex],
+                                recurringEndTime: t("pleaseEnterEndTime"),
+                              };
+                              return {
+                                ...prev,
+                                recurringSchedules: updatedErrors,
+                              };
+                            });
+                          } else {
+                            // Just clear error if field was already empty
+                            setError((prev) => {
+                              const updatedErrors = [...prev.recurringSchedules];
+                              updatedErrors[scheduleIndex] = {
+                                ...updatedErrors[scheduleIndex],
+                                recurringEndTime: "",
+                              };
+                              return {
+                                ...prev,
+                                recurringSchedules: updatedErrors,
+                              };
+                            });
+                          }
+                          return;
+                        }
 
                         const selectedDate = date[0];
                         const formattedDate = format(
@@ -871,7 +966,51 @@ const RecurringSchedule = ({
                     t={t}
                     minDate={null}
                     customOnChange={(date) => {
-                      if (!date || date.length === 0 || !date[0]) return;
+                      // Handle date clearing (repeatUntil is required for recurring)
+                      if (!date || date.length === 0 || !date[0]) {
+                        const previousValue = schedule.repeatUntil;
+                        
+                        setListingInput((prev) => {
+                          const updatedSchedules = [...prev.recurringSchedules];
+                          updatedSchedules[scheduleIndex] = {
+                            ...updatedSchedules[scheduleIndex],
+                            repeatUntil: "",
+                          };
+                          return {
+                            ...prev,
+                            recurringSchedules: updatedSchedules,
+                          };
+                        });
+
+                        // Only set error if field previously had a value (user actively cleared it)
+                        if (previousValue) {
+                          setError((prev) => {
+                            const updatedErrors = [...prev.recurringSchedules];
+                            updatedErrors[scheduleIndex] = {
+                              ...updatedErrors[scheduleIndex],
+                              repeatUntil: t("pleaseEnterRepeatUntil"),
+                            };
+                            return {
+                              ...prev,
+                              recurringSchedules: updatedErrors,
+                            };
+                          });
+                        } else {
+                          // Just clear error if field was already empty
+                          setError((prev) => {
+                            const updatedErrors = [...prev.recurringSchedules];
+                            updatedErrors[scheduleIndex] = {
+                              ...updatedErrors[scheduleIndex],
+                              repeatUntil: "",
+                            };
+                            return {
+                              ...prev,
+                              recurringSchedules: updatedErrors,
+                            };
+                          });
+                        }
+                        return;
+                      }
 
                       const selectedDate = date[0];
                       const formattedDate = format(
@@ -1042,28 +1181,21 @@ const RecurringSchedule = ({
               }));
             }}
             disabled={
-              !isRecurringScheduleComplete(
-                listingInput.recurringSchedules[
-                listingInput.recurringSchedules.length - 1
-                ],
-                listingInput.recurringSchedules.length - 1,
+              // Check if ALL schedules are complete, not just the last one
+              !listingInput.recurringSchedules.every((schedule, index) =>
+                isRecurringScheduleComplete(schedule, index)
               )
             }
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isRecurringScheduleComplete(
-              listingInput.recurringSchedules[
-              listingInput.recurringSchedules.length - 1
-              ],
-              listingInput.recurringSchedules.length - 1,
-            )
-              ? "bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+              listingInput.recurringSchedules.every((schedule, index) =>
+                isRecurringScheduleComplete(schedule, index)
+              )
+                ? "bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
             title={
-              !isRecurringScheduleComplete(
-                listingInput.recurringSchedules[
-                listingInput.recurringSchedules.length - 1
-                ],
-                listingInput.recurringSchedules.length - 1,
+              !listingInput.recurringSchedules.every((schedule, index) =>
+                isRecurringScheduleComplete(schedule, index)
               )
                 ? t("pleaseCompleteAllMandatoryFieldsBeforeAddingNewSchedule")
                 : ""
