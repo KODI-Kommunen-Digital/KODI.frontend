@@ -73,7 +73,7 @@ const updateUrlParams = (params) => {
 
 // DatePicker Component
 // eslint-disable-next-line react/prop-types
-const DatePicker = ({ value, onChange, placeholder, t }) => {
+const DatePicker = ({ value, onChange, placeholder, t, minDate, maxDate }) => {
   const handleDateChange = useCallback(
     (date) => {
       if (date[0]) {
@@ -92,8 +92,10 @@ const DatePicker = ({ value, onChange, placeholder, t }) => {
     () => ({
       dateFormat: "Y-m-d",
       allowInput: true,
+      minDate: minDate || null,
+      maxDate: maxDate || null,
     }),
-    [],
+    [minDate, maxDate],
   );
 
   return (
@@ -730,12 +732,14 @@ const HomePage = () => {
                     onChange={setStartDate}
                     placeholder={t("startDate") || "Start Date"}
                     t={t}
+                    maxDate={endDate || null}
                   />
                   <DatePicker
                     value={endDate}
                     onChange={setEndDate}
                     placeholder={t("endDate") || "End Date"}
                     t={t}
+                    minDate={startDate || null}
                   />
                 </>
               )}

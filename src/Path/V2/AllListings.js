@@ -80,6 +80,8 @@ const DatePicker = ({
   t,
   className = "",
   setPageNo = 1,
+  minDate,
+  maxDate,
 }) => {
   const handleDateChange = useCallback(
     (date) => {
@@ -105,8 +107,10 @@ const DatePicker = ({
     () => ({
       dateFormat: "Y-m-d",
       allowInput: true,
+      minDate: minDate || null,
+      maxDate: maxDate || null,
     }),
-    [],
+    [minDate, maxDate],
   );
 
   return (
@@ -150,6 +154,8 @@ DatePicker.propTypes = {
   t: PropTypes.func,
   className: PropTypes.string,
   setPageNo: PropTypes.func,
+  minDate: PropTypes.string,
+  maxDate: PropTypes.string,
 };
 
 DatePicker.defaultProps = {
@@ -158,6 +164,8 @@ DatePicker.defaultProps = {
   className: "",
   t: () => {},
   setPageNo: () => {},
+  minDate: null,
+  maxDate: null,
 };
 const AllListings = () => {
   window.scrollTo(0, 0);
@@ -804,6 +812,7 @@ const AllListings = () => {
                         t={t}
                         className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full gap-1"
                         setPageNo={setPageNo}
+                        maxDate={endDate || null}
                       />
                       <DatePicker
                         value={endDate}
@@ -812,6 +821,7 @@ const AllListings = () => {
                         t={t}
                         className="col-span-6 sm:col-span-1 mt-1 mb-1 px-0 mr-0 w-full"
                         setPageNo={setPageNo}
+                        minDate={startDate || null}
                       />
                     </div>
                   )}
