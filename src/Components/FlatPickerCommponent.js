@@ -61,7 +61,18 @@ const FlatPickerCommponent = ({
       return;
     }
 
-    if (!date || date.length === 0) return;
+    // Handle date clearing - update state to empty string and clear error
+    if (!date || date.length === 0) {
+      setListingInput((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+      // Clear error when date is removed
+      setError((prev) => ({ ...prev, [name]: "" }));
+      // Don't call validateInput here to avoid showing "required" errors
+      // The error is already cleared, and cross-field validation will happen in handleClose
+      return;
+    }
 
     const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
 
@@ -71,8 +82,7 @@ const FlatPickerCommponent = ({
       [name]: formattedDate,
     }));
 
-    // Clear error when user is selecting a date
-    setError((prev) => ({ ...prev, [name]: "" }));
+    // Don't clear error here - let validation in handleClose handle it
   };
 
   const handleClose = (selectedDates, dateStr, instance) => {
@@ -82,8 +92,11 @@ const FlatPickerCommponent = ({
       return;
     }
 
-    // Validate only after date picker closes
-    if (dateStr && validateInput) {
+    // Only validate if a date was actually selected (dateStr is not empty)
+    // This prevents:
+    // 1. Showing "required" errors when user just opens/closes without selecting
+    // 2. Triggering validation when user clears the date (already handled in handleChange)
+    if (validateInput && dateStr) {
       validateInput({
         target: {
           name,

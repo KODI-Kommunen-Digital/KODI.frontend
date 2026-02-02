@@ -1386,11 +1386,15 @@ function UploadListings() {
         return; // Don't set error for these fields
       }
 
-      const errorMessage = getErrorMessage(name, value);
-      setError((prevState) => ({
-        ...prevState,
-        [name]: errorMessage,
-      }));
+      // For startDate and endDate, skip getErrorMessage and use dedicated validation below
+      // This avoids double setError calls and ensures proper cross-field validation
+      if (name !== "startDate" && name !== "endDate") {
+        const errorMessage = getErrorMessage(name, value);
+        setError((prevState) => ({
+          ...prevState,
+          [name]: errorMessage,
+        }));
+      }
 
       const inputDate = new Date(value);
 
@@ -1399,6 +1403,13 @@ function UploadListings() {
 
       // Validate non-recurring event dates
       if (name === "startDate" && !listingInput.isRecurrence) {
+        // Validate startDate itself first
+        const startDateError = getErrorMessage(name, value);
+        setError((prevState) => ({
+          ...prevState,
+          startDate: startDateError,
+        }));
+
         // When startDate changes, re-validate endDate if it exists
         if (listingInput.endDate) {
           const startDateTime = new Date(value);
@@ -1420,7 +1431,21 @@ function UploadListings() {
 
       if (name === "endDate" && !listingInput.isRecurrence) {
         // When endDate changes, validate against startDate
-        if (listingInput.startDate && value) {
+        // End date is optional, so if it's empty, clear any error
+        if (!value) {
+          // Empty endDate is valid (optional field)
+          setError((prevState) => ({
+            ...prevState,
+            endDate: "",
+          }));
+        } else if (!listingInput.startDate) {
+          // If there's no startDate yet, endDate is valid (can't validate without startDate)
+          setError((prevState) => ({
+            ...prevState,
+            endDate: "",
+          }));
+        } else {
+          // Both dates exist - validate that endDate > startDate
           const startDateTime = new Date(listingInput.startDate);
           const endDateTime = new Date(value);
 
@@ -1430,6 +1455,7 @@ function UploadListings() {
               endDate: t("endTimeMustBeGreaterThanStartTime"),
             }));
           } else {
+            // End date is valid - clear error
             setError((prevState) => ({
               ...prevState,
               endDate: "",
