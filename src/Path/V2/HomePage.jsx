@@ -36,6 +36,8 @@ import ONEIMAGE from "../../assets/01.png";
 import TWOIMAGE from "../../assets/02.png";
 import THREEIMAGE from "../../assets/03.png";
 import MostPopularCategories from "../../Components/V2/MostPopularCategories";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
 
 // Constants
 const EVENTS_CATEGORY_ID = 3;
@@ -94,6 +96,7 @@ const DatePicker = ({ value, onChange, placeholder, t, minDate, maxDate }) => {
       allowInput: true,
       minDate: minDate || null,
       maxDate: maxDate || null,
+      locale: process.env.REACT_APP_LANG === "de" ? German : English,
     }),
     [minDate, maxDate],
   );
@@ -802,7 +805,7 @@ const HomePage = () => {
                       style={{ fontFamily: POPPINS_FONT }}
                       type="button"
                     >
-                      {t(tab?.label)}
+                      {t(tab?.id)}
                     </button>
                   ))}
                 </div>

@@ -29,6 +29,9 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 import PropTypes from "prop-types";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
+
 // Constants
 const EVENTS_CATEGORY_ID = 3;
 const OFFICIAL_NOTIFICATION_CATEGORY_ID = 16;
@@ -109,6 +112,7 @@ const DatePicker = ({
       allowInput: true,
       minDate: minDate || null,
       maxDate: maxDate || null,
+      locale: process.env.REACT_APP_LANG === "de" ? German : English,
     }),
     [minDate, maxDate],
   );
@@ -903,7 +907,7 @@ const AllListings = () => {
                         style={{ fontFamily: POPPINS_FONT }}
                         type="button"
                       >
-                        {t(tab?.label)}
+                        {t(tab?.id)}
                       </button>
                     ))}
                   </div>

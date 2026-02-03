@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function SearchBar({ onSearch, searchBarClassName, searchQuery }) {
   const [searchTerm, setSearchTerm] = useState(searchQuery);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setSearchTerm(searchQuery);
@@ -27,7 +29,7 @@ function SearchBar({ onSearch, searchBarClassName, searchQuery }) {
         value={searchTerm}
         onChange={handleChange}
         name="search"
-        placeholder="Search"
+        placeholder={t("search")}
         className="bg-white border-2 border-gray-500 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
         style={{ fontFamily: "Poppins, sans-serif" }}
       />

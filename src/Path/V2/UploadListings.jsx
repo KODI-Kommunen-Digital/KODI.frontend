@@ -37,6 +37,8 @@ import Delta from "quill-delta";
 import { daysOfWeek } from "../../Services/helper";
 import FlatPickerCommponent from "../../Components/FlatPickerCommponent";
 import RecurringSchedule from "../../Components/RecurringSchedule";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
 
 function UploadListings() {
   const { t } = useTranslation();
@@ -1203,11 +1205,11 @@ function UploadListings() {
     if (!dateStr) return dateStr;
     let normalized = dateStr;
     // Remove 'Z' if present
-    if (normalized.endsWith('Z')) {
+    if (normalized.endsWith("Z")) {
       normalized = normalized.slice(0, -1);
     }
     // Remove milliseconds if present
-    normalized = normalized.replace(/\.\d{3}/, '');
+    normalized = normalized.replace(/\.\d{3}/, "");
     return normalized;
   };
 
@@ -1261,7 +1263,9 @@ function UploadListings() {
       case "endDate":
         // For non-recurring events, validate that end > start
         if (!listingInput.isRecurrence && listingInput.startDate && value) {
-          const startDateTime = new Date(normalizeDateString(listingInput.startDate));
+          const startDateTime = new Date(
+            normalizeDateString(listingInput.startDate),
+          );
           const endDateTime = new Date(normalizeDateString(value));
 
           if (endDateTime <= startDateTime) {
@@ -1427,7 +1431,9 @@ function UploadListings() {
         // When startDate changes, re-validate endDate if it exists
         if (listingInput.endDate) {
           const startDateTime = new Date(normalizeDateString(value));
-          const endDateTime = new Date(normalizeDateString(listingInput.endDate));
+          const endDateTime = new Date(
+            normalizeDateString(listingInput.endDate),
+          );
 
           if (endDateTime <= startDateTime) {
             setError((prevState) => ({
@@ -1460,7 +1466,9 @@ function UploadListings() {
           }));
         } else {
           // Both dates exist - validate that endDate > startDate
-          const startDateTime = new Date(normalizeDateString(listingInput.startDate));
+          const startDateTime = new Date(
+            normalizeDateString(listingInput.startDate),
+          );
           const endDateTime = new Date(normalizeDateString(value));
 
           if (endDateTime <= startDateTime) {
@@ -2248,17 +2256,22 @@ function UploadListings() {
                         time_24hr: true,
                         clickOpens: true,
                         allowInput: false,
+                        locale:
+                          process.env.REACT_APP_LANG === "de"
+                            ? German
+                            : English,
+
                         // Custom parseDate to handle UTC strings without timezone conversion
                         parseDate: (dateStr) => {
                           if (!dateStr) return null;
                           // If date ends with 'Z', treat it as the literal time (not UTC)
                           // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
                           let d = dateStr;
-                          if (d.endsWith('Z')) {
+                          if (d.endsWith("Z")) {
                             d = d.slice(0, -1);
                           }
                           // Remove milliseconds if present
-                          d = d.replace(/\.\d{3}/, '');
+                          d = d.replace(/\.\d{3}/, "");
                           return new Date(d);
                         },
                       }}
@@ -2324,17 +2337,21 @@ function UploadListings() {
                         time_24hr: true,
                         clickOpens: true,
                         allowInput: false,
+                        locale:
+                          process.env.REACT_APP_LANG === "de"
+                            ? German
+                            : English,
                         // Custom parseDate to handle UTC strings without timezone conversion
                         parseDate: (dateStr) => {
                           if (!dateStr) return null;
                           // If date ends with 'Z', treat it as the literal time (not UTC)
                           // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
                           let d = dateStr;
-                          if (d.endsWith('Z')) {
+                          if (d.endsWith("Z")) {
                             d = d.slice(0, -1);
                           }
                           // Remove milliseconds if present
-                          d = d.replace(/\.\d{3}/, '');
+                          d = d.replace(/\.\d{3}/, "");
                           return new Date(d);
                         },
                       }}

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
 
 /**
  * FlatPickerComponent - A reusable date/time picker component
@@ -67,7 +69,7 @@ const FlatPickerCommponent = ({
         ...prev,
         [name]: "",
       }));
-      
+
       // If field is required, validate to show error; otherwise clear error
       if (required && validateInput) {
         validateInput({
@@ -134,6 +136,7 @@ const FlatPickerCommponent = ({
           time_24hr: true, // eslint-disable-line camelcase
           clickOpens: true,
           allowInput: false,
+          locale: process.env.REACT_APP_LANG === "de" ? German : English,
           ...(effectiveMinDate && { minDate: effectiveMinDate }),
           ...(effectiveMaxDate && { maxDate: effectiveMaxDate }),
           onClose: handleClose,
@@ -143,11 +146,11 @@ const FlatPickerCommponent = ({
             // If date ends with 'Z', treat it as the literal time (not UTC)
             // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
             let d = dateStr;
-            if (d.endsWith('Z')) {
+            if (d.endsWith("Z")) {
               d = d.slice(0, -1);
             }
             // Remove milliseconds if present
-            d = d.replace(/\.\d{3}/, '');
+            d = d.replace(/\.\d{3}/, "");
             return new Date(d);
           },
           ...additionalOptions,
