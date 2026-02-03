@@ -5,6 +5,8 @@ import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 import { daysOfWeek } from "../Services/helper";
 import FlatPickerCommponent from "./FlatPickerCommponent";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
 
 const RecurringSchedule = ({
   listingInput,
@@ -44,19 +46,19 @@ const RecurringSchedule = ({
                 // Reset to single empty schedule when unchecking or checking
                 recurringSchedules: isChecked
                   ? [
-                    {
-                      recurringType: "",
-                      recurringDays: [],
-                      monthlyWeekday: "",
-                      dayOrdinal: "",
-                      interval: 1,
-                      startDate: "",
-                      endDate: "",
-                      recurringEndTime: "",
-                      repeatUntil: "",
-                      exceptionDates: [],
-                    },
-                  ]
+                      {
+                        recurringType: "",
+                        recurringDays: [],
+                        monthlyWeekday: "",
+                        dayOrdinal: "",
+                        interval: 1,
+                        startDate: "",
+                        endDate: "",
+                        recurringEndTime: "",
+                        repeatUntil: "",
+                        exceptionDates: [],
+                      },
+                    ]
                   : prev.recurringSchedules,
               }));
               // Clear errors based on checkbox state
@@ -167,7 +169,9 @@ const RecurringSchedule = ({
                   });
                   // Clear related errors
                   setError((prevError) => {
-                    const prevSchedules = Array.isArray(prevError?.recurringSchedules)
+                    const prevSchedules = Array.isArray(
+                      prevError?.recurringSchedules,
+                    )
                       ? prevError.recurringSchedules
                       : [];
                     const updatedErrors = [...prevSchedules];
@@ -448,7 +452,10 @@ const RecurringSchedule = ({
                       : "hidden",
                   }}
                 >
-                  {safeError.recurringSchedules?.[scheduleIndex]?.monthlyWeekday}
+                  {
+                    safeError.recurringSchedules?.[scheduleIndex]
+                      ?.monthlyWeekday
+                  }
                 </div>
               </div>
             )}
@@ -581,9 +588,11 @@ const RecurringSchedule = ({
                         // Handle date clearing (startDate is required for recurring)
                         if (!date || date.length === 0 || !date[0]) {
                           const previousValue = schedule.startDate;
-                          
+
                           setListingInput((prev) => {
-                            const updatedSchedules = [...prev.recurringSchedules];
+                            const updatedSchedules = [
+                              ...prev.recurringSchedules,
+                            ];
                             updatedSchedules[scheduleIndex] = {
                               ...updatedSchedules[scheduleIndex],
                               startDate: "",
@@ -598,7 +607,9 @@ const RecurringSchedule = ({
                           // Don't show error on initial empty state
                           if (previousValue) {
                             setError((prev) => {
-                              const updatedErrors = [...prev.recurringSchedules];
+                              const updatedErrors = [
+                                ...prev.recurringSchedules,
+                              ];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 startDate: t("pleaseEnterStartDate"),
@@ -614,7 +625,9 @@ const RecurringSchedule = ({
                           } else {
                             // Just clear errors if field was already empty
                             setError((prev) => {
-                              const updatedErrors = [...prev.recurringSchedules];
+                              const updatedErrors = [
+                                ...prev.recurringSchedules,
+                              ];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 startDate: "",
@@ -781,10 +794,13 @@ const RecurringSchedule = ({
                       customOnChange={(date) => {
                         // Handle date clearing (end time is required for recurring)
                         if (!date || date.length === 0 || !date[0]) {
-                          const previousValue = schedule.recurringEndTime || schedule.endDate;
-                          
+                          const previousValue =
+                            schedule.recurringEndTime || schedule.endDate;
+
                           setListingInput((prev) => {
-                            const updatedSchedules = [...prev.recurringSchedules];
+                            const updatedSchedules = [
+                              ...prev.recurringSchedules,
+                            ];
                             updatedSchedules[scheduleIndex] = {
                               ...updatedSchedules[scheduleIndex],
                               endDate: "",
@@ -799,7 +815,9 @@ const RecurringSchedule = ({
                           // Only set error if field previously had a value (user actively cleared it)
                           if (previousValue) {
                             setError((prev) => {
-                              const updatedErrors = [...prev.recurringSchedules];
+                              const updatedErrors = [
+                                ...prev.recurringSchedules,
+                              ];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 recurringEndTime: t("pleaseEnterEndTime"),
@@ -812,7 +830,9 @@ const RecurringSchedule = ({
                           } else {
                             // Just clear error if field was already empty
                             setError((prev) => {
-                              const updatedErrors = [...prev.recurringSchedules];
+                              const updatedErrors = [
+                                ...prev.recurringSchedules,
+                              ];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 recurringEndTime: "",
@@ -969,7 +989,7 @@ const RecurringSchedule = ({
                       // Handle date clearing (repeatUntil is required for recurring)
                       if (!date || date.length === 0 || !date[0]) {
                         const previousValue = schedule.repeatUntil;
-                        
+
                         setListingInput((prev) => {
                           const updatedSchedules = [...prev.recurringSchedules];
                           updatedSchedules[scheduleIndex] = {
@@ -1106,6 +1126,10 @@ const RecurringSchedule = ({
                           new Date(schedule.repeatUntil),
                           "yyyy-MM-dd",
                         ),
+                        locale:
+                          process.env.REACT_APP_LANG === "de"
+                            ? German
+                            : English,
                       }}
                       onChange={(dates) => {
                         const formattedDates = dates.map((date) =>
@@ -1183,19 +1207,19 @@ const RecurringSchedule = ({
             disabled={
               // Check if ALL schedules are complete, not just the last one
               !listingInput.recurringSchedules.every((schedule, index) =>
-                isRecurringScheduleComplete(schedule, index)
+                isRecurringScheduleComplete(schedule, index),
               )
             }
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               listingInput.recurringSchedules.every((schedule, index) =>
-                isRecurringScheduleComplete(schedule, index)
+                isRecurringScheduleComplete(schedule, index),
               )
                 ? "bg-indigo-500 text-white hover:bg-indigo-600 cursor-pointer"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             title={
               !listingInput.recurringSchedules.every((schedule, index) =>
-                isRecurringScheduleComplete(schedule, index)
+                isRecurringScheduleComplete(schedule, index),
               )
                 ? t("pleaseCompleteAllMandatoryFieldsBeforeAddingNewSchedule")
                 : ""
