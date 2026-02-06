@@ -35,7 +35,6 @@ import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
 import Delta from "quill-delta";
 import { daysOfWeek } from "../../Services/helper";
-import FlatPickerCommponent from "../../Components/FlatPickerCommponent";
 import RecurringSchedule from "../../Components/RecurringSchedule";
 import { German } from "flatpickr/dist/l10n/de";
 import { English } from "flatpickr/dist/l10n/default";
@@ -335,7 +334,7 @@ function UploadListings() {
         monthlyWeekday: "",
         dayOrdinal: "",
         startDate: "",
-        repeatUntil: "",
+        // repeatUntil: "",
         recurringEndTime: "",
       },
     ],
@@ -839,18 +838,6 @@ function UploadListings() {
           );
           setSelectedSingleCity(singleCityObject);
           setSelectedCities(multiCityObjects);
-
-          // Helper function to format UTC date to local timezone for input field
-          const formatUTCToLocal = (utcDateStr) => {
-            if (!utcDateStr) return "";
-            const date = new Date(utcDateStr);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const day = String(date.getDate()).padStart(2, "0");
-            const hours = String(date.getHours()).padStart(2, "0");
-            const minutes = String(date.getMinutes()).padStart(2, "0");
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-          };
 
           // Transform recurrenceRules from API format to component format
           const transformRecurrenceRules = (recurrenceRules) => {
@@ -1370,18 +1357,16 @@ function UploadListings() {
       return false;
     }
 
-    // Check if repeatUntil is filled
-    if (!schedule.repeatUntil) {
-      return false;
-    }
+    // Note: repeatUntil is optional, so we don't check for it here
 
     // Check if there are any validation errors for this schedule
     if (
       errors.recurringType ||
       errors.recurringDays ||
       errors.startDate ||
-      errors.recurringEndTime ||
-      errors.repeatUntil
+      errors.recurringEndTime
+      // ||
+      // errors.repeatUntil
     ) {
       return false;
     }
@@ -1788,8 +1773,8 @@ function UploadListings() {
               schedule?.startDate && schedule?.startDate !== "";
             const hasRecurringEndTime =
               schedule?.recurringEndTime && schedule?.recurringEndTime !== "";
-            const hasRepeatUntil =
-              schedule?.repeatUntil && schedule?.repeatUntil !== "";
+            // const hasRepeatUntil =
+            //   schedule?.repeatUntil && schedule?.repeatUntil !== "";
             const hasValidInterval =
               schedule?.interval && schedule?.interval >= 1;
 
@@ -1797,7 +1782,7 @@ function UploadListings() {
               !hasRecurringType ||
               !hasStartDate ||
               !hasRecurringEndTime ||
-              !hasRepeatUntil ||
+              // !hasRepeatUntil ||
               !hasValidInterval
             ) {
               isCategoryValid = false;
@@ -1850,7 +1835,7 @@ function UploadListings() {
               (scheduleError?.recurringType ||
                 scheduleError?.startDate ||
                 scheduleError?.recurringEndTime ||
-                scheduleError?.repeatUntil ||
+                // scheduleError?.repeatUntil ||
                 scheduleError?.recurringDays ||
                 scheduleError?.monthlyWeekday ||
                 scheduleError?.dayOrdinal ||

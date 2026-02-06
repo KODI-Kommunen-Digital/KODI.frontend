@@ -25,6 +25,13 @@ const RecurringSchedule = ({
       : [],
   };
 
+  // Helper function to safely get recurringSchedules array from error state
+  const getSafeRecurringSchedules = (prevError) => {
+    return Array.isArray(prevError?.recurringSchedules)
+      ? prevError.recurringSchedules
+      : [];
+  };
+
   return (
     <div className="relative mb-4">
       <div className="relative mb-4">
@@ -118,16 +125,23 @@ const RecurringSchedule = ({
                   onClick={() => {
                     setListingInput((prev) => ({
                       ...prev,
-                      recurringSchedules: prev.recurringSchedules.filter(
+                      recurringSchedules: prev?.recurringSchedules?.filter(
                         (_, idx) => idx !== scheduleIndex,
                       ),
                     }));
-                    setError((prevError) => ({
-                      ...prevError,
-                      recurringSchedules: prevError.recurringSchedules.filter(
-                        (_, idx) => idx !== scheduleIndex,
-                      ),
-                    }));
+                    setError((prevError) => {
+                      const prevSchedules = Array.isArray(
+                        prevError?.recurringSchedules,
+                      )
+                        ? prevError.recurringSchedules
+                        : [];
+                      return {
+                        ...prevError,
+                        recurringSchedules: prevSchedules.filter(
+                          (_, idx) => idx !== scheduleIndex,
+                        ),
+                      };
+                    });
                   }}
                   className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
                 >
@@ -258,7 +272,9 @@ const RecurringSchedule = ({
                     }
 
                     setError((prevError) => {
-                      const updatedErrors = [...prevError.recurringSchedules];
+                      const prevSchedules =
+                        getSafeRecurringSchedules(prevError);
+                      const updatedErrors = [...prevSchedules];
                       updatedErrors[scheduleIndex] = {
                         ...updatedErrors[scheduleIndex],
                         interval: errorMessage,
@@ -334,9 +350,9 @@ const RecurringSchedule = ({
 
                           // Validate weekday selection
                           setError((prevError) => {
-                            const updatedErrors = [
-                              ...prevError.recurringSchedules,
-                            ];
+                            const prevSchedules =
+                              getSafeRecurringSchedules(prevError);
+                            const updatedErrors = [...prevSchedules];
                             const updatedDays =
                               listingInput.recurringSchedules[scheduleIndex]
                                 .recurringDays || [];
@@ -418,9 +434,9 @@ const RecurringSchedule = ({
                           });
                           // Clear error when user selects/deselects a weekday
                           setError((prevError) => {
-                            const updatedErrors = [
-                              ...prevError.recurringSchedules,
-                            ];
+                            const prevSchedules =
+                              getSafeRecurringSchedules(prevError);
+                            const updatedErrors = [...prevSchedules];
                             updatedErrors[scheduleIndex] = {
                               ...updatedErrors[scheduleIndex],
                               monthlyWeekday: "",
@@ -485,7 +501,9 @@ const RecurringSchedule = ({
                       });
                       // Clear error
                       setError((prevError) => {
-                        const updatedErrors = [...prevError.recurringSchedules];
+                        const prevSchedules =
+                          getSafeRecurringSchedules(prevError);
+                        const updatedErrors = [...prevSchedules];
                         updatedErrors[scheduleIndex] = {
                           ...updatedErrors[scheduleIndex],
                           dayOrdinal: "",
@@ -607,9 +625,9 @@ const RecurringSchedule = ({
                           // Don't show error on initial empty state
                           if (previousValue) {
                             setError((prev) => {
-                              const updatedErrors = [
-                                ...prev.recurringSchedules,
-                              ];
+                              const prevSchedules =
+                                getSafeRecurringSchedules(prev);
+                              const updatedErrors = [...prevSchedules];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 startDate: t("pleaseEnterStartDate"),
@@ -625,9 +643,9 @@ const RecurringSchedule = ({
                           } else {
                             // Just clear errors if field was already empty
                             setError((prev) => {
-                              const updatedErrors = [
-                                ...prev.recurringSchedules,
-                              ];
+                              const prevSchedules =
+                                getSafeRecurringSchedules(prev);
+                              const updatedErrors = [...prevSchedules];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 startDate: "",
@@ -698,7 +716,8 @@ const RecurringSchedule = ({
 
                         // ✅ Update errors (clear automatically when valid)
                         setError((prev) => {
-                          const updatedErrors = [...prev.recurringSchedules];
+                          const prevSchedules = getSafeRecurringSchedules(prev);
+                          const updatedErrors = [...prevSchedules];
                           updatedErrors[scheduleIndex] = {
                             ...updatedErrors[scheduleIndex],
 
@@ -815,9 +834,9 @@ const RecurringSchedule = ({
                           // Only set error if field previously had a value (user actively cleared it)
                           if (previousValue) {
                             setError((prev) => {
-                              const updatedErrors = [
-                                ...prev.recurringSchedules,
-                              ];
+                              const prevSchedules =
+                                getSafeRecurringSchedules(prev);
+                              const updatedErrors = [...prevSchedules];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 recurringEndTime: t("pleaseEnterEndTime"),
@@ -830,9 +849,9 @@ const RecurringSchedule = ({
                           } else {
                             // Just clear error if field was already empty
                             setError((prev) => {
-                              const updatedErrors = [
-                                ...prev.recurringSchedules,
-                              ];
+                              const prevSchedules =
+                                getSafeRecurringSchedules(prev);
+                              const updatedErrors = [...prevSchedules];
                               updatedErrors[scheduleIndex] = {
                                 ...updatedErrors[scheduleIndex],
                                 recurringEndTime: "",
@@ -900,7 +919,8 @@ const RecurringSchedule = ({
 
                         // ✅ Set errors (auto clear when valid)
                         setError((prev) => {
-                          const updatedErrors = [...prev.recurringSchedules];
+                          const prevSchedules = getSafeRecurringSchedules(prev);
+                          const updatedErrors = [...prevSchedules];
                           updatedErrors[scheduleIndex] = {
                             ...updatedErrors[scheduleIndex],
                             startDate: startDateError, // ✅ clear/set startDate error
@@ -931,7 +951,9 @@ const RecurringSchedule = ({
                           }
 
                           setError((prev) => {
-                            const updatedErrors = [...prev.recurringSchedules];
+                            const prevSchedules =
+                              getSafeRecurringSchedules(prev);
+                            const updatedErrors = [...prevSchedules];
                             updatedErrors[scheduleIndex] = {
                               ...updatedErrors[scheduleIndex],
                               recurringEndTime: errorMessage,
@@ -985,16 +1007,17 @@ const RecurringSchedule = ({
                     placeholder={t("repeatUntil")}
                     t={t}
                     minDate={null}
+                    required={false}
                     customOnChange={(date) => {
-                      // Handle date clearing (repeatUntil is required for recurring)
+                      // Handle date clearing (repeatUntil is optional)
                       if (!date || date.length === 0 || !date[0]) {
-                        const previousValue = schedule.repeatUntil;
-
                         setListingInput((prev) => {
                           const updatedSchedules = [...prev.recurringSchedules];
                           updatedSchedules[scheduleIndex] = {
                             ...updatedSchedules[scheduleIndex],
                             repeatUntil: "",
+                            // Clear all exception dates when repeatUntil is removed
+                            exceptionDates: [],
                           };
                           return {
                             ...prev,
@@ -1002,33 +1025,19 @@ const RecurringSchedule = ({
                           };
                         });
 
-                        // Only set error if field previously had a value (user actively cleared it)
-                        if (previousValue) {
-                          setError((prev) => {
-                            const updatedErrors = [...prev.recurringSchedules];
-                            updatedErrors[scheduleIndex] = {
-                              ...updatedErrors[scheduleIndex],
-                              repeatUntil: t("pleaseEnterRepeatUntil"),
-                            };
-                            return {
-                              ...prev,
-                              recurringSchedules: updatedErrors,
-                            };
-                          });
-                        } else {
-                          // Just clear error if field was already empty
-                          setError((prev) => {
-                            const updatedErrors = [...prev.recurringSchedules];
-                            updatedErrors[scheduleIndex] = {
-                              ...updatedErrors[scheduleIndex],
-                              repeatUntil: "",
-                            };
-                            return {
-                              ...prev,
-                              recurringSchedules: updatedErrors,
-                            };
-                          });
-                        }
+                        // Clear any validation errors when clearing the field
+                        setError((prev) => {
+                          const prevSchedules = getSafeRecurringSchedules(prev);
+                          const updatedErrors = [...prevSchedules];
+                          updatedErrors[scheduleIndex] = {
+                            ...updatedErrors[scheduleIndex],
+                            repeatUntil: "",
+                          };
+                          return {
+                            ...prev,
+                            recurringSchedules: updatedErrors,
+                          };
+                        });
                         return;
                       }
 
@@ -1038,12 +1047,39 @@ const RecurringSchedule = ({
                         "yyyy-MM-dd'T'HH:mm",
                       );
 
-                      // ✅ Update repeatUntil
+                      // ✅ Update repeatUntil and filter exception dates
                       setListingInput((prev) => {
                         const updatedSchedules = [...prev.recurringSchedules];
+                        const currentSchedule = updatedSchedules[scheduleIndex];
+                        const currentExceptionDates =
+                          currentSchedule.exceptionDates || [];
+
+                        // Filter exception dates to only keep those between startDate and repeatUntil
+                        let filteredExceptionDates = currentExceptionDates;
+                        if (currentSchedule.startDate) {
+                          const startDate = new Date(currentSchedule.startDate);
+                          const repeatUntilDate = new Date(formattedDate);
+
+                          // Set time to start of day for date comparison
+                          startDate.setHours(0, 0, 0, 0);
+                          repeatUntilDate.setHours(0, 0, 0, 0);
+
+                          filteredExceptionDates = currentExceptionDates.filter(
+                            (exceptionDateStr) => {
+                              const exceptionDate = new Date(exceptionDateStr);
+                              exceptionDate.setHours(0, 0, 0, 0);
+                              return (
+                                exceptionDate >= startDate &&
+                                exceptionDate <= repeatUntilDate
+                              );
+                            },
+                          );
+                        }
+
                         updatedSchedules[scheduleIndex] = {
                           ...updatedSchedules[scheduleIndex],
                           repeatUntil: formattedDate,
+                          exceptionDates: filteredExceptionDates,
                         };
                         return {
                           ...prev,
@@ -1082,7 +1118,8 @@ const RecurringSchedule = ({
 
                       // ✅ Set errors (auto clear when valid)
                       setError((prev) => {
-                        const updatedErrors = [...prev.recurringSchedules];
+                        const prevSchedules = getSafeRecurringSchedules(prev);
+                        const updatedErrors = [...prevSchedules];
                         updatedErrors[scheduleIndex] = {
                           ...updatedErrors[scheduleIndex],
                           startDate: startDateError, // ✅ clear/set startDate error
@@ -1099,8 +1136,8 @@ const RecurringSchedule = ({
                   />
                 </div>
 
-                {/* Exception Dates - Only show if both start date and repeat until are set */}
-                {schedule.startDate && schedule.repeatUntil && (
+                {/* Exception Dates - Show if start date is present */}
+                {schedule.startDate && (
                   <div className="relative">
                     <label
                       htmlFor={`exceptionDates-${scheduleIndex}`}
@@ -1110,6 +1147,9 @@ const RecurringSchedule = ({
                       {t("exceptionDates")} ({t("optional")})
                     </label>
                     <Flatpickr
+                      key={`exceptionDates-${scheduleIndex}-${
+                        schedule.repeatUntil || "no-repeat-until"
+                      }`}
                       id={`exceptionDates-${scheduleIndex}`}
                       name="exceptionDates"
                       value={schedule.exceptionDates}
@@ -1122,10 +1162,12 @@ const RecurringSchedule = ({
                           new Date(schedule.startDate),
                           "yyyy-MM-dd",
                         ),
-                        maxDate: format(
-                          new Date(schedule.repeatUntil),
-                          "yyyy-MM-dd",
-                        ),
+                        ...(schedule.repeatUntil && {
+                          maxDate: format(
+                            new Date(schedule.repeatUntil),
+                            "yyyy-MM-dd",
+                          ),
+                        }),
                         locale:
                           process.env.REACT_APP_LANG === "de"
                             ? German
@@ -1151,10 +1193,25 @@ const RecurringSchedule = ({
                       placeholder={t("selectExceptionDates")}
                     />
                     <div className="mt-1 text-xs text-gray-500">
-                      {t("selectDatesToExcludeFromRecurring")} ({t("Between")}{" "}
-                      {format(new Date(schedule.startDate), "MMM dd, yyyy")} -{" "}
-                      {format(new Date(schedule.repeatUntil), "MMM dd, yyyy")})
-                      - {t("startDateEndDateSelectable")}
+                      {t("selectDatesToExcludeFromRecurring")}{" "}
+                      {schedule.repeatUntil ? (
+                        <>
+                          ({t("Between")}{" "}
+                          {format(new Date(schedule.startDate), "MMM dd, yyyy")}{" "}
+                          -{" "}
+                          {format(
+                            new Date(schedule.repeatUntil),
+                            "MMM dd, yyyy",
+                          )}
+                          ) - {t("startDateEndDateSelectable")}
+                        </>
+                      ) : (
+                        <>
+                          ({t("From")}{" "}
+                          {format(new Date(schedule.startDate), "MMM dd, yyyy")}
+                          )
+                        </>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1187,22 +1244,25 @@ const RecurringSchedule = ({
                   },
                 ],
               }));
-              setError((prevError) => ({
-                ...prevError,
-                recurringSchedules: [
-                  ...prevError.recurringSchedules,
-                  {
-                    recurringType: "",
-                    recurringDays: "",
-                    monthlyWeekday: "",
-                    dayOrdinal: "",
-                    interval: "",
-                    startDate: "",
-                    repeatUntil: "",
-                    recurringEndTime: "",
-                  },
-                ],
-              }));
+              setError((prevError) => {
+                const prevSchedules = getSafeRecurringSchedules(prevError);
+                return {
+                  ...prevError,
+                  recurringSchedules: [
+                    ...prevSchedules,
+                    {
+                      recurringType: "",
+                      recurringDays: "",
+                      monthlyWeekday: "",
+                      dayOrdinal: "",
+                      interval: "",
+                      startDate: "",
+                      repeatUntil: "",
+                      recurringEndTime: "",
+                    },
+                  ],
+                };
+              });
             }}
             disabled={
               // Check if ALL schedules are complete, not just the last one
