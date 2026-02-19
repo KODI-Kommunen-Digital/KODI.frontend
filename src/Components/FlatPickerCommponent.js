@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import { format } from "date-fns";
+import { German } from "flatpickr/dist/l10n/de";
+import { English } from "flatpickr/dist/l10n/default";
 
 /**
  * FlatPickerComponent - A reusable date/time picker component
@@ -61,7 +63,26 @@ const FlatPickerCommponent = ({
       return;
     }
 
-    if (!date || date.length === 0) return;
+    // Handle date clearing - update state to empty string
+    if (!date || date.length === 0) {
+      setListingInput((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+
+      // If field is required, validate to show error; otherwise clear error
+      if (required && validateInput) {
+        validateInput({
+          target: {
+            name,
+            value: "",
+          },
+        });
+      } else {
+        setError((prev) => ({ ...prev, [name]: "" }));
+      }
+      return;
+    }
 
     const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
 
@@ -71,8 +92,7 @@ const FlatPickerCommponent = ({
       [name]: formattedDate,
     }));
 
-    // Clear error when user is selecting a date
-    setError((prev) => ({ ...prev, [name]: "" }));
+    // Don't clear error here - let validation in handleClose handle it
   };
 
   const handleClose = (selectedDates, dateStr, instance) => {
@@ -82,8 +102,11 @@ const FlatPickerCommponent = ({
       return;
     }
 
-    // Validate only after date picker closes
-    if (dateStr && validateInput) {
+    // Only validate if a date was actually selected (dateStr is not empty)
+    // This prevents:
+    // 1. Showing "required" errors when user just opens/closes without selecting
+    // 2. Triggering validation when user clears the date (already handled in handleChange)
+    if (validateInput && dateStr) {
       validateInput({
         target: {
           name,
@@ -113,9 +136,23 @@ const FlatPickerCommponent = ({
           time_24hr: true, // eslint-disable-line camelcase
           clickOpens: true,
           allowInput: false,
+          locale: process.env.REACT_APP_LANG === "de" ? German : English,
           ...(effectiveMinDate && { minDate: effectiveMinDate }),
           ...(effectiveMaxDate && { maxDate: effectiveMaxDate }),
           onClose: handleClose,
+          // Custom parseDate to handle UTC strings without timezone conversion
+          parseDate: (dateStr) => {
+            if (!dateStr) return null;
+            // If date ends with 'Z', treat it as the literal time (not UTC)
+            // Example: "2026-01-01T13:00:00.000Z" -> show as 13:00 local time
+            let d = dateStr;
+            if (d.endsWith("Z")) {
+              d = d.slice(0, -1);
+            }
+            // Remove milliseconds if present
+            d = d.replace(/\.\d{3}/, "");
+            return new Date(d);
+          },
           ...additionalOptions,
         }}
         onChange={handleChange}

@@ -21,7 +21,10 @@ import {
   deleteListingsById,
 } from "../../Services/favoritesApi";
 import LoadingPage from "../../Components/LoadingPage";
-import { getCategory, getListingsSubCategory } from "../../Services/CategoryApi";
+import {
+  getCategory,
+  getListingsSubCategory,
+} from "../../Services/CategoryApi";
 import PDFDisplay from "../../Components/PdfViewer";
 import listingSource from "../../Constants/listingSource";
 import RegionColors from "../../Components/RegionColors";
@@ -56,8 +59,11 @@ const Description = (props) => {
           .map((child) => processElement(child))
           .join("");
         return `<i>${italicText}</i>`;
-      } else if (element.nodeName === "U" ||
-        (element.nodeName === "SPAN" && element.style.textDecoration.includes("underline"))) {
+      } else if (
+        element.nodeName === "U" ||
+        (element.nodeName === "SPAN" &&
+          element.style.textDecoration.includes("underline"))
+      ) {
         const underlineText = Array.from(element.childNodes)
           .map((child) => processElement(child))
           .join("");
@@ -83,7 +89,7 @@ const Description = (props) => {
     text = text.replace(
       urlRegex,
       (url) =>
-        `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+        `<a class="underline" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`,
     );
 
     const anchorTagRegex = /<a\s+href="([^"]+)"(.*?)>(.*?)<\/a>/gi;
@@ -93,7 +99,7 @@ const Description = (props) => {
         if (/class="/.test(attributes)) {
           return `<a href="${url}" ${attributes.replace(
             /class="/,
-            'class="underline '
+            'class="underline ',
           )}>${linkText}</a>`;
         } else {
           return `<a href="${url}" class="underline" ${attributes}>${linkText}</a>`;
@@ -114,8 +120,9 @@ const Description = (props) => {
             if (ad && ad.image && ad.link) {
               const parser = new DOMParser();
               const parsed = parser.parseFromString(linkedContent, "text/html");
-              const tag = `<img src=${process.env.REACT_APP_BUCKET_HOST + ad.image
-                } alt="Ad" href=${ad.link}/>`;
+              const tag = `<img src=${
+                process.env.REACT_APP_BUCKET_HOST + ad.image
+              } alt="Ad" href=${ad.link}/>`;
               const a = document.createElement("a");
               const text = document.createElement("p");
               text.className = "text-right";
@@ -197,7 +204,9 @@ const Listing = () => {
     villagedropdown: "",
     zipcode: "",
     discountedPrice: "",
+    upcomingDates: [],
   });
+  const [showCount, setShowCount] = useState(5);
 
   const [favoriteId, setFavoriteId] = useState(0);
   const [cityId, setCityId] = useState(0);
@@ -213,6 +222,7 @@ const Listing = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [userSocial, setUserSocial] = useState([]);
+  const sortedDates = input?.upcomingDates || [];
 
   useEffect(() => {
     document.title =
@@ -257,7 +267,7 @@ const Listing = () => {
       fetchListing
         .then((listingsResponse) => {
           setIsActive(
-            listingsResponse.data.data.statusId === statusByName.Active
+            listingsResponse.data.data.statusId === statusByName.Active,
           );
 
           if (
@@ -291,7 +301,7 @@ const Listing = () => {
                   const favorite = response.data.data.find(
                     (f) =>
                       f.listingId === parseInt(listingId) &&
-                      (!isV2Backend || f.cityId === parseInt(cityId))
+                      (!isV2Backend || f.cityId === parseInt(cityId)),
                   );
                   if (favorite) {
                     setFavoriteId(favorite.id);
@@ -313,18 +323,21 @@ const Listing = () => {
             setWebsite(listingsResponse.data.data.website);
             setCreatedAt(
               new Intl.DateTimeFormat("de-DE").format(
-                Date.parse(listingsResponse.data.data.createdAt)
-              )
+                Date.parse(listingsResponse.data.data.createdAt),
+              ),
             );
           }
 
           if (listingsResponse.data.data?.categoryId) {
             getListingsSubCategory(listingsResponse.data.data.categoryId)
               .then((subCats) => {
-                const transformedSubCategories = subCats?.data?.data.reduce((acc, subCategory) => {
-                  acc[subCategory.id] = subCategory.name;
-                  return acc;
-                }, {});
+                const transformedSubCategories = subCats?.data?.data.reduce(
+                  (acc, subCategory) => {
+                    acc[subCategory.id] = subCategory.name;
+                    return acc;
+                  },
+                  {},
+                );
 
                 // Set the transformed subcategories
                 setSubCategories(transformedSubCategories);
@@ -345,7 +358,6 @@ const Listing = () => {
         const response = await getListings(params);
         const data = response.data.data;
         setListings(data);
-
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
@@ -382,10 +394,10 @@ const Listing = () => {
       getListings({ categoryId: selectedCategoryId, statusId: 1 }).then(
         (response) => {
           const filteredListings = response.data.data.filter(
-            (listing) => listing.id !== listingId
+            (listing) => listing.id !== listingId,
           );
           setListings(filteredListings);
-        }
+        },
       );
     }
   }, [selectedCategoryId, listingId]);
@@ -404,13 +416,13 @@ const Listing = () => {
         } else {
           postData.cityId
             ? postFavoriteListingsData(postData)
-              .then((response) => {
-                setFavoriteId(response.data.id);
-                // setHandleClassName(
-                //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
-                // );
-              })
-              .catch((err) => console.log("Error", err))
+                .then((response) => {
+                  setFavoriteId(response.data.id);
+                  // setHandleClassName(
+                  //   "rounded-md bg-white border border-gray-900 text-gray-900 py-2 px-4 text-sm cursor-pointer"
+                  // );
+                })
+                .catch((err) => console.log("Error", err))
             : console.log("Error");
         }
       } else {
@@ -464,11 +476,12 @@ const Listing = () => {
           <div className="mx-auto w-full flex flex-col lg:flex-row max-w-2xl gap-y-8 gap-x-8 pt-24 pb-8 px-4 sm:px-6 sm:pt-32 sm:pb-8 lg:max-w-7xl lg:pt-24 lg:pb-4">
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 gap-4 col-span-2">
-
                 {terminalView && (
                   <div className="w-full sm:w-60">
                     <a
-                      onClick={() => navigateTo("/AllListings?terminalView=true")}
+                      onClick={() =>
+                        navigateTo("/AllListings?terminalView=true")
+                      }
                       className="flex items-center text-white bg-green-600 py-2 px-6 gap-2 rounded-lg cursor-pointer"
                       style={{ fontFamily: "Poppins, sans-serif" }}
                     >
@@ -491,7 +504,7 @@ const Listing = () => {
                 <div className="lg:w-full md:w-full h-full">
                   <div className="md:grid md:gap-6 bg-white rounded-lg p-8 flex flex-col shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full">
                     <div className="mt-5 md:col-span-2 md:mt-0">
-                      <form method="POST">
+                      <form method="POST" onSubmit={(e) => e.preventDefault()}>
                         <div className="flex flex-col sm:flex-row sm:items-center text-start justify-between">
                           <h1 className="text-slate-800 mb-4 text-2xl md:text-3xl mt-4 lg:text-3xl title-font text-start font-bold overflow-hidden">
                             <span
@@ -514,25 +527,28 @@ const Listing = () => {
                               fill={
                                 terminalView
                                   ? "#16a34a" // Green-600
-                                  : process.env.REACT_APP_NAME === "Salzkotten APP"
-                                    ? "#fecc00"
-                                    : process.env.REACT_APP_NAME === "FICHTEL"
-                                      ? "#4d7c0f"
-                                      : "#1e40af"
+                                  : process.env.REACT_APP_NAME ===
+                                    "Salzkotten APP"
+                                  ? "#fecc00"
+                                  : process.env.REACT_APP_NAME === "FICHTEL"
+                                  ? "#4d7c0f"
+                                  : "#1e40af"
                               }
                             >
                               <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192h80v56H48V192zm0 104h80v64H48V296zm128 0h96v64H176V296zm144 0h80v64H320V296zm80-48H320V192h80v56zm0 160v40c0 8.8-7.2 16-16 16H320V408h80zm-128 0v56H176V408h96zm-144 0v56H64c-8.8 0-16-7.2-16-16V408h80zM272 248H176V192h96v56z" />
                             </svg>
                             <p
-                              className={`leading-relaxed text-base ${terminalView ? "text-green-600" : RegionColors.darkTextColor
-                                }`}
+                              className={`leading-relaxed text-base ${
+                                terminalView
+                                  ? "text-green-600"
+                                  : RegionColors.darkTextColor
+                              }`}
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             >
                               {t("uploaded_on")} {createdAt}
                             </p>
-
                           </div>
 
                           {!terminalView && (
@@ -545,14 +561,17 @@ const Listing = () => {
                                   className={`w-48 h-48 rounded rotate-[-40deg] ${RegionColors.lightBgColor} absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0`}
                                 ></span>
                                 <span className="relative w-full text-left text-slate-800 transition-colors duration-300 ease-in-out group-hover:text-white">
-                                  {favoriteId !== 0 ? t("unfavorite") : t("favourites")}
+                                  {favoriteId !== 0
+                                    ? t("unfavorite")
+                                    : t("favourites")}
                                 </span>
                               </a>
                             </div>
                           )}
                           <div
-                            className={`md:hidden block flex items-center mt-6 ${terminalView ? "hidden" : "visible"
-                              }`}
+                            className={`md:hidden block flex items-center mt-6 ${
+                              terminalView ? "hidden" : "visible"
+                            }`}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -578,8 +597,10 @@ const Listing = () => {
                               }}
                             >
                               {t(categories[input.categoryId])}
-                              {input.subcategoryId && subCategories[input.subcategoryId] ? ` - ${t(subCategories[input.subcategoryId])}` : ''}
-
+                              {input.subcategoryId &&
+                              subCategories[input.subcategoryId]
+                                ? ` - ${t(subCategories[input.subcategoryId])}`
+                                : ""}
                             </p>
                           </div>
 
@@ -594,11 +615,11 @@ const Listing = () => {
                                 <>
                                   <span>
                                     {new Date(
-                                      input.startDate.slice(0, 10)
+                                      input.startDate.slice(0, 10),
                                     ).toLocaleDateString("de-DE")}{" "}
                                     (
                                     {new Date(
-                                      input.startDate.replace("Z", "")
+                                      input.startDate.replace("Z", ""),
                                     ).toLocaleTimeString("de-DE", {
                                       hour: "2-digit",
                                       minute: "2-digit",
@@ -616,11 +637,11 @@ const Listing = () => {
                                       </span>
                                       <span>
                                         {new Date(
-                                          input.endDate.slice(0, 10)
+                                          input.endDate.slice(0, 10),
                                         ).toLocaleDateString("de-DE")}{" "}
                                         (
                                         {new Date(
-                                          input.endDate.replace("Z", "")
+                                          input.endDate.replace("Z", ""),
                                         ).toLocaleTimeString("de-DE", {
                                           hour: "2-digit",
                                           minute: "2-digit",
@@ -640,6 +661,115 @@ const Listing = () => {
                                 fontFamily: "Poppins, sans-serif",
                               }}
                             ></p>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-1 justify-between mt-6">
+                          {/* LEFT SIDE */}
+                          {Number(input?.categoryId) === 3 &&
+                            input?.upcomingDates?.length > 0 && (
+                              <div className="min-w-[120px]">
+                                <p
+                                  className="text-start font-bold"
+                                  style={{ fontFamily: "Poppins, sans-serif" }}
+                                >
+                                  {t("upcommingEvent")}
+                                </p>
+                              </div>
+                            )}
+
+                          {/* RIGHT SIDE */}
+                          {input?.id &&
+                          Number(input?.categoryId) === 3 &&
+                          sortedDates.length > 0 ? (
+                            <div className="flex flex-col items-start gap-1">
+                              {sortedDates
+                                .slice(0, showCount)
+                                .map((dateItem, idx) => (
+                                  <p
+                                    key={idx}
+                                    className="leading-relaxed text-base dark:text-slate-800 font-bold whitespace-nowrap"
+                                    style={{
+                                      fontFamily: "Poppins, sans-serif",
+                                    }}
+                                  >
+                                    <span>
+                                      {new Date(
+                                        dateItem.startDate.slice(0, 10),
+                                      ).toLocaleDateString("de-DE")}
+                                      {" ("}
+                                      {new Date(
+                                        dateItem.startDate.replace("Z", ""),
+                                      ).toLocaleTimeString("de-DE", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        timeZone: "Europe/Berlin",
+                                      })}
+                                      {")"}
+                                    </span>
+
+                                    <span
+                                      className={RegionColors.lightTextColor}
+                                    >
+                                      {" "}
+                                      {t("To")}{" "}
+                                    </span>
+
+                                    <span>
+                                      {new Date(
+                                        dateItem.endDate.slice(0, 10),
+                                      ).toLocaleDateString("de-DE")}
+                                      {" ("}
+                                      {new Date(
+                                        dateItem.endDate.replace("Z", ""),
+                                      ).toLocaleTimeString("de-DE", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        timeZone: "Europe/Berlin",
+                                      })}
+                                      {")"}
+                                    </span>
+                                  </p>
+                                ))}
+
+                              {/* Buttons */}
+                              {sortedDates.length > 5 && (
+                                <div className="relative flex items-center justify-center my-3 w-full">
+                                  {/* Left divider */}
+                                  <div className="flex-grow border-t border-gray-300"></div>
+
+                                  {/* Button */}
+                                  {showCount === 5 ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowCount(10)}
+                                      className="mx-3 px-4 py-1.5 text-sm font-semibold rounded-full
+                                      bg-white border border-gray-400 text-gray-700
+                                      hover:bg-gray-100 hover:border-gray-600
+                                      transition-all duration-200 shadow-sm"
+                                    >
+                                      {t("viewMores")} +
+                                      {Math.min(5, sortedDates.length - 5)}
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowCount(5)}
+                                      className="mx-3 px-4 py-1.5 text-sm font-semibold rounded-full
+                                     bg-white border border-gray-400 text-gray-700
+                                     hover:bg-gray-100 hover:border-gray-600
+                                     transition-all duration-200 shadow-sm"
+                                    >
+                                      {t("viewLess")}
+                                    </button>
+                                  )}
+
+                                  {/* Right divider */}
+                                  <div className="flex-grow border-t border-gray-300"></div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div />
                           )}
                         </div>
                       </form>
@@ -684,7 +814,9 @@ const Listing = () => {
                           </div>
                         ) : input.logo ? (
                           <CustomCarousel
-                            imageList={isV2Backend ? input.otherLogos : input.otherlogos}
+                            imageList={
+                              isV2Backend ? input.otherLogos : input.otherlogos
+                            }
                             sourceId={input.sourceId}
                             appointmentId={input.appointmentId || null}
                           />
@@ -742,11 +874,14 @@ const Listing = () => {
                         navigateTo(
                           user
                             ? `/ViewProfile/${user.username}`
-                            : "/ViewProfile"
+                            : "/ViewProfile",
                         )
                       }
-                      className={`rounded-t-lg h-32 ${terminalView ? "bg-green-600" : RegionColors.lightBgColor
-                        } overflow-hidden`}
+                      className={`rounded-t-lg h-32 ${
+                        terminalView
+                          ? "bg-green-600"
+                          : RegionColors.lightBgColor
+                      } overflow-hidden`}
                     >
                       {/* How to add image instead of color */}
                       {/* <img
@@ -760,7 +895,7 @@ const Listing = () => {
                         navigateTo(
                           user
                             ? `/ViewProfile/${user.username}`
-                            : "/ViewProfile"
+                            : "/ViewProfile",
                         )
                       }
                       className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden flex items-center justify-center"
@@ -791,7 +926,11 @@ const Listing = () => {
                         <div className="hidden lg:flex">
                           <a
                             onClick={() =>
-                              navigateTo(user ? `/ViewProfile/${user.username}` : "/ViewProfile")
+                              navigateTo(
+                                user
+                                  ? `/ViewProfile/${user.username}`
+                                  : "/ViewProfile",
+                              )
                             }
                             className={`relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all bg-white rounded-lg hover:bg-white group border cursor-pointer ${RegionColors.lightBorderColor}`}
                           >
@@ -822,51 +961,51 @@ const Listing = () => {
 
                 {isLoggedIn
                   ? input.id &&
-                  input.categoryId === 18 && (
-                    <a
-                      onClick={() =>
-                        navigateTo(
-                          `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`
-                        )
-                      }
-                      className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
-                    >
-                      <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                        <svg
-                          className="w-6 h-6"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"
-                          ></path>
-                        </svg>
-                      </span>
-                      <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">
-                        {t("clickHereToBook")}
-                      </span>
-                      <span className="relative invisible">
-                        {t("clickHereToBook")}
-                      </span>
-                    </a>
-                  )
-                  : input.id &&
-                  input.categoryId === 18 && (
-                    <div className="w-full items-center text-center justify-center">
-                      <p
-                        className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
-                        style={{ fontFamily: "Poppins, sans-serif" }}
-                        onClick={() => navigateTo("/login")}
+                    input.categoryId === 18 && (
+                      <a
+                        onClick={() =>
+                          navigateTo(
+                            `/Listings/BookAppointments?listingId=${listingId}&cityId=${cityId}`,
+                          )
+                        }
+                        className="relative w-full mt-4 inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-black transition duration-300 ease-out border-2 border-black rounded-full shadow-md group cursor-pointer"
                       >
-                        {t("pleaseLogin")}
-                      </p>
-                    </div>
-                  )}
+                        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                          <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            ></path>
+                          </svg>
+                        </span>
+                        <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">
+                          {t("clickHereToBook")}
+                        </span>
+                        <span className="relative invisible">
+                          {t("clickHereToBook")}
+                        </span>
+                      </a>
+                    )
+                  : input.id &&
+                    input.categoryId === 18 && (
+                      <div className="w-full items-center text-center justify-center">
+                        <p
+                          className="text-slate-800 hover:text-slate-100 rounded-lg font-bold bg-slate-100 hover:bg-slate-800 my-4 p-8 title-font text-sm items-center text-center border-l-4 border-blue-400 duration-300 group-hover:translate-x-0 ease"
+                          style={{ fontFamily: "Poppins, sans-serif" }}
+                          onClick={() => navigateTo("/login")}
+                        >
+                          {t("pleaseLogin")}
+                        </p>
+                      </div>
+                    )}
               </div>
             </div>
           </div>
@@ -899,7 +1038,7 @@ const Listing = () => {
                       .filter(
                         (listing) =>
                           listing.statusId === statusByName.Active &&
-                          listing.id !== listingId
+                          listing.id !== listingId,
                       )
                       .map((listing, index) => (
                         <ListingsCard
@@ -932,7 +1071,7 @@ const Listing = () => {
                     onClick={() => {
                       localStorage.setItem(
                         "selectedItem",
-                        "Choose one category"
+                        "Choose one category",
                       );
                       isLoggedIn
                         ? navigateTo("/UploadListings")

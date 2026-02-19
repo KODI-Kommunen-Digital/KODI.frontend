@@ -12,9 +12,9 @@ export default function HomePageNavBar() {
   const searchParams = new URLSearchParams(location.search);
   const terminalViewParam = searchParams.get("terminalView");
   const buttonClass = terminalViewParam === "true" ? "hidden" : "visible";
-  const [cityId, setCityId] = useState();
+  const [cityId, setCityId] = useState(0);
   const [cities, setCities] = useState([]);
-  const [categoryId, setCategoryId] = useState();
+  // const [categoryId, setCategoryId] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const navigateTo = (path) => {
@@ -42,20 +42,22 @@ export default function HomePageNavBar() {
     const urlParams = new URLSearchParams(window.location.search);
     getCities().then((citiesResponse) => {
       const sortedCities = citiesResponse.data.data.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
       setCities(sortedCities);
     });
 
-    const cityId = parseInt(urlParams.get("cityId"));
-    if (cityId) {
-      setCityId(cityId);
+    const cityIdParam = urlParams.get("cityId");
+    if (cityIdParam !== null) {
+      const parsedCityId = Number(cityIdParam);
+      setCityId(!Number.isNaN(parsedCityId) ? parsedCityId : 0);
     }
-    const categoryId = parseInt(urlParams.get("categoryId"));
-    if (categoryId) {
-      setCategoryId(categoryId);
-    }
-  }, []);
+
+    // const categoryId = parseInt(urlParams.get("categoryId"));
+    // if (categoryId) {
+    //   setCategoryId(categoryId);
+    // }
+  }, [location.search]);
 
   const handleLoginLogout = () => {
     if (isLoggedIn) {
@@ -93,25 +95,28 @@ export default function HomePageNavBar() {
 
   const onCityChange = (e) => {
     const selectedCityId = parseInt(e.target.value, 10); // Ensure it's a number
-    const selectedCategoryId = categoryId; // Assuming categoryId is available in scope
-
+    const urlParams = new URLSearchParams(window.location.search);
     if (selectedCityId === 0) {
       setCityId(0);
-      window.location.href = "/";
+      // Remove cityId but preserve all other filters
+      urlParams.delete("cityId");
+      const queryString = urlParams.toString();
+      const newUrl = queryString ? `/?${queryString}` : "/";
+      navigate(newUrl, { replace: true });
     } else {
       const selectedCity = cities.find((city) => city.id === selectedCityId);
 
       if (selectedCity) {
         setCityId(selectedCityId);
-        if (selectedCategoryId) {
-          window.location.href = `?cityId=${selectedCityId}&categoryId=${selectedCategoryId}`;
-        } else {
-          window.location.href = `?cityId=${selectedCityId}`;
-        }
+        // Update cityId while preserving all existing URL parameters (filters)
+        // Preserve: categoryId, startDate, endDate, sort, eventTab, and any other params
+        urlParams.set("cityId", selectedCityId);
+        const queryString = urlParams.toString();
+        const newUrl = `/?${queryString}`;
+        navigate(newUrl, { replace: true });
       }
     }
   };
-
   return (
     <div className="w-full fixed top-0 z-10">
       <Popover

@@ -1062,7 +1062,7 @@
     "allSubcategories": "Alle Unterkategorien",
     "eventType": "Ereignistyp",
     "chooseEventType": "Ereignistyp auswählen",
-    "multiDay": "Mehrere Tage",
+    "multiDay": "Mehrfach Tage",
     "singleDay": "Einzelner Tag",
     "recurring": "Wiederkehrend",
     "recurringType": "Wiederholungstyp",
@@ -1108,7 +1108,11 @@
     "pleaseEnterValidInterval": "Bitte geben Sie ein gültiges Intervall größer als 0 ein",
     "repeatUntilMustBeGreaterThanStartDate": "Das Datum „Wiederholen bis“ muss nach dem Startdatum liegen",
     "interval": "Intervall",
-    "startTimeMustbelessThanEndTime": "Die Startzeit muss vor der Endzeit liegen.",
+    "startTimeMustbelessThanEndTime": "Das Startdatum muss vor dem Enddatum liegen.",
     "startDateMustBeLessThanRepeatUntil": "Das Startdatum muss vor dem Wiederholungsdatum liegen.",
-    "invalidRecurrenceRule": "Ungültige Wiederholungsregel: Die Wiederholungsdauer darf 2 Jahre nicht überschreiten."
+    "invalidRecurrenceRule": "Ungültige Wiederholungsregel: Die Wiederholungsdauer darf 2 Jahre nicht überschreiten.",
+    "upcommingEvent": "Bevorstehende Veranstaltungen",
+    "viewLess": "Weniger anzeigen",
+    "viewMores": "Mehr anzeigen",
+    "pleaseEnterRepeatUntil": "Bitte geben Sie das Datum für die Wiederholung ein."
 }
