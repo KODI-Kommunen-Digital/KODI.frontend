@@ -702,7 +702,9 @@ function UploadListings() {
           const listingsResponse = await getListingsById(null, listingId);
 
           const listingData = listingsResponse.data.data;
-          const allCities = listingData.allCities || [];
+          const allCities = Array.isArray(listingData.allCities)
+            ? listingData.allCities
+            : [];
 
           const [firstCityId, ...otherCityIds] = allCities;
           const singleCityObject =
@@ -713,20 +715,56 @@ function UploadListings() {
           setSelectedSingleCity(singleCityObject);
           setSelectedCities(multiCityObjects);
 
-          setListingInput({
-            ...listingInput,
-            cityIds: allCities.length > 0 ? allCities : [listingData.cityId],
-            title: listingData.title || "",
-            categoryId: listingData.categoryId,
-            // subcategoryId: listingData.subcategoryId,
-            description: listingData.description,
-            startDate: listingData.startDate || "",
-            endDate: listingData.endDate || "",
-            expiryDate: listingData.expiryDate || "",
-            notify: listingData.notify,
-          });
-          setDescription(listingData.description);
-          setCategoryId(listingData.categoryId);
+          const normalizeText = (value) => (value == null ? "" : String(value));
+          const normalizeBoolean = (value) =>
+            value === true ||
+            value === 1 ||
+            value === "1" ||
+            value === "true";
+          const normalizeNumber = (value, fallback = 0) => {
+            if (value == null) {
+              return fallback;
+            }
+
+            const parsedValue = Number(value);
+            return Number.isFinite(parsedValue) ? parsedValue : fallback;
+          };
+          const normalizedDescription = normalizeText(listingData.description);
+          const normalizedCategoryId = normalizeNumber(listingData.categoryId);
+          const normalizedCityIds =
+            allCities.length > 0
+              ? allCities
+              : listingData.cityId != null
+                ? [listingData.cityId]
+                : [];
+
+          setListingInput((prevState) => ({
+            ...prevState,
+            cityIds: normalizedCityIds,
+            title: normalizeText(listingData.title),
+            place: normalizeText(listingData.place),
+            address: normalizeText(listingData.address),
+            phone: normalizeText(listingData.phone),
+            website: normalizeText(listingData.website),
+            email: normalizeText(listingData.email),
+            categoryId: normalizedCategoryId,
+            statusId: normalizeNumber(listingData.statusId, prevState.statusId),
+            appointmentId: listingData.appointmentId ?? null,
+            description: normalizedDescription,
+            startDate: normalizeText(listingData.startDate),
+            endDate: normalizeText(listingData.endDate),
+            expiryDate: normalizeText(listingData.expiryDate),
+            originalPrice: normalizeText(
+              listingData.originalPrice ?? listingData.price
+            ),
+            discountedPrice: normalizeText(
+              listingData.discountedPrice ?? listingData.discountPrice
+            ),
+            zipCode: normalizeText(listingData.zipCode ?? listingData.zipcode),
+            notify: normalizeBoolean(listingData.notify),
+          }));
+          setDescription(normalizedDescription);
+          setCategoryId(normalizedCategoryId);
           // setSubcategoryId(listingData.subcategoryId);
 
           if (listingData.categoryId === 1 && !listingData.expiryDate) {
