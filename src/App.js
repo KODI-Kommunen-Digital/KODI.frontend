@@ -109,6 +109,25 @@ const App = () => {
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
 
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    };
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ["+", "-", "="].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <div>
