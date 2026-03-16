@@ -143,6 +143,10 @@ li {
 
 html,
 body {
-  touch-action: manipulation;
+  touch-action: pan-x pan-y;
   overscroll-behavior: none;
+}
+
+iframe {
+  touch-action: pan-x pan-y;
 }

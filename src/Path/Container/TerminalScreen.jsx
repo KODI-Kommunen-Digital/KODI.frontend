@@ -55,6 +55,45 @@ const TerminalScreen = () => {
         };
     }, [trackEvent]);
 
+    useEffect(() => {
+        const preventWheelZoom = (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        };
+
+        document.addEventListener('wheel', preventWheelZoom, { passive: false, capture: true });
+
+        const initialDPR = window.devicePixelRatio;
+
+        const counterBrowserZoom = () => {
+            const zoomRatio = window.devicePixelRatio / initialDPR;
+            if (Math.abs(zoomRatio - 1) > 0.05) {
+                document.documentElement.style.zoom = `${1 / zoomRatio}`;
+            } else {
+                document.documentElement.style.zoom = '';
+            }
+        };
+
+        let dprMediaQuery;
+        const monitorDPR = () => {
+            dprMediaQuery = window.matchMedia(
+                `(resolution: ${window.devicePixelRatio}dppx)`
+            );
+            dprMediaQuery.addEventListener('change', () => {
+                counterBrowserZoom();
+                monitorDPR();
+            }, { once: true });
+        };
+        monitorDPR();
+
+        return () => {
+            document.removeEventListener('wheel', preventWheelZoom, { capture: true });
+            document.documentElement.style.zoom = '';
+        };
+    }, []);
+
     const handleShiftToMiddle = () => {
         if (!containerRef.current) return;
 
