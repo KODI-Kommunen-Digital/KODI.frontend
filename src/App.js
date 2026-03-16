@@ -137,7 +137,7 @@ const App = () => {
   };
 
 
-  document.addEventListener("wheel", preventZoom, { passive: false, capture: true });
+  window.addEventListener("wheel", preventZoom, { passive: false });
   window.addEventListener("keydown", preventKeyZoom);
 
   document.addEventListener("touchstart", preventPinch, { passive: false });
@@ -148,7 +148,7 @@ const App = () => {
   document.addEventListener("gestureend", preventGesture);
 
   return () => {
-    document.removeEventListener("wheel", preventZoom, { capture: true });
+    window.removeEventListener("wheel", preventZoom);
     window.removeEventListener("keydown", preventKeyZoom);
     document.removeEventListener("touchstart", preventPinch);
     document.removeEventListener("touchmove", preventPinch);
