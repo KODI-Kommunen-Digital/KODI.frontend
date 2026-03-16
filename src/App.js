@@ -109,24 +109,53 @@ const App = () => {
     document.getElementsByTagName("head")[0].appendChild(link);
   }, []);
 
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-      }
-    };
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && ["+", "-", "="].includes(e.key)) {
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+ useEffect(() => {
+
+  const preventZoom = (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+    }
+  };
+
+  const preventKeyZoom = (e) => {
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      ["+", "-", "=", "_", "0"].includes(e.key)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const preventPinch = (e) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  };
+
+  const preventGesture = (e) => {
+    e.preventDefault();
+  };
+
+
+  window.addEventListener("wheel", preventZoom, { passive: false });
+  window.addEventListener("keydown", preventKeyZoom);
+
+  document.addEventListener("touchmove", preventPinch, { passive: false });
+
+  document.addEventListener("gesturestart", preventGesture);
+  document.addEventListener("gesturechange", preventGesture);
+  document.addEventListener("gestureend", preventGesture);
+
+  return () => {
+    window.removeEventListener("wheel", preventZoom);
+    window.removeEventListener("keydown", preventKeyZoom);
+    document.removeEventListener("touchmove", preventPinch);
+    document.removeEventListener("gesturestart", preventGesture);
+    document.removeEventListener("gesturechange", preventGesture);
+    document.removeEventListener("gestureend", preventGesture);
+  };
+
+}, []);
 
   return (
     <BrowserRouter>
