@@ -616,8 +616,12 @@ function UploadListings() {
       // getVillages(cityId).then((response) => setVillages(response.data.data));
       getListingsById(cityIds, listingId).then((listingsResponse) => {
         const listingData = listingsResponse.data.data;
-        listingData.cityIds = cityIds;
-        setListingInput(listingData);
+        setListingInput({
+          ...listingData,
+          cityIds,
+          startDate: listingData.startDate || "",
+          endDate: listingData.endDate || "",
+        });
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
         setSubcategoryId(listingData.subcategoryId);
@@ -869,8 +873,20 @@ function UploadListings() {
         return "";
 
       case "endDate":
-        if (listingInput.startDate && new Date(listingInput.startDate) > new Date(value)) {
-          return t("endDateBeforeStartDate");
+        if (value == null || value === "") {
+          return "";
+        }
+        {
+          const endParsed = new Date(value);
+          if (Number.isNaN(endParsed.getTime())) {
+            return "";
+          }
+          if (listingInput.startDate) {
+            const startParsed = new Date(listingInput.startDate);
+            if (!Number.isNaN(startParsed.getTime()) && startParsed > endParsed) {
+              return t("endDateBeforeStartDate");
+            }
+          }
         }
         return "";
 
@@ -929,12 +945,13 @@ function UploadListings() {
         [name]: errorMessage,
       }));
 
-      const inputDate = new Date(value);
       if (name === "startDate" || name === "endDate") {
-        const startDate = name === "startDate" ? inputDate : new Date(listingInput.startDate);
-        const endDate = name === "endDate" ? inputDate : new Date(listingInput.endDate);
+        const startStr = name === "startDate" ? value : listingInput.startDate;
+        const endStr = name === "endDate" ? value : listingInput.endDate;
+        const startMs = startStr ? new Date(startStr).getTime() : NaN;
+        const endMs = endStr ? new Date(endStr).getTime() : NaN;
 
-        if (startDate && endDate && startDate > endDate) {
+        if (!Number.isNaN(startMs) && !Number.isNaN(endMs) && startMs > endMs) {
           setError((prevState) => ({
             ...prevState,
             endDate: t("endDateBeforeStartDate"),
