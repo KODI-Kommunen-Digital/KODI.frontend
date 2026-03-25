@@ -47,7 +47,7 @@ export default function ImprintPage() {
 
         <div className="font-sans font-semibold text-black mb-1 text-sm title-font">
           <p>Geschäftsführer: Dirk Bongards</p>
-          <p>Vorsitzender des Aufsichtsrates: Klaus Konrad Pesch</p>
+          <p>Vorsitzender des Aufsichtsrates: Patrick Anders</p>
         </div>
         <br />
 
