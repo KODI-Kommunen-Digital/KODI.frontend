@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import LISTINGSIMAGE from "../assets/ListingsImage.jpg"; // Import the default image
 
 function FormImage(props) {
   const { t } = useTranslation();
@@ -17,9 +16,8 @@ function FormImage(props) {
     let imageUrl;
 
     if (typeof img === "string") {
-      // Check if the image is a default admin image
-      if (img.includes("admin/")) {
-        imageUrl = LISTINGSIMAGE;
+      if (img.startsWith("http://") || img.startsWith("https://")) {
+        imageUrl = img;
       } else {
         imageUrl = process.env.REACT_APP_BUCKET_HOST + img;
       }

@@ -619,8 +619,9 @@ function UploadListings() {
         setListingInput({
           ...listingData,
           cityIds,
-          startDate: listingData.startDate || "",
-          endDate: listingData.endDate || "",
+          startDate: stripUtcIndicator(listingData.startDate),
+          endDate: stripUtcIndicator(listingData.endDate),
+          expiryDate: listingData.expiryDate ? stripUtcIndicator(listingData.expiryDate) : listingData.expiryDate,
         });
         setDescription(listingData.description);
         setCategoryId(listingData.categoryId);
@@ -1136,6 +1137,19 @@ function UploadListings() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
+  function stripUtcIndicator(dateStr) {
+    if (!dateStr) return "";
+    const cleaned = dateStr.replace(/\.000Z$/, "").replace(/Z$/, "");
+    const d = new Date(cleaned);
+    if (isNaN(d.getTime())) return "";
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   useEffect(() => {
     const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
     const checkFormValidity = () => {
@@ -1391,11 +1405,7 @@ function UploadListings() {
                       <Flatpickr
                         id="expiryDate"
                         name="expiryDate"
-                        value={
-                          listingInput.expiryDate
-                            ? formatDateTime(listingInput.expiryDate)
-                            : getDefaultEndDate()
-                        }
+                        value={listingInput.expiryDate || getDefaultEndDate()}
                         options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
                         onChange={(date) => {
                           const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
@@ -1457,20 +1467,34 @@ function UploadListings() {
                   >
                     {t("eventStartDate")} *
                   </label>
-                  <Flatpickr
-                    id="startDate"
-                    name="startDate"
-                    value={listingInput.startDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
-                    onChange={(date) => {
-                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
-                      setListingInput(prev => ({ ...prev, startDate: formattedDate }));
-                      validateInput({ target: { name: "startDate", value: formattedDate } });
-                    }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder={t("eventStartDate")}
-                    onBlur={validateInput}
-                  />
+                  <div className="flex gap-2">
+                    <Flatpickr
+                      id="startDate"
+                      name="startDate"
+                      value={listingInput.startDate}
+                      options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
+                      onChange={(date) => {
+                        const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                        setListingInput(prev => ({ ...prev, startDate: formattedDate }));
+                        validateInput({ target: { name: "startDate", value: formattedDate } });
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("eventStartDate")}
+                      onBlur={validateInput}
+                    />
+                    {listingInput.startDate && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setListingInput(prev => ({ ...prev, startDate: "" }));
+                          setError(prev => ({ ...prev, startDate: "" }));
+                        }}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-sm font-medium"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
                   <div
                     className="mt-2 text-sm text-red-600"
                     style={{
@@ -1497,20 +1521,34 @@ function UploadListings() {
                   >
                     {t("eventEndDate")}
                   </label>
-                  <Flatpickr
-                    id="endDate"
-                    name="endDate"
-                    value={listingInput.endDate}
-                    options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
-                    onChange={(date) => {
-                      const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
-                      setListingInput(prev => ({ ...prev, endDate: formattedDate }));
-                      validateInput({ target: { name: "endDate", value: formattedDate } });
-                    }}
-                    className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
-                    placeholder={t("eventEndDate")}
-                    onBlur={validateInput}
-                  />
+                  <div className="flex gap-2">
+                    <Flatpickr
+                      id="endDate"
+                      name="endDate"
+                      value={listingInput.endDate}
+                      options={{ enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true }}
+                      onChange={(date) => {
+                        const formattedDate = format(date[0], "yyyy-MM-dd'T'HH:mm");
+                        setListingInput(prev => ({ ...prev, endDate: formattedDate }));
+                        validateInput({ target: { name: "endDate", value: formattedDate } });
+                      }}
+                      className="w-full bg-white rounded border border-gray-300 focus:border-black focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-400 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-md"
+                      placeholder={t("eventEndDate")}
+                      onBlur={validateInput}
+                    />
+                    {listingInput.endDate && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setListingInput(prev => ({ ...prev, endDate: "" }));
+                          setError(prev => ({ ...prev, endDate: "" }));
+                        }}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-sm font-medium"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
                   <div
                     className="mt-2 text-sm text-red-600"
                     style={{
@@ -1767,7 +1805,7 @@ function UploadListings() {
                 image.length === 1 &&
                 typeof image[0] === "string" &&
                 image[0].includes("admin/") ? (
-                <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <FormImage
                     updateImageList={setImage}
                     handleRemoveImage={handleRemoveImage}
