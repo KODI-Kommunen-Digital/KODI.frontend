@@ -30,6 +30,7 @@ const TerminalScreen = () => {
     const [canScrollRight1, setCanScrollRight1] = useState(true); // Track if right scroll is possible for container 1
     const [canScrollLeft2, setCanScrollLeft2] = useState(false); // Track if left scroll is possible for container 2
     const [canScrollRight2, setCanScrollRight2] = useState(true);
+    const [isMasterportalOpen, setIsMasterportalOpen] = useState(false);
     const matomoStatus = process.env.REACT_APP_MATOMO_STATUS === 'True';
 
     const containerRef = useRef(null)
@@ -113,6 +114,16 @@ const TerminalScreen = () => {
     const handleCloseDienstePopup = () => {
         setIsDiensteOpen(false);
         setOverlayDienster(true);
+    };
+
+    const handleMasterportalClick = () => {
+        setOverlayMasterportal(false);
+        setIsMasterportalOpen(true);
+    };
+
+    const handleCloseMasterportalPopup = () => {
+        setIsMasterportalOpen(false);
+        setOverlayMasterportal(true);
     };
 
     useEffect(() => {
@@ -470,7 +481,7 @@ const TerminalScreen = () => {
                     <div className="absolute top-0 p-2 left-0 w-full h-full bg-sky-900 bg-opacity-90 z-[9999] flex flex-col items-center justify-center">
                         <button
                             className="bg-sky-950 text-white text-5xl px-6 py-6 rounded-xl shadow-xl border-2 border-white"
-                            onClick={() => setOverlayMasterportal(false)}
+                            onClick={handleMasterportalClick}
                         >
                             <span>{`"Was ist wo?"`}</span>
                             <br />
@@ -484,17 +495,6 @@ const TerminalScreen = () => {
                         />
                     </div>
                 )}
-
-                <iframe
-                    src="https://geoportal-hamburg.de/stadtteil-jenfeld/"
-                    onClick={() =>
-                        window.open("https://geoportal-hamburg.de/stadtteil-jenfeld/")
-                    }
-                    className={`w-full h-full relative z-0 ${overlayMasterportal ? "pointer-events-none" : "pointer-events-auto"
-                        }`}
-                    title="Masterportal"
-                    allow="geolocation"
-                />
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full basis-[50%] mt-2 flex-grow">
@@ -780,6 +780,40 @@ const TerminalScreen = () => {
                         >
                             Feedback senden
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {isMasterportalOpen && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[99999]">
+                    <div className="bg-white p-4 rounded-lg shadow-lg w-3/4 h-3/4 flex flex-col">
+
+                        <button
+                            className="bg-white rounded-md p-2 inline-flex items-center justify-end text-red-600"
+                            onClick={handleCloseMasterportalPopup}
+                        >
+                            <svg
+                                className="h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+
+                        <iframe
+                            src="https://geoportal-hamburg.de/stadtteil-jenfeld/"
+                            allow="geolocation"
+                            className="w-full h-full"
+                            title="Masterportal Popup"
+                        />
                     </div>
                 </div>
             )}
