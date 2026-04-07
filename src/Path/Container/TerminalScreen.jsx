@@ -309,7 +309,7 @@ const TerminalScreen = () => {
                     <>
                         {/* First Section */}
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
-                            <h2 className="text-sm font-bold text-sky-950 mb-2">
+                            <h2 className="text-sm font-bold text-sky-950 mb-2 mt-5">
                                 Aktuelles aus dem Bezirksamt
                             </h2>
                             <div className="relative">
@@ -392,7 +392,7 @@ const TerminalScreen = () => {
 
                         {/* Second Section */}
                         <div className="bg-white p-1 flex flex-col overflow-hidden h-full">
-                            <h2 className="text-sm font-bold text-sky-950 mb-2">
+                            <h2 className="text-sm font-bold text-sky-950 mb-2 mt-5">
                                 Veranstaltungen Jenfeld
                             </h2>
                             <div className="relative">
