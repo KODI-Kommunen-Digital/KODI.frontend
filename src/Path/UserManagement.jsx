@@ -66,7 +66,7 @@ const UserManagement = () => {
                 showNotification(t("Failed_block_user"), "error");
             }
         },
-        [getAllUsers]
+        [getAllUsers],
     );
 
     const handleUnblockUser = useCallback(
@@ -80,7 +80,7 @@ const UserManagement = () => {
                 showNotification(t("Failed_unblock_user"), "error");
             }
         },
-        [getAllUsers]
+        [getAllUsers],
     );
 
     const handleDeleteUser = useCallback(
@@ -94,7 +94,7 @@ const UserManagement = () => {
                 showNotification(t("Failed_delete_user"), "error");
             }
         },
-        [getAllUsers]
+        [getAllUsers],
     );
 
     useEffect(() => {
@@ -113,7 +113,7 @@ const UserManagement = () => {
                 console.error("Error fetching forums:", error);
             }
         },
-        [pageSize]
+        [pageSize],
     );
 
     useEffect(() => {
@@ -131,7 +131,7 @@ const UserManagement = () => {
                 showNotification(t("forum_status_updated_failed"), "error");
             }
         },
-        [getForums, currentPage, t]
+        [getForums, currentPage, t],
     );
 
     const deleteForumById = useCallback(
@@ -150,7 +150,7 @@ const UserManagement = () => {
                 showNotification(t("forum_deleted_failed"), "error");
             }
         },
-        [getForums, currentPage, forums.length, t]
+        [getForums, currentPage, forums.length, t],
     );
 
     const fetchAllChannels = useCallback(
@@ -164,7 +164,7 @@ const UserManagement = () => {
                 console.error("Error fetching channels:", error);
             }
         },
-        [pageSize]
+        [pageSize],
     );
 
     useEffect(() => {
@@ -182,7 +182,7 @@ const UserManagement = () => {
                 showNotification(t("channel_status_updated_failed"), "error");
             }
         },
-        [fetchAllChannels, channelCurrentPage, t]
+        [fetchAllChannels, channelCurrentPage, t],
     );
     const deleteChannelById = useCallback(
         async (channelId) => {
@@ -200,7 +200,7 @@ const UserManagement = () => {
                 showNotification(t("channel_deleted_failed"), "error");
             }
         },
-        [fetchAllChannels, channelCurrentPage, channels.length, t]
+        [fetchAllChannels, channelCurrentPage, channels.length, t],
     );
 
     return (
@@ -296,6 +296,12 @@ const UserManagement = () => {
                                                         {t("description")}
                                                     </th>
                                                     <th className="border px-4 py-2">
+                                                        {t("purpose")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
+                                                        {t("committee")}
+                                                    </th>
+                                                    <th className="border px-4 py-2">
                                                         {t("action")}
                                                     </th>
                                                 </>
@@ -332,12 +338,12 @@ const UserManagement = () => {
                                                                     <button
                                                                         onClick={() => {
                                                                             handleUnblockUser(
-                                                                                user.id
+                                                                                user.id,
                                                                             );
                                                                         }}
                                                                         className="p-1.5 hover:bg-red-100 rounded-full transition-colors"
                                                                         title={t(
-                                                                            "user_unblock"
+                                                                            "user_unblock",
                                                                         )}
                                                                     >
                                                                         <svg
@@ -368,12 +374,12 @@ const UserManagement = () => {
                                                                     <button
                                                                         onClick={() => {
                                                                             handleBlockUser(
-                                                                                user.id
+                                                                                user.id,
                                                                             );
                                                                         }}
                                                                         className="p-1.5 hover:bg-green-100 rounded-full transition-colors"
                                                                         title={t(
-                                                                            "user_block"
+                                                                            "user_block",
                                                                         )}
                                                                     >
                                                                         <svg
@@ -396,12 +402,12 @@ const UserManagement = () => {
                                                                 <button
                                                                     onClick={() => {
                                                                         handleDeleteUser(
-                                                                            user.id
+                                                                            user.id,
                                                                         );
                                                                     }}
                                                                     className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
                                                                     title={t(
-                                                                        "Delete_User"
+                                                                        "Delete_User",
                                                                     )}
                                                                 >
                                                                     <svg
@@ -479,12 +485,12 @@ const UserManagement = () => {
                                                                         <button
                                                                             className="p-1.5 hover:bg-green-100 rounded-full transition-colors"
                                                                             title={t(
-                                                                                "forum-approved"
+                                                                                "forum-approved",
                                                                             )}
                                                                             onClick={() => {
                                                                                 updateForumStatusById(
                                                                                     forum.id,
-                                                                                    "approved"
+                                                                                    "approved",
                                                                                 );
                                                                             }}
                                                                         >
@@ -508,12 +514,12 @@ const UserManagement = () => {
                                                                             onClick={() => {
                                                                                 updateForumStatusById(
                                                                                     forum.id,
-                                                                                    "rejected"
+                                                                                    "rejected",
                                                                                 );
                                                                             }}
                                                                             className="p-1.5 hover:bg-red-100 rounded-full transition-colors"
                                                                             title={t(
-                                                                                "forum-rejected"
+                                                                                "forum-rejected",
                                                                             )}
                                                                         >
                                                                             <svg
@@ -552,7 +558,7 @@ const UserManagement = () => {
                                                                     <button
                                                                         className="p-1.5 rounded-full"
                                                                         title={t(
-                                                                            "forum-approved"
+                                                                            "forum-approved",
                                                                         )}
                                                                         disabled
                                                                     >
@@ -576,7 +582,7 @@ const UserManagement = () => {
                                                                     <button
                                                                         className="p-1.5 rounded-full"
                                                                         title={t(
-                                                                            "forum-rejected"
+                                                                            "forum-rejected",
                                                                         )}
                                                                         disabled
                                                                     >
@@ -615,12 +621,12 @@ const UserManagement = () => {
                                                                 <button
                                                                     onClick={() => {
                                                                         deleteForumById(
-                                                                            forum.id
+                                                                            forum.id,
                                                                         );
                                                                     }}
                                                                     className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
                                                                     title={t(
-                                                                        "Delete_forum"
+                                                                        "Delete_forum",
                                                                     )}
                                                                 >
                                                                     <svg
@@ -679,6 +685,14 @@ const UserManagement = () => {
                                                             {channel.description ||
                                                                 "-"}
                                                         </td>
+                                                        <td className="border px-4 py-2 text-sm text-gray-500">
+                                                            {channel.purpose ||
+                                                                "-"}
+                                                        </td>
+                                                        <td className="border px-4 py-2 text-sm text-gray-500">
+                                                            {channel.municipalInstitution ||
+                                                                "-"}
+                                                        </td>
                                                         <td className="border px-4 py-2">
                                                             <div className="flex gap-2 items-center justify-center">
                                                                 {/* Conditional Status Icons */}
@@ -690,12 +704,12 @@ const UserManagement = () => {
                                                                             onClick={() => {
                                                                                 updateChannelStatusById(
                                                                                     channel.id,
-                                                                                    "approved"
+                                                                                    "approved",
                                                                                 );
                                                                             }}
                                                                             className="p-1.5 hover:bg-green-100 rounded-full transition-colors"
                                                                             title={t(
-                                                                                "channel-approved"
+                                                                                "channel-approved",
                                                                             )}
                                                                         >
                                                                             <svg
@@ -718,12 +732,12 @@ const UserManagement = () => {
                                                                             onClick={() => {
                                                                                 updateChannelStatusById(
                                                                                     channel.id,
-                                                                                    "rejected"
+                                                                                    "rejected",
                                                                                 );
                                                                             }}
                                                                             className="p-1.5 hover:bg-red-100 rounded-full transition-colors"
                                                                             title={t(
-                                                                                "channel-rejected"
+                                                                                "channel-rejected",
                                                                             )}
                                                                         >
                                                                             <svg
@@ -762,7 +776,7 @@ const UserManagement = () => {
                                                                     <button
                                                                         className="p-1.5 rounded-full"
                                                                         title={t(
-                                                                            "channel-approved"
+                                                                            "channel-approved",
                                                                         )}
                                                                         disabled
                                                                     >
@@ -786,7 +800,7 @@ const UserManagement = () => {
                                                                     <button
                                                                         className="p-1.5 rounded-full"
                                                                         title={t(
-                                                                            "channel-rejected"
+                                                                            "channel-rejected",
                                                                         )}
                                                                         disabled
                                                                     >
@@ -825,12 +839,12 @@ const UserManagement = () => {
                                                                 <button
                                                                     onClick={() => {
                                                                         deleteChannelById(
-                                                                            channel.id
+                                                                            channel.id,
                                                                         );
                                                                     }}
                                                                     className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
                                                                     title={t(
-                                                                        "Delete_channel"
+                                                                        "Delete_channel",
                                                                     )}
                                                                 >
                                                                     <svg
@@ -885,7 +899,7 @@ const UserManagement = () => {
                                 <button
                                     onClick={() =>
                                         setCurrentPage((prev) =>
-                                            Math.max(prev - 1, 1)
+                                            Math.max(prev - 1, 1),
                                         )
                                     }
                                     disabled={currentPage === 1}
@@ -913,7 +927,7 @@ const UserManagement = () => {
                                 <button
                                     onClick={() =>
                                         setCurrentPage((prev) =>
-                                            Math.min(prev + 1, totalPages)
+                                            Math.min(prev + 1, totalPages),
                                         )
                                     }
                                     disabled={currentPage === totalPages}
@@ -939,7 +953,7 @@ const UserManagement = () => {
                                 <button
                                     onClick={() =>
                                         setChannelCurrentPage((prev) =>
-                                            Math.max(prev - 1, 1)
+                                            Math.max(prev - 1, 1),
                                         )
                                     }
                                     disabled={channelCurrentPage === 1}
@@ -969,8 +983,8 @@ const UserManagement = () => {
                                         setChannelCurrentPage((prev) =>
                                             Math.min(
                                                 prev + 1,
-                                                channelTotalPages
-                                            )
+                                                channelTotalPages,
+                                            ),
                                         )
                                     }
                                     disabled={
