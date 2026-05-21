@@ -105,6 +105,7 @@ function UploadPosts() {
 				(postResponse) => {
 					const postData = postResponse.data.data;
 					postData.cityId = cityIdFromURL;
+					isLoadingDescription.current = true;
 					setInput(postData);
 					setDescription(postData.description);
 				}
@@ -233,8 +234,14 @@ function UploadPosts() {
 		validateInput(e);
 	};
 
+	const isLoadingDescription = useRef(false);
 	const [description, setDescription] = useState("");
 	const onDescriptionChange = (newContent) => {
+		if (isLoadingDescription.current) {
+			setDescription(newContent);
+			return;
+		}
+
 		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
 		const characterCount = plainText.length;
 
@@ -249,10 +256,17 @@ function UploadPosts() {
 			return;
 		}
 
-		setError((prev) => ({
-			...prev,
-			description: "",
-		}));
+		if (!plainText.trim()) {
+			setError((prev) => ({
+				...prev,
+				description: t("pleaseEnterDescription"),
+			}));
+		} else {
+			setError((prev) => ({
+				...prev,
+				description: "",
+			}));
+		}
 
 		setInput((prev) => ({
 			...prev,
@@ -483,6 +497,7 @@ function UploadPosts() {
 							ref={editor}
 							value={description}
 							onChange={(newContent) => onDescriptionChange(newContent)}
+							onFocus={() => { isLoadingDescription.current = false; }}
 							onBlur={() => {
 								const quillInstance = editor.current?.getEditor();
 								if (quillInstance) {
