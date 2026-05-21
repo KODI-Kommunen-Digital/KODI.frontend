@@ -235,11 +235,6 @@ function UploadPosts() {
 
 	const [description, setDescription] = useState("");
 	const onDescriptionChange = (newContent) => {
-		const hasNumberedList = newContent.includes("<ol>");
-		const hasBulletList = newContent.includes("<ul>");
-		let descriptions = [];
-		let listType = "";
-
 		const plainText = newContent.replace(/(<([^>]+)>)/gi, "");
 		const characterCount = plainText.length;
 
@@ -252,47 +247,17 @@ function UploadPosts() {
 				}),
 			}));
 			return;
-		} else {
-			setError((prev) => ({
-				...prev,
-				description: "",
-			}));
 		}
 
-		if (hasNumberedList || hasBulletList) {
-			const liRegex = /<li>(.*?)(?=<\/li>|$)/gi;
-			const matches = newContent.match(liRegex);
-			if (matches) {
-				descriptions = matches.map((match) => match.replace(/<\/?li>/gi, ""));
-			}
+		setError((prev) => ({
+			...prev,
+			description: "",
+		}));
 
-			listType = hasNumberedList ? "ol" : "ul";
-
-			const listHTML = `<${listType}>${descriptions
-				.map((item) => `<li>${item}</li>`)
-				.join("")}</${listType}>`;
-
-			let leftoverText = newContent
-				.replace(/<ol>.*?<\/ol>/gis, "")
-				.replace(/<ul>.*?<\/ul>/gis, "")
-				.trim();
-
-			leftoverText = leftoverText.replace(/(<br>|<\/?p>)/gi, "");
-
-			const finalDescription = leftoverText
-				? `${leftoverText}<br/>${listHTML}`
-				: listHTML;
-
-			setInput((prev) => ({
-				...prev,
-				description: finalDescription,
-			}));
-		} else {
-			setInput((prev) => ({
-				...prev,
-				description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
-			}));
-		}
+		setInput((prev) => ({
+			...prev,
+			description: newContent,
+		}));
 
 		setDescription(newContent);
 	};
@@ -313,12 +278,14 @@ function UploadPosts() {
 					return "";
 				}
 
-			case "description":
-				if (!value) {
+			case "description": {
+				const stripped = value ? value.replace(/(<([^>]+)>)/gi, "").trim() : "";
+				if (!stripped) {
 					return t("pleaseEnterDescription");
 				} else {
 					return "";
 				}
+			}
 
 			default:
 				return "";
@@ -368,7 +335,14 @@ function UploadPosts() {
 	useEffect(() => {
 		const validateForm = () => {
 			const requiredFields = ["title", "description", "cityId"];
-			const isValid = requiredFields.every((field) => input[field] && !error[field]);
+			const isValid = requiredFields.every((field) => {
+				const val = input[field];
+				if (field === "description") {
+					const stripped = val ? val.replace(/(<([^>]+)>)/gi, "").trim() : "";
+					return !!stripped && !error[field];
+				}
+				return val && !error[field];
+			});
 			setIsFormValid(isValid);
 		};
 
