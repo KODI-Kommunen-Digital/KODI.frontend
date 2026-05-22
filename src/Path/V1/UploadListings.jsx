@@ -809,7 +809,11 @@ function UploadListings() {
     } else {
       setListingInput((prev) => ({
         ...prev,
-        description: newContent.replace(/<p>/g, "").replace(/<\/p>/g, "<br>"),
+        description: newContent
+          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, "<br>")
+          .replace(/<p[^>]*>/g, "")
+          .replace(/<\/p>/g, "<br>")
+          .replace(/(<br\s*\/?>\s*)+$/gi, ""),
       }));
     }
 
@@ -854,7 +858,7 @@ function UploadListings() {
         }
 
       case "description":
-        if (!value) {
+        if (!value || !value.replace(/<[^>]*>/g, "").trim()) {
           return t("pleaseEnterDescription");
         } else {
           return "";
@@ -1122,9 +1126,12 @@ function UploadListings() {
   useEffect(() => {
     const isCategorySpecificValid = categoryId === 3 ? listingInput.startDate : true;
     const checkFormValidity = () => {
+      const descriptionText = (listingInput.description || "")
+        .replace(/<[^>]*>/g, "")
+        .trim();
       const requiredFields = [
         listingInput.title,
-        listingInput.description,
+        descriptionText,
         categoryId,
         cityIds || selectedCities.length > 0,
         !(error.title || error.description || error.categoryId),
