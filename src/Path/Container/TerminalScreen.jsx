@@ -582,7 +582,7 @@ const TerminalScreen = () => {
                                 </div>
                             )}
                             <iframe
-                                src="https://static.hamburg.de/kartenclient/prod/"
+                                src="https://static.hamburg.de/kartenclient/prod/jenfeld/?zoom=8"
                                 allow="geolocation"
                                 className={`w-full h-full relative z-0 ${overlayMaengelmelder ? "pointer-events-none" : "pointer-events-auto"}`}
                                 title="Mängelmelder"
@@ -636,7 +636,7 @@ const TerminalScreen = () => {
                                     </svg>
                                 </button>
                                 <iframe
-                                    src="https://static.hamburg.de/kartenclient/prod/"
+                                    src="https://static.hamburg.de/kartenclient/prod/jenfeld/?zoom=8"
                                     allow="geolocation"
                                     className="w-full h-full"
                                     title="Mängelmelder Popup"
