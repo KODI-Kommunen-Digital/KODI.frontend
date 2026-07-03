@@ -6,6 +6,9 @@ export default function ImprintPage() {
     const { t } = useTranslation();
     const version = process.env.REACT_APP_FORNTENDVERSION || '1';
     const HomePageNavBar = require(`../Components/V${version}/HomePageNavBar`).default;
+    const appName = process.env.REACT_APP_REGION_NAME;
+    const operator = process.env.REACT_APP_RESPONSIBLE_ENTITY;
+    const packageId = (process.env.REACT_APP_GOOGLEPLAYSTORE || "").split("id=")[1] || "";
 
     return (
         <section className="bg-white body-font relative">
@@ -14,6 +17,11 @@ export default function ImprintPage() {
             <div className="bg-white h-full items-center mt-20 py-5 xl:px-0 px-10 mx-auto max-w-screen-lg lg:mx-20 xl:mx-auto">
                 <p className="font-sans font-semibold text-black  mb-1 text-3xl title-font">
                     {t("Dataprotection")}
+                </p>
+                <br />
+
+                <p className="font-sans font-semibold text-black mb-1 text-sm title-font">
+                    {t("privacyPolicyAppNotice", { appName, operator, packageId })}
                 </p>
                 <br />
 

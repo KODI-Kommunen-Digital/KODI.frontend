@@ -338,6 +338,7 @@
     "Privacyataglance": "1. Privacy at a glance",
     "Generalinformationheading": "General information",
     "Generalinformation1": "The following notes provide a simple overview of what happens to your personal data when you visit our website. Personal data is all data with which you can be personally identified. Detailed information on the subject of data protection can be found in our data protection declaration listed under this text.",
+    "privacyPolicyAppNotice": "This privacy policy applies to the {{appName}} app (Google Play: {{packageId}}) and website, provided by {{operator}}. It explains how your personal data is collected and processed when you use the {{appName}} app and our website.",
     "Datacollectiononourwebsiteheading": "Data collection on our website",
     "Datacollectiononourwebsite1": "Who is responsible for data collection on this website?",
     "Datacollectiononourwebsite2": "The data processing on this website is carried out by the website operator. You can find their contact details in the imprint of this website.",

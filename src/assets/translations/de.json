@@ -334,6 +334,7 @@
     "Privacyataglance": "1. Datenschutz auf einen Blick",
     "Generalinformationheading": "Allgemeine Hinweise",
     "Generalinformation1": "Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit deinen personenbezogenen Daten passiert, wenn du unsere Website besuchst. Personenbezogene Daten sind alle Daten, mit denen du persönlich identifiziert werden kannst. Ausführliche Informationen zum Thema Datenschutz kannst du unserer unter diesem Text aufgeführten Datenschutzerklärung entnehmen.",
+    "privacyPolicyAppNotice": "Diese Datenschutzerklärung gilt für die App {{appName}} (Google Play: {{packageId}}) sowie die Website, bereitgestellt von {{operator}}. Sie erläutert, wie deine personenbezogenen Daten erhoben und verarbeitet werden, wenn du die App {{appName}} und unsere Website nutzt.",
     "Datacollectiononourwebsiteheading": "Datenerfassung auf unserer Website",
     "Datacollectiononourwebsite1": "Wer ist verantwortlich für die Datenerfassung auf dieser Website?",
     "Datacollectiononourwebsite2": "Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten kannst du dem Impressum dieser Website entnehmen.",
