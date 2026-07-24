@@ -4,7 +4,7 @@ const LogoutSuccessPage = () => {
 
     useEffect(() => {
         const redirectTimer = setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '/login';
         }, 5000);
         return () => clearTimeout(redirectTimer);
     }, []);

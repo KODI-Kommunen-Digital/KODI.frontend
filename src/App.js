@@ -17,8 +17,6 @@ import PrivacyPolicy from "./Path/PrivacyPolicy";
 import TermsOfUse from "./Path/TermsOfUse";
 import LogoutSuccessPage from "./Components/LogoutSuccessPage";
 
-import HomePageV1 from "./Path/V1/HomePage";
-import HomePageV2 from "./Path/V2/HomePage";
 import AllListingsV1 from "./Path/V1/AllListings";
 import AllListingsV2 from "./Path/V2/AllListings";
 import UploadListingsV1 from "./Path/V1/UploadListings";
@@ -41,6 +39,7 @@ import AllDevices from "./Path/AllDevices";
 import PasswordForgot from "./Path/PasswordForgot";
 import PasswordUpdate from "./Path/PasswordUpdate";
 import HeidiLogo from "./assets/HEIDI_Logo.png";
+import RootRedirect from "./Components/RootRedirect";
 import "./i18n";
 import ViewPost from "./Path/Forums/ViewPost";
 import GroupMembers from "./Path/MyGroups/GroupMembers";
@@ -164,12 +163,7 @@ const App = () => {
           {isTerminalScreenEnabled ? (
             <Route path="/" element={<TerminalScreen />} exact />
           ) : (
-            <Route
-              path="/"
-              element={
-                frontendVersion === "1" ? <HomePageV1 /> : <HomePageV2 />
-              }
-            />
+            <Route path="/" element={<RootRedirect />} />
           )}
 
           {inFrame && (

@@ -88,7 +88,7 @@ export default function HomePageNavBar() {
     window.sessionStorage.removeItem("userId");
     window.sessionStorage.removeItem("selectedItem");
     setIsLoggedIn(false);
-    navigateTo("/");
+    navigateTo("/login");
   }
 
   const onCityChange = (e) => {
