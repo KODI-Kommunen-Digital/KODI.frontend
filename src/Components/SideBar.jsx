@@ -148,7 +148,7 @@ function SideBar() {
           localStorage.removeItem("activeSubmenu");
           localStorage.removeItem("activeIndependentMenu")
           setLoggedIn(false);
-          navigateTo("/");
+          navigateTo("/login");
         });
       } catch (error) {
         console.log(error);

@@ -50,12 +50,16 @@ export const AuthProvider = ({ children }) => {
         window.localStorage.removeItem("userId");
         window.localStorage.removeItem("selectedItem");
         window.localStorage.removeItem("cityUsers");
+        window.sessionStorage.removeItem("accessToken");
+        window.sessionStorage.removeItem("refreshToken");
+        window.sessionStorage.removeItem("userId");
+        window.sessionStorage.removeItem("cityUsers");
         window.sessionStorage.removeItem("selectedItem");
         removeCookie("accessToken");
         removeCookie("refreshToken");
         removeCookie("userId");
         removeCookie("cityUsers");
-        navigateTo("/");
+        navigateTo("/login");
     };
 
     const getAccessToken = () => {
