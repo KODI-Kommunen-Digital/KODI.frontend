@@ -124,7 +124,7 @@ const LoginPage = () => {
 			setUser("");
 			setPwd("");
 			setRememberMe(false);
-			navigateTo("/");
+			navigateTo("/Dashboard");
 		} catch (err) {
 			setLoginLoading(false);
 			setAlertInfo(true);
